@@ -1,0 +1,864 @@
+{
+  "version": "2.0.0",
+  "spaceId": 1,
+  "spaceKey": "GT",
+  "spaceName": "General Tasks",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 13,
+  "space": {
+    "id": 1,
+    "name": "General Tasks",
+    "key": "GT",
+    "icon": "📋",
+    "color": "#6554C0",
+    "description": "General day-to-day tasks and miscellaneous work items",
+    "createdAt": "2026-08-29T08:15:46.633Z",
+    "updatedAt": "2026-10-31T18:58:39.340Z",
+    "issueCount": 13,
+    "file": "spaces/GT.json"
+  },
+  "issues": [
+    {
+      "id": 119,
+      "spaceId": 1,
+      "key": "GT-1",
+      "title": "List Product Based Comapnies",
+      "description": "## Overview\nResearch and compile a target list of top product-based tech companies hiring for senior DevOps, Cloud, and Platform Engineering roles.\n\n## Focus Areas\n- Filter tier-1 and tier-2 product companies with strong engineering cultures\n- Identify open positions for Senior DevOps / Cloud Platform Engineer\n- Track tech stacks (Kubernetes, AWS/Azure, Terraform, ArgoCD)\n- Maintain recruiter contact list and referral connections",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "career",
+        "companies",
+        "product-based",
+        "job-search"
+      ],
+      "subtasks": [
+        {
+          "id": "87dd2144-795d-41eb-8e42-259dab64d33c",
+          "title": "Filter tier-1 and tier-2 product companies with strong engineering cultures",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "39e44c0c-e6ca-4cef-baa3-016fc3e32e68",
+          "title": "Identify open positions for Senior DevOps / Cloud Platform Engineer",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "e0a0ed65-dff7-426e-aa12-031f93f6064c",
+          "title": "Track tech stacks (Kubernetes, AWS/Azure, Terraform, ArgoCD)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "514181a3-c83a-4e27-8056-537de56df0dd",
+          "title": "Maintain recruiter contact list and referral connections",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "ffba3ad3-8ebe-4b1e-bc5c-f7ffc8247661",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 120,
+      "spaceId": 1,
+      "key": "GT-2",
+      "title": "List AI Companies",
+      "description": "## Overview\nMap out leading AI startups, foundation model labs, and AI infrastructure scale-ups hiring AI/MLOps and AI SRE engineers.\n\n## Focus Areas\n- Research high-growth generative AI companies (YC, Series A-C)\n- Identify companies building AI agents, inference engines, and developer tools\n- Note their infrastructure requirements (GPU clusters, Slurm, vLLM, KubeRay)\n- Network with hiring managers and lead infrastructure architects",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai-companies",
+        "market-research",
+        "startups",
+        "career"
+      ],
+      "subtasks": [
+        {
+          "id": "51f3941b-1c16-4e63-8e30-899fe35d86a8",
+          "title": "Research high-growth generative AI companies (YC, Series A-C)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "496cb26b-439f-402c-993d-aac06fdbd623",
+          "title": "Identify companies building AI agents, inference engines, and developer tools",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "73782adf-2fb4-4c59-9772-f5bfa599b694",
+          "title": "Note their infrastructure requirements (GPU clusters, Slurm, vLLM, KubeRay)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "1f9346b3-fba6-4083-b7c8-030b714d0bd0",
+          "title": "Network with hiring managers and lead infrastructure architects",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "bce5b918-9a30-46cc-8a6e-799a9f8edac9",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 121,
+      "spaceId": 1,
+      "key": "GT-3",
+      "title": "Update LinkedIn",
+      "description": "## Overview\nPolish LinkedIn profile headline, about summary, featured projects, and skill endorsements for executive recruiter reach.\n\n## Focus Areas\n- Update headline to reflect Senior DevOps & AI Platform Engineer\n- Write metric-driven about section highlighting career achievements\n- Add portfolio links and GitHub repository in Featured section\n- Request skill recommendations from previous colleagues",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "linkedin",
+        "branding",
+        "networking",
+        "career"
+      ],
+      "subtasks": [
+        {
+          "id": "8623b7b2-d247-43a6-b3d3-bfdd66ec460b",
+          "title": "Update headline to reflect Senior DevOps & AI Platform Engineer",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "e952fc11-d676-4196-98a9-857ab105db80",
+          "title": "Write metric-driven about section highlighting career achievements",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "911bd6a3-f117-43c8-aaa2-878a0474052a",
+          "title": "Add portfolio links and GitHub repository in Featured section",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "26b614db-9fd3-466f-a16f-cba27b625cbb",
+          "title": "Request skill recommendations from previous colleagues",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "5c912f93-257e-4a1b-aefc-bf5be9186e93",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1400,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 122,
+      "spaceId": 1,
+      "key": "GT-4",
+      "title": "Update Naukri",
+      "description": "## Overview\nOptimize Naukri profile to maximize recruiter search visibility, algorithmic ranking, and relevant inbound job leads.\n\n## Focus Areas\n- Update primary headline with high-demand keywords (DevOps, K8s, Azure, Terraform, AI)\n- Upload latest ATS-tailored resume document\n- Verify notice period, current & expected CTC, and location preferences\n- Maintain daily activity check-ins for search rank boost",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "naukri",
+        "job-search",
+        "profile-optimization",
+        "career"
+      ],
+      "subtasks": [
+        {
+          "id": "cd14dcde-467a-4b51-85ca-a3a36111aba3",
+          "title": "Update primary headline with high-demand keywords (DevOps, K8s, Azure, Terraform, AI)",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "9799c49c-3d18-4da9-a682-68cfb9991c2c",
+          "title": "Upload latest ATS-tailored resume document",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "fb9c76ae-9e8b-4691-9f84-cc5b85f8b143",
+          "title": "Verify notice period, current & expected CTC, and location preferences",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "040737c5-b46b-46f4-9b0a-efe49332a363",
+          "title": "Maintain daily activity check-ins for search rank boost",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "f760f499-04d5-44be-9d4b-3ee6367c475d",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 123,
+      "spaceId": 1,
+      "key": "GT-5",
+      "title": "Update Resume",
+      "description": "## Overview\nComplete revision and ATS optimization of technical resume highlighting DevOps achievements, cloud architecture, and AI platform projects.\n\n## Completed Outcomes\n- Rephrased bullet points with quantifiable metrics and business impact\n- Optimized keywords for ATS screening across target role profiles\n- Formatted into clean single/double-page PDF with no parser obstacles\n- Final review and sign-off on master resume file",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "resolvedAt": "2026-10-31T12:00:00.000Z",
+      "labels": [
+        "resume",
+        "ats-optimization",
+        "career",
+        "completed"
+      ],
+      "subtasks": [
+        {
+          "id": "9ae8dd0b-97e9-496c-9f4f-58bf10bf7b92",
+          "title": "Rephrase bullet points with quantifiable metrics and business impact",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "0ca3cb3a-774b-4130-899b-bd1bf83cd5f6",
+          "title": "Optimize keywords for ATS screening across target role profiles",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "b4e282c6-c643-47cc-b86d-1760b9c224c6",
+          "title": "Format into clean single/double-page PDF with no parser obstacles",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "4edf3170-0f4d-42c6-9290-0119786fb44d",
+          "title": "Final review and sign-off on master resume file",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "6fa3e555-3f0d-4fd5-93f1-b429303d5443",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "Resume updated with latest project metrics and verified against ATS parsers.",
+          "createdAt": "2026-10-31T12:00:00.000Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "cfa5f46d-1f45-484c-b73d-7e23d7237901",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "67074db0-b933-4ea3-b269-5a93a226ad48",
+          "type": "status_change",
+          "author": "VY",
+          "from": "inprogress",
+          "to": "done",
+          "description": "completed resume update",
+          "createdAt": "2026-10-31T12:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T12:00:00.000Z"
+    },
+    {
+      "id": 124,
+      "spaceId": 1,
+      "key": "GT-6",
+      "title": "Update Self Intro",
+      "description": "## Overview\nRefine and rehearse a compelling 60-90 second elevator pitch showcasing DevOps, cloud-native architecture, and AI engineering strengths.\n\n## Focus Areas\n- Draft structured 3-part intro (Background, Core Superpower, Impact & Goals)\n- Highlight key wins (Kubernetes scale, CI/CD speedups, AI/LLMOps automation)\n- Prepare 3 variations: recruiter call, hiring manager screen, peer interview\n- Practice delivery timing and confidence",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "interview-prep",
+        "elevator-pitch",
+        "communication",
+        "career"
+      ],
+      "subtasks": [
+        {
+          "id": "7081fc91-c3aa-4dd5-9873-a5ea5022d9ba",
+          "title": "Draft structured 3-part intro (Background, Core Superpower, Impact & Goals)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "9a352f0d-aedd-408f-ada2-89fd89558396",
+          "title": "Highlight key wins (Kubernetes scale, CI/CD speedups, AI/LLMOps automation)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "d6dddff0-2166-4ba5-bf6d-d3156be52134",
+          "title": "Prepare 3 variations: recruiter call, hiring manager screen, peer interview",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "6384227a-c471-474a-be10-54ee1386d1d0",
+          "title": "Practice delivery timing and confidence",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "f00e51fd-ce76-4580-b676-d7962f909d6d",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1400,
+      "storyPoints": 2,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 125,
+      "spaceId": 1,
+      "key": "GT-7",
+      "title": "Create Office Email",
+      "description": "## Overview\nEstablish a clean, professional custom domain or dedicated Gmail address for official career communications, recruiters, and platform registrations.\n\n## Focus Areas\n- Select professional handle format (e.g. name.dev / name.cloud)\n- Set up email forwarding, signature, and spam filters\n- Configure 2FA security with authenticator app\n- Use new address for job portals and certification profiles",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "email",
+        "professional-setup",
+        "career",
+        "admin"
+      ],
+      "subtasks": [
+        {
+          "id": "7cb6eee3-aeac-44e3-8a94-02be910b4ed0",
+          "title": "Select professional handle format (e.g. name.dev / name.cloud)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "8cd6e723-da20-49cd-a5e7-686e1736e9b8",
+          "title": "Set up email forwarding, signature, and spam filters",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "d68135b3-a6a5-440e-ab3c-c75d61c5e4f7",
+          "title": "Configure 2FA security with authenticator app",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "31b885fd-af2a-478a-a6f1-c1ae48fce7d4",
+          "title": "Use new address for job portals and certification profiles",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "ab3a9c8c-7eb4-4ca9-ac86-1d0d3d8b7c9a",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 900,
+      "storyPoints": 2,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T19:00:17.204Z"
+    },
+    {
+      "id": 126,
+      "spaceId": 1,
+      "key": "GT-8",
+      "title": "Create GitHub, ADO and Azure accounts with Business account",
+      "description": "## Overview\nSet up dedicated developer and cloud accounts under the new professional email identity for portfolio showcase and practice labs.\n\n## Focus Areas\n- Set up professional GitHub profile and link SSH keys\n- Create Azure DevOps (ADO) organization and test project\n- Provision Microsoft Azure subscription with budget alert thresholds\n- Configure Workload Identity federation between GitHub and Azure",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "accounts",
+        "github",
+        "azure-devops",
+        "azure",
+        "setup"
+      ],
+      "subtasks": [
+        {
+          "id": "8f918835-f927-48d6-8747-0cc6629dabc2",
+          "title": "Set up professional GitHub profile and link SSH keys",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "05982115-17ad-44a8-bf16-e57fc4bda5c3",
+          "title": "Create Azure DevOps (ADO) organization and test project",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "f41b357b-9f00-42aa-9473-096c677d4345",
+          "title": "Provision Microsoft Azure subscription with budget alert thresholds",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "cd81c830-d1b5-4f05-bb75-5a59df8d66ab",
+          "title": "Configure Workload Identity federation between GitHub and Azure",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "c7e1cf41-ac1a-4896-8ce8-3a811bac6151",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T19:00:25.408Z"
+    },
+    {
+      "id": 127,
+      "spaceId": 1,
+      "key": "GT-9",
+      "title": "AZ AI certifications",
+      "description": "## Overview\nActive study and exam preparation for Microsoft Azure AI certification path (AI-900 / AI-901 and AI-102 / AI-103).\n\n## Focus Areas\n- Review Azure AI Services documentation and learn paths\n- Hands-on practice with Azure OpenAI Service and AI Search vector index\n- Complete official Microsoft practice assessment exams\n- Schedule and clear certification exams",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "azure-ai",
+        "certifications",
+        "ai-901",
+        "ai-103",
+        "study"
+      ],
+      "subtasks": [
+        {
+          "id": "ca2b0480-c77a-4025-b871-9fd990be9191",
+          "title": "Review Azure AI Services documentation and learn paths",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "c287e29a-baa1-4e95-a299-47dc36f8d7f6",
+          "title": "Hands-on practice with Azure OpenAI Service and AI Search vector index",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "db825d61-fba4-4cdb-855b-86f4b5dbbf58",
+          "title": "Complete official Microsoft practice assessment exams",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "a384af42-fb31-4365-afbf-3335725ed6f1",
+          "title": "Schedule and clear certification exams",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "c62c5e93-6387-4212-bfaf-864b53fdf1cb",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 128,
+      "spaceId": 1,
+      "key": "GT-10",
+      "title": "AZ 104",
+      "description": "## Overview\nComplete hands-on preparation for the Microsoft Certified: Azure Administrator Associate (AZ-104) exam.\n\n## Focus Areas\n- Revise Azure Entra ID governance, RBAC, and storage accounts\n- Complete virtual networking labs (VNet peering, VPN, NSGs)\n- Practice VM scale sets, compute management, and Azure Bastion\n- Score 85%+ on Tutorials Dojo practice exam simulators",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "az-104",
+        "azure",
+        "sysadmin",
+        "certification",
+        "study"
+      ],
+      "subtasks": [
+        {
+          "id": "090f5d40-22cb-44e5-86a2-cc2733a56fdc",
+          "title": "Revise Azure Entra ID governance, RBAC, and storage accounts",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "b37b5c98-b9af-427f-be98-278a01e12cf5",
+          "title": "Complete virtual networking labs (VNet peering, VPN, NSGs)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "ee7d6a23-7d24-4e49-823b-7b21bbf3f290",
+          "title": "Practice VM scale sets, compute management, and Azure Bastion",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "94bae991-1e21-4b97-af5a-d1672aafcfbb",
+          "title": "Score 85%+ on Tutorials Dojo practice exam simulators",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "b8191c8d-ea54-4078-9ee3-453e1b2ba9a6",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1200,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 129,
+      "spaceId": 1,
+      "key": "GT-11",
+      "title": "Python, AI/ML and MLOps",
+      "description": "## Overview\nDaily coding practice in Python, core machine learning libraries, and production MLOps tooling.\n\n## Focus Areas\n- Advanced Python: async, generators, type hints, and FastAPI\n- ML fundamentals: Scikit-Learn, PyTorch, and Hugging Face Transformers\n- MLOps hands-on: MLflow tracking, DVC data versioning, and Docker packaging\n- Build and test an end-to-end model serving API",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "python",
+        "ai-ml",
+        "mlops",
+        "coding-practice"
+      ],
+      "subtasks": [
+        {
+          "id": "0d6af38d-2ab8-4077-854c-4b9b259355f4",
+          "title": "Advanced Python: async, generators, type hints, and FastAPI",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "089dfbca-025c-484f-b525-feadf080689d",
+          "title": "ML fundamentals: Scikit-Learn, PyTorch, and Hugging Face Transformers",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "217da154-c95c-4519-9368-6d628c68e84b",
+          "title": "MLOps hands-on: MLflow tracking, DVC data versioning, and Docker packaging",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "81ac06a7-3bb3-4199-a1f4-d773bc41ea1d",
+          "title": "Build and test an end-to-end model serving API",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "3ac43fe1-934f-46aa-b19c-d2e2ef1555be",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 130,
+      "spaceId": 1,
+      "key": "GT-12",
+      "title": "DevOps Interview guide",
+      "description": "## Overview\nPrepare and master answers for technical interview rounds across Linux, Kubernetes, CI/CD, IaC, System Design, and Troubleshooting.\n\n## Focus Areas\n- Linux kernel, networking, and system debugging scenarios\n- Kubernetes architecture, etcd recovery, and networking questions\n- Terraform state locking and drift reconciliation patterns\n- Behavioral leadership and situational conflict resolution examples",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "interview-guide",
+        "devops",
+        "kubernetes",
+        "system-design",
+        "troubleshooting"
+      ],
+      "subtasks": [
+        {
+          "id": "72119611-4a7a-4360-b775-a5a7a15bc9cc",
+          "title": "Linux kernel, networking, and system debugging scenarios",
+          "completed": true,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "8b75ce73-6aca-41d6-97a7-d120bd1444aa",
+          "title": "Kubernetes architecture, etcd recovery, and networking questions",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "a5a0078a-1a73-4e0f-af59-c999c81d86b0",
+          "title": "Terraform state locking and drift reconciliation patterns",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "0e93137a-3f13-49dc-8736-e2166a27663f",
+          "title": "Behavioral leadership and situational conflict resolution examples",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "65f6c9dc-fd88-4314-8b17-1cf01455530b",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1500,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    },
+    {
+      "id": 131,
+      "spaceId": 1,
+      "key": "GT-13",
+      "title": "DevOps with AI Playlists - Youtube and KodeKloud",
+      "description": "## Overview\nOrganize and systematically watch curated playlists covering modern AI-assisted DevOps, agentic workflows, and cloud automation.\n\n## Focus Areas\n- Bookmark top YouTube playlists on AIOps and LLMs for DevOps\n- Complete KodeKloud AI & MLOps hands-on video modules\n- Document takeaways, scripts, and architectural diagrams\n- Apply learned patterns into personal showcase projects",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "playlists",
+        "learning",
+        "youtube",
+        "kodekloud",
+        "devops-ai"
+      ],
+      "subtasks": [
+        {
+          "id": "9c7356d5-1af5-41a6-a9ce-3d83d8117615",
+          "title": "Bookmark top YouTube playlists on AIOps and LLMs for DevOps",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "3ff12679-3666-4bf6-870e-a463b3fd0bb0",
+          "title": "Complete KodeKloud AI & MLOps hands-on video modules",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "dad2b76d-1780-4b62-b660-75e054d20f77",
+          "title": "Document takeaways, scripts, and architectural diagrams",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        },
+        {
+          "id": "1be5c94d-e7b8-464f-8e20-1046faf700e9",
+          "title": "Apply learned patterns into personal showcase projects",
+          "completed": false,
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "524a7bfe-43a0-4334-8050-51bd345c725b",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:58:39.340Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1500,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:58:39.340Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z"
+    }
+  ]
+}

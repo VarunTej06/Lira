@@ -1,0 +1,1147 @@
+{
+  "version": "2.0.0",
+  "spaceId": 3,
+  "spaceKey": "CERT",
+  "spaceName": "Certifications",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 15,
+  "space": {
+    "id": 3,
+    "name": "Certifications",
+    "key": "CERT",
+    "icon": "🏆",
+    "color": "#0052CC",
+    "description": "Technical certification study plans and exam preparation",
+    "createdAt": "2026-09-28T08:15:46.633Z",
+    "updatedAt": "2026-10-31T18:06:36.244Z",
+    "issueCount": 15,
+    "file": "spaces/CERT.json"
+  },
+  "issues": [
+    {
+      "spaceId": 3,
+      "key": "CERT-1",
+      "title": "HashiCorp Certified: Terraform Associate (004)",
+      "description": "Azure AI Fundamentals Certification\n\nSource: KodeKloud\n\nCourse: HashiCorp Certified: Terraform Associate 004\n\nLink: https://learn.kodekloud.com/learn/courses/hashicorp-certified-terraform-associate-004 ",
+      "type": "task",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-22T22:41:46.000Z",
+      "startDate": "2026-09-27T22:41:46.000Z",
+      "labels": [
+        "certification",
+        "terraform",
+        "iac",
+        "hashicorp"
+      ],
+      "subtasks": [
+        {
+          "id": "e48b54f1-4caf-4ed3-bea4-5fdf94065ac6",
+          "title": "Complete KodeKloud Terraform course",
+          "completed": true,
+          "createdAt": "2026-09-29T22:41:46.000Z"
+        },
+        {
+          "id": "7d3eb891-a2b7-4fe3-b64f-843519417b47",
+          "title": "Finish all hands-on labs",
+          "completed": true,
+          "createdAt": "2026-09-29T22:41:46.000Z"
+        },
+        {
+          "id": "f8558495-ce7b-4e4f-a2b4-56d108e6d409",
+          "title": "Practice exam 1 (score 85%+)",
+          "completed": true,
+          "createdAt": "2026-10-07T22:41:46.000Z"
+        },
+        {
+          "id": "65a69772-8b10-4c7a-b655-09590a3dbac3",
+          "title": "Practice exam 2 (score 85%+)",
+          "completed": true,
+          "createdAt": "2026-10-12T22:41:46.000Z"
+        },
+        {
+          "id": "8ad3c8cf-15c3-433d-a116-0f912ec543ee",
+          "title": "Review weak areas: backends & workspaces",
+          "completed": true,
+          "createdAt": "2026-10-17T22:41:46.000Z"
+        },
+        {
+          "id": "7d04d73a-f264-4c70-89a4-5424137d0fc3",
+          "title": "Book and pass exam",
+          "completed": true,
+          "createdAt": "2026-10-22T22:41:46.000Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "0b8b37ef-b8ee-432f-b762-efc352e11954",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "Passed the exam with a score of 92%! 🎉 The KodeKloud labs were incredibly helpful for the hands-on questions.",
+          "createdAt": "2026-10-22T22:41:46.000Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "c05e8a21-5be6-4975-b096-60808f6b72ad",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "converted issue type from Story to Task",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T20:11:31.229Z"
+        },
+        {
+          "id": "02343144-7bae-4c2a-9055-e5057438b8f5",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this issue",
+          "createdAt": "2026-09-27T22:41:46.000Z"
+        },
+        {
+          "id": "0b9ae6c1-c652-40a2-88c8-cc4de140c508",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed status",
+          "oldValue": "In Progress",
+          "newValue": "Done",
+          "createdAt": "2026-10-22T22:41:46.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "timeEstimate": 3600,
+      "timeLogged": 3240,
+      "category": "Infrastructure",
+      "team": "Solo Learning",
+      "rank": 1000,
+      "createdAt": "2026-09-27T22:41:46.000Z",
+      "updatedAt": "2026-10-31T18:00:11.950Z",
+      "resolvedAt": "2026-10-22T22:41:46.000Z",
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "id": 1
+    },
+    {
+      "id": 78,
+      "spaceId": 3,
+      "key": "CERT-14",
+      "title": "Azure Certifications",
+      "description": "## Overview\nComprehensive Microsoft Azure and Azure AI certification track covering Cloud Administration, AI Solutions & Fundamentals, DevOps Engineering, Solutions Architecture, Networking, and Security.\n\n## Target Certification Exams\n1. **AZ-104:** Microsoft Azure Administrator (In Progress)\n2. **AI-901:** Microsoft Azure AI Fundamentals (In Progress)\n3. **AI-103:** Microsoft Azure AI Engineer Associate (To Do)\n4. **AI-300:** Azure AI Solution Architect / Generative AI & OpenAI Services (Backlog)\n5. **AZ-400:** Designing and Implementing Microsoft DevOps Solutions (Backlog)\n6. **AZ-305:** Designing Microsoft Azure Infrastructure Solutions (Backlog)\n7. **AZ-700:** Designing and Implementing Microsoft Azure Networking Solutions (Backlog)\n8. **AZ-500:** Microsoft Azure Security Technologies (Backlog)",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-31T18:00:00.000Z",
+      "startDate": "2026-10-01T08:00:00.000Z",
+      "labels": [
+        "azure",
+        "microsoft",
+        "cloud",
+        "devops",
+        "ai",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "8e5d175f-e0f6-4c2e-9380-6117a3ef252b",
+          "title": "Pass AI-901 Azure AI Fundamentals",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "206ee1c9-098e-4cf0-aa86-06359ef44251",
+          "title": "Pass AZ-104 Microsoft Azure Administrator",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "502a8b99-040a-4f42-9457-2cb6df29276f",
+          "title": "Pass AI-103 Azure AI Engineer Associate",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "90122a2e-8db5-40d8-8553-4ae75ff26adb",
+          "title": "Pass AI-300 Azure AI Solution Architect",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "ec717ff5-eef0-4923-b259-3d4f09839a51",
+          "title": "Pass AZ-400 Microsoft Azure DevOps Solutions Engineer Expert",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "f0fa5cb0-7c8a-4de6-a9df-e81704168fa5",
+          "title": "Pass AZ-305 Microsoft Azure Solutions Architect Expert",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "62899034-b9b5-4f0b-a12e-224df059f302",
+          "title": "Pass AZ-700 Microsoft Azure Network Engineer Associate",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "6139fb14-ecaa-41a8-b009-d984301dd16f",
+          "title": "Pass AZ-500 Microsoft Azure Security Technologies",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "75e5a085-6185-4bfb-adb8-a10a16d3957c",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 900,
+      "storyPoints": 34,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z"
+    },
+    {
+      "id": 79,
+      "spaceId": 3,
+      "key": "CERT-15",
+      "title": "Databricks Certifications",
+      "description": "## Overview\nDatabricks and Azure Databricks certification and accreditation track covering Lakehouse architecture, platform administration, Unity Catalog governance, data engineering, and machine learning infrastructure.\n\n## Target Certification Exams & Badges\n1. **ADB - Azure Platform Architect Badge:** Azure Databricks Platform Architecture Accreditation & Partner Badge\n2. **Databricks Data + AI Platform Administrator:** Databricks Certified Platform Administrator Associate",
+      "type": "epic",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2027-01-31T18:00:00.000Z",
+      "startDate": "2026-11-01T08:00:00.000Z",
+      "labels": [
+        "databricks",
+        "data-ai",
+        "lakehouse",
+        "spark",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "7d42c5af-e47b-416a-b08e-a008b564301a",
+          "title": "Complete Azure Databricks Platform Architecture Accreditation & Badge",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "2040b3f8-0c35-4148-bc09-422070d75f2d",
+          "title": "Pass Databricks Certified Data + AI Platform Administrator",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "201d93bb-8814-4ebc-b425-88e3e4f36daf",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:11:35.900Z"
+    },
+    {
+      "id": 80,
+      "spaceId": 3,
+      "key": "CERT-16",
+      "title": "Kubestronaut Certifications",
+      "description": "## Overview\nThe **Kubestronaut Program** is the premier credential awarded by the Cloud Native Computing Foundation (CNCF) and Linux Foundation to individuals who successfully achieve all five core Kubernetes and Cloud Native certifications.\n\n## The 5 Core Certifications in the Kubestronaut Program\n1. **CKA:** Certified Kubernetes Administrator (Priority: Highest | Due: 31 Dec 2026)\n2. **CKAD:** Certified Kubernetes Application Developer\n3. **CKS:** Certified Kubernetes Security Specialist\n4. **KCNA:** Kubernetes and Cloud Native Associate\n5. **KCSA:** Kubernetes and Cloud Native Security Associate",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2027-03-31T18:00:00.000Z",
+      "startDate": "2026-10-15T08:00:00.000Z",
+      "labels": [
+        "kubestronaut",
+        "cncf",
+        "kubernetes",
+        "cka",
+        "ckad",
+        "cks",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "9ec8e40b-153e-4f94-ba7f-106ae9ce17bd",
+          "title": "Pass CKA (Certified Kubernetes Administrator)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "ce57405d-579b-436c-8273-d69aa6390cc3",
+          "title": "Pass CKAD (Certified Kubernetes Application Developer)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "b5814084-369a-445b-a4bb-846333aca07b",
+          "title": "Pass CKS (Certified Kubernetes Security Specialist)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "b08e14b1-6351-4eae-a69a-7943f9fd6828",
+          "title": "Pass KCNA (Kubernetes and Cloud Native Associate)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "57faf76f-dd7e-4b7f-9659-610db1e8b4c1",
+          "title": "Pass KCSA (Kubernetes and Cloud Native Security Associate)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "3c3ef5e3-c41b-4c35-bda5-29ad44f110fd",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 900,
+      "storyPoints": 55,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:21:32.751Z"
+    },
+    {
+      "id": 81,
+      "spaceId": 3,
+      "key": "CERT-2",
+      "parentId": 78,
+      "epicId": 78,
+      "epicLink": "Azure Certifications",
+      "title": "AZ - 104",
+      "description": "Azure AI Fundamentals Certification\n\nSource: KodeKloud\n\nCourse: [Updated] AZ-104: Microsoft Azure Administrator\n\nLink: https://learn.kodekloud.com/learn/courses/az-104-microsoft-azure-administrator ",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-30T18:00:00.000Z",
+      "startDate": "2026-10-01T08:00:00.000Z",
+      "labels": [
+        "azure",
+        "az-104",
+        "sysadmin",
+        "cloud",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "a0b5435a-dd7f-40e6-8601-d6d27733791f",
+          "title": "Azure AD / Entra ID users, groups, and RBAC",
+          "completed": true,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "89a4787c-fe30-469f-ab46-f5fb92c1a1bd",
+          "title": "Virtual networking, peering, and NSGs",
+          "completed": true,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "d2db2281-48db-4278-acb4-108fd4429c03",
+          "title": "Azure Storage accounts, blob tiers, and file shares",
+          "completed": true,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "ab9bcb35-455a-483a-9e84-28364690032e",
+          "title": "VM deployment, scale sets, and Azure Bastion",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "49ba238d-c384-47b7-a09e-31118c1808b5",
+          "title": "Practice exam tests on Tutorials Dojo / MeasureUp",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "9c41b049-938e-4a31-a2b7-cfe37642d4e2",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-14",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:12:59.922Z"
+    },
+    {
+      "id": 82,
+      "spaceId": 3,
+      "key": "CERT-4",
+      "parentId": 78,
+      "epicId": 78,
+      "epicLink": "Azure Certifications",
+      "title": "AI - 901",
+      "description": "Azure AI Fundamentals Certification\n\nSource: KodeKloud\n\nCourse: AI-901: Microsoft Azure AI Fundamentals\n\nLink: https://learn.kodekloud.com/learn/courses/ai-901-microsoft-azure-ai-fundamentals ",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-01T18:00:00.000Z",
+      "startDate": "2026-10-15T08:00:00.000Z",
+      "labels": [
+        "azure",
+        "ai-901",
+        "ai-900",
+        "machine-learning",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "70033ece-4dd1-4d7b-b1bd-673e6bf1dbc6",
+          "title": "Review Microsoft Learn AI-900 learning paths",
+          "completed": true,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "19aff953-98f8-4d0a-8288-11764329ebc0",
+          "title": "Hands-on practice with Azure AI Studio & Vision API",
+          "completed": true,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "19dae552-d6f7-4e93-b2c4-77a39c70afc0",
+          "title": "Azure OpenAI and generative AI capabilities review",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "c95f7706-0ccc-45ca-87ff-0df032d4d92a",
+          "title": "Take official Microsoft practice assessment",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "8bfffe5d-760b-40d1-9718-27eca2c423f1",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-14",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:12:14.317Z"
+    },
+    {
+      "id": 83,
+      "spaceId": 3,
+      "key": "CERT-5",
+      "parentId": 78,
+      "epicId": 78,
+      "epicLink": "Azure Certifications",
+      "title": "AI - 103",
+      "description": "## Overview\nPrepare for Microsoft Certified: Azure AI Engineer Associate (AI-102 / AI-103).\n\n## Key Domains\n- Plan and manage an Azure AI solution (15–20%)\n- Implement content moderation solutions (10–15%)\n- Implement computer vision solutions (15–20%)\n- Implement natural language processing solutions (30–35%)\n- Implement knowledge mining and Azure AI Search (10–15%)\n- Implement generative AI solutions with Azure OpenAI Service (10–15%)",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-31T18:00:00.000Z",
+      "startDate": "2026-11-01T08:00:00.000Z",
+      "labels": [
+        "azure",
+        "ai-103",
+        "ai-engineer",
+        "openai",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "2b6a4593-36ed-493b-ac91-eeda4aae5a01",
+          "title": "Azure AI Services setup and security configuration",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "8742ed46-7bcb-4498-ab83-f54c873928b6",
+          "title": "Computer vision and custom document intelligence models",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "33055c46-a2cc-43b1-b194-221224a6767d",
+          "title": "Natural language processing & conversational AI bots",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "5bde1b9f-3ee7-41c5-b54a-ccd20e53366f",
+          "title": "Azure AI Search RAG pipeline and vector indexing",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "b1585df1-2756-440d-afaa-cdc8c8eaacf6",
+          "title": "Azure OpenAI fine-tuning and deployment prompts",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "5b398516-791b-45bf-bc1f-4cbadd6d0d1a",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-14",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z"
+    },
+    {
+      "id": 84,
+      "spaceId": 3,
+      "key": "CERT-7",
+      "parentId": 78,
+      "epicId": 78,
+      "epicLink": "Azure Certifications",
+      "title": "AI - 300",
+      "description": "## Overview\nAzure AI Solution Architect / Generative AI & OpenAI Services architectural mastery.\n\n## Focus Areas\n- Enterprise architecture for generative AI applications on Azure\n- Azure OpenAI Service networking, security, data privacy, and TPM quota management\n- Implementing RAG with Azure AI Search and Cosmos DB vector store\n- Semantic Kernel, AutoGen, and LangChain orchestration on Azure App Service & AKS",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "azure",
+        "ai-300",
+        "openai",
+        "rag",
+        "architecture"
+      ],
+      "subtasks": [
+        {
+          "id": "9131d2fa-3b43-4f03-8006-27ef3d336945",
+          "title": "Study Azure OpenAI Service enterprise reference architecture",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "8f108f26-d1b9-49e4-8852-d5cbbf33176f",
+          "title": "Implement RAG architecture with Azure AI Search hybrid search",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "cd02727e-132d-4241-a9f7-13cb75998b02",
+          "title": "Evaluate fine-tuning vs retrieval patterns and cost models",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "8d87435d-7383-4644-aa8a-7b0ac8068a95",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-14",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z"
+    },
+    {
+      "id": 85,
+      "spaceId": 3,
+      "key": "CERT-8",
+      "parentId": 78,
+      "epicId": 78,
+      "epicLink": "Azure Certifications",
+      "title": "AZ - 400",
+      "description": "## Overview\nMicrosoft Certified: DevOps Engineer Expert (AZ-400).\n\n## Key Domains\n- Configure processes and communications (10–15%)\n- Design and implement source control strategies (10–15%)\n- Design and implement build and release pipelines (50–55%)\n- Develop a security and compliance plan (10–15%)\n- Implement an instrumentation strategy (5–10%)",
+      "type": "task",
+      "status": "backlog",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "azure",
+        "az-400",
+        "devops",
+        "cicd",
+        "github-actions",
+        "expert"
+      ],
+      "subtasks": [
+        {
+          "id": "67e889c7-8087-480c-bf49-30e66835802b",
+          "title": "Azure DevOps Pipelines YAML multi-stage deployments",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "6d1846c1-d2d7-4d8f-b250-b09b888eca29",
+          "title": "GitHub Actions integration with Azure workload identity federation",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "1564ac8c-60ab-48b6-b2e4-2ca49d618229",
+          "title": "Container build and Helm chart deployment to AKS",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "05567961-596a-4ba6-b498-113eecb8da90",
+          "title": "SonarQube / security scanning gates in pipeline",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "0b035987-e7b7-4195-975c-5405b32f2198",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-14",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1400,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z"
+    },
+    {
+      "id": 86,
+      "spaceId": 3,
+      "key": "CERT-9",
+      "parentId": 78,
+      "epicId": 78,
+      "epicLink": "Azure Certifications",
+      "title": "AZ - 305",
+      "description": "## Overview\nMicrosoft Certified: Azure Solutions Architect Expert (AZ-305).\n\n## Key Domains\n- Design identity, governance, and monitoring solutions (25–30%)\n- Design data storage solutions (20–25%)\n- Design business continuity solutions (15–20%)\n- Design infrastructure solutions (30–35%)",
+      "type": "task",
+      "status": "backlog",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "azure",
+        "az-305",
+        "solutions-architect",
+        "cloud-architecture",
+        "expert"
+      ],
+      "subtasks": [
+        {
+          "id": "31f8d6ce-7154-4786-ad6f-709d928ae582",
+          "title": "Design governance with Azure Management Groups, Subscriptions, and Policies",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "4106d1f0-5866-4790-969d-ada0e72f605f",
+          "title": "Design high-availability database solutions (SQL MI, Cosmos DB multi-region)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "9e1a686b-7734-46b0-9e14-d8371b1f4018",
+          "title": "Design disaster recovery and business continuity architectures with ASR",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "05407e78-6cf6-4086-b12a-f4a9701290d6",
+          "title": "Design compute architecture across VMs, Containers, and Serverless",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "fefea4da-9059-4720-9943-68ecd6656261",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-14",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1500,
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z"
+    },
+    {
+      "id": 87,
+      "spaceId": 3,
+      "key": "CERT-10",
+      "parentId": 78,
+      "epicId": 78,
+      "epicLink": "Azure Certifications",
+      "title": "AZ - 700",
+      "description": "## Overview\nMicrosoft Certified: Azure Network Engineer Associate (AZ-700).\n\n## Key Domains\n- Design and implement core networking infrastructure (20–25%)\n- Design, implement, and manage connectivity services (20–25%)\n- Design and implement application delivery services (20–25%)\n- Design and implement private access to Azure services (15–20%)\n- Secure and monitor network connections (15–20%)",
+      "type": "task",
+      "status": "backlog",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "azure",
+        "az-700",
+        "networking",
+        "vwan",
+        "firewall",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "2ba2be9f-ad41-4f68-a94b-d7eec1f3c11d",
+          "title": "Configure Azure Virtual Network, subnets, and peering",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "4e9c7a77-1c9a-495a-8ff2-c09c77aba9d9",
+          "title": "Configure hybrid connectivity: Site-to-Site VPN and ExpressRoute",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "d130b9c3-7f29-4755-ab56-49b94c59b17c",
+          "title": "Implement Azure Virtual WAN, routing tables, and Azure Firewall",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "8b70afb2-3a90-42b5-b946-e957b877021e",
+          "title": "Configure Application Gateway with WAF and Azure Front Door",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "bda93e7a-7bb3-4967-9319-54bb076456c4",
+          "title": "Implement Private Link, Private Endpoints, and Network Watcher",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "b1dd106b-5ab4-481a-9062-227bf41047de",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-14",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1600,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z"
+    },
+    {
+      "id": 88,
+      "spaceId": 3,
+      "key": "CERT-11",
+      "parentId": 78,
+      "epicId": 78,
+      "epicLink": "Azure Certifications",
+      "title": "AZ - 500",
+      "description": "## Overview\nMicrosoft Certified: Azure Security Engineer Associate (AZ-500).\n\n## Key Domains\n- Manage identity and access (25–30%)\n- Secure networking (20–25%)\n- Secure compute, storage, and databases (20–25%)\n- Manage security operations (25–30%)",
+      "type": "task",
+      "status": "backlog",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "azure",
+        "az-500",
+        "security",
+        "devsecops",
+        "sentinel",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "6bebdb10-afc6-4a26-a109-c74f8e338b76",
+          "title": "Configure Microsoft Entra ID PIM, Conditional Access, and MFA",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "d3c6a0c8-871a-4d61-97c0-7f7417326905",
+          "title": "Implement Network Security Groups, Azure Firewall, and Bastion",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "9ec06b7b-f971-4ee2-9dda-6075fbb6b9bd",
+          "title": "Configure Azure Key Vault access policies, secrets, and customer-managed keys",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "6ace36f5-a92a-42da-bbc9-85d15a897685",
+          "title": "Deploy Microsoft Defender for Cloud and Microsoft Sentinel SIEM/SOAR",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "4a287542-09cb-48f0-b057-ae5aa583b01e",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-14",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1700,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z"
+    },
+    {
+      "id": 89,
+      "spaceId": 3,
+      "key": "CERT-12",
+      "parentId": 79,
+      "epicId": 79,
+      "epicLink": "Databricks Certifications",
+      "title": "ADB - Azure Platform Architect Badge",
+      "description": "Azure Platform Architect Badge | Databricks",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "databricks",
+        "azure-databricks",
+        "architecture",
+        "badge",
+        "lakehouse"
+      ],
+      "subtasks": [
+        {
+          "id": "b904930a-d6f4-4e77-9dd9-bd7e2bd88eb9",
+          "title": "Review Azure Databricks reference architecture and security baseline",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "578b40cc-ab1c-4fa8-91ff-0ee3a1e881e9",
+          "title": "Configure Unity Catalog storage credentials and external locations",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "8bfd4288-f27e-49d3-8745-a2a78417eac8",
+          "title": "Complete Databricks Academy platform architect assessment",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "76226337-d5d1-46d2-8b43-aab2393c63da",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-15",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:13:39.937Z"
+    },
+    {
+      "id": 90,
+      "spaceId": 3,
+      "key": "CERT-13",
+      "parentId": 79,
+      "epicId": 79,
+      "epicLink": "Databricks Certifications",
+      "title": "Databricks Data + AI Platform Administrator",
+      "description": "https://www.databricks.com/learn/certification/platform-administrator-accreditation?itm_source=www&itm_category=learn&itm_page=certification&itm_location=body&itm_component=card&itm_offer=platform-administrator-accreditation",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "databricks",
+        "platform-admin",
+        "unity-catalog",
+        "lakehouse",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "b8e14f94-5f22-426d-99f9-c86fee76f75f",
+          "title": "Databricks account console and workspace administration",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "cfec20b8-35c0-43ac-b43d-b667c972a1c9",
+          "title": "Metastore management, permissions, and service principals",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "ba8d354a-8ccc-4a6a-add5-b0855aa7403b",
+          "title": "Cluster policies and serverless SQL warehouse optimization",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "821129f7-746c-4624-83e1-7981dfb8b977",
+          "title": "Take Databricks practice exam",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "e00a4b9d-51ef-41e8-90d4-91c32b6cadaf",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-15",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:14:20.676Z"
+    },
+    {
+      "id": 91,
+      "spaceId": 3,
+      "key": "CERT-3",
+      "parentId": 80,
+      "epicId": 80,
+      "epicLink": "Kubestronaut Certifications",
+      "title": "CKA",
+      "description": "## Overview\nPrepare for and pass the Certified Kubernetes Administrator (CKA) exam by CNCF & Linux Foundation.\n\n## Key Domains\n- Cluster Architecture, Installation & Configuration (25%)\n- Workloads & Scheduling (15%)\n- Services & Networking (20%)\n- Storage (10%)\n- Troubleshooting (30%)\n\n## Prep Resources\n- KodeKloud CKA Course by Mumshad Mannambeth\n- Killer.sh simulator sessions",
+      "type": "task",
+      "status": "backlog",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-31T18:00:00.000Z",
+      "startDate": "2026-10-15T08:00:00.000Z",
+      "labels": [
+        "kubestronaut",
+        "kubernetes",
+        "cka",
+        "cncf",
+        "certification"
+      ],
+      "subtasks": [
+        {
+          "id": "88b65ace-4555-4484-9cce-6ec0eb5598ce",
+          "title": "KodeKloud CKA course lectures & hands-on labs",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "5f3060f8-972b-459c-a767-bf43d7c60c61",
+          "title": "Practice etcd backup and restoration",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "9eca474f-1a14-484e-9a63-dd82412387ab",
+          "title": "Practice cluster upgrade using kubeadm",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "02897ef4-5432-4dfd-8d8d-f5a78325bd0a",
+          "title": "Troubleshoot worker node kubelet & network plugins",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "f432a9bd-a084-4d4a-bc5c-cc671fced003",
+          "title": "Complete Killer.sh session 1 and 2",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "4ebd6f98-b237-4d08-9645-152cbe578c47",
+          "title": "Book and pass CKA exam",
+          "completed": false,
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "5686d982-d1c0-4694-b418-0588f0e4e88f",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CERT-16",
+          "createdAt": "2026-10-31T18:06:36.244Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1200,
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:06:36.244Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z"
+    }
+  ]
+}

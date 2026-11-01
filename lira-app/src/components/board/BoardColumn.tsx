@@ -1,0 +1,122 @@
+import React from 'react';
+import { Droppable } from '@hello-pangea/dnd';
+import { Plus } from 'lucide-react';
+import type { Issue } from '../../types/issue';
+import type { Space } from '../../types/space';
+import { IssueCard } from './IssueCard';
+
+interface BoardColumnProps {
+  id: string;
+  title: string;
+  issues: Issue[];
+  allIssues?: Issue[];
+  space?: Space;
+  onIssueClick: (issue: Issue) => void;
+  onAddIssue: (status: string) => void;
+  accentColor?: string;
+  minHeight?: number;
+}
+
+const COLUMN_HEADER_STYLES: Record<string, { color: string; bg: string; dot: string }> = {
+  backlog: { color: '#6B778C', bg: '#F4F5F7', dot: '#6B778C' },
+  todo: { color: '#172B4D', bg: '#DFE1E6', dot: '#172B4D' },
+  inprogress: { color: '#0052CC', bg: '#DEEBFF', dot: '#FFAB00' },
+  done: { color: '#006644', bg: '#E3FCEF', dot: '#36B37E' },
+};
+
+export const BoardColumn: React.FC<BoardColumnProps> = ({
+  id,
+  title,
+  issues,
+  allIssues,
+  space,
+  onIssueClick,
+  onAddIssue,
+  accentColor,
+  minHeight,
+}) => {
+  const style = COLUMN_HEADER_STYLES[id] || COLUMN_HEADER_STYLES.todo;
+
+  return (
+    <div className="flex flex-col w-[300px] min-w-[300px] max-w-[300px] flex-shrink-0 self-stretch">
+      {/* Column Header */}
+      <div className="flex items-center justify-between px-2 py-2 mb-2 flex-shrink-0">
+        <div className="flex items-center gap-2 min-w-0">
+          <div
+            className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+            style={{ backgroundColor: accentColor || style.dot }}
+          />
+          <span className="text-sm font-semibold text-jira-text truncate">{title}</span>
+          <span
+            className="ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0"
+            style={{ color: style.color, backgroundColor: style.bg }}
+          >
+            {issues.length}
+          </span>
+        </div>
+
+        {/* Top-right Add Issue button aligned with heading */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddIssue(id);
+          }}
+          className="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-jira-muted hover:text-jira-blue hover:bg-white/80 hover:shadow-2xs border border-transparent hover:border-jira-border transition-all cursor-pointer flex-shrink-0 group"
+          title={`Add issue to ${title}`}
+          aria-label={`Add issue to ${title}`}
+        >
+          <Plus className="w-3.5 h-3.5 text-jira-muted group-hover:text-jira-blue transition-colors" />
+          <span className="group-hover:text-jira-blue transition-colors">Add</span>
+        </button>
+      </div>
+
+      {/* Drop zone container spanning full column height */}
+      <Droppable droppableId={id}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            style={{ minHeight: `${minHeight || 650}px` }}
+            className={`
+              flex flex-col gap-2.5 p-2 rounded-xl transition-colors duration-150 flex-1 w-full
+              ${snapshot.isDraggingOver
+                ? 'bg-blue-50/95 border-2 border-dashed border-jira-blue/70 shadow-xs ring-2 ring-jira-blue/20'
+                : 'bg-[#091E4206] hover:bg-[#091E420A] border-2 border-transparent'
+              }
+            `}
+          >
+            {issues.map((issue, index) => (
+              <IssueCard
+                key={issue.id}
+                issue={issue}
+                index={index}
+                space={space}
+                allIssues={allIssues}
+                onClick={onIssueClick}
+              />
+            ))}
+            {provided.placeholder}
+
+            {/* Empty column placeholder */}
+            {issues.length === 0 && !snapshot.isDraggingOver && (
+              <div
+                onClick={() => onAddIssue(id)}
+                className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-gray-200 hover:border-jira-blue/50 hover:bg-blue-50/20 rounded-xl text-center cursor-pointer transition-all group my-1 select-none flex-1 min-h-[140px]"
+                role="button"
+                tabIndex={0}
+              >
+                <span className="text-xs text-jira-muted group-hover:text-jira-blue font-medium">
+                  No {title.toLowerCase()} issues
+                </span>
+                <span className="text-xs text-jira-blue mt-1.5 font-semibold flex items-center gap-1 group-hover:underline">
+                  <Plus className="w-3.5 h-3.5" /> Add issue
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+      </Droppable>
+    </div>
+  );
+};

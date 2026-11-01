@@ -1,0 +1,394 @@
+{
+  "version": "2.0.0",
+  "spaceId": 5,
+  "spaceKey": "AP",
+  "spaceName": "Atmos - Weather App",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 9,
+  "space": {
+    "id": 5,
+    "name": "Atmos - Weather App",
+    "key": "AP",
+    "icon": "🌤️",
+    "color": "#FF5630",
+    "description": "Side project: Full-stack weather application",
+    "createdAt": "2026-10-13T08:15:46.633Z",
+    "updatedAt": "2026-10-28T19:03:34.766Z",
+    "issueCount": 9,
+    "file": "spaces/AP.json"
+  },
+  "issues": [
+    {
+      "spaceId": 5,
+      "key": "AP-7",
+      "title": "ATMOS - Weather APP",
+      "description": "## Overview\nFull-stack weather forecasting application with live meteorological data, animated visualizations, and microservices architecture.\n\n## Core Architecture\n- React 18 + TypeScript frontend with animated SVG weather icons\n- Microservices backend running on Azure Kubernetes Service (AKS)\n- Automated CI/CD pipelines via Azure DevOps",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "high",
+      "dueDate": "2026-11-30T00:00:00.000Z",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "weather-app",
+        "full-stack",
+        "epic"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "e72d73ec-015b-40cb-a5c5-90ddc410fcc5",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic",
+          "createdAt": "2026-10-28T19:03:34.766Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "id": 53,
+      "createdAt": "2026-10-28T19:03:34.766Z",
+      "updatedAt": "2026-10-28T19:03:34.766Z"
+    },
+    {
+      "spaceId": 5,
+      "key": "AP-13",
+      "title": "Documentation for ATMOS",
+      "description": "## Overview\nComprehensive technical documentation, architecture schematics, deployment playbooks, and developer runbooks for the ATMOS weather platform.\n\n## Sections\n- System architecture & data flow diagrams\n- API endpoint specifications & authentication\n- Kubernetes cluster setup and environment configs\n- Troubleshooting runbooks and monitoring guide",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "documentation",
+        "runbook",
+        "architecture"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "3f1f34c4-3373-4330-9138-a944eea37b5d",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T19:03:34.766Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 54,
+      "createdAt": "2026-10-28T19:03:34.766Z",
+      "updatedAt": "2026-10-28T19:03:34.766Z"
+    },
+    {
+      "spaceId": 5,
+      "key": "AP-10",
+      "title": "Docker - Containerization",
+      "description": "## Overview\nContainerize ATMOS frontend web app and backend weather aggregation API using production-grade multi-stage Dockerfiles.\n\n## Tasks\n- Multi-stage build for React frontend using Nginx Alpine runtime\n- Minimal Node.js backend runner with health check endpoints\n- Docker Compose setup for local end-to-end development testing",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "epicLink": "ATMOS - Weather APP",
+      "epicId": 53,
+      "parentId": 53,
+      "labels": [
+        "docker",
+        "containerization",
+        "devops"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "69848363-930f-4d77-bee7-5887a58e28eb",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T19:03:34.766Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 55,
+      "createdAt": "2026-10-28T19:03:34.766Z",
+      "updatedAt": "2026-10-28T19:03:34.766Z"
+    },
+    {
+      "spaceId": 5,
+      "key": "AP-11",
+      "title": "Implement CICD - AKS",
+      "description": "## Overview\nDesign and deploy an automated continuous integration and continuous deployment pipeline deploying container images to Azure Kubernetes Service.\n\n## Pipeline Stages\n- Linting, automated unit tests, and security scans\n- Docker image build and push to Azure Container Registry (ACR)\n- Helm release upgrade / Kubernetes deployment rolling update to AKS",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "epicLink": "ATMOS - Weather APP",
+      "epicId": 53,
+      "parentId": 53,
+      "labels": [
+        "aks",
+        "kubernetes",
+        "cicd",
+        "pipeline"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "dfdf44d7-6c3f-4502-878d-60d8f4d7e66e",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T19:03:34.766Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "id": 56,
+      "createdAt": "2026-10-28T19:03:34.766Z",
+      "updatedAt": "2026-10-28T19:03:34.766Z"
+    },
+    {
+      "spaceId": 5,
+      "key": "AP-12",
+      "title": "Test Live - Open Internet",
+      "description": "## Overview\nValidate live production endpoints, DNS routing, and TLS/SSL certificates accessible over the public internet.\n\n## Verification Checklist\n- Custom domain DNS resolution and edge caching\n- Let's Encrypt / Cloudflare SSL certificate validation\n- Mobile and desktop responsive layout performance audits",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "epicLink": "ATMOS - Weather APP",
+      "epicId": 53,
+      "parentId": 53,
+      "labels": [
+        "testing",
+        "dns",
+        "ingress",
+        "ssl"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "47749a75-6a37-4504-b016-33e3617e39ff",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T19:03:34.766Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1200,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 57,
+      "createdAt": "2026-10-28T19:03:34.766Z",
+      "updatedAt": "2026-10-28T19:03:34.766Z"
+    },
+    {
+      "spaceId": 5,
+      "key": "AP-9",
+      "title": "Access Management for Collaborators",
+      "description": "## Overview\nConfigure project role-based access control (RBAC), contributor permissions, and Azure AD directory access for external collaborators.\n\n## Scope\n- Repository read/write permissions & branch protection policies\n- Azure Kubernetes Service cluster namespace access roles\n- Secret management and environment variable access policies",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "epicLink": "ATMOS - Weather APP",
+      "epicId": 53,
+      "parentId": 53,
+      "labels": [
+        "security",
+        "rbac",
+        "access-management"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "cbc96696-76e0-4697-8bff-a92b6fb0ad03",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T19:03:34.766Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 58,
+      "createdAt": "2026-10-28T19:03:34.766Z",
+      "updatedAt": "2026-10-28T19:03:34.766Z"
+    },
+    {
+      "spaceId": 5,
+      "key": "AP-6",
+      "title": "ATMOS - Weather App - V1",
+      "description": "## Overview\nInitial V1 production release of the ATMOS weather dashboard application with location-based meteorological forecasting.\n\n## Features Delivered\n- Live geolocation and city search\n- 5-day weather forecast with temperature, humidity, and wind speed\n- Animated weather condition visuals and dark mode interface",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "dueDate": "2026-10-13T00:00:00.000Z",
+      "resolvedAt": "2026-10-13T00:00:00.000Z",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "epicLink": "ATMOS - Weather APP",
+      "epicId": 53,
+      "parentId": 53,
+      "labels": [
+        "v1",
+        "frontend",
+        "release"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "ce230e93-2644-4b41-a02c-3cea537d3017",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T19:03:34.766Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "id": 59,
+      "createdAt": "2026-10-28T19:03:34.766Z",
+      "updatedAt": "2026-10-28T19:03:34.766Z"
+    },
+    {
+      "spaceId": 5,
+      "key": "AP-8",
+      "title": "Code Migration to Azure DevOps Repos",
+      "description": "https://dev.azure.com/varuntej06/_git/Atmos?path=/README.md&_a=preview\n\nLocal Path - \\\\wsl.localhost\\Ubuntu-26.04\\home\\varuntej\\atmos\n\nGit configuration is from the above path",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "resolvedAt": "2026-10-28T19:03:34.766Z",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "epicLink": "ATMOS - Weather APP",
+      "epicId": 53,
+      "parentId": 53,
+      "labels": [
+        "azure-devops",
+        "migration",
+        "git"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "413bc3e5-adf3-4466-88a8-81ad7d244ddf",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T19:03:34.766Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 60,
+      "createdAt": "2026-10-28T19:03:34.766Z",
+      "updatedAt": "2026-10-31T18:15:16.525Z"
+    },
+    {
+      "spaceId": 5,
+      "key": "AP-14",
+      "parentId": 53,
+      "epicId": 53,
+      "epicLink": "ATMOS - Weather APP",
+      "title": "Setup Codebase in GitHub",
+      "description": "",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "c38fb740-a312-4236-9ca5-268e5f1cf2a8",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this issue",
+          "createdAt": "2026-10-31T18:16:00.383Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793470560383,
+      "createdAt": "2026-10-31T18:16:00.383Z",
+      "updatedAt": "2026-10-31T18:16:00.383Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 93
+    }
+  ]
+}

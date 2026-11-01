@@ -1,0 +1,574 @@
+{
+  "version": "2.0.0",
+  "spaceId": 2,
+  "spaceKey": "CH",
+  "spaceName": "Creator Hub",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 8,
+  "space": {
+    "id": 2,
+    "name": "Creator Hub",
+    "key": "CH",
+    "icon": "✨",
+    "color": "#00B8D9",
+    "description": "Content creation, writing, and creative projects",
+    "createdAt": "2026-09-13T08:15:46.633Z",
+    "updatedAt": "2026-10-31T18:52:48.174Z",
+    "issueCount": 8,
+    "file": "spaces/CH.json"
+  },
+  "issues": [
+    {
+      "id": 111,
+      "spaceId": 2,
+      "key": "CH-1",
+      "title": "List and Select Niche",
+      "description": "## Overview\nIdentify, evaluate, and finalize the core creator niche for the channel and content brand.\n\n## Key Focus Areas\n- Brainstorm prospective creator niches (Tech / AI / Coding / Lifestyle / Education)\n- Analyze audience demand, search volume, and market saturation\n- Evaluate monetization opportunities (Sponsorships, digital products, courses, consulting)\n- Define target audience persona, primary pain points, and value proposition",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "V",
+      "assigneeInitials": "V",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "niche",
+        "market-research",
+        "branding",
+        "audience"
+      ],
+      "subtasks": [
+        {
+          "id": "5182ae48-5c4a-4486-aa74-296af281f4ab",
+          "title": "Brainstorm top 5 content niche ideas",
+          "completed": true,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "a5628a80-df81-481e-9558-5af9c9973664",
+          "title": "Analyze competitor channels & view velocity",
+          "completed": true,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "e5ad76bf-6b12-45c5-8e08-7acb47cd10e9",
+          "title": "Evaluate audience demographics and retention",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "eb57701e-4599-464d-9c22-315291a9a3c5",
+          "title": "Finalize chosen niche and define brand positioning statement",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "f9b8a347-f009-48ce-a2e4-5912e3235086",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "V",
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:52:48.174Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z"
+    },
+    {
+      "id": 112,
+      "spaceId": 2,
+      "key": "CH-2",
+      "title": "Content Structure",
+      "description": "## Overview\nDesign the fundamental content architecture, series formats, and publishing calendar.\n\n## Key Focus Areas\n- Establish video/post formats: short-form (Reels/Shorts/TikTok) vs long-form (YouTube)\n- Structure hook templates (first 3-5 seconds), retention pacing, and call-to-actions (CTA)\n- Define recurring content buckets (e.g. How-To, News/Trends, Deep Dives, Stories)\n- Build publishing rhythm and production sprint schedule",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "V",
+      "assigneeInitials": "V",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "content-structure",
+        "formats",
+        "youtube",
+        "reels",
+        "pacing"
+      ],
+      "subtasks": [
+        {
+          "id": "7aaa6311-f0e1-4c62-8793-242443ade8ea",
+          "title": "Define 3 primary content pillars / buckets",
+          "completed": true,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "dbcf2558-6d25-4d78-88e2-c79c18b491b7",
+          "title": "Outline standard 5-part video structure (Hook, Lead-in, Core Value, Payoff, CTA)",
+          "completed": true,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "8f11d58b-93a9-498e-aa8d-edfcfbdd1a7b",
+          "title": "Create weekly content publishing calendar",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "0a62901d-fab8-4538-8bac-222e6bcd2c6f",
+          "title": "Draft thumbnail and title formula guidelines",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "9e5776a2-fca5-4f5a-86bd-285fc8fb760f",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 5,
+      "watchers": [
+        "V",
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:52:48.174Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z"
+    },
+    {
+      "id": 113,
+      "spaceId": 2,
+      "key": "CH-3",
+      "title": "AI Tools",
+      "description": "## Overview\nResearch, benchmark, and curate the production AI stack for content creators.\n\n## Key Tool Categories\n- **Text & Scripting:** Claude 3.5 Sonnet, ChatGPT Plus, Perplexity\n- **Image & Thumbnail Generation:** Midjourney v6, Flux.1, Stable Diffusion\n- **Audio & Voice:** ElevenLabs, Suno, Udio, Descript\n- **Video & Animation:** Runway Gen-3 Alpha, Luma Dream Machine, Kling AI, HeyGen\n- **Editing & Automation:** CapCut, Premiere Pro AI tools, Opus Clip",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "V",
+      "assigneeInitials": "V",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai-tools",
+        "midjourney",
+        "elevenlabs",
+        "runway",
+        "workflow"
+      ],
+      "subtasks": [
+        {
+          "id": "d6160c94-ac5f-46df-81d3-a43ca180c8d1",
+          "title": "Audit leading AI creative platforms and pricing tiers",
+          "completed": true,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "35e41358-189b-4900-83c0-ae2a18ed0109",
+          "title": "Benchmark voice generation realism and latency (ElevenLabs)",
+          "completed": true,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "2052fd40-7a1a-41f6-8188-dccaa9c53857",
+          "title": "Test video generation platforms (Runway vs Luma vs Kling)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "2da915fd-59f2-48fb-9f12-aa64a29053b2",
+          "title": "Assemble integrated content creation pipeline and tool matrix",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "51ab4c42-6cd1-4770-a139-6e4586c2086f",
+          "type": "created",
+          "author": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 5,
+      "watchers": [
+        "V",
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:52:48.174Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z"
+    },
+    {
+      "id": 114,
+      "spaceId": 2,
+      "key": "CH-4",
+      "title": "Prompts",
+      "description": "## Epic Overview\nComprehensive prompt engineering system for content production across scriptwriting, voiceover audio generation, AI video synthesis, and character creation.\n\n## Child Generation Modules\n1. **Audio Generation (CH-5):** Voice cloning, ElevenLabs audio prompts, background music pacing, and sound design.\n2. **Video Generation (CH-6):** Runway Gen-3, Luma Dream Machine, Sora, and Pika camera motion & lighting prompts.\n3. **Script Generation (CH-7):** Claude & ChatGPT viral storytelling, retention hooks, and multi-scene scripts.\n4. **Character Development (CH-8):** Midjourney & Flux consistent character seeds, styles, and prompt references.",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "prompts",
+        "ai-creator",
+        "content-engine",
+        "epic"
+      ],
+      "subtasks": [
+        {
+          "id": "bb3d4f74-168c-4c6a-b8a1-386bbb267462",
+          "title": "Standardize prompt repository and reusable system instructions",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "f72d0d41-8aaa-4bb1-8081-70b5ea318bab",
+          "title": "Develop Audio Generation prompting templates (CH-5)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "8cd62f08-3f0b-4861-bd9a-bc8b7a4f6a83",
+          "title": "Develop Video Generation camera and scene prompts (CH-6)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "ae5a65dd-f67a-415e-9034-fc3dbb29dbaf",
+          "title": "Develop Script Generation hooks and storytelling frameworks (CH-7)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "8732c6b9-1028-466d-8dfb-7ea770b40ae1",
+          "title": "Develop Character Development style seeds and consistent identity prompts (CH-8)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "7bcbea0c-b193-4e90-b14e-416e1eafeca0",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1200,
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:52:48.174Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z"
+    },
+    {
+      "id": 115,
+      "spaceId": 2,
+      "key": "CH-5",
+      "parentId": 114,
+      "epicId": 114,
+      "epicLink": "Prompts",
+      "title": "Audio Generation",
+      "description": "## Overview\nCraft prompt formulas and workflow templates for AI voiceovers, sound effects (SFX), and ambient background music.\n\n## Key Focus Areas\n- Voice cloning setup and tone calibration (ElevenLabs)\n- Emotion, inflection, and pacing prompt tags\n- Royalty-free AI background music generation (Suno/Udio)\n- Automated audio cleanup and mastering presets",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "V",
+      "assigneeInitials": "V",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "audio",
+        "voiceover",
+        "elevenlabs",
+        "prompts",
+        "suno"
+      ],
+      "subtasks": [
+        {
+          "id": "0157160a-ceed-4666-b3e7-b934ccb6c699",
+          "title": "Select and calibrate custom creator voice model",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "0bdd03c5-1dc0-45f4-a99f-f22d2d7d048b",
+          "title": "Craft prompt guide for narrative tone, pacing, and pauses",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "3e4cf69c-639d-4b29-bc19-968b6b25219f",
+          "title": "Test background music prompts matching video energy levels",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "cf580a3b-7810-4740-bdd4-73b2dd562e5d",
+          "title": "Create standardized audio export checklist",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1c5a4b60-b861-4652-81bc-07349fe7d5af",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CH-4",
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 3,
+      "watchers": [
+        "V",
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:52:48.174Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z"
+    },
+    {
+      "id": 116,
+      "spaceId": 2,
+      "key": "CH-6",
+      "parentId": 114,
+      "epicId": 114,
+      "epicLink": "Prompts",
+      "title": "Video Generation",
+      "description": "## Overview\nDevelop camera motion, lighting, and cinematic prompts for text-to-video and image-to-video generation engines.\n\n## Key Focus Areas\n- Camera direction prompts (Pan, tilt, dolly zoom, aerial drone shots)\n- Cinematic lighting keywords (Golden hour, volumetric rays, cyberpunk neon, studio softbox)\n- Motion fidelity and artifact reduction techniques\n- Storyboard image-to-video workflow optimization (Runway Gen-3, Luma, Kling)",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "V",
+      "assigneeInitials": "V",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "video-generation",
+        "runway",
+        "luma",
+        "cinematic-prompts",
+        "kling"
+      ],
+      "subtasks": [
+        {
+          "id": "cc12f4ef-df08-4420-9874-f901e6493e09",
+          "title": "Build prompt cheat sheet for camera motion parameters",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "17816e5f-c42a-4072-8551-5ef627e1a8eb",
+          "title": "Test image-to-video continuity using keyframe references",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "c0bc88f8-e41a-4343-9b05-ccd4b949a6f3",
+          "title": "Benchmark rendering times and resolution scaling",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "95124433-610f-4bec-9e32-c4d3b9939c38",
+          "title": "Catalog top 20 high-performing visual prompts",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "f4a8afc1-5394-4127-b595-7b3cb139e225",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CH-4",
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 5,
+      "watchers": [
+        "V",
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:52:48.174Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z"
+    },
+    {
+      "id": 117,
+      "spaceId": 2,
+      "key": "CH-7",
+      "parentId": 114,
+      "epicId": 114,
+      "epicLink": "Prompts",
+      "title": "Script Generation",
+      "description": "## Overview\nFormulate advanced LLM prompt chains to produce compelling, viral scripts with high viewer retention.\n\n## Key Focus Areas\n- Viral Hook Frameworks (Curiosity gap, contrarian statements, visual intrigue)\n- Pacing blueprints: 30s Shorts vs 60s Reels vs 8-10min YouTube videos\n- Script tone calibration: conversational, authoritative, and relatable\n- Automated shot list and B-roll cue generation in markdown",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "V",
+      "assigneeInitials": "V",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "scriptwriting",
+        "llm-prompts",
+        "storytelling",
+        "viral-hooks",
+        "claude"
+      ],
+      "subtasks": [
+        {
+          "id": "a5976de2-54b3-42a9-b2ef-03f0015cfb80",
+          "title": "Design master system prompt for script drafting",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "027ceda9-c35c-4707-90d2-f67591927f02",
+          "title": "Implement 10 proven hook formula prompt templates",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "29286d98-57fb-438f-a4a7-c1a64274f6eb",
+          "title": "Include automated timestamped B-roll suggestions",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "f58a07ed-a5e3-4472-8acb-d3efa24a75c9",
+          "title": "Test script generation across 3 sample topics",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "56d28b6d-e75a-45bd-9c97-51bcd44076c6",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CH-4",
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1200,
+      "storyPoints": 5,
+      "watchers": [
+        "V",
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:52:48.174Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z"
+    },
+    {
+      "id": 118,
+      "spaceId": 2,
+      "key": "CH-8",
+      "parentId": 114,
+      "epicId": 114,
+      "epicLink": "Prompts",
+      "title": "Character Development",
+      "description": "## Overview\nCreate consistent visual characters, digital avatars, and brand personas using image generation models.\n\n## Key Focus Areas\n- Character sheet creation (Front, side, 3/4 angle, expressions)\n- Maintaining consistent faces and outfits across Midjourney / Flux using seeds and character reference (--cref)\n- Digital avatar lip-sync setup (HeyGen / D-ID)\n- Visual brand guidelines: wardrobe, signature color palette, and accessories",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "V",
+      "assigneeInitials": "V",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "character-design",
+        "midjourney",
+        "flux",
+        "avatar",
+        "consistency"
+      ],
+      "subtasks": [
+        {
+          "id": "29fd6d30-dcbf-4d11-83f0-99874ee1273b",
+          "title": "Generate master character concept turnaround sheets",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "a9157f22-0caa-49e2-b155-d01e9b1779ac",
+          "title": "Lock consistent seed and style reference prompt parameters",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "04c98152-4d2a-4ca8-b384-328e70fbff20",
+          "title": "Test character in 5 varied scene environments",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        },
+        {
+          "id": "a08a880e-a1ea-47f9-858f-f082c5361ae2",
+          "title": "Export character asset library for thumbnail and video assets",
+          "completed": false,
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1ea862cb-d7aa-472e-b6cb-6876a7226c9b",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic CH-4",
+          "createdAt": "2026-10-31T18:52:48.174Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 5,
+      "watchers": [
+        "V",
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:52:48.174Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z"
+    }
+  ]
+}

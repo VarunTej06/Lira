@@ -1,0 +1,160 @@
+import React, { useState } from 'react';
+import { Modal } from '../common/Modal';
+import { Button } from '../common/Button';
+import { createSpace } from '../../hooks/useSpaces';
+
+interface CreateSpaceModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onCreated: (id: number) => void;
+}
+
+const SPACE_ICONS = ['📋', '✨', '🏆', '📚', '🌤️', '🚀', '💡', '🎯', '🔧', '🌐', '🧠', '⚡'];
+const SPACE_COLORS = ['#0052CC', '#00B8D9', '#6554C0', '#36B37E', '#FF5630', '#FFAB00', '#FF991F', '#172B4D'];
+
+export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({ isOpen, onClose, onCreated }) => {
+  const [name, setName] = useState('');
+  const [key, setKey] = useState('');
+  const [icon, setIcon] = useState('📋');
+  const [color, setColor] = useState('#0052CC');
+  const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleNameChange = (v: string) => {
+    setName(v);
+    // Auto-generate key from first word(s)
+    const generated = v.split(' ')
+      .map(w => w[0]?.toUpperCase() || '')
+      .join('')
+      .slice(0, 5);
+    setKey(generated);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) { setError('Name is required'); return; }
+    if (!key.trim()) { setError('Key is required'); return; }
+
+    setLoading(true);
+    setError('');
+    try {
+      const now = new Date();
+      const id = await createSpace({
+        name: name.trim(),
+        key: key.toUpperCase().trim(),
+        icon,
+        color,
+        description: description.trim(),
+        createdAt: now,
+        updatedAt: now,
+      });
+      onCreated(id);
+      onClose();
+      resetForm();
+    } catch (err) {
+      setError('Failed to create space.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetForm = () => {
+    setName(''); setKey(''); setIcon('📋'); setColor('#0052CC'); setDescription(''); setError('');
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={() => { resetForm(); onClose(); }} title="Create Space" size="md">
+      <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        {/* Icon & Color */}
+        <div>
+          <label className="block text-xs font-semibold text-jira-muted mb-2 uppercase tracking-wide">Icon</label>
+          <div className="flex flex-wrap gap-2">
+            {SPACE_ICONS.map(ic => (
+              <button
+                key={ic}
+                type="button"
+                onClick={() => setIcon(ic)}
+                className={`w-9 h-9 rounded-lg text-lg flex items-center justify-center transition-all ${
+                  icon === ic ? 'ring-2 ring-jira-blue scale-110' : 'hover:bg-gray-100'
+                }`}
+              >
+                {ic}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-jira-muted mb-2 uppercase tracking-wide">Color</label>
+          <div className="flex gap-2 flex-wrap">
+            {SPACE_COLORS.map(c => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setColor(c)}
+                className={`w-7 h-7 rounded-full transition-all ${color === c ? 'ring-2 ring-offset-2 ring-jira-blue scale-110' : 'hover:scale-105'}`}
+                style={{ backgroundColor: c }}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">
+            Name <span className="text-red-500">*</span>
+          </label>
+          <input
+            autoFocus
+            value={name}
+            onChange={e => handleNameChange(e.target.value)}
+            placeholder="e.g. Python Mastery"
+            className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue transition-all"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">
+            Key <span className="text-red-500">*</span>
+          </label>
+          <input
+            value={key}
+            onChange={e => setKey(e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 6))}
+            placeholder="e.g. PY"
+            className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue font-mono uppercase transition-all"
+          />
+          <p className="text-[10px] text-jira-muted mt-1">Used as ticket prefix (e.g. {key || 'KEY'}-1)</p>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Description</label>
+          <textarea
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            placeholder="Optional description..."
+            rows={2}
+            className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue resize-none transition-all"
+          />
+        </div>
+
+        {error && <p className="text-xs text-red-500">{error}</p>}
+
+        {/* Preview */}
+        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-jira-border">
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: color + '22', color }}>
+            {icon}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-jira-text">{name || 'Space Name'}</p>
+            <p className="text-xs text-jira-muted font-mono">{key || 'KEY'}-1, {key || 'KEY'}-2...</p>
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-3 pt-2 border-t border-jira-border">
+          <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button type="submit" variant="primary" loading={loading}>Create Space</Button>
+        </div>
+      </form>
+    </Modal>
+  );
+};

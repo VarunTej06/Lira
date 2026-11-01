@@ -1,0 +1,116 @@
+{
+  "version": "2.0.0",
+  "savedAt": "2026-10-31T20:40:16.260Z",
+  "spaceCount": 9,
+  "totalIssueCount": 115,
+  "spaces": [
+    {
+      "id": 1,
+      "name": "General Tasks",
+      "key": "GT",
+      "icon": "📋",
+      "color": "#6554C0",
+      "description": "General day-to-day tasks and miscellaneous work items",
+      "createdAt": "2026-08-29T08:15:46.633Z",
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "issueCount": 13,
+      "file": "spaces/GT.json"
+    },
+    {
+      "id": 2,
+      "name": "Creator Hub",
+      "key": "CH",
+      "icon": "✨",
+      "color": "#00B8D9",
+      "description": "Content creation, writing, and creative projects",
+      "createdAt": "2026-09-13T08:15:46.633Z",
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "issueCount": 8,
+      "file": "spaces/CH.json"
+    },
+    {
+      "id": 3,
+      "name": "Certifications",
+      "key": "CERT",
+      "icon": "🏆",
+      "color": "#0052CC",
+      "description": "Technical certification study plans and exam preparation",
+      "createdAt": "2026-09-28T08:15:46.633Z",
+      "updatedAt": "2026-10-31T18:06:36.244Z",
+      "issueCount": 15,
+      "file": "spaces/CERT.json"
+    },
+    {
+      "id": 4,
+      "name": "Courses",
+      "key": "COUR",
+      "icon": "📚",
+      "color": "#36B37E",
+      "description": "Online course tracking and learning milestones",
+      "createdAt": "2026-10-08T08:15:46.633Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "issueCount": 17,
+      "file": "spaces/COUR.json"
+    },
+    {
+      "id": 5,
+      "name": "Atmos - Weather App",
+      "key": "AP",
+      "icon": "🌤️",
+      "color": "#FF5630",
+      "description": "Side project: Full-stack weather application",
+      "createdAt": "2026-10-13T08:15:46.633Z",
+      "updatedAt": "2026-10-28T19:03:34.766Z",
+      "issueCount": 9,
+      "file": "spaces/AP.json"
+    },
+    {
+      "id": 6,
+      "name": "Lira",
+      "key": "LIRA",
+      "icon": "🎯",
+      "color": "#0052CC",
+      "description": "Lira product roadmap, feature development, DevOps and AI assistant",
+      "createdAt": "2026-10-18T08:15:46.633Z",
+      "updatedAt": "2026-10-28T08:15:46.633Z",
+      "issueCount": 29,
+      "file": "spaces/LIRA.json"
+    },
+    {
+      "name": "Interview Guide",
+      "key": "IG",
+      "icon": "🧠",
+      "color": "#0052CC",
+      "description": "",
+      "createdAt": "2026-10-28T18:30:46.269Z",
+      "updatedAt": "2026-10-28T18:30:46.269Z",
+      "id": 13,
+      "issueCount": 7,
+      "file": "spaces/IG.json"
+    },
+    {
+      "name": "AI Projects",
+      "key": "AI",
+      "icon": "🗂️",
+      "color": "#0052CC",
+      "description": "",
+      "createdAt": "2026-10-28T18:31:08.254Z",
+      "updatedAt": "2026-10-31T14:52:42.942Z",
+      "id": 14,
+      "issueCount": 17,
+      "file": "spaces/AI.json"
+    },
+    {
+      "name": "Test Space",
+      "key": "TS",
+      "icon": "📋",
+      "color": "#FF991F",
+      "description": "",
+      "createdAt": "2026-10-31T19:45:59.152Z",
+      "updatedAt": "2026-10-31T19:45:59.152Z",
+      "id": 15,
+      "issueCount": 0,
+      "file": "spaces/TS.json"
+    }
+  ]
+}

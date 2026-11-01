@@ -1,0 +1,1242 @@
+{
+  "version": "2.0.0",
+  "spaceId": 4,
+  "spaceKey": "COUR",
+  "spaceName": "Courses",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 17,
+  "space": {
+    "id": 4,
+    "name": "Courses",
+    "key": "COUR",
+    "icon": "📚",
+    "color": "#36B37E",
+    "description": "Online course tracking and learning milestones",
+    "createdAt": "2026-10-08T08:15:46.633Z",
+    "updatedAt": "2026-10-31T18:28:16.718Z",
+    "issueCount": 17,
+    "file": "spaces/COUR.json"
+  },
+  "issues": [
+    {
+      "id": 94,
+      "spaceId": 4,
+      "key": "COUR-16",
+      "title": "Azure & Cloud Infrastructure Courses",
+      "description": "## Overview\nComprehensive course curriculum for Microsoft Azure cloud architecture, infrastructure administration, DevOps engineering, networking, and cloud security.\n\n## Included Course Tracks\n- **AZ-104:** Azure Administrator Associate (In Progress)\n- **AZ-400 & AZ-305:** DevOps Engineer Expert and Solutions Architect Expert\n- **AZ-700 & AZ-500:** Azure Advanced Networking and Security Technologies\n- **Cloud Services:** Enterprise cloud service models, FinOps, and multi-cloud foundations\n- **HCTA0-004:** HashiCorp Certified Terraform Associate (Completed / Done)",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-31T18:00:00.000Z",
+      "startDate": "2026-07-01T08:00:00.000Z",
+      "labels": [
+        "azure",
+        "cloud",
+        "infrastructure",
+        "devops",
+        "courses"
+      ],
+      "subtasks": [
+        {
+          "id": "3a69a298-444c-46a8-9435-178474a84489",
+          "title": "Complete HCTA0-004 Terraform Associate course",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "9601f304-543a-40eb-9bd1-8448cafa1b83",
+          "title": "Complete AZ-104 Azure Administrator Associate course",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "a54a0775-8bae-49df-9a2b-896f99c0e887",
+          "title": "Complete AZ-400 & 305 DevOps and Architect tracks",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "3da8aa4b-90e7-40a0-abe8-c7671511d813",
+          "title": "Complete AZ-700 & 500 Networking and Security tracks",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "88896910-9abf-43ee-878a-734b17737352",
+          "title": "Complete Cloud Services foundational curriculum",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "765c3438-e1bc-4626-8dbf-fce8fb7f7105",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 900,
+      "storyPoints": 34,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 95,
+      "spaceId": 4,
+      "key": "COUR-17",
+      "title": "AI & MLOps Engineering Courses",
+      "description": "## Overview\nEnd-to-end coursework on Artificial Intelligence, Machine Learning Operations (MLOps), Azure AI solutions, and foundational AI/LLM engineering concepts.\n\n## Included Course Tracks\n- **AI-901 & AI-103:** Azure AI Fundamentals and Azure AI Engineer Associate (In Progress)\n- **AI 300 | MLOps Engineer:** Azure Machine Learning & MLOps lifecycle engineering\n- **Important Concepts of AI:** Transformers, embeddings, attention mechanisms, and RAG architectures\n- **Udemy - MLOps:** Production model deployment, tracking, monitoring, and CI/CD pipelines\n- **AI Learning Path:** Progressive mastery roadmap from math & PyTorch to autonomous agentic workflows",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-31T18:00:00.000Z",
+      "startDate": "2026-08-01T08:00:00.000Z",
+      "labels": [
+        "ai",
+        "mlops",
+        "llm",
+        "azure-ai",
+        "machine-learning",
+        "courses"
+      ],
+      "subtasks": [
+        {
+          "id": "54a774bd-c64f-406f-80b4-b13558fa87e3",
+          "title": "Complete AI-901 & 103 Azure AI Certifications curriculum",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "446fb7bb-9e61-4f47-8c0b-588c21b6feca",
+          "title": "Complete AI 300 MLOps Engineer training",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "4e507d38-4446-4d00-ada4-28d124654e90",
+          "title": "Master Important Concepts of AI (transformers, embeddings, RAG)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "2e555672-3a48-48e1-80e7-9c6a6fd86c06",
+          "title": "Complete Udemy MLOps production pipeline course",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "39aa9792-0b63-4dc0-9f7d-263a07c08256",
+          "title": "Execute full AI Learning Path curriculum",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "f3ee7aa1-1f98-4e28-b4a9-9b87a8156b46",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 950,
+      "storyPoints": 34,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 96,
+      "spaceId": 4,
+      "key": "COUR-18",
+      "title": "Platform & Creator Learning Tracks",
+      "description": "## Overview\nHands-on interactive learning platforms (KodeKloud) and top creator-led masterclasses (YouTube & Udemy) for DevOps, Cloud, AI, and MLOps.\n\n## Included Course Tracks\n- **AI Fundamentals by KodeKloud:** Interactive lab-based AI foundations for engineers\n- **KodeKloud - AI/MLOps/AIOps:** Hands-on labs for model deployment and AIOps cluster monitoring\n- **Abhishek Veeramalla - YouTube:** DevOps Zero to Hero, Kubernetes, ArgoCD, and Helm tutorials\n- **YouTube - Krish Naik:** Deep-dive Generative AI, LangChain, vector databases, and RAG series",
+      "type": "epic",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-31T18:00:00.000Z",
+      "startDate": "2026-09-01T08:00:00.000Z",
+      "labels": [
+        "kodekloud",
+        "youtube",
+        "community",
+        "devops",
+        "hands-on-labs",
+        "courses"
+      ],
+      "subtasks": [
+        {
+          "id": "e4bbae70-9543-462f-a0d4-adfdb5492e20",
+          "title": "Complete AI Fundamentals by KodeKloud labs",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "39a932f7-5448-4b89-aece-7c8db7d5299a",
+          "title": "Complete KodeKloud AI/MLOps/AIOps interactive course",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "ac727269-4430-4a81-a6b0-59b19e4b4217",
+          "title": "Watch and implement Abhishek Veeramalla DevOps projects",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "51f6fd75-4459-4124-8f2d-044c3277fdca",
+          "title": "Follow Krish Naik Generative AI & LangChain series",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "74b78ac1-aca1-4799-9425-d6ce91f804a2",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 900,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 97,
+      "spaceId": 4,
+      "key": "COUR-1",
+      "parentId": 94,
+      "epicId": 94,
+      "epicLink": "Azure & Cloud Infrastructure Courses",
+      "title": "AZ - 104 | Azure Administrator Associate",
+      "description": "## Overview\nIn-depth training course covering Microsoft Azure Administrator (AZ-104) exam domains.\n\n## Learning Objectives\n- Manage Azure identities and governance with Entra ID\n- Implement and manage cloud storage accounts, file shares, and lifecycle rules\n- Deploy and manage Azure compute resources (VMs, Scale Sets, Azure Bastion)\n- Configure and secure virtual networks, peering, and NSGs\n- Monitor, troubleshoot, and maintain resources via Azure Monitor and Log Analytics",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T18:00:00.000Z",
+      "startDate": "2026-10-01T08:00:00.000Z",
+      "labels": [
+        "azure",
+        "az-104",
+        "cloud-admin",
+        "sysadmin"
+      ],
+      "subtasks": [
+        {
+          "id": "a33871d9-0c1d-4184-8845-cfbf3c90ed63",
+          "title": "Identity & Governance in Entra ID (Azure AD)",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "943ceb9f-76e0-46d1-a575-d3d045bcef59",
+          "title": "Azure Storage configuration & Blob tiers",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "83c00987-924a-4622-a328-994ab7a0d68c",
+          "title": "Azure Compute: VMs, Virtual Machine Scale Sets & Bastion",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "d2678d52-c763-4c5e-b6b0-0577575e0feb",
+          "title": "Virtual Networks, Peering & NSGs",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "4b671db6-5ce4-46dd-838d-70f246e11514",
+          "title": "Azure Monitor, Alerts & Log Analytics",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "48248937-c27e-49bf-a119-f3e4527db4aa",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-16",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 98,
+      "spaceId": 4,
+      "key": "COUR-2",
+      "parentId": 94,
+      "epicId": 94,
+      "epicLink": "Azure & Cloud Infrastructure Courses",
+      "title": "HCTA0-004 | Terraform Associate",
+      "description": "## Overview\nComplete HashiCorp Certified Terraform Associate (004) preparation course.\n\n## Completed Outcomes\n- Mastered Infrastructure as Code (IaC) principles and declarative workflows\n- Deep hands-on experience with Terraform CLI (init, plan, apply, destroy, import)\n- Remote state management, locking, and backends (AWS S3, Azure Blob Storage)\n- Modular design patterns and reusable Terraform modules\n- Passed certification exam with high marks",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-07-31T18:00:00.000Z",
+      "startDate": "2026-06-01T08:00:00.000Z",
+      "resolvedAt": "2026-07-31T18:00:00.000Z",
+      "labels": [
+        "terraform",
+        "iac",
+        "hashicorp",
+        "hcta0-004",
+        "completed"
+      ],
+      "subtasks": [
+        {
+          "id": "954cb9a8-f75a-4218-8309-e80b07e48c72",
+          "title": "Understand Infrastructure as Code (IaC) concepts",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "c269ed0c-cc44-4827-9ae3-0ac1bbc5c00a",
+          "title": "Master Terraform CLI commands and workflow (init, plan, apply, destroy)",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "1627e15b-9b54-4431-96f7-95dca47c21b7",
+          "title": "State management, remote backends (S3/Azure Blob), and state locking",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "46dd76a7-fdaf-4d45-bcf5-cbf02d3d79c0",
+          "title": "Modular infrastructure design and Terraform Registry modules",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "62e9fd1d-e162-43d6-a6d2-ce8ff9c2717e",
+          "title": "Completed course and passed HCTA0-004 certification exam",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "73ca2815-dcc2-4960-a2a5-0f938884d2bb",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "Completed all modules and passed official exam.",
+          "createdAt": "2026-07-31T18:00:00.000Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "5cdba3d1-3498-45d5-bc64-b9518cb92300",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-16",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "459b8cd9-b31f-4821-a1e5-e47a40c5f6c1",
+          "type": "status_change",
+          "author": "VY",
+          "from": "inprogress",
+          "to": "done",
+          "description": "completed course",
+          "createdAt": "2026-07-31T18:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 99,
+      "spaceId": 4,
+      "key": "COUR-3",
+      "parentId": 95,
+      "epicId": 95,
+      "epicLink": "AI & MLOps Engineering Courses",
+      "title": "AI - 901, 103 | Azure AI Certifications",
+      "description": "## Overview\nCoursework covering Azure AI Fundamentals (AI-900 / AI-901) and Azure AI Engineer Associate (AI-102 / AI-103).\n\n## Learning Objectives\n- Fundamental AI & machine learning concepts on Microsoft Azure\n- Computer Vision and Custom Document Intelligence API models\n- Natural Language Processing & Language Studio conversational models\n- Azure OpenAI Service prompt engineering, rate limits, and fine-tuning\n- Azure AI Search hybrid retrieval and vector indexing for enterprise RAG",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-10-15T08:00:00.000Z",
+      "labels": [
+        "azure-ai",
+        "ai-901",
+        "ai-103",
+        "openai",
+        "nlp",
+        "vision"
+      ],
+      "subtasks": [
+        {
+          "id": "befb939f-24e6-498d-93ae-c667fb23a419",
+          "title": "AI-900 / AI-901 Azure AI Fundamentals complete module",
+          "completed": true,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "659147bc-187d-4906-b59c-3c6bc7196aef",
+          "title": "Computer Vision & Document Intelligence APIs",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "b8bdf2f5-2d52-4d93-9c38-183af5cf8f11",
+          "title": "Natural Language Processing & Language Studio",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "60664570-ed70-447e-8465-e4759f21cc38",
+          "title": "Azure OpenAI Service prompt engineering & deployments",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "3412eb46-e7cb-4777-81e1-43700eecf9a9",
+          "title": "Azure AI Search hybrid search & vector indexing",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "eb50dbf5-7ea9-4f58-bd00-8dd2816af88f",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-17",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 100,
+      "spaceId": 4,
+      "key": "COUR-4",
+      "parentId": 95,
+      "epicId": 95,
+      "epicLink": "AI & MLOps Engineering Courses",
+      "title": "AI 300 | MLOps Engineer",
+      "description": "## Overview\nAdvanced course track on Machine Learning Operations and cloud ML infrastructure.\n\n## Focus Areas\n- Azure Machine Learning workspaces, registry, and compute clusters\n- Automated ML (AutoML), MLflow experiment tracking, and artifact logging\n- Deploying models to managed online endpoints with autoscaling\n- LLMOps pipelines, prompt flow orchestration, and evaluation benchmarks",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai-300",
+        "mlops",
+        "azure-ml",
+        "llmops"
+      ],
+      "subtasks": [
+        {
+          "id": "5ce4a5df-13c0-4b3b-b3ed-10624792e802",
+          "title": "Azure Machine Learning workspaces, environments & compute targets",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "8be1e7d7-6720-488f-8ad4-bc1475be93d1",
+          "title": "Automated ML, MLflow model tracking & registry",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "ca9a4bbb-e4ea-4a5c-b1e2-fbb153ab1d08",
+          "title": "Model deployment: managed online endpoints & batch endpoints",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "d14f837e-e522-482a-addc-73cfbc09fb4c",
+          "title": "Azure AI infrastructure for LLMOps, RAG pipelines & Semantic Kernel",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "27825fc6-20f9-40bc-a132-31c6c507e0d9",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-17",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 101,
+      "spaceId": 4,
+      "key": "COUR-5",
+      "parentId": 94,
+      "epicId": 94,
+      "epicLink": "Azure & Cloud Infrastructure Courses",
+      "title": "AZ - 400, 305 | DevOps Engineer and Architect",
+      "description": "## Overview\nAdvanced expert track combining Microsoft DevOps Solutions (AZ-400) and Azure Solutions Architect Expert (AZ-305).\n\n## Key Syllabus\n- Enterprise CI/CD pipelines with Azure DevOps and GitHub Actions\n- Container release strategies and blue-green deployments to AKS\n- High availability, multi-region disaster recovery, and Azure Site Recovery (ASR)\n- Enterprise data tier architecture (Cosmos DB multi-master, SQL Managed Instance)",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "az-400",
+        "az-305",
+        "devops-architect",
+        "expert",
+        "cloud-architecture"
+      ],
+      "subtasks": [
+        {
+          "id": "d566b487-5171-46c9-844e-b1c321fe7dc7",
+          "title": "Azure DevOps Pipelines YAML multi-stage deployments",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "a7eabe0d-261e-4f5c-87fa-582ba0da6727",
+          "title": "GitHub Actions integration with Azure Workload Identity",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "29bdf411-3088-46f5-af05-d5833a52751a",
+          "title": "Container build pipelines & Helm deployments on AKS",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "70f47f89-440a-4cb8-b8ba-c33dc1705758",
+          "title": "AZ-305 Solution Architecture: Governance, High Availability & Disaster Recovery",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "6773aaeb-f263-4e7c-a5b6-80962d25c822",
+          "title": "Multi-region database architecture (Cosmos DB, Azure SQL Managed Instance)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1a799307-21eb-4f28-ab64-f14db81c3bf7",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-16",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 102,
+      "spaceId": 4,
+      "key": "COUR-7",
+      "parentId": 95,
+      "epicId": 95,
+      "epicLink": "AI & MLOps Engineering Courses",
+      "title": "Imp concepts of AI",
+      "description": "## Overview\nDeep conceptual course covering foundational and advanced concepts in modern Artificial Intelligence.\n\n## Focus Areas\n- Transformer architectures: Self-attention, multi-head attention, encoders vs decoders\n- Vector embeddings, latent dimensions, and metric spaces (Cosine, Euclidean, Dot Product)\n- Retrieval-Augmented Generation (RAG): Dense vs sparse retrieval, chunking strategies, and re-ranking\n- Parameter-Efficient Fine-Tuning (PEFT): LoRA, QLoRA, and prefix tuning\n- LLM alignment, RLHF, and guardrails\n\nCourse Link - https://youtu.be/ZaPbP9DwBOE?si=bJHTpoQ5Ti0nlNX4 ",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai-concepts",
+        "transformers",
+        "embeddings",
+        "rag",
+        "llm-theory"
+      ],
+      "subtasks": [
+        {
+          "id": "245c78e5-e9dd-4610-8236-4fd4daabf177",
+          "title": "Transformer architecture: Self-attention, encoders, decoders",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "f6a8a094-8418-4e09-9d98-703b1036c6f0",
+          "title": "Embeddings, vector spaces & cosine similarity",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "f7041860-1977-4d07-8669-ec68f482efe2",
+          "title": "Retrieval-Augmented Generation (RAG) paradigms & chunking strategies",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "45ae05c6-ea92-4b81-b8b1-a9e753922b9b",
+          "title": "Fine-tuning methods: LoRA, QLoRA, and prompt tuning",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "3e2c25db-73b8-446b-8b87-5f385aa95020",
+          "title": "LLM evaluation metrics: ROUGE, BLEU, G-Eval, hallucination detection",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "86275158-20a3-47d3-925a-e2f3057be4df",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-17",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1200,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:48:38.937Z"
+    },
+    {
+      "id": 103,
+      "spaceId": 4,
+      "key": "COUR-6",
+      "parentId": 94,
+      "epicId": 94,
+      "epicLink": "Azure & Cloud Infrastructure Courses",
+      "title": "AZ - 700, 500 | Azure Network and Security",
+      "description": "## Overview\nDeep dive into enterprise cloud networking (AZ-700) and security governance (AZ-500).\n\n## Focus Areas\n- Virtual WAN, hub-and-spoke VNet topology, ExpressRoute, and VPN gateways\n- Application Gateway with WAF, Azure Front Door, and Azure Firewall Premium\n- Microsoft Entra ID PIM (Privileged Identity Management) & Conditional Access policies\n- Microsoft Defender for Cloud, Microsoft Sentinel SIEM/SOAR, and Key Vault encryption",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "az-700",
+        "az-500",
+        "networking",
+        "security",
+        "firewall"
+      ],
+      "subtasks": [
+        {
+          "id": "46f1002a-fb90-4a99-abdd-dd47cde1f84e",
+          "title": "Virtual WAN architecture, hub-and-spoke topologies & peering",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "b53651ad-ecde-4274-8555-bf2208f89498",
+          "title": "Hybrid connectivity: ExpressRoute & Site-to-Site VPN",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "40dbb7fa-a327-4f39-808b-35972b883b5b",
+          "title": "Azure Firewall Premium, Application Gateway with WAF & Front Door",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "33bf2756-a000-4558-84b8-d6946df6a221",
+          "title": "Microsoft Entra ID PIM, Conditional Access & Defender for Cloud",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "75c3893f-e3a9-457a-9e4e-2a2708765ab4",
+          "title": "Azure Key Vault customer-managed keys & network isolation",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "5760f63a-f33a-4ebf-baa0-68973ef607d4",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-16",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 104,
+      "spaceId": 4,
+      "key": "COUR-8",
+      "parentId": 96,
+      "epicId": 96,
+      "epicLink": "Platform & Creator Learning Tracks",
+      "title": "AI Fundamentals by KodeKloud",
+      "description": "## Overview\nInteractive KodeKloud lab course providing hands-on foundational knowledge of Artificial Intelligence tailored for cloud and DevOps engineers.\n\n## Focus Areas\n- AI concepts explained with interactive cloud terminal labs\n- Exploring open-source models, Hugging Face, and inference APIs\n- Prompt engineering essentials for technical troubleshooting and scripting",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "kodekloud",
+        "ai-fundamentals",
+        "hands-on-labs",
+        "prompt-engineering"
+      ],
+      "subtasks": [
+        {
+          "id": "986465d1-0eb8-46bd-a571-3ac1ccee3c99",
+          "title": "KodeKloud AI Fundamentals video lectures",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "365fd3f5-6801-4ad2-ac14-9a0db4fa2c16",
+          "title": "Hands-on lab exercises on AI concepts",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "6c2baf5a-7838-492e-8232-7fee1799ff2e",
+          "title": "Introduction to generative AI and LLM tools for engineers",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "ce9b5ab5-9aea-479b-b82b-629e6b30c5f6",
+          "title": "Practical prompting and engineer workflow integration",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "aed7baed-2b1f-435c-81c2-348ebb4ca8a0",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-18",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1400,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 105,
+      "spaceId": 4,
+      "key": "COUR-9",
+      "parentId": 96,
+      "epicId": 96,
+      "epicLink": "Platform & Creator Learning Tracks",
+      "title": "KodeKloud - AI/MLOps/AIOps",
+      "description": "## Overview\nKodeKloud hands-on course covering MLOps deployment pipelines and AIOps automated cluster reliability.\n\n## Focus Areas\n- Automated model testing, packaging into multi-stage Docker containers, and Helm deployment\n- Model versioning with DVC and experiment tracking with MLflow on Kubernetes\n- AIOps: Autonomous anomaly detection, intelligent alert correlation, and predictive self-healing",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "kodekloud",
+        "mlops",
+        "aiops",
+        "kubernetes",
+        "containers"
+      ],
+      "subtasks": [
+        {
+          "id": "1aef9793-620a-4769-94b0-7a428ca64db3",
+          "title": "Complete KodeKloud MLOps course modules",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "176f5dfd-33af-471d-9e67-790c4f5d85db",
+          "title": "Model packaging with Docker and Kubernetes deployment",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "e38793b9-698b-4c71-a35c-ac2e3fa64d19",
+          "title": "Model registry & version control using DVC and MLflow",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "eccdc70b-f725-4c9b-9b78-13c0859f5e93",
+          "title": "AIOps: automated anomaly detection and log analytics in clusters",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "2f4f5c41-460d-4a70-a6b6-17df259d22e0",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-18",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1500,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    },
+    {
+      "id": 106,
+      "spaceId": 4,
+      "key": "COUR-10",
+      "parentId": 96,
+      "epicId": 96,
+      "epicLink": "Platform & Creator Learning Tracks",
+      "title": "Abhishek Veeramalla - Youtube",
+      "description": "Playlists to cover - \n\nAI Assisted DevOps \n\nAI DevOps Projects\n\nMLOps\n\nForward Deployed Engineer\n\nDevSecOps Zero to Hero\n\nGCP Zero to Hero\n\nFinOps\n\nForward Deployed Engineer (FDE)\n\nAI Agent Zero to Hero\n\n",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "youtube",
+        "abhishek-veeramalla",
+        "devops",
+        "kubernetes",
+        "gitops"
+      ],
+      "subtasks": [
+        {
+          "id": "4150c5c4-2763-4c41-b918-8035b20d20e6",
+          "title": "Complete DevOps Zero to Hero playlist",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "6e3fc534-d748-4211-b277-7cf6e5047771",
+          "title": "Follow Kubernetes End-to-End Projects with ArgoCD & Helm",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "1a85017f-4257-480c-b9c3-acf205744122",
+          "title": "AWS & Azure Cloud real-world architecture walkthroughs",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "3b8d6fb0-b70a-45af-9cf7-a3af62602411",
+          "title": "Terraform infrastructure deployment tutorials",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "5273d5bb-72d3-4d62-906f-9998e55b50b5",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-18",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:44:31.540Z"
+    },
+    {
+      "id": 107,
+      "spaceId": 4,
+      "key": "COUR-11",
+      "parentId": 95,
+      "epicId": 95,
+      "epicLink": "AI & MLOps Engineering Courses",
+      "title": "Udemy - MLOps",
+      "description": "Udemy Course Link - MLOps Zero to Hero - https://www.udemy.com/course/mlops-zero-to-hero/?couponCode=25BBPMXNVD35 ",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "udemy",
+        "mlops",
+        "data-drift",
+        "airflow",
+        "cicd"
+      ],
+      "subtasks": [
+        {
+          "id": "9c8f2238-cd9b-4ef7-8e38-6e0309267369",
+          "title": "End-to-end MLOps pipeline on cloud (AWS/Azure/GCP)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "1131af02-d0b9-4f15-a3b1-f1b63cd2e5b0",
+          "title": "Feature stores, data validation & drift monitoring (Evidently AI)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "ed154f24-39cd-4562-aea9-952062831caa",
+          "title": "CI/CD automation for model training and deployment with GitHub Actions",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "eeb1d8f3-91f2-4075-b7ac-be780a1978f0",
+          "title": "Monitoring deployed models in production & automated retraining triggers",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "128c768c-acf5-45fe-b17c-a9b870b6c0d3",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-17",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:44:55.632Z"
+    },
+    {
+      "id": 108,
+      "spaceId": 4,
+      "key": "COUR-13",
+      "parentId": 96,
+      "epicId": 96,
+      "epicLink": "Platform & Creator Learning Tracks",
+      "title": "YouTube - Krish Naik & Others",
+      "description": "Krish Naik Playlists to cover:\n\nMLOpsLangGraph\nGenAI  on Azure Cloud\nFinetuning LLM\nClaude Code Playlist\nRAG Playlist\nMCP\nAgentic AI\n\nOthers:\n\nClaude Code Videos\nGen AI\nAI Agents\nAgentic AI\nRAG - Sumanth 3 videos and Instagram reels in My profile\nPrompt Engineering - {https://www.promptingguide.ai/}\nTerraform MCP Server {https://developer.hashicorp.com/terraform/mcp-server}\nAI Skills for Agents - {https://www.youtube.com/watch?v=D0rcnsmxdcY%7D  - 10 skills\nGitHub CoPilot in VS Code - {https://www.youtube.com/watch?v=wqc85X2rpEY&list=PLj6YeMhvp2S7rQaCLRrMnzRdkNdKnMVwg%7D \n\n\n\n",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "youtube",
+        "krish-naik",
+        "gen-ai",
+        "langchain",
+        "rag"
+      ],
+      "subtasks": [
+        {
+          "id": "917febc8-ffb6-47fe-9741-6a25742bd335",
+          "title": "Complete Generative AI and LLM Series playlist",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "86078f00-452e-42ee-ae46-3ef94fc37a8e",
+          "title": "LangChain and LlamaIndex hands-on project implementations",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "fc40cc36-fc20-4006-be60-cd4c00357c5c",
+          "title": "Vector database deep dive (Pinecone, ChromaDB, FAISS)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "0f21a545-5867-4011-a4a7-3febdce13e21",
+          "title": "Building production-grade RAG applications with FastAPI",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "8be64fd3-8284-48ce-b8e9-df4fb44e2cfa",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-18",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1200,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:47:09.216Z"
+    },
+    {
+      "id": 109,
+      "spaceId": 4,
+      "key": "COUR-14",
+      "parentId": 94,
+      "epicId": 94,
+      "epicLink": "Azure & Cloud Infrastructure Courses",
+      "title": "Cloud Services",
+      "description": "Cloud Services: Container Apps, App Service, Function App, Logic App, Event Hub, Service Bus,\nNetworking: Express Route, Load Balancer, AGIC, Application Gateway, Firewall\n",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "cloud-services",
+        "finops",
+        "iaas",
+        "paas",
+        "serverless"
+      ],
+      "subtasks": [
+        {
+          "id": "1e53b108-8985-4d8a-ab16-8c01ebf29e56",
+          "title": "Core cloud service models: IaaS, PaaS, SaaS & Serverless",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "21dbb205-41a0-4dd5-99e1-69826d2a08a9",
+          "title": "Cloud cost management, FinOps principles & reservation planning",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "cf28e9cd-dc1e-4231-94e8-ab8c5fca299a",
+          "title": "Cloud security posture management (CSPM) and compliance baselines",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "7e0ac500-71c8-4abd-8889-c343109aa16a",
+          "title": "Multi-cloud networking and disaster recovery patterns",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d534b4f3-a2ec-4103-904e-a14a757274d3",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-16",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:47:40.350Z"
+    },
+    {
+      "id": 110,
+      "spaceId": 4,
+      "key": "COUR-15",
+      "parentId": 95,
+      "epicId": 95,
+      "epicLink": "AI & MLOps Engineering Courses",
+      "title": "AI Learning Path",
+      "description": "## Overview\nStructured learning roadmap for transitioning into an elite AI and agentic software engineer.\n\n## Learning Path Milestones\n1. Foundations: Advanced Python, linear algebra, and data science libraries\n2. Deep Learning: PyTorch, model training loops, and transformer architectures\n3. Modern GenAI: LangGraph, CrewAI, AutoGen, and Model Context Protocol (MCP)\n4. Production Systems: Multi-agent supervisor patterns, evaluation pipelines, and low-latency serving",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai-path",
+        "roadmap",
+        "pytorch",
+        "agentic-ai",
+        "langgraph"
+      ],
+      "subtasks": [
+        {
+          "id": "b57170a4-4bc0-49dd-aa5a-6dd244be6ad5",
+          "title": "Foundation: Python, linear algebra & statistics for AI",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "23d4ef6a-0a82-4eb3-b393-9d55a717c75f",
+          "title": "Deep Learning: PyTorch neural networks & transformers",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "38e34fc1-ba67-4e47-9902-b87c4a020e50",
+          "title": "Generative AI & Agentic frameworks (LangGraph, CrewAI, AutoGen)",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "e86e1ba1-b50a-4153-88b3-71789180f0cd",
+          "title": "Building autonomous multi-agent systems for DevOps workflows",
+          "completed": false,
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "62eb5643-47ea-4024-acb9-3df077c13802",
+          "type": "created",
+          "author": "VY",
+          "description": "created task linked to epic COUR-17",
+          "createdAt": "2026-10-31T18:28:16.718Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1400,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T18:28:16.718Z",
+      "updatedAt": "2026-10-31T18:28:16.718Z"
+    }
+  ]
+}

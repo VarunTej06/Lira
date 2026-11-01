@@ -1,0 +1,1944 @@
+{
+  "version": "2.0.0",
+  "spaceId": 6,
+  "spaceKey": "LIRA",
+  "spaceName": "Lira",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 29,
+  "space": {
+    "id": 6,
+    "name": "Lira",
+    "key": "LIRA",
+    "icon": "🎯",
+    "color": "#0052CC",
+    "description": "Lira product roadmap, feature development, DevOps and AI assistant",
+    "createdAt": "2026-10-18T08:15:46.633Z",
+    "updatedAt": "2026-10-28T08:15:46.633Z",
+    "issueCount": 29,
+    "file": "spaces/LIRA.json"
+  },
+  "issues": [
+    {
+      "id": 15,
+      "spaceId": 6,
+      "key": "LIRA-1",
+      "title": "Core Lira Frontend & Board Architecture",
+      "description": "## Epic Goal\nDeliver a state-of-the-art Jira clone user interface with drag-and-drop Kanban columns, issue hierarchy, and offline reactive state.",
+      "type": "epic",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-27T08:15:46.633Z",
+      "startDate": "2026-10-18T08:15:46.633Z",
+      "labels": [
+        "architecture",
+        "epic",
+        "frontend",
+        "ui"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "44a4073b-11e3-43aa-b391-8c116a63ff4d",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-18T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-18T08:15:46.633Z",
+      "updatedAt": "2026-10-28T21:42:53.703Z"
+    },
+    {
+      "id": 16,
+      "spaceId": 6,
+      "key": "LIRA-6",
+      "title": "DevOps & Cloud-Native Delivery",
+      "description": "## Epic Goal\nImplement containerization, AKS Kubernetes deployment manifests, automated CI/CD pipelines, static code analysis, and unit test coverage.",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-17T08:15:46.633Z",
+      "startDate": "2026-10-26T08:15:46.633Z",
+      "labels": [
+        "devops",
+        "epic",
+        "k8s",
+        "docker",
+        "cicd"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d3f9b4d6-7a53-4fba-a15f-eeccd2a5b3c6",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-26T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2000,
+      "storyPoints": 34,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-26T08:15:46.633Z",
+      "updatedAt": "2026-10-28T08:15:46.633Z"
+    },
+    {
+      "id": 17,
+      "spaceId": 6,
+      "key": "LIRA-13",
+      "title": "AI Copilot & Autonomous Agentic Assistant",
+      "description": "## Epic Goal\nBuild an integrated intelligent AI Chatbot and Autonomous Agent into Lira to answer project questions, auto-generate subtasks, plan sprints, and perform live board actions.",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-12T08:15:46.633Z",
+      "startDate": "2026-11-02T08:15:46.633Z",
+      "labels": [
+        "ai",
+        "agent",
+        "chatbot",
+        "llm",
+        "copilot"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "04434def-a5ef-4aa5-a6d6-1dc0df2976a8",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2100,
+      "storyPoints": 55,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T08:15:46.633Z",
+      "updatedAt": "2026-10-28T19:24:52.229Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z"
+    },
+    {
+      "id": 18,
+      "spaceId": 6,
+      "key": "LIRA-2",
+      "title": "Multi-Column Drag & Drop Kanban Board",
+      "description": "## Overview\nImplement high-performance Kanban board with drag-and-drop using @hello-pangea/dnd.\n\n## Features Delivered\n- Fixed 300px column widths across Backlog, To Do, In Progress, Done\n- Right-corner board scrollbar with mouse wheel and background pan\n- Empty column drop zone placeholders with quick add prompt",
+      "type": "task",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-26T08:15:46.633Z",
+      "startDate": "2026-10-20T08:15:46.633Z",
+      "labels": [
+        "kanban",
+        "dnd",
+        "board",
+        "cards"
+      ],
+      "subtasks": [
+        {
+          "id": "d72d0c46-731f-4d47-9368-aca6587a4096",
+          "title": "Implement @hello-pangea/dnd with fractional rank reordering",
+          "completed": true,
+          "createdAt": "2026-10-20T08:15:46.633Z"
+        },
+        {
+          "id": "45337cae-06bd-48ee-96c4-04b71e5ca4b4",
+          "title": "Lock uniform 300px card widths across Backlog, To Do, In Progress, Done",
+          "completed": true,
+          "createdAt": "2026-10-23T08:15:46.633Z"
+        },
+        {
+          "id": "53dedc69-eb3d-4403-8e0a-ab40cdd70f16",
+          "title": "Board-level right corner scrollbar with mouse wheel & drag-to-pan",
+          "completed": true,
+          "createdAt": "2026-10-25T08:15:46.633Z"
+        },
+        {
+          "id": "f84f1c58-3c70-4773-8a6d-097c67f30d88",
+          "title": "Empty column drop placeholders with quick add prompt",
+          "completed": true,
+          "createdAt": "2026-10-26T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "cf420d77-458c-4606-88a4-9a8b728124f1",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Epic to Task",
+          "oldValue": "Epic",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T19:25:47.897Z"
+        },
+        {
+          "id": "cee96034-7071-473b-a20f-1b66c531cc30",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Task to Epic",
+          "oldValue": "Task",
+          "newValue": "Epic",
+          "createdAt": "2026-10-28T19:25:41.926Z"
+        },
+        {
+          "id": "9bc0049a-3001-4a53-9580-86aa4faeb699",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Story to Task",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T19:25:27.261Z"
+        },
+        {
+          "id": "fa601504-b1d7-480c-828e-37f8309aaffe",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "completed feature",
+          "createdAt": "2026-10-20T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-20T08:15:46.633Z",
+      "updatedAt": "2026-10-28T19:27:06.155Z",
+      "parentId": 15,
+      "epicId": 15,
+      "epicLink": "Core Jira Frontend & Board Architecture"
+    },
+    {
+      "id": 19,
+      "spaceId": 6,
+      "key": "LIRA-3",
+      "parentId": 15,
+      "epicId": 15,
+      "title": "Reactive Offline-First Storage Engine (Dexie IndexedDB)",
+      "description": "## Overview\nBuild persistent local browser database using Dexie.js wrapping browser IndexedDB.\n\n## Key Deliverables\n- Compound indexes on [spaceId+status]\n- Reactive useLiveQuery hooks for zero-latency reactive rendering\n- Active space selection persistence in localStorage",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-25T08:15:46.633Z",
+      "startDate": "2026-10-19T08:15:46.633Z",
+      "labels": [
+        "storage",
+        "dexie",
+        "indexeddb",
+        "offline"
+      ],
+      "subtasks": [
+        {
+          "id": "b9f2328b-e52c-40e1-9409-69d1f573dc5a",
+          "title": "Configure Dexie schema with compound indexes [spaceId+status]",
+          "completed": true,
+          "createdAt": "2026-10-19T08:15:46.633Z"
+        },
+        {
+          "id": "a85d3b00-6b94-413e-b6d5-98579725c895",
+          "title": "Implement useLiveQuery hooks for zero-latency reactive rendering",
+          "completed": true,
+          "createdAt": "2026-10-21T08:15:46.633Z"
+        },
+        {
+          "id": "36c9ad9b-0bf5-4aa7-a659-5c696ccc1057",
+          "title": "Active space selection persistence in localStorage",
+          "completed": true,
+          "createdAt": "2026-10-25T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "056cf24b-7065-4930-88db-951f1f878a92",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "converted issue type from Story to Task and linked to Epic [LIRA-1] Core Jira Frontend & Board Architecture",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T20:11:31.229Z"
+        },
+        {
+          "id": "dbe6e727-687b-4207-a82e-2bd2c020a117",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "completed feature",
+          "createdAt": "2026-10-19T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-19T08:15:46.633Z",
+      "updatedAt": "2026-10-28T20:11:31.229Z",
+      "epicLink": "Core Jira Frontend & Board Architecture"
+    },
+    {
+      "id": 20,
+      "spaceId": 6,
+      "key": "LIRA-4",
+      "parentId": 15,
+      "epicId": 15,
+      "title": "Local PC Storage Auto-Sync (data/lira-workspace.json)",
+      "description": "## Overview\nEnable automatic two-way persistence between browser IndexedDB and the user hard drive.\n\n## Features Delivered\n- Vite Dev Server local file DB middleware (/api/data and /api/save)\n- Auto-sync mutations to d:/MLOps_LLMOps/Lira/data/lira-workspace.json\n- Top navigation real-time PC Saved status indicator",
+      "type": "task",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-27T08:15:46.633Z",
+      "startDate": "2026-10-24T08:15:46.633Z",
+      "labels": [
+        "persistence",
+        "local-disk",
+        "file-sync",
+        "vite"
+      ],
+      "subtasks": [
+        {
+          "id": "36a3614e-1d26-4a13-87fc-2d951b594de8",
+          "title": "Vite Dev Server local file DB middleware (/api/data and /api/save)",
+          "completed": true,
+          "createdAt": "2026-10-24T08:15:46.633Z"
+        },
+        {
+          "id": "e5f9e4ee-051f-4f50-8da4-ab840a97a334",
+          "title": "Auto-sync mutations to d:/MLOps_LLMOps/Lira/data/lira-workspace.json",
+          "completed": true,
+          "createdAt": "2026-10-26T08:15:46.633Z"
+        },
+        {
+          "id": "7fd7874a-4113-4391-a3a1-a3788fc95dc1",
+          "title": "Top navigation real-time PC Saved status indicator",
+          "completed": true,
+          "createdAt": "2026-10-27T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1d639a8d-ee00-4249-9ea8-ee6f4bf16d69",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "converted issue type from Story to Task and linked to Epic [LIRA-1] Core Jira Frontend & Board Architecture",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T20:11:31.229Z"
+        },
+        {
+          "id": "5969b78f-24e5-46b4-8e9c-ed7794bdf3f8",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "completed feature",
+          "createdAt": "2026-10-24T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 3000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-24T08:15:46.633Z",
+      "updatedAt": "2026-10-28T20:11:31.229Z",
+      "epicLink": "Core Jira Frontend & Board Architecture"
+    },
+    {
+      "id": 21,
+      "spaceId": 6,
+      "key": "LIRA-5",
+      "parentId": 18,
+      "epicId": 15,
+      "title": "Subtask Placard Floating Portal Dropdown",
+      "description": "## Overview\nPrevent linked parent task dropdown from being clipped inside the small subtask card.\n\n## Solution\nRender linked parent menu through React Portal into document.body with fixed positioning and collision avoidance.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T08:15:46.633Z",
+      "startDate": "2026-10-26T08:15:46.633Z",
+      "labels": [
+        "ui",
+        "portal",
+        "subtask",
+        "bugfix"
+      ],
+      "subtasks": [
+        {
+          "id": "a169d8d1-ff6e-40de-a504-163b5ebcdf65",
+          "title": "Portal-based fixed viewport popup to prevent overflow clipping",
+          "completed": true,
+          "createdAt": "2026-10-26T08:15:46.633Z"
+        },
+        {
+          "id": "71c93170-5c3a-4473-b26c-36f99c1fcf4c",
+          "title": "Linked parent open and quick re-link selector",
+          "completed": true,
+          "createdAt": "2026-10-27T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "46d44584-6f08-45cb-8db8-b60ef3b0bed8",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "converted issue type from Story to Task and linked to Epic [LIRA-1] Core Jira Frontend & Board Architecture",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T20:11:31.229Z"
+        },
+        {
+          "id": "04a3ae81-c6b5-41d4-844a-7d1d7ac9f18f",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "completed bugfix",
+          "createdAt": "2026-10-26T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 4000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-26T08:15:46.633Z",
+      "updatedAt": "2026-10-28T20:11:31.229Z",
+      "epicLink": "Core Jira Frontend & Board Architecture"
+    },
+    {
+      "id": 22,
+      "spaceId": 6,
+      "key": "LIRA-7",
+      "parentId": 16,
+      "epicId": 16,
+      "title": "Containerization with Multi-Stage Dockerfile",
+      "description": "## Task\nCreate a production-ready, highly optimized multi-stage Dockerfile for Lira.\n\n## Requirements\n- Build stage using node:20-alpine\n- Production stage using nginx:alpine with custom nginx.conf\n- Support SPA routing without 404s\n- Image size under 35MB",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-02T08:15:46.633Z",
+      "startDate": "2026-10-27T08:15:46.633Z",
+      "labels": [
+        "docker",
+        "container",
+        "nginx",
+        "devops"
+      ],
+      "subtasks": [
+        {
+          "id": "5abf868c-5e8a-401a-8f3d-050b32523793",
+          "title": "Write multi-stage Dockerfile with Node.js build & Nginx alpine runner",
+          "completed": false,
+          "createdAt": "2026-10-27T08:15:46.633Z"
+        },
+        {
+          "id": "a129bad8-dfc1-469f-92ce-30160847e400",
+          "title": "Add .dockerignore file for clean lean context",
+          "completed": false,
+          "createdAt": "2026-10-27T08:15:46.633Z"
+        },
+        {
+          "id": "c1bfec3b-ee71-467a-9378-093ecf82a6e9",
+          "title": "Test Docker container build and local port 80 forwarding",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "01a48a6b-5232-4c1f-88b0-65d0b9ffcae8",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "started task",
+          "createdAt": "2026-10-27T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-27T08:15:46.633Z",
+      "updatedAt": "2026-10-28T08:15:46.633Z"
+    },
+    {
+      "id": 23,
+      "spaceId": 6,
+      "key": "LIRA-8",
+      "parentId": 15,
+      "epicId": 15,
+      "title": "Issue Detail Modal & Rich Markdown Editor",
+      "description": "## Overview\nFull Jira issue editing modal with live markdown description editor, comments, and subtasks.",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-04T08:15:46.633Z",
+      "startDate": "2026-10-25T08:15:46.633Z",
+      "labels": [
+        "modal",
+        "markdown",
+        "details"
+      ],
+      "subtasks": [
+        {
+          "id": "9ad8b0c6-502d-4631-9da6-e26799e872c1",
+          "title": "Rich markdown editor with live preview toggle",
+          "completed": true,
+          "createdAt": "2026-10-25T08:15:46.633Z"
+        },
+        {
+          "id": "ca273aa9-4afc-4e33-8433-052a4fcd50de",
+          "title": "Subtask checklist management and progress bar",
+          "completed": true,
+          "createdAt": "2026-10-26T08:15:46.633Z"
+        },
+        {
+          "id": "3da654fb-8ed6-4b68-bc29-4a939cf8e75b",
+          "title": "Drill-in navigation stack with breadcrumb trail",
+          "completed": true,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "02f22bb8-69ac-48d6-bcaa-83e91f52a65d",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "converted issue type from Story to Task and linked to Epic [LIRA-1] Core Jira Frontend & Board Architecture",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T20:11:31.229Z"
+        },
+        {
+          "id": "24bfee0a-f6b5-43a7-820b-7821634f2a5f",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "in progress",
+          "createdAt": "2026-10-25T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-25T08:15:46.633Z",
+      "updatedAt": "2026-10-28T20:11:31.229Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "epicLink": "Core Jira Frontend & Board Architecture"
+    },
+    {
+      "id": 24,
+      "spaceId": 6,
+      "key": "LIRA-9",
+      "parentId": 16,
+      "epicId": 16,
+      "title": "Azure Kubernetes Service (AKS) Manifests & Helm Chart",
+      "description": "## Task\nWrite production Kubernetes manifests and Helm templates for deploying Lira to AKS.\n\n## Deliverables\n- deployment.yaml, service.yaml, ingress.yaml\n- HPA configuration for auto-scaling\n- ConfigMaps and Secrets for runtime configuration",
+      "type": "task",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-11T08:15:46.633Z",
+      "startDate": "2026-11-02T08:15:46.633Z",
+      "labels": [
+        "kubernetes",
+        "aks",
+        "helm",
+        "cloud-native"
+      ],
+      "subtasks": [
+        {
+          "id": "b0899218-7b0d-4f4b-a6c1-6a85aa38ceb4",
+          "title": "Create Kubernetes Deployment, Service, and Ingress manifests",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "2c532206-7239-4a2f-8853-3ad05168ab80",
+          "title": "Configure Horizontal Pod Autoscaler (HPA) and resource limits",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "e70bf644-f9c1-4080-a1b3-109320c3a25d",
+          "title": "Write Helm chart templates and values.yaml",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "f115a98c-83a7-43f1-a233-90d5110e3300",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T08:15:46.633Z",
+      "updatedAt": "2026-10-28T08:15:46.633Z"
+    },
+    {
+      "id": 25,
+      "spaceId": 6,
+      "key": "LIRA-10",
+      "parentId": 16,
+      "epicId": 16,
+      "title": "CI/CD Pipeline with GitHub Actions & Azure DevOps",
+      "description": "## Task\nImplement automated continuous integration and deployment pipelines.\n\n## Pipeline Stages\n1. Checkout and install dependencies\n2. Run TypeScript build and Vitest suite\n3. Build and push Docker image to Azure Container Registry (ACR)\n4. Deploy to AKS cluster via GitHub Action or Azure Pipeline",
+      "type": "task",
+      "status": "backlog",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-15T08:15:46.633Z",
+      "startDate": "2026-11-04T08:15:46.633Z",
+      "labels": [
+        "cicd",
+        "github-actions",
+        "azure-pipelines",
+        "automation"
+      ],
+      "subtasks": [
+        {
+          "id": "0b1c8058-8498-4749-a23c-6fac11be1111",
+          "title": "Build and test workflow on push to main",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "01335268-8de3-4c14-a0ba-0f1d297f86af",
+          "title": "Docker image build and push to Azure Container Registry (ACR)",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "74864141-e039-4ee7-b42c-8512daa7b430",
+          "title": "Automated deployment pipeline to AKS staging/prod environments",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "0a954a72-c73d-4e97-96ae-496fd7f7ce80",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "converted issue type from Story to Task and linked to Epic [LIRA-6] DevOps & Cloud-Native Delivery",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T20:11:31.229Z"
+        },
+        {
+          "id": "dda71f8f-40de-49e5-a9c4-e2ffaeffce98",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2500,
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T08:15:46.633Z",
+      "updatedAt": "2026-10-28T20:11:31.229Z",
+      "epicLink": "DevOps & Cloud-Native Delivery"
+    },
+    {
+      "id": 26,
+      "spaceId": 6,
+      "key": "LIRA-11",
+      "parentId": 16,
+      "epicId": 16,
+      "title": "Automated Code Quality & SonarQube / ESLint Pipeline",
+      "description": "## Task\nIntegrate static code analysis and linting into the development workflow and CI.\n\n## Goals\n- Zero lint errors with strict TypeScript rules\n- SonarCloud/SonarQube gate for code smells, bugs, and security hotspots",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-18T08:15:46.633Z",
+      "startDate": "2026-11-07T08:15:46.633Z",
+      "labels": [
+        "code-quality",
+        "sonarqube",
+        "eslint",
+        "security"
+      ],
+      "subtasks": [
+        {
+          "id": "880a920d-4c74-47dd-ac87-a5246573c593",
+          "title": "Configure ESLint & TypeScript strict linting in CI",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "9d52dcae-b32c-4e0a-8703-6bee56cb87dd",
+          "title": "SonarQube / SonarCloud static analysis scanning integration",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "0a779948-ffb6-4ed2-b1aa-851114cf455c",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2250,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T08:15:46.633Z",
+      "updatedAt": "2026-10-28T09:33:40.801Z"
+    },
+    {
+      "id": 27,
+      "spaceId": 6,
+      "key": "LIRA-12",
+      "parentId": 16,
+      "epicId": 16,
+      "title": "Comprehensive Unit & Integration Tests with Vitest",
+      "description": "## Task\nEstablish automated testing framework using Vitest and React Testing Library.\n\n## Coverage Areas\n- Database models, hooks, and local disk synchronization\n- BoardColumn and IssueCard interaction testing\n- Issue detail modal actions",
+      "type": "task",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-22T08:15:46.633Z",
+      "startDate": "2026-11-09T08:15:46.633Z",
+      "labels": [
+        "testing",
+        "vitest",
+        "unit-tests",
+        "quality"
+      ],
+      "subtasks": [
+        {
+          "id": "e5e72d23-3af5-4ff4-b8e2-8da2fbf00da3",
+          "title": "Set up Vitest and React Testing Library",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "5b5c01b4-b5fc-4356-81c7-b61c92a5df10",
+          "title": "Unit tests for Dexie sync and issue state mutations",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "a46749a8-8a95-47f6-8be3-898c7441a3f5",
+          "title": "Component tests for BoardColumn and IssueCard drag interactions",
+          "completed": false,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "4b1215f8-62cb-4dc3-a363-c2be261fd176",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T08:15:46.633Z",
+      "updatedAt": "2026-10-29T05:14:58.209Z"
+    },
+    {
+      "id": 28,
+      "spaceId": 6,
+      "key": "LIRA-14",
+      "parentId": 17,
+      "epicId": 17,
+      "title": "Embedded AI Chatbot Floating Drawer",
+      "description": "## Task\nDesign and implement an integrated AI Chatbot assistant panel in Lira.\n\n## Features\n- Floating AI button with glowing gradient aesthetic\n- Slide-out assistant drawer with markdown responses\n- Natural language queries over tasks and spaces",
+      "type": "task",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-02T08:15:46.633Z",
+      "startDate": "2026-11-12T08:15:46.633Z",
+      "labels": [
+        "ai",
+        "chatbot",
+        "ui",
+        "assistant"
+      ],
+      "subtasks": [
+        {
+          "id": "031d7edd-dfb9-4616-84f3-0acab981de09",
+          "title": "Design expandable slide-out chat drawer with Jira dark/light aesthetics",
+          "completed": true,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "e31acf42-b8b2-42f5-baae-44a18ffe70fc",
+          "title": "Implement natural language project querying (e.g. \"What is in progress?\")",
+          "completed": true,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "a5607e99-f7ec-43f1-80b2-9dc3eb5605c1",
+          "title": "Direct issue creation through AI conversation",
+          "completed": true,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "9203c89b-0d5a-478f-a0db-1f44a81fb87f",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "converted issue type from Story to Task and linked to Epic [LIRA-13] AI Copilot & Autonomous Agentic Assistant",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T20:11:31.229Z"
+        },
+        {
+          "id": "ffd56fda-f819-4308-ad5f-2b6419ee7343",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T08:15:46.633Z",
+      "updatedAt": "2026-10-28T20:11:31.229Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant"
+    },
+    {
+      "id": 29,
+      "spaceId": 6,
+      "key": "LIRA-15",
+      "parentId": 17,
+      "epicId": 17,
+      "title": "Autonomous AI Agent for Sprint Planning & Task Breakdown",
+      "description": "## Task\nBuild an intelligent AI Agent that can take autonomous actions on the board.\n\n## Capabilities\n- Auto-breakdown any feature into subtasks with checkboxes\n- Story point and time estimation recommendation\n- Move issues and update status via natural language commands",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-12T08:15:46.633Z",
+      "startDate": "2026-11-17T08:15:46.633Z",
+      "labels": [
+        "ai",
+        "agent",
+        "automation",
+        "planning"
+      ],
+      "subtasks": [
+        {
+          "id": "5f8f7953-33c6-4c72-a9be-5a8f79d62965",
+          "title": "One-click AI feature breakdown: generate Epics, Stories, and Subtasks automatically",
+          "completed": true,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "0a635227-4a14-4134-8fe8-a41403b36190",
+          "title": "AI story point estimation and acceptance criteria generator",
+          "completed": true,
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "5ac0f1ce-2a57-44b0-807c-9433df8350d8",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "converted issue type from Story to Task and linked to Epic [LIRA-13] AI Copilot & Autonomous Agentic Assistant",
+          "oldValue": "Story",
+          "newValue": "Task",
+          "createdAt": "2026-10-28T20:11:31.229Z"
+        },
+        {
+          "id": "8bcfc218-b3cd-4161-b407-219242860d3f",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task",
+          "createdAt": "2026-10-28T08:15:46.633Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2000,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T08:15:46.633Z",
+      "updatedAt": "2026-10-28T20:11:31.229Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-16",
+      "title": "Card multi-drag disabled after first drop (sensor unmount bug)",
+      "description": "### Bug Summary\nUsers were unable to drag a card a second time after moving it once. Subsequent drag attempts failed to lift the card.\n\n### Root Cause\nDeleting `optimisticUpdates[issueId]` synchronously in the `finally` block caused a momentary DOM unmount/remount (reverting status for ~25ms before Dexie live query updated). This destroyed `@hello-pangea/dnd` internal draggable sensor bindings.\n\n### Resolution\n1. Implemented a reactive `useEffect` that only evicts optimistic state once the underlying Dexie query confirms the new status.\n2. Filtered out `@hello-pangea/dnd` elements from board mouse-panning handlers.\n3. Removed CSS transitions from dragging wrappers.",
+      "type": "bug",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "bug",
+        "drag-and-drop",
+        "dnd",
+        "state-machine"
+      ],
+      "subtasks": [
+        {
+          "id": "48fd7225-19ea-481a-93bd-27e45ac59e6b",
+          "title": "Diagnose draggable sensor destruction on second drag",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "2d4933af-b1c2-4433-bc7d-2e1805911345",
+          "title": "Implement reactive optimistic update eviction in KanbanBoard",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "aaaddbe1-c6af-4354-a376-e81318d181a9",
+          "title": "Exclude dnd draggable and handle attributes from board panning",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "598e3e65-4386-4b95-acf5-ada1c6ab3cce",
+          "title": "Verify continuous multi-drop across all 4 columns",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "c5f688c2-3f84-4e0b-bebe-6d65a8a406d4",
+          "author": "VY",
+          "content": "Verified: Cards can now be dragged continuously any number of times between all columns.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "7cdc6be7-369b-4763-9739-19f646b7c8fb",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "395a584e-6423-42e2-af46-ab13978345c7",
+          "type": "status_change",
+          "author": "VY",
+          "from": "in_progress",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 5,
+      "rank": 1050,
+      "id": 30,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 18,
+      "epicId": 15
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-17",
+      "title": "Column droppable height collapse & missing blue drop zone in short columns",
+      "description": "### Bug Summary\nDragging tasks into short columns (e.g. In Progress with 1 task) failed when dragging from lower sections of tall columns. The blue drop zone only showed for the top 140px and vanished below existing cards.\n\n### Root Cause\nUnder CSS flexbox, flex column children with `height: 100%` collapse to `height: auto` if the parent container uses `min-height`. When scrolled down, the short column droppable DOM element was scrolled off the top of the viewport and did not exist in the lower area.\n\n### Resolution\n1. Computed dynamic `calculatedMinHeight` in `KanbanBoard` using `ResizeObserver` on `boardRef.current.scrollHeight` and card counts.\n2. Injected `style={{ minHeight }}` directly onto the `Droppable` DOM container so drop target covers the entire board height.\n3. Enhanced hover indicator with blue dashed border and shadow ring.",
+      "type": "bug",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "bug",
+        "dnd",
+        "kanban",
+        "css-flexbox",
+        "board"
+      ],
+      "subtasks": [
+        {
+          "id": "540200d4-76f0-438a-bd33-804e3dd67b11",
+          "title": "Inspect droppable bounding box collapse under CSS flexbox",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "de98928b-436f-404f-8e08-5972505b9f98",
+          "title": "Implement dynamic ResizeObserver scrollHeight calculation",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "5477584d-e3b3-4cdc-9160-55da509bafcd",
+          "title": "Inject inline minHeight onto Droppable ref in BoardColumn",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "17bdde7b-a34b-4b3d-b1f4-b7bbc1e3c548",
+          "title": "Verify dropping at bottom of short columns successfully appends task",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "eb3ad6f0-6417-46d3-bd65-c4ed8c2bf5bb",
+          "author": "VY",
+          "content": "Fixed: Blue drop target spans full board height across all columns.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "ac704e00-a556-48b4-83f9-252051e49f17",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "4de8f70c-88b4-4b13-a6c8-b5968a362a53",
+          "type": "status_change",
+          "author": "VY",
+          "from": "in_progress",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 5,
+      "rank": 1060,
+      "id": 31,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 18,
+      "epicId": 15
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-18",
+      "title": "Implement active edge auto-scrolling loop during card dragging",
+      "description": "### Feature Summary\nWhen dragging cards up or down across tall columns, the board should automatically scroll so cards can be moved between distant positions.\n\n### Implementation\n1. Removed CSS `scroll-smooth` on the board scroll container which previously conflicted with frame-by-frame drag scrolling.\n2. Added `requestAnimationFrame` loop on `window` mousemove events while `isDraggingCardRef.current` is true.\n3. Computes vertical edge proximity (top/bottom 100px) and horizontal edge proximity (left/right 80px) to scroll smoothly with velocity proportional to edge distance.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "auto-scroll",
+        "dnd",
+        "kanban",
+        "ux"
+      ],
+      "subtasks": [
+        {
+          "id": "8705d16e-b2fc-4592-9832-afb99d252ede",
+          "title": "Remove scroll-smooth from scroll container during drag",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "25d99c0a-33f9-4e34-b0c9-f5c9520e19e4",
+          "title": "Create requestAnimationFrame mousemove edge watcher",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "97aee0a0-10a1-44c7-b9cd-90c044b96037",
+          "title": "Support vertical and horizontal proportional scrolling speed",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "0ff95a05-4e82-4a94-8cd3-e509b077fc58",
+          "title": "Add mouseup safety fallback handler",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "34230547-e175-4dac-866d-c137d4b54088",
+          "author": "VY",
+          "content": "Feature complete: Board smoothly auto-scrolls when dragging cards to any edge.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "3d5f26bc-92b2-4471-bc67-d39328a13842",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "305f7c45-42ec-4535-9bae-60f64f820a7b",
+          "type": "status_change",
+          "author": "VY",
+          "from": "todo",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 3,
+      "rank": 1070,
+      "id": 32,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 18,
+      "epicId": 15
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-19",
+      "title": "Backup & Restore dual synchronization (PC disk file + browser download)",
+      "description": "### Feature Summary\nEnsure that clicking Backup not only downloads a timestamped backup JSON file in the browser, but also synchronizes the latest snapshot to the local PC project file `data/lira-workspace.json`.\n\n### Implementation\n1. Wired `await saveToDiskNow()` inside `exportBackup()` before preparing download blob.\n2. Wired `await saveToDiskNow()` inside `importBackup()` after restoring data.\n3. Updated Backup & Restore modal dialog UI to clearly indicate PC disk sync alongside file export.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "backup",
+        "persistence",
+        "disk-sync",
+        "json"
+      ],
+      "subtasks": [
+        {
+          "id": "6d7f4b90-f63f-4bff-a79c-89995762dbb8",
+          "title": "Call saveToDiskNow inside exportBackup",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "9066376a-0c30-49a7-b532-bad284119c31",
+          "title": "Call saveToDiskNow inside importBackup",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "71b86e1d-2c9e-4fe6-8c85-d686eee4cead",
+          "title": "Update TopNavigation backup modal copy with PC file path",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "4f4a7672-62f3-4968-b52e-e7da46455ba5",
+          "title": "Test export and verify data/lira-workspace.json update",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "c3163e4b-5672-49da-8ccb-e50f868331b3",
+          "author": "VY",
+          "content": "Dual sync active: clicking Export downloads JSON and updates data/lira-workspace.json.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "1cd108ad-92db-4b17-8fda-069d1c68da10",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "0ab2a96a-9132-41be-bace-7c29b53b8f97",
+          "type": "status_change",
+          "author": "VY",
+          "from": "todo",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 3,
+      "rank": 1080,
+      "id": 33,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 20,
+      "epicId": 15
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-20",
+      "title": "Subtask linked parent dropdown clipped by placard overflow container",
+      "description": "### Bug Summary\nClicking on a subtask placard parent task link opened a dropdown menu that was clipped inside the small card placard.\n\n### Resolution\nRefactored parent issue selection dropdown to use React Portal (`createPortal(..., document.body)`). Dynamically calculates positioning with `getBoundingClientRect()`, handles viewport boundaries, and attaches outside click & scroll listeners.",
+      "type": "bug",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "bug",
+        "ui",
+        "subtask",
+        "portal",
+        "dropdown"
+      ],
+      "subtasks": [
+        {
+          "id": "5b9a0c7e-52dd-4e38-bb38-ed8525663bf3",
+          "title": "Create portal dropdown outside card container",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "67e12534-c78a-42e7-b9fd-6a2b25bf3c42",
+          "title": "Add viewport collision and overflow repositioning",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "a8c116fd-9a34-43c6-b2df-631cb64caec6",
+          "title": "Wire parent task update handler to IndexedDB and disk sync",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "6480f36d-0d7d-4584-975a-85fd5e6b05a5",
+          "author": "VY",
+          "content": "Resolved: Dropdown floats on top of all elements without clipping.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "0a5035c8-e132-4e55-9769-7aecde87bd48",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "dfba2076-cbc2-4a47-aee4-43b58ce6db10",
+          "type": "status_change",
+          "author": "VY",
+          "from": "in_progress",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 3,
+      "rank": 1090,
+      "id": 34,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 18,
+      "epicId": 15
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-21",
+      "title": "TypeScript compilation & unused variable cleanup across components",
+      "description": "### Bug Summary\nFixed multiple TypeScript compilation errors and linter warnings:\n- `formatAbsoluteDate` unused in `IssueSidebarDetails.tsx`\n- `React` unused in `App.tsx`\n- `priorityCfg` unused and missing `ChildIssues` module in `IssueDetailModal.tsx`\n- `PlusCircle` unused in `LiraAICopilot.tsx`\n- Missing `useEffect` import in `KanbanBoard.tsx`\n\n### Resolution\nResolved all unused imports and variables. Ran `npx tsc -p tsconfig.app.json --noEmit` with 0 errors.",
+      "type": "bug",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "bug",
+        "typescript",
+        "lint",
+        "cleanup"
+      ],
+      "subtasks": [
+        {
+          "id": "8c037570-5746-481d-a7ff-535b7c1c5b67",
+          "title": "Fix IssueSidebarDetails unused formatAbsoluteDate",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "9b4d6fab-011b-445a-8b29-7276f0433424",
+          "title": "Fix App.tsx React import",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "b6451ec5-7e84-4ad6-a938-10555a750ad5",
+          "title": "Fix IssueDetailModal missing ChildIssues module and unused variables",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "23048d3b-72f8-4970-9114-873ebeed16ce",
+          "title": "Run full TypeScript type check and verify 0 errors",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "1278bb3b-5f08-495d-b702-6ff88adb00e1",
+          "author": "VY",
+          "content": "Clean build verified with 0 errors.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "e41bd91a-4efc-4e46-a7e4-18c89a6c890f",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "3abd43fb-da57-4ed7-b963-9513511b70a1",
+          "type": "status_change",
+          "author": "VY",
+          "from": "in_progress",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 2,
+      "rank": 1100,
+      "id": 35,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 15,
+      "epicId": 15
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-22",
+      "title": "Column top-right Add Issue button alignment & consistent card dimensions",
+      "description": "### Feature Summary\n1. Relocated Add Issue button from bottom of column to top-right alignment with column heading for faster access.\n2. Standardized task placard width (`w-[300px]`), padding, margin, and typography across Backlog, To Do, In Progress, and Done.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "ui",
+        "kanban",
+        "layout",
+        "buttons"
+      ],
+      "subtasks": [
+        {
+          "id": "a41a3447-53a6-4663-98c4-08118d559e62",
+          "title": "Move Add Issue button to column header",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "eebbbc9e-195d-48e1-9513-20664a1911c1",
+          "title": "Standardize card sizes and remove jitter",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "818fb75f-333a-498f-8c0f-3a5aff3a043f",
+          "author": "VY",
+          "content": "Layout standardized across all board columns.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "907e0c56-3fb7-42ce-9493-43461fb3ec6d",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "3e4b007d-4e92-4a77-97cc-ce42bf4cd061",
+          "type": "status_change",
+          "author": "VY",
+          "from": "todo",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 2,
+      "rank": 1110,
+      "id": 36,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 18,
+      "epicId": 15
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-23",
+      "title": "Lira brand identity asset placement and navbar integration",
+      "description": "### Feature Summary\nPlaced high-resolution brand logos (`lira-logo.png`, `lira-icon.png`) into `/public` assets directory and updated top navigation bar with brand icon and typography.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "low",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "branding",
+        "assets",
+        "ui",
+        "logo"
+      ],
+      "subtasks": [
+        {
+          "id": "1f91ab83-ca1c-4d2a-80bc-d43e7729fb43",
+          "title": "Place logo images into public directory",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "1331307d-a9c7-43cd-91c8-58fc4e74dfe2",
+          "title": "Update TopNavigation with brand icon and styling",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "f941df2d-98b6-4973-9de5-35cd74aa92f0",
+          "author": "VY",
+          "content": "Brand assets deployed and verified in navbar.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "56ca17f4-9608-4015-9e57-472d0bc3cbfa",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "6b140e95-aff7-4217-8476-5ef4fe10debe",
+          "type": "status_change",
+          "author": "VY",
+          "from": "todo",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 1,
+      "rank": 1120,
+      "id": 37,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 61,
+      "epicId": 15
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-24",
+      "title": "Custom board scrollbars and smooth pan interactions",
+      "description": "### Feature Summary\nAdded quick mouse scroll controls (floating pill in bottom-right corner) with directional buttons (top, bottom, left, right), alt-wheel horizontal scroll, and custom scrollbar styling.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-28T09:37:55.127Z",
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "labels": [
+        "kanban",
+        "navigation",
+        "scroll",
+        "ui"
+      ],
+      "subtasks": [
+        {
+          "id": "d618146a-e4b9-45a2-a998-5afb0fe53113",
+          "title": "Add floating mouse scroll controls in bottom right",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "1abbd74c-a4ce-49d5-8f1f-3458698b69af",
+          "title": "Implement custom CSS scrollbar for board container",
+          "completed": true,
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "e367a9e3-b533-460e-b942-51c29d8c7190",
+          "author": "VY",
+          "content": "Navigation controls active and working smoothly.",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "c03560ca-04c6-43b0-bde9-7fbdc1756713",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        },
+        {
+          "id": "b3c6e8d7-8908-4de8-841f-667ee99a538e",
+          "type": "status_change",
+          "author": "VY",
+          "from": "todo",
+          "to": "done",
+          "createdAt": "2026-10-28T09:37:55.127Z"
+        }
+      ],
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "storyPoints": 2,
+      "rank": 1130,
+      "id": 38,
+      "createdAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "parentId": 18,
+      "epicId": 15
+    },
+    {
+      "id": 61,
+      "spaceId": 6,
+      "key": "LIRA-25",
+      "parentId": 15,
+      "epicId": 15,
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "title": "Top Navigation Bar, Branding & Application Shell",
+      "description": "### Overview\nImplement high-performance top navigation bar with brand identity assets, spaces quick-switcher, Lira AI launcher, and PC hard drive sync status indicator.\n\n### Components\n- Brand logo placement and title in navbar\n- Reactive PC Saved disk sync status badge\n- One-click Backup & Restore modal",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ui",
+        "navigation",
+        "branding",
+        "shell"
+      ],
+      "subtasks": [
+        {
+          "id": "st-25-1",
+          "title": "Navbar layout and brand logo placement",
+          "completed": true,
+          "createdAt": "2026-10-28T21:37:51.587Z"
+        },
+        {
+          "id": "st-25-2",
+          "title": "Disk sync status pill with real-time indicators",
+          "completed": true,
+          "createdAt": "2026-10-28T21:37:51.587Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "act-25-1",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T21:37:51.587Z",
+          "description": "created task"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2500,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T21:37:51.587Z",
+      "updatedAt": "2026-10-28T21:37:51.587Z",
+      "resolvedAt": "2026-10-28T21:37:51.587Z"
+    },
+    {
+      "id": 62,
+      "spaceId": 6,
+      "key": "LIRA-26",
+      "parentId": 17,
+      "epicId": 17,
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant",
+      "title": "Dual AI Architecture: Floating Info Chatbot & Autonomous Pro Agent",
+      "description": "### Overview\nDecouple Lira AI into two specialized and distinct user experiences:\n1. **Floating Lira Info Chatbot**: Read-only cross-space search and status analytics assistant, docked in a curved floating window with animated Lira SVG avatar.\n2. **Lira AI Agent Console**: Top-navigation autonomous agent with full write access, status transitions, domain subtask breakdown, and live System Instruction editor.",
+      "type": "task",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai",
+        "copilot",
+        "agent",
+        "architecture",
+        "nlp"
+      ],
+      "subtasks": [
+        {
+          "id": "st-26-1",
+          "title": "SVG avatar with floating bob and glowing pulse",
+          "completed": true,
+          "createdAt": "2026-10-28T21:37:51.587Z"
+        },
+        {
+          "id": "st-26-2",
+          "title": "Curved dialogue card with write interception",
+          "completed": true,
+          "createdAt": "2026-10-28T21:37:51.587Z"
+        },
+        {
+          "id": "st-26-3",
+          "title": "Status matrix query engine across all spaces",
+          "completed": true,
+          "createdAt": "2026-10-28T21:37:51.587Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "act-26-1",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T21:37:51.587Z",
+          "description": "created task"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2600,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T21:37:51.587Z",
+      "updatedAt": "2026-10-28T21:37:51.587Z",
+      "resolvedAt": "2026-10-28T21:37:51.587Z"
+    },
+    {
+      "id": 63,
+      "spaceId": 6,
+      "key": "LIRA-27",
+      "parentId": 62,
+      "epicId": 17,
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant",
+      "title": "Animated Lira AI SVG Avatar with glow & pulsing online indicator",
+      "description": "### Overview\nCreated a dedicated vector SVG AI Avatar component featuring Lira brand geometry, multidimensional gradients, constellation stars, cyber arc, and continuous CSS floating bob and glowing pulse animations.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai",
+        "avatar",
+        "svg",
+        "animation"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "act-27-1",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T21:37:51.587Z",
+          "description": "created subtask"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2700,
+      "storyPoints": 2,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T21:37:51.587Z",
+      "updatedAt": "2026-10-28T21:37:51.587Z",
+      "resolvedAt": "2026-10-28T21:37:51.587Z"
+    },
+    {
+      "id": 64,
+      "spaceId": 6,
+      "key": "LIRA-28",
+      "parentId": 62,
+      "epicId": 17,
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant",
+      "title": "Curved floating dialogue card with write-action interception and handoff",
+      "description": "### Overview\nConstructed a compact floating chat window with curved edges on all sides (`rounded-3xl`, `w-[420px] h-[550px]`). Intercepts create, move, and breakdown write intents in read-only mode and provides a one-click CTA to open the Autonomous Agent Console.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai",
+        "dialogue",
+        "read-only",
+        "cta"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "act-28-1",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T21:37:51.587Z",
+          "description": "created subtask"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2800,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T21:37:51.587Z",
+      "updatedAt": "2026-10-28T21:37:51.587Z",
+      "resolvedAt": "2026-10-28T21:37:51.587Z"
+    },
+    {
+      "id": 65,
+      "spaceId": 6,
+      "key": "LIRA-29",
+      "parentId": 62,
+      "epicId": 17,
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant",
+      "title": "Natural language multi-space status matrix query generator",
+      "description": "### Overview\nUpgraded the rule-based query parser to evaluate status breakdowns across spaces before simple directory queries, returning a structured 4-status markdown table (Backlog, To Do, In Progress, Done) plus workspace totals.",
+      "type": "subtask",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai",
+        "nlp",
+        "metrics",
+        "matrix"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "act-29-1",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T21:37:51.587Z",
+          "description": "created subtask"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2900,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T21:37:51.587Z",
+      "updatedAt": "2026-10-28T21:37:51.587Z",
+      "resolvedAt": "2026-10-28T21:37:51.587Z"
+    }
+  ]
+}

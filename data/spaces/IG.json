@@ -1,0 +1,318 @@
+{
+  "version": "2.0.0",
+  "spaceId": 13,
+  "spaceKey": "IG",
+  "spaceName": "Interview Guide",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 7,
+  "space": {
+    "name": "Interview Guide",
+    "key": "IG",
+    "icon": "🧠",
+    "color": "#0052CC",
+    "description": "",
+    "createdAt": "2026-10-28T18:30:46.269Z",
+    "updatedAt": "2026-10-28T18:30:46.269Z",
+    "id": 13,
+    "issueCount": 7,
+    "file": "spaces/IG.json"
+  },
+  "issues": [
+    {
+      "spaceId": 13,
+      "key": "IG-1",
+      "title": "Self Intro",
+      "description": "## Overview\nCraft and rehearse a compelling 2-minute elevator pitch and introduction for technical interviews.\n\n## Structure\n- Background & current role\n- Core expertise: DevOps, MLOps, Cloud architecture\n- Key achievements & impact\n- Why this role/company",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "AI Agent",
+      "reporterInitials": "AI",
+      "labels": [
+        "ai-created",
+        "ig"
+      ],
+      "subtasks": [
+        {
+          "id": "5fe079c8-a169-43be-acc7-ede13ddc59f9",
+          "title": "Initial setup & requirements validation",
+          "completed": false,
+          "createdAt": "2026-10-28T18:51:39.331Z"
+        },
+        {
+          "id": "98c1f8c2-a8a9-455b-850a-421d0a5d3e0d",
+          "title": "Implementation & code review",
+          "completed": false,
+          "createdAt": "2026-10-28T18:51:39.331Z"
+        },
+        {
+          "id": "fd8923bd-0263-48ad-a33e-d3bdf716fed4",
+          "title": "Unit testing and verification",
+          "completed": false,
+          "createdAt": "2026-10-28T18:51:39.331Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "e1258879-f7b6-443f-a404-9a6b63315c71",
+          "type": "created",
+          "author": "AI Agent",
+          "authorInitials": "AI",
+          "description": "created this task via natural language agent command",
+          "createdAt": "2026-10-28T18:51:39.331Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-28T18:51:39.331Z",
+      "updatedAt": "2026-10-28T18:54:30.706Z",
+      "id": 46
+    },
+    {
+      "spaceId": 13,
+      "key": "IG-2",
+      "title": "HR Questions",
+      "description": "## Overview\nPrepare articulate responses to standard behavioral and situational HR questions.\n\n## Topics\n- Career motivations and transitions\n- Strengths and development areas\n- Salary expectations and notice period\n- Questions to ask the HR recruiter",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "interview",
+        "hr",
+        "soft-skills"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "6cb69502-ad39-4ecf-a49f-bb8464ce78d2",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T18:54:30.706Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 47,
+      "createdAt": "2026-10-28T18:54:30.706Z",
+      "updatedAt": "2026-10-28T18:54:30.706Z"
+    },
+    {
+      "spaceId": 13,
+      "key": "IG-3",
+      "title": "Behavioural Questions",
+      "description": "## Overview\nStructure real-world stories using the STAR framework (Situation, Task, Action, Result).\n\n## Scenario Categories\n- Conflict resolution with teammates or stakeholders\n- Production incident handling and root-cause analysis\n- Driving technical consensus on architecture choices\n- Mentoring and onboarding junior team members",
+      "type": "task",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "interview",
+        "behavioral",
+        "star-method"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "38e6cbe8-eb72-423a-96ee-8608e4588625",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T18:54:30.706Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1200,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 48,
+      "createdAt": "2026-10-28T18:54:30.706Z",
+      "updatedAt": "2026-10-28T18:54:30.706Z"
+    },
+    {
+      "spaceId": 13,
+      "key": "IG-4",
+      "title": "Git and GitHub",
+      "description": "## Overview\nTechnical deep dive into Git internals, advanced workflows, and GitHub administration.\n\n## Key Concepts\n- Git branching strategies (GitFlow, Trunk-based)\n- Interactive rebasing, squashing, cherry-picking, and reflog recovery\n- Merge conflicts and three-way merges\n- Branch protection rules, CODEOWNERS, and webhooks",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-31T00:00:00.000Z",
+      "labels": [
+        "interview",
+        "git",
+        "github",
+        "version-control"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "00240fee-a0e6-4a31-9134-0d7619337941",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T18:54:30.706Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "id": 49,
+      "createdAt": "2026-10-28T18:54:30.706Z",
+      "updatedAt": "2026-10-31T17:54:46.063Z"
+    },
+    {
+      "spaceId": 13,
+      "key": "IG-5",
+      "title": "Format Document",
+      "description": "## Overview\nFormat and polish interview prep notes, cheat sheets, and technical summaries for quick revision.\n\n## Tasks\n- Consistent markdown typography and headings\n- Highlight key code snippets and commands\n- Export clean PDF revision cheat sheet",
+      "type": "task",
+      "status": "todo",
+      "priority": "lowest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "documentation",
+        "formatting",
+        "cheat-sheet"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "3a5d15d4-b558-4eed-82dc-a32467731650",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T18:54:30.706Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 50,
+      "createdAt": "2026-10-28T18:54:30.706Z",
+      "updatedAt": "2026-10-28T18:54:30.706Z"
+    },
+    {
+      "spaceId": 13,
+      "key": "IG-6",
+      "title": "Print Document",
+      "description": "## Overview\nPrint physical copies of interview preparation guides, resume copies, and cheat sheets for offline review.\n\n## Checklist\n- 5 copies of latest resume\n- 1-page architecture reference cheat sheet\n- Questions list for the interviewers",
+      "type": "task",
+      "status": "todo",
+      "priority": "lowest",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "printing",
+        "physical-copy"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "a34b1702-ea01-46a8-834a-b773c35932b7",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T18:54:30.706Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1400,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "id": 51,
+      "createdAt": "2026-10-28T18:54:30.706Z",
+      "updatedAt": "2026-10-28T18:54:30.706Z"
+    },
+    {
+      "spaceId": 13,
+      "key": "IG-7",
+      "title": "CICD - Azure DevOps",
+      "description": "## Overview\nComprehensive technical preparation for Azure DevOps pipelines, releases, and artifact management.\n\n## Key Topics\n- YAML pipeline syntax (stages, jobs, steps)\n- Self-hosted agents vs Microsoft-hosted agents\n- Service connections and Azure Workload Identity federation\n- Environment gates, manual approvals, and deployment strategies",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "highest",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "interview",
+        "azure-devops",
+        "cicd",
+        "pipelines"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "77bc8f95-1bb7-4570-a12e-6ac4f4a87b57",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-10-28T18:54:30.706Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1100,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "id": 52,
+      "createdAt": "2026-10-28T18:54:30.706Z",
+      "updatedAt": "2026-10-28T18:54:30.706Z"
+    }
+  ]
+}

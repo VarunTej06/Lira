@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "spaceId": 15,
+  "spaceKey": "TS",
+  "spaceName": "Test Space",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 0,
+  "space": {
+    "name": "Test Space",
+    "key": "TS",
+    "icon": "📋",
+    "color": "#FF991F",
+    "description": "",
+    "createdAt": "2026-10-31T19:45:59.152Z",
+    "updatedAt": "2026-10-31T19:45:59.152Z",
+    "id": 15,
+    "issueCount": 0,
+    "file": "spaces/TS.json"
+  },
+  "issues": []
+}

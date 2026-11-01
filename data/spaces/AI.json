@@ -1,0 +1,1168 @@
+{
+  "version": "2.0.0",
+  "spaceId": 14,
+  "spaceKey": "AI",
+  "spaceName": "AI Projects",
+  "updatedAt": "2026-10-31T20:40:16.260Z",
+  "issueCount": 17,
+  "space": {
+    "name": "AI Projects",
+    "key": "AI",
+    "icon": "🗂️",
+    "color": "#0052CC",
+    "description": "",
+    "createdAt": "2026-10-28T18:31:08.254Z",
+    "updatedAt": "2026-10-31T14:52:42.942Z",
+    "id": 14,
+    "issueCount": 17,
+    "file": "spaces/AI.json"
+  },
+  "issues": [
+    {
+      "spaceId": 14,
+      "key": "AI-1",
+      "title": "Identify Life Admin",
+      "description": "## Overview\nIdentify personal and life administration workflows suitable for AI automation, scheduling, and agentic assistance.\n\n## Potential Areas\n- Personal scheduling and calendar sync\n- Recurring document management and renewals\n- Daily habit and task automation",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai",
+        "life-admin",
+        "automation"
+      ],
+      "subtasks": [
+        {
+          "id": "85768da4-1e3f-48d0-93fb-2e5a6273b6ed",
+          "title": "Audit recurring weekly administration tasks",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "70a607f5-9a3f-46c8-9963-d26c5d0e0555",
+          "title": "Select suitable agentic frameworks for personal automation",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d8204a39-f46f-4d45-9a0e-22fbfb781583",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "storyPoints": 3,
+      "rank": 1000,
+      "id": 39,
+      "createdAt": "2026-10-28T18:34:09.142Z",
+      "updatedAt": "2026-10-31T14:47:02.561Z"
+    },
+    {
+      "spaceId": 14,
+      "key": "AI-2",
+      "title": "Identify Apartment Admin",
+      "description": "## Overview\nMap out apartment, property, and residency administration tasks suitable for AI workflows.\n\n## Potential Areas\n- Maintenance requests and issue tracking\n- Utility tracking and billing reconciliation\n- Community notifications and document archiving",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "ai",
+        "apartment-admin",
+        "automation"
+      ],
+      "subtasks": [
+        {
+          "id": "b18a34c0-65a0-493e-9b17-6cbe686fe223",
+          "title": "Document routine residency management requirements",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "8db861f2-bba9-41e6-83df-d6c020de8b03",
+          "title": "Draft schema for apartment inventory and bills",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "4267ec4d-da83-49c1-ab95-e595a1115364",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "storyPoints": 3,
+      "rank": 1100,
+      "id": 40,
+      "createdAt": "2026-10-28T18:34:09.142Z",
+      "updatedAt": "2026-10-31T14:47:04.156Z"
+    },
+    {
+      "spaceId": 14,
+      "key": "AI-3",
+      "title": "Portfolio",
+      "description": "KodeKloud Like Portfolio with 3D design and images\nTech Stack: Python, FastAPI, React JS\nHomepage: Connect Handles, Projects count and Main Projects Names {Features and Capabilities}, Resume {Download also}, Work Experience, Technical Skills\nCertifications page\nProjects Page: Redirect links to each Project webpage, Upcoming Projects\nSocial Media Page \nUpskilling - Planned and Ongoing\nBuilt in Chatbot with RAG\nWhatsapp, LinkedIN, Instagram, etc Connectors",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "portfolio",
+        "ai-showcase",
+        "projects"
+      ],
+      "subtasks": [
+        {
+          "id": "4376b94c-7d2f-49c5-bc54-6d17cd542cf2",
+          "title": "Outline core AI and MLOps projects to feature",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "e92a17d0-a7d7-48d8-8b2b-c2d569291be5",
+          "title": "Structure architecture diagrams and technical write-ups",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d169b369-5f3c-473c-a55f-a088679667c9",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "storyPoints": 5,
+      "rank": 1200,
+      "id": 41,
+      "createdAt": "2026-10-28T18:34:09.142Z",
+      "updatedAt": "2026-10-31T14:47:06.855Z"
+    },
+    {
+      "spaceId": 14,
+      "key": "AI-4",
+      "title": "Identify Super Agents",
+      "description": "Terraform Drift Agent\nTerraform MCP Server\nObservabillity Agents\nK8s Agent\nCheck DevSecOps Related agents\nPR Review Agent\nPlanning Phase Agent\nSDLC Agent",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "super-agents",
+        "multi-agent",
+        "orchestration"
+      ],
+      "subtasks": [
+        {
+          "id": "2fe78a09-333b-417c-bbd5-70ba7d342c5c",
+          "title": "Compare multi-agent supervisor patterns",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "299f5bca-50d2-419d-8698-1db17477bf28",
+          "title": "Prototype delegation protocol between specialized agents",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "a0ec6423-8a32-40d6-90d2-048616d23293",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "c0757554-ce55-42a8-8c19-7f54eebc1c2a",
+          "type": "status_change",
+          "author": "VY",
+          "from": "todo",
+          "to": "inprogress",
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "storyPoints": 5,
+      "rank": 1000,
+      "id": 42,
+      "createdAt": "2026-10-28T18:34:09.142Z",
+      "updatedAt": "2026-10-28T18:46:32.831Z"
+    },
+    {
+      "spaceId": 14,
+      "key": "AI-5",
+      "title": "Identify Social Projects",
+      "description": "A RAG against Indian Tax documents\nAn app that can create legal briefs for lawyers\nAn app that can help fillout a passport applications \nA B2B app for local small vendors",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "social",
+        "community",
+        "ai-impact"
+      ],
+      "subtasks": [
+        {
+          "id": "0f54b32c-433b-4c0b-8d60-9fd84f3fa3b5",
+          "title": "Brainstorm civic and educational problem spaces",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "21d39ef1-ebb2-44a6-881d-1af424f0caf9",
+          "title": "Evaluate feasibility and community impact",
+          "completed": false,
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "58b0936c-8e3b-431c-b8e7-8bd83aa28869",
+          "type": "created",
+          "author": "VY",
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "6069c824-23fc-44dd-8c59-104245931cd0",
+          "type": "status_change",
+          "author": "VY",
+          "from": "todo",
+          "to": "inprogress",
+          "createdAt": "2026-10-28T18:34:09.142Z"
+        }
+      ],
+      "storyPoints": 5,
+      "rank": 1100,
+      "id": 43,
+      "createdAt": "2026-10-28T18:34:09.142Z",
+      "updatedAt": "2026-10-28T18:47:12.218Z"
+    },
+    {
+      "id": 66,
+      "spaceId": 14,
+      "key": "AI-6",
+      "title": "Top 1% DevOps AI Engineering Solutions - Next-Gen Platforms",
+      "description": "## Epic Vision & Objectives\nMaster and implement cutting-edge, real-world AI platforms transforming modern DevOps, DevSecOps, and Site Reliability Engineering. Becoming a top 1% DevOps engineer requires orchestrating agentic workflows across every lifecycle phase: from automated internal developer portals and AI-driven SDLC to cluster auto-instrumentation, pre-CI code security governance, and autonomous multi-agent incident RCA.\n\n## Strategic Pillars & Scope\n1. **Agentic SDLC & Developer Portals:** Autonomous software factory, developer self-service, and lifecycle automation with **Port (port.io)**.\n2. **AI Cluster Observability & Auto-Instrumentation:** Zero-touch cluster-level OpenTelemetry instrumentation and AI trace/metric synthesis with **Dash0 (dash0.com)**.\n3. **Pre-CI Shift-Left AI Code Review:** Context-aware security, compliance, and quality auditing with 1-click fixes before CI pipelines trigger using **CodeRabbit (coderabbit.ai)**.\n4. **Multi-Agent AI SRE & Automated RCA:** Autonomous agents correlating telemetry, logs, and code for up to 95% root cause accuracy using **incident.io** and **ResolveAI (resolve.ai)**.\n\n## Target Outcomes & Architecture\n- End-to-end evaluation architectures and proof-of-concept manifests for each platform.\n- Production integration runbooks connecting developer self-service (Port) -> PR review (CodeRabbit) -> K8s deployment (Dash0) -> Incident triage (ResolveAI / incident.io).\n- Standardized benchmarks, telemetry analysis, and security compliance verification.",
+      "type": "epic",
+      "status": "todo",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-31T18:00:00.000Z",
+      "startDate": "2026-10-31T06:00:00.000Z",
+      "labels": [
+        "devops",
+        "ai",
+        "sdlc",
+        "observability",
+        "code-review",
+        "sre",
+        "top-1-percent"
+      ],
+      "subtasks": [
+        {
+          "id": "9ca873e6-5368-4c9e-8ec9-106cfee4d1a6",
+          "title": "Architect & test AI Software Factory with Port (port.io)",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "fd8a8561-211a-4b8b-b8f4-141fe4c90e7f",
+          "title": "Deploy Dash0 operator for AI zero-touch auto-instrumentation in K8s",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "14c0171c-ceda-408a-8e83-6e9994ca0491",
+          "title": "Integrate CodeRabbit AI review for pre-CI security & compliance checks",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "99e3f65a-cccf-4262-9d0b-9a22ca94bdd3",
+          "title": "Benchmark multi-agent AI SRE root-cause analysis with incident.io & ResolveAI",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "ebe7a99a-196e-4b16-8c39-158b3dd7c59d",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1300,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T06:26:14.519Z",
+      "updatedAt": "2026-10-31T06:26:14.519Z"
+    },
+    {
+      "id": 67,
+      "spaceId": 14,
+      "key": "AI-7",
+      "parentId": 66,
+      "epicId": 66,
+      "epicLink": "Top 1% DevOps AI Engineering Solutions - Next-Gen Platforms",
+      "title": "AI Software Factory - port.io",
+      "description": "## Overview\nImplement an **AI Software Factory** using [Port (port.io)](https://www.port.io/) — an agentic SDLC and Internal Developer Portal (IDP) platform that brings AI automation directly into development workflows.\n\n## Key Capabilities & DevOps Focus\n- **Agentic SDLC Platform:** Bridge development teams, platform infrastructure, and autonomous AI agents into a single orchestration plane.\n- **Internal Developer Portal (IDP):** Unified service catalog, software templates, scorecards, and automated compliance auditing.\n- **Self-Service AI Workflows:** Enable engineers to trigger autonomous scaffolding, cloud resource provisioning, and pipeline actions through declarative workflows.\n- **Context-Rich Knowledge Graph:** Real-time visibility into microservices, cloud dependencies, ownership, and deployment health for AI agents.\n\n## Implementation & Hands-on Roadmap\n- [ ] Connect Port workspace with GitHub/GitLab and Kubernetes clusters\n- [ ] Define blueprints for microservices, cloud resources, and CI/CD pipelines\n- [ ] Implement self-service actions powered by AI agents to scaffold new services and infrastructure\n- [ ] Establish automated scorecards to track security, DORA metrics, and production readiness\n\n## Resources\n- Platform URL: [Agentic SDLC Platform: Build Your AI Software Factory | Port](https://www.port.io/)\n- Documentation: Port Blueprints, Self-Service Actions, and API integration guides",
+      "type": "task",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-20T18:00:00.000Z",
+      "startDate": "2026-10-31T06:00:00.000Z",
+      "labels": [
+        "port-io",
+        "sdlc",
+        "developer-portal",
+        "ai-automation",
+        "platform-engineering"
+      ],
+      "subtasks": [
+        {
+          "id": "52de1122-50e5-47cd-a2df-fd5a46e059a4",
+          "title": "Explore Port's Agentic SDLC architecture & core blueprints",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "05946d4b-140f-4350-93a0-371e54969843",
+          "title": "Configure software catalog, microservice models & scorecards",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "e3069fd6-c7ab-49e3-a07b-1bed2a2520f8",
+          "title": "Set up AI self-service action to scaffold new service & pipeline",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "134c45b6-ad77-4470-81e8-008fa1db33dc",
+          "title": "Integrate Port webhooks with CI/CD and Kubernetes orchestrator",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "8f1142fe-1109-4dc8-95c9-9f21f56bd122",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-6",
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1400,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T06:26:14.519Z",
+      "updatedAt": "2026-10-31T06:26:14.519Z"
+    },
+    {
+      "id": 68,
+      "spaceId": 14,
+      "key": "AI-8",
+      "parentId": 66,
+      "epicId": 66,
+      "epicLink": "Top 1% DevOps AI Engineering Solutions - Next-Gen Platforms",
+      "title": "Auto Instrumentation in Observability - dash0",
+      "description": "## Overview\nSet up **Auto-Instrumentation in Observability** with [Dash0 (dash0.com)](https://www.dash0.com/) — an OpenTelemetry-native observability platform that utilizes AI directly within Kubernetes clusters to eliminate manual instrumentation toil.\n\n## Key Capabilities & DevOps Focus\n- **AI-Driven Cluster Auto-Instrumentation:** Instrument containerized workloads, microservices, and runtimes without modifying application source code.\n- **OpenTelemetry-Native Standards:** Pure OTel semantics for distributed traces, metrics, and logs with zero vendor lock-in.\n- **In-Cluster Intelligence:** Direct integration with Kubernetes operators, daemonsets, and eBPF probes to capture deep kernel and network telemetry.\n- **AI Telemetry Synthesis:** Intelligent anomaly correlation, distributed trace aggregation, and semantic log indexing out of the box.\n\n## Implementation & Hands-on Roadmap\n- [ ] Deploy the Dash0 Kubernetes operator across test clusters\n- [ ] Enable zero-code auto-instrumentation for polyglot services (Node.js, Python, Go, Java)\n- [ ] Validate distributed trace collection, span context propagation, and metric exports\n- [ ] Explore AI-driven anomaly detection and automated OTel pipeline optimization\n\n## Resources\n- Platform URL: [OpenTelemetry Native Observability · Dash0](https://www.dash0.com/)\n- OpenTelemetry Operator & Auto-Instrumentation Documentation",
+      "type": "task",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-25T18:00:00.000Z",
+      "startDate": "2026-10-31T06:00:00.000Z",
+      "labels": [
+        "dash0",
+        "observability",
+        "opentelemetry",
+        "kubernetes",
+        "auto-instrumentation",
+        "ai"
+      ],
+      "subtasks": [
+        {
+          "id": "82909d01-eea0-418d-b4f3-67083b0f30b3",
+          "title": "Deploy Dash0 Kubernetes Operator in cluster via Helm",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "6f7a4ea3-d9ca-4661-bd8f-a995383c0912",
+          "title": "Configure auto-instrumentation annotations for polyglot workloads",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "84dcc1ba-120c-4520-be3f-15afb0386039",
+          "title": "Validate distributed tracing, metrics export, and span correlation",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "5aa09357-d43d-41c3-82f0-03080bcc279a",
+          "title": "Benchmark performance overhead and review AI-driven telemetry insights",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1a39c845-bc4b-432b-a830-ef76c11eddf9",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-6",
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1500,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T06:26:14.519Z",
+      "updatedAt": "2026-10-31T06:26:14.519Z"
+    },
+    {
+      "id": 69,
+      "spaceId": 14,
+      "key": "AI-9",
+      "parentId": 66,
+      "epicId": 66,
+      "epicLink": "Top 1% DevOps AI Engineering Solutions - Next-Gen Platforms",
+      "title": "AI Code Review - coderabbit.ai",
+      "description": "## Overview\nImplement automated **AI Code Review** with [CodeRabbit (coderabbit.ai)](https://www.coderabbit.ai/) to enforce security, code quality, and compliance *before* CI pipelines kick in.\n\n## Key Capabilities & DevOps Focus\n- **Shift-Left Security & Compliance:** Catch vulnerabilities, secret leaks, CVEs, and compliance drift in PRs prior to expensive build/test pipeline execution.\n- **Context-Aware Codebase Intelligence:** Understands repository architecture, AST relationships, and dependencies to provide pinpoint feedback rather than generic linting.\n- **1-Click AI Fixes & Walkthroughs:** Generates diffs and actionable PR comments that developers can apply with a single click.\n- **CI Cost & Time Optimization:** Drastically slashes CI churn and review turnaround time by catching trivial and structural flaws immediately upon PR creation.\n\n## Implementation & Hands-on Roadmap\n- [ ] Install CodeRabbit GitHub/GitLab app on organization repositories\n- [ ] Define `.coderabbit.yaml` custom review guidelines, security policies, and excluded paths\n- [ ] Test pull request workflows with intentional security and performance regressions\n- [ ] Measure reduction in PR cycle time, CI runner hours, and review velocity improvements\n\n## Resources\n- Platform URL: [CodeRabbit AI Code Review](https://www.coderabbit.ai/)\n- Documentation: Configuration options, custom prompts, and compliance rulebooks",
+      "type": "task",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-15T18:00:00.000Z",
+      "startDate": "2026-10-31T06:00:00.000Z",
+      "labels": [
+        "coderabbit",
+        "ai-code-review",
+        "devsecops",
+        "shift-left",
+        "security-compliance"
+      ],
+      "subtasks": [
+        {
+          "id": "31ec481d-b738-4751-8495-53a85bbe1abc",
+          "title": "Connect CodeRabbit to GitHub repository with custom webhook permissions",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "ed008065-24e5-4e2b-b277-a73a27c74bdf",
+          "title": "Craft .coderabbit.yaml configuration for DevOps & IaC security rules",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "57d22253-edfe-4188-8657-b78f2c728eba",
+          "title": "Test automated PR review on Terraform, Docker, and application code",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "71cdae91-cf8b-49e7-855a-725698972f67",
+          "title": "Assess 1-click refactoring and pre-CI security gate efficiency",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "c6bf2279-4b9e-4a61-9989-1122163d7836",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-6",
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1600,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T06:26:14.519Z",
+      "updatedAt": "2026-10-31T06:26:14.519Z"
+    },
+    {
+      "id": 70,
+      "spaceId": 14,
+      "key": "AI-10",
+      "parentId": 66,
+      "epicId": 66,
+      "epicLink": "Top 1% DevOps AI Engineering Solutions - Next-Gen Platforms",
+      "title": "AI SRE - Multi-Agent Root Cause Analysis (incident.io & resolve.ai)",
+      "description": "## Overview\nDeploy **AI SRE & Autonomous Root Cause Analysis (RCA)** leveraging multiple specialized agents to correlate logs, metrics, telemetry, and git diffs — achieving up to **95% RCA accuracy** during critical outages.\n\n## Featured Platforms\n1. **[incident.io](https://incident.io/)**: Modern incident management, automated paging, Slack/Teams live incident response rooms, and AI-driven incident timeline synthesis.\n2. **[ResolveAI (resolve.ai)](https://resolve.ai/)**: Autonomous AI SRE platform where specialized multi-agent swarms triage alerts, investigate observability signals across clusters, and diagnose root causes.\n\n## Key Capabilities & DevOps Focus\n- **Multi-Agent Signal Triangulation:** Autonomous agents simultaneously query metric dashboards, distributed traces, and pod logs to uncover hidden correlation patterns.\n- **Up to 95% RCA Accuracy:** Rapidly pinpoints breaking commit, memory leak, noisy neighbor, or misconfigured ingress within minutes instead of hours of war rooms.\n- **ChatOps & Co-Pilot Coordination:** Integrates seamlessly into Slack / Microsoft Teams with real-time status updates and remediation runbooks.\n- **Automated Post-Mortem & Blameless RCA:** Auto-compiles timeline of events, contributing factors, impacted SLOs, and prevention action items.\n\n## Implementation & Hands-on Roadmap\n- [ ] Configure incident.io integrations for ChatOps (Slack), PagerDuty, and telemetry providers\n- [ ] Onboard ResolveAI agent to sample Kubernetes cluster & APM telemetry streams\n- [ ] Simulate chaos engineering failure (pod crash-loop, database connection pool exhaustion)\n- [ ] Evaluate multi-agent diagnosis output, time-to-detect (TTD), and RCA accuracy rate\n- [ ] Validate automated post-mortem generation and Jira/Lira ticket remediation export\n\n## Resources\n- [incident.io Platform](https://incident.io/)\n- [ResolveAI | AI SRE Platform](https://resolve.ai/)",
+      "type": "task",
+      "status": "todo",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-30T18:00:00.000Z",
+      "startDate": "2026-10-31T06:00:00.000Z",
+      "labels": [
+        "ai-sre",
+        "incident-io",
+        "resolve-ai",
+        "multi-agent",
+        "root-cause-analysis",
+        "rca-95-percent"
+      ],
+      "subtasks": [
+        {
+          "id": "3a809acf-61d3-4c4c-b80e-61a63a5b9163",
+          "title": "Configure incident.io Slack workflow and on-call escalation policies",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "114620d5-c137-4e89-aa79-2926eba07362",
+          "title": "Connect ResolveAI agents to cluster logs, metrics, and git repository",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "7e34531b-6683-4705-ab2a-bd257db59306",
+          "title": "Execute chaos failure drill to evaluate multi-agent RCA accuracy",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "9284325b-a9a6-412a-9431-f2fcb06879ea",
+          "title": "Test automated incident timeline and post-mortem generation",
+          "completed": false,
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "efab1601-85cf-437e-b43b-814a2fd248bd",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-6",
+          "createdAt": "2026-10-31T06:26:14.519Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1700,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T06:26:14.519Z",
+      "updatedAt": "2026-10-31T06:26:14.519Z"
+    },
+    {
+      "id": 71,
+      "spaceId": 14,
+      "key": "AI-11",
+      "title": "Creating Claude Skills & Autonomous Workflows",
+      "description": "## Epic Vision & Goal\nBuild custom Claude Skills, prompt tools, and API connectors to automate career workflows, candidate profiling, job applications, and automated communication triage.\n\n## Core Capabilities & Scope\n1. **ATS Resume Skill:** Tailor, optimize, and score resumes against applicant tracking systems and job descriptions.\n2. **LinkedIn & Naukri Automation Skill:** Automate job discovery, custom cover letter drafting, and profile keyword alignment.\n3. **Gmail Connectivity Skill:** Connect Claude via Gmail API / OAuth MCP server to categorize inbound recruiter messages and compose context-aware auto-replies.\n\n## Target Outcomes\n- Production-ready Claude skill specifications with structured JSON inputs/outputs.\n- High-efficiency automation reducing application and recruiter response times by 80%.",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-30T18:00:00.000Z",
+      "startDate": "2026-10-31T08:00:00.000Z",
+      "labels": [
+        "claude",
+        "claude-skills",
+        "agentic-ai",
+        "career-automation",
+        "llm-tools"
+      ],
+      "subtasks": [
+        {
+          "id": "fff963bd-fe82-4267-bb45-de00fbb20337",
+          "title": "Build ATS resume tailoring and scoring skill for Claude",
+          "completed": true,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "fd38c686-845e-4820-bdef-e48ecd16a80f",
+          "title": "Create LinkedIn & Naukri job application outreach skill",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "a69863bf-059d-4c14-87f8-895517d4810e",
+          "title": "Implement Gmail MCP connector for automated recruiter email triage & replies",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "0e83214d-1fb0-4e39-a1d5-5d14a9aed162",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "32982294-1c58-47ab-b4c8-9ceaad83d92f",
+          "type": "status_change",
+          "author": "VY",
+          "from": "todo",
+          "to": "inprogress",
+          "description": "marked epic in progress",
+          "createdAt": "2026-10-31T12:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1800,
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T08:00:00.000Z",
+      "updatedAt": "2026-10-31T12:00:00.000Z"
+    },
+    {
+      "id": 72,
+      "spaceId": 14,
+      "key": "AI-12",
+      "parentId": 71,
+      "epicId": 71,
+      "epicLink": "Creating Claude Skills & Autonomous Workflows",
+      "title": "ATS Resume Skill",
+      "description": "## Overview\nDevelop a specialized **Claude Skill** that ingests raw resume markdown or structured JSON alongside specific job descriptions (JDs), identifies keyword gaps, restructures bullet points with quantifiable impact metrics, and ensures 95%+ ATS parseability scores.\n\n## Implemented Deliverables\n- **ATS Semantic Analyzer:** Compares candidate qualifications directly against job requirements and highlights high-frequency keywords.\n- **Impact Rephraser:** Automatically reformulates bullet points into Google XYZ style (*\"Accomplished [X], as measured by [Y], by doing [Z]\"*).\n- **Format Compliance:** Generates clean, standard ATS-friendly markdown and plaintext outputs compatible with Workday, Greenhouse, and Lever parsers.\n- **Skill Definition:** Standardized Claude tool prompt instructions and input schema.\n\n## Time & Effort Tracking\n- **Logged Time:** 4 hours (240 minutes) completed on 2026-10-31.\n- **Outcome:** Validated across sample DevOps / SRE job specifications with 95%+ ATS match rate.",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-10-31T18:00:00.000Z",
+      "startDate": "2026-10-31T08:00:00.000Z",
+      "resolvedAt": "2026-10-31T12:00:00.000Z",
+      "labels": [
+        "claude-skill",
+        "ats-resume",
+        "career",
+        "resume-optimization",
+        "completed"
+      ],
+      "subtasks": [
+        {
+          "id": "2faf4fba-080e-4f34-9157-37a620d8b750",
+          "title": "Analyze target job description keywords & ATS parseability criteria",
+          "completed": true,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "583e3364-f481-4544-b9a4-2f740bce8449",
+          "title": "Implement Claude skill schema & prompt template for ATS tailoring",
+          "completed": true,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "a462a73b-de9a-4d7e-8738-e5c1b9b04a81",
+          "title": "Test resume generation and score optimization against job postings",
+          "completed": true,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "8ea46e2e-f8fb-439b-8a30-6df113dde382",
+          "title": "Finalize prompt assets and export validated ATS-optimized resume format",
+          "completed": true,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "comments": [
+        {
+          "id": "bdd1c58d-95f1-4e2a-982c-2c6bb0880bf4",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "Successfully completed ATS Resume Skill for Claude. Conducted end-to-end testing against 5 senior DevOps job descriptions. All 4 hours logged and verified.",
+          "createdAt": "2026-10-31T12:00:00.000Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "2f2bb448-5ad2-4c4c-beff-e11f7a9de783",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-11",
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "b34bc85f-8325-40ee-ae38-25f8b8f4847e",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "logged 4h of work (4 hours spent)",
+          "oldValue": "0h",
+          "newValue": "4h",
+          "createdAt": "2026-10-31T11:45:00.000Z"
+        },
+        {
+          "id": "14c23cf2-fea2-46e1-b093-842baf7104d9",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "completed task and marked as Done",
+          "oldValue": "todo",
+          "newValue": "done",
+          "createdAt": "2026-10-31T12:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1900,
+      "storyPoints": 5,
+      "timeEstimate": 240,
+      "timeLogged": 240,
+      "category": "AI Skills",
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T08:00:00.000Z",
+      "updatedAt": "2026-10-31T12:00:00.000Z"
+    },
+    {
+      "id": 73,
+      "spaceId": 14,
+      "key": "AI-13",
+      "parentId": 71,
+      "epicId": 71,
+      "epicLink": "Creating Claude Skills & Autonomous Workflows",
+      "title": "LinkedIn and Naukri Skill",
+      "description": "## Overview\nCreate an integrated **LinkedIn & Naukri Skill** for Claude to streamline technical job discovery, parse job qualifications, draft personalized recruiter InMails/messages, and optimize profile presence.\n\n## Key Capabilities & DevOps Focus\n- **Job Posting Decomposition:** Ingest LinkedIn / Naukri job listings and extract key required vs nice-to-have technical competencies.\n- **Custom Outreach Generator:** Draft tailored messages for hiring managers, technical recruiters, and company founders.\n- **Profile Keyword Sync:** Recommend targeted headline, summary, and skills section updates based on trending market requirements.\n- **Application Log Integration:** Store applied roles and target contacts for follow-up reminders.\n\n## Implementation Roadmap\n- [ ] Define JSON schema for job descriptions and applicant profile\n- [ ] Craft custom prompt templates for high-conversion cold outreach\n- [ ] Test generation quality across LinkedIn and Naukri role requirements\n- [ ] Connect with local tracker / Lira issues for application status monitoring",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-15T18:00:00.000Z",
+      "startDate": "2026-10-31T08:00:00.000Z",
+      "labels": [
+        "claude-skill",
+        "linkedin",
+        "naukri",
+        "job-search",
+        "automation"
+      ],
+      "subtasks": [
+        {
+          "id": "920875f5-bfbc-4913-a2bb-f25b4e2592c1",
+          "title": "Scrape/parse job postings from LinkedIn and Naukri format",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "12ef5863-d532-4571-a2f1-1c983f88b7cb",
+          "title": "Implement Claude skill for generating personalized cover letters & outreach notes",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "f478e285-7667-495e-81d4-ee129e907414",
+          "title": "Build automated profile headline & skills section optimization recommender",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "77812306-8249-49c7-aadd-cf8974aecc18",
+          "title": "Track applied positions and follow-up reminders in Lira",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "556d316c-7cdf-4708-89bd-8bceb7cb3280",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-11",
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2000,
+      "storyPoints": 5,
+      "timeEstimate": 360,
+      "timeLogged": 0,
+      "category": "AI Skills",
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T08:00:00.000Z",
+      "updatedAt": "2026-10-31T14:55:09.062Z"
+    },
+    {
+      "id": 74,
+      "spaceId": 14,
+      "key": "AI-14",
+      "parentId": 71,
+      "epicId": 71,
+      "epicLink": "Creating Claude Skills & Autonomous Workflows",
+      "title": "Gmail Connectivity to Claude for Auto Email Replies",
+      "description": "## Overview\nConnect **Claude with Gmail** using an MCP (Model Context Protocol) server or Google Workspace REST API to scan incoming recruiter/career emails, summarize conversation threads, and automatically draft high-context, professional email replies.\n\n## Key Capabilities & DevOps Focus\n- **Secure OAuth 2.0 Integration:** Safe token handling with scoped access to read emails and draft responses.\n- **Smart Triage & Categorization:** Automatically distinguish recruiter outreach, interview invites, and assessments from routine notifications.\n- **Autonomous Context-Aware Reply Drafting:** Formulates polite responses matching candidate availability, compensation range expectations, and resume attachments.\n- **Human-in-the-Loop Safeguards:** Creates drafts in Gmail for final review before sending, or optional automated sending for predefined templates.\n\n## Implementation Roadmap\n- [ ] Configure Google Cloud OAuth 2.0 client credentials for Gmail API\n- [ ] Implement Claude MCP server with tools: `list_unread_emails`, `get_email_thread`, `create_draft_reply`, `send_email`\n- [ ] Craft system prompts for recruiter reply styling and availability sync\n- [ ] Validate automated end-to-end reply generation and test guardrails",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-20T18:00:00.000Z",
+      "startDate": "2026-10-31T08:00:00.000Z",
+      "labels": [
+        "claude-skill",
+        "gmail",
+        "mcp-server",
+        "email-automation",
+        "oauth"
+      ],
+      "subtasks": [
+        {
+          "id": "248efbb6-dafb-45b8-b421-bba5e8e61992",
+          "title": "Set up Google Cloud project & OAuth credentials for Gmail API",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "a5352c2b-2d8d-466f-8ec1-269d67e3979a",
+          "title": "Build Claude MCP tool for fetching unread recruiter/career emails",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "5d744ca2-9823-45b6-b181-54cff2346276",
+          "title": "Implement prompt template for context-aware reply drafting with user confirmation",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "025f9229-290f-43e8-9f5f-55f29f09ba12",
+          "title": "Configure automated labeling, priority filtering, and auto-reply trigger guardrails",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "20282823-17c6-48cd-9bba-dc464b6805ab",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-11",
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1900,
+      "storyPoints": 5,
+      "timeEstimate": 480,
+      "timeLogged": 0,
+      "category": "AI Skills",
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T08:00:00.000Z",
+      "updatedAt": "2026-10-31T14:55:06.832Z"
+    },
+    {
+      "id": 75,
+      "spaceId": 14,
+      "key": "AI-15",
+      "title": "Linking LIRA Workspace with Claude",
+      "description": "## Epic Vision & Goal\nIntegrate **Lira Workspace** with **Claude** through Model Context Protocol (MCP) and direct API integration, transforming Claude into an autonomous agile project co-pilot that can read board status, generate and rank tasks, log progress, and execute sprint actions conversationally.\n\n## Strategic Pillars & Scope\n1. **Lira MCP Server for Claude Desktop & CLI:** Standardized protocol tools allowing Claude to query spaces, list columns, create/update cards, and attach subtasks directly.\n2. **Claude AI Assistant in LIRA Shell:** Embedded chat drawer utilizing Claude 3.5/3.7 for sprint planning, velocity estimation, and task decomposition directly within the Lira UI.\n3. **Natural Language Board Automation:** Instruct Claude to *\"Create an epic for my next sprint with 4 tasks and assign to VY\"* and observe real-time board updates.\n\n## Target Outcomes\n- Seamless two-way synchronization between Claude AI agents and Lira local storage / IndexedDB.\n- Zero-friction ticket management via natural language prompts.",
+      "type": "epic",
+      "status": "todo",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-12-15T18:00:00.000Z",
+      "startDate": "2026-10-31T08:00:00.000Z",
+      "labels": [
+        "claude",
+        "lira-integration",
+        "mcp-server",
+        "jira-ai",
+        "agentic-devops"
+      ],
+      "subtasks": [
+        {
+          "id": "fa6696be-c321-4722-92e1-684f4ab6856e",
+          "title": "Build Lira Model Context Protocol (MCP) server for Claude Desktop",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "815d245a-0e2c-4ce1-bbd5-122fdff2f09c",
+          "title": "Implement Claude conversational assistant & sprint planning in LIRA UI",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "08220778-b753-4e51-8d38-03ba0cd60285",
+          "title": "Establish automated two-way synchronization between Claude actions and local disk DB",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "c30e7d18-ea02-476a-a754-6ab469d7cb00",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created epic",
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2200,
+      "storyPoints": 13,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T08:00:00.000Z",
+      "updatedAt": "2026-10-31T08:00:00.000Z"
+    },
+    {
+      "id": 76,
+      "spaceId": 14,
+      "key": "AI-16",
+      "parentId": 75,
+      "epicId": 75,
+      "epicLink": "Linking LIRA Workspace with Claude",
+      "title": "Lira Model Context Protocol (MCP) Server for Claude",
+      "description": "## Overview\nConstruct a dedicated **Lira Model Context Protocol (MCP)** server that exposes Lira's workspace data and mutations to Claude Desktop, Claude Code, and agentic workflows.\n\n## Key Capabilities & Tools to Expose\n- `lira_list_spaces`: Enumerate available project spaces and keys.\n- `lira_get_board`: Fetch columns and issues for a designated space.\n- `lira_create_issue`: Create tasks, bugs, or epics with parent links, subtasks, and estimates.\n- `lira_update_issue`: Modify issue status, assignees, priorities, or ranks.\n- `lira_log_time`: Append logged hours and work descriptions to cards.\n\n## Implementation Roadmap\n- [ ] Initialize TypeScript MCP server using `@modelcontextprotocol/sdk`\n- [ ] Bridge local JSON disk storage (`data/lira-workspace.json`) to MCP tools\n- [ ] Configure `claude_desktop_config.json` to register the local Lira MCP server\n- [ ] Validate querying board state and creating test issues directly from Claude chat",
+      "type": "task",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-25T18:00:00.000Z",
+      "startDate": "2026-10-31T08:00:00.000Z",
+      "labels": [
+        "mcp-server",
+        "claude-desktop",
+        "lira-integration",
+        "tools",
+        "json-rpc"
+      ],
+      "subtasks": [
+        {
+          "id": "eb365f4d-9b66-4e25-881b-7c8687032f14",
+          "title": "Initialize Node.js MCP SDK server for Lira",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "fbfb1937-db0e-4d7c-a341-1982c5aa9e5c",
+          "title": "Expose tools for reading spaces, columns, and issues",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "3ef4baff-e439-48ab-872a-659e96539687",
+          "title": "Implement write tools for creating, updating, moving, and logging work on cards",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "2e8e7441-5ab1-46ac-b84f-55ce2f8ffdd9",
+          "title": "Test tool invocation from Claude Desktop claude_desktop_config.json",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "b3fc8df6-09af-40bd-9aae-cdb616af679c",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-15",
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2300,
+      "storyPoints": 5,
+      "timeEstimate": 360,
+      "timeLogged": 0,
+      "category": "Integration",
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T08:00:00.000Z",
+      "updatedAt": "2026-10-31T08:00:00.000Z"
+    },
+    {
+      "id": 77,
+      "spaceId": 14,
+      "key": "AI-17",
+      "parentId": 75,
+      "epicId": 75,
+      "epicLink": "Linking LIRA Workspace with Claude",
+      "title": "Claude Conversational Assistant & Sprint Planning in LIRA UI",
+      "description": "## Overview\nIntegrate Claude as the default intelligence model inside Lira's embedded AI chatbot drawer, providing interactive backlog grooming, automatic acceptance criteria generation, and sprint planning.\n\n## Key Capabilities\n- **Board-Aware Context Injection:** Injects active space issues, current sprint backlog, and velocity metrics into Claude's prompt context.\n- **One-Click Ticket Generation:** Claude analyzes user requirements, proposes a breakdown into Epic + Tasks + Subtasks, and provides a 1-click button to insert them directly into the board.\n- **Sprint Retrospectives:** Summarizes completed cards, logged hours vs estimates, and identifies bottlenecks.\n\n## Implementation Roadmap\n- [ ] Connect Anthropic Claude API client in Lira backend/service layer\n- [ ] Wire up conversational drawer UI to stream responses from Claude\n- [ ] Implement structured JSON action-handling for proposed ticket insertion\n- [ ] Validate response latency, streaming UX, and error recovery",
+      "type": "task",
+      "status": "todo",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-30T18:00:00.000Z",
+      "startDate": "2026-10-31T08:00:00.000Z",
+      "labels": [
+        "claude-api",
+        "frontend-ai",
+        "chatbot",
+        "sprint-planning",
+        "ux"
+      ],
+      "subtasks": [
+        {
+          "id": "61c3efb3-b26d-448f-b6d4-04e1d4fe44f4",
+          "title": "Connect Anthropic Claude API client in Lira backend/service layer",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "b29b8436-38c3-496b-99b0-b74da3fdae40",
+          "title": "Implement prompt injection of active space issues and backlog context",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "439e301e-f26f-450c-b48d-742481fff31b",
+          "title": "Add 1-click execution of Claude-proposed task breakdowns into the board",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "142914e5-7d93-4ae5-a654-cd8e4b378784",
+          "title": "Validate response latency, streaming, and error fallback modes",
+          "completed": false,
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "be98bee7-4852-405b-896f-3a6969f69cdf",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created task linked to epic AI-15",
+          "createdAt": "2026-10-31T08:00:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 2400,
+      "storyPoints": 5,
+      "timeEstimate": 360,
+      "timeLogged": 0,
+      "category": "Frontend AI",
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-10-31T08:00:00.000Z",
+      "updatedAt": "2026-10-31T08:00:00.000Z"
+    }
+  ]
+}

@@ -31,6 +31,15 @@
 * **Multi-Axis Mouse Controls**: Floating directional controls (top, bottom, left, right), alt-wheel horizontal scroll, and custom scrollbars.
 * **Jira-Style Delete Confirmation Modal**: Custom `ConfirmDeleteModal` with Atlassian styling and backdrop blur replaces browser `window.confirm()`, alerting users with explicit warnings when deleting parent tasks or epics with child issues.
 
+### ⚡ 3. Lira v2.0 Scope Refactor & Enterprise UX Engine
+* **Strict Pruning & Zero Bloat**: Purged all dead menus (`Projects`, `Dashboards`, `Teams` in top nav, old `SPACES` header row and bottom utility list in left sidebar, `Timeline`/`Approvals` in board tabs).
+* **Multi-Dimensional Filters Explorer**: Full-page interactive JQL query table filtering across Spaces, Status, Priority, Tags/Labels, Assignees, and Teams with instant CSV & JSON exports.
+* **Action-Detail Notifications Center**: Bell popover displaying concrete audit action details (created, status transitioned, comments, edits) with clickable direct ticket hyperlinks.
+* **Jira-Grade Settings Popover Menu**: Searchable admin panel modeled directly from Jira Cloud with Personal settings, Jira admin settings (System & local PC data, Apps, Spaces, Work items, Marketplace), and Atlassian admin navigation.
+* **Interactive "Customise Your Sidebar"**: Modal drawer allowing users to customize visible navigation items and app shortcuts with `localStorage` persistence.
+* **Aesthetic Geometric App Launcher**: Multi-tone gradient 9-module app switcher button with instant operational triggers for Lira Board, Lira AI, and local PC Backup & Restore.
+* **Summary & Capacity Telemetry**: Executive analytical dashboards displaying progress percentage dials, status/priority breakdown charts, epic milestone bars, and developer capacity workload allocation.
+
 ### 🤖 3. Omnipresent AI Copilot & Autonomous Agent
 * **Animated Floating Avatar Trigger**: Docked in the bottom-right corner (`bottom-5 right-5`) featuring the enhanced Lira AI SVG avatar with gentle breathing and glowing animations (`animate-float-subtle`, `animate-pulse-glow`).
 * **Non-Blocking Curved Dialogue Box**: Floating card with curved edges on all 4 sides (`rounded-3xl`), detached from window borders, keeping the entire Kanban board visible.
@@ -102,10 +111,11 @@ Lira/
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── ai/                     # Lira AI Copilot floating card & LiraAIAvatar
-│   │   │   ├── board/                  # KanbanBoard, BoardColumn, IssueCard
-│   │   │   ├── common/                 # ConfirmDeleteModal (Jira-style delete confirmation)
+│   │   │   ├── board/                  # KanbanBoard, BoardColumn, IssueCard, SummaryView, CapacityView
+│   │   │   ├── common/                 # ConfirmDeleteModal, Avatar, Badge, Button, Modal
+│   │   │   ├── filter/                 # FiltersPage (Multi-dimensional cross-space filter engine)
 │   │   │   ├── issue/                  # IssueDetailModal, CreateIssueModal
-│   │   │   ├── layout/                 # TopNavigation, LeftSidebar, BoardActionBar
+│   │   │   ├── layout/                 # TopNavigation, LeftSidebar, BoardActionBar, CustomiseSidebarModal
 │   │   │   └── space/                  # Space settings and create modals
 │   │   ├── db/                         # Dexie DB instance, seed data, storage service
 │   │   ├── hooks/                      # useIssues, useSpaces reactive hooks
@@ -124,7 +134,7 @@ Lira/
 
 ## 🗂️ Active Spaces Across the Workspace
 
-Lira currently manages **9 active spaces** with **115+ issues** across diverse technical domains:
+Lira currently manages **9 active spaces** with **124+ issues** across diverse technical domains:
 
 | Key | Space Name | Description / Focus | Epics & Scope |
 |---|---|---|---|
@@ -134,7 +144,7 @@ Lira currently manages **9 active spaces** with **115+ issues** across diverse t
 | `CH` | **Creator Hub** | Creative Content & Production Workflows | Prompts Epic (`CH-4`) with audio, video, script, & character generation tasks |
 | `GT` | **General Tasks** | Day-to-Day Operations & Profile Branding | Company research, LinkedIn, Naukri, Resume, and Account setup tasks |
 | `AP` | **Awesome Portfolio** | Full-Stack & Systems Portfolio Showcases | Portfolio architecture, micro-frontends, and interactive demos |
-| `LIRA` | **Lira Project** | Lira App Development & Cloud-Native Delivery | Core Frontend (`LIRA-1`), DevOps Delivery (`LIRA-6`), AI Copilot (`LIRA-13`) |
+| `LIRA` | **Lira Project** | Lira App Development & Cloud-Native Delivery | Core Frontend (`LIRA-1`), DevOps Delivery (`LIRA-6`), AI Copilot (`LIRA-13`), v2.0 Scope Refactor (`LIRA-30`) |
 | `IG` | **Interview Guide** | Technical Interview Preparation | Distributed systems, Kubernetes deep dives, and system design |
 | `TS` | **Test Space** | Playground & Sandbox Environment | Testing workflows and temporary experiment tracking |
 
@@ -154,6 +164,14 @@ The `LIRA` space within the application tracks the active roadmap for cloud-nati
 | `LIRA-11` | Task | Automated Code Quality & SonarQube / ESLint Pipeline | **Backlog** |
 | `LIRA-12` | Task | Comprehensive Unit & Integration Tests with Vitest | **To Do** |
 | `LIRA-13` | Epic | AI Copilot & Autonomous Agentic Assistant | **Done** |
+| `LIRA-30` | Epic | Lira v2.0 Scope Refactor & Enterprise UX Implementation | **Done** |
+| `LIRA-31` | Task | Strict UI Pruning (Projects, Dashboards, Teams, SPACES Header, Timeline, Approvals) | **Done** |
+| `LIRA-32` | Task | Advanced Multi-Dimensional Filters Explorer Page | **Done** |
+| `LIRA-33` | Task | Notification Center with Action Details & Ticket Hyperlinks | **Done** |
+| `LIRA-34` | Task | Jira-Grade Settings Popover Menu with Admin Navigation | **Done** |
+| `LIRA-35` | Task | Interactive Customise Sidebar Drawer with Preference Persistence | **Done** |
+| `LIRA-36` | Task | Geometric Multi-Tone App Launcher & Backup/Restore Engine | **Done** |
+| `LIRA-37` | Task | Summary & Capacity Analytics Dashboards with Progress Dials | **Done** |
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-04T06:26:53.565Z",
+  "savedAt": "2026-11-04T07:45:35.097Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -72,7 +72,7 @@
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-10-28T08:15:46.633Z",
-      "issueCount": 29,
+      "issueCount": 37,
       "file": "spaces/LIRA.json"
     },
     {
@@ -98,18 +98,6 @@
       "id": 14,
       "issueCount": 18,
       "file": "spaces/AI.json"
-    },
-    {
-      "name": "Test Space",
-      "key": "TS",
-      "icon": "📋",
-      "color": "#FF991F",
-      "description": "",
-      "createdAt": "2026-10-31T19:45:59.152Z",
-      "updatedAt": "2026-10-31T19:45:59.152Z",
-      "id": 15,
-      "issueCount": 0,
-      "file": "spaces/TS.json"
     }
   ],
   "issues": [
@@ -7600,8 +7588,6 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": null,
-      "startDate": null,
       "labels": [
         "claude-skill",
         "finance"
@@ -7614,14 +7600,16 @@
           "type": "created",
           "text": "Issue created",
           "author": "VY",
-          "timestamp": "2026-11-04T06:23:17.958Z"
+          "timestamp": "2026-11-04T06:23:17.958Z",
+          "createdAt": "2026-11-04T07:11:55.458Z"
         },
         {
           "id": 1793773397963,
           "type": "status_change",
           "text": "Status changed to Done",
           "author": "VY",
-          "timestamp": "2026-11-04T06:23:17.958Z"
+          "timestamp": "2026-11-04T06:23:17.958Z",
+          "createdAt": "2026-11-04T07:11:55.458Z"
         }
       ],
       "attachments": [],
@@ -7636,6 +7624,334 @@
       "watchers": [],
       "id": 132,
       "parentId": 71
+    },
+    {
+      "id": 133,
+      "spaceId": 6,
+      "key": "LIRA-30",
+      "title": "Lira v2.0 Scope Refactor & Enterprise UX Implementation",
+      "description": "## Lira v2.0 Scope Refactor\nComplete architectural overhaul with aggressive UI pruning of decommissioned elements and enterprise functional implementations.",
+      "type": "epic",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "refactor",
+        "ux",
+        "architecture"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793778334995",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Marked Lira v2.0 Epic as Done",
+          "createdAt": "2026-11-04T07:45:34.994Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 30000,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T07:45:34.994Z",
+      "updatedAt": "2026-11-04T07:45:34.994Z"
+    },
+    {
+      "id": 134,
+      "spaceId": 6,
+      "key": "LIRA-31",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Strict UI Pruning (Projects, Dashboards, Teams, SPACES Header, Timeline, Approvals)",
+      "description": "Removed bloated non-functional navigation menus (Projects, Dashboards, Teams from top nav; SPACES header row & bottom utility items from left sidebar; Timeline and Approvals from board tabs).",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "pruning",
+        "cleanup"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793778334996",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Completed strict UI pruning",
+          "createdAt": "2026-11-04T07:45:34.994Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 31000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T07:45:34.994Z",
+      "updatedAt": "2026-11-04T07:45:34.994Z"
+    },
+    {
+      "id": 135,
+      "spaceId": 6,
+      "key": "LIRA-32",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Advanced Multi-Dimensional Filters Explorer Page",
+      "description": "Built a dedicated Filters Explorer Page (/filters) supporting cross-space slicing by Spaces, Status, Priority, Tags, Assignee, and Teams with CSV and JSON exports.",
+      "type": "task",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "filters",
+        "search"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793778334997",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Implemented full Filters Page",
+          "createdAt": "2026-11-04T07:45:34.994Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 32000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T07:45:34.994Z",
+      "updatedAt": "2026-11-04T07:45:34.994Z"
+    },
+    {
+      "id": 136,
+      "spaceId": 6,
+      "key": "LIRA-33",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Notification Center with Action Details & Ticket Hyperlinks",
+      "description": "Updated Notifications bell popover to display concrete update activity (created, status changed, updated) with clickable direct ticket links.",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "notifications",
+        "ux"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793778334998",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Notification details and hyperlinks enabled",
+          "createdAt": "2026-11-04T07:45:34.994Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 33000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T07:45:34.994Z",
+      "updatedAt": "2026-11-04T07:45:34.994Z"
+    },
+    {
+      "id": 137,
+      "spaceId": 6,
+      "key": "LIRA-34",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Jira-Grade Settings Popover Menu with Admin Navigation",
+      "description": "Implemented settings dropdown matching reference design (Personal Jira settings, Jira admin settings, Atlassian admin settings, search bar, and system diagnostics).",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "settings",
+        "admin"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793778334999",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Settings Popover Menu implemented",
+          "createdAt": "2026-11-04T07:45:34.994Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 34000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T07:45:34.994Z",
+      "updatedAt": "2026-11-04T07:45:34.994Z"
+    },
+    {
+      "id": 138,
+      "spaceId": 6,
+      "key": "LIRA-35",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Interactive Customise Sidebar Drawer with Preference Persistence",
+      "description": "Added modal dialog matching reference design allowing users to toggle visible navigation items and app shortcuts, persisting preferences to localStorage.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "sidebar",
+        "customization"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793778335000",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Customise sidebar modal completed",
+          "createdAt": "2026-11-04T07:45:34.994Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 35000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T07:45:34.994Z",
+      "updatedAt": "2026-11-04T07:45:34.994Z"
+    },
+    {
+      "id": 139,
+      "spaceId": 6,
+      "key": "LIRA-36",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Geometric Multi-Tone App Launcher & Backup/Restore Engine",
+      "description": "Replaced basic icon with aesthetic multi-tone geometric app launcher button and wired Backup & Restore button directly to system data management dialog.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "app-launcher",
+        "backup-restore"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793778335001",
+          "type": "status_change",
+          "author": "VY",
+          "text": "App Launcher and Backup trigger completed",
+          "createdAt": "2026-11-04T07:45:34.994Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 36000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T07:45:34.994Z",
+      "updatedAt": "2026-11-04T07:45:34.994Z"
+    },
+    {
+      "id": 140,
+      "spaceId": 6,
+      "key": "LIRA-37",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Summary & Capacity Analytics Dashboards with Progress Dials",
+      "description": "Built SummaryView with completion dial, status breakdown, priority distribution, epic progress, and CapacityView with developer workload allocation bars.",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "summary",
+        "capacity",
+        "analytics"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793778335002",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Summary & Capacity analytics views built",
+          "createdAt": "2026-11-04T07:45:34.994Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 37000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T07:45:34.994Z",
+      "updatedAt": "2026-11-04T07:45:34.994Z"
     }
   ]
 }

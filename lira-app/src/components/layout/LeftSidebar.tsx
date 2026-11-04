@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {
-  ChevronLeft, ChevronRight, Plus, Filter,
-  LayoutDashboard, Target, Users, Folder,
+  ChevronLeft, ChevronRight, Plus,
+  Users, Folder,
   Settings,
   ChevronDown, MoreHorizontal, Star, Trash2, Archive,
   Edit3, Palette
 } from 'lucide-react';
 import type { Space } from '../../types/space';
 import { deleteSpace } from '../../hooks/useSpaces';
+import { CustomiseSidebarModal } from './CustomiseSidebarModal';
 
 interface LeftSidebarProps {
   spaces: Space[];
@@ -17,13 +18,6 @@ interface LeftSidebarProps {
   onEditSpace?: (space: Space) => void;
 }
 
-const UTILITY_ITEMS = [
-  { icon: <Filter className="w-4 h-4" />, label: 'Filters' },
-  { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboards' },
-  { icon: <Users className="w-4 h-4" />, label: 'Teams' },
-  { icon: <Target className="w-4 h-4" />, label: 'Goals' },
-];
-
 export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   spaces,
   activeSpaceId,
@@ -31,10 +25,23 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onCreateSpace,
   onEditSpace,
 }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean>(
+    () => localStorage.getItem('lira_sidebar_collapsed') === 'true'
+  );
   const [spacesExpanded, setSpacesExpanded] = useState(true);
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [starredIds, setStarredIds] = useState<Set<number>>(new Set());
+  const [showCustomiseModal, setShowCustomiseModal] = useState(false);
+
+  const collapse = () => {
+    localStorage.setItem('lira_sidebar_collapsed', 'true');
+    setCollapsed(true);
+  };
+
+  const expand = () => {
+    localStorage.setItem('lira_sidebar_collapsed', 'false');
+    setCollapsed(false);
+  };
 
   const toggleStar = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -56,17 +63,36 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
   if (collapsed) {
     return (
-      <aside className="w-12 bg-[#1A2332] flex flex-col items-center py-3 gap-2 flex-shrink-0 border-r border-black/20">
-        <button onClick={() => setCollapsed(false)} className="p-2 rounded hover:bg-white/10 text-white/60 hover:text-white transition-colors">
+      <aside className="w-12 bg-[#1A2332] flex flex-col items-center py-3 gap-2 flex-shrink-0 border-r border-black/20 transition-all duration-200">
+        {/* Expand button */}
+        <button
+          onClick={expand}
+          className="p-2 rounded hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+          title="Expand sidebar"
+        >
           <ChevronRight className="w-4 h-4" />
         </button>
+
         <div className="w-px h-4 bg-white/20 mx-auto" />
+
+        {/* + New space button */}
+        <button
+          onClick={onCreateSpace}
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+          title="New space"
+        >
+          <Plus className="w-4 h-4" />
+        </button>
+
+        {/* Space icon buttons */}
         {spaces.map(space => (
           <button
             key={space.id}
             onClick={() => onSpaceSelect(space.id!)}
             className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm transition-all ${
-              activeSpaceId === space.id ? 'ring-2 ring-white/60 text-white' : 'text-white/60 hover:text-white hover:bg-white/10'
+              activeSpaceId === space.id
+                ? 'ring-2 ring-white/60 text-white'
+                : 'text-white/60 hover:text-white hover:bg-white/10'
             }`}
             style={activeSpaceId === space.id ? { backgroundColor: space.color } : {}}
             title={space.name}
@@ -79,43 +105,58 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   }
 
   return (
-    <aside className="w-64 bg-[#1A2332] flex flex-col flex-shrink-0 border-r border-black/20 overflow-y-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between px-3 py-3 border-b border-white/10">
-        <span className="text-white/50 text-xs font-semibold uppercase tracking-wider">Spaces</span>
-        <div className="flex items-center gap-1">
-          <button onClick={onCreateSpace} className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors" title="New space">
-            <Plus className="w-3.5 h-3.5" />
-          </button>
-          <button onClick={() => setCollapsed(true)} className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors">
-            <ChevronLeft className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
+    <aside className="w-64 bg-[#1A2332] flex flex-col flex-shrink-0 border-r border-black/20 overflow-y-auto transition-all duration-200">
 
       {/* Starred */}
       {starredIds.size > 0 && (
         <div className="py-2 border-b border-white/10">
           <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">Starred</div>
           {spaces.filter(s => s.id && starredIds.has(s.id)).map(space => (
-            <SpaceRow key={space.id} space={space} active={activeSpaceId === space.id} starred onSelect={onSpaceSelect}
+            <SpaceRow
+              key={space.id}
+              space={space}
+              active={activeSpaceId === space.id}
+              starred
+              onSelect={onSpaceSelect}
               onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
               menuOpen={openMenuId === space.id}
-              onStar={e => toggleStar(space.id!, e)} onDelete={e => handleDelete(space, e)}
+              onStar={e => toggleStar(space.id!, e)}
+              onDelete={e => handleDelete(space, e)}
               onEdit={() => { onEditSpace?.(space); setOpenMenuId(null); }}
             />
           ))}
         </div>
       )}
 
-      {/* Your Spaces */}
-      <div className="py-2 flex-1">
+      {/* Your Spaces header */}
+      <div className="flex items-center justify-between px-3 pt-4 pb-1">
+        <span className="text-white/40 text-[10px] font-semibold uppercase tracking-wider">Your Spaces</span>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={onCreateSpace}
+            className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+            title="New space"
+          >
+            <Plus className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={collapse}
+            className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+            title="Collapse sidebar"
+          >
+            <ChevronLeft className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Spaces list expand/collapse toggle */}
+      <div className="py-1 flex-1">
         <button
           onClick={() => setSpacesExpanded(!spacesExpanded)}
           className="w-full flex items-center gap-2 px-3 py-1.5 text-white/40 text-[10px] font-semibold uppercase tracking-wider hover:text-white/60 transition-colors"
         >
           <ChevronDown className={`w-3 h-3 transition-transform ${spacesExpanded ? '' : '-rotate-90'}`} />
-          Your Spaces
+          {spacesExpanded ? 'Hide' : 'Show'}
         </button>
 
         {spacesExpanded && (
@@ -138,21 +179,20 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
         )}
       </div>
 
-      {/* Utility nav */}
-      <div className="border-t border-white/10 py-1">
-        {UTILITY_ITEMS.map(item => (
-          <button key={item.label} className="w-full flex items-center gap-3 px-3 py-2 text-sm text-white/50 hover:text-white hover:bg-white/5 transition-all">
-            <span className="text-white/40">{item.icon}</span>
-            {item.label}
-          </button>
-        ))}
-      </div>
-
+      {/* Customise sidebar footer */}
       <div className="border-t border-white/10 px-3 py-3">
-        <button className="w-full flex items-center gap-2 text-xs text-white/30 hover:text-white/50 transition-colors">
+        <button
+          onClick={() => setShowCustomiseModal(true)}
+          className="w-full flex items-center gap-2 text-xs text-white/40 hover:text-white/80 transition-colors cursor-pointer"
+        >
           <Settings className="w-3.5 h-3.5" /> Customise sidebar
         </button>
       </div>
+
+      <CustomiseSidebarModal
+        isOpen={showCustomiseModal}
+        onClose={() => setShowCustomiseModal(false)}
+      />
     </aside>
   );
 };

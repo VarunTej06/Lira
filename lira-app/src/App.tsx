@@ -1,8 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { TopNavigation } from './components/layout/TopNavigation';
 import { LeftSidebar } from './components/layout/LeftSidebar';
 import { BoardActionBar } from './components/board/BoardActionBar';
 import { KanbanBoard } from './components/board/KanbanBoard';
+import { SummaryView } from './components/board/SummaryView';
+import { CapacityView } from './components/board/CapacityView';
+import { FiltersPage } from './components/filter/FiltersPage';
 import { IssueDetailModal } from './components/issue/IssueDetailModal';
 import { CreateIssueModal } from './components/issue/CreateIssueModal';
 import { CreateSpaceModal } from './components/board/CreateSpaceModal';
@@ -10,10 +13,12 @@ import { LiraInfoChatbot } from './components/ai/LiraInfoChatbot';
 import { LiraAIAgentConsole } from './components/ai/LiraAIAgentConsole';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { useSpaces } from './hooks/useSpaces';
-import { useIssuesBySpace } from './hooks/useIssues';
+import { useIssuesBySpace, useAllIssues } from './hooks/useIssues';
 import { requestDurableStorage } from './db/db';
 import { initLocalDiskSync } from './services/localDiskSync';
 import type { Issue } from './types/issue';
+
+type GroupBy = 'status' | 'assignee' | 'priority' | 'epic';
 
 export default function App() {
   const spaces = useSpaces();
@@ -35,13 +40,28 @@ export default function App() {
   const [showAIChatbot, setShowAIChatbot] = useState(false);
   const [showAIAgent, setShowAIAgent] = useState(false);
   const [pendingAgentPrompt, setPendingAgentPrompt] = useState<string | null>(null);
+
+  // Search & Filter & Grouping states
   const [searchQuery, setSearchQuery] = useState('');
   const [filterAssignee, setFilterAssignee] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<{ priorities: string[]; labels: string[] }>({
+    priorities: [],
+    labels: [],
+  });
+  const [groupBy, setGroupBy] = useState<GroupBy>('status');
   const [activeTab, setActiveTab] = useState('Board');
   const [initialized, setInitialized] = useState(false);
 
   const activeSpace = spaces?.find(s => s.id === activeSpaceId);
   const issues = useIssuesBySpace(activeSpaceId) || [];
+  const allIssues = useAllIssues() || [];
+
+  // Available labels for current space
+  const availableLabels = useMemo(() => {
+    const set = new Set<string>();
+    issues.forEach(i => i.labels?.forEach(l => set.add(l)));
+    return Array.from(set);
+  }, [issues]);
 
   // Current top of navigation stack
   const selectedIssue = issueNavStack.length > 0 ? issueNavStack[issueNavStack.length - 1] : null;
@@ -78,9 +98,7 @@ export default function App() {
   }, []);
 
   const navigateToIssue = useCallback((issue: Issue) => {
-    // Push onto navigation stack for breadcrumb drill-down
     setIssueNavStack(prev => {
-      // If already in stack, pop back to it
       const existingIdx = prev.findIndex(i => i.id === issue.id);
       if (existingIdx >= 0) return prev.slice(0, existingIdx + 1);
       return [...prev, issue];
@@ -96,12 +114,23 @@ export default function App() {
     setShowCreateIssue(true);
   }, []);
 
+  // Filter preset handler from TopNav
+  const handleApplyFilter = useCallback((preset: string) => {
+    if (preset === 'all') {
+      setActiveFilters({ priorities: [], labels: [] });
+      setFilterAssignee(false);
+      setSearchQuery('');
+    } else if (preset === 'open') {
+      setActiveFilters(prev => ({ ...prev }));
+    }
+  }, []);
+
   if (!initialized) {
     return (
       <div className="h-screen flex items-center justify-center bg-jira-bg">
         <div className="text-center space-y-3">
           <img src="/lira-logo.png" alt="Lira Logo" className="w-16 h-16 mx-auto animate-pulse object-contain" />
-          <p className="text-jira-muted text-sm font-medium">Initializing Lira…</p>
+          <p className="text-jira-muted text-sm font-medium">Initializing Lira v2.0…</p>
         </div>
       </div>
     );
@@ -112,6 +141,11 @@ export default function App() {
       <TopNavigation
         onCreateIssue={() => setShowCreateIssue(true)}
         onToggleAI={() => setShowAIAgent(v => !v)}
+        issues={allIssues.length > 0 ? allIssues : issues}
+        spaces={spaces || []}
+        onSelectIssue={openIssue}
+        onApplyFilter={handleApplyFilter}
+        onNavigateToFilters={() => setActiveTab('Filters')}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -123,19 +157,31 @@ export default function App() {
         />
 
         <main className="flex-1 flex flex-col overflow-hidden">
-          {activeSpaceId ? (
+          {activeTab === 'Filters' ? (
+            <FiltersPage
+              issues={allIssues.length > 0 ? allIssues : issues}
+              spaces={spaces || []}
+              onSelectIssue={openIssue}
+              onBackToBoard={() => setActiveTab('Board')}
+            />
+          ) : activeSpaceId ? (
             <>
               <BoardActionBar
                 space={activeSpace}
+                issues={issues}
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
                 filterAssignee={filterAssignee}
                 onFilterAssigneeToggle={() => setFilterAssignee(f => !f)}
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
+                onFilterChange={setActiveFilters}
+                onGroupChange={setGroupBy}
+                onClearFilters={() => setActiveFilters({ priorities: [], labels: [] })}
+                availableLabels={availableLabels}
               />
 
-              {activeTab === 'Board' ? (
+              {activeTab === 'Board' && (
                 <div className="flex-1 overflow-hidden min-h-0 flex flex-col">
                   <KanbanBoard
                     issues={issues}
@@ -144,14 +190,34 @@ export default function App() {
                     filterAssignee={filterAssignee}
                     onIssueClick={openIssue}
                     onAddIssue={handleAddIssue}
+                    activeFilters={activeFilters}
+                    groupBy={groupBy}
                   />
                 </div>
-              ) : (
+              )}
+
+              {activeTab === 'Summary' && (
+                <SummaryView
+                  issues={issues}
+                  space={activeSpace}
+                  onIssueClick={openIssue}
+                />
+              )}
+
+              {activeTab === 'Capacity' && (
+                <CapacityView
+                  issues={issues}
+                  space={activeSpace}
+                  onIssueClick={openIssue}
+                />
+              )}
+
+              {activeTab !== 'Board' && activeTab !== 'Summary' && activeTab !== 'Capacity' && (
                 <div className="flex-1 flex items-center justify-center bg-jira-bg">
                   <div className="text-center space-y-3">
                     <div className="text-5xl">🚧</div>
                     <p className="text-jira-muted text-sm font-medium">{activeTab} view — coming soon</p>
-                    <button onClick={() => setActiveTab('Board')} className="text-jira-blue text-sm hover:underline">
+                    <button onClick={() => setActiveTab('Board')} className="text-jira-blue text-sm hover:underline cursor-pointer">
                       Back to Board
                     </button>
                   </div>
@@ -163,7 +229,7 @@ export default function App() {
               <div className="text-center space-y-4 max-w-md px-4">
                 <img src="/lira-full-logo.png" alt="Lira - Learner's Jira Workspace" className="h-20 mx-auto object-contain drop-shadow-sm" />
                 <p className="text-jira-muted text-sm">Select a space or create one to get started.</p>
-                <button onClick={() => setShowCreateSpace(true)} className="px-5 py-2.5 bg-jira-blue text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+                <button onClick={() => setShowCreateSpace(true)} className="px-5 py-2.5 bg-jira-blue text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer">
                   Create your first space
                 </button>
               </div>
@@ -172,7 +238,7 @@ export default function App() {
         </main>
       </div>
 
-      {/* Issue detail modal — wrapped in error boundary so crashes don't kill the whole app */}
+      {/* Issue detail modal */}
       <ErrorBoundary
         fallback={
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={closeModal}>

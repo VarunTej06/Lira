@@ -3,7 +3,7 @@
   "spaceId": 14,
   "spaceKey": "AI",
   "spaceName": "AI Projects",
-  "updatedAt": "2026-11-04T06:26:53.565Z",
+  "updatedAt": "2026-11-04T07:45:35.097Z",
   "issueCount": 18,
   "space": {
     "name": "AI Projects",
@@ -1176,8 +1176,6 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": null,
-      "startDate": null,
       "labels": [
         "claude-skill",
         "finance"
@@ -1190,14 +1188,16 @@
           "type": "created",
           "text": "Issue created",
           "author": "VY",
-          "timestamp": "2026-11-04T06:23:17.958Z"
+          "timestamp": "2026-11-04T06:23:17.958Z",
+          "createdAt": "2026-11-04T07:11:55.458Z"
         },
         {
           "id": 1793773397963,
           "type": "status_change",
           "text": "Status changed to Done",
           "author": "VY",
-          "timestamp": "2026-11-04T06:23:17.958Z"
+          "timestamp": "2026-11-04T06:23:17.958Z",
+          "createdAt": "2026-11-04T07:11:55.458Z"
         }
       ],
       "attachments": [],

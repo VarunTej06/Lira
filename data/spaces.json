@@ -1,8 +1,8 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-04T06:26:53.565Z",
-  "spaceCount": 9,
-  "totalIssueCount": 116,
+  "savedAt": "2026-11-04T07:45:35.097Z",
+  "spaceCount": 8,
+  "totalIssueCount": 124,
   "spaces": [
     {
       "id": 1,
@@ -73,7 +73,7 @@
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-10-28T08:15:46.633Z",
-      "issueCount": 29,
+      "issueCount": 37,
       "file": "spaces/LIRA.json"
     },
     {
@@ -99,18 +99,6 @@
       "id": 14,
       "issueCount": 18,
       "file": "spaces/AI.json"
-    },
-    {
-      "name": "Test Space",
-      "key": "TS",
-      "icon": "📋",
-      "color": "#FF991F",
-      "description": "",
-      "createdAt": "2026-10-31T19:45:59.152Z",
-      "updatedAt": "2026-10-31T19:45:59.152Z",
-      "id": 15,
-      "issueCount": 0,
-      "file": "spaces/TS.json"
     }
   ]
 }

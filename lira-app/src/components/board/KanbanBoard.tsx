@@ -12,6 +12,8 @@ interface KanbanBoardProps {
   filterAssignee: boolean;
   onIssueClick: (issue: Issue) => void;
   onAddIssue: (status: string) => void;
+  activeFilters?: { priorities: string[]; labels: string[] };
+  groupBy?: 'status' | 'assignee' | 'priority' | 'epic';
 }
 
 const COLUMNS = [
@@ -28,6 +30,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   filterAssignee,
   onIssueClick,
   onAddIssue,
+  activeFilters,
+  groupBy: _groupBy = 'status',
 }) => {
   const [optimisticUpdates, setOptimisticUpdates] = useState<Record<number, string>>({});
   const boardRef = useRef<HTMLDivElement>(null);
@@ -51,8 +55,18 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
       filtered = filtered.filter(i => i.assigneeInitials === 'VY');
     }
 
+    // Apply priority filters if any selected
+    if (activeFilters?.priorities && activeFilters.priorities.length > 0) {
+      filtered = filtered.filter(i => activeFilters.priorities.includes(i.priority));
+    }
+
+    // Apply label filters if any selected
+    if (activeFilters?.labels && activeFilters.labels.length > 0) {
+      filtered = filtered.filter(i => i.labels.some(l => activeFilters.labels.includes(l)));
+    }
+
     return filtered;
-  }, [issues, searchQuery, filterAssignee]);
+  }, [issues, searchQuery, filterAssignee, activeFilters]);
 
   const issuesByColumn = useMemo(() => {
     const columns: Record<string, Issue[]> = {};

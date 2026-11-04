@@ -3,8 +3,8 @@
   "spaceId": 14,
   "spaceKey": "AI",
   "spaceName": "AI Projects",
-  "updatedAt": "2026-10-31T20:40:16.260Z",
-  "issueCount": 17,
+  "updatedAt": "2026-11-04T06:26:53.565Z",
+  "issueCount": 18,
   "space": {
     "name": "AI Projects",
     "key": "AI",
@@ -14,7 +14,7 @@
     "createdAt": "2026-10-28T18:31:08.254Z",
     "updatedAt": "2026-10-31T14:52:42.942Z",
     "id": 14,
-    "issueCount": 17,
+    "issueCount": 18,
     "file": "spaces/AI.json"
   },
   "issues": [
@@ -1163,6 +1163,55 @@
       ],
       "createdAt": "2026-10-31T08:00:00.000Z",
       "updatedAt": "2026-10-31T08:00:00.000Z"
+    },
+    {
+      "spaceId": 14,
+      "key": "AI-18",
+      "title": "Monthly Budget and Wealth Tracker",
+      "description": "## Overview\nA Claude skill to automatically track monthly budgets and personal wealth.\n\n## Google Sheet\n[Monthly Budget and Wealth Tracker](https://docs.google.com/spreadsheets/d/1w7gcvuJ2bI81twcawO0ibjMkA0VDy_zRUB5H_0b9p6A/edit?gid=4#gid=4)",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": null,
+      "startDate": null,
+      "labels": [
+        "claude-skill",
+        "finance"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": 1793773397962,
+          "type": "created",
+          "text": "Issue created",
+          "author": "VY",
+          "timestamp": "2026-11-04T06:23:17.958Z"
+        },
+        {
+          "id": 1793773397963,
+          "type": "status_change",
+          "text": "Status changed to Done",
+          "author": "VY",
+          "timestamp": "2026-11-04T06:23:17.958Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "timeEstimate": null,
+      "timeLogged": null,
+      "rank": "zzz78",
+      "createdAt": "2026-11-04T06:23:17.958Z",
+      "updatedAt": "2026-11-04T06:23:17.958Z",
+      "resolvedAt": "2026-11-04T06:23:17.958Z",
+      "storyPoints": null,
+      "watchers": [],
+      "id": 132,
+      "parentId": 71
     }
   ]
 }

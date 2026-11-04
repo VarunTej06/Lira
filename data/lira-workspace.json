@@ -1,13 +1,13 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-04T07:45:35.097Z",
+  "savedAt": "2026-11-04T07:55:53.355Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
       "id": 1,
       "name": "General Tasks",
       "key": "GT",
-      "icon": "📋",
+      "icon": "\ud83d\udccb",
       "color": "#6554C0",
       "description": "General day-to-day tasks and miscellaneous work items",
       "createdAt": "2026-08-29T08:15:46.633Z",
@@ -19,7 +19,7 @@
       "id": 2,
       "name": "Creator Hub",
       "key": "CH",
-      "icon": "✨",
+      "icon": "\u2728",
       "color": "#00B8D9",
       "description": "Content creation, writing, and creative projects",
       "createdAt": "2026-09-13T08:15:46.633Z",
@@ -31,7 +31,7 @@
       "id": 3,
       "name": "Certifications",
       "key": "CERT",
-      "icon": "🏆",
+      "icon": "\ud83c\udfc6",
       "color": "#0052CC",
       "description": "Technical certification study plans and exam preparation",
       "createdAt": "2026-09-28T08:15:46.633Z",
@@ -43,7 +43,7 @@
       "id": 4,
       "name": "Courses",
       "key": "COUR",
-      "icon": "📚",
+      "icon": "\ud83d\udcda",
       "color": "#36B37E",
       "description": "Online course tracking and learning milestones",
       "createdAt": "2026-10-08T08:15:46.633Z",
@@ -55,7 +55,7 @@
       "id": 5,
       "name": "Atmos - Weather App",
       "key": "AP",
-      "icon": "🌤️",
+      "icon": "\ud83c\udf24\ufe0f",
       "color": "#FF5630",
       "description": "Side project: Full-stack weather application",
       "createdAt": "2026-10-13T08:15:46.633Z",
@@ -67,18 +67,18 @@
       "id": 6,
       "name": "Lira",
       "key": "LIRA",
-      "icon": "🎯",
+      "icon": "\ud83c\udfaf",
       "color": "#0052CC",
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-10-28T08:15:46.633Z",
-      "issueCount": 37,
+      "issueCount": 42,
       "file": "spaces/LIRA.json"
     },
     {
       "name": "Interview Guide",
       "key": "IG",
-      "icon": "🧠",
+      "icon": "\ud83e\udde0",
       "color": "#0052CC",
       "description": "",
       "createdAt": "2026-10-28T18:30:46.269Z",
@@ -90,7 +90,7 @@
     {
       "name": "AI Projects",
       "key": "AI",
-      "icon": "🗂️",
+      "icon": "\ud83d\uddc2\ufe0f",
       "color": "#0052CC",
       "description": "",
       "createdAt": "2026-10-28T18:31:08.254Z",
@@ -164,7 +164,7 @@
           "id": "0b8b37ef-b8ee-432f-b762-efc352e11954",
           "author": "VY",
           "authorInitials": "VY",
-          "content": "Passed the exam with a score of 92%! 🎉 The KodeKloud labs were incredibly helpful for the hands-on questions.",
+          "content": "Passed the exam with a score of 92%! \ud83c\udf89 The KodeKloud labs were incredibly helpful for the hands-on questions.",
           "createdAt": "2026-10-22T22:41:46.000Z"
         }
       ],
@@ -681,7 +681,7 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": "2026-11-02T08:15:46.633Z",
+      "dueDate": "2026-11-30T00:00:00.000Z",
       "startDate": "2026-10-27T08:15:46.633Z",
       "labels": [
         "docker",
@@ -728,7 +728,7 @@
         "VY"
       ],
       "createdAt": "2026-10-27T08:15:46.633Z",
-      "updatedAt": "2026-10-28T08:15:46.633Z"
+      "updatedAt": "2026-11-04T07:50:03.498Z"
     },
     {
       "id": 23,
@@ -3091,7 +3091,7 @@
       "epicId": 66,
       "epicLink": "Top 1% DevOps AI Engineering Solutions - Next-Gen Platforms",
       "title": "AI Software Factory - port.io",
-      "description": "## Overview\nImplement an **AI Software Factory** using [Port (port.io)](https://www.port.io/) — an agentic SDLC and Internal Developer Portal (IDP) platform that brings AI automation directly into development workflows.\n\n## Key Capabilities & DevOps Focus\n- **Agentic SDLC Platform:** Bridge development teams, platform infrastructure, and autonomous AI agents into a single orchestration plane.\n- **Internal Developer Portal (IDP):** Unified service catalog, software templates, scorecards, and automated compliance auditing.\n- **Self-Service AI Workflows:** Enable engineers to trigger autonomous scaffolding, cloud resource provisioning, and pipeline actions through declarative workflows.\n- **Context-Rich Knowledge Graph:** Real-time visibility into microservices, cloud dependencies, ownership, and deployment health for AI agents.\n\n## Implementation & Hands-on Roadmap\n- [ ] Connect Port workspace with GitHub/GitLab and Kubernetes clusters\n- [ ] Define blueprints for microservices, cloud resources, and CI/CD pipelines\n- [ ] Implement self-service actions powered by AI agents to scaffold new services and infrastructure\n- [ ] Establish automated scorecards to track security, DORA metrics, and production readiness\n\n## Resources\n- Platform URL: [Agentic SDLC Platform: Build Your AI Software Factory | Port](https://www.port.io/)\n- Documentation: Port Blueprints, Self-Service Actions, and API integration guides",
+      "description": "## Overview\nImplement an **AI Software Factory** using [Port (port.io)](https://www.port.io/) \u2014 an agentic SDLC and Internal Developer Portal (IDP) platform that brings AI automation directly into development workflows.\n\n## Key Capabilities & DevOps Focus\n- **Agentic SDLC Platform:** Bridge development teams, platform infrastructure, and autonomous AI agents into a single orchestration plane.\n- **Internal Developer Portal (IDP):** Unified service catalog, software templates, scorecards, and automated compliance auditing.\n- **Self-Service AI Workflows:** Enable engineers to trigger autonomous scaffolding, cloud resource provisioning, and pipeline actions through declarative workflows.\n- **Context-Rich Knowledge Graph:** Real-time visibility into microservices, cloud dependencies, ownership, and deployment health for AI agents.\n\n## Implementation & Hands-on Roadmap\n- [ ] Connect Port workspace with GitHub/GitLab and Kubernetes clusters\n- [ ] Define blueprints for microservices, cloud resources, and CI/CD pipelines\n- [ ] Implement self-service actions powered by AI agents to scaffold new services and infrastructure\n- [ ] Establish automated scorecards to track security, DORA metrics, and production readiness\n\n## Resources\n- Platform URL: [Agentic SDLC Platform: Build Your AI Software Factory | Port](https://www.port.io/)\n- Documentation: Port Blueprints, Self-Service Actions, and API integration guides",
       "type": "task",
       "status": "todo",
       "priority": "high",
@@ -3163,7 +3163,7 @@
       "epicId": 66,
       "epicLink": "Top 1% DevOps AI Engineering Solutions - Next-Gen Platforms",
       "title": "Auto Instrumentation in Observability - dash0",
-      "description": "## Overview\nSet up **Auto-Instrumentation in Observability** with [Dash0 (dash0.com)](https://www.dash0.com/) — an OpenTelemetry-native observability platform that utilizes AI directly within Kubernetes clusters to eliminate manual instrumentation toil.\n\n## Key Capabilities & DevOps Focus\n- **AI-Driven Cluster Auto-Instrumentation:** Instrument containerized workloads, microservices, and runtimes without modifying application source code.\n- **OpenTelemetry-Native Standards:** Pure OTel semantics for distributed traces, metrics, and logs with zero vendor lock-in.\n- **In-Cluster Intelligence:** Direct integration with Kubernetes operators, daemonsets, and eBPF probes to capture deep kernel and network telemetry.\n- **AI Telemetry Synthesis:** Intelligent anomaly correlation, distributed trace aggregation, and semantic log indexing out of the box.\n\n## Implementation & Hands-on Roadmap\n- [ ] Deploy the Dash0 Kubernetes operator across test clusters\n- [ ] Enable zero-code auto-instrumentation for polyglot services (Node.js, Python, Go, Java)\n- [ ] Validate distributed trace collection, span context propagation, and metric exports\n- [ ] Explore AI-driven anomaly detection and automated OTel pipeline optimization\n\n## Resources\n- Platform URL: [OpenTelemetry Native Observability · Dash0](https://www.dash0.com/)\n- OpenTelemetry Operator & Auto-Instrumentation Documentation",
+      "description": "## Overview\nSet up **Auto-Instrumentation in Observability** with [Dash0 (dash0.com)](https://www.dash0.com/) \u2014 an OpenTelemetry-native observability platform that utilizes AI directly within Kubernetes clusters to eliminate manual instrumentation toil.\n\n## Key Capabilities & DevOps Focus\n- **AI-Driven Cluster Auto-Instrumentation:** Instrument containerized workloads, microservices, and runtimes without modifying application source code.\n- **OpenTelemetry-Native Standards:** Pure OTel semantics for distributed traces, metrics, and logs with zero vendor lock-in.\n- **In-Cluster Intelligence:** Direct integration with Kubernetes operators, daemonsets, and eBPF probes to capture deep kernel and network telemetry.\n- **AI Telemetry Synthesis:** Intelligent anomaly correlation, distributed trace aggregation, and semantic log indexing out of the box.\n\n## Implementation & Hands-on Roadmap\n- [ ] Deploy the Dash0 Kubernetes operator across test clusters\n- [ ] Enable zero-code auto-instrumentation for polyglot services (Node.js, Python, Go, Java)\n- [ ] Validate distributed trace collection, span context propagation, and metric exports\n- [ ] Explore AI-driven anomaly detection and automated OTel pipeline optimization\n\n## Resources\n- Platform URL: [OpenTelemetry Native Observability \u00b7 Dash0](https://www.dash0.com/)\n- OpenTelemetry Operator & Auto-Instrumentation Documentation",
       "type": "task",
       "status": "todo",
       "priority": "high",
@@ -3308,7 +3308,7 @@
       "epicId": 66,
       "epicLink": "Top 1% DevOps AI Engineering Solutions - Next-Gen Platforms",
       "title": "AI SRE - Multi-Agent Root Cause Analysis (incident.io & resolve.ai)",
-      "description": "## Overview\nDeploy **AI SRE & Autonomous Root Cause Analysis (RCA)** leveraging multiple specialized agents to correlate logs, metrics, telemetry, and git diffs — achieving up to **95% RCA accuracy** during critical outages.\n\n## Featured Platforms\n1. **[incident.io](https://incident.io/)**: Modern incident management, automated paging, Slack/Teams live incident response rooms, and AI-driven incident timeline synthesis.\n2. **[ResolveAI (resolve.ai)](https://resolve.ai/)**: Autonomous AI SRE platform where specialized multi-agent swarms triage alerts, investigate observability signals across clusters, and diagnose root causes.\n\n## Key Capabilities & DevOps Focus\n- **Multi-Agent Signal Triangulation:** Autonomous agents simultaneously query metric dashboards, distributed traces, and pod logs to uncover hidden correlation patterns.\n- **Up to 95% RCA Accuracy:** Rapidly pinpoints breaking commit, memory leak, noisy neighbor, or misconfigured ingress within minutes instead of hours of war rooms.\n- **ChatOps & Co-Pilot Coordination:** Integrates seamlessly into Slack / Microsoft Teams with real-time status updates and remediation runbooks.\n- **Automated Post-Mortem & Blameless RCA:** Auto-compiles timeline of events, contributing factors, impacted SLOs, and prevention action items.\n\n## Implementation & Hands-on Roadmap\n- [ ] Configure incident.io integrations for ChatOps (Slack), PagerDuty, and telemetry providers\n- [ ] Onboard ResolveAI agent to sample Kubernetes cluster & APM telemetry streams\n- [ ] Simulate chaos engineering failure (pod crash-loop, database connection pool exhaustion)\n- [ ] Evaluate multi-agent diagnosis output, time-to-detect (TTD), and RCA accuracy rate\n- [ ] Validate automated post-mortem generation and Jira/Lira ticket remediation export\n\n## Resources\n- [incident.io Platform](https://incident.io/)\n- [ResolveAI | AI SRE Platform](https://resolve.ai/)",
+      "description": "## Overview\nDeploy **AI SRE & Autonomous Root Cause Analysis (RCA)** leveraging multiple specialized agents to correlate logs, metrics, telemetry, and git diffs \u2014 achieving up to **95% RCA accuracy** during critical outages.\n\n## Featured Platforms\n1. **[incident.io](https://incident.io/)**: Modern incident management, automated paging, Slack/Teams live incident response rooms, and AI-driven incident timeline synthesis.\n2. **[ResolveAI (resolve.ai)](https://resolve.ai/)**: Autonomous AI SRE platform where specialized multi-agent swarms triage alerts, investigate observability signals across clusters, and diagnose root causes.\n\n## Key Capabilities & DevOps Focus\n- **Multi-Agent Signal Triangulation:** Autonomous agents simultaneously query metric dashboards, distributed traces, and pod logs to uncover hidden correlation patterns.\n- **Up to 95% RCA Accuracy:** Rapidly pinpoints breaking commit, memory leak, noisy neighbor, or misconfigured ingress within minutes instead of hours of war rooms.\n- **ChatOps & Co-Pilot Coordination:** Integrates seamlessly into Slack / Microsoft Teams with real-time status updates and remediation runbooks.\n- **Automated Post-Mortem & Blameless RCA:** Auto-compiles timeline of events, contributing factors, impacted SLOs, and prevention action items.\n\n## Implementation & Hands-on Roadmap\n- [ ] Configure incident.io integrations for ChatOps (Slack), PagerDuty, and telemetry providers\n- [ ] Onboard ResolveAI agent to sample Kubernetes cluster & APM telemetry streams\n- [ ] Simulate chaos engineering failure (pod crash-loop, database connection pool exhaustion)\n- [ ] Evaluate multi-agent diagnosis output, time-to-detect (TTD), and RCA accuracy rate\n- [ ] Validate automated post-mortem generation and Jira/Lira ticket remediation export\n\n## Resources\n- [incident.io Platform](https://incident.io/)\n- [ResolveAI | AI SRE Platform](https://resolve.ai/)",
       "type": "task",
       "status": "todo",
       "priority": "highest",
@@ -4296,7 +4296,7 @@
       "epicId": 78,
       "epicLink": "Azure Certifications",
       "title": "AI - 103",
-      "description": "## Overview\nPrepare for Microsoft Certified: Azure AI Engineer Associate (AI-102 / AI-103).\n\n## Key Domains\n- Plan and manage an Azure AI solution (15–20%)\n- Implement content moderation solutions (10–15%)\n- Implement computer vision solutions (15–20%)\n- Implement natural language processing solutions (30–35%)\n- Implement knowledge mining and Azure AI Search (10–15%)\n- Implement generative AI solutions with Azure OpenAI Service (10–15%)",
+      "description": "## Overview\nPrepare for Microsoft Certified: Azure AI Engineer Associate (AI-102 / AI-103).\n\n## Key Domains\n- Plan and manage an Azure AI solution (15\u201320%)\n- Implement content moderation solutions (10\u201315%)\n- Implement computer vision solutions (15\u201320%)\n- Implement natural language processing solutions (30\u201335%)\n- Implement knowledge mining and Azure AI Search (10\u201315%)\n- Implement generative AI solutions with Azure OpenAI Service (10\u201315%)",
       "type": "task",
       "status": "todo",
       "priority": "medium",
@@ -4436,7 +4436,7 @@
       "epicId": 78,
       "epicLink": "Azure Certifications",
       "title": "AZ - 400",
-      "description": "## Overview\nMicrosoft Certified: DevOps Engineer Expert (AZ-400).\n\n## Key Domains\n- Configure processes and communications (10–15%)\n- Design and implement source control strategies (10–15%)\n- Design and implement build and release pipelines (50–55%)\n- Develop a security and compliance plan (10–15%)\n- Implement an instrumentation strategy (5–10%)",
+      "description": "## Overview\nMicrosoft Certified: DevOps Engineer Expert (AZ-400).\n\n## Key Domains\n- Configure processes and communications (10\u201315%)\n- Design and implement source control strategies (10\u201315%)\n- Design and implement build and release pipelines (50\u201355%)\n- Develop a security and compliance plan (10\u201315%)\n- Implement an instrumentation strategy (5\u201310%)",
       "type": "task",
       "status": "backlog",
       "priority": "high",
@@ -4506,7 +4506,7 @@
       "epicId": 78,
       "epicLink": "Azure Certifications",
       "title": "AZ - 305",
-      "description": "## Overview\nMicrosoft Certified: Azure Solutions Architect Expert (AZ-305).\n\n## Key Domains\n- Design identity, governance, and monitoring solutions (25–30%)\n- Design data storage solutions (20–25%)\n- Design business continuity solutions (15–20%)\n- Design infrastructure solutions (30–35%)",
+      "description": "## Overview\nMicrosoft Certified: Azure Solutions Architect Expert (AZ-305).\n\n## Key Domains\n- Design identity, governance, and monitoring solutions (25\u201330%)\n- Design data storage solutions (20\u201325%)\n- Design business continuity solutions (15\u201320%)\n- Design infrastructure solutions (30\u201335%)",
       "type": "task",
       "status": "backlog",
       "priority": "high",
@@ -4575,7 +4575,7 @@
       "epicId": 78,
       "epicLink": "Azure Certifications",
       "title": "AZ - 700",
-      "description": "## Overview\nMicrosoft Certified: Azure Network Engineer Associate (AZ-700).\n\n## Key Domains\n- Design and implement core networking infrastructure (20–25%)\n- Design, implement, and manage connectivity services (20–25%)\n- Design and implement application delivery services (20–25%)\n- Design and implement private access to Azure services (15–20%)\n- Secure and monitor network connections (15–20%)",
+      "description": "## Overview\nMicrosoft Certified: Azure Network Engineer Associate (AZ-700).\n\n## Key Domains\n- Design and implement core networking infrastructure (20\u201325%)\n- Design, implement, and manage connectivity services (20\u201325%)\n- Design and implement application delivery services (20\u201325%)\n- Design and implement private access to Azure services (15\u201320%)\n- Secure and monitor network connections (15\u201320%)",
       "type": "task",
       "status": "backlog",
       "priority": "high",
@@ -4651,7 +4651,7 @@
       "epicId": 78,
       "epicLink": "Azure Certifications",
       "title": "AZ - 500",
-      "description": "## Overview\nMicrosoft Certified: Azure Security Engineer Associate (AZ-500).\n\n## Key Domains\n- Manage identity and access (25–30%)\n- Secure networking (20–25%)\n- Secure compute, storage, and databases (20–25%)\n- Manage security operations (25–30%)",
+      "description": "## Overview\nMicrosoft Certified: Azure Security Engineer Associate (AZ-500).\n\n## Key Domains\n- Manage identity and access (25\u201330%)\n- Secure networking (20\u201325%)\n- Secure compute, storage, and databases (20\u201325%)\n- Manage security operations (25\u201330%)",
       "type": "task",
       "status": "backlog",
       "priority": "high",
@@ -7632,7 +7632,7 @@
       "title": "Lira v2.0 Scope Refactor & Enterprise UX Implementation",
       "description": "## Lira v2.0 Scope Refactor\nComplete architectural overhaul with aggressive UI pruning of decommissioned elements and enterprise functional implementations.",
       "type": "epic",
-      "status": "done",
+      "status": "inprogress",
       "priority": "highest",
       "assignee": "Varun Tej",
       "assigneeInitials": "VY",
@@ -7657,13 +7657,13 @@
       ],
       "attachments": [],
       "linkedIssues": [],
-      "rank": 30000,
+      "rank": 900,
       "storyPoints": 21,
       "watchers": [
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:55:52.796Z"
     },
     {
       "id": 134,
@@ -7952,6 +7952,216 @@
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
       "updatedAt": "2026-11-04T07:45:34.994Z"
+    },
+    {
+      "id": 141,
+      "spaceId": 6,
+      "key": "LIRA-38",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Interactive Account Profile (VY) Dropdown & Profile Editor Modal",
+      "description": "Wired top-right VY avatar to AccountDropdown matching Account Opions screen.png with profile editor modal, theme toggle, and local storage persistence.",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "account",
+        "profile",
+        "theme"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000001",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Completed AccountDropdown & profile editor",
+          "createdAt": "2026-11-04T08:35:54.340722Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 38000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T08:35:54.340722Z",
+      "updatedAt": "2026-11-04T08:35:54.340722Z"
+    },
+    {
+      "id": 142,
+      "spaceId": 6,
+      "key": "LIRA-39",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Jira Settings Popover Complete Suite of 8 Admin Modals",
+      "description": "Replaced dummy alerts with real interactive modals for General Settings, Notification Settings, Manage Spaces, Work Items Hierarchy, Marketplace Apps, User Management, Billing, and System Backup.",
+      "type": "task",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "settings",
+        "admin",
+        "modals"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000002",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Completed all 8 Jira settings modals",
+          "createdAt": "2026-11-04T08:35:54.340722Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 39000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T08:35:54.340722Z",
+      "updatedAt": "2026-11-04T08:35:54.340722Z"
+    },
+    {
+      "id": 143,
+      "spaceId": 6,
+      "key": "LIRA-40",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Space Three-Dots Menu: Board Settings, WIP Limits & Bulk Actions",
+      "description": "Implemented complete functional modals for Board Settings (card density & badges), WIP Limits (enforcement & column capacity indicators), Bulk Actions (batch status/priority/assignee/delete), and Export view to JSON.",
+      "type": "task",
+      "status": "done",
+      "priority": "highest",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "board-settings",
+        "wip-limits",
+        "bulk-actions"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000003",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Completed three-dots overflow menu functionalities",
+          "createdAt": "2026-11-04T08:35:54.340722Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 40000,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T08:35:54.340722Z",
+      "updatedAt": "2026-11-04T08:35:54.340722Z"
+    },
+    {
+      "id": 144,
+      "spaceId": 6,
+      "key": "LIRA-41",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Capacity View Grouping Engine & Real-Time Filter Chips",
+      "description": "Upgraded CapacityView with support for all 4 groupings (Status, Priority, Assignee, Epic), story point load distribution, and in-view filter chips (All, Assigned to VY, In Flight, High Priority, Overdue).",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "capacity",
+        "grouping",
+        "filtering"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000004",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Completed Capacity grouping and filters",
+          "createdAt": "2026-11-04T08:35:54.340722Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 41000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T08:35:54.340722Z",
+      "updatedAt": "2026-11-04T08:35:54.340722Z"
+    },
+    {
+      "id": 145,
+      "spaceId": 6,
+      "key": "LIRA-42",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Dynamic Sidebar Customization & Reactive Section Rendering",
+      "description": "Connected CustomiseSidebarModal to LeftSidebar to dynamically display/hide navigation items (For you, Recent, Filters, Dashboards, Teams, Apps) with localStorage persistence.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "sidebar",
+        "customization"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000005",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Completed sidebar customizer reactive rendering",
+          "createdAt": "2026-11-04T08:35:54.340722Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 42000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-04T08:35:54.340722Z",
+      "updatedAt": "2026-11-04T08:35:54.340722Z"
     }
-  ]
+  ],
+  "exportedAt": "2026-11-04T08:35:54.340722Z"
 }

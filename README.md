@@ -35,10 +35,12 @@
 * **Strict Pruning & Zero Bloat**: Purged all dead menus (`Projects`, `Dashboards`, `Teams` in top nav, old `SPACES` header row and bottom utility list in left sidebar, `Timeline`/`Approvals` in board tabs).
 * **Multi-Dimensional Filters Explorer**: Full-page interactive JQL query table filtering across Spaces, Status, Priority, Tags/Labels, Assignees, and Teams with instant CSV & JSON exports.
 * **Action-Detail Notifications Center**: Bell popover displaying concrete audit action details (created, status transitioned, comments, edits) with clickable direct ticket hyperlinks.
-* **Jira-Grade Settings Popover Menu**: Searchable admin panel modeled directly from Jira Cloud with Personal settings, Jira admin settings (System & local PC data, Apps, Spaces, Work items, Marketplace), and Atlassian admin navigation.
-* **Interactive "Customise Your Sidebar"**: Modal drawer allowing users to customize visible navigation items and app shortcuts with `localStorage` persistence.
+* **Jira-Grade Settings Popover Menu & 8 Dedicated Modals**: Searchable admin panel modeled directly from Jira Cloud with working popups for General Settings, Notification Settings, System & Disk Backup, Jira Apps, Manage Spaces, Work Items Hierarchy, Marketplace Apps, User Management, and Billing.
+* **Interactive Account Options (`VY`) & Profile Editor**: Dedicated account popover matching Jira Cloud with Profile editor modal, email & initials manager, and Light/Dark workspace theme switcher.
+* **Space Overflow Actions (`...`)**: Fully operational Board Settings modal (card density & badge toggles), WIP Limits engine (with column caps and over-capacity warnings), and Bulk Actions modal (batch status, priority, assignee, and deletion).
+* **Enhanced Capacity & Workload Allocation**: Complete 4-way grouping engine (`Status`, `Assignee`, `Priority`, `Epic`) with story point capacity load bars, throughput dials, and in-view quick filter chips (`All`, `Assigned to VY`, `In Flight`, `High Priority`, `Overdue`).
+* **Interactive & Reactive "Customise Your Sidebar"**: Modal drawer allowing users to customize visible navigation items (For you, Recent, Filters, Dashboards, Teams, Apps, Starred, Spaces) with instant reactive rendering and `localStorage` persistence.
 * **Aesthetic Geometric App Launcher**: Multi-tone gradient 9-module app switcher button with instant operational triggers for Lira Board, Lira AI, and local PC Backup & Restore.
-* **Summary & Capacity Telemetry**: Executive analytical dashboards displaying progress percentage dials, status/priority breakdown charts, epic milestone bars, and developer capacity workload allocation.
 
 ### 🤖 3. Omnipresent AI Copilot & Autonomous Agent
 * **Animated Floating Avatar Trigger**: Docked in the bottom-right corner (`bottom-5 right-5`) featuring the enhanced Lira AI SVG avatar with gentle breathing and glowing animations (`animate-float-subtle`, `animate-pulse-glow`).

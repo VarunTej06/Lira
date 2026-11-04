@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import { Plus } from 'lucide-react';
+import { Plus, AlertCircle } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { IssueCard } from './IssueCard';
@@ -37,8 +37,38 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
 }) => {
   const style = COLUMN_HEADER_STYLES[id] || COLUMN_HEADER_STYLES.todo;
 
+  // Read WIP limit configuration
+  const [wipConfig, setWipConfig] = useState(() => {
+    try {
+      const isEnabled = localStorage.getItem('lira_wip_limits') === 'true';
+      const raw = localStorage.getItem('lira_wip_config');
+      const parsed = raw ? JSON.parse(raw) : { enabled: isEnabled, limits: { todo: 5, inprogress: 3 } };
+      return { enabled: isEnabled, limits: parsed.limits || { todo: 5, inprogress: 3 } };
+    } catch {
+      return { enabled: false, limits: { todo: 5, inprogress: 3 } };
+    }
+  });
+
+  useEffect(() => {
+    const handler = () => {
+      try {
+        const isEnabled = localStorage.getItem('lira_wip_limits') === 'true';
+        const raw = localStorage.getItem('lira_wip_config');
+        const parsed = raw ? JSON.parse(raw) : { enabled: isEnabled, limits: { todo: 5, inprogress: 3 } };
+        setWipConfig({ enabled: isEnabled, limits: parsed.limits || { todo: 5, inprogress: 3 } });
+      } catch { /* ignore */ }
+    };
+    window.addEventListener('lira_wip_limits_changed', handler);
+    return () => window.removeEventListener('lira_wip_limits_changed', handler);
+  }, []);
+
+  const columnLimit = wipConfig.limits[id as keyof typeof wipConfig.limits] || 0;
+  const isExceeded = wipConfig.enabled && columnLimit > 0 && issues.length > columnLimit;
+
   return (
-    <div className="flex flex-col w-[300px] min-w-[300px] max-w-[300px] flex-shrink-0 self-stretch">
+    <div className={`flex flex-col w-[300px] min-w-[300px] max-w-[300px] flex-shrink-0 self-stretch rounded-xl transition-all ${
+      isExceeded ? 'ring-2 ring-red-400 bg-red-50/20' : ''
+    }`}>
       {/* Column Header */}
       <div className="flex items-center justify-between px-2 py-2 mb-2 flex-shrink-0">
         <div className="flex items-center gap-2 min-w-0">
@@ -47,12 +77,25 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             style={{ backgroundColor: accentColor || style.dot }}
           />
           <span className="text-sm font-semibold text-jira-text truncate">{title}</span>
-          <span
-            className="ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0"
-            style={{ color: style.color, backgroundColor: style.bg }}
-          >
-            {issues.length}
-          </span>
+
+          {wipConfig.enabled && columnLimit > 0 ? (
+            <span
+              className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0 flex items-center gap-1 ${
+                isExceeded ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-200 text-gray-700'
+              }`}
+              title={isExceeded ? `WIP limit exceeded! (${issues.length} > ${columnLimit})` : `WIP Limit: ${columnLimit}`}
+            >
+              {isExceeded && <AlertCircle className="w-3 h-3" />}
+              {issues.length}/{columnLimit}
+            </span>
+          ) : (
+            <span
+              className="ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0"
+              style={{ color: style.color, backgroundColor: style.bg }}
+            >
+              {issues.length}
+            </span>
+          )}
         </div>
 
         {/* Top-right Add Issue button aligned with heading */}

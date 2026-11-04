@@ -10,6 +10,16 @@ import { Modal } from '../common/Modal';
 import { exportBackup, importBackup } from '../../db/storageService';
 import { subscribeToSyncStatus, saveToDiskNow } from '../../services/localDiskSync';
 import { LiraAIAvatar } from '../ai/LiraAIAvatar';
+import { AccountDropdown } from './AccountDropdown';
+import {
+  GeneralSettingsModal,
+  NotificationSettingsModal,
+  ManageSpacesModal,
+  WorkItemsModal,
+  MarketplaceModal,
+  UserManagementModal,
+  BillingModal,
+} from './SettingsModals';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 
@@ -627,8 +637,23 @@ const NotificationsBell: React.FC<{
 
 const SettingsGearMenu: React.FC<{
   onOpenSystemModal: () => void;
-  onOpenProfileModal: () => void;
-}> = ({ onOpenSystemModal, onOpenProfileModal }) => {
+  onOpenGeneralModal: () => void;
+  onOpenNotifModal: () => void;
+  onOpenSpacesModal: () => void;
+  onOpenWorkItemsModal: () => void;
+  onOpenMarketplaceModal: () => void;
+  onOpenUsersModal: () => void;
+  onOpenBillingModal: () => void;
+}> = ({
+  onOpenSystemModal,
+  onOpenGeneralModal,
+  onOpenNotifModal,
+  onOpenSpacesModal,
+  onOpenWorkItemsModal,
+  onOpenMarketplaceModal,
+  onOpenUsersModal,
+  onOpenBillingModal,
+}) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLDivElement>(null);
@@ -656,14 +681,14 @@ const SettingsGearMenu: React.FC<{
           label: 'General settings',
           desc: 'Manage language, time zone, and other personal preferences',
           icon: <User className="w-4 h-4 text-blue-400" />,
-          onClick: () => { setOpen(false); onOpenProfileModal(); },
+          onClick: () => { setOpen(false); onOpenGeneralModal(); },
         },
         {
           id: 'notifications',
           label: 'Notification settings',
           desc: 'Manage email and in-app notifications from Jira',
           icon: <Bell className="w-4 h-4 text-amber-400" />,
-          onClick: () => { setOpen(false); alert('Notification settings: In-app live sync is enabled.'); },
+          onClick: () => { setOpen(false); onOpenNotifModal(); },
         },
       ],
     },
@@ -682,28 +707,28 @@ const SettingsGearMenu: React.FC<{
           label: 'Jira apps',
           desc: 'Manage access, settings, and integrations across Jira',
           icon: <LayoutGrid className="w-4 h-4 text-purple-400" />,
-          onClick: () => { setOpen(false); alert('Jira apps: Vite Local File Storage Plugin & Dexie DB active.'); },
+          onClick: () => { setOpen(false); onOpenMarketplaceModal(); },
         },
         {
           id: 'spaces',
           label: 'Spaces',
           desc: 'Manage space settings, categories, and more',
           icon: <Layers className="w-4 h-4 text-sky-400" />,
-          onClick: () => { setOpen(false); alert('Manage spaces via sidebar space settings gear.'); },
+          onClick: () => { setOpen(false); onOpenSpacesModal(); },
         },
         {
           id: 'workitems',
           label: 'Work items',
           desc: 'Configure work types, workflows, screens, fields, and hierarchy',
           icon: <CheckSquare className="w-4 h-4 text-orange-400" />,
-          onClick: () => { setOpen(false); alert('Work items: 3-tier hierarchy (Epic → Task/Bug → Subtask) active.'); },
+          onClick: () => { setOpen(false); onOpenWorkItemsModal(); },
         },
         {
           id: 'marketplace',
           label: 'Marketplace apps',
           desc: 'Add and manage Jira Marketplace apps and integrations',
           icon: <Sparkles className="w-4 h-4 text-pink-400" />,
-          onClick: () => { setOpen(false); alert('Marketplace: Lira Offline Edition v2.0.'); },
+          onClick: () => { setOpen(false); onOpenMarketplaceModal(); },
         },
       ],
     },
@@ -715,16 +740,14 @@ const SettingsGearMenu: React.FC<{
           label: 'User management',
           desc: 'Manage users, groups, and access requests',
           icon: <Shield className="w-4 h-4 text-indigo-400" />,
-          external: true,
-          onClick: () => { setOpen(false); alert('User management: Local Administrator profile active.'); },
+          onClick: () => { setOpen(false); onOpenUsersModal(); },
         },
         {
           id: 'billing',
           label: 'Billing',
           desc: 'Update your billing details, manage subscriptions, and more',
           icon: <CreditCard className="w-4 h-4 text-teal-400" />,
-          external: true,
-          onClick: () => { setOpen(false); alert('Billing: Lira Offline Edition is free and open-source.'); },
+          onClick: () => { setOpen(false); onOpenBillingModal(); },
         },
       ],
     },
@@ -900,6 +923,14 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   onNavigateToFilters,
 }) => {
   const [showSystemModal, setShowSystemModal] = useState(false);
+  const [showGeneralModal, setShowGeneralModal] = useState(false);
+  const [showNotifModal, setShowNotifModal] = useState(false);
+  const [showSpacesModal, setShowSpacesModal] = useState(false);
+  const [showWorkItemsModal, setShowWorkItemsModal] = useState(false);
+  const [showMarketplaceModal, setShowMarketplaceModal] = useState(false);
+  const [showUsersModal, setShowUsersModal] = useState(false);
+  const [showBillingModal, setShowBillingModal] = useState(false);
+
   const [importing, setImporting] = useState(false);
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const [syncState, setSyncState] = useState<{ status: string; lastSaved: Date | null; filePath: string }>({
@@ -1020,10 +1051,16 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
         <SettingsGearMenu
           onOpenSystemModal={() => setShowSystemModal(true)}
-          onOpenProfileModal={() => alert('User Profile: Varun Tej (VY) · Local Administrator')}
+          onOpenGeneralModal={() => setShowGeneralModal(true)}
+          onOpenNotifModal={() => setShowNotifModal(true)}
+          onOpenSpacesModal={() => setShowSpacesModal(true)}
+          onOpenWorkItemsModal={() => setShowWorkItemsModal(true)}
+          onOpenMarketplaceModal={() => setShowMarketplaceModal(true)}
+          onOpenUsersModal={() => setShowUsersModal(true)}
+          onOpenBillingModal={() => setShowBillingModal(true)}
         />
 
-        <Avatar initials="VY" size="sm" color="#0052CC" className="cursor-pointer hover:ring-2 hover:ring-white/50 transition-all ml-1" />
+        <AccountDropdown />
       </div>
 
       {/* Hidden file input for import */}
@@ -1038,6 +1075,23 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         onExport={handleExport}
         onImportClick={() => fileRef.current?.click()}
       />
+
+      {/* Jira Settings Modals */}
+      <GeneralSettingsModal isOpen={showGeneralModal} onClose={() => setShowGeneralModal(false)} />
+      <NotificationSettingsModal isOpen={showNotifModal} onClose={() => setShowNotifModal(false)} />
+      <ManageSpacesModal
+        isOpen={showSpacesModal}
+        onClose={() => setShowSpacesModal(false)}
+        spaces={spaces}
+        onSelectSpace={(id) => {
+          localStorage.setItem('lira_active_space_id', String(id));
+          window.location.reload();
+        }}
+      />
+      <WorkItemsModal isOpen={showWorkItemsModal} onClose={() => setShowWorkItemsModal(false)} />
+      <MarketplaceModal isOpen={showMarketplaceModal} onClose={() => setShowMarketplaceModal(false)} />
+      <UserManagementModal isOpen={showUsersModal} onClose={() => setShowUsersModal(false)} />
+      <BillingModal isOpen={showBillingModal} onClose={() => setShowBillingModal(false)} />
     </nav>
   );
 };

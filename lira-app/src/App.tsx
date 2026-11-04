@@ -154,6 +154,9 @@ export default function App() {
           activeSpaceId={activeSpaceId}
           onSpaceSelect={handleSelectSpace}
           onCreateSpace={() => setShowCreateSpace(true)}
+          onNavigateToFilters={() => setActiveTab('Filters')}
+          onNavigateToDashboards={() => setActiveTab('Summary')}
+          onNavigateToTeams={() => setActiveTab('Capacity')}
         />
 
         <main className="flex-1 flex flex-col overflow-hidden">
@@ -209,6 +212,10 @@ export default function App() {
                   issues={issues}
                   space={activeSpace}
                   onIssueClick={openIssue}
+                  searchQuery={searchQuery}
+                  filterAssignee={filterAssignee}
+                  activeFilters={activeFilters}
+                  groupBy={groupBy}
                 />
               )}
 

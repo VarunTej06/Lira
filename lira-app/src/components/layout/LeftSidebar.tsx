@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import {
   ChevronLeft, ChevronRight, Plus,
-  Users, Folder,
-  Settings,
+  Users, Folder, Settings,
   ChevronDown, MoreHorizontal, Star, Trash2, Archive,
-  Edit3, Palette
+  Edit3, Palette, Clock, Filter, LayoutDashboard,
+  User, LayoutGrid
 } from 'lucide-react';
 import type { Space } from '../../types/space';
 import { deleteSpace } from '../../hooks/useSpaces';
-import { CustomiseSidebarModal } from './CustomiseSidebarModal';
+import { CustomiseSidebarModal, DEFAULT_SIDEBAR_CONFIG, type SidebarConfig } from './CustomiseSidebarModal';
 
 interface LeftSidebarProps {
   spaces: Space[];
@@ -16,6 +16,9 @@ interface LeftSidebarProps {
   onSpaceSelect: (id: number) => void;
   onCreateSpace: () => void;
   onEditSpace?: (space: Space) => void;
+  onNavigateToFilters?: () => void;
+  onNavigateToDashboards?: () => void;
+  onNavigateToTeams?: () => void;
 }
 
 export const LeftSidebar: React.FC<LeftSidebarProps> = ({
@@ -24,6 +27,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onSpaceSelect,
   onCreateSpace,
   onEditSpace,
+  onNavigateToFilters,
+  onNavigateToDashboards,
+  onNavigateToTeams,
 }) => {
   const [collapsed, setCollapsed] = useState<boolean>(
     () => localStorage.getItem('lira_sidebar_collapsed') === 'true'
@@ -32,6 +38,16 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [starredIds, setStarredIds] = useState<Set<number>>(new Set());
   const [showCustomiseModal, setShowCustomiseModal] = useState(false);
+
+  // Sidebar dynamic customization preferences
+  const [sidebarConfig, setSidebarConfig] = useState<SidebarConfig>(() => {
+    try {
+      const saved = localStorage.getItem('lira_sidebar_customization');
+      return saved ? { ...DEFAULT_SIDEBAR_CONFIG, ...JSON.parse(saved) } : DEFAULT_SIDEBAR_CONFIG;
+    } catch {
+      return DEFAULT_SIDEBAR_CONFIG;
+    }
+  });
 
   const collapse = () => {
     localStorage.setItem('lira_sidebar_collapsed', 'true');
@@ -67,7 +83,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
         {/* Expand button */}
         <button
           onClick={expand}
-          className="p-2 rounded hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+          className="p-2 rounded hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
           title="Expand sidebar"
         >
           <ChevronRight className="w-4 h-4" />
@@ -75,10 +91,31 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
         <div className="w-px h-4 bg-white/20 mx-auto" />
 
+        {/* Shortcuts if enabled */}
+        {sidebarConfig.filters && (
+          <button
+            onClick={onNavigateToFilters}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            title="Filters"
+          >
+            <Filter className="w-4 h-4" />
+          </button>
+        )}
+
+        {sidebarConfig.dashboards && (
+          <button
+            onClick={onNavigateToDashboards}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            title="Dashboards"
+          >
+            <LayoutDashboard className="w-4 h-4" />
+          </button>
+        )}
+
         {/* + New space button */}
         <button
           onClick={onCreateSpace}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           title="New space"
         >
           <Plus className="w-4 h-4" />
@@ -89,9 +126,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           <button
             key={space.id}
             onClick={() => onSpaceSelect(space.id!)}
-            className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm transition-all ${
+            className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm transition-all cursor-pointer ${
               activeSpaceId === space.id
-                ? 'ring-2 ring-white/60 text-white'
+                ? 'ring-2 ring-white/60 text-white shadow-xs'
                 : 'text-white/60 hover:text-white hover:bg-white/10'
             }`}
             style={activeSpaceId === space.id ? { backgroundColor: space.color } : {}}
@@ -104,13 +141,92 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     );
   }
 
+  // Check if any top navigation item is visible
+  const hasCustomNavItems =
+    sidebarConfig.forYou ||
+    sidebarConfig.recent ||
+    sidebarConfig.filters ||
+    sidebarConfig.dashboards ||
+    sidebarConfig.teams ||
+    sidebarConfig.apps;
+
   return (
     <aside className="w-64 bg-[#1A2332] flex flex-col flex-shrink-0 border-r border-black/20 overflow-y-auto transition-all duration-200">
+      {/* ── Customised Navigation Items Section ── */}
+      {hasCustomNavItems && (
+        <div className="py-2.5 border-b border-white/10 space-y-0.5">
+          <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">
+            Navigation
+          </div>
 
-      {/* Starred */}
-      {starredIds.size > 0 && (
+          {sidebarConfig.forYou && (
+            <button
+              onClick={() => onSpaceSelect(spaces[0]?.id || 1)}
+              className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+            >
+              <User className="w-3.5 h-3.5 text-blue-400" />
+              <span>For you</span>
+            </button>
+          )}
+
+          {sidebarConfig.recent && (
+            <button
+              onClick={() => onSpaceSelect(spaces[0]?.id || 1)}
+              className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+            >
+              <Clock className="w-3.5 h-3.5 text-amber-400" />
+              <span>Recent</span>
+            </button>
+          )}
+
+          {sidebarConfig.filters && (
+            <button
+              onClick={onNavigateToFilters}
+              className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+            >
+              <Filter className="w-3.5 h-3.5 text-sky-400" />
+              <span>Filters</span>
+            </button>
+          )}
+
+          {sidebarConfig.dashboards && (
+            <button
+              onClick={onNavigateToDashboards}
+              className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+            >
+              <LayoutDashboard className="w-3.5 h-3.5 text-purple-400" />
+              <span>Dashboards</span>
+            </button>
+          )}
+
+          {sidebarConfig.teams && (
+            <button
+              onClick={onNavigateToTeams}
+              className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+            >
+              <Users className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Teams &amp; Capacity</span>
+            </button>
+          )}
+
+          {sidebarConfig.apps && (
+            <button
+              onClick={() => setShowCustomiseModal(true)}
+              className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+            >
+              <LayoutGrid className="w-3.5 h-3.5 text-pink-400" />
+              <span>Apps</span>
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── Starred Section ── */}
+      {sidebarConfig.starred && starredIds.size > 0 && (
         <div className="py-2 border-b border-white/10">
-          <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">Starred</div>
+          <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">
+            Starred
+          </div>
           {spaces.filter(s => s.id && starredIds.has(s.id)).map(space => (
             <SpaceRow
               key={space.id}
@@ -128,62 +244,68 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
         </div>
       )}
 
-      {/* Your Spaces header */}
-      <div className="flex items-center justify-between px-3 pt-4 pb-1">
-        <span className="text-white/40 text-[10px] font-semibold uppercase tracking-wider">Your Spaces</span>
-        <div className="flex items-center gap-1">
-          <button
-            onClick={onCreateSpace}
-            className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors"
-            title="New space"
-          >
-            <Plus className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={collapse}
-            className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors"
-            title="Collapse sidebar"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Spaces list expand/collapse toggle */}
-      <div className="py-1 flex-1">
-        <button
-          onClick={() => setSpacesExpanded(!spacesExpanded)}
-          className="w-full flex items-center gap-2 px-3 py-1.5 text-white/40 text-[10px] font-semibold uppercase tracking-wider hover:text-white/60 transition-colors"
-        >
-          <ChevronDown className={`w-3 h-3 transition-transform ${spacesExpanded ? '' : '-rotate-90'}`} />
-          {spacesExpanded ? 'Hide' : 'Show'}
-        </button>
-
-        {spacesExpanded && (
-          <div className="mt-0.5">
-            {spaces.map(space => (
-              <SpaceRow
-                key={space.id}
-                space={space}
-                active={activeSpaceId === space.id}
-                starred={space.id ? starredIds.has(space.id) : false}
-                onSelect={onSpaceSelect}
-                onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
-                menuOpen={openMenuId === space.id}
-                onStar={e => toggleStar(space.id!, e)}
-                onDelete={e => handleDelete(space, e)}
-                onEdit={() => { onEditSpace?.(space); setOpenMenuId(null); }}
-              />
-            ))}
+      {/* ── Your Spaces Section ── */}
+      {sidebarConfig.spaces && (
+        <>
+          <div className="flex items-center justify-between px-3 pt-4 pb-1">
+            <span className="text-white/40 text-[10px] font-semibold uppercase tracking-wider">
+              Your Spaces
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={onCreateSpace}
+                className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors cursor-pointer"
+                title="New space"
+              >
+                <Plus className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={collapse}
+                className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors cursor-pointer"
+                title="Collapse sidebar"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
-        )}
-      </div>
 
-      {/* Customise sidebar footer */}
-      <div className="border-t border-white/10 px-3 py-3">
+          {/* Spaces list expand/collapse toggle */}
+          <div className="py-1 flex-1">
+            <button
+              onClick={() => setSpacesExpanded(!spacesExpanded)}
+              className="w-full flex items-center gap-2 px-3 py-1.5 text-white/40 text-[10px] font-semibold uppercase tracking-wider hover:text-white/60 transition-colors cursor-pointer"
+            >
+              <ChevronDown className={`w-3 h-3 transition-transform ${spacesExpanded ? '' : '-rotate-90'}`} />
+              {spacesExpanded ? 'Hide' : 'Show'}
+            </button>
+
+            {spacesExpanded && (
+              <div className="mt-0.5">
+                {spaces.map(space => (
+                  <SpaceRow
+                    key={space.id}
+                    space={space}
+                    active={activeSpaceId === space.id}
+                    starred={space.id ? starredIds.has(space.id) : false}
+                    onSelect={onSpaceSelect}
+                    onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
+                    menuOpen={openMenuId === space.id}
+                    onStar={e => toggleStar(space.id!, e)}
+                    onDelete={e => handleDelete(space, e)}
+                    onEdit={() => { onEditSpace?.(space); setOpenMenuId(null); }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {/* ── Customise sidebar footer ── */}
+      <div className="border-t border-white/10 px-3 py-3 mt-auto">
         <button
           onClick={() => setShowCustomiseModal(true)}
-          className="w-full flex items-center gap-2 text-xs text-white/40 hover:text-white/80 transition-colors cursor-pointer"
+          className="w-full flex items-center gap-2 text-xs text-white/50 hover:text-white transition-colors cursor-pointer"
         >
           <Settings className="w-3.5 h-3.5" /> Customise sidebar
         </button>
@@ -192,6 +314,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       <CustomiseSidebarModal
         isOpen={showCustomiseModal}
         onClose={() => setShowCustomiseModal(false)}
+        onSave={cfg => setSidebarConfig(cfg)}
       />
     </aside>
   );
@@ -216,7 +339,7 @@ const SpaceRow: React.FC<SpaceRowProps> = ({
   <div className="relative group">
     <button
       onClick={() => onSelect(space.id!)}
-      className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-all ${
+      className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-all cursor-pointer ${
         active ? 'bg-[#0052CC]/30 text-white border-r-2 border-[#0052CC]' : 'text-white/60 hover:text-white hover:bg-white/5'
       }`}
     >
@@ -229,10 +352,10 @@ const SpaceRow: React.FC<SpaceRowProps> = ({
       <span className="truncate font-medium flex-1 text-left">{space.name}</span>
       {starred && <Star className="w-3 h-3 text-yellow-400 flex-shrink-0" />}
 
-      {/* Context menu trigger — visible on hover */}
+      {/* Context menu trigger */}
       <button
         onClick={e => { e.stopPropagation(); onMenuOpen(); }}
-        className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-white/20 text-white/50 hover:text-white transition-all flex-shrink-0"
+        className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-white/20 text-white/50 hover:text-white transition-all flex-shrink-0 cursor-pointer"
         title="Space actions"
       >
         <MoreHorizontal className="w-3.5 h-3.5" />
@@ -270,7 +393,7 @@ const ContextItem: React.FC<{ icon: React.ReactNode; label: string; onClick: (e:
 }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors ${
+    className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors cursor-pointer ${
       danger ? 'text-red-400 hover:bg-red-900/20' : 'text-white/70 hover:bg-white/10 hover:text-white'
     }`}
   >

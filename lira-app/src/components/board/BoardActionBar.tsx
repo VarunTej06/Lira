@@ -9,6 +9,7 @@ import type { Issue } from '../../types/issue';
 import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
+import { BoardSettingsModal, WIPLimitsModal, BulkActionsModal } from './BoardModals';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -135,8 +136,9 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
   const [wipEnabled, setWipEnabled] = useState<boolean>(() => {
     try { return localStorage.getItem('lira_wip_limits') === 'true'; } catch { return false; }
   });
-  const [boardSettingsMsg, setBoardSettingsMsg] = useState(false);
-  const [bulkMsg, setBulkMsg] = useState(false);
+  const [showBoardSettingsModal, setShowBoardSettingsModal] = useState(false);
+  const [showWipLimitsModal, setShowWipLimitsModal] = useState(false);
+  const [showBulkActionsModal, setShowBulkActionsModal] = useState(false);
 
   // ── Notify parent when filter changes ────────────────────────────────────────
   const handlePriorityToggle = (value: string) => {
@@ -197,21 +199,24 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
   const handleWipToggle = () => {
     const next = !wipEnabled;
     setWipEnabled(next);
-    try { localStorage.setItem('lira_wip_limits', String(next)); } catch { /* ignore */ }
+    try {
+      localStorage.setItem('lira_wip_limits', String(next));
+      window.dispatchEvent(new Event('lira_wip_limits_changed'));
+    } catch { /* ignore */ }
   };
 
   // ── Overflow menu actions ────────────────────────────────────────────────────
   const handleBoardSettings = () => {
-    setBoardSettingsMsg(true);
-    setTimeout(() => setBoardSettingsMsg(false), 2500);
+    setShowOverflow(false);
+    setShowBoardSettingsModal(true);
   };
 
   const handleBulkActions = () => {
+    setShowOverflow(false);
     if (onBulkAction) {
       onBulkAction();
     } else {
-      setBulkMsg(true);
-      setTimeout(() => setBulkMsg(false), 2500);
+      setShowBulkActionsModal(true);
     }
   };
 
@@ -470,29 +475,31 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
               {/* Board settings */}
               <button
                 onClick={handleBoardSettings}
-                className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors"
+                className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <Settings className="w-3.5 h-3.5 text-jira-muted" />
                 Board settings
               </button>
-              {boardSettingsMsg && (
-                <p className="px-3 py-1 text-xs text-jira-muted italic">Board settings coming soon</p>
-              )}
 
               <div className="border-t border-jira-border my-1" />
 
               {/* WIP Limits */}
-              <div className="flex items-center justify-between px-3 py-2">
-                <span className="text-sm text-jira-text flex items-center gap-2">
+              <div className="flex items-center justify-between px-3 py-2 hover:bg-gray-50 transition-colors">
+                <button
+                  type="button"
+                  onClick={() => { setShowOverflow(false); setShowWipLimitsModal(true); }}
+                  className="text-sm text-jira-text flex items-center gap-2 text-left hover:text-jira-blue cursor-pointer"
+                  title="Configure WIP limits per column"
+                >
                   {wipEnabled
                     ? <ToggleRight className="w-3.5 h-3.5 text-jira-blue" />
                     : <ToggleLeft className="w-3.5 h-3.5 text-jira-muted" />
                   }
                   WIP limits: {wipEnabled ? 'ON' : 'OFF'}
-                </span>
+                </button>
                 <button
                   onClick={handleWipToggle}
-                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${wipEnabled ? 'bg-jira-blue' : 'bg-gray-300'}`}
+                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${wipEnabled ? 'bg-jira-blue' : 'bg-gray-300'}`}
                   aria-label="Toggle WIP limits"
                 >
                   <span
@@ -506,21 +513,18 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
               {/* Bulk actions */}
               <button
                 onClick={handleBulkActions}
-                className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors"
+                className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <CheckSquare className="w-3.5 h-3.5 text-jira-muted" />
                 Bulk actions
               </button>
-              {bulkMsg && (
-                <p className="px-3 py-1 text-xs text-jira-muted italic">Select issues on board to use bulk actions</p>
-              )}
 
               <div className="border-t border-jira-border my-1" />
 
               {/* Export view to JSON */}
               <button
                 onClick={handleExportViewJSON}
-                className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors"
+                className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <FileJson className="w-3.5 h-3.5 text-jira-muted" />
                 Export view to JSON
@@ -576,6 +580,25 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
           </div>
         </div>
       </Modal>
+
+      {/* ── Space Overflow Modals ── */}
+      <BoardSettingsModal
+        isOpen={showBoardSettingsModal}
+        onClose={() => setShowBoardSettingsModal(false)}
+        space={space}
+      />
+      <WIPLimitsModal
+        isOpen={showWipLimitsModal}
+        onClose={() => setShowWipLimitsModal(false)}
+        space={space}
+        onConfigSaved={cfg => setWipEnabled(cfg.enabled)}
+      />
+      <BulkActionsModal
+        isOpen={showBulkActionsModal}
+        onClose={() => setShowBulkActionsModal(false)}
+        space={space}
+        issues={issues}
+      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Droppable } from '@hello-pangea/dnd';
-import { Plus } from 'lucide-react';
+import { Plus, AlertCircle } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { IssueCard } from './IssueCard';
@@ -15,6 +15,7 @@ interface BoardColumnProps {
   onAddIssue: (status: string) => void;
   accentColor?: string;
   minHeight?: number;
+  wipLimit?: number;
 }
 
 const COLUMN_HEADER_STYLES: Record<string, { color: string; bg: string; dot: string }> = {
@@ -34,11 +35,53 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
   onAddIssue,
   accentColor,
   minHeight,
+  wipLimit: propWipLimit,
 }) => {
   const style = COLUMN_HEADER_STYLES[id] || COLUMN_HEADER_STYLES.todo;
 
+  // Read WIP limit configuration (object { [columnName]: number } or fallback)
+  const [internalLimit, setInternalLimit] = useState<number | undefined>(() => {
+    try {
+      const raw = localStorage.getItem('lira_wip_limits');
+      if (raw && raw.startsWith('{')) {
+        const parsed = JSON.parse(raw);
+        return parsed[id] || parsed[title] || parsed[id.toLowerCase()];
+      }
+      return undefined;
+    } catch {
+      return undefined;
+    }
+  });
+
+  useEffect(() => {
+    const handler = () => {
+      try {
+        const raw = localStorage.getItem('lira_wip_limits');
+        if (raw && raw.startsWith('{')) {
+          const parsed = JSON.parse(raw);
+          setInternalLimit(parsed[id] || parsed[title] || parsed[id.toLowerCase()]);
+        } else {
+          setInternalLimit(undefined);
+        }
+      } catch {
+        setInternalLimit(undefined);
+      }
+    };
+    window.addEventListener('lira_wip_limits_changed', handler);
+    window.addEventListener('storage', handler);
+    return () => {
+      window.removeEventListener('lira_wip_limits_changed', handler);
+      window.removeEventListener('storage', handler);
+    };
+  }, [id, title]);
+
+  const activeLimit = propWipLimit !== undefined ? propWipLimit : internalLimit;
+  const isExceeded = activeLimit !== undefined && activeLimit > 0 && issues.length > activeLimit;
+
   return (
-    <div className="flex flex-col w-[300px] min-w-[300px] max-w-[300px] flex-shrink-0 self-stretch">
+    <div className={`flex flex-col w-[300px] min-w-[300px] max-w-[300px] flex-shrink-0 self-stretch rounded-xl transition-all ${
+      isExceeded ? 'ring-2 ring-red-400 bg-red-50/20' : ''
+    }`}>
       {/* Column Header */}
       <div className="flex items-center justify-between px-2 py-2 mb-2 flex-shrink-0">
         <div className="flex items-center gap-2 min-w-0">
@@ -47,12 +90,25 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             style={{ backgroundColor: accentColor || style.dot }}
           />
           <span className="text-sm font-semibold text-jira-text truncate">{title}</span>
-          <span
-            className="ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0"
-            style={{ color: style.color, backgroundColor: style.bg }}
-          >
-            {issues.length}
-          </span>
+
+          {activeLimit !== undefined && activeLimit > 0 ? (
+            <span
+              className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0 flex items-center gap-1 transition-all ${
+                isExceeded ? 'bg-red-500 text-white animate-pulse ring-2 ring-red-300' : 'bg-gray-200 text-gray-700'
+              }`}
+              title={isExceeded ? `WIP limit exceeded! (${issues.length} / ${activeLimit})` : `WIP Limit: ${issues.length} / ${activeLimit}`}
+            >
+              {isExceeded && <AlertCircle className="w-3 h-3" />}
+              {issues.length} / {activeLimit}
+            </span>
+          ) : (
+            <span
+              className="ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0"
+              style={{ color: style.color, backgroundColor: style.bg }}
+            >
+              {issues.length}
+            </span>
+          )}
         </div>
 
         {/* Top-right Add Issue button aligned with heading */}

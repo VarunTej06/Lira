@@ -119,16 +119,21 @@ src/
 │   ├── board/
 │   │   ├── KanbanBoard.tsx           # Board container with edge auto-scroll & pan handlers
 │   │   ├── BoardColumn.tsx           # Full-height droppable column lane with Atlassian styling
-│   │   └── IssueCard.tsx             # Draggable placard with floating portal dropdown for parent issues
+│   │   ├── IssueCard.tsx             # Draggable placard with floating portal dropdown for parent issues
+│   │   ├── SummaryView.tsx           # Executive space summary, completion rate & priority telemetry
+│   │   └── CapacityView.tsx          # Team workload capacity planning and sprint allocation
 │   ├── common/
 │   │   └── ConfirmDeleteModal.tsx    # Jira-style delete confirmation modal with child issue cascade warning
+│   ├── filter/
+│   │   └── FiltersPage.tsx           # Advanced multi-dimensional cross-space filter engine & exporter
 │   ├── issue/
 │   │   ├── IssueDetailModal.tsx      # Comprehensive issue editor with markdown, activity & subtasks
 │   │   └── CreateIssueModal.tsx      # 3-tier issue creator modal (Epic/Task/Bug)
 │   ├── layout/
-│   │   ├── TopNavigation.tsx         # Navbar with brand logo, PC sync badge, search & AI button
-│   │   ├── LeftSidebar.tsx           # Space switcher, starred spaces, and space creation
-│   │   └── BoardActionBar.tsx        # Search input, assignee filter (VY), and views tabs
+│   │   ├── TopNavigation.tsx         # Navbar with geometric app switcher, search, notifications & settings
+│   │   ├── LeftSidebar.tsx           # Collapsible space blade with starred spaces & customizer
+│   │   ├── CustomiseSidebarModal.tsx # Sidebar item visibility manager with localStorage persistence
+│   │   └── BoardActionBar.tsx        # Search input, assignee filter (VY), multi-filter & grouping tabs
 │   └── space/
 │       ├── CreateSpaceModal.tsx      # Space wizard with color & emoji picker
 │       └── SpaceSettingsModal.tsx    # Space metadata editing & deletion

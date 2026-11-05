@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -43,35 +44,37 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
       <div
         className={`
-          bg-white rounded-lg shadow-modal w-full animate-scale-in
-          flex flex-col overflow-hidden
+          bg-white rounded-xl shadow-modal w-full animate-scale-in
+          flex flex-col overflow-hidden text-jira-text
           ${SIZE_CLASSES[size]} ${className}
         `}
         style={{ maxHeight: '90vh' }}
+        onClick={(e) => e.stopPropagation()}
       >
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-jira-border flex-shrink-0">
-            <h2 className="text-base font-semibold text-jira-text">{title}</h2>
+          <div className="flex items-center justify-between px-6 py-4 border-b border-jira-border flex-shrink-0 bg-white">
+            <h2 className="text-base font-bold text-jira-text">{title}</h2>
             <button
               onClick={onClose}
-              className="p-1 rounded hover:bg-gray-100 text-jira-muted hover:text-jira-text transition-colors"
+              className="p-1 rounded-lg hover:bg-gray-100 text-jira-muted hover:text-jira-text transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         )}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto bg-white">
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

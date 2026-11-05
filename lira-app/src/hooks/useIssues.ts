@@ -13,6 +13,16 @@ export function useIssuesBySpace(spaceId: number | undefined) {
   );
 }
 
+export function useAllIssues() {
+  return useLiveQuery<Issue[], Issue[]>(
+    async () => {
+      return await db.issues.toArray();
+    },
+    [],
+    []
+  );
+}
+
 // Top-level issues only (no parentId) — for the Kanban board
 export function useRootIssuesBySpace(spaceId: number | undefined) {
   return useLiveQuery<Issue[], Issue[]>(

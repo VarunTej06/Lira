@@ -3,7 +3,8 @@ import {
   X, Maximize2, Share2, MoreHorizontal, Eye, Plus,
   ChevronDown, ChevronRight, Paperclip, AlertTriangle,
   Zap, Settings, Clock, Tag, Users, Calendar,
-  CheckSquare, Trash2, ExternalLink, Link, Target, Layers
+  CheckSquare, Trash2, ExternalLink, Link, Target, Layers,
+  Check, Save
 } from 'lucide-react';
 import type { Issue, Comment, Priority, IssueType, IssueStatus, ActivityEntry } from '../../types/issue';
 import { ISSUE_TYPE_CONFIG } from '../../types/issue';
@@ -49,6 +50,14 @@ const PRIORITY_OPTIONS = Object.entries(PRIORITY_CONFIG).map(([value, cfg]) => (
   bgColor: cfg.bgColor,
 }));
 
+const ASSIGNEE_OPTIONS = [
+  { value: '', label: 'Unassigned', initials: '' },
+  { value: 'Varuntej Yadla', label: 'Varuntej Yadla (VY)', initials: 'VY' },
+  { value: 'Alex Morgan', label: 'Alex Morgan (AM)', initials: 'AM' },
+  { value: 'Sarah Connor', label: 'Sarah Connor (SC)', initials: 'SC' },
+  { value: 'Dev Team', label: 'Dev Team (DT)', initials: 'DT' },
+];
+
 const STATUS_BANNER: Record<string, string> = {
   done: '#36B37E', inprogress: '#FFAB00', todo: '#0052CC', backlog: '#6B778C',
 };
@@ -89,6 +98,7 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({
   const [descCollapsed, setDescCollapsed] = useState(false);
   const [attCollapsed, setAttCollapsed] = useState(false);
   const [childCollapsed, setChildCollapsed] = useState(false);
+  const [savedToast, setSavedToast] = useState(false);
   const statusMenuRef = useRef<HTMLDivElement>(null);
   const typeMenuRef = useRef<HTMLDivElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
@@ -220,6 +230,30 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({
       await patch({ title: titleVal.trim() });
     }
   }, [titleVal, local, patch]);
+
+  const handleSaveChanges = useCallback(async () => {
+    if (!local?.id) return;
+    if (!titleVal.trim()) {
+      alert('Issue title cannot be empty.');
+      return;
+    }
+    const changes: Partial<Issue> = {
+      title: titleVal.trim(),
+      description: descVal,
+      status: local.status,
+      priority: local.priority,
+      assignee: local.assignee,
+      assigneeInitials: local.assigneeInitials,
+      labels: local.labels,
+      dueDate: local.dueDate,
+      storyPoints: local.storyPoints,
+      updatedAt: new Date(),
+    };
+    await updateIssue(local.id, changes);
+    setLocal(prev => prev ? { ...prev, ...changes } : null);
+    setSavedToast(true);
+    setTimeout(() => setSavedToast(false), 2000);
+  }, [local, titleVal, descVal]);
 
   const handleAddComment = useCallback(async (comment: Comment) => {
     if (!local) return;
@@ -664,11 +698,34 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({
                 )}
 
                 <DetailRow icon={<Users className="w-3.5 h-3.5" />} label="Assignee">
-                  <div className="flex items-center gap-2">
-                    {local.assigneeInitials
-                      ? <><Avatar initials={local.assigneeInitials} size="xs" /><span className="text-sm text-jira-text">{local.assignee || local.assigneeInitials}</span></>
-                      : <span className="text-sm text-jira-muted">Unassigned</span>
-                    }
+                  <div className="flex items-center gap-2 w-full">
+                    {local.assigneeInitials ? (
+                      <Avatar initials={local.assigneeInitials} size="xs" />
+                    ) : null}
+                    <select
+                      value={
+                        local.assignee === 'VY'
+                          ? 'Varuntej Yadla'
+                          : (local.assignee || '')
+                      }
+                      onChange={e => {
+                        const val = e.target.value;
+                        const match = ASSIGNEE_OPTIONS.find(o => o.value === val);
+                        const initials = match?.initials || (val ? val.slice(0, 2).toUpperCase() : undefined);
+                        patch({
+                          assignee: val || undefined,
+                          assigneeInitials: initials,
+                        });
+                      }}
+                      className="w-full text-xs text-jira-text bg-white border border-jira-border hover:border-gray-400 rounded px-2 py-1 outline-none focus:border-jira-blue transition-colors cursor-pointer"
+                    >
+                      {ASSIGNEE_OPTIONS.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                      {local.assignee && !['', 'VY', 'Varuntej Yadla', 'Alex Morgan', 'Sarah Connor', 'Dev Team'].includes(local.assignee) && (
+                        <option value={local.assignee}>{local.assignee} ({local.assigneeInitials || 'User'})</option>
+                      )}
+                    </select>
                   </div>
                 </DetailRow>
 
@@ -744,11 +801,20 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({
                   </div>
                 </DetailRow>
 
-                {local.storyPoints !== undefined && (
-                  <DetailRow icon={<CheckSquare className="w-3.5 h-3.5" />} label="Story points">
-                    <span className="text-sm font-semibold text-jira-text">{local.storyPoints}</span>
-                  </DetailRow>
-                )}
+                <DetailRow icon={<CheckSquare className="w-3.5 h-3.5" />} label="Story points">
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={local.storyPoints ?? ''}
+                    placeholder="None"
+                    onChange={e => {
+                      const val = e.target.value === '' ? undefined : Math.max(0, parseInt(e.target.value, 10));
+                      patch({ storyPoints: val });
+                    }}
+                    className="w-20 px-2 py-1 text-xs border border-jira-border hover:border-gray-400 rounded bg-white text-jira-text outline-none focus:border-jira-blue transition-colors"
+                  />
+                </DetailRow>
               </div>
             </div>
 
@@ -774,6 +840,18 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({
                 )}
               </div>
             </div>
+
+            {/* Save changes button */}
+            <div className="p-4 border-t border-jira-border bg-white sticky bottom-0 z-10 shadow-xs">
+              <button
+                type="button"
+                onClick={handleSaveChanges}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-jira-blue hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+              >
+                <Save className="w-4 h-4" />
+                Save changes
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -788,6 +866,14 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = ({
         childCount={childCount}
         isEpic={local.type === 'epic'}
       />
+
+      {/* 2-second green toast */}
+      {savedToast && (
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+          <Check className="w-4 h-4 text-white" />
+          <span>Saved ✓</span>
+        </div>
+      )}
     </div>
   );
 };

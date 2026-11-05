@@ -42,9 +42,21 @@ export const AccountDropdown: React.FC = () => {
   const selectTheme = (t: 'light' | 'dark') => {
     setTheme(t);
     localStorage.setItem('lira_theme', t);
+    if (t === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   };
 
   const saveProfile = () => {
+    const profile = {
+      name: userName,
+      email: userEmail,
+      initials: userInitials,
+      role: localStorage.getItem('lira_user_role') || 'MLOps & Platform Engineer',
+    };
+    localStorage.setItem('lira_user_profile', JSON.stringify(profile));
     localStorage.setItem('lira_user_name', userName);
     localStorage.setItem('lira_user_email', userEmail);
     localStorage.setItem('lira_user_initials', userInitials);

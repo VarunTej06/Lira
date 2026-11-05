@@ -3,7 +3,7 @@
   "spaceId": 1,
   "spaceKey": "GT",
   "spaceName": "General Tasks",
-  "updatedAt": "2026-11-04T07:55:53.355Z",
+  "updatedAt": "2026-11-05T13:08:22.761Z",
   "issueCount": 13,
   "space": {
     "id": 1,
@@ -22,7 +22,7 @@
       "id": 119,
       "spaceId": 1,
       "key": "GT-1",
-      "title": "List Product Based Comapnies",
+      "title": "List All Product Based Companies",
       "description": "## Overview\nResearch and compile a target list of top product-based tech companies hiring for senior DevOps, Cloud, and Platform Engineering roles.\n\n## Focus Areas\n- Filter tier-1 and tier-2 product companies with strong engineering cultures\n- Identify open positions for Senior DevOps / Cloud Platform Engineer\n- Track tech stacks (Kubernetes, AWS/Azure, Terraform, ArgoCD)\n- Maintain recruiter contact list and referral connections",
       "type": "task",
       "status": "todo",
@@ -79,7 +79,7 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-11-05T13:08:22.170Z"
     },
     {
       "id": 120,

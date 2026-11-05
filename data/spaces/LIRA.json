@@ -3,18 +3,18 @@
   "spaceId": 6,
   "spaceKey": "LIRA",
   "spaceName": "Lira",
-  "updatedAt": "2026-11-04T08:35:54.340722Z",
-  "issueCount": 42,
+  "updatedAt": "2026-11-05T13:08:22.761Z",
+  "issueCount": 46,
   "space": {
     "id": 6,
     "name": "Lira",
     "key": "LIRA",
-    "icon": "\ud83c\udfaf",
+    "icon": "🎯",
     "color": "#0052CC",
     "description": "Lira product roadmap, feature development, DevOps and AI assistant",
     "createdAt": "2026-10-18T08:15:46.633Z",
-    "updatedAt": "2026-10-28T08:15:46.633Z",
-    "issueCount": 42,
+    "updatedAt": "2026-11-05T12:17:43.513Z",
+    "issueCount": 55,
     "file": "spaces/LIRA.json"
   },
   "issues": [
@@ -2297,7 +2297,7 @@
           "type": "status_change",
           "author": "VY",
           "text": "Completed AccountDropdown & profile editor",
-          "createdAt": "2026-11-04T08:35:54.340722Z"
+          "createdAt": "2026-11-04T08:35:54.340Z"
         }
       ],
       "attachments": [],
@@ -2307,8 +2307,8 @@
       "watchers": [
         "VY"
       ],
-      "createdAt": "2026-11-04T08:35:54.340722Z",
-      "updatedAt": "2026-11-04T08:35:54.340722Z"
+      "createdAt": "2026-11-04T08:35:54.340Z",
+      "updatedAt": "2026-11-04T08:35:54.340Z"
     },
     {
       "id": 142,
@@ -2339,7 +2339,7 @@
           "type": "status_change",
           "author": "VY",
           "text": "Completed all 8 Jira settings modals",
-          "createdAt": "2026-11-04T08:35:54.340722Z"
+          "createdAt": "2026-11-04T08:35:54.340Z"
         }
       ],
       "attachments": [],
@@ -2349,8 +2349,8 @@
       "watchers": [
         "VY"
       ],
-      "createdAt": "2026-11-04T08:35:54.340722Z",
-      "updatedAt": "2026-11-04T08:35:54.340722Z"
+      "createdAt": "2026-11-04T08:35:54.340Z",
+      "updatedAt": "2026-11-04T08:35:54.340Z"
     },
     {
       "id": 143,
@@ -2381,7 +2381,7 @@
           "type": "status_change",
           "author": "VY",
           "text": "Completed three-dots overflow menu functionalities",
-          "createdAt": "2026-11-04T08:35:54.340722Z"
+          "createdAt": "2026-11-04T08:35:54.340Z"
         }
       ],
       "attachments": [],
@@ -2391,8 +2391,8 @@
       "watchers": [
         "VY"
       ],
-      "createdAt": "2026-11-04T08:35:54.340722Z",
-      "updatedAt": "2026-11-04T08:35:54.340722Z"
+      "createdAt": "2026-11-04T08:35:54.340Z",
+      "updatedAt": "2026-11-04T08:35:54.340Z"
     },
     {
       "id": 144,
@@ -2423,7 +2423,7 @@
           "type": "status_change",
           "author": "VY",
           "text": "Completed Capacity grouping and filters",
-          "createdAt": "2026-11-04T08:35:54.340722Z"
+          "createdAt": "2026-11-04T08:35:54.340Z"
         }
       ],
       "attachments": [],
@@ -2433,8 +2433,8 @@
       "watchers": [
         "VY"
       ],
-      "createdAt": "2026-11-04T08:35:54.340722Z",
-      "updatedAt": "2026-11-04T08:35:54.340722Z"
+      "createdAt": "2026-11-04T08:35:54.340Z",
+      "updatedAt": "2026-11-04T08:35:54.340Z"
     },
     {
       "id": 145,
@@ -2464,7 +2464,7 @@
           "type": "status_change",
           "author": "VY",
           "text": "Completed sidebar customizer reactive rendering",
-          "createdAt": "2026-11-04T08:35:54.340722Z"
+          "createdAt": "2026-11-04T08:35:54.340Z"
         }
       ],
       "attachments": [],
@@ -2474,8 +2474,181 @@
       "watchers": [
         "VY"
       ],
-      "createdAt": "2026-11-04T08:35:54.340722Z",
-      "updatedAt": "2026-11-04T08:35:54.340722Z"
+      "createdAt": "2026-11-04T08:35:54.340Z",
+      "updatedAt": "2026-11-04T08:35:54.340Z"
+    },
+    {
+      "id": 159,
+      "spaceId": 6,
+      "key": "LIRA-56",
+      "parentId": 133,
+      "epicId": 133,
+      "title": "Phase 4: Layout State, Routing & Theme Fixes",
+      "description": "Comprehensive layout state, light/dark theme persistence, board maximize, and responsive sidebar auto-collapse implementation.",
+      "type": "task",
+      "status": "done",
+      "priority": "high",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "v2.0",
+        "phase4",
+        "layout",
+        "theme",
+        "routing"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000019",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Completed Phase 4: Layout State, Routing & Theme Fixes",
+          "createdAt": "2026-11-05T12:30:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 56000,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-05T12:30:00.000Z",
+      "updatedAt": "2026-11-05T12:30:00.000Z",
+      "resolvedAt": "2026-11-05T12:30:00.000Z"
+    },
+    {
+      "id": 160,
+      "spaceId": 6,
+      "key": "LIRA-57",
+      "parentId": 159,
+      "epicId": 133,
+      "title": "Light/Dark Mode Fix on documentElement with LocalStorage & Tailwind Class Strategy",
+      "description": "Configure Tailwind class darkMode, persist preference to localStorage key lira_theme, sync dark class to documentElement on mount and toggle.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "theme",
+        "darkmode",
+        "tailwind",
+        "persistence"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000020",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Fixed light/dark theme toggles to apply dark class on documentElement and sync with localStorage lira_theme",
+          "createdAt": "2026-11-05T12:30:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 57000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-05T12:30:00.000Z",
+      "updatedAt": "2026-11-05T12:30:00.000Z",
+      "resolvedAt": "2026-11-05T12:30:00.000Z"
+    },
+    {
+      "id": 161,
+      "spaceId": 6,
+      "key": "LIRA-58",
+      "parentId": 159,
+      "epicId": 133,
+      "title": "Maximize & Sidebar Auto-Collapse with 56px Icon Rail & Smooth Transition",
+      "description": "Support board maximize button triggering sidebar collapse, rendering 56px wide icon-only rail with CSS transition-all duration-300.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "sidebar",
+        "maximize",
+        "animation",
+        "icon-rail"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000021",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Implemented 56px icon rail, CSS width transition-all duration-300, and maximize button",
+          "createdAt": "2026-11-05T12:30:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 58000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-05T12:30:00.000Z",
+      "updatedAt": "2026-11-05T12:30:00.000Z",
+      "resolvedAt": "2026-11-05T12:30:00.000Z"
+    },
+    {
+      "id": 162,
+      "spaceId": 6,
+      "key": "LIRA-59",
+      "parentId": 159,
+      "epicId": 133,
+      "title": "Filters Page Sidebar Auto-Collapse & Cross-View Space Navigation",
+      "description": "Auto-collapse sidebar when activeTab is Filters, allow manual expansion, and restore board view with expanded sidebar when any space link is clicked.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "Varun Tej",
+      "assigneeInitials": "VY",
+      "reporter": "Varun Tej",
+      "reporterInitials": "VY",
+      "labels": [
+        "filters",
+        "routing",
+        "navigation",
+        "sidebar"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "1793780000022",
+          "type": "status_change",
+          "author": "VY",
+          "text": "Wired auto-collapse on Filters page and space click navigation back to board with sidebar restoration",
+          "createdAt": "2026-11-05T12:30:00.000Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 59000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-05T12:30:00.000Z",
+      "updatedAt": "2026-11-05T12:30:00.000Z",
+      "resolvedAt": "2026-11-05T12:30:00.000Z"
     }
   ]
 }

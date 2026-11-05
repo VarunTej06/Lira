@@ -15,6 +15,7 @@ interface BoardColumnProps {
   onAddIssue: (status: string) => void;
   accentColor?: string;
   minHeight?: number;
+  wipLimit?: number;
 }
 
 const COLUMN_HEADER_STYLES: Record<string, { color: string; bg: string; dot: string }> = {
@@ -34,36 +35,48 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
   onAddIssue,
   accentColor,
   minHeight,
+  wipLimit: propWipLimit,
 }) => {
   const style = COLUMN_HEADER_STYLES[id] || COLUMN_HEADER_STYLES.todo;
 
-  // Read WIP limit configuration
-  const [wipConfig, setWipConfig] = useState(() => {
+  // Read WIP limit configuration (object { [columnName]: number } or fallback)
+  const [internalLimit, setInternalLimit] = useState<number | undefined>(() => {
     try {
-      const isEnabled = localStorage.getItem('lira_wip_limits') === 'true';
-      const raw = localStorage.getItem('lira_wip_config');
-      const parsed = raw ? JSON.parse(raw) : { enabled: isEnabled, limits: { todo: 5, inprogress: 3 } };
-      return { enabled: isEnabled, limits: parsed.limits || { todo: 5, inprogress: 3 } };
+      const raw = localStorage.getItem('lira_wip_limits');
+      if (raw && raw.startsWith('{')) {
+        const parsed = JSON.parse(raw);
+        return parsed[id] || parsed[title] || parsed[id.toLowerCase()];
+      }
+      return undefined;
     } catch {
-      return { enabled: false, limits: { todo: 5, inprogress: 3 } };
+      return undefined;
     }
   });
 
   useEffect(() => {
     const handler = () => {
       try {
-        const isEnabled = localStorage.getItem('lira_wip_limits') === 'true';
-        const raw = localStorage.getItem('lira_wip_config');
-        const parsed = raw ? JSON.parse(raw) : { enabled: isEnabled, limits: { todo: 5, inprogress: 3 } };
-        setWipConfig({ enabled: isEnabled, limits: parsed.limits || { todo: 5, inprogress: 3 } });
-      } catch { /* ignore */ }
+        const raw = localStorage.getItem('lira_wip_limits');
+        if (raw && raw.startsWith('{')) {
+          const parsed = JSON.parse(raw);
+          setInternalLimit(parsed[id] || parsed[title] || parsed[id.toLowerCase()]);
+        } else {
+          setInternalLimit(undefined);
+        }
+      } catch {
+        setInternalLimit(undefined);
+      }
     };
     window.addEventListener('lira_wip_limits_changed', handler);
-    return () => window.removeEventListener('lira_wip_limits_changed', handler);
-  }, []);
+    window.addEventListener('storage', handler);
+    return () => {
+      window.removeEventListener('lira_wip_limits_changed', handler);
+      window.removeEventListener('storage', handler);
+    };
+  }, [id, title]);
 
-  const columnLimit = wipConfig.limits[id as keyof typeof wipConfig.limits] || 0;
-  const isExceeded = wipConfig.enabled && columnLimit > 0 && issues.length > columnLimit;
+  const activeLimit = propWipLimit !== undefined ? propWipLimit : internalLimit;
+  const isExceeded = activeLimit !== undefined && activeLimit > 0 && issues.length > activeLimit;
 
   return (
     <div className={`flex flex-col w-[300px] min-w-[300px] max-w-[300px] flex-shrink-0 self-stretch rounded-xl transition-all ${
@@ -78,15 +91,15 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
           />
           <span className="text-sm font-semibold text-jira-text truncate">{title}</span>
 
-          {wipConfig.enabled && columnLimit > 0 ? (
+          {activeLimit !== undefined && activeLimit > 0 ? (
             <span
-              className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0 flex items-center gap-1 ${
-                isExceeded ? 'bg-red-500 text-white animate-pulse' : 'bg-gray-200 text-gray-700'
+              className={`ml-1 px-2 py-0.5 text-xs font-bold rounded-full flex-shrink-0 flex items-center gap-1 transition-all ${
+                isExceeded ? 'bg-red-500 text-white animate-pulse ring-2 ring-red-300' : 'bg-gray-200 text-gray-700'
               }`}
-              title={isExceeded ? `WIP limit exceeded! (${issues.length} > ${columnLimit})` : `WIP Limit: ${columnLimit}`}
+              title={isExceeded ? `WIP limit exceeded! (${issues.length} / ${activeLimit})` : `WIP Limit: ${issues.length} / ${activeLimit}`}
             >
               {isExceeded && <AlertCircle className="w-3 h-3" />}
-              {issues.length}/{columnLimit}
+              {issues.length} / {activeLimit}
             </span>
           ) : (
             <span

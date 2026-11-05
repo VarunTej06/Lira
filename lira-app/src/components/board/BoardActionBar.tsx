@@ -3,6 +3,7 @@ import {
   Share2, Zap, Maximize2, Search, ChevronDown, MoreHorizontal,
   Users, SlidersHorizontal, X, Tag, Download, FileJson, FileText,
   Settings, ToggleLeft, ToggleRight, CheckSquare,
+  Eye, EyeOff, Archive, ArchiveRestore, Edit3,
 } from 'lucide-react';
 import type { Space } from '../../types/space';
 import type { Issue } from '../../types/issue';
@@ -10,6 +11,10 @@ import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { BoardSettingsModal, WIPLimitsModal, BulkActionsModal } from './BoardModals';
+import { FormsModal } from './FormsModal';
+import { DocumentsModal } from './DocumentsModal';
+import { AttachmentsModal } from './AttachmentsModal';
+import { ReportsModal } from './ReportsModal';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -29,12 +34,18 @@ interface BoardActionBarProps {
   onClearFilters?: () => void;
   availableLabels?: string[];
   onBulkAction?: () => void;
+  onMaximize?: () => void;
+  isSpaceHidden?: boolean;
+  isSpaceArchived?: boolean;
+  onToggleHideSpace?: () => void;
+  onToggleArchiveSpace?: () => void;
+  onEditSpace?: () => void;
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const MAIN_TABS = ['Summary', 'Board', 'List', 'Calendar', 'Capacity'];
-const MORE_TABS = ['Forms', 'Docs', 'Attachments', 'Reports'];
+const MORE_TABS = ['Forms', 'Documents', 'Attachments', 'Reports'];
 
 const PRIORITIES: { label: string; value: string; color: string }[] = [
   { label: 'Highest', value: 'highest', color: '#FF0000' },
@@ -105,6 +116,12 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
   onClearFilters,
   availableLabels = [],
   onBulkAction,
+  onMaximize,
+  isSpaceHidden = false,
+  isSpaceArchived = false,
+  onToggleHideSpace,
+  onToggleArchiveSpace,
+  onEditSpace,
 }) => {
   // ── Share modal ──────────────────────────────────────────────────────────────
   const [showShare, setShowShare] = useState(false);
@@ -134,11 +151,41 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
   const overflowRef = useRef<HTMLDivElement>(null);
   useClickOutside(overflowRef, () => setShowOverflow(false));
   const [wipEnabled, setWipEnabled] = useState<boolean>(() => {
-    try { return localStorage.getItem('lira_wip_limits') === 'true'; } catch { return false; }
+    try {
+      const raw = localStorage.getItem('lira_wip_limits');
+      if (!raw) return false;
+      if (raw === 'true') return true;
+      if (raw.startsWith('{')) {
+        const obj = JSON.parse(raw);
+        return Object.values(obj).some((v: any) => typeof v === 'number' && v > 0);
+      }
+      return false;
+    } catch { return false; }
   });
   const [showBoardSettingsModal, setShowBoardSettingsModal] = useState(false);
   const [showWipLimitsModal, setShowWipLimitsModal] = useState(false);
   const [showBulkActionsModal, setShowBulkActionsModal] = useState(false);
+  const [showFormsModal, setShowFormsModal] = useState(false);
+  const [showDocumentsModal, setShowDocumentsModal] = useState(false);
+  const [showAttachmentsModal, setShowAttachmentsModal] = useState(false);
+  const [showReportsModal, setShowReportsModal] = useState(false);
+
+  // ── More option modal launcher ──────────────────────────────────────────────
+  const handleMoreOptionClick = (tab: string) => {
+    setShowMore(false);
+    const normalized = tab.toLowerCase();
+    if (normalized === 'forms') {
+      setShowFormsModal(true);
+    } else if (normalized === 'docs' || normalized === 'documents') {
+      setShowDocumentsModal(true);
+    } else if (normalized === 'attachments') {
+      setShowAttachmentsModal(true);
+    } else if (normalized === 'reports') {
+      setShowReportsModal(true);
+    } else {
+      onTabChange(tab);
+    }
+  };
 
   // ── Notify parent when filter changes ────────────────────────────────────────
   const handlePriorityToggle = (value: string) => {
@@ -200,7 +247,14 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
     const next = !wipEnabled;
     setWipEnabled(next);
     try {
-      localStorage.setItem('lira_wip_limits', String(next));
+      if (next) {
+        const raw = localStorage.getItem('lira_wip_config');
+        const parsed = raw ? JSON.parse(raw) : null;
+        const limits = parsed?.limits || { todo: 5, inprogress: 3 };
+        localStorage.setItem('lira_wip_limits', JSON.stringify(limits));
+      } else {
+        localStorage.setItem('lira_wip_limits', JSON.stringify({}));
+      }
       window.dispatchEvent(new Event('lira_wip_limits_changed'));
     } catch { /* ignore */ }
   };
@@ -243,9 +297,23 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
             </div>
           )}
           <div>
-            <h1 className="text-lg font-bold text-jira-text leading-tight">
-              {space?.name || 'Select a space'}
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg font-bold text-jira-text leading-tight">
+                {space?.name || 'Select a space'}
+              </h1>
+              {isSpaceHidden && (
+                <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-semibold shadow-2xs">
+                  <EyeOff className="w-3 h-3 text-amber-600" />
+                  Hidden Space
+                </span>
+              )}
+              {isSpaceArchived && (
+                <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-300 font-semibold shadow-2xs">
+                  <Archive className="w-3 h-3 text-slate-600" />
+                  Archived Space
+                </span>
+              )}
+            </div>
             {space?.description && (
               <p className="text-xs text-jira-muted truncate max-w-xs">{space.description}</p>
             )}
@@ -263,7 +331,11 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
           <button className="p-1.5 rounded hover:bg-gray-100 text-jira-muted transition-colors" title="Automations">
             <Zap className="w-4 h-4" />
           </button>
-          <button className="p-1.5 rounded hover:bg-gray-100 text-jira-muted transition-colors" title="Fullscreen">
+          <button
+            onClick={onMaximize}
+            className="p-1.5 rounded hover:bg-gray-100 text-jira-muted transition-colors cursor-pointer"
+            title="Maximize board"
+          >
             <Maximize2 className="w-4 h-4" />
           </button>
         </div>
@@ -303,8 +375,8 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
               {MORE_TABS.map(tab => (
                 <button
                   key={tab}
-                  onClick={() => { onTabChange(tab); setShowMore(false); }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 text-jira-text transition-colors"
+                  onClick={() => handleMoreOptionClick(tab)}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 text-jira-text transition-colors cursor-pointer"
                 >
                   {tab}
                 </button>
@@ -481,6 +553,66 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
                 Board settings
               </button>
 
+              {/* Space settings & Edit */}
+              {onEditSpace && (
+                <button
+                  onClick={() => {
+                    setShowOverflow(false);
+                    onEditSpace();
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  <Edit3 className="w-3.5 h-3.5 text-jira-muted" />
+                  Space settings
+                </button>
+              )}
+
+              {/* Hide / Unhide space */}
+              {onToggleHideSpace && (
+                <button
+                  onClick={() => {
+                    setShowOverflow(false);
+                    onToggleHideSpace();
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  {isSpaceHidden ? (
+                    <>
+                      <Eye className="w-3.5 h-3.5 text-jira-blue" />
+                      <span>Unhide space</span>
+                    </>
+                  ) : (
+                    <>
+                      <EyeOff className="w-3.5 h-3.5 text-jira-muted" />
+                      <span>Hide space</span>
+                    </>
+                  )}
+                </button>
+              )}
+
+              {/* Archive / Unarchive space */}
+              {onToggleArchiveSpace && (
+                <button
+                  onClick={() => {
+                    setShowOverflow(false);
+                    onToggleArchiveSpace();
+                  }}
+                  className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-jira-text hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  {isSpaceArchived ? (
+                    <>
+                      <ArchiveRestore className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Unarchive space</span>
+                    </>
+                  ) : (
+                    <>
+                      <Archive className="w-3.5 h-3.5 text-jira-muted" />
+                      <span>Archive space</span>
+                    </>
+                  )}
+                </button>
+              )}
+
               <div className="border-t border-jira-border my-1" />
 
               {/* WIP Limits */}
@@ -596,6 +728,27 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
       <BulkActionsModal
         isOpen={showBulkActionsModal}
         onClose={() => setShowBulkActionsModal(false)}
+        space={space}
+        issues={issues}
+      />
+      <FormsModal
+        isOpen={showFormsModal}
+        onClose={() => setShowFormsModal(false)}
+        space={space}
+      />
+      <DocumentsModal
+        isOpen={showDocumentsModal}
+        onClose={() => setShowDocumentsModal(false)}
+        space={space}
+      />
+      <AttachmentsModal
+        isOpen={showAttachmentsModal}
+        onClose={() => setShowAttachmentsModal(false)}
+        space={space}
+      />
+      <ReportsModal
+        isOpen={showReportsModal}
+        onClose={() => setShowReportsModal(false)}
         space={space}
         issues={issues}
       />

@@ -40,6 +40,8 @@
 * **Space Overflow Actions (`...`)**: Fully operational Board Settings modal (card density & badge toggles), WIP Limits engine (with column caps and over-capacity warnings), and Bulk Actions modal (batch status, priority, assignee, and deletion).
 * **Enhanced Capacity & Workload Allocation**: Complete 4-way grouping engine (`Status`, `Assignee`, `Priority`, `Epic`) with story point capacity load bars, throughput dials, and in-view quick filter chips (`All`, `Assigned to VY`, `In Flight`, `High Priority`, `Overdue`).
 * **Interactive & Reactive "Customise Your Sidebar"**: Modal drawer allowing users to customize visible navigation items (For you, Recent, Filters, Dashboards, Teams, Apps, Starred, Spaces) with instant reactive rendering and `localStorage` persistence.
+* **Space Visibility & Lifecycle Management (Hide & Archive)**: Dedicated **"Hidden Spaces"** and **"Archived Spaces"** sidebar sections with real-time counters, expand/collapse toggles, and contextual 3-dots options. Users can hide/unhide and archive/unarchive spaces either directly from sidebar space rows or from the Kanban board toolbar (`...` menu). Hidden and archived spaces remain fully accessible to view, edit, modify issues, and update space settings at any time.
+* **Seamless Project-to-Space Navigation**: Smoothly transition between the Projects overview/workspace and any Space board with automatic state switching and sidebar restoration.
 * **Aesthetic Geometric App Launcher**: Multi-tone gradient 9-module app switcher button with instant operational triggers for Lira Board, Lira AI, and local PC Backup & Restore.
 
 ### 🤖 3. Omnipresent AI Copilot & Autonomous Agent
@@ -174,6 +176,84 @@ The `LIRA` space within the application tracks the active roadmap for cloud-nati
 | `LIRA-35` | Task | Interactive Customise Sidebar Drawer with Preference Persistence | **Done** |
 | `LIRA-36` | Task | Geometric Multi-Tone App Launcher & Backup/Restore Engine | **Done** |
 | `LIRA-37` | Task | Summary & Capacity Analytics Dashboards with Progress Dials | **Done** |
+| `LIRA-38` | Task | Interactive Account Profile (VY) Dropdown & Profile Editor Modal | **Done** |
+| `LIRA-39` | Task | Jira Settings Popover Complete Suite of 8 Admin Modals | **Done** |
+| `LIRA-40` | Task | Space Three-Dots Menu: Board Settings, WIP Limits & Bulk Actions | **Done** |
+| `LIRA-41` | Task | Capacity View Grouping Engine & Real-Time Filter Chips | **Done** |
+| `LIRA-42` | Task | Dynamic Sidebar Customization & Reactive Section Rendering | **Done** |
+| `LIRA-43` | Task | Preset Filter Navigation & Automatic JQL Preset Application | **Done** |
+| `LIRA-44` | Task | Responsive Two-Row Tailwind Grid Redesign for FiltersPage | **Done** |
+| `LIRA-45` | Task | Settings Gear Modal with Appearance Theme, Profile & Export Sections | **Done** |
+| `LIRA-46` | Task | Enhanced Notifications Popover with Action Details & Ticket Hyperlinks | **Done** |
+| `LIRA-47` | Task | LocalDiskSync Backup & Restore Engine with Live Toast Feedback | **Done** |
+| `LIRA-48` | Task | Customizable & Reorderable Left Sidebar with LocalStorage Sync | **Done** |
+| `LIRA-49` | Task | Modernized Quick-Links App Launcher Visuals & Tailwind States | **Done** |
+| `LIRA-50` | Task | Lira v2.0 Release Notes & Master Documentation Updates | **Done** |
+| `LIRA-51` | Task | Phase 2: Projects Architecture & Spaces Integration | **Done** |
+| `LIRA-52` | Task | ProjectsOverview Directory & Card Interface | **Done** |
+| `LIRA-53` | Task | CreateProjectModal with Dual Space Association | **Done** |
+| `LIRA-54` | Task | ProjectDetailView Tabbed Workspace (Board, Technical Details, Settings) | **Done** |
+| `LIRA-55` | Task | App.tsx & LeftSidebar Navigation Wiring | **Done** |
+| `LIRA-56` | Task | Phase 4: Layout State, Routing & Theme Fixes | **Done** |
+| `LIRA-57` | Task | Light/Dark Mode Fix on documentElement with LocalStorage & Tailwind Class Strategy | **Done** |
+| `LIRA-58` | Task | Maximize & Sidebar Auto-Collapse with 56px Icon Rail & Smooth Transition | **Done** |
+| `LIRA-59` | Task | Filters Page Sidebar Auto-Collapse & Cross-View Space Navigation | **Done** |
+
+---
+
+## 🚀 v2.0 Release Notes
+
+Lira v2.0 delivers an extensive suite of enterprise UX refinements, navigation upgrades, and responsive layouts:
+
+1. **Preset Filter Navigation & Automatic JQL Application**:
+   - Integrated preset filter triggers (`All Issues`, `Open Issues`, `Completed`, `Recently Updated`) directly within the Top Navigation `Filters` dropdown.
+   - Clicking any preset automatically routes the user to the Filters page and applies the selected criteria instantaneously.
+   - Interactive segmented preset control on the Filters page displays real-time ticket tallies and single-click switching.
+
+2. **Responsive Two-Row FiltersPage Layout**:
+   - Complete redesign of the Filters & Work Item Search controls into a structured two-row layout utilizing Tailwind CSS grid utilities.
+   - **Row 1 (Primary & Presets)**: Full-width search bar with clear button, preset filter pill segmented tabs, and matching items counter.
+   - **Row 2 (Multi-Dimensional Facets)**: Responsive 6-column grid for Spaces, Status, Priority, Type, Assignee, and Tags & Team filters with active badges.
+   - Removable active filter chips bar allowing granular removal of applied criteria with one-click "Reset all" functionality.
+
+3. **Unified Settings Gear Modal with Appearance, Export/Backup, & Profile**:
+   - Replaced redundant dropdown actions by wiring the top-navigation Settings gear icon directly to a unified Settings modal.
+   - **Appearance**: Live Theme Switcher supporting Dark Mode (default) and Light Mode with immediate document-level styling and `localStorage` persistence.
+   - **Profile**: Personal profile management for display name, contact email, initials avatar, and professional role.
+   - **Export & Backup**: Direct administrative dashboard displaying local storage engine diagnostics, file sync paths, and backup actions.
+
+4. **Enhanced Action-Detail Notifications Center**:
+   - Refactored the Notifications bell popover to categorize audit events into `+ Created`, `✏️ Edited`, and `✓ Closed` transitions.
+   - Formatted each notification with actor badges, action summaries, space chips, and explicit clickable ticket hyperlinks (`#KEY`).
+   - Added category filter tabs (`All`, `Created`, `Edited`, `Closed`) and an "Only show unread" toggle switch with a "Mark all as read" control.
+
+5. **LocalDiskSync Backup & Restore Engine with Live Toast Feedback**:
+   - Direct integration between modal backup/restore triggers and the `localDiskSync` service (`saveToDiskNow`, `initLocalDiskSync`, `exportBackup`, `importBackup`).
+   - Animated floating toast feedback banners with visual icons for successful saves, restoration completions, and error notifications.
+   - Automatic dual-sync to local PC disk files (`data/spaces/*.json` and `data/lira-workspace.json`).
+
+6. **Customizable & Reorderable Left Sidebar**:
+   - Complete "Customise your sidebar" modal supporting both visibility toggles and custom ordering of navigation items and app shortcuts.
+   - Drag-and-drop handles, single-click up/down reordering arrows, and contextual move menus ("Move to top", "Move to bottom", "Move up", "Move down").
+   - Choices are persisted in `localStorage` (`lira_sidebar_customization`) and applied dynamically on sidebar render for both expanded and collapsed modes.
+
+7. **Modernized Quick-Links App Launcher**:
+   - Updated the top-left App Launcher button with the modern Atlassian 9-dot switcher visual design from `Switch Sites or Apps Screen.png`.
+   - Polished hover and active Tailwind styling with smooth transitions, border illumination, and active state ring effects while preserving the quick-links icon set (`Lira Board`, `Lira AI Assistant`, `Backup & Restore`, `GitHub Repo`).
+
+8. **Phase 2: Projects Architecture & Spaces Integration**:
+   - **Projects Overview Directory (`ProjectsOverview.tsx`)**: High-fidelity projects hub persisted in `localStorage` (`lira_projects`), rendering responsive project cards with technical owners/leads, associated Space tags, live progress meters (% completed), ticket tallies, real-time search, and space filtering.
+   - **Dual-Association Creation Engine (`CreateProjectModal.tsx`)**: Modal dialog with automatic key prefix derivation, lead assignment, and a dual-mode radio selector allowing developers to either bind to existing spaces or provision new isolated workspace shards (`data/spaces/<KEY>.json`) directly on disk.
+   - **Tabbed Project Workspace (`ProjectDetailView.tsx`)**:
+     - **Board Tab**: Filtered Kanban board displaying exclusively the issues linked to the active project, with ticket search, quick assignee toggles, and column progress metrics.
+     - **Technical Details Tab**: Comprehensive engineering metadata management for Git repository URLs (with direct external links), multi-environment tagging (Development, QA, Staging, Production), and architectural scope descriptions.
+     - **Project Settings Tab**: Jira-grade RBAC permissions note with offline administrator guidelines, 4-stage workflow states lifecycle (`Backlog`, `To Do`, `In Progress`, `Done`), and customizable project fields schema stub.
+   - **Navigation & Routing Wiring (`App.tsx` & `LeftSidebar.tsx`)**: Added dedicated "Projects" navigation item with Lucide `FolderKanban` icon in LeftSidebar (both expanded and collapsed modes), AppLauncher quick-links, and reactive `activeTab === 'Projects'` view rendering.
+
+9. **Phase 4: Layout State, Routing & Theme Fixes**:
+   - **Light/Dark Mode System Fix**: Configured Tailwind `darkMode: 'class'` strategy in `tailwind.config.js`. Synchronized theme changes directly to `document.documentElement.classList` (`dark` add/remove) across `SettingsModal.tsx`, `AccountDropdown.tsx`, and `TopNavigation.tsx` with persistence to `localStorage` key `lira_theme`. On app initialization in `App.tsx`, read and apply `lira_theme` immediately before and during initial render.
+   - **Board Maximize & Sidebar Auto-Collapse**: Added `sidebarCollapsed` state in `App.tsx` and wired to the board header maximize button (⤢ icon in `BoardActionBar`). When collapsed, `LeftSidebar` transitions smoothly (`transition-all duration-300`) to an icon-only 56px wide rail without text labels.
+   - **Filters Page Sidebar Behavior**: Automatically collapses sidebar when navigating to the Filters page (`activeTab === 'Filters'`). Supports manual sidebar expansion, and automatically restores full sidebar and routes to the Board view (`setActiveTab('Board')` and `setSidebarCollapsed(false)`) when clicking any space link from the icon rail, expanded sidebar, or Filters page issue list.
 
 ---
 

@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
-import { createSpace } from '../../hooks/useSpaces';
+import { createSpace, updateSpace } from '../../hooks/useSpaces';
+import type { Space } from '../../types/space';
 
 interface CreateSpaceModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreated: (id: number) => void;
+  editingSpace?: Space | null;
+  onUpdated?: (space: Space) => void;
 }
 
 const SPACE_ICONS = ['📋', '✨', '🏆', '📚', '🌤️', '🚀', '💡', '🎯', '🔧', '🌐', '🧠', '⚡'];
 const SPACE_COLORS = ['#0052CC', '#00B8D9', '#6554C0', '#36B37E', '#FF5630', '#FFAB00', '#FF991F', '#172B4D'];
 
-export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({ isOpen, onClose, onCreated }) => {
+export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
+  isOpen,
+  onClose,
+  onCreated,
+  editingSpace,
+  onUpdated,
+}) => {
   const [name, setName] = useState('');
   const [key, setKey] = useState('');
   const [icon, setIcon] = useState('📋');
@@ -21,14 +30,29 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({ isOpen, onCl
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    if (editingSpace) {
+      setName(editingSpace.name || '');
+      setKey(editingSpace.key || '');
+      setIcon(editingSpace.icon || '📋');
+      setColor(editingSpace.color || '#0052CC');
+      setDescription(editingSpace.description || '');
+      setError('');
+    } else {
+      resetForm();
+    }
+  }, [isOpen, editingSpace]);
+
   const handleNameChange = (v: string) => {
     setName(v);
-    // Auto-generate key from first word(s)
-    const generated = v.split(' ')
-      .map(w => w[0]?.toUpperCase() || '')
-      .join('')
-      .slice(0, 5);
-    setKey(generated);
+    if (!editingSpace) {
+      // Auto-generate key from first word(s)
+      const generated = v.split(' ')
+        .map(w => w[0]?.toUpperCase() || '')
+        .join('')
+        .slice(0, 5);
+      setKey(generated);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,20 +64,41 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({ isOpen, onCl
     setError('');
     try {
       const now = new Date();
-      const id = await createSpace({
-        name: name.trim(),
-        key: key.toUpperCase().trim(),
-        icon,
-        color,
-        description: description.trim(),
-        createdAt: now,
-        updatedAt: now,
-      });
-      onCreated(id);
-      onClose();
-      resetForm();
+      if (editingSpace?.id) {
+        await updateSpace(editingSpace.id, {
+          name: name.trim(),
+          key: key.toUpperCase().trim(),
+          icon,
+          color,
+          description: description.trim(),
+          updatedAt: now,
+        });
+        onUpdated?.({
+          ...editingSpace,
+          name: name.trim(),
+          key: key.toUpperCase().trim(),
+          icon,
+          color,
+          description: description.trim(),
+          updatedAt: now,
+        });
+        onClose();
+      } else {
+        const id = await createSpace({
+          name: name.trim(),
+          key: key.toUpperCase().trim(),
+          icon,
+          color,
+          description: description.trim(),
+          createdAt: now,
+          updatedAt: now,
+        });
+        onCreated(id);
+        onClose();
+        resetForm();
+      }
     } catch (err) {
-      setError('Failed to create space.');
+      setError(editingSpace ? 'Failed to update space.' : 'Failed to create space.');
     } finally {
       setLoading(false);
     }
@@ -63,8 +108,11 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({ isOpen, onCl
     setName(''); setKey(''); setIcon('📋'); setColor('#0052CC'); setDescription(''); setError('');
   };
 
+  const modalTitle = editingSpace ? 'Space Settings & Edit' : 'Create Space';
+  const submitLabel = editingSpace ? 'Save Changes' : 'Create Space';
+
   return (
-    <Modal isOpen={isOpen} onClose={() => { resetForm(); onClose(); }} title="Create Space" size="md">
+    <Modal isOpen={isOpen} onClose={() => { resetForm(); onClose(); }} title={modalTitle} size="md">
       <form onSubmit={handleSubmit} className="p-6 space-y-5">
         {/* Icon & Color */}
         <div>
@@ -152,7 +200,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({ isOpen, onCl
 
         <div className="flex justify-end gap-3 pt-2 border-t border-jira-border">
           <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
-          <Button type="submit" variant="primary" loading={loading}>Create Space</Button>
+          <Button type="submit" variant="primary" loading={loading}>{submitLabel}</Button>
         </div>
       </form>
     </Modal>

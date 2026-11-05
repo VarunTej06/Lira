@@ -3,7 +3,7 @@ import { DragDropContext, type DropResult } from '@hello-pangea/dnd';
 import { BoardColumn } from './BoardColumn';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
-import { moveIssue } from '../../hooks/useIssues';
+import { moveIssue, updateIssue } from '../../hooks/useIssues';
 
 interface KanbanBoardProps {
   issues: Issue[];
@@ -16,12 +16,39 @@ interface KanbanBoardProps {
   groupBy?: 'status' | 'assignee' | 'priority' | 'epic';
 }
 
-const COLUMNS = [
-  { id: 'backlog', title: 'Backlog' },
-  { id: 'todo', title: 'To Do' },
-  { id: 'inprogress', title: 'In Progress' },
-  { id: 'done', title: 'Done' },
+const STATUS_COLUMNS = [
+  { id: 'backlog', title: 'Backlog', accentColor: '#6B778C' },
+  { id: 'todo', title: 'To Do', accentColor: '#172B4D' },
+  { id: 'inprogress', title: 'In Progress', accentColor: '#0052CC' },
+  { id: 'done', title: 'Done', accentColor: '#006644' },
 ];
+
+const PRIORITY_COLUMNS = [
+  { id: 'highest', title: 'Highest', accentColor: '#FF0000' },
+  { id: 'high', title: 'High', accentColor: '#FF5630' },
+  { id: 'medium', title: 'Medium', accentColor: '#FF8B00' },
+  { id: 'low', title: 'Low', accentColor: '#36B37E' },
+  { id: 'lowest', title: 'Lowest', accentColor: '#00B8D9' },
+];
+
+function loadWipLimitsFromStorage(): Record<string, number> {
+  try {
+    const raw = localStorage.getItem('lira_wip_limits');
+    if (!raw) return {};
+    if (raw.startsWith('{')) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') return parsed;
+    }
+    // Backward compatibility for boolean string
+    if (raw === 'true') {
+      const cfg = localStorage.getItem('lira_wip_config');
+      if (cfg) return JSON.parse(cfg).limits || {};
+    }
+    return {};
+  } catch {
+    return {};
+  }
+}
 
 export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   issues,
@@ -31,7 +58,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   onIssueClick,
   onAddIssue,
   activeFilters,
-  groupBy: _groupBy = 'status',
+  groupBy = 'status',
 }) => {
   const [optimisticUpdates, setOptimisticUpdates] = useState<Record<number, string>>({});
   const boardRef = useRef<HTMLDivElement>(null);
@@ -39,6 +66,79 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const isPanningRef = useRef(false);
   const startPosRef = useRef({ x: 0, y: 0, scrollLeft: 0, scrollTop: 0 });
 
+  // ── Read WIP Limits from localStorage `lira_wip_limits` ──
+  const [wipLimits, setWipLimits] = useState<Record<string, number>>(() => loadWipLimitsFromStorage());
+
+  useEffect(() => {
+    const handler = () => {
+      setWipLimits(loadWipLimitsFromStorage());
+    };
+    window.addEventListener('lira_wip_limits_changed', handler);
+    window.addEventListener('storage', handler);
+    return () => {
+      window.removeEventListener('lira_wip_limits_changed', handler);
+      window.removeEventListener('storage', handler);
+    };
+  }, []);
+
+  const getColWipLimit = (colId: string, colTitle: string): number | undefined => {
+    const keys = [
+      colId,
+      colId.toLowerCase(),
+      colTitle,
+      colTitle.toLowerCase(),
+      colTitle.toLowerCase().replace(/\s+/g, ''),
+    ];
+    for (const k of keys) {
+      if (typeof wipLimits[k] === 'number' && wipLimits[k] > 0) {
+        return wipLimits[k];
+      }
+    }
+    return undefined;
+  };
+
+  // ── Compute Columns based on groupBy ──
+  const assigneeColumns = useMemo(() => {
+    const set = new Set<string>();
+    issues.forEach(i => {
+      const name = i.assignee?.trim();
+      if (name) set.add(name);
+    });
+
+    if (!set.has('Varun Tej')) set.add('Varun Tej');
+    set.add('Unassigned');
+
+    const ASSIGNEE_COLORS = ['#0052CC', '#6554C0', '#00B8D9', '#36B37E', '#FF8B00', '#FF5630', '#8777D9'];
+    return Array.from(set).map((assignee, idx) => ({
+      id: assignee,
+      title: assignee,
+      accentColor: assignee === 'Unassigned' ? '#6B778C' : ASSIGNEE_COLORS[idx % ASSIGNEE_COLORS.length],
+    }));
+  }, [issues]);
+
+  const epicColumns = useMemo(() => {
+    const epics = issues.filter(i => i.type === 'epic');
+    const cols = epics.map(e => ({
+      id: `epic-${e.id}`,
+      title: `${e.key}: ${e.title}`,
+      accentColor: '#6554C0',
+    }));
+    cols.push({
+      id: 'no-epic',
+      title: 'No Epic / Standalone',
+      accentColor: '#6B778C',
+    });
+    return cols;
+  }, [issues]);
+
+  const activeColumns = useMemo(() => {
+    if (groupBy === 'priority') return PRIORITY_COLUMNS;
+    if (groupBy === 'assignee') return assigneeColumns;
+    if (groupBy === 'epic') return epicColumns;
+    return STATUS_COLUMNS;
+  }, [groupBy, assigneeColumns, epicColumns]);
+
+  // ── Filtered Issues ──
   const filteredIssues = useMemo(() => {
     let filtered = issues;
 
@@ -68,15 +168,40 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     return filtered;
   }, [issues, searchQuery, filterAssignee, activeFilters]);
 
+  // ── Group Issues into Columns ──
   const issuesByColumn = useMemo(() => {
-    const columns: Record<string, Issue[]> = {};
-    COLUMNS.forEach(col => {
-      columns[col.id] = filteredIssues
-        .filter(i => (optimisticUpdates[i.id!] || i.status) === col.id)
-        .sort((a, b) => a.rank - b.rank);
+    const columnsMap: Record<string, Issue[]> = {};
+    activeColumns.forEach(col => {
+      columnsMap[col.id] = [];
     });
-    return columns;
-  }, [filteredIssues, optimisticUpdates]);
+
+    filteredIssues.forEach(issue => {
+      let colId: string;
+      if (groupBy === 'priority') {
+        colId = optimisticUpdates[issue.id!] || issue.priority || 'medium';
+      } else if (groupBy === 'assignee') {
+        colId = optimisticUpdates[issue.id!] || issue.assignee?.trim() || 'Unassigned';
+      } else if (groupBy === 'epic') {
+        const epicKey = issue.epicId ? `epic-${issue.epicId}` : 'no-epic';
+        colId = optimisticUpdates[issue.id!] || epicKey;
+      } else {
+        colId = optimisticUpdates[issue.id!] || issue.status || 'todo';
+      }
+
+      if (columnsMap[colId]) {
+        columnsMap[colId].push(issue);
+      } else {
+        if (!columnsMap[colId]) columnsMap[colId] = [];
+        columnsMap[colId].push(issue);
+      }
+    });
+
+    Object.keys(columnsMap).forEach(key => {
+      columnsMap[key].sort((a, b) => a.rank - b.rank);
+    });
+
+    return columnsMap;
+  }, [activeColumns, filteredIssues, groupBy, optimisticUpdates]);
 
   // Clean up optimistic update entries once real live query catches up
   useEffect(() => {
@@ -88,14 +213,21 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
       keys.forEach(k => {
         const id = Number(k);
         const match = issues.find(i => i.id === id);
-        if (match && match.status === prev[id]) {
-          delete next[id];
-          changed = true;
+        if (match) {
+          const currentVal = groupBy === 'priority'
+            ? match.priority
+            : groupBy === 'assignee'
+            ? (match.assignee?.trim() || 'Unassigned')
+            : match.status;
+          if (currentVal === prev[id]) {
+            delete next[id];
+            changed = true;
+          }
         }
       });
       return changed ? next : prev;
     });
-  }, [issues]);
+  }, [issues, groupBy]);
 
   const [boardContentHeight, setBoardContentHeight] = useState(700);
 
@@ -201,36 +333,52 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-    const issueId = parseInt(draggableId);
+    const issueId = parseInt(draggableId, 10);
     if (isNaN(issueId)) return;
-    const newStatus = destination.droppableId;
+    const targetColId = destination.droppableId;
 
-    // Optimistically update status in memory immediately
-    setOptimisticUpdates(prev => ({ ...prev, [issueId]: newStatus }));
-
-    // Calculate new rank accurately (excluding the dragged issue itself from target column)
-    const targetItems = (issuesByColumn[newStatus] || []).filter(i => i.id !== issueId);
-    let newRank: number;
-
-    if (targetItems.length === 0) {
-      newRank = 1000;
-    } else if (destination.index <= 0) {
-      newRank = (targetItems[0]?.rank ?? 1000) - 100;
-    } else if (destination.index >= targetItems.length) {
-      newRank = (targetItems[targetItems.length - 1]?.rank ?? 1000) + 100;
-    } else {
-      const before = targetItems[destination.index - 1]?.rank ?? 1000;
-      const after = targetItems[destination.index]?.rank ?? (before + 200);
-      newRank = Math.floor((before + after) / 2);
-      if (newRank === before || newRank === after) {
-        newRank = before + 0.5;
-      }
-    }
+    // Optimistically update in memory immediately
+    setOptimisticUpdates(prev => ({ ...prev, [issueId]: targetColId }));
 
     try {
-      await moveIssue(issueId, newStatus, newRank);
+      if (groupBy === 'priority') {
+        await updateIssue(issueId, { priority: targetColId as Issue['priority'] });
+      } else if (groupBy === 'assignee') {
+        if (targetColId === 'Unassigned') {
+          await updateIssue(issueId, { assignee: undefined, assigneeInitials: undefined });
+        } else {
+          const initials = targetColId === 'Varun Tej'
+            ? 'VY'
+            : targetColId.split(' ').map(s => s[0]).join('').toUpperCase().slice(0, 2);
+          await updateIssue(issueId, { assignee: targetColId, assigneeInitials: initials });
+        }
+      } else if (groupBy === 'epic') {
+        const epicId = targetColId === 'no-epic' ? undefined : parseInt(targetColId.replace('epic-', ''), 10);
+        await updateIssue(issueId, { epicId });
+      } else {
+        // Standard status movement
+        const targetItems = (issuesByColumn[targetColId] || []).filter(i => i.id !== issueId);
+        let newRank: number;
+
+        if (targetItems.length === 0) {
+          newRank = 1000;
+        } else if (destination.index <= 0) {
+          newRank = (targetItems[0]?.rank ?? 1000) - 100;
+        } else if (destination.index >= targetItems.length) {
+          newRank = (targetItems[targetItems.length - 1]?.rank ?? 1000) + 100;
+        } else {
+          const before = targetItems[destination.index - 1]?.rank ?? 1000;
+          const after = targetItems[destination.index]?.rank ?? (before + 200);
+          newRank = Math.floor((before + after) / 2);
+          if (newRank === before || newRank === after) {
+            newRank = before + 0.5;
+          }
+        }
+
+        await moveIssue(issueId, targetColId, newRank);
+      }
     } catch (err) {
-      console.error('Failed to move issue:', err);
+      console.error('Failed to move/update issue:', err);
       // Revert optimistic update on failure
       setOptimisticUpdates(prev => {
         const next = { ...prev };
@@ -244,7 +392,6 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isDraggingCardRef.current) return;
     const target = e.target as HTMLElement;
-    // Do not initiate board panning if clicking any card, drag handle, button, link, or input
     if (
       target.closest('[data-rfd-draggable-id]') ||
       target.closest('[data-rfd-drag-handle-draggable-id]') ||
@@ -304,7 +451,7 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
           className="w-full h-full overflow-y-auto overflow-x-auto p-4 pr-5 lira-board-scrollbar"
         >
           <div className="flex gap-5 items-stretch min-w-max pb-36">
-            {COLUMNS.map(col => (
+            {activeColumns.map(col => (
               <BoardColumn
                 key={col.id}
                 id={col.id}
@@ -313,8 +460,16 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 allIssues={issues}
                 space={space}
                 onIssueClick={onIssueClick}
-                onAddIssue={onAddIssue}
+                onAddIssue={(status) => {
+                  if (groupBy === 'priority' || groupBy === 'assignee' || groupBy === 'epic') {
+                    onAddIssue('todo');
+                  } else {
+                    onAddIssue(status);
+                  }
+                }}
+                accentColor={col.accentColor}
                 minHeight={calculatedMinHeight}
+                wipLimit={getColWipLimit(col.id, col.title)}
               />
             ))}
           </div>
@@ -323,4 +478,3 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     </div>
   );
 };
-

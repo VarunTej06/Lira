@@ -12,6 +12,7 @@ export const GeneralSettingsModal: React.FC<{
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
+    localStorage.setItem('lira_locale_prefs', JSON.stringify({ language, timeZone }));
     localStorage.setItem('lira_pref_lang', language);
     localStorage.setItem('lira_pref_tz', timeZone);
     setSaved(true);
@@ -86,7 +87,9 @@ export const NotificationSettingsModal: React.FC<{
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
-    localStorage.setItem('lira_notif_config', JSON.stringify({ inApp, sounds, mentionsOnly }));
+    const prefs = { inApp, sounds, mentionsOnly };
+    localStorage.setItem('lira_notification_prefs', JSON.stringify(prefs));
+    localStorage.setItem('lira_notif_config', JSON.stringify(prefs));
     setSaved(true);
     setTimeout(() => { setSaved(false); onClose(); }, 1000);
   };

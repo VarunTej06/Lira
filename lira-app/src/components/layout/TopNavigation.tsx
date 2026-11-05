@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react'
 import {
   Search, Bell, Settings, ChevronDown, Plus, Download, Upload,
   HardDrive, X, LayoutGrid, Zap, Clock, CheckCircle2, Filter,
-  GitBranch, DatabaseBackup, AlertCircle, ArrowRight, User, ExternalLink,
-  Shield, CheckSquare, Layers, Monitor, CreditCard, Sparkles,
+  GitBranch, DatabaseBackup, AlertCircle, ArrowRight, ExternalLink,
+  FolderKanban
 } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
@@ -11,6 +11,7 @@ import { exportBackup, importBackup } from '../../db/storageService';
 import { subscribeToSyncStatus, saveToDiskNow } from '../../services/localDiskSync';
 import { LiraAIAvatar } from '../ai/LiraAIAvatar';
 import { AccountDropdown } from './AccountDropdown';
+import { SettingsModal, type SettingsSection } from './SettingsModal';
 import {
   GeneralSettingsModal,
   NotificationSettingsModal,
@@ -33,6 +34,7 @@ interface TopNavigationProps {
   onSelectIssue?: (issue: Issue) => void;
   onApplyFilter?: (filter: string) => void;
   onNavigateToFilters?: () => void;
+  onNavigateToProjects?: () => void;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -70,12 +72,13 @@ function fuzzyMatch(query: string, text: string): boolean {
   return qi === q.length;
 }
 
-// ─── App Launcher Popover (Premium Geometric Logo Button) ─────────────────────
+// ─── App Launcher Popover (Quick-links with Modern 9-Dot Switcher) ───────────
 
 const AppLauncher: React.FC<{
   onToggleAI?: () => void;
   onOpenBackup: () => void;
-}> = ({ onToggleAI, onOpenBackup }) => {
+  onNavigateToProjects?: () => void;
+}> = ({ onToggleAI, onOpenBackup, onNavigateToProjects }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
@@ -90,22 +93,27 @@ const AppLauncher: React.FC<{
   const links = [
     {
       label: 'Lira Board',
-      icon: <LayoutGrid className="w-5 h-5 text-blue-400" />,
+      icon: <LayoutGrid className="w-4 h-4 text-blue-400" />,
       action: () => setOpen(false),
     },
     {
+      label: 'Projects',
+      icon: <FolderKanban className="w-4 h-4 text-violet-400" />,
+      action: () => { setOpen(false); onNavigateToProjects?.(); },
+    },
+    {
       label: 'Lira AI Assistant',
-      icon: <Zap className="w-5 h-5 text-purple-400" />,
+      icon: <Zap className="w-4 h-4 text-purple-400" />,
       action: () => { setOpen(false); onToggleAI?.(); },
     },
     {
       label: 'Backup & Restore',
-      icon: <DatabaseBackup className="w-5 h-5 text-emerald-400" />,
+      icon: <DatabaseBackup className="w-4 h-4 text-emerald-400" />,
       action: () => { setOpen(false); onOpenBackup(); },
     },
     {
       label: 'GitHub Repo',
-      icon: <GitBranch className="w-5 h-5 text-sky-400" />,
+      icon: <GitBranch className="w-4 h-4 text-sky-400" />,
       action: () => {
         setOpen(false);
         window.open('https://github.com/VarunTej06/Lira', '_blank', 'noopener');
@@ -115,44 +123,56 @@ const AppLauncher: React.FC<{
 
   return (
     <div ref={ref} className="relative">
-      {/* Sleek Geometric App Launcher Button */}
+      {/* Modern 9-Dot Quick-Links App Switcher */}
       <button
         onClick={() => setOpen(v => !v)}
-        className={`p-2 rounded-lg transition-all flex items-center justify-center group cursor-pointer ${
+        className={`p-2 rounded-lg transition-all duration-150 flex items-center justify-center group cursor-pointer ${
           open
-            ? 'bg-blue-600/30 ring-1 ring-blue-400 text-white'
-            : 'bg-white/5 hover:bg-white/15 text-white/80 hover:text-white border border-white/10 hover:border-white/20'
+            ? 'bg-[#0C66E4]/25 border border-blue-400 text-blue-300 ring-2 ring-blue-500/30 shadow-md'
+            : 'bg-white/5 hover:bg-white/15 active:scale-95 text-white/80 hover:text-white border border-white/10 hover:border-white/20 shadow-2xs'
         }`}
-        title="App Launcher & Quick Links"
+        title="Switch sites or apps"
+        aria-label="Switch sites or apps"
       >
-        <svg className="w-5 h-5 transition-transform group-hover:scale-105" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="4.5" height="4.5" rx="1.2" fill="#60A5FA" />
-          <rect x="9.75" y="3" width="4.5" height="4.5" rx="1.2" fill="#3B82F6" />
-          <rect x="16.5" y="3" width="4.5" height="4.5" rx="1.2" fill="#2563EB" />
-          <rect x="3" y="9.75" width="4.5" height="4.5" rx="1.2" fill="#818CF8" />
-          <rect x="9.75" y="9.75" width="4.5" height="4.5" rx="1.2" fill="#38BDF8" />
-          <rect x="16.5" y="9.75" width="4.5" height="4.5" rx="1.2" fill="#6366F1" />
-          <rect x="3" y="16.5" width="4.5" height="4.5" rx="1.2" fill="#A78BFA" />
-          <rect x="9.75" y="16.5" width="4.5" height="4.5" rx="1.2" fill="#8B5CF6" />
-          <rect x="16.5" y="16.5" width="4.5" height="4.5" rx="1.2" fill="#7C3AED" />
+        {/* 9-dot waffle grid SVG (3x3 grid of small rounded rectangles, white on dark bg) */}
+        <svg
+          className="w-4 h-4 text-white/90 group-hover:text-white transition-colors duration-150"
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="1.5" y="1.5" width="3" height="3" rx="0.75" />
+          <rect x="6.5" y="1.5" width="3" height="3" rx="0.75" />
+          <rect x="11.5" y="1.5" width="3" height="3" rx="0.75" />
+          <rect x="1.5" y="6.5" width="3" height="3" rx="0.75" />
+          <rect x="6.5" y="6.5" width="3" height="3" rx="0.75" />
+          <rect x="11.5" y="6.5" width="3" height="3" rx="0.75" />
+          <rect x="1.5" y="11.5" width="3" height="3" rx="0.75" />
+          <rect x="6.5" y="11.5" width="3" height="3" rx="0.75" />
+          <rect x="11.5" y="11.5" width="3" height="3" rx="0.75" />
         </svg>
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-56 bg-[#1D2939] border border-white/10 rounded-xl shadow-2xl z-50 p-2 transition-all duration-150 animate-scale-in">
-          <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider px-2 pb-1.5 border-b border-white/10 mb-1">
-            Quick links & apps
+        <div className="absolute top-full left-0 mt-2 w-60 bg-[#1D2939] border border-white/10 rounded-xl shadow-2xl z-50 p-2 transition-all duration-150 animate-scale-in">
+          <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider px-2.5 pb-2 border-b border-white/10 mb-1 flex items-center justify-between">
+            <span>Switch sites or apps</span>
+            <span className="text-[9px] bg-white/10 px-1.5 py-0.2 rounded font-normal text-white/50">Lira v2.0</span>
           </p>
-          {links.map(({ label, icon, action }) => (
-            <button
-              key={label}
-              onClick={action}
-              className="w-full flex items-center gap-3 px-2.5 py-2.5 rounded-lg text-sm text-white/80 hover:text-white hover:bg-white/10 transition-all cursor-pointer text-left"
-            >
-              {icon}
-              <span className="font-medium text-xs">{label}</span>
-            </button>
-          ))}
+          <div className="space-y-0.5">
+            {links.map(({ label, icon, action }) => (
+              <button
+                key={label}
+                onClick={action}
+                className="w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-xs font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all cursor-pointer text-left group"
+              >
+                <div className="p-1 rounded-md bg-white/5 group-hover:bg-white/15 transition-colors">
+                  {icon}
+                </div>
+                <span className="truncate">{label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -301,6 +321,7 @@ const FiltersDropdown: React.FC<{
   const handleSelect = (id: string) => {
     setActive(id);
     onApplyFilter?.(id);
+    onNavigateToFilters?.();
     setOpen(false);
   };
 
@@ -500,7 +521,7 @@ const OmniSearch: React.FC<{
   );
 };
 
-// ─── Notifications Bell (With Update Detail & Clickable Ticket Link) ─────────
+// ─── Notifications Bell (With Action Details & Clickable Ticket Link) ─────────
 
 const NotificationsBell: React.FC<{
   issues: Issue[];
@@ -508,6 +529,8 @@ const NotificationsBell: React.FC<{
 }> = ({ issues, onSelectIssue }) => {
   const [open, setOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(true);
+  const [activeTab, setActiveTab] = useState<'all' | 'created' | 'edited' | 'closed'>('all');
+  const [onlyUnread, setOnlyUnread] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
 
@@ -518,56 +541,110 @@ const NotificationsBell: React.FC<{
     return () => document.removeEventListener('keydown', handler);
   }, [open]);
 
-  // Collect most recent activity entries across issues
+  // Collect and classify action entries (created / edited / closed) across issues
   const notifications = useMemo(() => {
+    type ActionCategory = 'created' | 'edited' | 'closed';
     type Entry = {
+      id: string;
       issue: Issue;
       author: string;
+      category: ActionCategory;
       actionText: string;
       createdAt: Date | string;
     };
     const all: Entry[] = [];
 
     issues.forEach(issue => {
-      // Activity array
-      (issue.activity ?? []).forEach((act: unknown) => {
+      // 1. Closed tickets (Done)
+      if (issue.status === 'done') {
+        all.push({
+          id: `${issue.key}-closed`,
+          issue,
+          author: issue.assigneeInitials || issue.assignee || 'VY',
+          category: 'closed',
+          actionText: 'closed ticket and transitioned to Done',
+          createdAt: issue.resolvedAt || issue.updatedAt || issue.createdAt,
+        });
+      }
+
+      // 2. Activity events (status change, created, edit)
+      (issue.activity ?? []).forEach((act: unknown, idx: number) => {
         const item = act as {
           text?: string;
           description?: string;
           author?: string;
-          authorInitials?: string;
           type?: string;
           createdAt?: Date | string;
           timestamp?: Date | string;
         };
-        const actionText =
-          item.text ||
-          item.description ||
-          (item.type === 'created' ? 'created this work item' : item.type === 'status_change' ? 'changed status' : 'updated ticket');
+
+        let cat: ActionCategory = 'edited';
+        let desc = item.text || item.description || 'updated ticket details';
+
+        if (item.type === 'created') {
+          cat = 'created';
+          desc = `created this ${issue.type}`;
+        } else if (item.type === 'status_change') {
+          if (desc.toLowerCase().includes('done')) {
+            cat = 'closed';
+            desc = 'transitioned ticket to Done';
+          } else {
+            cat = 'edited';
+            desc = `changed status to ${item.description || 'in progress'}`;
+          }
+        }
 
         all.push({
+          id: `${issue.key}-act-${idx}`,
           issue,
-          author: item.author || 'VY',
-          actionText,
+          author: item.author || issue.assigneeInitials || 'VY',
+          category: cat,
+          actionText: desc,
           createdAt: item.createdAt || item.timestamp || issue.updatedAt || issue.createdAt,
         });
       });
 
-      // If no activity array but has issue info, add creation entry
+      // 3. Issue creation event fallback
       if (!issue.activity || issue.activity.length === 0) {
         all.push({
+          id: `${issue.key}-created`,
           issue,
           author: issue.reporter || 'VY',
-          actionText: `created ${issue.type} ${issue.key}`,
+          category: 'created',
+          actionText: `created ${issue.type}`,
           createdAt: issue.createdAt,
         });
+
+        // 4. Issue edit fallback if updated significantly after creation and not done
+        if (
+          issue.updatedAt &&
+          new Date(issue.updatedAt).getTime() > new Date(issue.createdAt).getTime() + 60000 &&
+          issue.status !== 'done'
+        ) {
+          all.push({
+            id: `${issue.key}-edited`,
+            issue,
+            author: issue.assigneeInitials || 'VY',
+            category: 'edited',
+            actionText: `edited priority to ${issue.priority} & updated fields`,
+            createdAt: issue.updatedAt,
+          });
+        }
       }
     });
 
     return all
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, 12);
+      .slice(0, 20);
   }, [issues]);
+
+  const filteredNotifications = useMemo(() => {
+    return notifications.filter(n => {
+      if (activeTab !== 'all' && n.category !== activeTab) return false;
+      if (onlyUnread && !hasUnread) return false;
+      return true;
+    });
+  }, [notifications, activeTab, onlyUnread, hasUnread]);
 
   return (
     <div ref={ref} className="relative">
@@ -583,48 +660,128 @@ const NotificationsBell: React.FC<{
       </button>
 
       {open && (
-        <div className="absolute top-full right-0 mt-2 w-84 bg-[#1D2939] border border-white/10 rounded-xl shadow-2xl z-50 transition-all duration-150 animate-scale-in">
+        <div className="absolute top-full right-0 mt-2 w-96 bg-[#1D2939] border border-white/10 rounded-xl shadow-2xl z-50 transition-all duration-150 animate-scale-in overflow-hidden">
+          {/* Header */}
           <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-white/10 bg-white/5">
-            <span className="text-sm font-semibold text-white">Notifications</span>
-            {hasUnread && (
-              <button
-                onClick={() => setHasUnread(false)}
-                className="text-[11px] text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
-              >
-                Mark all as read
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-white">Notifications</span>
+              <span className="text-[10px] bg-white/10 text-white/60 px-1.5 py-0.2 rounded font-mono">
+                {filteredNotifications.length}
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-1.5 text-[11px] text-white/60 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={onlyUnread}
+                  onChange={e => setOnlyUnread(e.target.checked)}
+                  className="w-3.5 h-3.5 text-blue-500 rounded border-white/20 bg-white/10"
+                />
+                <span>Only unread</span>
+              </label>
+              {hasUnread && (
+                <button
+                  onClick={() => setHasUnread(false)}
+                  className="text-[11px] text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+                >
+                  Mark all as read
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="max-h-88 overflow-y-auto divide-y divide-white/5">
-            {notifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 gap-2">
+          {/* Action Filter Tabs (All / Created / Edited / Closed) */}
+          <div className="flex border-b border-white/10 px-2 pt-1.5 gap-1 bg-white/[0.02]">
+            {[
+              { id: 'all' as const, label: 'All' },
+              { id: 'created' as const, label: 'Created' },
+              { id: 'edited' as const, label: 'Edited' },
+              { id: 'closed' as const, label: 'Closed' },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-2.5 py-1 text-xs font-medium rounded-t-lg transition-colors cursor-pointer ${
+                  activeTab === tab.id
+                    ? 'bg-[#1D2939] text-white border-t border-x border-white/10'
+                    : 'text-white/40 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Notifications Feed */}
+          <div className="max-h-96 overflow-y-auto divide-y divide-white/5">
+            {filteredNotifications.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-2 text-center px-4">
                 <Bell className="w-6 h-6 text-white/20" />
-                <p className="text-xs text-white/40">No new notifications</p>
+                <p className="text-xs text-white/50">No notifications in this view</p>
+                <p className="text-[11px] text-white/30">Action updates will appear as tickets are created, edited, or closed.</p>
               </div>
             ) : (
-              notifications.map((notif, idx) => (
-                <div
-                  key={`${notif.issue.key}-${idx}`}
-                  onClick={() => { onSelectIssue?.(notif.issue); setOpen(false); }}
-                  className="flex items-start gap-2.5 px-3.5 py-2.5 hover:bg-white/10 transition-colors cursor-pointer group"
-                >
-                  <Avatar initials={notif.author.slice(0, 2).toUpperCase()} size="xs" className="mt-0.5 flex-shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs text-white/90 leading-snug">
-                      <span className="font-semibold text-white">{notif.author}</span>{' '}
-                      <span className="text-white/70">{notif.actionText}</span>{' '}
-                      <span className="text-blue-400 font-mono font-bold hover:underline">
-                        {notif.issue.key}
-                      </span>
-                    </p>
-                    <p className="text-[11px] text-white/50 mt-0.5 truncate group-hover:text-white/80">
-                      {notif.issue.title}
-                    </p>
-                    <p className="text-[10px] text-white/30 mt-1">{relativeTime(notif.createdAt)}</p>
+              filteredNotifications.map((notif) => {
+                const badgeColor =
+                  notif.category === 'closed'
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                    : notif.category === 'edited'
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                    : 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+
+                const badgeLabel =
+                  notif.category === 'closed'
+                    ? '✓ Closed'
+                    : notif.category === 'edited'
+                    ? '✏️ Edited'
+                    : '+ Created';
+
+                return (
+                  <div
+                    key={notif.id}
+                    onClick={() => { onSelectIssue?.(notif.issue); setOpen(false); }}
+                    className="flex items-start gap-2.5 px-3.5 py-2.5 hover:bg-white/10 transition-colors cursor-pointer group"
+                  >
+                    <Avatar initials={notif.author.slice(0, 2).toUpperCase()} size="xs" className="mt-0.5 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-semibold text-white text-xs">{notif.author}</span>
+                        <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${badgeColor}`}>
+                          {badgeLabel}
+                        </span>
+                        <span className="text-white/70 text-xs">{notif.actionText}</span>
+                      </div>
+
+                      {/* Explicit Ticket Hyperlink */}
+                      <div className="mt-1 flex items-center gap-1.5">
+                        <a
+                          href={`#issue-${notif.issue.key}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onSelectIssue?.(notif.issue);
+                            setOpen(false);
+                          }}
+                          className="text-blue-400 hover:text-blue-300 font-mono font-bold text-xs hover:underline flex items-center gap-0.5"
+                          title={`Open ${notif.issue.key}`}
+                        >
+                          {notif.issue.key}
+                          <ExternalLink className="w-2.5 h-2.5 opacity-60 inline" />
+                        </a>
+                        <span className="text-white/30 text-[11px]">·</span>
+                        <span className="text-[11px] text-white/60 truncate max-w-[200px] group-hover:text-white/90">
+                          {notif.issue.title}
+                        </span>
+                      </div>
+
+                      <p className="text-[10px] text-white/30 mt-1">{relativeTime(notif.createdAt)}</p>
+                    </div>
+                    {hasUnread && (
+                      <span className="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0 mt-1.5" />
+                    )}
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
@@ -633,195 +790,7 @@ const NotificationsBell: React.FC<{
   );
 };
 
-// ─── Jira Settings Popover Menu (Matching Settings Gear Features.png) ─────────
 
-const SettingsGearMenu: React.FC<{
-  onOpenSystemModal: () => void;
-  onOpenGeneralModal: () => void;
-  onOpenNotifModal: () => void;
-  onOpenSpacesModal: () => void;
-  onOpenWorkItemsModal: () => void;
-  onOpenMarketplaceModal: () => void;
-  onOpenUsersModal: () => void;
-  onOpenBillingModal: () => void;
-}> = ({
-  onOpenSystemModal,
-  onOpenGeneralModal,
-  onOpenNotifModal,
-  onOpenSpacesModal,
-  onOpenWorkItemsModal,
-  onOpenMarketplaceModal,
-  onOpenUsersModal,
-  onOpenBillingModal,
-}) => {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const ref = useRef<HTMLDivElement>(null);
-  useClickOutside(ref, () => setOpen(false));
-
-  interface SettingsAction {
-    id: string;
-    label: string;
-    desc: string;
-    icon: React.ReactNode;
-    external?: boolean;
-    onClick: () => void;
-  }
-  interface SettingsGroup {
-    category: string;
-    actions: SettingsAction[];
-  }
-
-  const items: SettingsGroup[] = [
-    {
-      category: 'Personal Jira settings',
-      actions: [
-        {
-          id: 'general',
-          label: 'General settings',
-          desc: 'Manage language, time zone, and other personal preferences',
-          icon: <User className="w-4 h-4 text-blue-400" />,
-          onClick: () => { setOpen(false); onOpenGeneralModal(); },
-        },
-        {
-          id: 'notifications',
-          label: 'Notification settings',
-          desc: 'Manage email and in-app notifications from Jira',
-          icon: <Bell className="w-4 h-4 text-amber-400" />,
-          onClick: () => { setOpen(false); onOpenNotifModal(); },
-        },
-      ],
-    },
-    {
-      category: 'Jira admin settings',
-      actions: [
-        {
-          id: 'system',
-          label: 'System & Local PC Data',
-          desc: 'Manage disk backups, sync status, theme, and system diagnostics',
-          icon: <Monitor className="w-4 h-4 text-emerald-400" />,
-          onClick: () => { setOpen(false); onOpenSystemModal(); },
-        },
-        {
-          id: 'apps',
-          label: 'Jira apps',
-          desc: 'Manage access, settings, and integrations across Jira',
-          icon: <LayoutGrid className="w-4 h-4 text-purple-400" />,
-          onClick: () => { setOpen(false); onOpenMarketplaceModal(); },
-        },
-        {
-          id: 'spaces',
-          label: 'Spaces',
-          desc: 'Manage space settings, categories, and more',
-          icon: <Layers className="w-4 h-4 text-sky-400" />,
-          onClick: () => { setOpen(false); onOpenSpacesModal(); },
-        },
-        {
-          id: 'workitems',
-          label: 'Work items',
-          desc: 'Configure work types, workflows, screens, fields, and hierarchy',
-          icon: <CheckSquare className="w-4 h-4 text-orange-400" />,
-          onClick: () => { setOpen(false); onOpenWorkItemsModal(); },
-        },
-        {
-          id: 'marketplace',
-          label: 'Marketplace apps',
-          desc: 'Add and manage Jira Marketplace apps and integrations',
-          icon: <Sparkles className="w-4 h-4 text-pink-400" />,
-          onClick: () => { setOpen(false); onOpenMarketplaceModal(); },
-        },
-      ],
-    },
-    {
-      category: 'Atlassian admin settings',
-      actions: [
-        {
-          id: 'users',
-          label: 'User management',
-          desc: 'Manage users, groups, and access requests',
-          icon: <Shield className="w-4 h-4 text-indigo-400" />,
-          onClick: () => { setOpen(false); onOpenUsersModal(); },
-        },
-        {
-          id: 'billing',
-          label: 'Billing',
-          desc: 'Update your billing details, manage subscriptions, and more',
-          icon: <CreditCard className="w-4 h-4 text-teal-400" />,
-          onClick: () => { setOpen(false); onOpenBillingModal(); },
-        },
-      ],
-    },
-  ];
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen(v => !v)}
-        className={`p-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer ${
-          open ? 'bg-white/15 text-white' : 'text-white/70 hover:text-white'
-        }`}
-        title="Settings & Administration"
-      >
-        <Settings className="w-4.5 h-4.5" style={{ width: 18, height: 18 }} />
-      </button>
-
-      {open && (
-        <div className="absolute top-full right-0 mt-2 w-88 bg-white text-jira-text border border-jira-border rounded-xl shadow-2xl z-50 p-3 transition-all duration-150 animate-scale-in max-h-[85vh] overflow-y-auto">
-          {/* Search bar inside settings popover */}
-          <div className="relative mb-3">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search ( Ctrl + K )"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full bg-gray-50 text-xs rounded-lg pl-8 pr-3 py-1.5 border border-gray-200 focus:outline-none focus:bg-white focus:border-jira-blue transition-all"
-            />
-          </div>
-
-          <div className="space-y-4">
-            {items.map(group => {
-              const filteredActions = group.actions.filter(
-                a => a.label.toLowerCase().includes(search.toLowerCase()) || a.desc.toLowerCase().includes(search.toLowerCase())
-              );
-              if (filteredActions.length === 0) return null;
-
-              return (
-                <div key={group.category} className="space-y-1">
-                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider px-2">
-                    {group.category}
-                  </p>
-                  {filteredActions.map(action => (
-                    <button
-                      key={action.id}
-                      onClick={action.onClick}
-                      className="w-full flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors text-left cursor-pointer group"
-                    >
-                      <div className="mt-0.5 p-1 rounded bg-gray-100 group-hover:bg-blue-50 transition-colors">
-                        {action.icon}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold text-jira-text group-hover:text-jira-blue">
-                            {action.label}
-                          </span>
-                          {action.external && <ExternalLink className="w-3 h-3 text-gray-400" />}
-                        </div>
-                        <p className="text-[11px] text-jira-muted leading-tight mt-0.5">
-                          {action.desc}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 // ─── System & Backup Modal ───────────────────────────────────────────────────
 
@@ -841,6 +810,11 @@ const SystemSettingsModal: React.FC<{
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
     localStorage.setItem('lira_theme', next);
+    if (next === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   };
 
   return (
@@ -921,7 +895,17 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   onSelectIssue,
   onApplyFilter,
   onNavigateToFilters,
+  onNavigateToProjects,
 }) => {
+  const [showUnifiedSettingsModal, setShowUnifiedSettingsModal] = useState(false);
+  const [settingsInitialSection, setSettingsInitialSection] = useState<SettingsSection>('appearance');
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3500);
+  }, []);
+
   const [showSystemModal, setShowSystemModal] = useState(false);
   const [showGeneralModal, setShowGeneralModal] = useState(false);
   const [showNotifModal, setShowNotifModal] = useState(false);
@@ -951,30 +935,42 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
     setImportStatus(null);
     try {
       const result = await importBackup(file);
-      setImportStatus(`✅ Imported ${result.spaces} spaces and ${result.issues} issues. Refresh to see changes.`);
+      const msg = `Imported ${result.spaces} spaces and ${result.issues} issues!`;
+      setImportStatus(`✅ ${msg}`);
+      showToast(msg, 'success');
     } catch (err) {
-      setImportStatus(`❌ Import failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      const errText = `Import failed: ${err instanceof Error ? err.message : 'Unknown error'}`;
+      setImportStatus(`❌ ${errText}`);
+      showToast(errText, 'error');
     } finally {
       setImporting(false);
       if (fileRef.current) fileRef.current.value = '';
     }
-  }, []);
+  }, [showToast]);
 
   const handleExport = useCallback(async () => {
     try {
       await exportBackup();
-      setImportStatus('✅ Backup downloaded to your computer & synced to PC disk (data/spaces/*.json)');
+      const msg = 'Backup downloaded & synced to PC disk (data/spaces/*.json)!';
+      setImportStatus(`✅ ${msg}`);
+      showToast(msg, 'success');
     } catch (err) {
-      setImportStatus(`❌ Export failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      const errText = `Export failed: ${err instanceof Error ? err.message : 'Unknown error'}`;
+      setImportStatus(`❌ ${errText}`);
+      showToast(errText, 'error');
     }
-  }, []);
+  }, [showToast]);
 
   return (
     <nav className="h-14 bg-[#1D2125] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
       {/* App Launcher with Custom Geometric Logo */}
       <AppLauncher
         onToggleAI={onToggleAI}
-        onOpenBackup={() => setShowSystemModal(true)}
+        onNavigateToProjects={onNavigateToProjects}
+        onOpenBackup={() => {
+          setSettingsInitialSection('backup');
+          setShowUnifiedSettingsModal(true);
+        }}
       />
 
       {/* Lira Logo + Brand */}
@@ -1022,7 +1018,13 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Local PC Storage Indicator */}
       <button
         type="button"
-        onClick={() => saveToDiskNow()}
+        onClick={async () => {
+          const ok = await saveToDiskNow();
+          showToast(
+            ok ? 'Workspace saved to local PC disk (data/spaces/*.json)!' : 'Failed to save to PC disk',
+            ok ? 'success' : 'error'
+          );
+        }}
         className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs transition-all border border-white/15 hover:border-white/30 hover:bg-white/5 ml-auto cursor-pointer"
         title={`Saved locally on your PC in: ${syncState.filePath}\nClick to force save now.`}
       >
@@ -1049,22 +1051,49 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       <div className="flex items-center gap-1 ml-1">
         <NotificationsBell issues={issues} onSelectIssue={onSelectIssue} />
 
-        <SettingsGearMenu
-          onOpenSystemModal={() => setShowSystemModal(true)}
-          onOpenGeneralModal={() => setShowGeneralModal(true)}
-          onOpenNotifModal={() => setShowNotifModal(true)}
-          onOpenSpacesModal={() => setShowSpacesModal(true)}
-          onOpenWorkItemsModal={() => setShowWorkItemsModal(true)}
-          onOpenMarketplaceModal={() => setShowMarketplaceModal(true)}
-          onOpenUsersModal={() => setShowUsersModal(true)}
-          onOpenBillingModal={() => setShowBillingModal(true)}
-        />
+        {/* Wired Settings Gear Icon Button */}
+        <button
+          onClick={() => {
+            setSettingsInitialSection('appearance');
+            setShowUnifiedSettingsModal(true);
+          }}
+          className={`p-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer ${
+            showUnifiedSettingsModal ? 'bg-white/15 text-white ring-1 ring-white/30' : 'text-white/70 hover:text-white'
+          }`}
+          title="Settings & Administration"
+        >
+          <Settings className="w-4.5 h-4.5" style={{ width: 18, height: 18 }} />
+        </button>
 
         <AccountDropdown />
       </div>
 
       {/* Hidden file input for import */}
       <input ref={fileRef} type="file" accept=".json" onChange={handleImport} className="hidden" />
+
+      {/* Unified Settings Modal (Appearance, Export/Backup, Profile) */}
+      <SettingsModal
+        isOpen={showUnifiedSettingsModal}
+        onClose={() => setShowUnifiedSettingsModal(false)}
+        initialSection={settingsInitialSection}
+        onToast={showToast}
+      />
+
+      {/* Toast Feedback Banner */}
+      {toast && (
+        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold animate-scale-in transition-all ${
+          toast.type === 'error'
+            ? 'bg-red-900/95 text-red-100 border-red-700'
+            : 'bg-[#1D2939]/95 text-white border-white/20'
+        }`}>
+          {toast.type === 'error' ? (
+            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+          ) : (
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+          )}
+          <span>{toast.message}</span>
+        </div>
+      )}
 
       {/* System Settings & Data Backup Modal */}
       <SystemSettingsModal

@@ -5,6 +5,7 @@ import {
 import { Modal } from '../common/Modal';
 import { db } from '../../db/db';
 import { saveToDiskNow } from '../../services/localDiskSync';
+import { updateIssue } from '../../hooks/useIssues';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 
@@ -35,9 +36,12 @@ export const BoardSettingsModal: React.FC<{
   onClose: () => void;
   space: Space | undefined;
 }> = ({ isOpen, onClose, space }) => {
+  const spaceId = space?.id ?? 'global';
+  const storageKey = `lira_board_settings_${spaceId}`;
+
   const [config, setConfig] = useState<BoardSettingsConfig>(() => {
     try {
-      const saved = localStorage.getItem('lira_board_settings');
+      const saved = localStorage.getItem(storageKey) || localStorage.getItem('lira_board_settings');
       return saved ? { ...DEFAULT_BOARD_SETTINGS, ...JSON.parse(saved) } : DEFAULT_BOARD_SETTINGS;
     } catch {
       return DEFAULT_BOARD_SETTINGS;
@@ -47,13 +51,14 @@ export const BoardSettingsModal: React.FC<{
   const [saved, setSaved] = useState(false);
 
   const handleSave = () => {
+    localStorage.setItem(storageKey, JSON.stringify(config));
     localStorage.setItem('lira_board_settings', JSON.stringify(config));
     window.dispatchEvent(new Event('lira_board_settings_changed'));
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
       onClose();
-    }, 800);
+    }, 2000);
   };
 
   return (
@@ -155,6 +160,14 @@ export const BoardSettingsModal: React.FC<{
           </button>
         </div>
       </div>
+
+      {/* 2-second green toast */}
+      {saved && (
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+          <Check className="w-4 h-4 text-white" />
+          <span>✓ Saved</span>
+        </div>
+      )}
     </Modal>
   );
 };
@@ -189,8 +202,17 @@ export const WIPLimitsModal: React.FC<{
 }> = ({ isOpen, onClose, space, onConfigSaved }) => {
   const [config, setConfig] = useState<WipLimitsConfig>(() => {
     try {
-      const saved = localStorage.getItem('lira_wip_config');
-      return saved ? { ...DEFAULT_WIP_CONFIG, ...JSON.parse(saved) } : DEFAULT_WIP_CONFIG;
+      const savedLimits = localStorage.getItem('lira_wip_limits');
+      const savedConfig = localStorage.getItem('lira_wip_config');
+      if (savedLimits && savedLimits.startsWith('{')) {
+        const parsedLimits = JSON.parse(savedLimits);
+        const hasLimits = Object.values(parsedLimits).some((v: any) => typeof v === 'number' && v > 0);
+        return {
+          enabled: hasLimits,
+          limits: { ...DEFAULT_WIP_CONFIG.limits, ...parsedLimits }
+        };
+      }
+      return savedConfig ? { ...DEFAULT_WIP_CONFIG, ...JSON.parse(savedConfig) } : DEFAULT_WIP_CONFIG;
     } catch {
       return DEFAULT_WIP_CONFIG;
     }
@@ -200,14 +222,18 @@ export const WIPLimitsModal: React.FC<{
 
   const handleSave = () => {
     localStorage.setItem('lira_wip_config', JSON.stringify(config));
-    localStorage.setItem('lira_wip_limits', String(config.enabled));
+    if (config.enabled) {
+      localStorage.setItem('lira_wip_limits', JSON.stringify(config.limits));
+    } else {
+      localStorage.setItem('lira_wip_limits', JSON.stringify({}));
+    }
     window.dispatchEvent(new Event('lira_wip_limits_changed'));
     onConfigSaved?.(config);
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
       onClose();
-    }, 800);
+    }, 2000);
   };
 
   return (
@@ -298,6 +324,14 @@ export const WIPLimitsModal: React.FC<{
           </button>
         </div>
       </div>
+
+      {/* 2-second green toast */}
+      {saved && (
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+          <Check className="w-4 h-4 text-white" />
+          <span>✓ Saved</span>
+        </div>
+      )}
     </Modal>
   );
 };
@@ -316,6 +350,7 @@ export const BulkActionsModal: React.FC<{
   const [batchAssignee, setBatchAssignee] = useState<string>('Varun Tej');
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [savedToast, setSavedToast] = useState(false);
 
   // Toggle select all
   const allSelected = issues.length > 0 && selectedIds.size === issues.length;
@@ -340,13 +375,12 @@ export const BulkActionsModal: React.FC<{
     if (selectedIds.size === 0) return;
     setIsProcessing(true);
     try {
-      const now = new Date();
       for (const id of selectedIds) {
-        await db.issues.update(id, { status: batchStatus as Issue['status'], updatedAt: now });
+        await updateIssue(id, { status: batchStatus as Issue['status'] });
       }
-      await saveToDiskNow();
       setFeedback(`✓ Moved ${selectedIds.size} issues to "${batchStatus}".`);
-      setTimeout(() => { setFeedback(null); onClose(); }, 1200);
+      setSavedToast(true);
+      setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
     } catch (err) {
       setFeedback(`❌ Error: ${err instanceof Error ? err.message : 'Failed'}`);
     } finally {
@@ -359,13 +393,12 @@ export const BulkActionsModal: React.FC<{
     if (selectedIds.size === 0) return;
     setIsProcessing(true);
     try {
-      const now = new Date();
       for (const id of selectedIds) {
-        await db.issues.update(id, { priority: batchPriority as Issue['priority'], updatedAt: now });
+        await updateIssue(id, { priority: batchPriority as Issue['priority'] });
       }
-      await saveToDiskNow();
       setFeedback(`✓ Updated priority of ${selectedIds.size} issues to "${batchPriority}".`);
-      setTimeout(() => { setFeedback(null); onClose(); }, 1200);
+      setSavedToast(true);
+      setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
     } catch (err) {
       setFeedback(`❌ Error: ${err instanceof Error ? err.message : 'Failed'}`);
     } finally {
@@ -378,18 +411,16 @@ export const BulkActionsModal: React.FC<{
     if (selectedIds.size === 0) return;
     setIsProcessing(true);
     try {
-      const now = new Date();
       const initials = batchAssignee === 'Varun Tej' ? 'VY' : 'UN';
       for (const id of selectedIds) {
-        await db.issues.update(id, {
+        await updateIssue(id, {
           assignee: batchAssignee,
           assigneeInitials: initials,
-          updatedAt: now
         });
       }
-      await saveToDiskNow();
       setFeedback(`✓ Assigned ${selectedIds.size} issues to "${batchAssignee}".`);
-      setTimeout(() => { setFeedback(null); onClose(); }, 1200);
+      setSavedToast(true);
+      setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
     } catch (err) {
       setFeedback(`❌ Error: ${err instanceof Error ? err.message : 'Failed'}`);
     } finally {
@@ -584,6 +615,14 @@ export const BulkActionsModal: React.FC<{
           </button>
         </div>
       </div>
+
+      {/* 2-second green toast */}
+      {savedToast && (
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+          <Check className="w-4 h-4 text-white" />
+          <span>✓ Saved</span>
+        </div>
+      )}
     </Modal>
   );
 };

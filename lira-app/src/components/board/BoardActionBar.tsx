@@ -6,6 +6,7 @@ import {
   Eye, EyeOff, Archive, ArchiveRestore, Edit3,
 } from 'lucide-react';
 import type { Space } from '../../types/space';
+import { StandupButton } from '../standup/StandupButton';
 import type { Issue } from '../../types/issue';
 import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
@@ -44,7 +45,7 @@ interface BoardActionBarProps {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const MAIN_TABS = ['Summary', 'Board', 'List', 'Calendar', 'Capacity'];
+const MAIN_TABS = ['Summary', 'Board', 'List', 'Calendar', 'Sprints', 'Capacity'];
 const MORE_TABS = ['Forms', 'Documents', 'Attachments', 'Reports'];
 
 const PRIORITIES: { label: string; value: string; color: string }[] = [
@@ -321,6 +322,9 @@ export const BoardActionBar: React.FC<BoardActionBarProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {space?.id && (
+            <StandupButton scope={{ type: 'space', id: `space:${space.id}`, name: space.name, spaceId: space.id }} />
+          )}
           <button
             onClick={() => setShowShare(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-jira-text border border-jira-border rounded hover:bg-gray-50 transition-colors"

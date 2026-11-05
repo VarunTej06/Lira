@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db/db';
 import type { Issue } from '../types/issue';
+import { sprintKey } from '../utils/sprintUtils';
 
 export function useIssuesBySpace(spaceId: number | undefined) {
   return useLiveQuery<Issue[], Issue[]>(
@@ -75,7 +76,7 @@ export async function updateIssue(id: number, changes: Partial<Issue>): Promise<
 }
 
 export async function createIssue(issue: Omit<Issue, 'id'>): Promise<number> {
-  const id = await db.issues.add(issue);
+  const id = await db.issues.add({ ...issue, sprint: issue.sprint || sprintKey(new Date()) });
   triggerDiskSync();
   return id;
 }

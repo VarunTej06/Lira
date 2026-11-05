@@ -3,7 +3,7 @@
   "spaceId": 6,
   "spaceKey": "LIRA",
   "spaceName": "Lira",
-  "updatedAt": "2026-11-05T13:55:19.649Z",
+  "updatedAt": "2026-11-05T15:22:48.733Z",
   "issueCount": 46,
   "space": {
     "id": 6,
@@ -59,7 +59,8 @@
         "VY"
       ],
       "createdAt": "2026-10-18T08:15:46.633Z",
-      "updatedAt": "2026-10-28T21:42:53.703Z"
+      "updatedAt": "2026-10-28T21:42:53.703Z",
+      "sprint": "2026-10"
     },
     {
       "id": 16,
@@ -103,7 +104,8 @@
         "VY"
       ],
       "createdAt": "2026-10-26T08:15:46.633Z",
-      "updatedAt": "2026-10-28T08:15:46.633Z"
+      "updatedAt": "2026-10-28T08:15:46.633Z",
+      "sprint": "2026-10"
     },
     {
       "id": 17,
@@ -148,7 +150,8 @@
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
       "updatedAt": "2026-10-28T19:24:52.229Z",
-      "resolvedAt": "2026-10-28T09:37:55.127Z"
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "sprint": "2026-10"
     },
     {
       "id": 18,
@@ -249,7 +252,8 @@
       "updatedAt": "2026-10-28T19:27:06.155Z",
       "parentId": 15,
       "epicId": 15,
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 19,
@@ -324,7 +328,8 @@
       ],
       "createdAt": "2026-10-19T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 20,
@@ -399,7 +404,8 @@
       ],
       "createdAt": "2026-10-24T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 21,
@@ -468,7 +474,8 @@
       ],
       "createdAt": "2026-10-26T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 22,
@@ -522,6 +529,16 @@
           "authorInitials": "VY",
           "description": "started task",
           "createdAt": "2026-10-27T08:15:46.633Z"
+        },
+        {
+          "id": "494d34c0-3642-4f0d-a07e-51300149bdd1",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.781Z"
         }
       ],
       "attachments": [],
@@ -532,7 +549,11 @@
         "VY"
       ],
       "createdAt": "2026-10-27T08:15:46.633Z",
-      "updatedAt": "2026-11-04T07:50:03.498Z"
+      "updatedAt": "2026-11-05T15:08:26.760Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 23,
@@ -607,7 +628,8 @@
       "createdAt": "2026-10-25T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "resolvedAt": "2026-10-28T09:37:55.127Z",
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 24,
@@ -661,6 +683,16 @@
           "authorInitials": "VY",
           "description": "created task",
           "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "a717c668-9c01-420c-8c0a-58d89596f819",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.814Z"
         }
       ],
       "attachments": [],
@@ -671,7 +703,11 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-10-28T08:15:46.633Z"
+      "updatedAt": "2026-11-05T15:08:26.813Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 25,
@@ -735,6 +771,16 @@
           "authorInitials": "VY",
           "description": "created task",
           "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "78cc3e38-f9a0-492f-9126-8798338c45dd",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.828Z"
         }
       ],
       "attachments": [],
@@ -745,8 +791,12 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-10-28T20:11:31.229Z",
-      "epicLink": "DevOps & Cloud-Native Delivery"
+      "updatedAt": "2026-11-05T15:08:26.826Z",
+      "epicLink": "DevOps & Cloud-Native Delivery",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 26,
@@ -794,6 +844,16 @@
           "authorInitials": "VY",
           "description": "created task",
           "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "eb588b14-0969-4169-b9f1-f2a1d154b7de",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.833Z"
         }
       ],
       "attachments": [],
@@ -804,7 +864,11 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-10-28T09:33:40.801Z"
+      "updatedAt": "2026-11-05T15:08:26.832Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 27,
@@ -858,6 +922,16 @@
           "authorInitials": "VY",
           "description": "created task",
           "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "ec60749d-fa73-406a-b658-941d6fc0bfe3",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.844Z"
         }
       ],
       "attachments": [],
@@ -868,7 +942,11 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-10-29T05:14:58.209Z"
+      "updatedAt": "2026-11-05T15:08:26.843Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 28,
@@ -944,7 +1022,8 @@
       "createdAt": "2026-10-28T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "resolvedAt": "2026-10-28T09:37:55.127Z",
-      "epicLink": "AI Copilot & Autonomous Agentic Assistant"
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant",
+      "sprint": "2026-10"
     },
     {
       "id": 29,
@@ -1014,7 +1093,8 @@
       "createdAt": "2026-10-28T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "resolvedAt": "2026-10-28T09:37:55.127Z",
-      "epicLink": "AI Copilot & Autonomous Agentic Assistant"
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant",
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1093,7 +1173,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1173,7 +1254,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1252,7 +1334,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1331,7 +1414,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 20,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1405,7 +1489,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1484,7 +1569,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 15,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1551,7 +1637,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1618,7 +1705,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 61,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1685,7 +1773,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "id": 61,
@@ -1742,7 +1831,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 62,
@@ -1806,7 +1896,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 63,
@@ -1850,7 +1941,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 64,
@@ -1894,7 +1986,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 65,
@@ -1938,7 +2031,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 133,
@@ -1978,7 +2072,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:55:52.796Z"
+      "updatedAt": "2026-11-04T07:55:52.796Z",
+      "sprint": "2026-11"
     },
     {
       "id": 134,
@@ -2019,7 +2114,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 135,
@@ -2060,7 +2156,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 136,
@@ -2101,7 +2198,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 137,
@@ -2142,7 +2240,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 138,
@@ -2183,7 +2282,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 139,
@@ -2224,7 +2324,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 140,
@@ -2266,7 +2367,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 141,
@@ -2308,7 +2410,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 142,
@@ -2350,7 +2453,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 143,
@@ -2392,7 +2496,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 144,
@@ -2434,7 +2539,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 145,
@@ -2475,7 +2581,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 159,
@@ -2519,7 +2626,8 @@
       ],
       "createdAt": "2026-11-05T12:30:00.000Z",
       "updatedAt": "2026-11-05T12:30:00.000Z",
-      "resolvedAt": "2026-11-05T12:30:00.000Z"
+      "resolvedAt": "2026-11-05T12:30:00.000Z",
+      "sprint": "2026-11"
     },
     {
       "id": 160,
@@ -2562,7 +2670,8 @@
       ],
       "createdAt": "2026-11-05T12:30:00.000Z",
       "updatedAt": "2026-11-05T12:30:00.000Z",
-      "resolvedAt": "2026-11-05T12:30:00.000Z"
+      "resolvedAt": "2026-11-05T12:30:00.000Z",
+      "sprint": "2026-11"
     },
     {
       "id": 161,
@@ -2605,7 +2714,8 @@
       ],
       "createdAt": "2026-11-05T12:30:00.000Z",
       "updatedAt": "2026-11-05T12:30:00.000Z",
-      "resolvedAt": "2026-11-05T12:30:00.000Z"
+      "resolvedAt": "2026-11-05T12:30:00.000Z",
+      "sprint": "2026-11"
     },
     {
       "id": 162,
@@ -2648,7 +2758,8 @@
       ],
       "createdAt": "2026-11-05T12:30:00.000Z",
       "updatedAt": "2026-11-05T12:30:00.000Z",
-      "resolvedAt": "2026-11-05T12:30:00.000Z"
+      "resolvedAt": "2026-11-05T12:30:00.000Z",
+      "sprint": "2026-11"
     }
   ]
 }

@@ -3,7 +3,7 @@
   "spaceId": 13,
   "spaceKey": "IG",
   "spaceName": "Interview Guide",
-  "updatedAt": "2026-11-05T13:55:19.649Z",
+  "updatedAt": "2026-11-05T15:22:48.733Z",
   "issueCount": 7,
   "space": {
     "name": "Interview Guide",
@@ -63,6 +63,16 @@
           "authorInitials": "AI",
           "description": "created this task via natural language agent command",
           "createdAt": "2026-10-28T18:51:39.331Z"
+        },
+        {
+          "id": "559efaf7-dda6-43f7-a0a0-6e7bd438c780",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.896Z"
         }
       ],
       "attachments": [],
@@ -73,8 +83,12 @@
         "VY"
       ],
       "createdAt": "2026-10-28T18:51:39.331Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z",
-      "id": 46
+      "updatedAt": "2026-11-05T15:08:26.895Z",
+      "id": 46,
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -103,6 +117,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "e2159604-70a7-4cc2-b6de-190646a672b9",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.900Z"
         }
       ],
       "attachments": [],
@@ -114,7 +138,11 @@
       ],
       "id": 47,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.899Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -143,6 +171,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "5eedd6ae-3143-4c5f-8e3f-145229b2a7b6",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.912Z"
         }
       ],
       "attachments": [],
@@ -154,7 +192,11 @@
       ],
       "id": 48,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.910Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -185,6 +227,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "e9167c77-3662-405d-a69d-66199f9a9be4",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.917Z"
         }
       ],
       "attachments": [],
@@ -196,7 +248,11 @@
       ],
       "id": 49,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-31T17:54:46.063Z"
+      "updatedAt": "2026-11-05T15:08:26.916Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -225,6 +281,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "86902016-976b-4fd0-8c6c-0388407aff76",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.928Z"
         }
       ],
       "attachments": [],
@@ -236,7 +302,11 @@
       ],
       "id": 50,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.927Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -262,6 +332,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "88a657de-f5fc-4a37-be02-9cce36830626",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.932Z"
         }
       ],
       "attachments": [],
@@ -273,7 +353,11 @@
       ],
       "id": 51,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.931Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -301,6 +385,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "9d30c87b-5db8-4db6-9a4a-62efafe573c8",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.944Z"
         }
       ],
       "attachments": [],
@@ -312,7 +406,11 @@
       ],
       "id": 52,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.943Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     }
   ]
 }

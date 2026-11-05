@@ -1,13 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import {
   ChevronLeft, ChevronRight, Plus,
   Users, Folder, Settings,
   ChevronDown, MoreHorizontal, Star, Trash2, Archive,
   Edit3, Palette, Clock, Filter, LayoutDashboard,
   User, LayoutGrid, Map, Calendar, Database, Target,
-  List, FolderKanban, Eye, EyeOff, ArchiveRestore
+  List, FolderKanban, Eye, EyeOff, ArchiveRestore, CalendarClock, Ticket
 } from 'lucide-react';
 import type { Space } from '../../types/space';
+import type { Project } from '../../types/project';
+import { currentSprintKey, sprintLabel, sprintName, sprintPhase } from '../../utils/sprintUtils';
 import { deleteSpace } from '../../hooks/useSpaces';
 import { CustomiseSidebarModal, DEFAULT_SIDEBAR_CONFIG, type SidebarConfig } from './CustomiseSidebarModal';
 
@@ -23,6 +25,18 @@ interface LeftSidebarProps {
   onNavigateToList?: () => void;
   onNavigateToCalendar?: () => void;
   onNavigateToProjects?: () => void;
+  onNavigateToSprints?: () => void;
+  onNavigateToForYou?: () => void;
+  projects?: Project[];
+  activeProjectId?: string;
+  onSelectProject?: (project: Project) => void;
+  onCreateProject?: () => void;
+  sprintKeys?: string[];
+  sprintCounts?: Record<string, { done: number; total: number }>;
+  activeSprint?: string;
+  onSelectSprint?: (key: string) => void;
+  onCreateSprint?: () => void;
+  onNavigateToAllTickets?: () => void;
   sidebarCollapsed?: boolean;
   setSidebarCollapsed?: (collapsed: boolean) => void;
   activeTab?: string;
@@ -46,6 +60,18 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onNavigateToList,
   onNavigateToCalendar,
   onNavigateToProjects,
+  onNavigateToSprints,
+  onNavigateToForYou,
+  onNavigateToAllTickets,
+  projects = [],
+  activeProjectId,
+  onSelectProject,
+  onCreateProject,
+  sprintKeys = [],
+  sprintCounts = {},
+  activeSprint,
+  onSelectSprint,
+  onCreateSprint,
   sidebarCollapsed = false,
   setSidebarCollapsed,
   activeTab,
@@ -61,7 +87,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   );
   const isCollapsed = setSidebarCollapsed !== undefined ? sidebarCollapsed : internalCollapsed;
   const [isRotating, setIsRotating] = useState(false);
-  const [spacesExpanded, setSpacesExpanded] = useState(true);
+  const [spacesExpanded, setSpacesExpanded] = useSectionState('spaces', true);
+  const [projectsExpanded, setProjectsExpanded] = useSectionState('projects', true);
+  const [sprintsExpanded, setSprintsExpanded] = useSectionState('sprints', true);
+  const [showAllSprints, setShowAllSprints] = useState(false);
   const [hiddenSpacesExpanded, setHiddenSpacesExpanded] = useState(true);
   const [archivedSpacesExpanded, setArchivedSpacesExpanded] = useState(false);
   const [hiddenHeaderMenuOpen, setHiddenHeaderMenuOpen] = useState(false);
@@ -143,7 +172,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
   const handleSpaceClick = (id: number) => {
     onSpaceSelect(id);
-    if (activeTab === 'Filters' || activeTab === 'Projects') {
+    if (GLOBAL_TABS.includes(activeTab ?? '')) {
       onTabChange?.('Board');
       if (setSidebarCollapsed) {
         setSidebarCollapsed(false);
@@ -182,8 +211,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
   // Item definitions for ordered rendering
   const navItemDefs: Record<string, { label: string; icon: React.ReactNode; action: () => void }> = {
-    forYou: { label: 'For you', icon: <User className="w-3.5 h-3.5 text-blue-400" />, action: () => handleSpaceClick(spaces[0]?.id || 1) },
+    forYou: { label: 'For you', icon: <User className="w-3.5 h-3.5 text-blue-400" />, action: () => onNavigateToForYou?.() },
     projects: { label: 'Projects', icon: <FolderKanban className="w-3.5 h-3.5 text-violet-400" />, action: () => onNavigateToProjects?.() },
+    sprints: { label: 'Sprints', icon: <CalendarClock className="w-3.5 h-3.5 text-teal-400" />, action: () => onNavigateToSprints?.() },
+    allTickets: { label: 'All tickets', icon: <Ticket className="w-3.5 h-3.5 text-yellow-400" />, action: () => onNavigateToAllTickets?.() },
     recent: { label: 'Recent', icon: <Clock className="w-3.5 h-3.5 text-amber-400" />, action: () => handleSpaceClick(spaces[0]?.id || 1) },
     filters: { label: 'Filters', icon: <Filter className="w-3.5 h-3.5 text-sky-400" />, action: () => onNavigateToFilters?.() },
     dashboards: { label: 'Dashboards', icon: <LayoutDashboard className="w-3.5 h-3.5 text-purple-400" />, action: () => onNavigateToDashboards?.() },
@@ -211,7 +242,15 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
   const isStarredVisible = isKeyVisible('starred');
   const isSpacesVisible = isKeyVisible('spaces');
-  const collapsedShortcuts = ['forYou', 'projects', ...pinnedKeys.filter(k => k !== 'projects')].slice(0, 4);
+  const collapsedShortcuts = [
+    'forYou', 'projects', 'sprints', 'allTickets',
+    ...pinnedKeys.filter(k => k !== 'projects' && k !== 'sprints' && k !== 'allTickets'),
+  ].slice(0, 6);
+
+  const curSprint = currentSprintKey();
+  const visibleSprintKeys = showAllSprints
+    ? [...sprintKeys].reverse()
+    : sprintKeys.filter(k => k >= prevOf(curSprint)).reverse().slice(0, 6);
 
   const visibleSpaces = spaces.filter(
     s => s.id && !hiddenSpaceIds.includes(s.id) && !archivedSpaceIds.includes(s.id)
@@ -223,14 +262,57 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     s => s.id && archivedSpaceIds.includes(s.id)
   );
 
+  const inSpaceView = !GLOBAL_TABS.includes(activeTab ?? '');
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState({ top: 0, height: 0, visible: false });
+
+  // Measure the active row and glide the highlight to it. Re-measures through the section
+  // expand/collapse animation so the highlight tracks rows while they move.
+  const measureKey = [activeTab, activeSpaceId, activeProjectId, activeSprint, spacesExpanded, projectsExpanded, sprintsExpanded, isCollapsed, spaces.length, projects.length, sprintKeys.length, showAllSprints, hiddenSpaceIds.length, archivedSpaceIds.length].join('|');
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel || isCollapsed) return;
+    const measure = () => {
+      const el = panel.querySelector<HTMLElement>('[data-active="true"]');
+      if (!el) {
+        setIndicator(prev => (prev.visible ? { ...prev, visible: false } : prev));
+        return;
+      }
+      const top = el.getBoundingClientRect().top - panel.getBoundingClientRect().top + panel.scrollTop;
+      const height = el.getBoundingClientRect().height;
+      setIndicator(prev => (prev.visible && Math.abs(prev.top - top) < 0.5 && Math.abs(prev.height - height) < 0.5 ? prev : { top, height, visible: true }));
+    };
+    measure();
+    const start = performance.now();
+    let raf = 0;
+    const loop = () => {
+      measure();
+      if (performance.now() - start < 450) raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [measureKey]);
+
   return (
     <aside
-      className={`bg-[#1A2332] flex flex-col flex-shrink-0 border-r border-black/20 transition-all duration-300 overflow-x-hidden ${
-        isCollapsed ? 'w-[56px] items-center py-3 gap-2 overflow-y-auto' : 'w-64 overflow-y-auto'
+      className={`flex-shrink-0 p-2 pr-0 transition-[width] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
+        isCollapsed ? 'w-[68px]' : 'w-[272px]'
       }`}
     >
+      <div
+        ref={panelRef}
+        className="relative h-full flex flex-col rounded-2xl bg-gradient-to-b from-[#1D2A45] via-[#18233B] to-[#121A2C] border border-white/[0.08] shadow-[0_10px_34px_rgba(0,0,0,0.38)] overflow-x-hidden overflow-y-auto lira-sidebar-scroll"
+      >
+      {/* Sliding highlight: glides to whichever item is currently active */}
+      {!isCollapsed && (
+        <div
+          aria-hidden
+          className="absolute left-2 right-2 z-0 rounded-xl bg-gradient-to-r from-[#2684FF]/35 to-[#2684FF]/10 ring-1 ring-[#4C9AFF]/40 shadow-[inset_3px_0_0_#4C9AFF] pointer-events-none transition-[top,height,opacity] duration-300 ease-[cubic-bezier(.4,0,.2,1)]"
+          style={{ top: indicator.top, height: indicator.height, opacity: indicator.visible ? 1 : 0 }}
+        />
+      )}
       {isCollapsed ? (
-        <div className="flex flex-col items-center w-full gap-2">
+        <div key="rail" className="relative z-10 flex flex-col items-center w-full gap-2 py-3 animate-sidebar-in">
           {/* Expand button with smooth animated chevron */}
           <button
             onClick={expand}
@@ -316,9 +398,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </div>
         </div>
       ) : (
-        <div className="w-64 flex flex-col flex-1 min-h-0">
+        <div key="full" className="relative z-10 w-full flex flex-col flex-1 min-h-0 animate-sidebar-in">
           {/* ── Navigation Section ── */}
-          <div className="py-2.5 border-b border-white/10 space-y-0.5">
+          <div className="py-2.5 px-2 border-b border-white/10 space-y-0.5">
             <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
               <span>Navigation</span>
               <button
@@ -335,30 +417,36 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </button>
         </div>
 
-        {navItemDefs.forYou && (
-          <button
-            onClick={navItemDefs.forYou.action}
-            className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
-          >
-            <span>{navItemDefs.forYou.icon}</span>
-            <span>{navItemDefs.forYou.label}</span>
-          </button>
-        )}
-
-        {navItemDefs.projects && (
-          <button
-            onClick={navItemDefs.projects.action}
-            className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
-          >
-            <span>{navItemDefs.projects.icon}</span>
-            <span>{navItemDefs.projects.label}</span>
-          </button>
-        )}
+        {['forYou', 'projects', 'sprints', 'allTickets'].map(k => {
+          const item = navItemDefs[k];
+          if (!item) return null;
+          const tab = k === 'forYou' ? 'ForYou' : k === 'projects' ? 'Projects' : k === 'sprints' ? 'SprintsHub' : 'AllTickets';
+          const sprintRowShown = sprintsExpanded && visibleSprintKeys.includes(activeSprint ?? '');
+          const isActive =
+            (k === 'sprints'
+              // overview page, or a sprint page whose row isn't visible in the Sprints section
+              ? activeTab === 'SprintsHub' || (activeTab === 'SprintDetail' && !sprintRowShown)
+              : activeTab === tab) &&
+            !(k === 'projects' && activeProjectId);
+          return (
+            <button
+              key={k}
+              onClick={item.action}
+              data-active={isActive ? 'true' : undefined}
+              className={`group w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs transition-all duration-200 cursor-pointer text-left ${
+                isActive ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+              }`}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* ── Pinned Views Section ── */}
       {pinnedKeys.filter(k => k !== 'projects').length > 0 && (
-        <div className="py-2.5 border-b border-white/10 space-y-0.5">
+        <div className="py-2.5 px-2 border-b border-white/10 space-y-0.5">
           <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">
             Pinned Views
           </div>
@@ -369,7 +457,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               <button
                 key={key}
                 onClick={item.action}
-                className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-white/70 hover:text-white hover:bg-white/[0.06] transition-all duration-200 hover:translate-x-0.5 cursor-pointer text-left"
               >
                 <span>{item.icon}</span>
                 <span>{item.label}</span>
@@ -381,7 +469,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
       {/* ── App Shortcuts Section ── */}
       {visibleAppKeys.length > 0 && (
-        <div className="py-2.5 border-b border-white/10 space-y-0.5">
+        <div className="py-2.5 px-2 border-b border-white/10 space-y-0.5">
           <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">
             App Shortcuts
           </div>
@@ -392,7 +480,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               <button
                 key={key}
                 onClick={item.action}
-                className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-white/70 hover:text-white hover:bg-white/[0.06] transition-all duration-200 hover:translate-x-0.5 cursor-pointer text-left"
               >
                 <span>{item.icon}</span>
                 <span>{item.label}</span>
@@ -412,7 +500,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             <SpaceRow
               key={space.id}
               space={space}
-              active={activeSpaceId === space.id}
+              active={inSpaceView && activeSpaceId === space.id}
               starred
               onSelect={handleSpaceClick}
               onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
@@ -438,35 +526,17 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       {/* ── Your Spaces Section ── */}
       {isSpacesVisible && (
         <div className="py-2 border-b border-white/10">
-          <div className="flex items-center justify-between px-3 pt-2 pb-1">
-            <span className="text-white/40 text-[10px] font-semibold uppercase tracking-wider">
-              Your Spaces
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={onCreateSpace}
-                className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors cursor-pointer"
-                title="New space"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
+          <SectionHeader
+            title="Spaces"
+            count={visibleSpaces.length}
+            expanded={spacesExpanded}
+            onToggle={() => setSpacesExpanded(!spacesExpanded)}
+            onAdd={onCreateSpace}
+            addTitle="New space"
+          />
 
-          {/* Spaces list expand/collapse toggle */}
           <div className="py-1">
-            <button
-              onClick={() => setSpacesExpanded(!spacesExpanded)}
-              className="w-full flex items-center gap-2 px-3 py-1.5 text-white/40 text-[10px] font-semibold uppercase tracking-wider hover:text-white/60 transition-colors cursor-pointer"
-            >
-              <ChevronDown className={`w-3 h-3 transition-transform ${spacesExpanded ? '' : '-rotate-90'}`} />
-              <span>{spacesExpanded ? 'Hide' : 'Show'}</span>
-              <span className="bg-white/10 text-white/60 text-[9px] px-1.5 py-0.2 rounded-full font-bold ml-auto">
-                {visibleSpaces.length}
-              </span>
-            </button>
-
-            {spacesExpanded && (
+            <Collapsible open={spacesExpanded}>
               <div className="mt-0.5">
                 {visibleSpaces.length === 0 ? (
                   <div className="px-3 py-1.5 text-[11px] text-white/30 italic">
@@ -477,7 +547,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                     <SpaceRow
                       key={space.id}
                       space={space}
-                      active={activeSpaceId === space.id}
+                      active={inSpaceView && activeSpaceId === space.id}
                       starred={space.id ? starredIds.has(space.id) : false}
                       onSelect={handleSpaceClick}
                       onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
@@ -499,10 +569,102 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                   ))
                 )}
               </div>
-            )}
+            </Collapsible>
           </div>
         </div>
       )}
+
+      {/* ── Projects Section ── */}
+      <div className="py-2 border-b border-white/10">
+        <SectionHeader
+          title="Projects"
+          count={projects.length}
+          expanded={projectsExpanded}
+          onToggle={() => setProjectsExpanded(!projectsExpanded)}
+          onAdd={onCreateProject}
+          addTitle="New project"
+        />
+        <Collapsible open={projectsExpanded}>
+          <div className="mt-0.5 px-2 space-y-0.5">
+            {projects.length === 0 ? (
+              <div className="px-2 py-1.5 text-[11px] text-white/30 italic">No projects yet</div>
+            ) : (
+              projects.map(p => {
+                const space = spaces.find(sp => sp.id === p.spaceId);
+                const active = activeProjectId === p.id && activeTab === 'Projects';
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => onSelectProject?.(p)}
+                    title={p.name}
+                    data-active={active ? 'true' : undefined}
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${
+                      active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+                    }`}
+                  >
+                    <span
+                      className="w-5 h-5 rounded-md flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0"
+                      style={{ backgroundColor: space?.color || '#0052CC' }}
+                    >
+                      {p.key.slice(0, 2)}
+                    </span>
+                    <span className="truncate flex-1">{p.name}</span>
+                  </button>
+                );
+              })
+            )}
+          </div>
+        </Collapsible>
+      </div>
+
+      {/* ── Sprints Section ── */}
+      <div className="py-2 border-b border-white/10">
+        <SectionHeader
+          title="Sprints"
+          count={sprintKeys.length}
+          expanded={sprintsExpanded}
+          onToggle={() => setSprintsExpanded(!sprintsExpanded)}
+          onAdd={onCreateSprint}
+          addTitle="New sprint"
+        />
+        <Collapsible open={sprintsExpanded}>
+          <div className="mt-0.5 px-2 space-y-0.5">
+            {visibleSprintKeys.map(k => {
+              const phase = sprintPhase(k);
+              const c = sprintCounts[k] || { done: 0, total: 0 };
+              const active = activeSprint === k && activeTab === 'SprintDetail';
+              return (
+                <button
+                  key={k}
+                  onClick={() => onSelectSprint?.(k)}
+                  title={sprintName(k)}
+                  data-active={active ? 'true' : undefined}
+                  className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${
+                    active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+                  }`}
+                >
+                  <span
+                    className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                      phase === 'active' ? 'bg-green-400' : phase === 'upcoming' ? 'bg-sky-400' : 'bg-white/30'
+                    }`}
+                  />
+                  <span className="truncate flex-1">{sprintLabel(k)}</span>
+                  {phase === 'active' && <span className="text-[9px] font-bold text-green-300">ACTIVE</span>}
+                  <span className="text-[10px] text-white/40 tabular-nums">{c.done}/{c.total}</span>
+                </button>
+              );
+            })}
+            {sprintKeys.length > visibleSprintKeys.length || showAllSprints ? (
+              <button
+                onClick={() => setShowAllSprints(v => !v)}
+                className="w-full text-left px-2.5 py-1 text-[11px] text-white/40 hover:text-white/70 cursor-pointer"
+              >
+                {showAllSprints ? 'Show fewer' : `Show all ${sprintKeys.length} sprints`}
+              </button>
+            ) : null}
+          </div>
+        </Collapsible>
+      </div>
 
       {/* ── Hidden Spaces Section ── */}
       <div className="py-2 border-b border-white/10">
@@ -573,7 +735,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 <SpaceRow
                   key={space.id}
                   space={space}
-                  active={activeSpaceId === space.id}
+                  active={inSpaceView && activeSpaceId === space.id}
                   starred={space.id ? starredIds.has(space.id) : false}
                   isHidden
                   onSelect={handleSpaceClick}
@@ -622,7 +784,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 <SpaceRow
                   key={space.id}
                   space={space}
-                  active={activeSpaceId === space.id}
+                  active={inSpaceView && activeSpaceId === space.id}
                   starred={space.id ? starredIds.has(space.id) : false}
                   isArchived
                   onSelect={handleSpaceClick}
@@ -649,10 +811,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       )}
 
       {/* ── Customise sidebar footer ── */}
-      <div className="border-t border-white/10 px-3 py-3 mt-auto">
+      <div className="relative z-10 border-t border-white/10 px-2 py-2 mt-auto">
         <button
           onClick={() => setShowCustomiseModal(true)}
-          className="w-full flex items-center gap-2 text-xs text-white/50 hover:text-white transition-colors cursor-pointer"
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-white/50 hover:text-white hover:bg-white/[0.06] transition-all duration-200 cursor-pointer"
         >
           <Settings className="w-3.5 h-3.5" /> Customise sidebar
         </button>
@@ -665,6 +827,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     onClose={() => setShowCustomiseModal(false)}
     onSave={handleSaveConfig}
   />
+  </div>
 </aside>
   );
 };
@@ -689,17 +852,18 @@ interface SpaceRowProps {
 const SpaceRow: React.FC<SpaceRowProps> = ({
   space, active, starred, isHidden, isArchived, onSelect, onMenuOpen, menuOpen, onStar, onDelete, onEdit, onToggleHide, onToggleArchive,
 }) => (
-  <div className="relative group">
+  <div className="relative group px-2">
     <button
       onClick={() => onSelect(space.id!)}
-      className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-all cursor-pointer ${
+      data-active={active ? 'true' : undefined}
+      className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 cursor-pointer ${
         active
-          ? 'bg-[#0052CC]/30 text-white border-r-2 border-[#0052CC]'
-          : 'text-white/60 hover:text-white hover:bg-white/5'
+          ? 'text-white font-medium'
+          : 'text-white/60 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
       }`}
     >
       <div
-        className="w-6 h-6 rounded flex items-center justify-center text-xs flex-shrink-0"
+        className="w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0"
         style={{ backgroundColor: space.color + '33', color: space.color }}
       >
         {space.icon}
@@ -780,4 +944,75 @@ const ContextItem: React.FC<{ icon: React.ReactNode; label: string; onClick: (e:
     <span>{icon}</span>
     {label}
   </button>
+);
+
+const GLOBAL_TABS = ['ForYou', 'Filters', 'Projects', 'SprintsHub', 'SprintDetail', 'AllTickets'];
+
+function prevOf(key: string): string {
+  const [y, m] = key.split('-').map(Number);
+  const d = new Date(y, m - 2, 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+/** Expanded/collapsed state of a sidebar section, remembered between sessions. */
+function useSectionState(name: string, initial: boolean): [boolean, (v: boolean) => void] {
+  const key = `lira_sidebar_section_${name}`;
+  const [open, setOpen] = useState<boolean>(() => {
+    try {
+      const v = localStorage.getItem(key);
+      return v === null ? initial : v === 'true';
+    } catch {
+      return initial;
+    }
+  });
+  const set = (v: boolean) => {
+    setOpen(v);
+    try { localStorage.setItem(key, String(v)); } catch { /* storage unavailable */ }
+  };
+  return [open, set];
+}
+
+/** Collapsible section title with an item count and a "+" action — used for Spaces, Projects and Sprints. */
+const SectionHeader: React.FC<{
+  title: string;
+  count: number;
+  expanded: boolean;
+  onToggle: () => void;
+  onAdd?: () => void;
+  addTitle: string;
+}> = ({ title, count, expanded, onToggle, onAdd, addTitle }) => (
+  <div className="flex items-center justify-between px-3 py-1">
+    <button
+      onClick={onToggle}
+      aria-expanded={expanded}
+      title={expanded ? `Minimise ${title}` : `Expand ${title}`}
+      className="flex items-center gap-1.5 text-white/50 hover:text-white/80 text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer"
+    >
+      <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? '' : '-rotate-90'}`} />
+      <span>{title}</span>
+      <span className="bg-white/10 text-white/70 text-[9px] px-1.5 py-0.5 rounded-full font-bold">{count}</span>
+    </button>
+    {onAdd && (
+      <button
+        onClick={onAdd}
+        className="p-1 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors cursor-pointer"
+        title={addTitle}
+        aria-label={addTitle}
+      >
+        <Plus className="w-3.5 h-3.5" />
+      </button>
+    )}
+  </div>
+);
+
+/** Smoothly animates a section open/closed (height + fade) without needing a fixed height. */
+const Collapsible: React.FC<{ open: boolean; children: React.ReactNode }> = ({ open, children }) => (
+  <div
+    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
+      open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+    }`}
+    aria-hidden={!open}
+  >
+    <div className="overflow-hidden min-h-0">{children}</div>
+  </div>
 );

@@ -13,9 +13,17 @@ import { ListView } from './components/layout/ListView';
 import { CalendarView } from './components/layout/CalendarView';
 import { ProjectsOverview } from './components/projects/ProjectsOverview';
 import { ProjectDetailView } from './components/projects/ProjectDetailView';
-import { LiraInfoChatbot } from './components/ai/LiraInfoChatbot';
-import { LiraAIAgentConsole } from './components/ai/LiraAIAgentConsole';
+import { VivaAIChatbot } from './components/ai/VivaAIChatbot';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { SprintsPage } from './components/sprints/SprintsPage';
+import { SprintsOverview } from './components/sprints/SprintsOverview';
+import { ForYouPage } from './components/foryou/ForYouPage';
+import { AllTicketsPage } from './components/sprints/AllTicketsPage';
+import { SprintFilterBar } from './components/sprints/sprintParts';
+import { allSprintKeys, getIssueSprint, stampLegacySprints, issuesInSprint, sprintStats, currentSprintKey, SPRINTS_EVENT } from './utils/sprintUtils';
+import { CreateSprintModal } from './components/sprints/CreateSprintModal';
+import { CreateProjectModal } from './components/projects/CreateProjectModal';
+import { useProjects, writeProjects } from './hooks/useProjects';
 import { useSpaces } from './hooks/useSpaces';
 import { useIssuesBySpace, useAllIssues } from './hooks/useIssues';
 import { requestDurableStorage } from './db/db';
@@ -25,6 +33,9 @@ import type { Project } from './types/project';
 import type { Space } from './types/space';
 
 type GroupBy = 'status' | 'assignee' | 'priority' | 'epic';
+
+// Full-page (cross-space) views. Selecting a space from the sidebar always leaves these.
+const GLOBAL_TABS = ['ForYou', 'Filters', 'Projects', 'SprintsHub', 'SprintDetail', 'AllTickets'];
 
 // Immediately apply stored theme to documentElement before render if in browser
 if (typeof window !== 'undefined') {
@@ -109,7 +120,7 @@ export default function App() {
     setActiveSpaceId(id);
     localStorage.setItem('lira_active_space_id', String(id));
     setSelectedProject(null);
-    if (activeTab === 'Projects' || activeTab === 'Filters') {
+    if (GLOBAL_TABS.includes(activeTab)) {
       setActiveTab('Board');
       setSidebarCollapsed(false);
     }
@@ -121,8 +132,6 @@ export default function App() {
   const [createIssueStatus, setCreateIssueStatus] = useState('todo');
   const [showCreateSpace, setShowCreateSpace] = useState(false);
   const [showAIChatbot, setShowAIChatbot] = useState(false);
-  const [showAIAgent, setShowAIAgent] = useState(false);
-  const [pendingAgentPrompt, setPendingAgentPrompt] = useState<string | null>(null);
 
   // Search & Filter & Grouping states
   const [searchQuery, setSearchQuery] = useState('');
@@ -135,10 +144,38 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [filterPreset, setFilterPreset] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const [sprintFilter, setSprintFilter] = useState<string>('all');
+  const [focusSprint, setFocusSprint] = useState<string>(currentSprintKey());
+  const [showCreateSprint, setShowCreateSprint] = useState(false);
+  const [showCreateProject, setShowCreateProject] = useState(false);
+  const [plannedTick, setPlannedTick] = useState(0);
+  useEffect(() => {
+    const bump = () => setPlannedTick(t => t + 1);
+    window.addEventListener(SPRINTS_EVENT, bump);
+    return () => window.removeEventListener(SPRINTS_EVENT, bump);
+  }, []);
+  const projects = useProjects(spaces || []);
 
   const activeSpace = spaces?.find(s => s.id === activeSpaceId);
-  const issues = useIssuesBySpace(activeSpaceId) || [];
+  const spaceIssues = useIssuesBySpace(activeSpaceId) || [];
   const allIssues = useAllIssues() || [];
+  const spaceSprintKeys = useMemo(() => allSprintKeys(spaceIssues), [spaceIssues, plannedTick]);
+  const globalSprintKeys = useMemo(() => allSprintKeys(allIssues), [allIssues, plannedTick]);
+  const globalSprintCounts = useMemo(() => {
+    const out: Record<string, { done: number; total: number }> = {};
+    globalSprintKeys.forEach(k => {
+      const s = sprintStats(issuesInSprint(allIssues, k));
+      out[k] = { done: s.done, total: s.total };
+    });
+    return out;
+  }, [globalSprintKeys, allIssues]);
+  // Board / List / Calendar / Summary see the chosen sprint (epics stay visible so grouping still works)
+  const issues = useMemo(
+    () => sprintFilter === 'all'
+      ? spaceIssues
+      : spaceIssues.filter(i => i.type === 'epic' || getIssueSprint(i) === sprintFilter),
+    [spaceIssues, sprintFilter]
+  );
 
   // Available labels for current space
   const availableLabels = useMemo(() => {
@@ -155,6 +192,7 @@ export default function App() {
     const init = async () => {
       await requestDurableStorage();
       await initLocalDiskSync();
+      await stampLegacySprints();
       setInitialized(true);
     };
     init();
@@ -193,8 +231,26 @@ export default function App() {
     setIssueNavStack([]);
   }, []);
 
-  const handleAddIssue = useCallback((status: string) => {
+  // Ticket creation context: which sprint to preselect, and whether the user must pick a space
+  const [createIssueSprint, setCreateIssueSprint] = useState<string | undefined>(undefined);
+  const [createIssueSpaceId, setCreateIssueSpaceId] = useState<number | undefined>(undefined);
+  const [createIssueChooseSpace, setCreateIssueChooseSpace] = useState(false);
+
+  // Other components (e.g. the standup popup) ask the app to open a ticket via a window event
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const issue = (e as CustomEvent<Issue>).detail;
+      if (issue) openIssue(issue);
+    };
+    window.addEventListener('lira-open-issue', onOpen);
+    return () => window.removeEventListener('lira-open-issue', onOpen);
+  }, [openIssue]);
+
+  const handleAddIssue = useCallback((status: string, opts?: { sprint?: string; spaceId?: number; chooseSpace?: boolean }) => {
     setCreateIssueStatus(status);
+    setCreateIssueSprint(opts?.sprint);
+    setCreateIssueSpaceId(opts?.spaceId);
+    setCreateIssueChooseSpace(!!opts?.chooseSpace);
     setShowCreateIssue(true);
   }, []);
 
@@ -216,10 +272,10 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-jira-bg font-sans">
+    <div className="h-screen flex flex-col overflow-hidden bg-app-frame font-sans">
       <TopNavigation
-        onCreateIssue={() => setShowCreateIssue(true)}
-        onToggleAI={() => setShowAIAgent(v => !v)}
+        onCreateIssue={() => handleAddIssue('todo', { chooseSpace: true })}
+        onToggleAI={() => setShowAIChatbot(v => !v)}
         issues={allIssues.length > 0 ? allIssues : issues}
         spaces={spaces || []}
         onSelectIssue={openIssue}
@@ -246,6 +302,24 @@ export default function App() {
             setSelectedProject(null);
             setActiveTab('Projects');
           }}
+          onNavigateToSprints={() => setActiveTab('SprintsHub')}
+          onNavigateToForYou={() => setActiveTab('ForYou')}
+          onNavigateToAllTickets={() => setActiveTab('AllTickets')}
+          projects={projects}
+          activeProjectId={selectedProject?.id}
+          onSelectProject={(project) => {
+            setSelectedProject(project);
+            setActiveTab('Projects');
+          }}
+          onCreateProject={() => setShowCreateProject(true)}
+          sprintKeys={globalSprintKeys}
+          sprintCounts={globalSprintCounts}
+          activeSprint={focusSprint}
+          onSelectSprint={(key) => {
+            setFocusSprint(key);
+            setActiveTab('SprintDetail');
+          }}
+          onCreateSprint={() => setShowCreateSprint(true)}
           sidebarCollapsed={sidebarCollapsed}
           setSidebarCollapsed={setSidebarCollapsed}
           activeTab={activeTab}
@@ -261,7 +335,7 @@ export default function App() {
           }}
         />
 
-        <main className="flex-1 flex flex-col overflow-hidden">
+        <main className="flex-1 min-w-0 flex flex-col overflow-hidden my-2 mr-2 ml-2 rounded-2xl border border-jira-border bg-jira-bg shadow-[0_4px_20px_rgba(9,30,66,0.10)]">
           {activeTab === 'Filters' ? (
             <FiltersPage
               issues={allIssues.length > 0 ? allIssues : issues}
@@ -279,6 +353,49 @@ export default function App() {
               initialPreset={filterPreset}
               onClearPreset={() => setFilterPreset(null)}
             />
+          ) : activeTab === 'ForYou' ? (
+            <ForYouPage
+              spaces={spaces || []}
+              issues={allIssues}
+              projects={projects}
+              onIssueClick={openIssue}
+              onOpenSpace={(spaceId) => { handleSelectSpace(spaceId); setActiveTab('Board'); }}
+              onOpenProject={(project) => { setSelectedProject(project); setActiveTab('Projects'); }}
+              onOpenSprint={(key) => { setFocusSprint(key); setActiveTab('SprintDetail'); }}
+              onCreateIssue={() => handleAddIssue('todo', { chooseSpace: true })}
+            />
+          ) : activeTab === 'SprintsHub' ? (
+            <SprintsOverview
+              spaces={spaces || []}
+              issues={allIssues}
+              onOpenSprint={(key) => { setFocusSprint(key); setActiveTab('SprintDetail'); }}
+              onCreateSprint={() => setShowCreateSprint(true)}
+              onOpenAllTickets={() => setActiveTab('AllTickets')}
+            />
+          ) : activeTab === 'SprintDetail' ? (
+            <SprintsPage
+              spaces={spaces || []}
+              issues={allIssues}
+              onIssueClick={openIssue}
+              onAddIssue={(status, opts) =>
+                handleAddIssue(status, { ...opts, chooseSpace: !opts?.spaceId })
+              }
+              onOpenAllTickets={() => setActiveTab('AllTickets')}
+              focusSprint={focusSprint}
+              onBack={() => setActiveTab('SprintsHub')}
+              onCreateSprint={() => setShowCreateSprint(true)}
+              onOpenSpace={(spaceId) => {
+                handleSelectSpace(spaceId);
+                setActiveTab('Board');
+              }}
+            />
+          ) : activeTab === 'AllTickets' ? (
+            <AllTicketsPage
+              spaces={spaces || []}
+              issues={allIssues}
+              onIssueClick={openIssue}
+              onOpenSprints={() => setActiveTab('SprintsHub')}
+            />
           ) : activeTab === 'Projects' ? (
             selectedProject ? (
               <ProjectDetailView
@@ -292,7 +409,7 @@ export default function App() {
                     const raw = localStorage.getItem('lira_projects');
                     if (raw) {
                       const list: Project[] = JSON.parse(raw);
-                      localStorage.setItem('lira_projects', JSON.stringify(list.filter(p => p.id !== projectId)));
+                      writeProjects(list.filter(p => p.id !== projectId));
                     }
                   } catch (e) {
                     console.error('Failed to remove project from localStorage', e);
@@ -346,6 +463,27 @@ export default function App() {
                   }
                 }}
               />
+
+              {['Board', 'List', 'Calendar', 'Summary'].includes(activeTab) && (
+                <SprintFilterBar
+                  value={sprintFilter}
+                  options={spaceSprintKeys}
+                  onChange={setSprintFilter}
+                  onManage={() => setActiveTab('Sprints')}
+                />
+              )}
+
+              {activeTab === 'Sprints' && (
+                <SprintsPage
+                  key={activeSpaceId}
+                  spaces={spaces || []}
+                  issues={allIssues}
+                  lockedSpaceId={activeSpaceId}
+                  onIssueClick={openIssue}
+                  onAddIssue={handleAddIssue}
+                  onOpenAllTickets={() => setActiveTab('AllTickets')}
+                />
+              )}
 
               {activeTab === 'Board' && (
                 <div className="flex-1 overflow-hidden min-h-0 flex flex-col">
@@ -404,7 +542,7 @@ export default function App() {
                 />
               )}
 
-              {activeTab !== 'Board' && activeTab !== 'List' && activeTab !== 'Calendar' && activeTab !== 'Summary' && activeTab !== 'Capacity' && (
+              {activeTab !== 'Board' && activeTab !== 'List' && activeTab !== 'Calendar' && activeTab !== 'Summary' && activeTab !== 'Capacity' && activeTab !== 'Sprints' && (
                 <div className="flex-1 flex items-center justify-center bg-jira-bg">
                   <div className="text-center space-y-3">
                     <div className="text-5xl">🚧</div>
@@ -457,8 +595,37 @@ export default function App() {
       <CreateIssueModal
         isOpen={showCreateIssue}
         onClose={() => setShowCreateIssue(false)}
-        space={activeTab === 'Projects' && selectedProject ? (spaces?.find(s => s.id === selectedProject.spaceId) || activeSpace) : activeSpace}
+        space={
+          createIssueSpaceId
+            ? (spaces?.find(s => s.id === createIssueSpaceId) || activeSpace)
+            : activeTab === 'Projects' && selectedProject
+              ? (spaces?.find(s => s.id === selectedProject.spaceId) || activeSpace)
+              : activeSpace
+        }
+        spaces={spaces || []}
+        chooseSpace={createIssueChooseSpace}
+        defaultSprint={createIssueSprint}
         defaultStatus={createIssueStatus}
+      />
+
+      <CreateSprintModal
+        isOpen={showCreateSprint}
+        onClose={() => setShowCreateSprint(false)}
+        existingKeys={globalSprintKeys}
+        onCreated={(key) => {
+          setFocusSprint(key);
+          setActiveTab('SprintDetail');
+        }}
+      />
+
+      <CreateProjectModal
+        isOpen={showCreateProject}
+        onClose={() => setShowCreateProject(false)}
+        spaces={spaces || []}
+        onProjectCreated={(project) => {
+          setSelectedProject(project);
+          setActiveTab('Projects');
+        }}
       />
 
       <CreateSpaceModal
@@ -471,29 +638,13 @@ export default function App() {
         onCreated={(id: number) => handleSelectSpace(id)}
       />
 
-      {/* 1. Bottom-Right Floating Avatar & Curved Dialogue (Read-Only Info Chatbot) */}
-      <LiraInfoChatbot
+      {/* Viva AI — bottom-right chatbot with full read & write access */}
+      <VivaAIChatbot
         isOpen={showAIChatbot}
         onClose={() => setShowAIChatbot(false)}
         onToggle={() => setShowAIChatbot(v => !v)}
-        onOpenAgent={(prompt) => {
-          setShowAIChatbot(false);
-          if (prompt) setPendingAgentPrompt(prompt);
-          setShowAIAgent(true);
-        }}
         activeSpace={activeSpace}
         spaces={spaces || []}
-        onSelectIssue={openIssue}
-      />
-
-      {/* 2. Top-Nav Pro Autonomous Agent Drawer (Full Read/Write, System Instructions, Gemini LLM) */}
-      <LiraAIAgentConsole
-        isOpen={showAIAgent}
-        onClose={() => setShowAIAgent(false)}
-        activeSpace={activeSpace}
-        spaces={spaces || []}
-        initialPrompt={pendingAgentPrompt}
-        onClearInitialPrompt={() => setPendingAgentPrompt(null)}
         onSelectIssue={openIssue}
       />
     </div>

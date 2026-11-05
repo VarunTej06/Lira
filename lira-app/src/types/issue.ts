@@ -86,4 +86,6 @@ export interface Issue {
   epicLink?: string;
   storyPoints?: number;
   watchers: string[];
+  sprint?: string;          // monthly sprint key, e.g. "2026-11"
+  sprintHistory?: string[]; // earlier sprints this ticket was carried over from
 }

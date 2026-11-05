@@ -48,7 +48,7 @@ export interface RefinedPromptGoal {
   searchKeyword?: string;
 }
 
-export const DEFAULT_SYSTEM_INSTRUCTION = `You are the Lira AI Autonomous Agent & Chief Agile Copilot, an intelligent project manager and engineering assistant embedded directly inside LIRA.
+export const DEFAULT_SYSTEM_INSTRUCTION = `You are the Viva AI Autonomous Agent & Chief Agile Copilot, an intelligent project manager and engineering assistant embedded directly inside LIRA.
 
 ### Core Directives:
 1. Cross-Space Omnipresence & Future Scalability:
@@ -428,7 +428,7 @@ export async function processUserMessage(
       const geminiResponse = await callGeminiAPI(userPrompt, apiKey, activeSpace, allSpaces, allIssues, refinedGoal);
       if (geminiResponse) return geminiResponse;
     } catch (err) {
-      console.warn('[Lira AI Agent] Gemini API call failed, falling back to local NLP engine:', err);
+      console.warn('[Viva AI Agent] Gemini API call failed, falling back to local NLP engine:', err);
     }
   }
 
@@ -444,7 +444,7 @@ export async function processUserMessage(
     return {
       id: uuidv4(),
       sender: 'assistant',
-      text: `ℹ️ **Lira Info Chatbot (Read-Only Mode)**\n\nI am the lightweight search & information assistant. I have full read access across all spaces to answer questions, search tickets, and generate status reports, but I cannot modify tickets or database records.\n\nTo execute **"${refinedGoal.optimizedGoal}"**, please use the **Lira Autonomous Agent**!`,
+      text: `ℹ️ **Viva AI (Read-Only Mode)**\n\nI am the lightweight search & information assistant. I have full read access across all spaces to answer questions, search tickets, and generate status reports, but I cannot modify tickets or database records.\n\nTo execute **"${refinedGoal.optimizedGoal}"**, please use the **Lira Autonomous Agent**!`,
       timestamp: now,
       refinedPrompt: refinedMetadata,
       actionTaken: {
@@ -597,7 +597,7 @@ export async function processUserMessage(
         spaceId: spaceToUse.id,
         key,
         title: title.charAt(0).toUpperCase() + title.slice(1),
-        description: `## Overview\nCreated autonomously by Lira AI Agent based on prompt:\n> "${userPrompt}"\n\n## Refined Goal\n- ${refinedGoal.optimizedGoal}\n\n## Acceptance Criteria\n- Implemented according to project specification in ${spaceToUse.name}\n- Verified on board and local storage`,
+        description: `## Overview\nCreated autonomously by Viva AI Agent based on prompt:\n> "${userPrompt}"\n\n## Refined Goal\n- ${refinedGoal.optimizedGoal}\n\n## Acceptance Criteria\n- Implemented according to project specification in ${spaceToUse.name}\n- Verified on board and local storage`,
         type: rawType,
         status,
         priority,
@@ -940,7 +940,7 @@ export async function processUserMessage(
     return {
       id: uuidv4(),
       sender: 'assistant',
-      text: `👋 I am **Lira Info Chatbot (Read-Only Assistant)**.\n\nI have active search & analytics visibility into **all ${allSpaces.length} spaces** and **${allIssues.length} tickets**. You can ask me naturally to fetch information:\n\n- *"Show all spaces with number of tickets in each To do, Backlog, In Progress and Done"*\n- *"What tasks are in Atmos?"*\n- *"Tell me about AP-7"*\n- *"What is in progress across all spaces?"*\n- *"Show all Epics across spaces"*\n- *"Search for docker"*\n\n*(To execute write tasks like creating or moving tickets, use the Lira AI Agent in the top bar!)*`,
+      text: `👋 I am **Viva AI (Read-Only Assistant)**.\n\nI have active search & analytics visibility into **all ${allSpaces.length} spaces** and **${allIssues.length} tickets**. You can ask me naturally to fetch information:\n\n- *"Show all spaces with number of tickets in each To do, Backlog, In Progress and Done"*\n- *"What tasks are in Atmos?"*\n- *"Tell me about AP-7"*\n- *"What is in progress across all spaces?"*\n- *"Show all Epics across spaces"*\n- *"Search for docker"*\n\n*(To execute write tasks like creating or moving tickets, use the Viva AI Agent in the top bar!)*`,
       timestamp: now,
       refinedPrompt: refinedMetadata,
       suggestedActions: [
@@ -955,7 +955,7 @@ export async function processUserMessage(
   return {
     id: uuidv4(),
     sender: 'assistant',
-    text: `👋 I am **Lira AI Autonomous Agent**.\n\nI have full autonomous read and write visibility across **all ${allSpaces.length} spaces** and **${allIssues.length} tickets**. You can command or ask me naturally:\n\n- *"Move AP-10 to in progress"*\n- *"Create task 'Configure Helm' in Atmos"*\n- *"Break down AP-10 into subtasks"*\n- *"Show status breakdown of all spaces"*\n- *"Tell me about AP-7"*`,
+    text: `👋 I am **Viva AI Autonomous Agent**.\n\nI have full autonomous read and write visibility across **all ${allSpaces.length} spaces** and **${allIssues.length} tickets**. You can command or ask me naturally:\n\n- *"Move AP-10 to in progress"*\n- *"Create task 'Configure Helm' in Atmos"*\n- *"Break down AP-10 into subtasks"*\n- *"Show status breakdown of all spaces"*\n- *"Tell me about AP-7"*`,
     timestamp: now,
     refinedPrompt: refinedMetadata,
     suggestedActions: [

@@ -4,6 +4,8 @@ import {
 } from 'lucide-react';
 import { Button } from '../common/Button';
 import { CreateProjectModal } from './CreateProjectModal';
+import { StandupButton } from '../standup/StandupButton';
+import { DEFAULT_PROJECTS, writeProjects } from '../../hooks/useProjects';
 import { ProjectDetailView } from './ProjectDetailView';
 import type { Space } from '../../types/space';
 import type { Issue } from '../../types/issue';
@@ -19,53 +21,6 @@ interface ProjectsOverviewProps {
   onAddIssue?: (status: string) => void;
 }
 
-const DEFAULT_PROJECTS = (spaces: Space[]): Project[] => {
-  const liraSpace = spaces.find(s => s.key === 'LIRA') || spaces[0];
-  const aiSpace = spaces.find(s => s.key === 'AI') || spaces[1] || spaces[0];
-  const certSpace = spaces.find(s => s.key === 'CERT') || spaces[2] || spaces[0];
-
-  return [
-    {
-      id: 'proj-lira-core',
-      name: 'Lira Core Platform',
-      key: liraSpace ? liraSpace.key : 'LIRA',
-      description: 'Enterprise Jira-grade offline engineering workspace, reactive Kanban drag-and-drop, and dual-sync PC persistence.',
-      lead: 'Varun Tej',
-      spaceId: liraSpace?.id || 6,
-      repoUrl: 'https://github.com/VarunTej06/Lira',
-      environments: ['Development', 'Staging', 'Production'],
-      category: 'Software Engineering',
-      createdAt: '2026-10-18T08:15:46.633Z',
-      updatedAt: '2026-11-05T12:00:00.000Z',
-    },
-    {
-      id: 'proj-ai-copilot',
-      name: 'Lira AI Copilot & Autonomous Agent',
-      key: aiSpace ? aiSpace.key : 'AI',
-      description: 'Omnipresent LLM assistant with non-blocking curved dialog, subtask automation, sprint planning, and cross-space visibility.',
-      lead: 'Varun Tej',
-      spaceId: aiSpace?.id || 1,
-      repoUrl: 'https://github.com/VarunTej06/Lira/tree/main/src/components/ai',
-      environments: ['Development', 'Staging'],
-      category: 'Artificial Intelligence',
-      createdAt: '2026-10-28T08:15:46.633Z',
-      updatedAt: '2026-11-05T12:00:00.000Z',
-    },
-    {
-      id: 'proj-cert-mastery',
-      name: 'Cloud & DevOps Engineering Track',
-      key: certSpace ? certSpace.key : 'CERT',
-      description: 'Certification study roadmaps, multi-cloud architectures, Databricks AI, and cloud-native Kubernetes delivery.',
-      lead: 'Varun Tej',
-      spaceId: certSpace?.id || 2,
-      repoUrl: '',
-      environments: ['Production'],
-      category: 'DevOps & Infrastructure',
-      createdAt: '2026-10-20T08:15:46.633Z',
-      updatedAt: '2026-11-05T12:00:00.000Z',
-    },
-  ];
-};
 
 export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
   spaces,
@@ -89,7 +44,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
       console.error('Failed to parse lira_projects from localStorage', e);
     }
     const def = DEFAULT_PROJECTS(spaces);
-    localStorage.setItem('lira_projects', JSON.stringify(def));
+    try { localStorage.setItem('lira_projects', JSON.stringify(def)); } catch { /* storage unavailable */ }
     return def;
   });
 
@@ -117,7 +72,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
   const saveProjects = useCallback((updated: Project[]) => {
     setProjects(updated);
     try {
-      localStorage.setItem('lira_projects', JSON.stringify(updated));
+      writeProjects(updated);
     } catch (e) {
       console.error('Failed to save lira_projects', e);
     }
@@ -367,9 +322,16 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
                         </div>
                       </div>
 
-                      {/* Chevron indicator on hover */}
+                      {/* Standup (stop clicks so the card doesn't open) */}
+                      <div className="flex items-center gap-1 flex-shrink-0" onClick={e => e.stopPropagation()}>
+                        <StandupButton
+                          compact
+                          className="!px-2 !py-1"
+                          scope={{ type: 'project', id: `project:${project.id}`, name: project.name, spaceId: project.spaceId, projectKey: project.key }}
+                        />
                       <div className="p-1 rounded-md text-gray-400 group-hover:text-jira-blue group-hover:bg-blue-50 transition-all flex-shrink-0">
                         <ChevronRight className="w-4 h-4" />
+                      </div>
                       </div>
                     </div>
 

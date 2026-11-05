@@ -3,7 +3,7 @@
   "spaceId": 4,
   "spaceKey": "COUR",
   "spaceName": "Courses",
-  "updatedAt": "2026-11-05T13:55:19.649Z",
+  "updatedAt": "2026-11-05T15:22:48.733Z",
   "issueCount": 17,
   "space": {
     "id": 4,
@@ -91,7 +91,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "sprint": "2026-10"
     },
     {
       "id": 95,
@@ -167,7 +168,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "sprint": "2026-10"
     },
     {
       "id": 96,
@@ -237,7 +239,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "sprint": "2026-10"
     },
     {
       "id": 97,
@@ -303,6 +306,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-16",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "b8df0c7e-3264-42fe-84cc-7b4d54fffb97",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.108Z"
         }
       ],
       "attachments": [],
@@ -313,7 +326,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.107Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 98,
@@ -408,7 +425,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "sprint": "2026-10"
     },
     {
       "id": 99,
@@ -473,6 +491,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "54096048-db01-4f66-b847-27c98d5f8404",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.110Z"
         }
       ],
       "attachments": [],
@@ -483,7 +511,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.110Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 100,
@@ -539,6 +571,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "7f541bbd-9515-4ed4-a4b9-0dd3c7a52a8a",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.114Z"
         }
       ],
       "attachments": [],
@@ -549,7 +591,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.112Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 101,
@@ -612,6 +658,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-16",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "27f2862f-6af2-49dc-a017-2b56b54f761f",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.123Z"
         }
       ],
       "attachments": [],
@@ -622,7 +678,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.122Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 102,
@@ -685,6 +745,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "05f7a9e4-d169-4337-9616-aa14fb43412f",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.127Z"
         }
       ],
       "attachments": [],
@@ -695,7 +765,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:48:38.937Z"
+      "updatedAt": "2026-11-05T15:08:27.126Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 103,
@@ -758,6 +832,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-16",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "9a16fb1c-910a-46e4-86c5-af2b82c1cdb1",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.130Z"
         }
       ],
       "attachments": [],
@@ -768,7 +852,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.130Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 104,
@@ -824,6 +912,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-18",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "6a45671f-3ebb-4011-8dc5-e35518255172",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.134Z"
         }
       ],
       "attachments": [],
@@ -834,7 +932,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.133Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 105,
@@ -891,6 +993,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-18",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "e80bbe94-22a3-4098-a876-08b99c5db150",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.142Z"
         }
       ],
       "attachments": [],
@@ -901,7 +1013,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.142Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 106,
@@ -958,6 +1074,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-18",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "5037873a-a7db-455a-a59d-eb200897c73b",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.146Z"
         }
       ],
       "attachments": [],
@@ -968,7 +1094,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:44:31.540Z"
+      "updatedAt": "2026-11-05T15:08:27.145Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 107,
@@ -1025,6 +1155,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "94321b84-bd07-49cd-bb3b-c3c342a37355",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.150Z"
         }
       ],
       "attachments": [],
@@ -1035,7 +1175,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:44:55.632Z"
+      "updatedAt": "2026-11-05T15:08:27.149Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 108,
@@ -1092,6 +1236,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-18",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "e0cec463-6358-4551-933e-f73c4875aa7c",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.158Z"
         }
       ],
       "attachments": [],
@@ -1102,7 +1256,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:47:09.216Z"
+      "updatedAt": "2026-11-05T15:08:27.157Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 109,
@@ -1159,6 +1317,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-16",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "3898c85e-6532-440a-b023-131781a9afa1",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.161Z"
         }
       ],
       "attachments": [],
@@ -1169,7 +1337,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:47:40.350Z"
+      "updatedAt": "2026-11-05T15:08:27.160Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 110,
@@ -1226,6 +1398,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "382400aa-717a-457c-82d9-7aa847492035",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.163Z"
         }
       ],
       "attachments": [],
@@ -1236,7 +1418,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.163Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     }
   ]
 }

@@ -230,7 +230,7 @@ export const MarketplaceModal: React.FC<{
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
   const apps = [
-    { name: 'Lira AI Autonomous Agent', status: 'Installed & Active', desc: 'Offline natural language task generator, breakdown, and sprint planner.', icon: '🤖' },
+    { name: 'Viva AI Autonomous Agent', status: 'Installed & Active', desc: 'Offline natural language task generator, breakdown, and sprint planner.', icon: '🤖' },
     { name: 'Local PC File Sync Engine', status: 'Active (Vite Plugin)', desc: 'Dual-writes partition data to data/spaces/*.json on your local disk.', icon: '💾' },
     { name: 'Dexie.js IndexedDB Store', status: 'Active (Client DB)', desc: 'Ultra-fast in-browser reactive cache with useLiveQuery observables.', icon: '⚡' },
     { name: 'Claude Model Context Protocol (MCP)', status: 'Connected', desc: 'Model Context Protocol endpoints for seamless external LLM automation.', icon: '🧠' },
@@ -277,7 +277,7 @@ export const UserManagementModal: React.FC<{
 }> = ({ isOpen, onClose }) => {
   const users = [
     { name: 'Varuntej Yadla', initials: 'VY', email: 'yvaruntej0612@gmail.com', role: 'Site Administrator', status: 'Active' },
-    { name: 'Lira AI Assistant', initials: 'LA', email: 'ai@lira.local', role: 'Autonomous Agent', status: 'Active' },
+    { name: 'Viva AI Assistant', initials: 'LA', email: 'ai@lira.local', role: 'Autonomous Agent', status: 'Active' },
     { name: 'Unassigned Queue', initials: 'UN', email: 'unassigned@lira.local', role: 'Service Account', status: 'System' },
   ];
 
@@ -325,14 +325,14 @@ export const BillingModal: React.FC<{
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Billing & Subscriptions" size="md">
       <div className="p-6 space-y-4 text-jira-text">
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl space-y-2">
+        <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-500/10 dark:to-indigo-500/10 border border-blue-200 rounded-xl space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-jira-blue">Current Plan</span>
             <span className="text-xs font-bold bg-jira-blue text-white px-2 py-0.5 rounded-full">Free &amp; Open Source</span>
           </div>
           <h3 className="text-lg font-extrabold text-jira-text">Lira Community Edition v2.0</h3>
           <p className="text-xs text-jira-muted">
-            Unlimited spaces, unlimited issues, offline local disk sync, Dexie IndexedDB caching, and Lira AI Agent.
+            Unlimited spaces, unlimited issues, offline local disk sync, Dexie IndexedDB caching, and Viva AI Agent.
           </p>
         </div>
 

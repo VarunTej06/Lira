@@ -4,6 +4,7 @@ import { Button } from '../common/Button';
 import { FolderKanban, Layers, PlusCircle, Check } from 'lucide-react';
 import type { Space } from '../../types/space';
 import type { Project } from '../../types/project';
+import { writeProjects } from '../../hooks/useProjects';
 import { createSpace } from '../../hooks/useSpaces';
 
 interface CreateProjectModalProps {
@@ -135,7 +136,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
       }
 
       const updated = [newProject, ...existingProjects];
-      localStorage.setItem('lira_projects', JSON.stringify(updated));
+      writeProjects(updated);
 
       onProjectCreated(newProject);
       setSavedToast(true);

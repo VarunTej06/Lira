@@ -9,7 +9,6 @@ import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
 import { exportBackup, importBackup } from '../../db/storageService';
 import { subscribeToSyncStatus, saveToDiskNow } from '../../services/localDiskSync';
-import { LiraAIAvatar } from '../ai/LiraAIAvatar';
 import { AccountDropdown } from './AccountDropdown';
 import { SettingsModal, type SettingsSection } from './SettingsModal';
 import {
@@ -74,6 +73,28 @@ function fuzzyMatch(query: string, text: string): boolean {
 
 // ─── App Launcher Popover (Quick-links with Modern 9-Dot Switcher) ───────────
 
+/** True on devices with a real hover pointer (mouse / trackpad) — hover menus are skipped on touch. */
+const canHoverDevice = () => typeof window !== 'undefined' && !!window.matchMedia?.('(hover: hover)').matches;
+
+/** Opens a dropdown shortly after the pointer enters it and closes it after the pointer leaves. */
+function useHoverMenu(setOpen: (v: boolean) => void) {
+  const timer = useRef<number | undefined>(undefined);
+  const clear = () => { if (timer.current) window.clearTimeout(timer.current); };
+  useEffect(() => clear, []);
+  return {
+    onMouseEnter: () => {
+      if (!canHoverDevice()) return;
+      clear();
+      timer.current = window.setTimeout(() => setOpen(true), 90);
+    },
+    onMouseLeave: () => {
+      if (!canHoverDevice()) return;
+      clear();
+      timer.current = window.setTimeout(() => setOpen(false), 240);
+    },
+  };
+}
+
 const AppLauncher: React.FC<{
   onToggleAI?: () => void;
   onOpenBackup: () => void;
@@ -82,6 +103,7 @@ const AppLauncher: React.FC<{
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
+  const hover = useHoverMenu(setOpen);
 
   useEffect(() => {
     if (!open) return;
@@ -102,7 +124,7 @@ const AppLauncher: React.FC<{
       action: () => { setOpen(false); onNavigateToProjects?.(); },
     },
     {
-      label: 'Lira AI Assistant',
+      label: 'Viva AI Assistant',
       icon: <Zap className="w-4 h-4 text-purple-400" />,
       action: () => { setOpen(false); onToggleAI?.(); },
     },
@@ -122,10 +144,10 @@ const AppLauncher: React.FC<{
   ];
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative" {...hover}>
       {/* Modern 9-Dot Quick-Links App Switcher */}
       <button
-        onClick={() => setOpen(v => !v)}
+        onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
         className={`p-2 rounded-lg transition-all duration-150 flex items-center justify-center group cursor-pointer ${
           open
             ? 'bg-[#0C66E4]/25 border border-blue-400 text-blue-300 ring-2 ring-blue-500/30 shadow-md'
@@ -154,7 +176,7 @@ const AppLauncher: React.FC<{
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-60 bg-[#1D2939] border border-white/10 rounded-xl shadow-2xl z-50 p-2 transition-all duration-150 animate-scale-in">
+        <div className="absolute top-full left-0 mt-2 w-60 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 p-2 origin-top-left animate-scale-in">
           <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider px-2.5 pb-2 border-b border-white/10 mb-1 flex items-center justify-between">
             <span>Switch sites or apps</span>
             <span className="text-[9px] bg-white/10 px-1.5 py-0.2 rounded font-normal text-white/50">Lira v2.0</span>
@@ -192,6 +214,7 @@ const YourWorkDropdown: React.FC<{
   const [tab, setTab] = useState<YourWorkTab>('worked');
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
+  const hover = useHoverMenu(setOpen);
 
   useEffect(() => {
     if (!open) return;
@@ -229,18 +252,18 @@ const YourWorkDropdown: React.FC<{
   };
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative" {...hover}>
       <button
-        onClick={() => setOpen(v => !v)}
-        className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[13px] transition-colors cursor-pointer ${
-          open ? 'bg-white/15 text-white' : 'text-white/80 hover:text-white hover:bg-white/10'
+        onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all duration-200 cursor-pointer ${
+          open ? 'bg-white/15 text-white shadow-inner' : 'text-white/80 hover:text-white hover:bg-white/10'
         }`}
       >
-        Your work <ChevronDown className="w-3 h-3 opacity-60" />
+        Your work <ChevronDown className={`w-3 h-3 opacity-60 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-80 bg-[#1D2939] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-150">
+        <div className="absolute top-full left-0 mt-2 w-80 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150">
           <div className="flex border-b border-white/10 px-2 pt-2 gap-1 bg-white/5">
             {[
               { id: 'worked' as const, label: 'Worked on' },
@@ -303,6 +326,7 @@ const FiltersDropdown: React.FC<{
   const [active, setActive] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
+  const hover = useHoverMenu(setOpen);
 
   useEffect(() => {
     if (!open) return;
@@ -326,18 +350,18 @@ const FiltersDropdown: React.FC<{
   };
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative" {...hover}>
       <button
-        onClick={() => setOpen(v => !v)}
-        className={`flex items-center gap-1 px-2.5 py-1.5 rounded text-[13px] transition-colors cursor-pointer ${
-          open ? 'bg-white/15 text-white' : 'text-white/80 hover:text-white hover:bg-white/10'
+        onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all duration-200 cursor-pointer ${
+          open ? 'bg-white/15 text-white shadow-inner' : 'text-white/80 hover:text-white hover:bg-white/10'
         } ${active && active !== 'all' ? 'text-blue-300' : ''}`}
       >
-        Filters <ChevronDown className="w-3 h-3 opacity-60" />
+        Filters <ChevronDown className={`w-3 h-3 opacity-60 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-[#1D2939] border border-white/10 rounded-xl shadow-xl z-50 p-2 transition-all duration-150">
+        <div className="absolute top-full left-0 mt-2 w-72 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left p-2 transition-all duration-150">
           {/* Prominent Action to Open Full Filter Page */}
           <button
             onClick={() => { setOpen(false); onNavigateToFilters?.(); }}
@@ -471,7 +495,7 @@ const OmniSearch: React.FC<{
           onChange={e => { setQuery(e.target.value); setOpen(true); }}
           onFocus={() => { if (query.trim()) setOpen(true); }}
           onKeyDown={handleKeyDown}
-          className="w-full bg-white/10 text-white placeholder-white/40 text-xs rounded pl-8 pr-7 py-1.5 border border-white/10 focus:outline-none focus:bg-white/15 focus:border-white/30 transition-all"
+          className="w-full bg-white/10 text-white placeholder-white/40 text-xs rounded-xl pl-8 pr-7 py-2 border border-white/10 focus:outline-none focus:bg-white/15 focus:border-white/30 transition-all"
         />
         {query ? (
           <button
@@ -486,7 +510,7 @@ const OmniSearch: React.FC<{
       </div>
 
       {open && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#1D2939] border border-white/10 rounded-xl shadow-xl z-50 overflow-hidden transition-all duration-150 animate-scale-in">
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150 animate-scale-in">
           <div className="max-h-72 overflow-y-auto py-1">
             {Object.entries(grouped).map(([spaceName, spaceIssues]) => (
               <div key={spaceName}>
@@ -962,7 +986,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   }, [showToast]);
 
   return (
-    <nav className="h-14 bg-[#1D2125] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
+    <nav className="mx-2 mt-2 h-14 rounded-2xl bg-gradient-to-r from-[#1C2540] via-[#1A2236] to-[#151B2B] border border-white/[0.08] shadow-[0_8px_26px_rgba(0,0,0,0.32)] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
       {/* App Launcher with Custom Geometric Logo */}
       <AppLauncher
         onToggleAI={onToggleAI}
@@ -974,7 +998,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       />
 
       {/* Lira Logo + Brand */}
-      <div className="flex items-center gap-2 mr-2 cursor-pointer select-none">
+      <div className="flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200 hover:scale-[1.04]">
         <img
           src="/lira-logo.png"
           alt="Lira Logo"
@@ -998,21 +1022,11 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Create button */}
       <button
         onClick={onCreateIssue}
-        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0052CC] hover:bg-[#0065FF] text-white text-sm font-medium rounded transition-colors ml-1 cursor-pointer"
+        className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#0C66E4] to-[#2684FF] hover:from-[#2684FF] hover:to-[#4C9AFF] text-white text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgba(38,132,255,0.35)] hover:shadow-[0_6px_18px_rgba(38,132,255,0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
+        title="Create a ticket — you'll choose the space"
       >
         <Plus className="w-4 h-4" />
         <span className="hidden sm:inline">Create</span>
-      </button>
-
-      {/* Lira AI Button */}
-      <button
-        type="button"
-        onClick={onToggleAI}
-        className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-lg text-xs font-semibold shadow-md hover:shadow-purple-500/25 transition-all cursor-pointer ml-1"
-        title="Open Lira AI Chatbot & Autonomous Agent"
-      >
-        <LiraAIAvatar size={18} hasSparkles={false} />
-        <span className="hidden sm:inline">Lira AI</span>
       </button>
 
       {/* Local PC Storage Indicator */}
@@ -1057,7 +1071,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             setSettingsInitialSection('appearance');
             setShowUnifiedSettingsModal(true);
           }}
-          className={`p-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer ${
+          className={`p-2 rounded-xl hover:bg-white/10 transition-all duration-200 hover:rotate-45 cursor-pointer ${
             showUnifiedSettingsModal ? 'bg-white/15 text-white ring-1 ring-white/30' : 'text-white/70 hover:text-white'
           }`}
           title="Settings & Administration"

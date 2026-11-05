@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-05T13:08:22.761Z",
+  "savedAt": "2026-11-05T13:55:19.649Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -72,7 +72,7 @@
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-11-05T12:17:43.513Z",
-      "issueCount": 55,
+      "issueCount": 46,
       "file": "spaces/LIRA.json"
     },
     {
@@ -3025,7 +3025,7 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": "2026-12-31T18:00:00.000Z",
+      "dueDate": "2026-12-30T00:00:00.000Z",
       "startDate": "2026-10-31T06:00:00.000Z",
       "labels": [
         "devops",
@@ -3081,7 +3081,7 @@
         "VY"
       ],
       "createdAt": "2026-10-31T06:26:14.519Z",
-      "updatedAt": "2026-10-31T06:26:14.519Z"
+      "updatedAt": "2026-11-05T13:55:19.004Z"
     },
     {
       "id": 67,

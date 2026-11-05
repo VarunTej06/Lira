@@ -3,7 +3,7 @@
   "spaceId": 6,
   "spaceKey": "LIRA",
   "spaceName": "Lira",
-  "updatedAt": "2026-11-05T13:08:22.761Z",
+  "updatedAt": "2026-11-05T13:55:19.649Z",
   "issueCount": 46,
   "space": {
     "id": 6,
@@ -14,7 +14,7 @@
     "description": "Lira product roadmap, feature development, DevOps and AI assistant",
     "createdAt": "2026-10-18T08:15:46.633Z",
     "updatedAt": "2026-11-05T12:17:43.513Z",
-    "issueCount": 55,
+    "issueCount": 46,
     "file": "spaces/LIRA.json"
   },
   "issues": [

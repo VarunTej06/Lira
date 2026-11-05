@@ -3,7 +3,7 @@
   "spaceId": 14,
   "spaceKey": "AI",
   "spaceName": "AI Projects",
-  "updatedAt": "2026-11-05T13:08:22.761Z",
+  "updatedAt": "2026-11-05T13:55:19.649Z",
   "issueCount": 18,
   "space": {
     "name": "AI Projects",
@@ -277,7 +277,7 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": "2026-12-31T18:00:00.000Z",
+      "dueDate": "2026-12-30T00:00:00.000Z",
       "startDate": "2026-10-31T06:00:00.000Z",
       "labels": [
         "devops",
@@ -333,7 +333,7 @@
         "VY"
       ],
       "createdAt": "2026-10-31T06:26:14.519Z",
-      "updatedAt": "2026-10-31T06:26:14.519Z"
+      "updatedAt": "2026-11-05T13:55:19.004Z"
     },
     {
       "id": 67,

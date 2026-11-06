@@ -12,3 +12,5 @@ export * from './ai/types';
 export * from './ai/settings';
 export { findTargetSpace, refineUserPrompt } from './ai/intent';
 export { processUserMessage } from './ai/agent';
+export { confirmAndRun, undoAction } from './ai/confirm';
+export { suggestForTicket } from './ai/suggest';

@@ -3,6 +3,13 @@ import type { Issue } from '../types/issue';
 import type { Space, Column } from '../types/space';
 import type { ProjectRow, SprintRow, TeamRow, StandupRow } from '../services/structuredStore';
 
+let restoringIssues = false;
+/** Runs a restore (such as Undo) without the Done / status-log bookkeeping, so the old copies come back exactly as they were. */
+export async function restoringIssuesExactly<T>(fn: () => Promise<T>): Promise<T> {
+  restoringIssues = true;
+  try { return await fn(); } finally { restoringIssues = false; }
+}
+
 export class LiraDatabase extends Dexie {
   spaces!: Table<Space, number>;
   issues!: Table<Issue, number>;
@@ -34,6 +41,27 @@ export class LiraDatabase extends Dexie {
       sprints: 'id, spaceId, sprint, planned',
       teams: 'id, kind, owner',
       standups: 'id, scopeId',
+    });
+
+    // Stamp resolvedAt whenever a ticket reaches Done (and clear it when it is reopened), wherever the change comes from:
+    // the board, the ticket popup, bulk moves, Viva AI. Reports (burndown, cycle time) rely on it.
+    const isDoneStatus = (s: unknown) => typeof s === 'string' && s.toLowerCase() === 'done';
+    this.issues.hook('creating', (_pk, obj) => {
+      if (isDoneStatus(obj.status) && !obj.resolvedAt) obj.resolvedAt = new Date();
+    });
+    this.issues.hook('updating', (mods, _pk, obj) => {
+      if (restoringIssues) return undefined;
+      const m = mods as Partial<Issue>;
+      if (!('status' in m) || m.status === obj.status) return undefined;
+      const now = new Date();
+      const extra: Partial<Issue> = { statusLog: [...(obj.statusLog || []), { from: obj.status, to: m.status as string, at: now }] };
+      if (!('resolvedAt' in m)) {
+        const wasDone = isDoneStatus(obj.status);
+        const nowDone = isDoneStatus(m.status);
+        if (nowDone && !wasDone) extra.resolvedAt = now;
+        if (!nowDone && wasDone) extra.resolvedAt = undefined;
+      }
+      return extra;
     });
   }
 }

@@ -432,6 +432,7 @@ export default function App() {
         isOpen={showCreateSprint}
         onClose={() => setShowCreateSprint(false)}
         existingKeys={globalSprintKeys}
+        spaces={spaceList}
         onCreated={(key) => navigate(`/sprints/${key}`)}
       />
 

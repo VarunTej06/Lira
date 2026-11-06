@@ -32,3 +32,47 @@ export function getGeminiApiKey(): string {
 export function setGeminiApiKey(key: string): void {
   localStorage.setItem('lira_gemini_api_key', key);
 }
+
+// ─── Which model answers ─────────────────────────────────────────────────────
+// 'local'  built-in rules, no network (the default)
+// 'gemini' Google Gemini with an API key
+// 'openai' any OpenAI-compatible server: Ollama, LM Studio, vLLM or a hosted one (set the base URL)
+export type AiProvider = 'local' | 'gemini' | 'openai';
+
+export interface OpenAiConfig { baseUrl: string; model: string; apiKey: string }
+
+export const DEFAULT_OPENAI_URL = 'http://localhost:11434/v1'; // Ollama
+export const DEFAULT_OPENAI_MODEL = 'llama3.1';
+
+export function getAiProvider(): AiProvider {
+  const v = localStorage.getItem('lira_ai_provider');
+  if (v === 'local' || v === 'gemini' || v === 'openai') return v;
+  return getGeminiApiKey() ? 'gemini' : 'local'; // before this setting existed, a key meant Gemini
+}
+
+export function setAiProvider(p: AiProvider): void {
+  localStorage.setItem('lira_ai_provider', p);
+}
+
+export function getOpenAiConfig(): OpenAiConfig {
+  return {
+    baseUrl: (localStorage.getItem('lira_ai_base_url') || DEFAULT_OPENAI_URL).replace(/\/+$/, ''),
+    model: localStorage.getItem('lira_ai_model') || DEFAULT_OPENAI_MODEL,
+    apiKey: localStorage.getItem('lira_ai_api_key') || '',
+  };
+}
+
+export function setOpenAiConfig(c: Partial<OpenAiConfig>): void {
+  if (c.baseUrl !== undefined) localStorage.setItem('lira_ai_base_url', c.baseUrl.trim());
+  if (c.model !== undefined) localStorage.setItem('lira_ai_model', c.model.trim());
+  if (c.apiKey !== undefined) localStorage.setItem('lira_ai_api_key', c.apiKey.trim());
+}
+
+/** Writes are explained and need a click on Confirm before they run. On by default. */
+export function getConfirmWrites(): boolean {
+  return localStorage.getItem('lira_ai_confirm_writes') !== '0';
+}
+
+export function setConfirmWrites(on: boolean): void {
+  localStorage.setItem('lira_ai_confirm_writes', on ? '1' : '0');
+}

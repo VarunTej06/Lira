@@ -7,14 +7,13 @@ import { getSystemInstruction } from './settings';
 /**
  * Optional Google Gemini API integration when user configures an API key
  */
-export async function callGeminiAPI(
+export function buildPromptText(
   userPrompt: string,
-  apiKey: string,
   activeSpace: Space | undefined,
   allSpaces: Space[],
   allIssues: Issue[],
   refinedGoal?: RefinedPromptGoal
-): Promise<ChatMessage | null> {
+): string {
   const systemInstruction = getSystemInstruction();
 
   // Create condensed context of spaces and issues for token efficiency
@@ -43,9 +42,7 @@ export async function callGeminiAPI(
     issues: issuesContext,
   };
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-  const promptText = `SYSTEM CONTEXT:
+  return `SYSTEM CONTEXT:
 ${JSON.stringify(contextPayload)}
 
 REFINED OBJECTIVE & ACTIONABLE GOAL:
@@ -54,6 +51,18 @@ ${refinedGoal ? refinedGoal.optimizedGoal : userPrompt}
 
 ORIGINAL USER REQUEST:
 ${userPrompt}`;
+}
+
+export async function callGeminiAPI(
+  userPrompt: string,
+  apiKey: string,
+  activeSpace: Space | undefined,
+  allSpaces: Space[],
+  allIssues: Issue[],
+  refinedGoal?: RefinedPromptGoal
+): Promise<ChatMessage | null> {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+  const promptText = buildPromptText(userPrompt, activeSpace, allSpaces, allIssues, refinedGoal);
 
   const body = {
     contents: [

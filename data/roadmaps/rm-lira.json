@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06T12:37:20.036Z",
+  "updatedAt": "2026-11-06T13:39:30.726Z",
   "roadmap": {
     "createdAt": "2026-11-06T00:00:00.000Z",
     "description": "The November plan for Lira, taken from ROADMAP.md: each item takes about two days and everything finishes in November. December gets its own roadmap.",
@@ -237,27 +237,27 @@
       {
         "children": [
           {
-            "done": false,
+            "done": true,
             "id": "p4a",
             "title": "Sprint planning view with capacity"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p4b",
             "title": "Automatic month-end rollover prompt"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p4c",
             "title": "Retrospective at sprint close"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p4d",
             "title": "Reports: burnup, CFD, cycle and lead time"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p4e",
             "title": "Set resolvedAt when a ticket moves to Done"
           }
@@ -270,9 +270,9 @@
         "id": "p4",
         "lane": "Agile",
         "owner": "VY",
-        "progress": 0,
+        "progress": 100,
         "start": "2026-11-17",
-        "status": "planned",
+        "status": "done",
         "title": "Phase 4: Sprint planning, rollover, retros, reports",
         "epicKey": "LIRA-66",
         "taskKey": "LIRA-75"
@@ -318,22 +318,22 @@
       {
         "children": [
           {
-            "done": false,
+            "done": true,
             "id": "p6a",
             "title": "Preview, confirm and undo for writes"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p6b",
             "title": "Sprint-aware prompts"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p6c",
             "title": "Standup digest"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p6d",
             "title": "Risk radar for sprints"
           }
@@ -346,9 +346,9 @@
         "id": "p6",
         "lane": "AI",
         "owner": "VY",
-        "progress": 0,
+        "progress": 100,
         "start": "2026-11-21",
-        "status": "planned",
+        "status": "done",
         "title": "Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
         "epicKey": "LIRA-68",
         "taskKey": "LIRA-77"
@@ -416,7 +416,7 @@
     "name": "Lira Platform Roadmap",
     "projectKey": "LIRA",
     "spaceKey": "LIRA",
-    "updatedAt": "2026-11-06T12:37:20.036Z",
+    "updatedAt": "2026-11-06T13:39:30.726Z",
     "scheduleVersion": 2,
     "pendingTicketSync": false
   }

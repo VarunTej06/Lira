@@ -88,4 +88,6 @@ export interface Issue {
   watchers: string[];
   sprint?: string;          // monthly sprint key, e.g. "2026-11"
   sprintHistory?: string[]; // earlier sprints this ticket was carried over from
+  /** Every status change, oldest first. Feeds cumulative flow and cycle time. */
+  statusLog?: { from: string; to: string; at: Date }[];
 }

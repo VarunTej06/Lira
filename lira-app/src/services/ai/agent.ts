@@ -2,15 +2,21 @@ import { db } from '../../db/db';
 import { v4 as uuidv4 } from 'uuid';
 import type { Space } from '../../types/space';
 import type { ChatMessage } from './types';
-import { getGeminiApiKey } from './settings';
+import { getAiProvider } from './settings';
 import { refineUserPrompt } from './intent';
-import { callGeminiAPI } from './gemini';
+import { askConfiguredModel } from './provider';
+import { buildPreview, WRITE_INTENTS } from './preview';
+import { handleSprintPlan, handleSprintSummary, handleStandupDigest, handleRiskRadar } from './handlersSprint';
 import { handleStatusTransition, handleSubtaskBreakdown, handleTicketDetail, handleCreateIssue } from './handlersWrite';
 import { handleStatusMatrix, handlePriorityBreakdown, handleSpaceQuery, handleEpicsList, handleStatusQuery, handleKeywordSearch } from './handlersRead';
 import type { AgentContext, AgentHandler } from './context';
 
 /** In the order they are tried. */
 const HANDLERS: AgentHandler[] = [
+  handleSprintPlan,
+  handleSprintSummary,
+  handleStandupDigest,
+  handleRiskRadar,
   handleStatusTransition,
   handleSubtaskBreakdown,
   handleTicketDetail,
@@ -27,7 +33,8 @@ export async function processUserMessage(
   userPrompt: string,
   activeSpace: Space | undefined,
   allSpaces: Space[],
-  mode: 'info' | 'agent' = 'agent'
+  mode: 'info' | 'agent' = 'agent',
+  options: { confirmWrites?: boolean } = {},
 ): Promise<ChatMessage> {
   const q = userPrompt.trim().toLowerCase();
   const now = new Date();
@@ -50,24 +57,22 @@ export async function processUserMessage(
     targetTicketKey: refinedGoal.targetTicketKey,
   };
 
-  // Optional: Try Gemini API if key is configured (only in agent mode)
-  const apiKey = getGeminiApiKey();
-  if (apiKey && mode === 'agent') {
+  // Requests that change data or need exact numbers are answered by the built-in engine (a model cannot write to Lira);
+  // everything else can go to the configured model (Gemini or an OpenAI-compatible server) in agent mode.
+  const ACTIONS = [...WRITE_INTENTS, 'sprint_summary', 'standup_digest', 'risk_radar'];
+  if (mode === 'agent' && getAiProvider() !== 'local' && !ACTIONS.includes(refinedGoal.intent)) {
     try {
-      const geminiResponse = await callGeminiAPI(userPrompt, apiKey, activeSpace, allSpaces, allIssues, refinedGoal);
-      if (geminiResponse) return geminiResponse;
+      const modelResponse = await askConfiguredModel(userPrompt, activeSpace, allSpaces, allIssues, refinedGoal);
+      if (modelResponse) return modelResponse;
     } catch (err) {
-      console.warn('[Viva AI Agent] Gemini API call failed, falling back to local NLP engine:', err);
+      console.warn('[Viva AI Agent] The model call failed, falling back to the built-in engine:', err);
     }
   }
 
   // ─────────────────────────────────────────────────────────────
   // 2. READ-ONLY RESTRICTION FOR AVATAR INFO CHATBOT (mode === 'info')
   // ─────────────────────────────────────────────────────────────
-  const isWriteIntent =
-    refinedGoal.intent === 'create_issue' ||
-    refinedGoal.intent === 'status_transition' ||
-    refinedGoal.intent === 'subtask_breakdown';
+  const isWriteIntent = WRITE_INTENTS.includes(refinedGoal.intent);
 
   if (mode === 'info' && isWriteIntent) {
     return {
@@ -96,6 +101,10 @@ export async function processUserMessage(
   // 3. AUTONOMOUS TASK EXECUTION BASED ON REFINED GOAL
   // The first handler that recognises the goal answers; the order matters (a status move is checked before a status query).
   const ctx: AgentContext = { userPrompt, q, now, mode, activeSpace, allSpaces, allIssues, spacesMap, refinedGoal, refinedMetadata };
+  if (options.confirmWrites && isWriteIntent) {
+    const preview = buildPreview(ctx);
+    if (preview) return preview;
+  }
   for (const handle of HANDLERS) {
     const answer = await handle(ctx);
     if (answer) return answer;

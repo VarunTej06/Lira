@@ -1,5 +1,7 @@
 # 02 — Frontend Architecture
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 ## 1. Tech Stack Overview
 
 | Layer | Technology | Version | Purpose |
@@ -191,3 +193,12 @@ const closeModal = () => setIssueNavStack([]);
   onClose={closeModal}
 />
 ```
+
+## Update (November 2026)
+
+- **Routing:** React Router 7. `src/routes.ts` is the single list of pages (`parsePath`, `pathFor`, `routeForTab`); `?issue=KEY` opens a ticket popup on any page. A `PageBoundary` error boundary wraps every page.
+- **File layout:** big components are split into a small parent plus a folder of parts, using one state hook that returns everything the parts need (for example `components/layout/sidebar/`, `components/projects/detail/`, `components/issue/detail/`, `components/board/actionbar/`). No component is over about 500 lines.
+- **New areas:** `components/sprints/` (overview, page, planning, reports, retro, epics, filter, create), `components/roadmap/`, `components/standup/`, `components/foryou/`, `components/projects/`.
+- **Motion:** Framer Motion, all in `components/common/motion.tsx` (dialogs, menus, toasts, count-up, growing bars) and `Confetti.tsx`. `MotionConfig reducedMotion="user"` turns movement off for people who ask for it.
+- **Responsive:** below 1024 px the left sidebar is a drawer opened by a round menu button (`useMediaQuery`); on phones the search is a magnifier button; the ticket popup stacks into one column; on touch screens hover-only buttons are always visible (`@media (hover: none)`).
+- **Theme:** CSS variables for colours, a class-based dark mode, 10+ accent colours (`utils/accent.ts`), and a safety net in `theme-dark.css`. The Inter font is bundled (`@fontsource/inter`).

@@ -1,4 +1,4 @@
-import { Sun, HardDrive, User, Bell, Monitor } from 'lucide-react';
+import { Sun, HardDrive, User, Bell, Monitor, Smartphone } from 'lucide-react';
 import type { SettingsState } from './useSettingsState';
 
 /** The list of settings pages on the left. */
@@ -34,6 +34,18 @@ export function SettingsNav(s: SettingsState) {
           >
             <HardDrive className="w-4 h-4 flex-shrink-0" />
             <span>Export &amp; Backup</span>
+          </button>
+
+          <button
+            onClick={() => setActiveSection('devices')}
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer text-left whitespace-nowrap ${
+              activeSection === 'devices'
+                ? 'bg-jira-blue text-white shadow-xs'
+                : 'text-gray-700 hover:bg-gray-100'
+            }`}
+          >
+            <Smartphone className="w-4 h-4 flex-shrink-0" />
+            <span>Other devices</span>
           </button>
 
           <button

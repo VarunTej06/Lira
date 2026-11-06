@@ -3,6 +3,7 @@ import { Search, X } from 'lucide-react';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
 import { useClickOutside, fuzzyMatch } from './shared';
+import { useMediaQuery } from '../../../hooks/useMediaQuery';
 
 export const OmniSearch: React.FC<{
   issues: Issue[];
@@ -12,9 +13,12 @@ export const OmniSearch: React.FC<{
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
+  // On a phone the search is a button; tapping it opens the search box across the top of the screen.
+  const phone = useMediaQuery('(max-width: 639px)');
+  const [phoneOpen, setPhoneOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  useClickOutside(containerRef, () => setOpen(false));
+  useClickOutside(containerRef, () => { setOpen(false); setPhoneOpen(false); });
 
   const spaceMap = useMemo(() => {
     const map: Record<number, Space> = {};
@@ -89,8 +93,20 @@ export const OmniSearch: React.FC<{
 
   let flatIdx = 0;
 
+  if (phone && !phoneOpen) {
+    return (
+      <button
+        onClick={() => { setPhoneOpen(true); window.setTimeout(() => inputRef.current?.focus(), 50); }}
+        aria-label="Search work items"
+        className="flex-shrink-0 ml-auto w-9 h-9 rounded-xl bg-white/10 border border-white/10 text-white/70 flex items-center justify-center cursor-pointer"
+      >
+        <Search className="w-4 h-4" />
+      </button>
+    );
+  }
+
   return (
-    <div ref={containerRef} className="flex-1 max-w-xs mx-2 relative">
+    <div ref={containerRef} className={phone ? 'fixed left-3 right-3 top-3 z-[70] bg-[#18233B] rounded-2xl p-2 shadow-2xl border border-white/10' : 'flex-1 min-w-0 max-w-xs mx-1 sm:mx-2 relative'}>
       <div className="relative">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40" />
         <input

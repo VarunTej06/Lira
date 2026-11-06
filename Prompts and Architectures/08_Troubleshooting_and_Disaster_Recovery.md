@@ -1,5 +1,7 @@
 # 08 — Troubleshooting & Disaster Recovery
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 ## Common Scenarios & Fixes
 
 ---
@@ -278,3 +280,19 @@ req.onsuccess = e => {
 indexedDB.deleteDatabase('LiraDB');
 location.reload();
 ```
+
+## Update (November 2026)
+
+| Problem | Fix |
+|---|---|
+| Data looks lost after clearing the browser | It is not: everything is in `data/`. Reload; Lira reads the files back. Check you started `npm run dev` from `lira-app/`. |
+| A page shows "This page hit a problem" | Only that page failed. Press **Try again** or go elsewhere from the sidebar. The details are in the browser console. |
+| Tablet or phone shows "Lira needs its private link" | Open the link from **Settings, Other devices** once on that device. |
+| Tablet or phone cannot connect | Start with `npm run dev:lan`; set Windows Wi-Fi to **Private** or allow Node.js through the firewall; check the computer's address has not changed. |
+| "Request refused" in the console | Lira was opened by a name it does not allow. Use `localhost`, or `dev:lan` and the computer's network address. |
+| Undo says it can no longer undo | Undo lasts until the page is reloaded (and the last 20 changes). Restore from a backup or git if you need older data. |
+| Two devices overwrote each other | Saving is not live: the last save wins. Refresh a device to see what another saved; restore a file from git (`git checkout -- data/spaces/KEY.json`) if needed. |
+| Sprint numbers or burndown look off for old tickets | Tickets changed before the status log existed use the resolved date only. New changes are exact. |
+| After pulling changes the app fails to start | Run `npm install` (new packages), and restart `npm run dev`. |
+
+To cancel access for every tablet or phone, delete `data/private/lan-token` and restart.

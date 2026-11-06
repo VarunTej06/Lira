@@ -1,5 +1,7 @@
 # 03 — Database & Storage
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 ## 1. Why IndexedDB over LocalStorage
 
 | Feature | LocalStorage | IndexedDB (via Dexie.js) |
@@ -224,3 +226,13 @@ this.version(3).stores({ ... }).upgrade(tx => {
   });
 });
 ```
+
+## Update (November 2026)
+
+- **Source of truth is `data/`.** Tickets: `data/spaces/<KEY>.json`. Everything else: `data/projects.json`, `sprints.json`, `teams.json`, `standups.json`, `settings.json`, `board-config.json`, `roadmaps/<id>.json`. Secrets and the tablet link secret: `data/private/` (git-ignored).
+- **`kvMirror.ts`** mirrors every `lira_*` localStorage key to the right file (`fileForKey`) and loads them back before the app renders. **Disk wins on load, unless the browser has unsaved changes** (`lira__kv_dirty`, `lira__issues_dirty`).
+- **Dexie version 3** adds `projects`, `sprints`, `teams` and `standups` tables, filled from the files by `structuredStore.ts` as a read-only, queryable copy.
+- **New ticket fields:** `sprint` (a month key `YYYY-MM`, or a start date `YYYY-MM-DD` for a weekly, bi-weekly or N-day sprint), `sprintHistory`, `resolvedAt` and `statusLog` (every status change). Database hooks in `db.ts` stamp `resolvedAt` when a ticket reaches Done and clear it when reopened.
+- **Sprint data:** goals, capacity, retrospectives, closed state and the spaces working in a sprint are in `lira_sprint_meta`; custom sprint dates in `lira_sprint_defs`; both land in `data/sprints.json`.
+- **Writes** go to disk about half a second after a change; only changed files are rewritten and keys are sorted, so git diffs stay small. Each save is noted (file names only) in `data/private/audit.log`.
+- **Backups** include all of the above except API keys.

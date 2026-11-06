@@ -6,6 +6,7 @@ import { BackupSection } from './settings/BackupSection';
 import { ProfileSection } from './settings/ProfileSection';
 import { GeneralSection } from './settings/GeneralSection';
 import { NotificationsSection } from './settings/NotificationsSection';
+import { DevicesSection } from './settings/DevicesSection';
 import { Check } from 'lucide-react';
 import { Modal } from '../common/Modal';
 export type { SettingsSection } from './settings/useSettingsState';
@@ -21,6 +22,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = (props) => {
         <div className="flex-1 p-6 overflow-y-auto">
           <AppearanceSection {...s} />
           <BackupSection {...s} />
+          <DevicesSection {...s} />
           <ProfileSection {...s} />
           <GeneralSection {...s} />
           <NotificationsSection {...s} />

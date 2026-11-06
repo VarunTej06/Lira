@@ -1,3 +1,4 @@
+import { motion, menuPop } from '../../common/motion';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus, Users, Folder, ChevronDown, MoreHorizontal, Star, Trash2, Archive, Edit3, Palette, Eye, EyeOff, ArchiveRestore } from 'lucide-react';
@@ -118,7 +119,7 @@ export const FloatingMenu: React.FC<{ menuRoot: string; onClose: () => void; cla
     const anchor = document.querySelector<HTMLElement>(`[data-menu-root="${menuRoot}"]:not([data-floating]) [data-menu-trigger]`);
     if (!menu || !anchor) return;
     const a = anchor.getBoundingClientRect();
-    const m = menu.getBoundingClientRect();
+    const m = { width: menu.offsetWidth, height: menu.offsetHeight }; // offset sizes ignore the pop-in scale
     const gap = 4;
     const margin = 8;
     let top = a.bottom + gap;
@@ -135,16 +136,17 @@ export const FloatingMenu: React.FC<{ menuRoot: string; onClose: () => void; cla
   }, [onClose]);
 
   return createPortal(
-    <div
+    <motion.div
       ref={ref}
+      {...menuPop}
       data-menu-root={menuRoot}
       data-floating
-      className={`bg-[#1D2939] border border-white/10 rounded-lg shadow-2xl py-1 max-h-[calc(100vh-16px)] overflow-y-auto ${pos ? 'animate-scale-in' : ''} ${className}`}
-      style={{ position: 'fixed', top: pos?.top ?? 0, left: pos?.left ?? 0, zIndex: 1000, visibility: pos ? 'visible' : 'hidden' }}
+      className={`bg-[#1D2939] border border-white/10 rounded-lg shadow-2xl py-1 max-h-[calc(100vh-16px)] overflow-y-auto ${className}`}
+      style={{ position: 'fixed', top: pos?.top ?? 0, left: pos?.left ?? 0, zIndex: 1000, visibility: pos ? 'visible' : 'hidden', transformOrigin: 'top right' }}
       onClick={e => e.stopPropagation()}
     >
       {children}
-    </div>,
+    </motion.div>,
     document.body,
   );
 };

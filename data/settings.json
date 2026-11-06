@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06T13:21:47.161Z",
+  "updatedAt": "2026-11-06T18:08:56.705Z",
   "entries": {
     "lira_accent": "#059669",
-    "lira_active_space_id": "14",
+    "lira_active_space_id": "2",
     "lira_roadmap_prefs": {
       "collapsed": [],
       "roadmapId": "rm-lira",
@@ -11,7 +11,7 @@
       "view": "timeline",
       "zoom": "weeks"
     },
-    "lira_sidebar_collapsed": "true",
+    "lira_sidebar_collapsed": "false",
     "lira_sidebar_customization": {
       "navOrder": [
         "forYou",
@@ -49,6 +49,6 @@
       "filters",
       "dashboards"
     ],
-    "lira_theme": "dark"
+    "lira_theme": "light"
   }
 }

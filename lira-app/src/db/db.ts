@@ -2,6 +2,7 @@ import Dexie, { type Table } from 'dexie';
 import type { Issue } from '../types/issue';
 import type { Space, Column } from '../types/space';
 import type { ProjectRow, SprintRow, TeamRow, StandupRow } from '../services/structuredStore';
+import { celebrate } from '../utils/celebrate';
 
 let restoringIssues = false;
 /** Runs a restore (such as Undo) without the Done / status-log bookkeeping, so the old copies come back exactly as they were. */
@@ -55,12 +56,13 @@ export class LiraDatabase extends Dexie {
       if (!('status' in m) || m.status === obj.status) return undefined;
       const now = new Date();
       const extra: Partial<Issue> = { statusLog: [...(obj.statusLog || []), { from: obj.status, to: m.status as string, at: now }] };
+      const wasDone = isDoneStatus(obj.status);
+      const nowDone = isDoneStatus(m.status);
       if (!('resolvedAt' in m)) {
-        const wasDone = isDoneStatus(obj.status);
-        const nowDone = isDoneStatus(m.status);
         if (nowDone && !wasDone) extra.resolvedAt = now;
         if (!nowDone && wasDone) extra.resolvedAt = undefined;
       }
+      if (nowDone && !wasDone) celebrate('done'); // also when the caller (Viva) supplied resolvedAt itself
       return extra;
     });
   }

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { AnimatePresence, motion, dialogBackdrop, dialogPanel } from './motion';
 
 interface ModalProps {
   isOpen: boolean;
@@ -42,17 +43,20 @@ export const Modal: React.FC<ModalProps> = ({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
   return createPortal(
-    <div
+    <AnimatePresence>
+    {isOpen && (
+    <motion.div
+      key="modal"
       ref={overlayRef}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      {...dialogBackdrop}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
-      <div
+      <motion.div
+        {...dialogPanel}
         className={`
-          bg-white rounded-xl shadow-modal w-full animate-scale-in
+          bg-white rounded-xl shadow-modal w-full
           flex flex-col overflow-hidden text-jira-text
           ${SIZE_CLASSES[size]} ${className}
         `}
@@ -73,8 +77,10 @@ export const Modal: React.FC<ModalProps> = ({
         <div className="flex-1 overflow-auto bg-white">
           {children}
         </div>
-      </div>
-    </div>,
+      </motion.div>
+    </motion.div>
+    )}
+    </AnimatePresence>,
     document.body
   );
 };

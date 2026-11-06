@@ -1,3 +1,4 @@
+import { safeHttpUrl } from '../../../utils/safeUrl';
 import { GitBranch, Plus, ExternalLink, Check, Save, Server, X, Code } from 'lucide-react';
 import { Button } from '../../common/Button';
 import type { DetailCtx } from './types';
@@ -42,9 +43,9 @@ export function TechnicalTab(ctx: DetailCtx) {
                         className="w-full pl-9 pr-3 py-2 text-sm border border-jira-border rounded-lg focus:outline-none focus:border-jira-blue transition-all"
                       />
                     </div>
-                    {repoUrl && (
+                    {safeHttpUrl(repoUrl) && (
                       <a
-                        href={repoUrl}
+                        href={safeHttpUrl(repoUrl)}
                         target="_blank"
                         rel="noreferrer"
                         className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-jira-text text-sm rounded-lg flex items-center gap-1 transition-colors"

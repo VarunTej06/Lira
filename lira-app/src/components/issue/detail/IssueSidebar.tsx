@@ -13,7 +13,7 @@ export function IssueSidebar(s: IssueDetailState) {
   return (
     <>
           {/* ── RIGHT: Details sidebar ── */}
-          <div className="w-72 flex-shrink-0 border-l border-jira-border overflow-y-auto bg-gray-50/40">
+          <div className="w-full md:w-72 flex-shrink-0 border-t md:border-t-0 md:border-l border-jira-border md:overflow-y-auto bg-gray-50/40">
             {/* Status button — prominent at top like Jira */}
             <div className="px-4 pt-4 pb-3 border-b border-jira-border space-y-2">
               <div ref={statusMenuRef} className="relative">

@@ -1,5 +1,7 @@
 # 04 — Backend & Offline Workflows
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 ## 1. Zero-Backend Architecture
 
 Lira has no server.  The entire application is a **static Single-Page App (SPA)**
@@ -161,3 +163,11 @@ if not, it inserts 5 spaces and ~15 pre-seeded issues covering:
 - **GEN-1**: Proxmox homelab setup.
 
 This seed data runs only once (guarded by `if (count > 0) return`).
+
+## Update (November 2026)
+
+- **There is a small server**, the Vite dev-server plugin (`vite.config.ts`, `server/`). Endpoints: `GET /api/health`, `GET /api/data`, `POST /api/save` (tickets), `GET/POST /api/kv` (everything else), `GET /api/spaces`, `GET /api/lan` (this computer only).
+- **Guard (`server/guard.ts`):** the host and origin must be this computer; writes must be JSON, at most 50 MB; reserved keys (`__proto__`...) and unusual file names are refused; every response carries security headers (CSP, no framing, no sniffing).
+- **Tablet and phone mode (`npm run dev:lan`):** also accepts addresses from your own network (never web names). Devices other than this computer must arrive once with the private link (`?key=`), receive an HttpOnly cookie, and never receive or change the API key.
+- **Still no cloud and no accounts.** The dev server is the only server; `npm run preview` or a built copy cannot save to disk.
+- See [SECURITY_REPORT.md](../SECURITY_REPORT.md).

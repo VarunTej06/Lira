@@ -1,5 +1,7 @@
 # 06 — Feature Catalog
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 ## Complete Capabilities Matrix
 
 ### 1. Spaces & Projects
@@ -171,3 +173,17 @@
 | Interactive Action Cards | Ticket inspection displays interactive "Open Ticket" button for one-click modal navigation |
 | Formatted Table Output | Workspace directories and cross-space roadmaps render as clean, structured Markdown tables |
 | Local Disk Persistence | All changes initiated by the agent auto-sync to `data/lira-workspace.json` within 400ms |
+
+## Update (November 2026)
+
+| Area | Features |
+|---|---|
+| Sprints | Monthly, weekly, bi-weekly and N-day sprints; spaces per sprint; goal; capacity; Planning view (drag, points vs capacity, over-commit warning); rollover prompt; close with carry-over and retrospective (actions can be ticked); Reports (burnup, cumulative flow, scope changes, lead and cycle time, Markdown and PDF export); Epics timeline; status and space filter; delete sprint |
+| Roadmaps | List of roadmaps; timeline, Now / Next / Later, table, planner; each item is an epic with a checklist task; one file per roadmap; milestones; CSV export |
+| Viva AI | Read and write across spaces; confirm and undo; plan a sprint, summarise a sprint, write a standup, risk radar; suggestions on create (duplicates, labels, priority, epic); built-in engine, Gemini or OpenAI-compatible model |
+| Standup and sprint calls | Per space, project or sprint; Google Calendar, Teams and email invites; `.ics` download |
+| Navigation | A URL for every page; Back and Forward; shared links; ticket popup link (`?issue=KEY`); sidebar customisable (Navigation items and sections, reorder, hide) |
+| Persistence | Everything in JSON files; backup and restore of all of it |
+| Look | Light and dark; accent colours; rounded panels; Framer Motion animations, count-up numbers, line drawing, confetti |
+| Devices | Phone and tablet layouts; `npm run dev:lan` with a private link and QR code |
+| Safety | Local API guard, safe links and file names, security headers, audit log |

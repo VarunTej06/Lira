@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
+import { celebrate } from '../../utils/celebrate';
 import type { Issue } from '../../types/issue';
 import {
   completeSprint, followingSprint, getSprintMeta, isDone, setSprintMeta, sprintLabel, sprintName, sprintStart, type Retro,
@@ -59,7 +60,7 @@ export const CloseSprintModal: React.FC<CloseSprintModalProps> = ({ isOpen, onCl
     };
     const hasRetro = retro.wentWell.length + retro.didnt.length + retro.actions.length > 0;
     let moved = 0;
-    if (!closed) moved = await completeSprint(list, sprint, scope, target);
+    if (!closed) { moved = await completeSprint(list, sprint, scope, target); celebrate('sprint'); }
     if (hasRetro) setSprintMeta(scope, sprint, { retro });
     onSaved(
       closed

@@ -32,10 +32,10 @@ git clone https://github.com/VarunTej06/Lira.git
 cd Lira
 ```
 
-The checked-out branch matters. Active development is on `v3`:
+The checked-out branch matters. The latest work is on `v3.1` (earlier work is on `v3`, and `main` is the release branch):
 
 ```bash
-git checkout v3
+git checkout v3.1
 ```
 
 ---
@@ -47,14 +47,19 @@ Lira/                      <- repo root
 ├── data/                  <- your workspace data (JSON files, committed to git)
 │   ├── spaces.json        <- manifest of all spaces
 │   ├── spaces/<KEY>.json  <- one file per space, holding its tickets
-│   └── lira-workspace.json<- consolidated snapshot
+│   ├── lira-workspace.json<- consolidated snapshot
+│   ├── projects.json, sprints.json, teams.json, standups.json, settings.json, board-config.json
+│   ├── roadmaps/          <- one file per roadmap
+│   └── private/           <- git-ignored: API key, tablet link secret, audit log
 ├── lira-app/              <- the web app (run every command from HERE)
+│   ├── server/            <- disk store and the API guard (who may call the local API)
 │   ├── src/
 │   ├── package.json
 │   └── vite.config.ts     <- also contains the disk-sync API
 ├── Prompts and Architectures/
 ├── (App Screen Previews/ is git-ignored: third-party screenshots, kept locally only)
 ├── README.md              <- product overview and features
+├── SECURITY_REPORT.md     <- the 20-point security check and what was fixed
 ├── SETUP.md               <- this file
 └── ROADMAP.md             <- planned work
 ```
@@ -84,6 +89,8 @@ npm run dev
 
 Open the URL Vite prints, normally **http://localhost:5173**.
 
+To use Lira from a tablet or phone on the same Wi-Fi, start it with `npm run dev:lan` instead (see section 13).
+
 > **Important: always start the server from `lira-app/`.**
 > `vite.config.ts` finds the data folder using `process.cwd()/../data`. Starting Vite from anywhere else makes Lira read and write the wrong folder.
 
@@ -98,6 +105,7 @@ All commands run from `lira-app/`.
 | Command | What it does |
 |---|---|
 | `npm run dev` | Starts the dev server with hot reload and the disk-sync API. **Restart it after switching branches or pulling changes** that touch `tailwind.config.js` (Tailwind reads its config once at start) |
+| `npm run dev:lan` | Same as `dev`, and also opens Lira to your own Wi-Fi for a tablet or phone, behind a private link (see section 13) |
 | `npm run build` | Type-checks (`tsc -b`) then builds to `lira-app/dist/` |
 | `npm run preview` | Serves the built `dist/` for a quick check |
 | `npm run lint` | Runs Oxlint |
@@ -123,7 +131,9 @@ Everything you create or change is saved to JSON files in `data/`, so clearing b
 | Standups and standup notes | `data/standups.json` |
 | WIP limits, board settings, attachments, documents, forms | `data/board-config.json` |
 | Theme, profile, sidebar, notification and Viva AI settings | `data/settings.json` |
-| Gemini API key | `data/private/secrets.json` (**git-ignored**, never committed) |
+| Which spaces work in each sprint, sprint capacity and retrospectives | `data/sprints.json` (with the other sprint data above) |
+| Gemini and other model API keys | `data/private/secrets.json` (**git-ignored**, never committed) |
+| The private link secret for tablets and phones, and a record of what was saved and when | `data/private/lan-token`, `data/private/audit.log` (**git-ignored**) |
 
 How it works:
 - Writes happen about half a second after each change, through the dev server (`/api/save` for tickets, `/api/kv` for everything else).
@@ -160,16 +170,17 @@ If you add a page, add it to `routes.ts` and to the `<Routes>` in `App.tsx`.
 
 ---
 
-## 8. Optional: Viva AI with Gemini
+## 8. Viva AI
 
-Viva AI (the chatbot at the bottom right) works out of the box with the built-in local agent, which can read and write tickets.
+Viva AI (the chat button at the bottom right) works out of the box with the built-in engine, which can read and write tickets. Before it changes anything it shows what it will do and waits for **Confirm**; afterwards there is an **Undo** button (until the page is reloaded). You can turn the confirmation off in Viva's settings (gear icon).
 
-To use Gemini for free-form answers:
-1. Get a key from Google AI Studio.
-2. Open Viva AI, then the settings (gear) icon.
-3. Paste the key and save.
+Try: "Plan next sprint from my backlog", "Summarise this sprint", "Write my standup", "Show the risk radar", "Move LIRA-12 to in progress".
 
-The key is kept in your browser's localStorage.
+To use a model for free-form answers, open Viva's settings and choose **Model**:
+- **Google Gemini**: paste a key from Google AI Studio.
+- **OpenAI-compatible server**: for example Ollama (`http://localhost:11434/v1`, model `llama3.1`), LM Studio or a hosted service. Enter the base URL, model name and (if needed) a key.
+
+Changes to tickets are always made by the built-in engine so they can be previewed and undone; the model only answers questions. Keys are stored in `data/private/secrets.json` (git-ignored), never in a file that is committed.
 
 ---
 
@@ -180,6 +191,8 @@ After `npm run dev`:
 - [ ] Open a space board and drag a ticket between columns.
 - [ ] The top bar shows `PC Saved`, and the matching `data/spaces/<KEY>.json` has a new modified time.
 - [ ] Toggle dark mode from the account menu (top right).
+- [ ] Open **Sprints**, then **New sprint**, and check that Monthly, Weekly, Bi-weekly and Number of days are offered.
+- [ ] Ask Viva "move LIRA-2 to backlog": it should show a preview with Confirm, and Undo afterwards.
 - [ ] `http://localhost:5173/api/health` returns JSON with `"status":"ok"` and non-zero counts.
 
 ---
@@ -196,6 +209,10 @@ After `npm run dev`:
 | Stale or odd data | Clear the site's data (DevTools, Application, Storage, Clear site data) and reload. Tickets reload from `data/`. Browser-only data (projects, sprint goals, teams) is lost, so export a backup first. |
 | Changes saved in the UI but not on disk | You are on `npm run preview` or a built copy. Use `npm run dev`. |
 | Windows line-ending warnings from git | Normal (CRLF/LF). Ignore, or set `git config core.autocrlf true`. |
+| `npm run dev` fails after pulling | New packages were added. Run `npm install`. |
+| A tablet or phone shows "Lira needs its private link" | Open the link from **Settings, Other devices** (or the terminal) once on that device. |
+| A tablet or phone cannot reach the computer | You started with `npm run dev`, not `npm run dev:lan`; or Windows Firewall blocks it (set the network to Private); or the computer's address changed (section 13). |
+| "Request refused" in the browser console | Lira is being opened by a name it does not allow. Use `localhost`, or `dev:lan` and the computer's network address. |
 
 ---
 
@@ -209,4 +226,33 @@ npm run build     # must succeed
 npm run lint
 ```
 
-Tests cover the sprint logic, standup and invite builders, AI intent parsing, and the disk-persistence layer (including a test that wipes the browser and restores from disk).
+Tests (294) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
+
+---
+
+## 12. Animations
+
+Motion uses `framer-motion`, set up in one file: `src/components/common/motion.tsx` (springs, dialog / menu / toast animations, count-up numbers, growing bars). Confetti is in `components/common/Confetti.tsx`; call `celebrate()` from `utils/celebrate.ts` to trigger it (it fires when a ticket reaches Done and when a sprint is closed). Use those pieces for anything new so it feels the same everywhere. People who ask their system for reduced motion get no movement, no count-up and no confetti.
+
+---
+
+## 13. Use Lira on a tablet or phone (same Wi-Fi)
+
+Lira runs on your computer and normally only that computer can open it. To let your own tablet or phone in:
+
+1. Start it with `npm run dev:lan` (in `lira-app`) instead of `npm run dev`.
+2. On the computer, open **Settings, Other devices**. It shows the private link and a QR code (the same link is printed in the terminal). Scan the code with the tablet or phone camera, or open the link once. After that the device is remembered; you can bookmark the plain address without the `?key=...` part. Opening the plain address on a device that has never used the link shows a page that says what to do.
+3. If the page does not load, Windows Firewall is probably blocking it. Set the Wi-Fi network to **Private** (Settings, Network and internet, Wi-Fi, your network, Private network), or allow Node.js through the firewall when Windows asks.
+
+Good to know:
+- The link is a password. Anyone with it, on your Wi-Fi, can read and change your tickets. Do not use this on public Wi-Fi. To cancel every device, delete `data/private/lan-token` and restart.
+- The computer must be on and running Lira. Your router may give the computer a different address after a restart; reserve its address in the router, or use the name `YOURPC.local`.
+- Every device keeps its own copy in its browser and saves to the computer's `data/` folder. It is not live: if two devices change tickets at once, the one that saves last wins. Refresh a device to see what another one saved.
+- Your API key is never sent to other devices, and they cannot change it.
+- On a phone or a tablet held upright the left panel becomes a menu: tap the round button at the bottom left. On a phone, search is the magnifier button in the top bar. Anything that only showed on hover (such as the "..." menus) is always visible on touch screens.
+
+---
+
+## 14. Security
+
+The local API only answers Lira itself, links are checked, and the packages are audited. The full 20-point check, what was fixed and what still applies is in [SECURITY_REPORT.md](SECURITY_REPORT.md). Run `npm audit` before releases and after adding any package.

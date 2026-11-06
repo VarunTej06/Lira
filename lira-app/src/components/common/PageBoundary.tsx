@@ -17,7 +17,7 @@ export function PageBoundary({ pageKey, children }: { pageKey: string; children:
             <div className="mx-auto w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-500 flex items-center justify-center"><AlertTriangle className="w-6 h-6" /></div>
             <h2 className="text-lg font-semibold text-jira-text">This page hit a problem</h2>
             <p className="text-sm text-jira-muted">The rest of Lira is fine. You can try again, or go somewhere else from the sidebar.</p>
-            {error?.message && <pre className="text-[11px] text-left bg-jira-surface border border-jira-border rounded-lg p-3 text-jira-muted whitespace-pre-wrap max-h-28 overflow-auto">{error.message}</pre>}
+            {import.meta.env.DEV && error?.message && <pre className="text-[11px] text-left bg-jira-surface border border-jira-border rounded-lg p-3 text-jira-muted whitespace-pre-wrap max-h-28 overflow-auto">{error.message}</pre>}
             <div className="flex items-center justify-center gap-2">
               <button onClick={reset} className="px-4 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg hover:bg-jira-blue-hover cursor-pointer">Try again</button>
               <Link to="/" className="px-4 py-2 text-sm font-medium border border-jira-border rounded-lg text-jira-text hover:bg-jira-surface">Go home</Link>

@@ -4,7 +4,7 @@ import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import {
   allSprintKeys, currentSprintKey, daysLeft, getIssueSprint, getSprintMeta, isDone, issuesInSprint,
-  sprintDays, sprintEnd, sprintLabel, sprintName, sprintPhase, sprintStart, sprintStats,
+  sprintDays, sprintEnd, sprintKindLabel, sprintLabel, sprintName, sprintPhase, sprintStart, sprintStats,
 } from '../../utils/sprintUtils';
 import { PhaseBadge } from './sprintParts';
 
@@ -33,10 +33,12 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
   const closed = rows.filter(r => r.phase === 'past' && r.stats.total > 0);
   const avgCompletion = closed.length ? Math.round(closed.reduce((a, r) => a + r.stats.percent, 0) / closed.length) : 0;
   const avgVelocity = closed.length ? Math.round(closed.reduce((a, r) => a + r.stats.done, 0) / closed.length) : 0;
-  const stranded = work.filter(i => !isDone(i) && getIssueSprint(i) < cur).length;
+  const stranded = work.filter(i => !isDone(i) && sprintPhase(getIssueSprint(i)) === 'past').length;
+  // sprints that ended with unfinished work and were never closed: the month-end "carry them over?" prompt
+  const toClose = rows.filter(r => r.phase === 'past' && !getSprintMeta('all', r.key).completedAt && r.stats.open > 0).slice(0, 3);
   const carried = work.filter(i => (i.sprintHistory || []).length > 0).length;
 
-  const lastSix = rows.filter(r => r.key <= cur).slice(0, 6).reverse();
+  const lastSix = rows.filter(r => r.phase !== 'upcoming').slice(0, 6).reverse();
   const maxTotal = Math.max(1, ...lastSix.map(r => r.stats.total));
 
   const tiles = [
@@ -49,12 +51,25 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
   return (
     <div className="flex-1 overflow-y-auto bg-jira-bg">
       <div className="max-w-6xl mx-auto p-6 space-y-5">
+        {toClose.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl px-4 py-3 space-y-2" role="status" data-testid="overview-rollover">
+            {toClose.map(r => (
+              <div key={r.key} className="flex items-center gap-3 text-sm text-blue-900">
+                <span className="flex-1">
+                  {sprintName(r.key)} ended with <strong>{r.stats.open}</strong> unfinished ticket{r.stats.open === 1 ? '' : 's'}. Carry {r.stats.open === 1 ? 'it' : 'them'} over?
+                </span>
+                <button onClick={() => onOpenSprint(r.key)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">Review</button>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-xl font-semibold text-jira-text flex items-center gap-2">
               <CalendarClock className="w-5 h-5 text-jira-blue" /> Sprints overview
             </h1>
-            <p className="text-xs text-jira-muted mt-0.5">Every month is a sprint. Pick one to plan it, move tickets, or close it.</p>
+            <p className="text-xs text-jira-muted mt-0.5">Monthly, weekly, bi-weekly or a set number of days. Pick one to plan it, move tickets, or close it.</p>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={onOpenAllTickets} className="text-sm px-3 py-1.5 border border-jira-border rounded-xl bg-white text-jira-text hover:bg-gray-50 cursor-pointer">All tickets</button>
@@ -124,7 +139,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                       {r.goal && <div className="text-[10px] text-jira-muted truncate max-w-[200px]">🎯 {r.goal}</div>}
                     </td>
                     <td className="px-3 py-2.5"><PhaseBadge sprint={r.key} /></td>
-                    <td className="px-3 py-2.5 text-jira-muted whitespace-nowrap">{fmt(sprintStart(r.key))} – {fmt(sprintEnd(r.key))} <span className="opacity-60">({sprintDays(r.key)}d)</span></td>
+                    <td className="px-3 py-2.5 text-jira-muted whitespace-nowrap">{fmt(sprintStart(r.key))} – {fmt(sprintEnd(r.key))} <span className="opacity-60">({sprintKindLabel(r.key)}, {sprintDays(r.key)}d)</span></td>
                     <td className="px-3 py-2.5 font-semibold text-jira-text">{r.stats.total}</td>
                     <td className="px-3 py-2.5 text-jira-muted">{r.stats.todo + r.stats.backlog}</td>
                     <td className="px-3 py-2.5 text-jira-blue">{r.stats.inprogress}</td>

@@ -53,7 +53,7 @@ Lira/                      <- repo root
 │   ├── package.json
 │   └── vite.config.ts     <- also contains the disk-sync API
 ├── Prompts and Architectures/
-├── App Screen Previews/
+├── (App Screen Previews/ is git-ignored: third-party screenshots, kept locally only)
 ├── README.md              <- product overview and features
 ├── SETUP.md               <- this file
 └── ROADMAP.md             <- planned work
@@ -118,7 +118,7 @@ Everything you create or change is saved to JSON files in `data/`, so clearing b
 | Spaces and tickets | `data/spaces.json`, `data/spaces/<KEY>.json`, `data/lira-workspace.json` |
 | Projects and project settings | `data/projects.json` |
 | Roadmaps | one file each: `data/roadmaps/<id>.json`, plus `data/roadmaps/index.json` |
-| Sprint goals, closed sprints, planned sprints | `data/sprints.json` |
+| Sprint goals, capacity, retrospectives, closed sprints, planned sprints, weekly / bi-weekly / N-day sprint definitions | `data/sprints.json` |
 | Teams and added team members | `data/teams.json` |
 | Standups and standup notes | `data/standups.json` |
 | WIP limits, board settings, attachments, documents, forms | `data/board-config.json` |
@@ -148,7 +148,7 @@ Every page has its own address, so refresh, Back/Forward and shared links work.
 | `/for-you` | For you |
 | `/space/<KEY>/<tab>` | A space: `summary`, `board`, `list`, `calendar`, `sprints`, `capacity`, `forms`, `documents`, `attachments`, `reports` |
 | `/projects`, `/projects/<id>` | Projects, one project |
-| `/sprints`, `/sprints/2026-11` | Sprints overview, one sprint |
+| `/sprints`, `/sprints/2026-11`, `/sprints/2026-11-09` | Sprints overview, one monthly sprint, one weekly / bi-weekly / N-day sprint (named by its start date) |
 | `/tickets` | All tickets |
 | `/roadmaps`, `/roadmaps/<id>` | Roadmaps, one roadmap |
 | `/filters` | Filters |

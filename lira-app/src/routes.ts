@@ -27,7 +27,7 @@ export type AppRoute =
   | { kind: 'roadmaps'; roadmapId?: string }
   | { kind: 'space'; spaceKey: string; tab: string };
 
-const SPRINT_KEY = /^\d{4}-\d{2}$/;
+const SPRINT_KEY = /^\d{4}-\d{2}(-\d{2})?$/; // a month, or a weekly / bi-weekly / N-day sprint's start date
 const tabFromSlug = (slug?: string) => SPACE_TABS.find(t => t.toLowerCase() === (slug || '').toLowerCase());
 const seg = (s: string) => encodeURIComponent(s);
 

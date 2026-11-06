@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { CalendarClock } from 'lucide-react';
-import { currentSprintKey, getIssueSprint, moveIssuesToSprint, shiftSprint, sprintLabel, sprintName } from '../../utils/sprintUtils';
+import { currentSprintKey, getSprintDefs, getIssueSprint, sprintIncludesSpace, moveIssuesToSprint, shiftSprint, sprintLabel, sprintName } from '../../utils/sprintUtils';
 import type { Issue, Priority, IssueStatus } from '../../types/issue';
 import { SelectDropdown } from '../common/Dropdown';
 import { Avatar } from '../common/Avatar';
@@ -49,7 +49,8 @@ export const IssueSidebarDetails: React.FC<IssueSidebarDetailsProps> = ({ issue,
     const cur = currentSprintKey();
     const keys = new Set<string>([getIssueSprint(issue)]);
     for (let d = -6; d <= 3; d++) keys.add(shiftSprint(cur, d));
-    return Array.from(keys).sort().reverse().map(k => ({
+    Object.keys(getSprintDefs()).forEach(k => keys.add(k));
+    return Array.from(keys).filter(k => k === getIssueSprint(issue) || sprintIncludesSpace(k, issue.spaceId)).sort().reverse().map(k => ({
       value: k,
       label: `${sprintName(k)}${k === cur ? ' (current)' : ''}`,
     }));

@@ -9452,7 +9452,7 @@
       "title": "Phase 4: Sprint planning, rollover, retros, reports",
       "description": "Two-column planning view, automatic month-end rollover, retrospectives, burnup, cumulative flow, scope change log.",
       "type": "epic",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -9473,18 +9473,36 @@
           "authorInitials": "VY",
           "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
           "createdAt": "2026-11-06T03:49:20.342Z"
+        },
+        {
+          "id": "phase-4-complete-06g5rw",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (Phase 4 complete)",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-06T13:39:30.726Z"
         }
       ],
       "attachments": [],
       "linkedIssues": [],
       "rank": 1793936960342,
       "createdAt": "2026-11-06T03:49:20.342Z",
-      "updatedAt": "2026-11-06T04:18:30.520Z",
+      "updatedAt": "2026-11-06T13:39:30.726Z",
       "watchers": [
         "VY"
       ],
       "id": 169,
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:39:30.726Z",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-06T13:39:30.726Z"
+        }
+      ]
     },
     {
       "spaceId": 6,
@@ -9532,7 +9550,7 @@
       "title": "Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
       "description": "Preview and undo for every AI write, sprint planning suggestions, standup digest, risk radar.",
       "type": "epic",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -9553,18 +9571,36 @@
           "authorInitials": "VY",
           "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
           "createdAt": "2026-11-06T03:49:20.425Z"
+        },
+        {
+          "id": "phase-6-complete-xy5i93",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (Phase 6 complete)",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-06T13:39:30.726Z"
         }
       ],
       "attachments": [],
       "linkedIssues": [],
       "rank": 1793936960425,
       "createdAt": "2026-11-06T03:49:20.425Z",
-      "updatedAt": "2026-11-06T04:18:31.340Z",
+      "updatedAt": "2026-11-06T13:39:30.726Z",
       "watchers": [
         "VY"
       ],
       "id": 171,
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:39:30.726Z",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-06T13:39:30.726Z"
+        }
+      ]
     },
     {
       "spaceId": 6,
@@ -10011,7 +10047,7 @@
       "title": "Deliver: Phase 4: Sprint planning, rollover, retros, reports",
       "description": "Checklist for the roadmap item \"Phase 4: Sprint planning, rollover, retros, reports\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
       "type": "task",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -10026,31 +10062,31 @@
         {
           "id": "p4a",
           "title": "Sprint planning view with capacity",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.254Z"
         },
         {
           "id": "p4b",
           "title": "Automatic month-end rollover prompt",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.254Z"
         },
         {
           "id": "p4c",
           "title": "Retrospective at sprint close",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.254Z"
         },
         {
           "id": "p4d",
           "title": "Reports: burnup, CFD, cycle and lead time",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.254Z"
         },
         {
           "id": "p4e",
           "title": "Set resolvedAt when a ticket moves to Done",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.254Z"
         }
       ],
@@ -10073,6 +10109,16 @@
           "oldValue": "February 2027 Sprint",
           "newValue": "November 2026 Sprint",
           "createdAt": "2026-11-06T04:18:30.876Z"
+        },
+        {
+          "id": "phase-4-complete-1psuoa",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (Phase 4 complete)",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-06T13:39:30.726Z"
         }
       ],
       "attachments": [],
@@ -10080,12 +10126,20 @@
       "sprint": "2026-11",
       "rank": 1793937364254,
       "createdAt": "2026-11-06T03:56:04.254Z",
-      "updatedAt": "2026-11-06T04:18:30.875Z",
+      "updatedAt": "2026-11-06T13:39:30.726Z",
       "watchers": [
         "VY"
       ],
       "id": 178,
-      "sprintHistory": []
+      "sprintHistory": [],
+      "resolvedAt": "2026-11-06T13:39:30.726Z",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-06T13:39:30.726Z"
+        }
+      ]
     },
     {
       "spaceId": 6,
@@ -10175,7 +10229,7 @@
       "title": "Deliver: Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
       "description": "Checklist for the roadmap item \"Phase 6: Viva AI confirm-and-undo, sprint-aware prompts\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
       "type": "task",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -10190,25 +10244,25 @@
         {
           "id": "p6a",
           "title": "Preview, confirm and undo for writes",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.399Z"
         },
         {
           "id": "p6b",
           "title": "Sprint-aware prompts",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.399Z"
         },
         {
           "id": "p6c",
           "title": "Standup digest",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.399Z"
         },
         {
           "id": "p6d",
           "title": "Risk radar for sprints",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.399Z"
         }
       ],
@@ -10231,6 +10285,16 @@
           "oldValue": "April 2027 Sprint",
           "newValue": "November 2026 Sprint",
           "createdAt": "2026-11-06T04:18:31.748Z"
+        },
+        {
+          "id": "phase-6-complete-aszgq9",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (Phase 6 complete)",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-06T13:39:30.726Z"
         }
       ],
       "attachments": [],
@@ -10238,12 +10302,20 @@
       "sprint": "2026-11",
       "rank": 1793937364399,
       "createdAt": "2026-11-06T03:56:04.399Z",
-      "updatedAt": "2026-11-06T04:18:31.747Z",
+      "updatedAt": "2026-11-06T13:39:30.726Z",
       "watchers": [
         "VY"
       ],
       "id": 180,
-      "sprintHistory": []
+      "sprintHistory": [],
+      "resolvedAt": "2026-11-06T13:39:30.726Z",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-06T13:39:30.726Z"
+        }
+      ]
     }
   ]
 }

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
+import { TicketSuggestions } from './TicketSuggestions';
 import type { Space } from '../../types/space';
 import { createIssue, getNextIssueKey, useIssuesBySpace } from '../../hooks/useIssues';
 import type { Issue, Priority, IssueType } from '../../types/issue';
 import { v4 as uuidv4 } from 'uuid';
-import { currentSprintKey, shiftSprint, sprintName } from '../../utils/sprintUtils';
+import { currentSprintKey, getSprintDefs, shiftSprint, sprintIncludesSpace, sprintName } from '../../utils/sprintUtils';
 
 interface CreateIssueModalProps {
   isOpen: boolean;
@@ -59,8 +60,12 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   const [sprint, setSprint] = useState(currentSprintKey());
   const sprintChoices = Array.from(new Set([
     ...[-2, -1, 0, 1, 2, 3].map(d => shiftSprint(currentSprintKey(), d)),
+    ...Object.keys(getSprintDefs()),
     ...(defaultSprint ? [defaultSprint] : []),
   ])).sort();
+  // a sprint only takes tickets from the spaces that work in it
+  const openSprints = space?.id ? sprintChoices.filter(k => sprintIncludesSpace(k, space.id!)) : sprintChoices;
+  const sprintValue = openSprints.includes(sprint) ? sprint : (openSprints.includes(currentSprintKey()) ? currentSprintKey() : openSprints[0] ?? sprint);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -127,7 +132,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         }],
         attachments: [],
         linkedIssues: [],
-        sprint: type === 'epic' ? undefined : sprint,
+        sprint: type === 'epic' ? undefined : sprintValue,
         rank: Date.now(),
         createdAt: now,
         updatedAt: now,
@@ -253,6 +258,20 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
           {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
         </div>
 
+        <TicketSuggestions
+          title={title}
+          description={description}
+          type={type}
+          spaceId={space?.id}
+          existing={spaceIssues}
+          labels={labels}
+          priority={priority}
+          parentId={parentId}
+          onAddLabel={l => setLabels(prev => (prev.trim() ? `${prev.replace(/[,\s]+$/, '')}, ${l}` : l))}
+          onPriority={setPriority}
+          onEpic={setParentId}
+        />
+
         {/* Description */}
         <div>
           <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Description</label>
@@ -299,11 +318,11 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
           <div>
             <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Sprint</label>
             <select
-              value={sprint}
+              value={sprintValue}
               onChange={e => setSprint(e.target.value)}
               className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white cursor-pointer"
             >
-              {sprintChoices.map(k => (
+              {openSprints.map(k => (
                 <option key={k} value={k}>{sprintName(k)}{k === currentSprintKey() ? ' (current)' : ''}</option>
               ))}
             </select>

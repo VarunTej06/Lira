@@ -43,3 +43,6 @@ desktop.ini
 
 # Secrets written by the disk store (API keys) - never commit
 data/private/
+
+# Screenshots of third-party software (Jira); not ours to redistribute
+App Screen Previews/

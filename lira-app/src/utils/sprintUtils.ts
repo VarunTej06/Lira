@@ -10,9 +10,22 @@ import { v4 as uuidv4 } from 'uuid';
  */
 export type SprintPhase = 'past' | 'active' | 'upcoming';
 
+/** What the team learned when the sprint closed. */
+export interface Retro {
+  wentWell: string[];
+  didnt: string[];
+  actions: { text: string; done: boolean }[];
+  savedAt?: string; // ISO
+}
+
 export interface SprintMeta {
   goal?: string;
   completedAt?: string; // ISO — set when the sprint was formally closed
+  /** Story points the team can take on in this sprint. Planning warns when the sprint goes over it. */
+  capacity?: number;
+  retro?: Retro;
+  /** Spaces working in this sprint. Missing = every space. Stored under the "all" scope. */
+  spaceIds?: number[];
 }
 
 export const isDone = (i: Issue) => i.status?.toLowerCase() === 'done';
@@ -35,34 +48,143 @@ export function shiftSprint(key: string, delta: number): string {
 export const nextSprint = (key: string) => shiftSprint(key, 1);
 export const prevSprint = (key: string) => shiftSprint(key, -1);
 
+// ─── Custom-length sprints ───────────────────────────────────────────────────
+// A key "YYYY-MM" is a calendar-month sprint. A key "YYYY-MM-DD" is a sprint that starts on that day and lasts
+// weekly (7 days), bi-weekly (14 days) or a number of days; its end date is kept in lira_sprint_defs.
+
+export type SprintKind = 'monthly' | 'weekly' | 'biweekly' | 'days';
+export interface SprintDef { start: string; end: string; kind: Exclude<SprintKind, 'monthly'>; name?: string }
+
+export const CUSTOM_SPRINT_KEY = /^\d{4}-\d{2}-\d{2}$/;
+export const SPRINT_KEY_PATTERN = /^\d{4}-\d{2}(-\d{2})?$/;
+export const isCustomSprint = (key: string) => CUSTOM_SPRINT_KEY.test(key);
+
+const DEFS_KEY = 'lira_sprint_defs';
+export const MAX_SPRINT_DAYS = 90;
+
+export const toDay = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+export function parseDay(s: string): Date {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+const startOfToday = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
+/** Whole days from a to b (b later = positive), ignoring time of day and daylight-saving shifts. */
+export const diffDays = (a: Date, b: Date) =>
+  Math.round((Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) - Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())) / 86400000);
+
+export function getSprintDefs(): Record<string, SprintDef> {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(DEFS_KEY) || '{}');
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+    const out: Record<string, SprintDef> = {};
+    for (const [k, v] of Object.entries(parsed as Record<string, SprintDef>)) {
+      if (isCustomSprint(k) && v && CUSTOM_SPRINT_KEY.test(v.end)) out[k] = v;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+function setSprintDefs(defs: Record<string, SprintDef>) {
+  try { localStorage.setItem(DEFS_KEY, JSON.stringify(defs)); } catch { /* storage unavailable */ }
+}
+
+/** How many days a kind lasts. `days` is only used by the "days" kind. */
+export function kindLength(kind: SprintKind, days = 14): number {
+  if (kind === 'weekly') return 7;
+  if (kind === 'biweekly') return 14;
+  return Math.min(MAX_SPRINT_DAYS, Math.max(1, Math.floor(days) || 1));
+}
+
+/** The existing custom sprint that overlaps [start, start+length), if any. */
+export function findOverlap(startDay: string, length: number): string | undefined {
+  const a = parseDay(startDay);
+  const aEnd = new Date(a.getFullYear(), a.getMonth(), a.getDate() + length - 1);
+  return Object.entries(getSprintDefs()).find(([k, d]) => parseDay(k) <= aEnd && parseDay(d.end) >= a)?.[0];
+}
+
+/** Creates a weekly / bi-weekly / N-day sprint. Returns its key, or null when it would overlap another custom sprint. */
+export function addCustomSprint(opts: { start: string; kind: Exclude<SprintKind, 'monthly'>; days?: number; name?: string }): string | null {
+  const length = kindLength(opts.kind, opts.days);
+  if (findOverlap(opts.start, length)) return null;
+  const s = parseDay(opts.start);
+  const end = toDay(new Date(s.getFullYear(), s.getMonth(), s.getDate() + length - 1));
+  setSprintDefs({ ...getSprintDefs(), [opts.start]: { start: opts.start, end, kind: opts.kind, ...(opts.name?.trim() ? { name: opts.name.trim() } : {}) } });
+  setDeletedSprints(getDeletedSprints().filter(k => k !== opts.start));
+  window.dispatchEvent(new Event(SPRINTS_EVENT));
+  return opts.start;
+}
+
 export function sprintStart(key: string): Date {
+  if (isCustomSprint(key)) return parseDay(key);
   const [y, m] = key.split('-').map(Number);
   return new Date(y, m - 1, 1);
 }
 
 export function sprintEnd(key: string): Date {
+  if (isCustomSprint(key)) {
+    const def = getSprintDefs()[key];
+    const s = parseDay(key);
+    const e = def ? parseDay(def.end) : new Date(s.getFullYear(), s.getMonth(), s.getDate() + 13);
+    return new Date(e.getFullYear(), e.getMonth(), e.getDate(), 23, 59, 59, 999);
+  }
   const [y, m] = key.split('-').map(Number);
   return new Date(y, m, 0, 23, 59, 59, 999);
 }
 
+/** Length in days. */
 export function sprintDays(key: string): number {
-  return sprintEnd(key).getDate();
+  return diffDays(sprintStart(key), sprintEnd(key)) + 1;
 }
 
+const shortDay = (d: Date) => d.toLocaleString('en-US', { month: 'short', day: 'numeric' });
+
 export function sprintLabel(key: string, short = false): string {
+  if (isCustomSprint(key)) {
+    const a = sprintStart(key), b = sprintEnd(key);
+    const sameMonth = a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
+    const range = sameMonth ? `${shortDay(a)}–${b.getDate()}` : `${shortDay(a)} – ${shortDay(b)}`;
+    return short ? range : `${range}, ${b.getFullYear()}`;
+  }
   const d = sprintStart(key);
   const month = d.toLocaleString('en-US', { month: short ? 'short' : 'long' });
   return short ? `${month} '${String(d.getFullYear()).slice(2)}` : `${month} ${d.getFullYear()}`;
 }
 
 export function sprintName(key: string): string {
+  if (isCustomSprint(key)) return getSprintDefs()[key]?.name || `Sprint ${sprintLabel(key)}`;
   return `${sprintLabel(key)} Sprint`;
 }
 
+/** Human description of the length: "Monthly", "Weekly", "Bi-weekly" or "10 days". */
+export function sprintKindLabel(key: string): string {
+  if (!isCustomSprint(key)) return 'Monthly';
+  const def = getSprintDefs()[key];
+  if (def?.kind === 'weekly') return 'Weekly';
+  if (def?.kind === 'biweekly') return 'Bi-weekly';
+  return `${sprintDays(key)} days`;
+}
+
+/** The sprint after `key` in time. A month has a fixed next month; a custom sprint uses the sprints that exist. */
+export function followingSprint(key: string, keys: string[]): string {
+  if (!isCustomSprint(key)) return nextSprint(key);
+  const end = sprintEnd(key).getTime();
+  const later = keys.filter(k => sprintStart(k).getTime() > end).sort((a, b) => sprintStart(a).getTime() - sprintStart(b).getTime());
+  return later[0] || nextSprint(sprintKey(sprintEnd(key)));
+}
+
+/** Previous / next sprint in the list (ordered by start date), for the arrows on the sprint page. */
+export function neighbourSprint(key: string, keys: string[], dir: -1 | 1): string {
+  const i = keys.indexOf(key);
+  return keys[i + dir] ?? key;
+}
+
 export function sprintPhase(key: string): SprintPhase {
-  const cur = currentSprintKey();
-  if (key === cur) return 'active';
-  return key < cur ? 'past' : 'upcoming';
+  const today = startOfToday();
+  if (today < sprintStart(key)) return 'upcoming';
+  if (today > sprintEnd(key)) return 'past';
+  return 'active';
 }
 
 /** Days remaining in the active sprint (0 for past, full length for upcoming). */
@@ -70,7 +192,15 @@ export function daysLeft(key: string): number {
   const phase = sprintPhase(key);
   if (phase === 'past') return 0;
   if (phase === 'upcoming') return sprintDays(key);
-  return Math.max(0, sprintDays(key) - new Date().getDate());
+  return Math.max(0, diffDays(startOfToday(), sprintEnd(key)));
+}
+
+/** Days of the sprint that have gone by, today included (0 before it starts, full length after it ends). */
+export function daysElapsed(key: string): number {
+  const phase = sprintPhase(key);
+  if (phase === 'past') return sprintDays(key);
+  if (phase === 'upcoming') return 0;
+  return diffDays(sprintStart(key), startOfToday()) + 1;
 }
 
 /** The sprint a ticket belongs to. Legacy tickets (no stamp) fall back to their creation month. */
@@ -132,21 +262,24 @@ export function allSprintKeys(issues: Issue[]): string[] {
     if (k < min) min = k;
     if (k > max) max = k;
   });
-  issues.forEach(i => {
-    if (!isSprintWork(i)) return;
-    const k = getIssueSprint(i);
+  const used = new Set(issues.filter(isSprintWork).map(getIssueSprint));
+  used.forEach(k => {
+    if (isCustomSprint(k)) return; // custom sprints are listed from their definitions below
     if (k < min) min = k;
     if (k > max) max = k;
   });
   const deleted = new Set(getDeletedSprints());
-  const used = new Set(issues.filter(isSprintWork).map(getIssueSprint));
   const keys: string[] = [];
   for (let k = min; k <= max; k = nextSprint(k)) {
     // the current and next sprint always exist; a deleted month stays hidden unless a ticket is in it again
     if (deleted.has(k) && !used.has(k) && k !== cur && k !== nextSprint(cur)) continue;
     keys.push(k);
   }
-  return keys;
+  const custom = new Set(Object.keys(getSprintDefs()));
+  used.forEach(k => { if (isCustomSprint(k)) custom.add(k); }); // a ticket in a sprint whose definition is gone keeps it visible
+  custom.forEach(k => { if (!deleted.has(k) || used.has(k)) keys.push(k); });
+  // oldest first; a month sprint comes before a custom sprint that starts the same day
+  return keys.sort((a, b) => sprintStart(a).getTime() - sprintStart(b).getTime() || a.length - b.length);
 }
 
 export interface SprintStats {
@@ -186,11 +319,11 @@ export function burndown(list: Issue[], key: string) {
   const start = sprintStart(key);
   const total = list.length;
   const phase = sprintPhase(key);
-  const lastDay = phase === 'active' ? new Date().getDate() : phase === 'past' ? days : 0;
+  const lastDay = phase === 'active' ? daysElapsed(key) : phase === 'past' ? days : 0;
   const doneAt = list.filter(isDone).map(i => new Date(i.resolvedAt || i.updatedAt || i.createdAt));
   const points: { day: number; ideal: number; actual: number | null }[] = [];
   for (let d = 1; d <= days; d++) {
-    const dayEnd = new Date(start.getFullYear(), start.getMonth(), d, 23, 59, 59, 999);
+    const dayEnd = new Date(start.getFullYear(), start.getMonth(), start.getDate() + d - 1, 23, 59, 59, 999);
     const doneByThen = doneAt.filter(t => t <= dayEnd).length;
     points.push({
       day: d,
@@ -224,6 +357,23 @@ export function setSprintMeta(spaceId: number | 'all', key: string, patch: Sprin
   try {
     localStorage.setItem(META_KEY, JSON.stringify(store));
   } catch { /* storage unavailable */ }
+}
+
+/** The spaces taking part in a sprint, or null when every space does. */
+export function getSprintSpaces(key: string): number[] | null {
+  const ids = getSprintMeta('all', key).spaceIds;
+  return Array.isArray(ids) && ids.length ? ids : null;
+}
+
+export function sprintIncludesSpace(key: string, spaceId: number): boolean {
+  const ids = getSprintSpaces(key);
+  return !ids || ids.includes(spaceId);
+}
+
+/** Pass null (or every space) to let all spaces take part. */
+export function setSprintSpaces(key: string, ids: number[] | null) {
+  setSprintMeta('all', key, { spaceIds: ids && ids.length ? Array.from(new Set(ids)).sort((a, b) => a - b) : undefined });
+  window.dispatchEvent(new Event(SPRINTS_EVENT));
 }
 
 // ─── Mutations ───────────────────────────────────────────────────────────────
@@ -280,6 +430,7 @@ export async function completeSprint(
 
 /** Sprints can be deleted unless they are the current or the next one (those always exist). */
 export function canDeleteSprint(key: string): boolean {
+  if (isCustomSprint(key)) return true; // weekly / bi-weekly / N-day sprints are always optional
   const cur = currentSprintKey();
   return key !== cur && key !== nextSprint(cur);
 }
@@ -295,6 +446,11 @@ export async function deleteSprint(key: string, issues: Issue[]): Promise<number
   if (!canDeleteSprint(key)) return 0;
   const moved = await moveIssuesToSprint(issuesInSprint(issues, key), sprintDeleteTarget(key));
   setDeletedSprints([...getDeletedSprints(), key]);
+  if (isCustomSprint(key)) {
+    const defs = getSprintDefs();
+    delete defs[key];
+    setSprintDefs(defs);
+  }
   try {
     const planned = getPlannedSprints().filter(k => k !== key);
     localStorage.setItem(PLANNED_KEY, JSON.stringify(planned));

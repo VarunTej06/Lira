@@ -1,6 +1,7 @@
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import type { RefinedPromptGoal } from './types';
+import { currentSprintKey, nextSprint, prevSprint, sprintName } from '../../utils/sprintUtils';
 
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -103,6 +104,33 @@ export function refineUserPrompt(
   }
   if (!targetSpace) {
     targetSpace = activeSpace;
+  }
+
+  // 2b. Sprint-aware requests: planning, summary, standup digest, risk radar
+  if (!targetTicket) {
+    const explicitSpace = findTargetSpace(q, allSpaces);
+    const sprintOf = (fallback: string) =>
+      /\bnext\b/.test(q) ? nextSprint(currentSprintKey())
+        : /\b(last|previous)\b/.test(q) ? prevSprint(currentSprintKey())
+        : /\b(this|current)\b/.test(q) ? currentSprintKey()
+        : fallback;
+    const sprintGoal = (intent: RefinedPromptGoal['intent'], sprint: string | undefined, text: string): RefinedPromptGoal => ({
+      originalInput: raw, intent, targetSprint: sprint, targetSpace: explicitSpace, optimizedGoal: text,
+    });
+    if (/\b(plan|fill|populate|prepare)\b/.test(q) && /\bsprint\b/.test(q)) {
+      const s = sprintOf(nextSprint(currentSprintKey()));
+      return sprintGoal('sprint_plan', s, `Plan ${sprintName(s)} from the backlog${explicitSpace ? ` of ${explicitSpace.name}` : ''}, highest priority first, within capacity`);
+    }
+    if (/\b(standup|stand-up|daily update|what did i do|what changed)\b/.test(q)) {
+      return sprintGoal('standup_digest', undefined, 'Write a standup from what changed since the last working day');
+    }
+    if (/\b(risk|at risk|risky|slipping|stale|idle|stuck|behind)\b/.test(q) && /\b(sprint|ticket|tickets|work|radar)\b|^(show |what is |what's )?(the )?risk/.test(q)) {
+      return sprintGoal('risk_radar', undefined, 'Find sprints likely to miss their goal and tickets that have sat idle');
+    }
+    if (/\b(summari[sz]e|summary|recap|how is|how's|status of)\b/.test(q) && /\bsprint\b/.test(q)) {
+      const s = sprintOf(currentSprintKey());
+      return sprintGoal('sprint_summary', s, `Summarise ${sprintName(s)}`);
+    }
   }
 
   // 3. Status Transition Intent Check (Evaluate before Matrix check to avoid "to done" matching "to do")

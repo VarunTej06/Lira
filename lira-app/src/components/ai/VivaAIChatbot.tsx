@@ -8,7 +8,8 @@ import type { Issue } from '../../types/issue';
 import {
   processUserMessage, type ChatMessage,
   getSystemInstruction, setSystemInstruction, DEFAULT_SYSTEM_INSTRUCTION,
-  getGeminiApiKey, setGeminiApiKey,
+  getGeminiApiKey, setGeminiApiKey, confirmAndRun, undoAction,
+  getAiProvider, setAiProvider, getOpenAiConfig, setOpenAiConfig, getConfirmWrites, setConfirmWrites, type AiProvider,
 } from '../../services/aiAgentService';
 import { LiraAIAvatar } from './LiraAIAvatar';
 
@@ -34,6 +35,9 @@ const welcomeMessage = (spaceCount: number): ChatMessage => ({
     'What is in progress across all spaces?',
     'Show all Epics across spaces',
     'Create a task "Review sprint goals" in Lira',
+    'Plan next sprint from my backlog',
+    'Write my standup',
+    'Show the risk radar',
   ],
 });
 
@@ -49,6 +53,9 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
   const [apiKeyInput, setApiKeyInput] = useState(getGeminiApiKey());
   const [showApiKey, setShowApiKey] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [provider, setProvider] = useState<AiProvider>(getAiProvider());
+  const [oai, setOai] = useState(getOpenAiConfig());
+  const [confirmWrites, setConfirmWritesState] = useState(getConfirmWrites());
 
   // Keep the panel mounted while its closing animation plays
   const [mounted, setMounted] = useState(isOpen);
@@ -93,7 +100,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
       // 'agent' mode = full read + write access
-      const response = await processUserMessage(text, activeSpace, spaces, 'agent');
+      const response = await processUserMessage(text, activeSpace, spaces, 'agent', { confirmWrites });
       setMessages(prev => [...prev, response]);
     } catch (err) {
       console.error('[Viva AI] request failed', err);
@@ -104,6 +111,35 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  /** Confirm or cancel a change Viva has previewed. */
+  const resolvePending = async (msg: ChatMessage, confirm: boolean) => {
+    if (!msg.pending || msg.pending.state !== 'waiting') return;
+    const mark = (state: 'confirmed' | 'cancelled') =>
+      setMessages(prev => prev.map(m => (m.id === msg.id && m.pending ? { ...m, pending: { ...m.pending, state } } : m)));
+    if (!confirm) { mark('cancelled'); return; }
+    mark('confirmed');
+    setLoading(true);
+    try {
+      const response = await confirmAndRun(msg.pending.prompt, activeSpace, spaces);
+      setMessages(prev => [...prev, response]);
+    } catch (err) {
+      console.error('[Viva AI] confirmed action failed', err);
+      setMessages(prev => [...prev, { id: String(Date.now()), sender: 'assistant', text: '⚠️ **That did not work.** Nothing was changed.', timestamp: new Date() }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /** Put back what an action changed. */
+  const undo = async (msg: ChatMessage) => {
+    if (!msg.undo || msg.undo.state !== 'available') return;
+    const n = await undoAction(msg.undo.id);
+    setMessages(prev => [
+      ...prev.map(m => (m.id === msg.id && m.undo ? { ...m, undo: { ...m.undo, state: 'undone' as const } } : m)),
+      { id: String(Date.now()), sender: 'assistant', text: n === null ? '⚠️ I can no longer undo that one (it was too long ago, or the page was reloaded).' : `↩️ **Undone.** ${n} ticket${n === 1 ? '' : 's'} put back as they were.`, timestamp: new Date() },
+    ]);
   };
 
   // Auto-send a prompt handed in from elsewhere (e.g. the app launcher)
@@ -118,6 +154,9 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
   const saveSettings = () => {
     setSystemInstruction(instructionText);
     setGeminiApiKey(apiKeyInput.trim());
+    setAiProvider(provider);
+    setOpenAiConfig(oai);
+    setConfirmWrites(confirmWrites);
     setSaved(true);
     window.setTimeout(() => setSaved(false), 2000);
   };
@@ -183,7 +222,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-indigo-200/75 font-medium truncate mt-0.5">
-                  {apiKeyInput ? 'Gemini-powered' : 'Local engine'} · {spaces.length} spaces connected
+                  {{ local: 'Local engine', gemini: 'Gemini-powered', openai: `Model: ${oai.model}` }[provider]} · {spaces.length} spaces connected
                 </p>
               </div>
             </div>
@@ -255,10 +294,42 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                 />
               </div>
 
+              <div className="bg-white border border-jira-border rounded-2xl p-3 space-y-2">
+                <label className="flex items-start gap-2 text-xs cursor-pointer">
+                  <input type="checkbox" className="mt-0.5" checked={confirmWrites} onChange={e => setConfirmWritesState(e.target.checked)} />
+                  <span><span className="font-bold uppercase tracking-wide">Confirm before changing anything</span><br /><span className="text-jira-muted">Viva shows what it will do and waits for Confirm. Every change can be undone.</span></span>
+                </label>
+              </div>
+
+              <div className="bg-white border border-jira-border rounded-2xl p-3 space-y-2">
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                  <label htmlFor="viva-provider" className="text-xs font-bold uppercase tracking-wide">Model</label>
+                </div>
+                <select
+                  id="viva-provider"
+                  value={provider}
+                  onChange={e => setProvider(e.target.value as AiProvider)}
+                  className="w-full text-xs border border-gray-300 rounded-xl px-2.5 py-2 bg-white"
+                >
+                  <option value="local">Built-in engine (no network)</option>
+                  <option value="gemini">Google Gemini</option>
+                  <option value="openai">OpenAI-compatible server (Ollama, LM Studio, ...)</option>
+                </select>
+                {provider === 'openai' && (
+                  <div className="space-y-2">
+                    <input aria-label="Base URL" value={oai.baseUrl} onChange={e => setOai({ ...oai, baseUrl: e.target.value })} placeholder="http://localhost:11434/v1" className="w-full text-xs border border-gray-300 rounded-xl px-2.5 py-2" />
+                    <input aria-label="Model name" value={oai.model} onChange={e => setOai({ ...oai, model: e.target.value })} placeholder="llama3.1" className="w-full text-xs border border-gray-300 rounded-xl px-2.5 py-2" />
+                    <input aria-label="API key" type="password" value={oai.apiKey} onChange={e => setOai({ ...oai, apiKey: e.target.value })} placeholder="API key (not needed for a local server)" className="w-full text-xs border border-gray-300 rounded-xl px-2.5 py-2" />
+                  </div>
+                )}
+                <p className="text-[10px] text-jira-muted">Changes to tickets are always made by the built-in engine, so they can be previewed and undone. The model answers questions.</p>
+              </div>
+
               <div className="bg-white border border-jira-border rounded-2xl p-3">
                 <div className="flex items-center gap-1.5 mb-2">
                   <Key className="w-3.5 h-3.5 text-amber-500" />
-                  <label className="text-xs font-bold uppercase tracking-wide">Gemini API key (optional)</label>
+                  <label className="text-xs font-bold uppercase tracking-wide">Gemini API key (used when Google Gemini is the model)</label>
                 </div>
                 <div className="relative">
                   <input
@@ -310,6 +381,29 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                           )}
 
                           {renderMarkdown(msg.text)}
+
+                          {msg.pending && (
+                            <div className="mt-2.5 flex items-center gap-2" data-testid="viva-confirm">
+                              {msg.pending.state === 'waiting' ? (
+                                <>
+                                  <button type="button" onClick={() => resolvePending(msg, true)} className="px-3 py-1 bg-jira-blue text-white rounded-lg text-[11px] font-semibold cursor-pointer">Confirm</button>
+                                  <button type="button" onClick={() => resolvePending(msg, false)} className="px-3 py-1 bg-white border border-jira-border text-jira-text rounded-lg text-[11px] font-semibold cursor-pointer">Cancel</button>
+                                </>
+                              ) : (
+                                <span className="text-[11px] text-jira-muted">{msg.pending.state === 'confirmed' ? '✔ Confirmed' : '✖ Cancelled, nothing changed'}</span>
+                              )}
+                            </div>
+                          )}
+
+                          {msg.undo && (
+                            <div className="mt-2.5 flex items-center gap-2" data-testid="viva-undo">
+                              {msg.undo.state === 'available' ? (
+                                <button type="button" onClick={() => undo(msg)} className="px-3 py-1 bg-white border border-jira-border text-jira-text rounded-lg text-[11px] font-semibold flex items-center gap-1 cursor-pointer">
+                                  <RotateCcw className="w-3 h-3" /> Undo ({msg.undo.changed} ticket{msg.undo.changed === 1 ? '' : 's'})
+                                </button>
+                              ) : <span className="text-[11px] text-jira-muted">↩ Undone</span>}
+                            </div>
+                          )}
 
                           {msg.actionTaken?.issue && onSelectIssue && (
                             <div className="mt-2.5 p-2 bg-blue-50/70 rounded-xl border border-blue-200/60 flex items-center justify-between gap-2">

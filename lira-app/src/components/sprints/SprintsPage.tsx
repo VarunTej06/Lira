@@ -3,12 +3,28 @@ import { ChevronLeft, ChevronRight, CheckCircle2, ArrowRightCircle, CalendarCloc
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import {
-  allSprintKeys, burndown, completeSprint, currentSprintKey, daysLeft, getIssueSprint, getSprintMeta,
-  isDone, isSprintWork, issuesInSprint, moveIssuesToSprint, nextSprint, prevSprint, setSprintMeta,
+  allSprintKeys, burndown, currentSprintKey, daysLeft, getIssueSprint, getSprintMeta,
+  getSprintSpaces, setSprintSpaces, isDone, isSprintWork, issuesInSprint, moveIssuesToSprint, followingSprint, neighbourSprint, daysElapsed, sprintKindLabel, setSprintMeta,
   sprintDays, sprintEnd, sprintLabel, sprintName, sprintPhase, sprintStart, sprintStats,
 } from '../../utils/sprintUtils';
 import { PhaseBadge, SprintSelect, STATUS_META, TicketRow } from './sprintParts';
 import { StandupButton } from '../standup/StandupButton';
+import { SprintPlanning } from './SprintPlanning';
+import { SprintReports } from './SprintReports';
+import { EpicTimeline } from './EpicTimeline';
+import { CloseSprintModal } from './CloseSprintModal';
+import { RetroCard } from './RetroCard';
+import { EMPTY_FILTER, SprintFilter, type SprintFilterValue } from './SprintFilter';
+import { SprintSpacesPicker } from './SprintSpacesPicker';
+import { Modal } from '../common/Modal';
+
+type View = 'sprint' | 'planning' | 'reports' | 'epics';
+const VIEWS: { id: View; label: string }[] = [
+  { id: 'sprint', label: 'Sprint' },
+  { id: 'planning', label: 'Planning' },
+  { id: 'reports', label: 'Reports' },
+  { id: 'epics', label: 'Epics' },
+];
 
 interface SprintsPageProps {
   spaces: Space[];
@@ -40,10 +56,16 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
   const [goalDraft, setGoalDraft] = useState('');
   const [toast, setToast] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+  const [view, setView] = useState<View>('sprint');
+  const [closeOpen, setCloseOpen] = useState(false);
+  const [retroVersion, setRetroVersion] = useState(0);
+  const [filter, setFilter] = useState<SprintFilterValue>(EMPTY_FILTER);
+  const [spacesOpen, setSpacesOpen] = useState(false);
+  const [spacesDraft, setSpacesDraft] = useState<number[]>([]);
 
   useEffect(() => { if (lockedSpaceId) setScope(lockedSpaceId); }, [lockedSpaceId]);
   useEffect(() => { if (focusSprint) setSprint(focusSprint); }, [focusSprint]);
-  useEffect(() => { setSelected(new Set()); }, [sprint, scope]);
+  useEffect(() => { setSelected(new Set()); setFilter(EMPTY_FILTER); }, [sprint, scope]);
 
   const spaceById = useMemo(() => new Map(spaces.map(s => [s.id!, s])), [spaces]);
 
@@ -67,19 +89,18 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
   // Open tickets stranded in sprints that already ended
   const stranded = useMemo(
-    () => scoped.filter(i => !isDone(i) && getIssueSprint(i) < currentSprintKey()),
+    () => scoped.filter(i => !isDone(i) && sprintPhase(getIssueSprint(i)) === 'past'),
     [scoped]
   );
 
   const velocity = useMemo(() => {
-    const cur = currentSprintKey();
-    const last = keys.filter(k => k <= cur).slice(-6);
+    const last = keys.filter(k => sprintPhase(k) !== 'upcoming').slice(-6);
     const rows = last.map(k => {
       const l = issuesInSprint(scoped, k);
       return { key: k, ...sprintStats(l) };
     });
     const max = Math.max(1, ...rows.map(r => r.total));
-    const closed = rows.filter(r => r.key < cur && r.total > 0);
+    const closed = rows.filter(r => sprintPhase(r.key) === 'past' && r.total > 0);
     const avg = closed.length ? Math.round(closed.reduce((a, r) => a + r.done, 0) / closed.length) : 0;
     return { rows, max, avg };
   }, [keys, scoped]);
@@ -93,16 +114,17 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
       return next;
     });
 
+  // the status / space filter only narrows the ticket list below; the numbers above stay for the whole sprint
+  const visible = useMemo(
+    () => list.filter(i => (!filter.statuses.length || filter.statuses.includes(i.status?.toLowerCase())) && (!filter.spaceIds.length || filter.spaceIds.includes(i.spaceId))),
+    [list, filter],
+  );
+  const involved = getSprintSpaces(sprint);
+  const involvedNames = involved ? spaces.filter(s => involved.includes(s.id!)).map(s => s.name) : [];
   const selectedIssues = list.filter(i => selected.has(i.id!));
   const unfinished = list.filter(i => !isDone(i));
 
-  const handleComplete = async () => {
-    const target = nextSprint(sprint);
-    if (unfinished.length > 0 &&
-        !window.confirm(`Complete ${sprintName(sprint)}?\n\n${stats.done} done ticket(s) stay in this sprint.\n${unfinished.length} unfinished ticket(s) (backlog / to do / in progress) move to ${sprintName(target)}.`)) return;
-    const moved = await completeSprint(list, sprint, scope, target);
-    flash(moved ? `${moved} unfinished ticket${moved > 1 ? 's' : ''} carried over to ${sprintName(target)}` : `${sprintName(sprint)} completed — nothing to carry over`);
-  };
+  const handleComplete = () => setCloseOpen(true);
 
   const handleRescue = async () => {
     const moved = await moveIssuesToSprint(stranded, currentSprintKey());
@@ -117,7 +139,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
   const completed = !!meta.completedAt;
   const total = sprintDays(sprint);
-  const elapsed = phase === 'past' ? total : phase === 'upcoming' ? 0 : new Date().getDate();
+  const elapsed = daysElapsed(sprint);
 
   return (
     <div className="flex-1 overflow-y-auto bg-jira-bg">
@@ -132,7 +154,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               <CalendarClock className="w-5 h-5 text-jira-blue" />
               {lockedSpaceId ? `${spaceById.get(lockedSpaceId)?.name ?? 'Space'} sprints` : 'Sprints'}
             </h1>
-            <p className="text-xs text-jira-muted mt-0.5">Monthly sprints — every calendar month is one sprint.</p>
+            <p className="text-xs text-jira-muted mt-0.5">Sprints run monthly, weekly, bi-weekly or for a set number of days.</p>
           </div>
           <div className="flex items-center gap-2">
             {!lockedSpaceId && (
@@ -171,7 +193,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
         {/* Sprint timeline */}
         <div className="flex items-center gap-2">
-          <button onClick={() => setSprint(prevSprint(sprint))} className="p-1.5 rounded border border-jira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Previous sprint">
+          <button onClick={() => setSprint(neighbourSprint(sprint, keys, -1))} className="p-1.5 rounded border border-jira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Previous sprint">
             <ChevronLeft className="w-4 h-4" />
           </button>
           <div className="flex-1 flex gap-1.5 overflow-x-auto py-1">
@@ -196,7 +218,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               );
             })}
           </div>
-          <button onClick={() => setSprint(nextSprint(sprint))} className="p-1.5 rounded border border-jira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Next sprint">
+          <button onClick={() => setSprint(neighbourSprint(sprint, keys, 1))} className="p-1.5 rounded border border-jira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Next sprint">
             <ChevronRight className="w-4 h-4" />
           </button>
           {sprint !== currentSprintKey() && (
@@ -205,6 +227,19 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             </button>
           )}
         </div>
+
+        {/* Rollover prompt: this sprint has ended and still has unfinished tickets */}
+        {phase === 'past' && !meta.completedAt && unfinished.length > 0 && (
+          <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3" role="status" data-testid="rollover-prompt">
+            <ArrowRightCircle className="w-4 h-4 text-blue-600 flex-shrink-0" />
+            <p className="text-sm text-blue-900 flex-1">
+              {sprintName(sprint)} ended with <strong>{unfinished.length}</strong> unfinished ticket{unfinished.length > 1 ? 's' : ''}. Carry {unfinished.length > 1 ? 'them' : 'it'} over to {sprintName(followingSprint(sprint, keys))}?
+            </p>
+            <button onClick={handleComplete} className="text-xs font-medium px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">
+              Carry over and close
+            </button>
+          </div>
+        )}
 
         {/* Stranded banner */}
         {stranded.length > 0 && (
@@ -229,9 +264,13 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
                 {completed && <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-green-100 text-green-700">Closed</span>}
               </div>
               <p className="text-xs text-jira-muted mt-1">
-                {fmt(sprintStart(sprint))} – {fmt(sprintEnd(sprint))} · {total} days
+                {sprintKindLabel(sprint)} · {fmt(sprintStart(sprint))} – {fmt(sprintEnd(sprint))} · {total} days
                 {phase === 'active' && ` · ${daysLeft(sprint)} day${daysLeft(sprint) === 1 ? '' : 's'} left`}
                 {completed && meta.completedAt && ` · closed ${new Date(meta.completedAt).toLocaleDateString()}`}
+              </p>
+              <p className="text-xs text-jira-muted mt-1" data-testid="sprint-spaces">
+                Spaces: {involved ? involvedNames.join(', ') || `${involved.length} spaces` : 'all spaces'}
+                {' '}<button onClick={() => { setSpacesDraft(involved ?? []); setSpacesOpen(true); }} className="text-jira-blue hover:underline cursor-pointer">Edit</button>
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -242,11 +281,11 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               )}
               <button
                 onClick={handleComplete}
-                disabled={list.length === 0}
+                disabled={list.length === 0 && !completed}
                 className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-md bg-jira-blue text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                title={`Done tickets stay; unfinished tickets move to ${sprintName(nextSprint(sprint))}`}
+                title={completed ? 'Edit the retrospective' : `Close the sprint. Done tickets stay; unfinished tickets move to ${sprintName(followingSprint(sprint, keys))}`}
               >
-                <CheckCircle2 className="w-4 h-4" /> Complete sprint
+                <CheckCircle2 className="w-4 h-4" /> {completed ? 'Retrospective' : 'Complete sprint'}
               </button>
             </div>
           </div>
@@ -258,7 +297,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               value={goalDraft}
               onChange={e => setGoalDraft(e.target.value)}
               onBlur={() => setSprintMeta(scope, sprint, { goal: goalDraft })}
-              placeholder={`Sprint goal for ${sprintLabel(sprint)}… (what must be true by month end?)`}
+              placeholder={`Sprint goal for ${sprintLabel(sprint)}… (what must be true by the end?)`}
               className="flex-1 text-sm border border-transparent hover:border-jira-border focus:border-jira-blue rounded px-2 py-1.5 bg-transparent text-jira-text outline-none"
             />
           </div>
@@ -296,6 +335,37 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
           </div>
         </div>
 
+        {/* Views */}
+        <div className="flex gap-1 border-b border-jira-border" role="tablist" aria-label="Sprint views">
+          {VIEWS.map(v => (
+            <button
+              key={v.id}
+              role="tab"
+              aria-selected={view === v.id}
+              onClick={() => setView(v.id)}
+              className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 cursor-pointer transition-colors ${view === v.id ? 'border-jira-blue text-jira-blue' : 'border-transparent text-jira-muted hover:text-jira-text'}`}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+
+        {view === 'sprint' && (
+          <div className="flex items-center gap-2 -mt-2">
+            <SprintFilter spaces={involved ? spaces.filter(s => involved.includes(s.id!)) || spaces : spaces} value={filter} onChange={setFilter} />
+            {(filter.statuses.length > 0 || filter.spaceIds.length > 0) && (
+              <span className="text-xs text-jira-muted" data-testid="filter-count">Showing {visible.length} of {list.length} tickets</span>
+            )}
+          </div>
+        )}
+
+        {view === 'planning' && <SprintPlanning issues={issues} spaces={spaces} sprint={sprint} keys={keys} scope={scope} onIssueClick={onIssueClick} flash={flash} />}
+        {view === 'reports' && <SprintReports issues={issues} sprint={sprint} scope={scope} onIssueClick={onIssueClick} />}
+        {view === 'epics' && <EpicTimeline issues={issues} keys={keys} scope={scope} sprint={sprint} onIssueClick={onIssueClick} onPickSprint={k => { setSprint(k); setView('sprint'); }} />}
+
+        {view === 'sprint' && (<>
+        <RetroCard sprint={sprint} scope={scope} version={retroVersion} onEdit={() => setCloseOpen(true)} onChanged={() => setRetroVersion(v => v + 1)} />
+
         {/* Charts */}
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-white border border-jira-border rounded-lg p-4">
@@ -331,7 +401,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             <span className="text-sm font-medium">{selectedIssues.length} selected</span>
             <span className="text-xs opacity-80">Move to</span>
             <SprintSelect value="all" options={keys} onChange={v => v !== 'all' && handleBulkMove(v)} allLabel="Choose sprint…" className="text-jira-text" />
-            <button onClick={() => handleBulkMove(nextSprint(sprint))} className="flex items-center gap-1 text-xs px-2.5 py-1 rounded bg-white/20 hover:bg-white/30 cursor-pointer">
+            <button onClick={() => handleBulkMove(followingSprint(sprint, keys))} className="flex items-center gap-1 text-xs px-2.5 py-1 rounded bg-white/20 hover:bg-white/30 cursor-pointer">
               <ArrowRightCircle className="w-3.5 h-3.5" /> Next sprint
             </button>
             <button onClick={() => setSelected(new Set())} className="ml-auto text-xs underline cursor-pointer">Clear</button>
@@ -347,7 +417,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             </div>
           )}
           {GROUPS.map(status => {
-            const rows = list.filter(i => i.status?.toLowerCase() === status);
+            const rows = visible.filter(i => i.status?.toLowerCase() === status);
             if (rows.length === 0) return null;
             const sm = STATUS_META[status];
             const isCollapsed = collapsed.has(status);
@@ -389,7 +459,34 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             ))}
           </div>
         )}
+        </>)}
       </div>
+
+      <Modal isOpen={spacesOpen} onClose={() => setSpacesOpen(false)} title={`Spaces in ${sprintName(sprint)}`} size="md">
+        <div className="p-6 space-y-4">
+          <SprintSpacesPicker spaces={spaces} value={spacesDraft} onChange={setSpacesDraft} />
+          <p className="text-[11px] text-jira-muted">Tickets already in the sprint stay. This decides which spaces can add tickets from now on.</p>
+          <div className="flex justify-end gap-2">
+            <button onClick={() => setSpacesOpen(false)} className="text-sm px-3 py-1.5 rounded-lg border border-jira-border bg-white cursor-pointer">Cancel</button>
+            <button
+              onClick={() => { setSprintSpaces(sprint, spacesDraft.length && spacesDraft.length < spaces.length ? spacesDraft : null); setSpacesOpen(false); flash('Sprint spaces updated'); }}
+              className="text-sm px-3 py-1.5 rounded-lg bg-jira-blue text-white cursor-pointer"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <CloseSprintModal
+        isOpen={closeOpen}
+        onClose={() => setCloseOpen(false)}
+        sprint={sprint}
+        scope={scope}
+        list={list}
+        keys={keys}
+        onSaved={msg => { flash(msg); setRetroVersion(v => v + 1); }}
+      />
 
       {toast && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg shadow-lg z-50">{toast}</div>

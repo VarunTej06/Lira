@@ -75,7 +75,18 @@ Phases 1 and 2 make every later phase cheaper, so they should come first.
 
 ---
 
-## Phase 4: Sprint planning, rollover, retrospectives, reports
+## Phase 4: Sprint planning, rollover, retrospectives, reports (DONE)
+
+> Completed. On the sprint page there are four views: Sprint, Planning, Reports and Epics.
+> - **Sprint length.** Creating a sprint asks for the duration: Monthly, Weekly, Bi-weekly or a number of days (1 to 90). Weekly, bi-weekly and N-day sprints start on a date you pick and cannot overlap each other. Their key is the start date (`/sprints/2026-11-09`); their end date is kept in `lira_sprint_defs` in `data/sprints.json`. Monthly sprints work as before.
+> - **Planning.** Backlog on the left, sprint on the right; drag across or use + and minus. Story points committed against a team capacity you type in (or the average of the last closed sprints), with an over-commit warning.
+> - **Rollover.** A sprint that has ended with unfinished tickets shows "Carry them over?" on its page and on the sprints overview. Closing a sprint opens a dialog to pick the sprint to carry over to and to write the retrospective.
+> - **Retrospective.** Went well, didn't, and actions (tick them off later). Saved with the sprint.
+> - **Reports.** Burnup, cumulative flow, scope changes (added or removed after the first day), lead and cycle time. Export as Markdown, or PDF through the browser's print dialog.
+> - **resolvedAt.** Set whenever a ticket moves to Done (from any screen) and cleared if it is reopened. Every status change is also logged on the ticket (`statusLog`), which is what the cumulative flow and cycle time use. Tickets changed before this release have no log, so their charts use the resolved date only.
+> - **Epics.** A timeline of epics across the sprints with the ticket count in each.
+>
+> Not done: "Carry over" keeps all unfinished tickets together; choosing tickets one by one is done in Planning before closing.
 
 **Scope**
 - Planning view: backlog on the left, sprint on the right, drag and drop, running points total against team capacity, over-commit warning.
@@ -101,7 +112,17 @@ Phases 1 and 2 make every later phase cheaper, so they should come first.
 
 ---
 
-## Phase 6: Viva AI upgrades
+## Phase 6: Viva AI upgrades (DONE)
+
+> Completed.
+> - **Confirm and undo.** Viva explains a change first (move a ticket, add subtasks, create a ticket, plan a sprint) and waits for Confirm. After it runs, an Undo button puts every changed ticket back exactly as it was. Turn the confirmation off in Viva's settings if you prefer. Undo lasts until the page is reloaded.
+> - **Sprint-aware prompts.** "Plan next sprint from my backlog" (highest priority first, within the sprint's capacity, only spaces that work in that sprint), "Summarise this sprint", "Summarise next sprint".
+> - **Standup digest.** "Write my standup": done and started since the last working day, what is in progress, blockers.
+> - **Risk radar.** "Show the risk radar" or "which tickets are idle": sprints behind their time, over-committed sprints, tickets idle for 5 days or more, overdue tickets.
+> - **Suggestions while creating a ticket.** Possible duplicates, labels, a priority from urgency words, and the likely epic. Nothing is applied until you click a chip. Viva's create preview shows the same duplicate warning.
+> - **Model choice.** Built-in engine (default), Google Gemini, or any OpenAI-compatible server such as Ollama or LM Studio (base URL, model, key). Changes to tickets are always made by the built-in engine so they can be previewed and undone; the model answers questions.
+>
+> Not done: undo does not survive a reload; the suggestions are word-overlap based, not a language model.
 
 **Scope**
 - Preview and confirm before writes, with Undo for each action. Especially for bulk changes.

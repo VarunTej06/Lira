@@ -12,9 +12,12 @@ export interface ProjectRow { id: string; [field: string]: unknown }
 export interface SprintRow {
   id: string
   spaceId: number | 'all'
-  sprint: string // YYYY-MM
+  sprint: string // YYYY-MM (a month) or YYYY-MM-DD (a weekly / bi-weekly / N-day sprint starting that day)
   goal?: string
   completedAt?: string
+  start?: string
+  end?: string
+  kind?: string
   planned: boolean
 }
 export interface TeamRow {
@@ -52,6 +55,9 @@ export function projectStructured(local: Record<string, string>): Structured {
   }
   for (const sprint of parse<string[]>(local.lira_planned_sprints, [])) {
     if (/^\d{4}-\d{2}$/.test(sprint)) sprints.push({ id: `planned:${sprint}`, spaceId: 'all', sprint, planned: true })
+  }
+  for (const [sprint, def] of Object.entries(parse<Record<string, { start: string; end: string; kind: string }>>(local.lira_sprint_defs, {}))) {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(sprint) && def) sprints.push({ id: `custom:${sprint}`, spaceId: 'all', sprint, planned: true, start: def.start, end: def.end, kind: def.kind })
   }
 
   const teams: TeamRow[] = []

@@ -29,14 +29,14 @@ export const isMirroredKey = (key: string) => key.startsWith(MIRROR_PREFIX) && !
 export function fileForKey(key: string): StoreFileName {
   if (key === 'lira_projects' || key.startsWith('lira_project_settings_')) return 'projects'
   if (key === 'lira_roadmaps') return 'roadmaps'
-  if (key === 'lira_sprint_meta' || key === 'lira_planned_sprints' || key === 'lira_deleted_sprints') return 'sprints'
+  if (key === 'lira_sprint_meta' || key === 'lira_planned_sprints' || key === 'lira_deleted_sprints' || key === 'lira_sprint_defs') return 'sprints'
   if (key === 'lira_team_directory' || key.startsWith('lira_scope_team:')) return 'teams'
   if (key === 'lira_standups' || key === 'lira_standup_notes') return 'standups'
   if (
     key.startsWith('lira_wip_') || key.startsWith('lira_board_settings') || key.startsWith('lira_attachments_') ||
     key.startsWith('lira_docs_') || key.startsWith('lira_forms_')
   ) return 'board-config'
-  if (key === 'lira_gemini_api_key') return 'secrets'
+  if (key === 'lira_gemini_api_key' || key === 'lira_ai_api_key') return 'secrets'
   return 'settings'
 }
 

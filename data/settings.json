@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-06T02:58:34.875Z",
+  "entries": {
+    "lira_active_space_id": "16",
+    "lira_sidebar_collapsed": "false",
+    "lira_sidebar_customization": {
+      "apps": true,
+      "appsOrder": [
+        "assets",
+        "teams",
+        "goals",
+        "projects"
+      ],
+      "assets": false,
+      "calendar": false,
+      "dashboards": true,
+      "filters": true,
+      "forYou": true,
+      "goals": false,
+      "list": false,
+      "navOrder": [
+        "forYou",
+        "projects",
+        "spaces",
+        "recent",
+        "starred",
+        "apps",
+        "roadmaps",
+        "plans",
+        "filters",
+        "dashboards",
+        "list",
+        "calendar"
+      ],
+      "plans": true,
+      "projects": false,
+      "recent": true,
+      "roadmaps": true,
+      "spaces": true,
+      "starred": true,
+      "teams": false,
+      "visibility": {
+        "apps": true,
+        "assets": false,
+        "calendar": false,
+        "dashboards": true,
+        "filters": true,
+        "forYou": true,
+        "goals": false,
+        "list": false,
+        "plans": true,
+        "projects": false,
+        "recent": true,
+        "roadmaps": true,
+        "spaces": true,
+        "starred": true,
+        "teams": false
+      }
+    },
+    "lira_sidebar_pinned": [
+      "recent",
+      "apps",
+      "roadmaps",
+      "plans",
+      "filters",
+      "dashboards"
+    ],
+    "lira_theme": "dark"
+  }
+}

@@ -1,11 +1,16 @@
 import Dexie, { type Table } from 'dexie';
 import type { Issue } from '../types/issue';
 import type { Space, Column } from '../types/space';
+import type { ProjectRow, SprintRow, TeamRow, StandupRow } from '../services/structuredStore';
 
 export class LiraDatabase extends Dexie {
   spaces!: Table<Space, number>;
   issues!: Table<Issue, number>;
   columns!: Table<Column, string>;
+  projects!: Table<ProjectRow, string>;
+  sprints!: Table<SprintRow, string>;
+  teams!: Table<TeamRow, string>;
+  standups!: Table<StandupRow, string>;
 
   constructor() {
     super('LiraDB');
@@ -21,6 +26,14 @@ export class LiraDatabase extends Dexie {
       spaces: '++id, name, key, createdAt',
       issues: '++id, spaceId, key, status, priority, assignee, dueDate, rank, createdAt, updatedAt, [spaceId+status], parentId, epicId',
       columns: 'id, spaceId, order',
+    });
+
+    // Version 3: queryable copies of projects, sprint goals, teams and standups (see services/structuredStore.ts)
+    this.version(3).stores({
+      projects: 'id, key, name',
+      sprints: 'id, spaceId, sprint, planned',
+      teams: 'id, kind, owner',
+      standups: 'id, scopeId',
     });
   }
 }

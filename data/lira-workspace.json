@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-05T15:22:48.733Z",
+  "savedAt": "2026-11-06T02:58:25.115Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -98,6 +98,16 @@
       "id": 14,
       "issueCount": 18,
       "file": "spaces/AI.json"
+    },
+    {
+      "name": "Test",
+      "key": "TEST",
+      "icon": "🚀",
+      "color": "#36B37E",
+      "description": "Test",
+      "createdAt": "2026-11-06T02:58:24.584Z",
+      "updatedAt": "2026-11-06T02:58:24.584Z",
+      "id": 16
     }
   ],
   "issues": [

@@ -40,3 +40,6 @@ desktop.ini
 *.sln
 *.sw?
 
+
+# Secrets written by the disk store (API keys) - never commit
+data/private/

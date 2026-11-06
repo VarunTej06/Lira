@@ -3,9 +3,15 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import './theme-dark.css'
 import App from './App.tsx'
+import { initKvMirror, onKvChange } from './services/kvMirror'
+import { syncStructured } from './services/structuredStore'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// Restore projects, sprints, teams, standups and preferences from data/*.json before anything reads them.
+onKvChange(() => { void syncStructured() })
+initKvMirror().finally(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
+})

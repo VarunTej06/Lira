@@ -263,7 +263,7 @@ export function refineUserPrompt(
   }
 
   // 7. Create Issue Intent Check
-  const createMatch = q.match(/(?:create|add|new)\s+(task|bug|epic)?\s*(?:called|named|titled|for|:)?\s*["']?([^"'\n]+)["']?/i);
+  const createMatch = q.match(/(?:create|add|new)\s+(?:an?\s+)?(task|bug|epic)?\s*(?:called|named|titled|for|:)?\s*["']?([^"'\n]+)["']?/i);
   if (createMatch && (q.includes('create') || q.includes('add task') || q.includes('new task') || q.includes('add bug') || q.includes('new bug') || q.includes('add epic'))) {
     const rawType = (createMatch[1] || 'task').toLowerCase();
     let title = createMatch[2]?.trim() || '';

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06T04:18:32.343Z",
+  "updatedAt": "2026-11-06T12:37:20.036Z",
   "roadmap": {
     "createdAt": "2026-11-06T00:00:00.000Z",
     "description": "The November plan for Lira, taken from ROADMAP.md: each item takes about two days and everything finishes in November. December gets its own roadmap.",
@@ -50,27 +50,27 @@
       {
         "children": [
           {
-            "done": false,
+            "done": true,
             "id": "p2a",
             "title": "Add a router with real paths (/sprints/2026-11, /space/CERT/board)"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p2b",
             "title": "Remove the duplicated global-tab lists; derive sidebar highlight from the route"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p2c",
             "title": "Split ProjectDetailView, TopNavigation and aiAgentService (under ~500 lines each)"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p2d",
             "title": "Fix the nested <button> DOM warning"
           },
           {
-            "done": false,
+            "done": true,
             "id": "p2e",
             "title": "Add an error boundary per page"
           }
@@ -83,9 +83,9 @@
         "id": "p2",
         "lane": "Foundation",
         "owner": "VY",
-        "progress": 0,
+        "progress": 100,
         "start": "2026-11-07",
-        "status": "planned",
+        "status": "done",
         "title": "Phase 2: Routing and file splitting",
         "epicKey": "LIRA-61",
         "taskKey": "LIRA-70"
@@ -416,7 +416,7 @@
     "name": "Lira Platform Roadmap",
     "projectKey": "LIRA",
     "spaceKey": "LIRA",
-    "updatedAt": "2026-11-06T03:56:04.408Z",
+    "updatedAt": "2026-11-06T12:37:20.036Z",
     "scheduleVersion": 2,
     "pendingTicketSync": false
   }

@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import './theme-dark.css'
 import App from './App.tsx'
@@ -13,7 +14,9 @@ initKvMirror().finally(() => {
   applyAccent(loadAccent()) // the saved accent colour, before the first paint of the app
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
-      <App />
+      <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <App />
+      </BrowserRouter>
     </StrictMode>,
   )
 })

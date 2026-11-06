@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-06T04:18:32.384Z",
+  "savedAt": "2026-11-06T12:37:20.036Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -9241,7 +9241,7 @@
       "title": "Phase 2: Routing and file splitting",
       "description": "Real URLs, back/forward and deep links. Split the very large components so later work is cheaper.",
       "type": "epic",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -9262,18 +9262,29 @@
           "authorInitials": "VY",
           "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
           "createdAt": "2026-11-06T03:49:20.083Z"
+        },
+        {
+          "id": "p2done-dh4ayxsw",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (Phase 2 complete)",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-06T12:37:20.036Z"
         }
       ],
       "attachments": [],
       "linkedIssues": [],
       "rank": 1793936960083,
       "createdAt": "2026-11-06T03:49:20.083Z",
-      "updatedAt": "2026-11-06T04:18:29.341Z",
+      "updatedAt": "2026-11-06T12:37:20.036Z",
       "watchers": [
         "VY"
       ],
       "id": 164,
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T12:37:20.036Z"
     },
     {
       "spaceId": 6,
@@ -9638,7 +9649,7 @@
       "title": "Deliver: Phase 2: Routing and file splitting",
       "description": "Checklist for the roadmap item \"Phase 2: Routing and file splitting\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
       "type": "task",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -9653,31 +9664,31 @@
         {
           "id": "p2a",
           "title": "Add a router with real paths (/sprints/2026-11, /space/CERT/board)",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:03.944Z"
         },
         {
           "id": "p2b",
           "title": "Remove the duplicated global-tab lists; derive sidebar highlight from the route",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:03.944Z"
         },
         {
           "id": "p2c",
           "title": "Split ProjectDetailView, TopNavigation and aiAgentService (under ~500 lines each)",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:03.944Z"
         },
         {
           "id": "p2d",
           "title": "Fix the nested <button> DOM warning",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:03.944Z"
         },
         {
           "id": "p2e",
           "title": "Add an error boundary per page",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:03.944Z"
         }
       ],
@@ -9690,6 +9701,16 @@
           "authorInitials": "VY",
           "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
           "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2done-adtb58aj",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (Phase 2 complete)",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-06T12:37:20.036Z"
         }
       ],
       "attachments": [],
@@ -9697,11 +9718,12 @@
       "sprint": "2026-11",
       "rank": 1793937363944,
       "createdAt": "2026-11-06T03:56:03.944Z",
-      "updatedAt": "2026-11-06T04:18:29.471Z",
+      "updatedAt": "2026-11-06T12:37:20.036Z",
       "watchers": [
         "VY"
       ],
-      "id": 173
+      "id": 173,
+      "resolvedAt": "2026-11-06T12:37:20.036Z"
     },
     {
       "spaceId": 6,

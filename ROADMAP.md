@@ -41,7 +41,9 @@ Phases 1 and 2 make every later phase cheaper, so they should come first.
 
 ---
 
-## Phase 2: Routing and file splitting
+## Phase 2: Routing and file splitting (DONE)
+
+> Completed. React Router with the URL scheme in SETUP.md section 7b; one list of pages (`src/routes.ts`) instead of several copies; an error boundary around every page; the nested-button warning fixed. Every component is now at most about 500 lines (the sample-data file `src/db/seedData.ts` is the one exception). The large files were split into a small parent plus focused parts in a folder next to it, for example `components/projects/detail/`, `components/layout/sidebar/`, `services/ai/`, `utils/roadmap/`. Existing import paths still work.
 
 **Problem.** Navigation is a set of `activeTab` strings in `App.tsx` with duplicated "global tabs" lists. There are no URLs, no back button and no deep links. Several files are very large (`ProjectDetailView`, `TopNavigation`, `aiAgentService`).
 

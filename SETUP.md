@@ -97,7 +97,7 @@ All commands run from `lira-app/`.
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Starts the dev server with hot reload and the disk-sync API |
+| `npm run dev` | Starts the dev server with hot reload and the disk-sync API. **Restart it after switching branches or pulling changes** that touch `tailwind.config.js` (Tailwind reads its config once at start) |
 | `npm run build` | Type-checks (`tsc -b`) then builds to `lira-app/dist/` |
 | `npm run preview` | Serves the built `dist/` for a quick check |
 | `npm run lint` | Runs Oxlint |
@@ -136,6 +136,27 @@ How it works:
 - Disk saving needs `npm run dev`. Without it the app still works using browser storage only.
 
 Committing: ticket and settings files are normal repo files. Commit them when you want to share workspace state, or run `git checkout -- data/` before a code-only commit. Do not commit `data/private/`.
+
+---
+
+## 7b. Pages and URLs
+
+Every page has its own address, so refresh, Back/Forward and shared links work.
+
+| URL | Page |
+|---|---|
+| `/for-you` | For you |
+| `/space/<KEY>/<tab>` | A space: `summary`, `board`, `list`, `calendar`, `sprints`, `capacity`, `forms`, `documents`, `attachments`, `reports` |
+| `/projects`, `/projects/<id>` | Projects, one project |
+| `/sprints`, `/sprints/2026-11` | Sprints overview, one sprint |
+| `/tickets` | All tickets |
+| `/roadmaps`, `/roadmaps/<id>` | Roadmaps, one roadmap |
+| `/filters` | Filters |
+| `?issue=LIRA-12` | Added to any page: opens that ticket's popup, for example `/roadmaps/rm-lira?issue=LIRA-61` |
+
+The route table is in `lira-app/src/routes.ts`. Unknown spaces or projects show a "not found" page instead of a blank screen.
+
+If you add a page, add it to `routes.ts` and to the `<Routes>` in `App.tsx`.
 
 ---
 

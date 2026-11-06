@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06T05:25:00.724Z",
+  "updatedAt": "2026-11-06T11:44:33.282Z",
   "entries": {
     "lira_accent": "#059669",
     "lira_active_space_id": "6",
@@ -11,7 +11,7 @@
       "view": "timeline",
       "zoom": "weeks"
     },
-    "lira_sidebar_collapsed": "false",
+    "lira_sidebar_collapsed": "true",
     "lira_sidebar_customization": {
       "navOrder": [
         "forYou",

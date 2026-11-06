@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ChevronLeft, ChevronRight, Plus,
   Users, Folder, Settings,
@@ -122,7 +123,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   useEffect(() => {
     if (!hiddenHeaderMenuOpen) return;
     const handleClick = (e: MouseEvent) => {
-      if (hiddenMenuRef.current && !hiddenMenuRef.current.contains(e.target as Node)) {
+      const t = e.target as Element;
+      if (hiddenMenuRef.current && !hiddenMenuRef.current.contains(t) && !t.closest?.('[data-floating]')) {
         setHiddenHeaderMenuOpen(false);
       }
     };
@@ -363,6 +365,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                       open={rowMenu === `project:${p.id}`}
                       onToggle={() => setRowMenu(rowMenu === `project:${p.id}` ? null : `project:${p.id}`)}
                       label="Project actions"
+                      menuKey={`project:${p.id}`}
                     >
                       <ContextItem icon={<FolderKanban className="w-3.5 h-3.5 text-violet-400" />} label="Open project" onClick={() => { setRowMenu(null); onSelectProject?.(p); }} />
                       <div className="border-t border-white/10 my-1" />
@@ -428,6 +431,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                     open={rowMenu === `sprint:${k}`}
                     onToggle={() => setRowMenu(rowMenu === `sprint:${k}` ? null : `sprint:${k}`)}
                     label="Sprint actions"
+                    menuKey={`sprint:${k}`}
                   >
                     <ContextItem icon={<CalendarClock className="w-3.5 h-3.5 text-teal-400" />} label="Open sprint" onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} />
                     <div className="border-t border-white/10 my-1" />
@@ -484,8 +488,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </button>
 
           {/* Hidden Spaces Header 3-Dots Menu */}
-          <div className="relative" ref={hiddenMenuRef}>
+          <div className="relative" ref={hiddenMenuRef} data-menu-root="hidden-header">
             <button
+              data-menu-trigger
               onClick={(e) => {
                 e.stopPropagation();
                 setHiddenHeaderMenuOpen(!hiddenHeaderMenuOpen);
@@ -497,11 +502,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             </button>
 
             {hiddenHeaderMenuOpen && (
-              <div
-                className="absolute right-0 z-50 bg-[#1D2939] border border-white/10 rounded-lg shadow-xl py-1 min-w-[190px] animate-scale-in"
-                style={{ top: '100%', marginTop: 2 }}
-                onClick={(e) => e.stopPropagation()}
-              >
+              <FloatingMenu menuRoot="hidden-header" onClose={() => setHiddenHeaderMenuOpen(false)} className="min-w-[190px]">
                 <ContextItem
                   icon={<Eye className="w-3.5 h-3.5 text-blue-400" />}
                   label="Unhide all spaces"
@@ -521,7 +522,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                     if (target) onEditSpace?.(target);
                   }}
                 />
-              </div>
+              </FloatingMenu>
             )}
           </div>
         </div>
@@ -878,6 +879,7 @@ const SpaceRow: React.FC<SpaceRowProps> = ({
 
       {/* Context menu trigger */}
       <button
+        data-menu-trigger
         onClick={e => { e.stopPropagation(); onMenuOpen(); }}
         className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-white/20 text-white/50 hover:text-white transition-all flex-shrink-0 cursor-pointer"
         title="Space actions"
@@ -888,11 +890,7 @@ const SpaceRow: React.FC<SpaceRowProps> = ({
 
     {/* Context menu */}
     {menuOpen && (
-      <div
-        className="absolute left-4 z-50 bg-[#1D2939] border border-white/10 rounded-lg shadow-xl py-1 min-w-[220px] animate-scale-in"
-        style={{ top: '100%', marginTop: 2 }}
-        onClick={e => e.stopPropagation()}
-      >
+      <FloatingMenu menuRoot={`space:${space.id}`} onClose={onMenuOpen} className="min-w-[220px]">
         <ContextItem icon={<Star className="w-3.5 h-3.5" />} label={starred ? 'Remove from starred' : 'Add to starred'} onClick={onStar} />
         <ContextItem icon={<Edit3 className="w-3.5 h-3.5" />} label="Space settings" onClick={onEdit} />
         <ContextItem icon={<Palette className="w-3.5 h-3.5" />} label="Set space background" onClick={() => {}} />
@@ -920,15 +918,61 @@ const SpaceRow: React.FC<SpaceRowProps> = ({
             <span>Business space · Team-managed</span>
           </div>
         </div>
-      </div>
+      </FloatingMenu>
     )}
   </div>
 );
 
+/**
+ * A dropdown drawn in a floating layer above everything (not inside the sidebar, whose scrolling panel would clip it).
+ * It opens under its "..." button, right-aligned to it, flips above the button when there is no room below, and always
+ * stays fully inside the window. It closes when the sidebar or the page scrolls or the window is resized.
+ */
+const FloatingMenu: React.FC<{ menuRoot: string; onClose: () => void; className?: string; children: React.ReactNode }> = ({ menuRoot, onClose, className = '', children }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+
+  useLayoutEffect(() => {
+    const menu = ref.current;
+    const anchor = document.querySelector<HTMLElement>(`[data-menu-root="${menuRoot}"]:not([data-floating]) [data-menu-trigger]`);
+    if (!menu || !anchor) return;
+    const a = anchor.getBoundingClientRect();
+    const m = menu.getBoundingClientRect();
+    const gap = 4;
+    const margin = 8;
+    let top = a.bottom + gap;
+    if (top + m.height > window.innerHeight - margin) top = Math.max(margin, a.top - gap - m.height); // no room below: open upwards
+    const left = Math.min(Math.max(margin, a.right - m.width), window.innerWidth - m.width - margin);
+    setPos({ top, left });
+  }, [menuRoot, children]);
+
+  useEffect(() => {
+    const close = (e: Event) => { if (!ref.current?.contains(e.target as Node)) onClose(); };
+    window.addEventListener('scroll', close, true);
+    window.addEventListener('resize', onClose);
+    return () => { window.removeEventListener('scroll', close, true); window.removeEventListener('resize', onClose); };
+  }, [onClose]);
+
+  return createPortal(
+    <div
+      ref={ref}
+      data-menu-root={menuRoot}
+      data-floating
+      className={`bg-[#1D2939] border border-white/10 rounded-lg shadow-2xl py-1 max-h-[calc(100vh-16px)] overflow-y-auto ${pos ? 'animate-scale-in' : ''} ${className}`}
+      style={{ position: 'fixed', top: pos?.top ?? 0, left: pos?.left ?? 0, zIndex: 1000, visibility: pos ? 'visible' : 'hidden' }}
+      onClick={e => e.stopPropagation()}
+    >
+      {children}
+    </div>,
+    document.body,
+  );
+};
+
 /** The "..." button that appears when you hover a project or sprint row, with its dropdown. */
-const RowMenuButton: React.FC<{ open: boolean; onToggle: () => void; label: string; children: React.ReactNode }> = ({ open, onToggle, label, children }) => (
+const RowMenuButton: React.FC<{ open: boolean; onToggle: () => void; label: string; menuKey: string; children: React.ReactNode }> = ({ open, onToggle, label, menuKey, children }) => (
   <>
     <button
+      data-menu-trigger
       onClick={e => { e.stopPropagation(); onToggle(); }}
       className={`absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-white/20 text-white/50 hover:text-white transition-all cursor-pointer ${open ? 'opacity-100 bg-white/15 text-white' : 'opacity-0 group-hover:opacity-100'}`}
       title={label}
@@ -938,9 +982,9 @@ const RowMenuButton: React.FC<{ open: boolean; onToggle: () => void; label: stri
       <MoreHorizontal className="w-3.5 h-3.5" />
     </button>
     {open && (
-      <div className="absolute right-1 z-50 bg-[#1D2939] border border-white/10 rounded-lg shadow-xl py-1 min-w-[190px] animate-scale-in" style={{ top: '100%', marginTop: 2 }} onClick={e => e.stopPropagation()}>
+      <FloatingMenu menuRoot={menuKey} onClose={onToggle} className="min-w-[190px]">
         {children}
-      </div>
+      </FloatingMenu>
     )}
   </>
 );

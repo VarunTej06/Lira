@@ -10,7 +10,7 @@
 [![Storage](https://img.shields.io/badge/Storage-JSON_files_in_data/-emerald.svg)](./data/)
 [![Tests](https://img.shields.io/badge/tests-294_passing-brightgreen.svg)](#-tests)
 
-**Documents:** [SETUP.md](SETUP.md) (install, run, data, URLs, tablet and phone) · [ROADMAP.md](ROADMAP.md) (what is done and what is next) · [SECURITY_REPORT.md](SECURITY_REPORT.md) (20-point security check) · [Prompts and Architectures/](Prompts%20and%20Architectures/) (design documents)
+**Documents:** [SETUP.md](SETUP.md) (install, run, data, URLs, tablet and phone) · [ROADMAP.md](ROADMAP.md) (what is done and what is next) · [SECURITY_REPORT.md](SECURITY_REPORT.md) (20-point security check) · [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (plan for a hosted, multi-user edition on Azure) · [Prompts and Architectures/](Prompts%20and%20Architectures/) (design documents)
 
 ---
 

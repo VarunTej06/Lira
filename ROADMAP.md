@@ -10,7 +10,7 @@ Build order for the versions of Lira. Pick a phase number to start and it will b
 | 4 | Sprint planning, rollover, retros, reports | Agile | Large | **Done** |
 | 5 | Command palette, bulk edit, saved filters | Productivity | Medium | Not started |
 | 6 | Viva AI: confirm-and-undo, sprint-aware prompts | AI | Medium | **Done** |
-| 7 | Decide on multi-user | Architecture | Decision, then Very large | Deferred: single-user and multi-user will live on separate branches |
+| 7 | Decide on multi-user | Architecture | Decision, then Very large | Being planned: see [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (one repo with a shared core and two editions, hosted on Azure) |
 
 Phases 1 and 2 make every later phase cheaper, so they came first.
 

@@ -14,7 +14,7 @@ export function IssueMain(s: IssueDetailState) {
   return (
     <>
           {/* ── LEFT: Main content ── */}
-          <div className="flex-1 overflow-y-auto min-w-0 px-6 pt-4 pb-10 space-y-5">
+          <div className="md:flex-1 md:overflow-y-auto min-w-0 px-4 md:px-6 pt-4 pb-10 space-y-5">
 
             {/* Quick action bar */}
             <div className="flex items-center gap-2">

@@ -124,7 +124,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       />
 
       {/* Lira Logo + Brand */}
-      <div className="flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200 hover:scale-[1.04]">
+      <div className="flex-shrink-0 flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200 hover:scale-[1.04]">
         <img
           src="/lira-logo.png"
           alt="Lira Logo"

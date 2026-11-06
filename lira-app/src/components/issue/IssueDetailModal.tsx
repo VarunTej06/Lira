@@ -28,7 +28,7 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = (props) => {
         {/* Status colour banner */}
         <div className="h-1.5 w-full flex-shrink-0" style={{ backgroundColor: s.bannerColor }} />
         <IssueHeader {...s} />
-        <div className="flex flex-1 overflow-hidden min-h-0">
+        <div className="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden min-h-0">
           <IssueMain {...s} />
           <IssueSidebar {...s} />
         </div>

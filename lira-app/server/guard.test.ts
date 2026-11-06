@@ -113,3 +113,81 @@ describe('request size', () => {
     await expect(readBody(Readable.from([Buffer.alloc(200)]) as never, 100)).rejects.toThrow('too large')
   })
 })
+
+import { isAllowedHost, isLoopbackAddress, LOCKED_PAGE, lanGate, loadLanToken } from './guard.ts'
+
+describe('network access (tablet and phone)', () => {
+  const lanReq = (headers: Record<string, string>, method = 'GET') => ({ method, headers })
+
+  it('is off unless switched on', () => {
+    expect(checkApiRequest(lanReq({ host: '192.168.0.131:5173' })).ok).toBe(false)
+    expect(checkApiRequest(lanReq({ host: '192.168.0.131:5173' }), { lan: true }).ok).toBe(true)
+  })
+
+  it('accepts only addresses from your own network, never a web name', () => {
+    for (const h of ['192.168.0.131', '10.0.0.7', '172.16.5.9', '172.31.255.1', 'my-pc.local', 'localhost']) expect(isAllowedHost(h, true)).toBe(true)
+    for (const h of ['8.8.8.8', '172.32.0.1', '192.169.0.1', 'evil.example', '192.168.0.1.evil.example', 'evil.local.example']) expect(isAllowedHost(h, true)).toBe(false)
+    expect(isAllowedHost('192.168.0.131', false)).toBe(false)
+  })
+
+  it('the page and the address it came from must agree', () => {
+    const ok = lanReq({ host: '192.168.0.131:5173', origin: 'http://192.168.0.131:5173', 'sec-fetch-site': 'same-origin' })
+    expect(checkApiRequest(ok, { lan: true }).ok).toBe(true)
+    const other = lanReq({ host: '192.168.0.131:5173', origin: 'http://192.168.0.50:5173' })
+    expect(checkApiRequest(other, { lan: true }).ok).toBe(false) // a different device's page
+    expect(checkApiRequest(lanReq({ host: '192.168.0.131:5173', origin: 'https://evil.example' }), { lan: true }).ok).toBe(false)
+  })
+
+  it('knows which connections come from this computer', () => {
+    expect(isLoopbackAddress('127.0.0.1')).toBe(true)
+    expect(isLoopbackAddress('::1')).toBe(true)
+    expect(isLoopbackAddress('::ffff:127.0.0.1')).toBe(true)
+    expect(isLoopbackAddress('192.168.0.50')).toBe(false)
+    expect(isLoopbackAddress('::ffff:192.168.0.50')).toBe(false)
+  })
+
+  const token = 'a'.repeat(32)
+  it('this computer never needs the link', () => {
+    expect(lanGate({ url: '/', remoteAddress: '127.0.0.1', token }).action).toBe('allow')
+  })
+  it('not even when it opens Lira by its own network address', () => {
+    const own = Object.values(os.networkInterfaces()).flat().find(i => i && i.family === 'IPv4' && !i.internal)?.address
+    if (own) {
+      expect(lanGate({ url: '/', remoteAddress: own, token }).action).toBe('allow')
+      expect(lanGate({ url: '/', remoteAddress: '::ffff:' + own, token }).action).toBe('allow')
+    }
+  })
+  it('the page for a device without the link explains what to do and holds no secret', () => {
+    expect(LOCKED_PAGE).toContain('private link')
+    expect(LOCKED_PAGE).toContain('Other devices')
+    expect(LOCKED_PAGE).not.toMatch(/[a-f0-9]{32}/)
+  })
+  it('another device without the link is turned away', () => {
+    expect(lanGate({ url: '/', remoteAddress: '192.168.0.50', token }).action).toBe('deny')
+    expect(lanGate({ url: '/api/data', remoteAddress: '192.168.0.50', token, cookie: 'lira_access=wrong' }).action).toBe('deny')
+    expect(lanGate({ url: '/?key=' + 'b'.repeat(32), remoteAddress: '192.168.0.50', token }).action).toBe('deny')
+    expect(lanGate({ url: '/?key=short', remoteAddress: '192.168.0.50', token }).action).toBe('deny')
+  })
+  it('the right link logs the device in and removes the secret from the address', () => {
+    const r = lanGate({ url: `/sprints/2026-11?key=${token}&x=1`, remoteAddress: '192.168.0.50', token })
+    expect(r.action).toBe('login')
+    if (r.action === 'login') {
+      expect(r.redirect).toBe('/sprints/2026-11?x=1')
+      expect(r.cookie).toContain(`lira_access=${token}`)
+      expect(r.cookie).toMatch(/HttpOnly/)
+      expect(r.cookie).toMatch(/SameSite=Strict/)
+    }
+  })
+  it('after that the cookie is enough', () => {
+    expect(lanGate({ url: '/api/data', remoteAddress: '192.168.0.50', token, cookie: `theme=dark; lira_access=${token}` }).action).toBe('allow')
+  })
+
+  it('the link secret is created once and kept', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lira-lan-'))
+    try {
+      const a = loadLanToken(dir)
+      expect(a).toMatch(/^[a-f0-9]{32}$/)
+      expect(loadLanToken(dir)).toBe(a)
+    } finally { fs.rmSync(dir, { recursive: true, force: true }) }
+  })
+})

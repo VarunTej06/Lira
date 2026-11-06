@@ -10,7 +10,7 @@ export function IssueHeader(s: IssueDetailState) {
   return (
     <>
         {/* ── HEADER ── */}
-        <div className="flex items-center justify-between px-5 py-2.5 border-b border-jira-border flex-shrink-0 bg-white">
+        <div className="flex flex-wrap items-center justify-between gap-y-1 px-3 md:px-5 py-2.5 border-b border-jira-border flex-shrink-0 bg-white">
           {/* Left: breadcrumb */}
           <div className="flex items-center gap-1.5 min-w-0">
             {resolvedParent && (

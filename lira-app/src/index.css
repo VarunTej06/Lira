@@ -215,3 +215,13 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-sidebar-in { animation: none !important; }
 }
+
+/* Touch screens have no hover, so anything that only appears on hover (row menus, quick actions) is always shown there. */
+@media (hover: none) {
+  .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+  [data-menu-trigger] {
+    opacity: 1 !important;
+  }
+}

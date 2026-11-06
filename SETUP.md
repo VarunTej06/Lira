@@ -215,3 +215,18 @@ Tests cover the sprint logic, standup and invite builders, AI intent parsing, an
 ## Animations
 
 Motion uses `framer-motion`, set up in one file: `src/components/common/motion.tsx` (springs, dialog / menu / toast animations, count-up numbers, growing bars). Confetti is in `components/common/Confetti.tsx`; call `celebrate()` from `utils/celebrate.ts` to trigger it (it fires when a ticket reaches Done and when a sprint is closed). Use those pieces for anything new so it feels the same everywhere. People who ask their system for reduced motion get no movement, no count-up and no confetti.
+
+## Use Lira on a tablet or phone (same Wi-Fi)
+
+Lira runs on your computer and normally only that computer can open it. To let your own tablet or phone in:
+
+1. Start it with `npm run dev:lan` (in `lira-app`) instead of `npm run dev`.
+2. On the computer, open **Settings, Other devices**. It shows the private link and a QR code (the same link is printed in the terminal). Scan the code with the tablet or phone camera, or open the link once. After that the device is remembered; you can bookmark the plain address without the `?key=...` part. Opening the plain address on a device that has never used the link shows a page that says what to do.
+3. If the page does not load, Windows Firewall is probably blocking it. Set the Wi-Fi network to **Private** (Settings, Network and internet, Wi-Fi, your network, Private network), or allow Node.js through the firewall when Windows asks.
+
+Good to know:
+- The link is a password. Anyone with it, on your Wi-Fi, can read and change your tickets. Do not use this on public Wi-Fi. To cancel every device, delete `data/private/lan-token` and restart.
+- The computer must be on and running Lira. Your router may give the computer a different address after a restart; reserve its address in the router, or use the name `YOURPC.local`.
+- Every device keeps its own copy in its browser and saves to the computer's `data/` folder. It is not live: if two devices change tickets at once, the one that saves last wins. Refresh a device to see what another one saved.
+- Your API key is never sent to other devices, and they cannot change it.
+- On a phone or a tablet held upright the left panel becomes a menu: tap the round button at the bottom left. On a phone, search is the magnifier button in the top bar. Anything that only showed on hover (such as the "..." menus) is always visible on touch screens.

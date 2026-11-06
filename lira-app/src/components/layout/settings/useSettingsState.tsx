@@ -3,7 +3,7 @@ import { loadAccent, saveAccent } from '../../../utils/accent';
 import { saveToDiskNow, initLocalDiskSync, subscribeToSyncStatus } from '../../../services/localDiskSync';
 import { exportBackup, importBackup } from '../../../db/storageService';
 
-export type SettingsSection = 'appearance' | 'backup' | 'profile' | 'general' | 'notifications';
+export type SettingsSection = 'appearance' | 'backup' | 'profile' | 'general' | 'notifications' | 'devices';
 
 export interface SettingsModalProps {
   isOpen: boolean;

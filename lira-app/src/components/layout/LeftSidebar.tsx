@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Menu } from 'lucide-react';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { CustomiseSidebarModal } from './CustomiseSidebarModal';
 import { useSidebarState, type LeftSidebarProps } from './sidebar/useSidebarState';
 import { CollapsedRail } from './sidebar/CollapsedRail';
@@ -13,7 +16,19 @@ import { SidebarFooter } from './sidebar/SidebarFooter';
 
 /** The floating left panel: navigation, spaces, projects, sprints (in the order set in "Customise sidebar"). */
 export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
-  const s = useSidebarState(props);
+  // On a phone the sidebar is a drawer: closed until you tap the menu button, over the page when open.
+  const phone = useMediaQuery('(max-width: 1023px)');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const location = useLocation();
+  useEffect(() => { setDrawerOpen(false); }, [location.pathname, location.search]); // going somewhere closes it
+  useEffect(() => {
+    if (!phone || !drawerOpen) return;
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setDrawerOpen(false); };
+    document.addEventListener('keydown', esc);
+    return () => document.removeEventListener('keydown', esc);
+  }, [phone, drawerOpen]);
+
+  const s = useSidebarState(phone ? { ...props, sidebarCollapsed: false, setSidebarCollapsed: (c: boolean) => { if (c) setDrawerOpen(false); } } : props);
   const { isCollapsed, panelRef, indicator, indicatorAnimated, visibleSectionKeys, showCustomiseModal, setShowCustomiseModal, handleSaveConfig } = s;
 
   // Collapsible blocks below the navigation; shown in the order chosen in the sidebar settings
@@ -24,10 +39,25 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
     sec_hidden: <HiddenSpacesSection {...s} />,
   };
 
+  if (phone && !drawerOpen) {
+    return (
+      <button
+        onClick={() => setDrawerOpen(true)}
+        aria-label="Open menu"
+        data-testid="open-menu"
+        className="fixed bottom-5 left-4 z-40 w-12 h-12 rounded-2xl bg-[#1D2A45] text-white border border-white/10 shadow-xl flex items-center justify-center cursor-pointer"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
+    );
+  }
+
   return (
+    <>
+    {phone && <div className="fixed inset-0 z-[55] bg-black/55" onClick={() => setDrawerOpen(false)} aria-hidden />}
     <aside
       className={`flex-shrink-0 p-2 pr-0 transition-[width] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
-        isCollapsed ? 'w-[68px]' : 'w-[272px]'
+        phone ? 'fixed inset-y-0 left-0 z-[60] w-[min(300px,86vw)] pr-2' : isCollapsed ? 'w-[68px]' : 'w-[272px]'
       }`}
     >
       <div
@@ -61,5 +91,6 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
         />
       </div>
     </aside>
+    </>
   );
 };

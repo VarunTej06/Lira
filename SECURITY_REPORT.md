@@ -135,6 +135,11 @@ Saved files are read only with `JSON.parse`. There is no `eval`, `new Function`,
 
 Run them with `npm test` in `lira-app`.
 
+## Using Lira from a tablet or phone
+
+`npm run dev:lan` opens Lira to your own network. It is off by default, and when on it is protected: only plain home-network addresses are accepted as the host (never a web name), other devices must hold a secret 128-bit link (kept in `data/private/lan-token`, compared in constant time, stored as an HttpOnly, SameSite=Strict cookie), the page and the address it came from must match, and other devices never receive the API key and cannot overwrite it. The computer that runs Lira is always allowed, including when it opens its own network address; the link and QR code are only given to that computer (`/api/lan`). Tests: `server/guard.test.ts`, "network access".
+Remaining: traffic on the Wi-Fi is plain HTTP, so use it only on a network you trust. Anyone holding the link has full access; there are no separate users.
+
 ## Before multi-user (Phase 7)
 
 These items need real work if Lira ever has more than one person:

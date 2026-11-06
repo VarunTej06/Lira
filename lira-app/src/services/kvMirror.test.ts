@@ -16,6 +16,7 @@ describe('fileForKey', () => {
   it('routes keys to the right JSON file', () => {
     expect(fileForKey('lira_projects')).toBe('projects')
     expect(fileForKey('lira_project_settings_proj-1')).toBe('projects')
+    expect(fileForKey('lira_roadmaps')).toBe('roadmaps')
     expect(fileForKey('lira_sprint_meta')).toBe('sprints')
     expect(fileForKey('lira_planned_sprints')).toBe('sprints')
     expect(fileForKey('lira_team_directory')).toBe('teams')
@@ -75,7 +76,7 @@ describe('buildFiles / flattenFiles', () => {
 
   it('always includes every file, even when empty', () => {
     expect(Object.keys(buildFiles(fakeStorage({}))).sort()).toEqual(
-      ['board-config', 'projects', 'secrets', 'settings', 'sprints', 'standups', 'teams'],
+      ['board-config', 'projects', 'roadmaps', 'secrets', 'settings', 'sprints', 'standups', 'teams'],
     )
   })
 

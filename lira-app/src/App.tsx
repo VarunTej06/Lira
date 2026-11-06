@@ -18,9 +18,11 @@ import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { SprintsPage } from './components/sprints/SprintsPage';
 import { SprintsOverview } from './components/sprints/SprintsOverview';
 import { ForYouPage } from './components/foryou/ForYouPage';
+import { RoadmapsPage } from './components/roadmap/RoadmapsPage';
+import { syncPendingRoadmaps } from './services/roadmapEpics';
 import { AllTicketsPage } from './components/sprints/AllTicketsPage';
 import { SprintFilterBar } from './components/sprints/sprintParts';
-import { allSprintKeys, getIssueSprint, stampLegacySprints, issuesInSprint, sprintStats, currentSprintKey, SPRINTS_EVENT } from './utils/sprintUtils';
+import { allSprintKeys, deleteSprint, getIssueSprint, stampLegacySprints, issuesInSprint, sprintStats, currentSprintKey, SPRINTS_EVENT } from './utils/sprintUtils';
 import { CreateSprintModal } from './components/sprints/CreateSprintModal';
 import { CreateProjectModal } from './components/projects/CreateProjectModal';
 import { useProjects, writeProjects } from './hooks/useProjects';
@@ -35,7 +37,7 @@ import type { Space } from './types/space';
 type GroupBy = 'status' | 'assignee' | 'priority' | 'epic';
 
 // Full-page (cross-space) views. Selecting a space from the sidebar always leaves these.
-const GLOBAL_TABS = ['ForYou', 'Filters', 'Projects', 'SprintsHub', 'SprintDetail', 'AllTickets'];
+const GLOBAL_TABS = ['ForYou', 'Filters', 'Projects', 'SprintsHub', 'SprintDetail', 'AllTickets', 'Roadmaps'];
 
 // Immediately apply stored theme to documentElement before render if in browser
 if (typeof window !== 'undefined') {
@@ -193,6 +195,7 @@ export default function App() {
       await requestDurableStorage();
       await initLocalDiskSync();
       await stampLegacySprints();
+      await syncPendingRoadmaps(); // a changed roadmap schedule reaches its epics and tasks (and stops future sprints from piling up)
       setInitialized(true);
     };
     init();
@@ -225,6 +228,19 @@ export default function App() {
       if (existingIdx >= 0) return prev.slice(0, existingIdx + 1);
       return [...prev, issue];
     });
+  }, []);
+
+  // Deleting a project removes it and its saved settings and team; its tickets stay in the space
+  const handleDeleteProject = useCallback((projectId: string) => {
+    try {
+      const raw = localStorage.getItem('lira_projects');
+      if (raw) writeProjects((JSON.parse(raw) as Project[]).filter(p => p.id !== projectId));
+      localStorage.removeItem(`lira_project_settings_${projectId}`);
+      localStorage.removeItem(`lira_scope_team:project:${projectId}`);
+    } catch (e) {
+      console.error('Failed to remove project', e);
+    }
+    setSelectedProject(prev => (prev?.id === projectId ? null : prev));
   }, []);
 
   const closeModal = useCallback(() => {
@@ -303,6 +319,7 @@ export default function App() {
             setActiveTab('Projects');
           }}
           onNavigateToSprints={() => setActiveTab('SprintsHub')}
+          onNavigateToRoadmaps={() => { setActiveTab('Roadmaps'); window.dispatchEvent(new Event('lira-roadmaps-home')); }}
           onNavigateToForYou={() => setActiveTab('ForYou')}
           onNavigateToAllTickets={() => setActiveTab('AllTickets')}
           projects={projects}
@@ -320,6 +337,8 @@ export default function App() {
             setActiveTab('SprintDetail');
           }}
           onCreateSprint={() => setShowCreateSprint(true)}
+          onDeleteProject={project => handleDeleteProject(project.id)}
+          onDeleteSprint={key => { void deleteSprint(key, allIssues); if (focusSprint === key && activeTab === 'SprintDetail') setActiveTab('SprintsHub'); }}
           sidebarCollapsed={sidebarCollapsed}
           setSidebarCollapsed={setSidebarCollapsed}
           activeTab={activeTab}
@@ -364,6 +383,8 @@ export default function App() {
               onOpenSprint={(key) => { setFocusSprint(key); setActiveTab('SprintDetail'); }}
               onCreateIssue={() => handleAddIssue('todo', { chooseSpace: true })}
             />
+          ) : activeTab === 'Roadmaps' ? (
+            <RoadmapsPage issues={allIssues} spaces={spaces || []} />
           ) : activeTab === 'SprintsHub' ? (
             <SprintsOverview
               spaces={spaces || []}
@@ -404,18 +425,7 @@ export default function App() {
                 issues={allIssues.length > 0 ? allIssues : issues}
                 onBack={() => setSelectedProject(null)}
                 onUpdateProject={(updated) => setSelectedProject(updated)}
-                onDeleteProject={(projectId) => {
-                  try {
-                    const raw = localStorage.getItem('lira_projects');
-                    if (raw) {
-                      const list: Project[] = JSON.parse(raw);
-                      writeProjects(list.filter(p => p.id !== projectId));
-                    }
-                  } catch (e) {
-                    console.error('Failed to remove project from localStorage', e);
-                  }
-                  setSelectedProject(null);
-                }}
+                onDeleteProject={handleDeleteProject}
                 onIssueClick={openIssue}
                 onAddIssue={handleAddIssue}
                 onSwitchToSpace={(spaceId) => {

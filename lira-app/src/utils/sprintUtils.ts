@@ -101,7 +101,26 @@ export function addPlannedSprint(key: string) {
   try {
     localStorage.setItem(PLANNED_KEY, JSON.stringify(next));
   } catch { /* storage unavailable */ }
+  setDeletedSprints(getDeletedSprints().filter(k => k !== key)); // creating a sprint again brings it back
   window.dispatchEvent(new Event(SPRINTS_EVENT));
+}
+
+const DELETED_KEY = 'lira_deleted_sprints';
+
+/** Sprints the user deleted. Months are listed contiguously, so a deleted month in the middle must be remembered to stay hidden. */
+export function getDeletedSprints(): string[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(DELETED_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed.filter((k): k is string => /^\d{4}-\d{2}$/.test(k)) : [];
+  } catch {
+    return [];
+  }
+}
+
+function setDeletedSprints(list: string[]) {
+  try {
+    localStorage.setItem(DELETED_KEY, JSON.stringify(Array.from(new Set(list)).sort()));
+  } catch { /* storage unavailable */ }
 }
 
 /** All sprint keys that exist: every month with tickets, planned months, plus current and next — contiguous. */
@@ -119,8 +138,14 @@ export function allSprintKeys(issues: Issue[]): string[] {
     if (k < min) min = k;
     if (k > max) max = k;
   });
+  const deleted = new Set(getDeletedSprints());
+  const used = new Set(issues.filter(isSprintWork).map(getIssueSprint));
   const keys: string[] = [];
-  for (let k = min; k <= max; k = nextSprint(k)) keys.push(k);
+  for (let k = min; k <= max; k = nextSprint(k)) {
+    // the current and next sprint always exist; a deleted month stays hidden unless a ticket is in it again
+    if (deleted.has(k) && !used.has(k) && k !== cur && k !== nextSprint(cur)) continue;
+    keys.push(k);
+  }
   return keys;
 }
 
@@ -250,6 +275,34 @@ export async function completeSprint(
 ): Promise<number> {
   const moved = await moveIssuesToSprint(scope.filter(i => !isDone(i)), target);
   setSprintMeta(spaceId, key, { completedAt: new Date().toISOString() });
+  return moved;
+}
+
+/** Sprints can be deleted unless they are the current or the next one (those always exist). */
+export function canDeleteSprint(key: string): boolean {
+  const cur = currentSprintKey();
+  return key !== cur && key !== nextSprint(cur);
+}
+
+/** Where a deleted sprint's tickets go: the current sprint (or the next one when the current one is being deleted). */
+export const sprintDeleteTarget = (key: string) => (key === currentSprintKey() ? nextSprint(key) : currentSprintKey());
+
+/**
+ * Deletes a sprint. Its tickets are not deleted: they move to the current sprint. The goal and closed state of the sprint
+ * are removed, and the month is hidden from the sprint list. Returns how many tickets moved.
+ */
+export async function deleteSprint(key: string, issues: Issue[]): Promise<number> {
+  if (!canDeleteSprint(key)) return 0;
+  const moved = await moveIssuesToSprint(issuesInSprint(issues, key), sprintDeleteTarget(key));
+  setDeletedSprints([...getDeletedSprints(), key]);
+  try {
+    const planned = getPlannedSprints().filter(k => k !== key);
+    localStorage.setItem(PLANNED_KEY, JSON.stringify(planned));
+    const meta = readMeta();
+    for (const k of Object.keys(meta)) if (k.endsWith(`:${key}`)) delete meta[k];
+    localStorage.setItem(META_KEY, JSON.stringify(meta));
+  } catch { /* storage unavailable */ }
+  window.dispatchEvent(new Event(SPRINTS_EVENT));
   return moved;
 }
 

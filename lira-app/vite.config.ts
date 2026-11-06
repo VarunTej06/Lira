@@ -9,7 +9,8 @@ function localFileDbPlugin(): Plugin {
   // - data/spaces.json              <- Manifest of all spaces
   // - data/spaces/<KEY>.json        <- Space-segregated issues (e.g. AI.json, CERT.json, etc.)
   // - data/lira-workspace.json      <- Legacy fallback file
-  const dataDir = path.resolve(process.cwd(), '../data')
+  // Override with LIRA_DATA_DIR to keep the data somewhere else (for example when testing)
+  const dataDir = process.env.LIRA_DATA_DIR ? path.resolve(process.env.LIRA_DATA_DIR) : path.resolve(process.cwd(), '../data')
   const spacesDir = path.resolve(dataDir, 'spaces')
   const spacesManifestFile = path.resolve(dataDir, 'spaces.json')
 

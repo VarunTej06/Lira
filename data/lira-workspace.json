@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-06T02:58:25.115Z",
+  "savedAt": "2026-11-06T04:18:32.384Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -72,7 +72,7 @@
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-11-05T12:17:43.513Z",
-      "issueCount": 46,
+      "issueCount": 64,
       "file": "spaces/LIRA.json"
     },
     {
@@ -107,7 +107,9 @@
       "description": "Test",
       "createdAt": "2026-11-06T02:58:24.584Z",
       "updatedAt": "2026-11-06T02:58:24.584Z",
-      "id": 16
+      "id": 16,
+      "issueCount": 0,
+      "file": "spaces/TEST.json"
     }
   ],
   "issues": [
@@ -9192,6 +9194,1034 @@
       "updatedAt": "2026-11-05T12:30:00.000Z",
       "resolvedAt": "2026-11-05T12:30:00.000Z",
       "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-60",
+      "title": "Phase 1: Persistence cleanup and core tests",
+      "description": "Projects, sprints, teams, standups and settings saved to JSON in data/. Structured Dexie tables. Vitest suite.",
+      "type": "epic",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-01T18:30:00.000Z",
+      "dueDate": "2026-11-02T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "85b16620-4cd7-45b9-9437-0e50ad8eff8c",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.004Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960004,
+      "createdAt": "2026-11-06T03:49:20.004Z",
+      "updatedAt": "2026-11-06T04:18:29.018Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 163,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-61",
+      "title": "Phase 2: Routing and file splitting",
+      "description": "Real URLs, back/forward and deep links. Split the very large components so later work is cheaper.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-06T18:30:00.000Z",
+      "dueDate": "2026-11-07T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "ac7e93b4-c6d1-4e8d-8f2e-4e7f91fe66df",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.083Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960083,
+      "createdAt": "2026-11-06T03:49:20.083Z",
+      "updatedAt": "2026-11-06T04:18:29.341Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 164,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-62",
+      "title": "Browser smoke tests (Playwright) for unverified pages",
+      "description": "Light mode, hover menus, Viva AI open/close, standup popup, For you, Sprints overview, Create Issue rules.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-08T18:30:00.000Z",
+      "dueDate": "2026-11-09T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "78bd1d09-0ded-4c60-905f-1d91854e85e6",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.153Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960153,
+      "createdAt": "2026-11-06T03:49:20.153Z",
+      "updatedAt": "2026-11-06T04:18:29.623Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 165,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-63",
+      "title": "Accessibility pass",
+      "description": "Focus rings, aria labels on icon buttons, dark-mode contrast, reduced-motion everywhere.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-10T18:30:00.000Z",
+      "dueDate": "2026-11-11T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "76e8f6d1-258d-4957-a176-35175d9cb69f",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.209Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960210,
+      "createdAt": "2026-11-06T03:49:20.209Z",
+      "updatedAt": "2026-11-06T04:18:29.879Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 166,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-64",
+      "title": "Phase 7: Decide on multi-user",
+      "description": "Stay local and single-user, or add a backend (accounts, database, realtime). Must be decided before real invites in Phase 3.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-12T18:30:00.000Z",
+      "dueDate": "2026-11-13T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "766b0c6a-c7df-4547-ba60-a09823570f8c",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.258Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960258,
+      "createdAt": "2026-11-06T03:49:20.258Z",
+      "updatedAt": "2026-11-06T04:18:30.215Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 167,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-65",
+      "title": "Phase 3: Teams, real standup and invites",
+      "description": "Named teams assigned to spaces and projects. Standup history, async standup, real calendar invites.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-14T18:30:00.000Z",
+      "dueDate": "2026-11-15T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "78136a29-72fb-4c03-979c-3824dd36f038",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.303Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960303,
+      "createdAt": "2026-11-06T03:49:20.303Z",
+      "updatedAt": "2026-11-06T04:18:30.344Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 168,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-66",
+      "title": "Phase 4: Sprint planning, rollover, retros, reports",
+      "description": "Two-column planning view, automatic month-end rollover, retrospectives, burnup, cumulative flow, scope change log.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-16T18:30:00.000Z",
+      "dueDate": "2026-11-17T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "cf1e4adf-7d5a-4b93-b23d-b8d9859ba644",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.342Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960342,
+      "createdAt": "2026-11-06T03:49:20.342Z",
+      "updatedAt": "2026-11-06T04:18:30.520Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 169,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-67",
+      "title": "Phase 5: Command palette, bulk edit, saved filters",
+      "description": "Ctrl+K palette, keyboard shortcuts, bulk edit, saved filters, templates and recurring tickets.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-18T18:30:00.000Z",
+      "dueDate": "2026-11-19T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "48708aee-3a2d-43e7-9783-4f29e0b7c736",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.394Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960394,
+      "createdAt": "2026-11-06T03:49:20.394Z",
+      "updatedAt": "2026-11-06T04:18:30.901Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 170,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-68",
+      "title": "Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
+      "description": "Preview and undo for every AI write, sprint planning suggestions, standup digest, risk radar.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T18:30:00.000Z",
+      "dueDate": "2026-11-21T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "ec826aa5-44ee-4898-a0c9-1944afa7dba7",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.425Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960425,
+      "createdAt": "2026-11-06T03:49:20.425Z",
+      "updatedAt": "2026-11-06T04:18:31.340Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 171,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-69",
+      "parentId": 163,
+      "epicId": 163,
+      "epicLink": "Phase 1: Persistence cleanup and core tests",
+      "title": "Deliver: Phase 1: Persistence cleanup and core tests",
+      "description": "Checklist for the roadmap item \"Phase 1: Persistence cleanup and core tests\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-01T18:30:00.000Z",
+      "dueDate": "2026-11-02T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p1a",
+          "title": "Mirror all lira_* data to data/*.json",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        },
+        {
+          "id": "p1b",
+          "title": "Dexie tables for projects, sprints, teams, standups",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        },
+        {
+          "id": "p1c",
+          "title": "Only rewrite changed space files",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        },
+        {
+          "id": "p1d",
+          "title": "Include new data in export/import",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        },
+        {
+          "id": "p1e",
+          "title": "Vitest suite for sprint, standup, AI and persistence logic",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "35aaaae3-c1e0-4676-aced-fd215d37bd25",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937363846,
+      "createdAt": "2026-11-06T03:56:03.846Z",
+      "updatedAt": "2026-11-06T04:18:29.183Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 172
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-70",
+      "parentId": 164,
+      "epicId": 164,
+      "epicLink": "Phase 2: Routing and file splitting",
+      "title": "Deliver: Phase 2: Routing and file splitting",
+      "description": "Checklist for the roadmap item \"Phase 2: Routing and file splitting\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-06T18:30:00.000Z",
+      "dueDate": "2026-11-07T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p2a",
+          "title": "Add a router with real paths (/sprints/2026-11, /space/CERT/board)",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2b",
+          "title": "Remove the duplicated global-tab lists; derive sidebar highlight from the route",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2c",
+          "title": "Split ProjectDetailView, TopNavigation and aiAgentService (under ~500 lines each)",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2d",
+          "title": "Fix the nested <button> DOM warning",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2e",
+          "title": "Add an error boundary per page",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "0d6f80a5-70fe-420c-b497-3301869b0332",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937363944,
+      "createdAt": "2026-11-06T03:56:03.944Z",
+      "updatedAt": "2026-11-06T04:18:29.471Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 173
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-71",
+      "parentId": 165,
+      "epicId": 165,
+      "epicLink": "Browser smoke tests (Playwright) for unverified pages",
+      "title": "Deliver: Browser smoke tests (Playwright) for unverified pages",
+      "description": "Checklist for the roadmap item \"Browser smoke tests (Playwright) for unverified pages\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-08T18:30:00.000Z",
+      "dueDate": "2026-11-09T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "q1a",
+          "title": "Set up Playwright against npm run dev",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        },
+        {
+          "id": "q1b",
+          "title": "Create Issue hierarchy rules (task/bug/epic/subtask)",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        },
+        {
+          "id": "q1c",
+          "title": "Sidebar navigation and highlight",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        },
+        {
+          "id": "q1d",
+          "title": "Light and dark theme screenshots",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d42144f7-9769-4f8c-9dcd-bd8794bfdb73",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364001,
+      "createdAt": "2026-11-06T03:56:04.001Z",
+      "updatedAt": "2026-11-06T04:18:29.747Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 174
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-72",
+      "parentId": 166,
+      "epicId": 166,
+      "epicLink": "Accessibility pass",
+      "title": "Deliver: Accessibility pass",
+      "description": "Checklist for the roadmap item \"Accessibility pass\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-10T18:30:00.000Z",
+      "dueDate": "2026-11-11T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "q2a",
+          "title": "Focus rings on all interactive elements",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        },
+        {
+          "id": "q2b",
+          "title": "aria-labels for icon-only buttons",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        },
+        {
+          "id": "q2c",
+          "title": "Contrast review of both themes",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        },
+        {
+          "id": "q2d",
+          "title": "prefers-reduced-motion support",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d626aa16-516d-4c03-aa3e-2372e8403597",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364063,
+      "createdAt": "2026-11-06T03:56:04.063Z",
+      "updatedAt": "2026-11-06T04:18:30.030Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 175
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-73",
+      "parentId": 167,
+      "epicId": 167,
+      "epicLink": "Phase 7: Decide on multi-user",
+      "title": "Deliver: Phase 7: Decide on multi-user",
+      "description": "Checklist for the roadmap item \"Phase 7: Decide on multi-user\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-12T18:30:00.000Z",
+      "dueDate": "2026-11-13T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "a1a",
+          "title": "List what the team actually needs shared",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.139Z"
+        },
+        {
+          "id": "a1b",
+          "title": "Compare local + git sharing vs hosted backend",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.139Z"
+        },
+        {
+          "id": "a1c",
+          "title": "Record the decision",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.139Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "829ce3e9-240b-45d1-87d8-e965006cdb84",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.139Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364139,
+      "createdAt": "2026-11-06T03:56:04.139Z",
+      "updatedAt": "2026-11-06T04:18:30.276Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 176
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-74",
+      "parentId": 168,
+      "epicId": 168,
+      "epicLink": "Phase 3: Teams, real standup and invites",
+      "title": "Deliver: Phase 3: Teams, real standup and invites",
+      "description": "Checklist for the roadmap item \"Phase 3: Teams, real standup and invites\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-14T18:30:00.000Z",
+      "dueDate": "2026-11-15T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p3a",
+          "title": "Team entity: members, roles, capacity",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        },
+        {
+          "id": "p3b",
+          "title": "Assign teams to spaces and projects",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        },
+        {
+          "id": "p3c",
+          "title": "Standup history and async updates",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        },
+        {
+          "id": "p3d",
+          "title": "Real Google / Teams invites (depends on the decision)",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "7849b6f3-ff20-4d64-a2e5-179d0306ddd2",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        },
+        {
+          "id": "ad7d4b61-40d2-4c08-b184-91f22a49b798",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from December 2026 Sprint to November 2026 Sprint",
+          "oldValue": "December 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-06T04:18:30.502Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364207,
+      "createdAt": "2026-11-06T03:56:04.207Z",
+      "updatedAt": "2026-11-06T04:18:30.501Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 177,
+      "sprintHistory": []
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-75",
+      "parentId": 169,
+      "epicId": 169,
+      "epicLink": "Phase 4: Sprint planning, rollover, retros, reports",
+      "title": "Deliver: Phase 4: Sprint planning, rollover, retros, reports",
+      "description": "Checklist for the roadmap item \"Phase 4: Sprint planning, rollover, retros, reports\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-16T18:30:00.000Z",
+      "dueDate": "2026-11-17T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p4a",
+          "title": "Sprint planning view with capacity",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "p4b",
+          "title": "Automatic month-end rollover prompt",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "p4c",
+          "title": "Retrospective at sprint close",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "p4d",
+          "title": "Reports: burnup, CFD, cycle and lead time",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "p4e",
+          "title": "Set resolvedAt when a ticket moves to Done",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "c82121b3-4aeb-4dbe-9fd2-61627fbfd8f0",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "55d6ad29-12bb-4f36-89d0-a0ae7f89ad1e",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from February 2027 Sprint to November 2026 Sprint",
+          "oldValue": "February 2027 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-06T04:18:30.876Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364254,
+      "createdAt": "2026-11-06T03:56:04.254Z",
+      "updatedAt": "2026-11-06T04:18:30.875Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 178,
+      "sprintHistory": []
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-76",
+      "parentId": 170,
+      "epicId": 170,
+      "epicLink": "Phase 5: Command palette, bulk edit, saved filters",
+      "title": "Deliver: Phase 5: Command palette, bulk edit, saved filters",
+      "description": "Checklist for the roadmap item \"Phase 5: Command palette, bulk edit, saved filters\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-18T18:30:00.000Z",
+      "dueDate": "2026-11-19T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p5a",
+          "title": "Ctrl+K command palette",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        },
+        {
+          "id": "p5b",
+          "title": "Keyboard shortcuts and help sheet",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        },
+        {
+          "id": "p5c",
+          "title": "Bulk edit on board and list",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        },
+        {
+          "id": "p5d",
+          "title": "Saved filters pinned to the sidebar",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "e38a9f49-ecc7-459f-a5fb-03b885507a4f",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        },
+        {
+          "id": "a832af06-e567-4902-bc82-0e77776773ee",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from March 2027 Sprint to November 2026 Sprint",
+          "oldValue": "March 2027 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-06T04:18:31.301Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364319,
+      "createdAt": "2026-11-06T03:56:04.319Z",
+      "updatedAt": "2026-11-06T04:18:31.300Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 179,
+      "sprintHistory": []
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-77",
+      "parentId": 171,
+      "epicId": 171,
+      "epicLink": "Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
+      "title": "Deliver: Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
+      "description": "Checklist for the roadmap item \"Phase 6: Viva AI confirm-and-undo, sprint-aware prompts\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T18:30:00.000Z",
+      "dueDate": "2026-11-21T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p6a",
+          "title": "Preview, confirm and undo for writes",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        },
+        {
+          "id": "p6b",
+          "title": "Sprint-aware prompts",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        },
+        {
+          "id": "p6c",
+          "title": "Standup digest",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        },
+        {
+          "id": "p6d",
+          "title": "Risk radar for sprints",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "7a9eace6-b4ee-44c6-9bc3-b578964d68cf",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        },
+        {
+          "id": "c2873902-7358-476f-b562-dc67948c1fb3",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from April 2027 Sprint to November 2026 Sprint",
+          "oldValue": "April 2027 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-06T04:18:31.748Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364399,
+      "createdAt": "2026-11-06T03:56:04.399Z",
+      "updatedAt": "2026-11-06T04:18:31.747Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 180,
+      "sprintHistory": []
     }
   ]
 }

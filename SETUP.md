@@ -117,6 +117,7 @@ Everything you create or change is saved to JSON files in `data/`, so clearing b
 |---|---|
 | Spaces and tickets | `data/spaces.json`, `data/spaces/<KEY>.json`, `data/lira-workspace.json` |
 | Projects and project settings | `data/projects.json` |
+| Roadmaps | one file each: `data/roadmaps/<id>.json`, plus `data/roadmaps/index.json` |
 | Sprint goals, closed sprints, planned sprints | `data/sprints.json` |
 | Teams and added team members | `data/teams.json` |
 | Standups and standup notes | `data/standups.json` |
@@ -131,6 +132,7 @@ How it works:
 - Backups (**Export JSON Backup**) include all of the above except the API key. Import restores them and reloads the page.
 - The same data is also projected into Dexie tables (`projects`, `sprints`, `teams`, `standups`) after every change, so screens can query it with `useLiveQuery`. These tables are a read-only copy; the JSON files stay the source of truth.
 - Tickets follow the same rule: disk wins on load, unless the browser has ticket changes that were not saved yet (for example the tab closed within the save delay). Then the browser copy is pushed to disk instead.
+- To keep the data somewhere other than `../data` (for example for a throwaway test), start the server with the `LIRA_DATA_DIR` environment variable set to that folder.
 - Disk saving needs `npm run dev`. Without it the app still works using browser storage only.
 
 Committing: ticket and settings files are normal repo files. Commit them when you want to share workspace state, or run `git checkout -- data/` before a code-only commit. Do not commit `data/private/`.

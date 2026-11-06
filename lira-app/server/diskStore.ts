@@ -4,12 +4,13 @@
  *
  * Files written (all under <repo>/data):
  *   projects.json, sprints.json, teams.json, standups.json, board-config.json, settings.json
+ *   roadmaps/index.json + roadmaps/<id>.json   <- one file per roadmap
  *   private/secrets.json   <- git-ignored (API keys)
  */
 import fs from 'node:fs'
 import path from 'node:path'
 
-export const STORE_FILES = ['projects', 'sprints', 'teams', 'standups', 'board-config', 'settings', 'secrets'] as const
+export const STORE_FILES = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'settings', 'secrets'] as const
 export type StoreFile = (typeof STORE_FILES)[number]
 export type StoreEntries = Record<string, unknown>
 
@@ -37,10 +38,69 @@ function readJson(file: string): any | undefined {
   }
 }
 
+const safeId = (id: unknown) => String(id).replace(/[^a-zA-Z0-9_-]/g, '_')
+export const roadmapsDir = (dataDir: string) => path.join(dataDir, 'roadmaps')
+
+/** Roadmaps live in data/roadmaps/<id>.json (one file each) with an index; the old single data/roadmaps.json is still read. */
+export function readRoadmaps(dataDir: string): unknown[] | undefined {
+  const dir = roadmapsDir(dataDir)
+  const index = readJson(path.join(dir, 'index.json'))
+  if (index && Array.isArray(index.roadmaps)) {
+    const out: unknown[] = []
+    const seen = new Set<string>()
+    const add = (file: string) => {
+      if (seen.has(file)) return
+      seen.add(file)
+      const parsed = readJson(path.join(dir, file))
+      if (parsed && parsed.roadmap) out.push(parsed.roadmap)
+    }
+    for (const r of index.roadmaps as { file?: string }[]) if (r && typeof r.file === 'string') add(path.basename(r.file))
+    try {
+      for (const f of fs.readdirSync(dir)) if (f.endsWith('.json') && f !== 'index.json') add(f) // files added by hand
+    } catch { /* folder vanished */ }
+    return out
+  }
+  const legacy = readJson(path.join(dataDir, 'roadmaps.json'))
+  if (legacy && legacy.entries && Array.isArray(legacy.entries.lira_roadmaps)) return legacy.entries.lira_roadmaps
+  return undefined
+}
+
+/** Writes one JSON file per roadmap plus an index. Only changed files are touched; removed roadmaps lose their file. */
+export function writeRoadmaps(dataDir: string, entries: Record<string, unknown>, now = new Date()): boolean {
+  if (!Array.isArray(entries.lira_roadmaps)) return false // nothing to say about roadmaps: never delete files because a key is absent
+  const list = (Array.isArray(entries.lira_roadmaps) ? entries.lira_roadmaps : []) as { id?: unknown; name?: unknown; items?: unknown[]; starred?: boolean; archived?: boolean }[]
+  const dir = roadmapsDir(dataDir)
+  let changed = false
+  const keep = new Set<string>(['index.json'])
+  const ts = now.toISOString()
+  const index: { id: string; name: string; file: string; items: number; starred?: boolean; archived?: boolean }[] = []
+  for (const rm of list) {
+    if (!rm || rm.id === undefined) continue
+    const file = `${safeId(rm.id)}.json`
+    keep.add(file)
+    index.push({ id: String(rm.id), name: String(rm.name ?? ''), file, items: Array.isArray(rm.items) ? rm.items.length : 0, ...(rm.starred ? { starred: true } : {}), ...(rm.archived ? { archived: true } : {}) })
+    if (writeJsonIfChanged(path.join(dir, file), { version: 1, updatedAt: ts, roadmap: rm }, ['updatedAt'])) changed = true
+  }
+  if (writeJsonIfChanged(path.join(dir, 'index.json'), { version: 1, updatedAt: ts, roadmaps: index }, ['updatedAt'])) changed = true
+  try {
+    for (const f of fs.readdirSync(dir)) {
+      if (f.endsWith('.json') && !keep.has(f)) { fs.unlinkSync(path.join(dir, f)); changed = true }
+    }
+  } catch { /* nothing to clean */ }
+  const legacy = path.join(dataDir, 'roadmaps.json')
+  if (fs.existsSync(legacy)) { fs.unlinkSync(legacy); changed = true } // migrated into the folder
+  return changed
+}
+
 /** Reads every store file. Missing or corrupt files are skipped. */
 export function readStore(dataDir: string): Record<string, StoreEntries> {
   const out: Record<string, StoreEntries> = {}
   for (const name of STORE_FILES) {
+    if (name === 'roadmaps') {
+      const list = readRoadmaps(dataDir)
+      if (list) out.roadmaps = { lira_roadmaps: list }
+      continue
+    }
     const parsed = readJson(storePath(dataDir, name))
     if (parsed && typeof parsed.entries === 'object' && parsed.entries) out[name] = parsed.entries
   }
@@ -55,6 +115,10 @@ export function writeStore(dataDir: string, files: Record<string, StoreEntries>,
   const written: string[] = []
   for (const [name, entries] of Object.entries(files)) {
     if (!isStoreFile(name) || !entries || typeof entries !== 'object') continue
+    if (name === 'roadmaps') {
+      if (writeRoadmaps(dataDir, entries, now)) written.push(name)
+      continue
+    }
     const file = storePath(dataDir, name)
     const sorted = sortKeys(entries)
     const existing = readJson(file)

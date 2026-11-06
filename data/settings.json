@@ -1,61 +1,43 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06T02:58:34.875Z",
+  "updatedAt": "2026-11-06T03:56:10.895Z",
   "entries": {
-    "lira_active_space_id": "16",
+    "lira_active_space_id": "2",
+    "lira_roadmap_prefs": {
+      "collapsed": [],
+      "roadmapId": "rm-lira",
+      "showDeps": true,
+      "view": "timeline",
+      "zoom": "weeks"
+    },
     "lira_sidebar_collapsed": "false",
     "lira_sidebar_customization": {
-      "apps": true,
-      "appsOrder": [
-        "assets",
-        "teams",
-        "goals",
-        "projects"
-      ],
-      "assets": false,
-      "calendar": false,
-      "dashboards": true,
-      "filters": true,
-      "forYou": true,
-      "goals": false,
-      "list": false,
       "navOrder": [
         "forYou",
         "projects",
-        "spaces",
-        "recent",
-        "starred",
-        "apps",
+        "sprints",
+        "allTickets",
         "roadmaps",
-        "plans",
-        "filters",
-        "dashboards",
-        "list",
-        "calendar"
+        "dashboards"
       ],
-      "plans": true,
-      "projects": false,
-      "recent": true,
-      "roadmaps": true,
-      "spaces": true,
-      "starred": true,
-      "teams": false,
+      "sectionOrder": [
+        "sec_spaces",
+        "sec_projects",
+        "sec_sprints",
+        "sec_hidden"
+      ],
+      "version": 2,
       "visibility": {
-        "apps": true,
-        "assets": false,
-        "calendar": false,
+        "allTickets": true,
         "dashboards": true,
-        "filters": true,
         "forYou": true,
-        "goals": false,
-        "list": false,
-        "plans": true,
-        "projects": false,
-        "recent": true,
+        "projects": true,
         "roadmaps": true,
-        "spaces": true,
-        "starred": true,
-        "teams": false
+        "sec_hidden": true,
+        "sec_projects": true,
+        "sec_spaces": true,
+        "sec_sprints": true,
+        "sprints": true
       }
     },
     "lira_sidebar_pinned": [

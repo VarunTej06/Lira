@@ -14,6 +14,8 @@ Proposed build order for the next versions. It is a draft: pick a phase number t
 
 Phases 1 and 2 make every later phase cheaper, so they should come first.
 
+> The same plan now lives inside Lira as a real roadmap: open **Roadmaps** in the sidebar (timeline, Now/Next/Later, table). Every item is an epic in the LIRA space, and each roadmap is saved as its own file in `data/roadmaps/`. In the app it is the **November plan**: every item takes about two days and everything finishes in November (the phase descriptions below are unchanged). December gets its own roadmap. When you finish an item here, update it there too.
+
 ---
 
 ## Phase 1: Persistence cleanup and core tests (DONE)

@@ -3,7 +3,7 @@
   "spaceId": 16,
   "spaceKey": "TEST",
   "spaceName": "Test",
-  "updatedAt": "2026-11-06T02:58:25.115Z",
+  "updatedAt": "2026-11-06T03:49:20.875Z",
   "issueCount": 0,
   "space": {
     "name": "Test",
@@ -13,7 +13,9 @@
     "description": "Test",
     "createdAt": "2026-11-06T02:58:24.584Z",
     "updatedAt": "2026-11-06T02:58:24.584Z",
-    "id": 16
+    "id": 16,
+    "issueCount": 0,
+    "file": "spaces/TEST.json"
   },
   "issues": []
 }

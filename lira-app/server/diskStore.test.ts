@@ -70,3 +70,64 @@ describe('writeJsonIfChanged', () => {
     expect(writeJsonIfChanged(file, { updatedAt: 'c', issues: [1, 2] }, ['updatedAt'])).toBe(true)
   })
 })
+
+describe('one JSON file per roadmap', () => {
+  const rm = (id: string, name: string, items = 1) => ({ id, name, items: Array.from({ length: items }, (_, i) => ({ id: `i${i}` })), lanes: [] })
+  const dirOf = () => path.join(dir, 'roadmaps')
+
+  it('writes data/roadmaps/<id>.json for each roadmap plus an index', () => {
+    writeStore(dir, { roadmaps: { lira_roadmaps: [rm('rm-a', 'Alpha', 2), rm('rm-b', 'Beta')] } })
+    expect(fs.readdirSync(dirOf()).sort()).toEqual(['index.json', 'rm-a.json', 'rm-b.json'])
+    const index = JSON.parse(fs.readFileSync(path.join(dirOf(), 'index.json'), 'utf-8'))
+    expect(index.roadmaps).toEqual([
+      { id: 'rm-a', name: 'Alpha', file: 'rm-a.json', items: 2 },
+      { id: 'rm-b', name: 'Beta', file: 'rm-b.json', items: 1 },
+    ])
+    expect(JSON.parse(fs.readFileSync(path.join(dirOf(), 'rm-a.json'), 'utf-8')).roadmap.name).toBe('Alpha')
+    expect(fs.existsSync(path.join(dir, 'roadmaps.json'))).toBe(false)
+  })
+
+  it('reads them back in index order', () => {
+    writeStore(dir, { roadmaps: { lira_roadmaps: [rm('rm-b', 'Beta'), rm('rm-a', 'Alpha')] } })
+    const read = readStore(dir).roadmaps.lira_roadmaps as { id: string }[]
+    expect(read.map(r => r.id)).toEqual(['rm-b', 'rm-a'])
+  })
+
+  it('only rewrites the roadmap that changed', async () => {
+    writeStore(dir, { roadmaps: { lira_roadmaps: [rm('rm-a', 'Alpha'), rm('rm-b', 'Beta')] } })
+    const m = (f: string) => fs.statSync(path.join(dirOf(), f)).mtimeMs
+    const [a0, b0] = [m('rm-a.json'), m('rm-b.json')]
+    await new Promise(r => setTimeout(r, 30))
+    const written = writeStore(dir, { roadmaps: { lira_roadmaps: [rm('rm-a', 'Alpha'), rm('rm-b', 'Beta renamed')] } })
+    expect(written).toEqual(['roadmaps'])
+    expect(m('rm-a.json')).toBe(a0)
+    expect(m('rm-b.json')).toBeGreaterThan(b0)
+    expect(writeStore(dir, { roadmaps: { lira_roadmaps: [rm('rm-a', 'Alpha'), rm('rm-b', 'Beta renamed')] } })).toEqual([])
+  })
+
+  it('removes the file of a deleted roadmap', () => {
+    writeStore(dir, { roadmaps: { lira_roadmaps: [rm('rm-a', 'Alpha'), rm('rm-b', 'Beta')] } })
+    writeStore(dir, { roadmaps: { lira_roadmaps: [rm('rm-a', 'Alpha')] } })
+    expect(fs.readdirSync(dirOf()).sort()).toEqual(['index.json', 'rm-a.json'])
+  })
+
+  it('never deletes anything when the browser sends no roadmap data', () => {
+    writeStore(dir, { roadmaps: { lira_roadmaps: [rm('rm-a', 'Alpha')] } })
+    writeStore(dir, { roadmaps: {} })
+    expect(fs.existsSync(path.join(dirOf(), 'rm-a.json'))).toBe(true)
+  })
+
+  it('migrates the old single data/roadmaps.json into the folder', () => {
+    fs.writeFileSync(path.join(dir, 'roadmaps.json'), JSON.stringify({ version: 1, entries: { lira_roadmaps: [rm('old', 'Old one')] } }))
+    expect((readStore(dir).roadmaps.lira_roadmaps as { id: string }[])[0].id).toBe('old')
+    writeStore(dir, { roadmaps: { lira_roadmaps: [rm('old', 'Old one')] } })
+    expect(fs.existsSync(path.join(dir, 'roadmaps.json'))).toBe(false)
+    expect(fs.existsSync(path.join(dirOf(), 'old.json'))).toBe(true)
+  })
+
+  it('keeps roadmap ids safe as file names', () => {
+    writeStore(dir, { roadmaps: { lira_roadmaps: [rm('../evil', 'x')] } })
+    expect(fs.readdirSync(dirOf()).sort()).toEqual(['___evil.json', 'index.json'])
+    expect(fs.existsSync(path.join(dir, 'evil.json'))).toBe(false)
+  })
+})

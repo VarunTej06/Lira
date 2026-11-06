@@ -202,11 +202,18 @@
 
 
 
-/* Sidebar: slim, rounded scrollbar that matches the floating panel */
-.lira-sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+/* Sidebar: slim, rounded scrollbar that matches the floating panel.
+   No arrow buttons (they stick out past the rounded corners), and the track is inset from the top and bottom so the
+   whole scrollbar stays inside the panel. Chrome ignores these rules if scrollbar-width is set, so that is only used
+   where ::-webkit-scrollbar does not exist (Firefox). */
 .lira-sidebar-scroll::-webkit-scrollbar { width: 6px; }
+.lira-sidebar-scroll::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+.lira-sidebar-scroll::-webkit-scrollbar-track { background: transparent; margin: 20px 0; }
 .lira-sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.16); border-radius: 9999px; }
 .lira-sidebar-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+@supports not selector(::-webkit-scrollbar) {
+  .lira-sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
+}
 @media (prefers-reduced-motion: reduce) {
   .animate-sidebar-in { animation: none !important; }
 }

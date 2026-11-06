@@ -1022,7 +1022,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Create button */}
       <button
         onClick={onCreateIssue}
-        className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#0C66E4] to-[#2684FF] hover:from-[#2684FF] hover:to-[#4C9AFF] text-white text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgba(38,132,255,0.35)] hover:shadow-[0_6px_18px_rgba(38,132,255,0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
+        className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-jira-blue to-jira-blue-hover hover:brightness-110 text-white text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgb(var(--jira-blue)/0.35)] hover:shadow-[0_6px_18px_rgb(var(--jira-blue)/0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
         title="Create a ticket — you'll choose the space"
       >
         <Plus className="w-4 h-4" />

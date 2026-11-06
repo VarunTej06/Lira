@@ -3,13 +3,32 @@
 > **Lira** is an offline-first, enterprise-grade project tracking and engineering workspace modeled after Atlassian Jira, built with React 18, TypeScript, Tailwind CSS, Dexie IndexedDB, and automatic local PC file synchronization.
 
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-6.x-purple.svg)](https://vitejs.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7.x-blue.svg)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.x-purple.svg)](https://vitejs.dev/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
 [![Dexie.js](https://img.shields.io/badge/Dexie.js-IndexedDB-orange.svg)](https://dexie.org/)
-[![Storage](https://img.shields.io/badge/Storage-Space--Segregated_JSON-emerald.svg)](./data/spaces/)
+[![Storage](https://img.shields.io/badge/Storage-JSON_files_in_data/-emerald.svg)](./data/)
+[![Tests](https://img.shields.io/badge/tests-294_passing-brightgreen.svg)](#-tests)
+
+**Documents:** [SETUP.md](SETUP.md) (install, run, data, URLs, tablet and phone) · [ROADMAP.md](ROADMAP.md) (what is done and what is next) · [SECURITY_REPORT.md](SECURITY_REPORT.md) (20-point security check) · [Prompts and Architectures/](Prompts%20and%20Architectures/) (design documents)
 
 ---
+
+## 🆕 What's new (November 2026)
+
+| Area | What you get |
+|---|---|
+| **Sprints** | Every sprint can be **monthly, weekly, bi-weekly or a set number of days**. Choose which spaces work in each sprint. Sprint page has four views: **Sprint** (with a status and space filter), **Planning** (backlog on the left, sprint on the right, drag across, points against capacity with an over-commit warning), **Reports** (burnup, cumulative flow, scope changes, lead and cycle time, export to Markdown or PDF) and **Epics** (timeline across sprints). Closing a sprint carries unfinished tickets over and records a **retrospective**. |
+| **Roadmaps** | One JSON file per roadmap, timeline / Now-Next-Later / table / planner views. Every roadmap item is a real epic with a checklist task. |
+| **Viva AI** | **Confirm before changing anything, with Undo.** Sprint-aware prompts ("Plan next sprint from my backlog", "Summarise this sprint"), "Write my standup", a risk radar, suggestions while creating a ticket (duplicates, labels, priority, epic), and a choice of model: built-in engine, Gemini, or any OpenAI-compatible server such as Ollama. |
+| **Standup and sprint calls** | Calendar, Teams and email invites with `.ics` download, per space, project or sprint. |
+| **Pages have real URLs** | `/sprints/2026-11`, `/space/LIRA/board`, `/roadmaps/rm-lira`, `?issue=LIRA-12`. Refresh, Back and shared links work. Errors in one page no longer blank the app. |
+| **Everything is in files** | Projects, sprints, teams, standups, roadmaps and settings are saved as JSON under `data/`, so clearing the browser loses nothing. |
+| **Tablet and phone** | `npm run dev:lan` opens Lira to your own Wi-Fi behind a private link and QR code (**Settings, Other devices**). Phone and upright-tablet layouts use a menu drawer. |
+| **Motion** | Framer Motion: dialogs and menus animate in and out, sliding tab underline and sidebar highlight, count-up numbers, bars that grow, burndown lines that draw themselves, confetti when a ticket reaches Done or a sprint closes. Reduced-motion settings are respected. |
+| **Look** | Light and dark themes, 10+ accent colours, rounded panels, scroll bars kept inside their panels. |
+| **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
+| **Code health** | Large files split into small parts (no component over about 500 lines), 294 automated tests. |
 
 ## 🌟 Key Highlights
 
@@ -17,7 +36,8 @@
 * **Space-Segregated Storage Architecture**: Workspace data is partitioned cleanly into individual space files under [`data/spaces/<KEY>.json`](./data/spaces/) (e.g. `AI.json`, `CERT.json`, `COUR.json`, `CH.json`, `GT.json`, `LIRA.json`), paired with a manifest index in [`data/spaces.json`](./data/spaces.json). This prevents file bloat and ensures modular, scalable performance.
 * **Consolidated Master Snapshot & Dual-Sync**: On every change, Lira automatically updates both the individual space file (`data/spaces/<KEY>.json`) and a unified master snapshot at [`data/lira-workspace.json`](./data/lira-workspace.json) for 100% backward compatibility.
 * **No Cloud Required / 100% Offline**: All spaces, epics, tasks, subtasks, activities, and rankings are stored directly on your PC disk. No internet connection or external database is required.
-* **Vite Middleware REST Endpoints**: Built-in Vite dev-server middleware exposes `/api/data`, `/api/save`, `/api/spaces`, and `/api/health` endpoints, serializing workspace state with zero external backend dependencies.
+* **Vite Middleware REST Endpoints**: Built-in Vite dev-server middleware exposes `/api/data` and `/api/save` (tickets), `/api/kv` (projects, sprints, roadmaps, teams, standups and settings), `/api/spaces`, `/api/health` and `/api/lan` (this computer only), with zero external backend dependencies. Only Lira itself may call them (host and origin checks, JSON only, size limit), and every save is noted in `data/private/audit.log`.
+* **Everything is a file**: besides tickets, projects, sprints, roadmaps (one file each), teams, standups and settings live as JSON under `data/`, so clearing the browser loses nothing. See SETUP.md section 7.
 * **Unified Single-File Backup & Restore**:
   * **Export**: Clicking **Export JSON Backup** downloads a single, comprehensive timestamped backup file (`lira-backup-YYYY-MM-DD.json`) containing all spaces and issues across your entire workspace, while simultaneously refreshing local disk files.
   * **Import**: Uploading a single backup `.json` file restores all spaces and issues into in-browser Dexie IndexedDB and immediately dual-syncs them to individual space JSON files on disk.
@@ -44,15 +64,16 @@
 * **Seamless Project-to-Space Navigation**: Smoothly transition between the Projects overview/workspace and any Space board with automatic state switching and sidebar restoration.
 * **Aesthetic Geometric App Launcher**: Multi-tone gradient 9-module app switcher button with instant operational triggers for Lira Board, Lira AI, and local PC Backup & Restore.
 
-### 🤖 3. Omnipresent AI Copilot & Autonomous Agent
-* **Animated Floating Avatar Trigger**: Docked in the bottom-right corner (`bottom-5 right-5`) featuring the enhanced Lira AI SVG avatar with gentle breathing and glowing animations (`animate-float-subtle`, `animate-pulse-glow`).
-* **Non-Blocking Curved Dialogue Box**: Floating card with curved edges on all 4 sides (`rounded-3xl`), detached from window borders, keeping the entire Kanban board visible.
-* **Compact & Expanded Modes**: One-click toggle between compact dialogue card (`w-[440px]`) and spacious view (`w-[680px]`) for wide cross-space comparison tables.
-* **Cross-Space Omnipresence**: Live read/write visibility across all present and future spaces. Query tickets, inspect roadmaps, or create issues in any space from anywhere in the app.
-* **Autonomous Task Breakdown**: Generates domain-specific engineering subtasks (Docker, Kubernetes, CI/CD, Certifications) directly into tickets.
-* **Configurable System Instructions**: Edit the agent's governing directives and optional Google Gemini 1.5 Flash cloud API key via the in-drawer Settings tab.
+### 🤖 4. Viva AI: Copilot & Autonomous Agent
+* **Floating launcher** in the bottom-right corner opens a curved chat card that grows out of the button and shrinks back into it. Compact and expanded sizes.
+* **Reads and writes across every space.** Search, status tables, create tickets, move them between statuses and sprints, add subtasks.
+* **Confirm and Undo.** Before changing anything Viva shows what it will do and waits for **Confirm**. Afterwards an **Undo** button puts every changed ticket back. (Settings can turn confirmation off.)
+* **Sprint-aware.** "Plan next sprint from my backlog" (highest priority first, within capacity, only spaces that work in that sprint), "Summarise this sprint", "Write my standup", "Show the risk radar".
+* **Suggestions while you create a ticket.** Possible duplicates, labels, priority and the likely epic. Nothing is applied until you click.
+* **Your choice of model.** The built-in engine (default, no network), Google Gemini, or any OpenAI-compatible server (Ollama, LM Studio...). Changes to tickets are always made by the built-in engine so they can be previewed and undone; a model only answers questions. Ticket text is treated as data, never as instructions.
+* Code: `src/services/ai/` (intent, handlers, preview, undo, provider) and `src/components/ai/`.
 
-### 🏷️ 4. 3-Tier Enterprise Work Item Hierarchy
+### 🏷️ 5. 3-Tier Enterprise Work Item Hierarchy
 * **Epics** ⚡ → **Tasks** ✅ / **Bugs** 🐛 → **Subtasks** ↳
 * **Story Removed**: Completely streamlined into Tasks and Epics across all spaces and code paths.
 * **Dynamic Type Conversion**: Upgrade or downgrade any ticket dynamically with automatic parent-child relinking and audit activity logging.
@@ -63,23 +84,32 @@
 ## 🚀 Quick Start
 
 ### Prerequisites
-* **Node.js**: v18.0.0 or higher
-* **npm**: v9.0.0 or higher
+* **Node.js** 20.19+ or 22.12+ (Vite 8 needs it) and **npm** 10+
 
-### Installation & Launch
+### Install and run
 
 ```bash
-# 1. Clone or navigate to the repository
-cd d:\MLOps_LLMOps\Lira\lira-app
-
-# 2. Install dependencies
+cd lira-app          # every command runs from lira-app/
 npm install
-
-# 3. Start the local development server
-npm run dev
+npm run dev          # http://localhost:5173
 ```
 
-Open your browser at **`http://localhost:5173`**.
+Other commands:
+
+| Command | What it does |
+|---|---|
+| `npm run dev:lan` | Same, and also opens Lira to your own Wi-Fi for a tablet or phone (private link and QR code in **Settings, Other devices**) |
+| `npm test` | 294 unit and integration tests (Vitest) |
+| `npm run build` | Type-check, then production build |
+| `npm run lint` | Oxlint |
+
+Full instructions, where data is stored, URLs, and the tablet and phone steps are in [SETUP.md](SETUP.md).
+
+---
+
+## 🧪 Tests
+
+`npm test` covers sprint logic (monthly and custom lengths, rollover, reports), standup and invite builders, AI intent parsing and the confirm / undo flow, the disk-persistence layer (including wiping the browser and restoring from disk), the local API guard, routes, and the animation helpers.
 
 ---
 
@@ -87,58 +117,45 @@ Open your browser at **`http://localhost:5173`**.
 
 ```
 Lira/
-├── data/
-│   ├── spaces.json                     # Manifest registry of all active spaces
-│   ├── spaces/                         # Sharded space-segregated storage
-│   │   ├── AI.json                     # AI Projects (Epics, Tasks, Subtasks)
-│   │   ├── AP.json                     # Awesome Portfolio
-│   │   ├── CERT.json                   # Certifications (Azure, Databricks, Kubestronaut)
-│   │   ├── CH.json                     # Creator Hub (Prompts, Content)
-│   │   ├── COUR.json                   # Courses (Azure, AI/MLOps, Platform)
-│   │   ├── GT.json                     # General Tasks
-│   │   ├── IG.json                     # Interview Guide
-│   │   ├── LIRA.json                   # Lira Internal Engineering & DevOps
-│   │   └── TS.json                     # Test Space
-│   └── lira-workspace.json             # Consolidated dual-sync master snapshot
-├── Prompts and Architectures/          # System design, architecture, and user guides
-│   ├── 01_AppDesign.md
-│   ├── 02_Frontend_Architecture.md
-│   ├── 03_Database_and_Storage.md
-│   ├── 04_Backend_and_Offline_Workflows.md
-│   ├── 05_Technical_Workflows_and_State_Machine.md
-│   ├── 06_Feature_Catalog.md
-│   ├── 07_User_Guide_and_How_To.md
-│   ├── 08_Troubleshooting_and_Disaster_Recovery.md
-│   └── 09_AI_Agent_and_Copilot_Architecture.md
-├── lira-app/                           # React frontend application
-│   ├── public/                         # Public brand assets (lira-logo.png, etc.)
+├── data/                               # Your workspace, as JSON files
+│   ├── spaces.json, spaces/<KEY>.json  # Spaces and their tickets (one file per space)
+│   ├── lira-workspace.json             # Consolidated snapshot
+│   ├── projects.json                   # Projects
+│   ├── sprints.json                    # Sprint goals, capacity, retrospectives, custom sprints, sprint spaces
+│   ├── roadmaps/<id>.json, index.json  # One file per roadmap
+│   ├── teams.json, standups.json       # Teams and standups
+│   ├── board-config.json, settings.json# Board settings, theme, profile, Viva settings
+│   └── private/                        # Git-ignored: API key, tablet link secret, audit log
+├── Prompts and Architectures/          # Design, architecture and user guides (01 to 09)
+├── lira-app/                           # The web app (run every command from here)
+│   ├── server/                         # Disk store and the local API guard (host check, headers, audit log)
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── ai/                     # Lira AI Copilot floating card & LiraAIAvatar
-│   │   │   ├── board/                  # KanbanBoard, BoardColumn, IssueCard, SummaryView, CapacityView
-│   │   │   ├── common/                 # ConfirmDeleteModal, Avatar, Badge, Button, Modal
-│   │   │   ├── filter/                 # FiltersPage (Multi-dimensional cross-space filter engine)
-│   │   │   ├── issue/                  # IssueDetailModal, CreateIssueModal
-│   │   │   ├── layout/                 # TopNavigation, LeftSidebar, BoardActionBar, CustomiseSidebarModal
-│   │   │   └── space/                  # Space settings and create modals
-│   │   ├── db/                         # Dexie DB instance, seed data, storage service
-│   │   ├── hooks/                      # useIssues, useSpaces reactive hooks
-│   │   ├── services/                   # localDiskSync, aiAgentService
-│   │   ├── types/                      # TypeScript domain models (issue, space)
-│   │   ├── utils/                      # dateUtils, priorityUtils, rankUtils
-│   │   ├── App.tsx                     # Main layout & routing
-│   │   └── main.tsx                    # React DOM entry point
-│   ├── vite.config.ts                  # Vite config with sharded localFileDbPlugin middleware
-│   ├── package.json
-│   └── tsconfig.json
-└── README.md                           # Master repository documentation
+│   │   │   ├── ai/                     # Viva AI chat card and avatar
+│   │   │   ├── board/                  # Kanban board, summary, capacity, reports, forms
+│   │   │   ├── common/                 # Modal, Button, motion (animations), Confetti, error boundaries
+│   │   │   ├── filter/ foryou/ issue/  # Filters page, For you, ticket popup and create form
+│   │   │   ├── layout/                 # Top bar, sidebar, settings (including Other devices)
+│   │   │   ├── projects/ roadmap/      # Projects and roadmaps
+│   │   │   ├── sprints/                # Sprint pages: overview, planning, reports, retro, epics
+│   │   │   ├── standup/ space/         # Standup and sprint calls, space dialogs
+│   │   ├── db/                         # Dexie database, seed data, backup
+│   │   ├── hooks/                      # Data hooks, issue popup, media queries
+│   │   ├── services/                   # Disk sync, JSON mirror, roadmap epics, ai/ (Viva)
+│   │   ├── utils/                      # Sprint logic and reports, roadmap logic, accent, safe URLs, celebrate
+│   │   ├── routes.ts                   # The list of pages and their URLs
+│   │   └── App.tsx, main.tsx
+│   ├── vite.config.ts                  # Dev server with the disk-saving API
+│   └── package.json
+├── README.md  SETUP.md  ROADMAP.md  SECURITY_REPORT.md
+└── .gitignore                          # Includes data/private/ and App Screen Previews/
 ```
 
 ---
 
 ## 🗂️ Active Spaces Across the Workspace
 
-Lira currently manages **9 active spaces** with **124+ issues** across diverse technical domains:
+Lira currently manages **9 active spaces** with **150+ tickets** across diverse technical domains:
 
 | Key | Space Name | Description / Focus | Epics & Scope |
 |---|---|---|---|
@@ -156,7 +173,7 @@ Lira currently manages **9 active spaces** with **124+ issues** across diverse t
 
 ## 🛠️ DevOps & Production Roadmap (LIRA Space)
 
-The `LIRA` space within the application tracks the active roadmap for cloud-native delivery:
+The `LIRA` space within the application tracks the work below. The current plan (phases, what is done) is in [ROADMAP.md](ROADMAP.md) and, inside Lira, under **Roadmaps**. Older releases first:
 
 | Key | Type | Title | Status |
 |---|---|---|---|
@@ -201,7 +218,7 @@ The `LIRA` space within the application tracks the active roadmap for cloud-nati
 
 ---
 
-## 🚀 v2.0 Release Notes
+## 🚀 v2.0 Release Notes (earlier history)
 
 Lira v2.0 delivers an extensive suite of enterprise UX refinements, navigation upgrades, and responsive layouts:
 

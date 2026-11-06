@@ -38,7 +38,7 @@ Lira is a **single-user app that runs on your own computer**. It has no accounts
 | 19 | Insecure deserialization | Pass |
 | 20 | Stack traces | Fixed |
 
-**Totals:** 6 pass, 8 fixed, 2 partial, 4 not applicable. After the fixes: `npm audit` reports 0 vulnerabilities, 270 automated tests pass (including the security tests listed below), and the app was re-run in a real browser with the new policies and showed no violations.
+**Totals:** 6 pass, 8 fixed, 2 partial, 4 not applicable. After the fixes: `npm audit` reports 0 vulnerabilities, 294 automated tests pass (including the security tests listed below), and the app was re-run in a real browser with the new policies and showed no violations.
 
 ## Problems found that are not on the list
 
@@ -91,7 +91,7 @@ Searched the working tree and all 20 commits for Gemini, OpenAI, GitHub and priv
 There are no passwords and nothing is hashed. Ticket ids use `uuid`, which uses the browser's secure random generator.
 
 ### 11. Slop squatting: Pass
-Every package Lira depends on was looked up on npm and exists, with the expected maintainer: `@hello-pangea/dnd`, `date-fns`, `dexie`, `dexie-react-hooks`, `lucide-react`, `react-router-dom`, `uuid`, `zustand`, and the new `@fontsource/inter`. One stub, `@types/uuid` (npm says `uuid` ships its own types), was removed.
+Every package Lira depends on was looked up on npm and exists, with the expected maintainer: `@hello-pangea/dnd`, `date-fns`, `dexie`, `dexie-react-hooks`, `lucide-react`, `react-router-dom`, `uuid`, `zustand`, and the later additions `@fontsource/inter`, `framer-motion` and `qrcode`. One stub, `@types/uuid` (npm says `uuid` ships its own types), was removed.
 Tip: when an AI suggests a package, run `npm view <name>` first.
 
 ### 12. Dependency CVEs: Fixed

@@ -1,5 +1,7 @@
 # 07 — User Guide & How-To
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 ## Getting Started
 
 ### 1. Run the App Locally
@@ -206,3 +208,21 @@ Your study notes, tickets, and progress are precious. Back them up in seconds:
 | `Enter` | Save title edit |
 | `Ctrl + Enter` | Submit comment |
 | `Tab` | Navigate form fields |
+
+## Update (November 2026)
+
+**Create a sprint with a length and spaces.** Sprints, then **New sprint**. Choose Monthly, Weekly, Bi-weekly or Number of days (1 to 90), the start date (or the month), an optional name and goal, and which spaces work in it ("All spaces" by default). Custom sprints cannot overlap each other.
+
+**Plan a sprint.** Open the sprint, **Planning** tab. Drag tickets from the backlog on the left to the sprint on the right (or use + and -). Type the team capacity in story points; going over shows a warning.
+
+**Filter a sprint.** On the **Sprint** tab, **Filter** by status and by space.
+
+**Close a sprint.** **Complete sprint**, pick where unfinished tickets go, optionally write the retrospective, **Close sprint**. Tick off retrospective actions later on the sprint page.
+
+**Reports.** **Reports** tab: burnup, cumulative flow, scope changes, lead and cycle time. **Markdown** downloads a file; **PDF** opens the print dialog.
+
+**Ask Viva.** Open the chat button. Examples: "Plan next sprint from my backlog", "Summarise this sprint", "Write my standup", "Show the risk radar", "Move LIRA-12 to in progress". Viva shows a preview; press **Confirm**, and **Undo** if you change your mind.
+
+**Open Lira on a tablet or phone.** Start with `npm run dev:lan`. On the computer open **Settings, Other devices**, scan the QR code with the device (same Wi-Fi), once. See SETUP.md section 13.
+
+**Move around.** Every page has its own address, so Refresh and Back work, and you can paste a link to a page or a ticket.

@@ -1,5 +1,7 @@
 # 01 — App Design: System Prompts & Genesis Architecture
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 > **Lira (Learner's Jira)** is a 100% offline-first, browser-based personal project management tool
 > modelled exactly on Atlassian Jira Work Management.  No cloud account, no API keys, no server.
 
@@ -162,3 +164,11 @@ Floating Trigger (bottom-5 right-5)
 
 The AI subsystem operates as an omnipresent assistant across all spaces without obstructing the Kanban board. It supports compact (`w-[440px]`) and expanded (`w-[680px]`) modes, natural language ticket lookup, and domain-specific engineering task breakdowns. For full details, see [09_AI_Agent_and_Copilot_Architecture.md](./09_AI_Agent_and_Copilot_Architecture.md).
 
+## Update (November 2026)
+
+- **Still offline-first and single-user**, but no longer "browser only": the Vite dev server has a small API that saves everything as JSON files under `data/`. The browser (IndexedDB, localStorage) is a cache. Clearing it loses nothing.
+- **Sprints are first-class.** Monthly sprints plus weekly, bi-weekly and N-day sprints, a choice of which spaces work in each sprint, planning, reports, retrospectives and a roadmap-style epic view.
+- **Roadmaps** with one file each; every item is a real epic.
+- **Viva AI** (renamed from Lira AI) previews, confirms and can undo its changes; it is sprint-aware and can use Gemini or any OpenAI-compatible model.
+- **Reach:** `npm run dev:lan` opens Lira to your own Wi-Fi for a tablet or phone, behind a private link.
+- **Multi-user** is deliberately not part of this branch. Single-user and multi-user will live on separate branches (ROADMAP Phase 7).

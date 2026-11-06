@@ -1,5 +1,7 @@
 # 09 — AI Agent & Copilot Architecture
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 > Technical architecture, design specifications, and execution pipelines for the **Lira AI Autonomous Agent & Chief Agile Copilot** embedded inside Lira.
 
 ---
@@ -223,3 +225,12 @@ To enhance interactive responsiveness and replicate the familiar feel of modern 
 * **API Key Storage**: When configured, Google Gemini API keys are held strictly in the browser's client-side `localStorage`. They are never logged, serialized to `lira-workspace.json`, or transmitted to third parties.
 * **Two-Way Local Disk Persistence**: All actions executed by the agent (creating issues, updating statuses, appending subtasks) automatically trigger `localDiskSync.ts`, synchronizing the mutated state directly to `data/lira-workspace.json` within 400ms.
 
+## Update (November 2026)
+
+- **Name:** Viva AI (formerly Lira AI). Code: `src/services/ai/` and `src/components/ai/VivaAIChatbot.tsx`. See `src/components/ai/README.md` for the file-by-file list.
+- **Pipeline:** prompt, `refineUserPrompt` (intent: status move, subtasks, create, sprint plan, sprint summary, standup digest, risk radar, read queries), then either the configured model (questions only) or the built-in handlers. Changes and exact numbers always use the built-in engine.
+- **Confirm and undo:** `preview.ts` explains each change; `confirm.ts` runs it inside `runWithUndo`, which snapshots tickets and keeps the differences (last 20, in memory); `undoAction` restores them.
+- **Sprint-aware logic** is pure and tested (`sprintInsights.ts`): planning picks backlog tickets by priority within capacity (default 20 points when none is set, unestimated tickets count as 3, only spaces in that sprint); risk compares time passed with work done (at risk when the work done is 30 percentage points behind the time passed (after a quarter of the sprint), watch at 15) and lists tickets idle for 5 days or more.
+- **Creation suggestions** (`suggest.ts`): word-overlap based duplicates (50% or more), labels from similar tickets and topics, priority from urgency words, the likely epic. Nothing is applied until clicked.
+- **Providers:** built-in (default), Gemini (key sent in a header, not the URL) and OpenAI-compatible servers (`/chat/completions`).
+- **Security:** ticket text is shortened, flattened and marked as data in prompts, and a model cannot write to tickets, so text inside a ticket cannot make Viva act. API keys live in `data/private/secrets.json`, are never shown to tablets or phones, and tablets cannot overwrite them.

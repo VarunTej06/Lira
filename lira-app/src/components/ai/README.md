@@ -8,60 +8,65 @@
 
 ```
 src/components/ai/
-├── LiraAIAvatar.tsx           # Enhanced Viva AI SVG brand avatar component
-├── LiraAICopilot.tsx          # Floating dialogue card, animated bottom-right trigger & settings
-└── README.md                  # Component documentation (this file)
+├── LiraAIAvatar.tsx           # Viva AI SVG brand avatar
+├── VivaAIChatbot.tsx          # Launcher, chat card (grows out of the launcher), settings, confirm / undo buttons
+└── README.md                  # this file
 ```
 
-Companion service:
+The logic lives in `src/services/ai/` (`src/services/aiAgentService.ts` re-exports it):
+
 ```
-src/services/
-└── aiAgentService.ts          # NLU parser, intent execution pipeline, Gemini API client
+src/services/ai/
+├── agent.ts            # processUserMessage: refine the prompt, then the model or the built-in handlers
+├── intent.ts           # What is being asked: space, ticket, status, sprint, standup, risk
+├── handlersRead.ts     # Searches, status tables, epics, overview
+├── handlersWrite.ts    # Move a ticket, add subtasks, create a ticket
+├── handlersSprint.ts   # Plan a sprint, summarise one, standup digest, risk radar
+├── sprintInsights.ts   # The pure logic behind those four (capacity, risk, idle tickets, digest)
+├── preview.ts          # "Please confirm" text for every change
+├── confirm.ts, undo.ts # Run a previewed change, remember how to take it back
+├── suggest.ts          # Duplicates, labels, priority, epic while creating a ticket
+├── provider.ts         # Gemini or an OpenAI-compatible server
+├── gemini.ts           # Gemini client and the prompt (ticket text flattened and marked as data)
+├── settings.ts         # System instruction, provider, keys, confirm switch
+├── subtasks.ts, context.ts, types.ts
 ```
 
 ---
 
 ## 🎨 Component Overview
 
-### 1. `LiraAIAvatar.tsx`
-Renders the official enhanced Viva AI Avatar as a scalable SVG.
+### `LiraAIAvatar.tsx`
+Renders the Viva AI avatar as a scalable SVG. Props: `size` (default 48), `className`, `hasSparkles` (default true). Gradient and filter ids come from `useId()` so several avatars never collide.
 
-* **Props**:
-  ```typescript
-  interface LiraAIAvatarProps {
-    size?: number;            // Default: 48 (renders size x size px)
-    className?: string;       // Custom CSS classes
-    hasSparkles?: boolean;    // Default: true (renders AI constellation stars)
-  }
-  ```
-* **Features**:
-  * Scoped gradient and filter IDs generated via React `useId()` to prevent SVG DOM collision.
-  * Multi-stop gradient background (`#4F46E5` → `#7C3AED` → `#0052CC` → `#0284C7`).
-  * Authentic Atlassian-grade bold "L" glyph with SVG drop-shadow.
-  * Cyber energetic circuit arc and 4-point golden/cyan AI sparkle star.
+### `VivaAIChatbot.tsx`
+The floating launcher and the chat card.
 
-### 2. `LiraAICopilot.tsx`
-Renders both the **floating bottom-right avatar trigger button** and the **curved floating dialogue card**.
-
-* **Props**:
-  ```typescript
-  interface LiraAICopilotProps {
-    isOpen: boolean;                         // Controls dialogue card visibility
-    onClose: () => void;                     // Callback to dismiss the dialogue card
-    onToggle?: () => void;                   // Optional toggle callback
-    activeSpace: Space | undefined;          // Current active space context
-    spaces: Space[];                         // List of all spaces in workspace
-    onSelectIssue?: (issue: Issue) => void;  // Callback when user clicks "Open" on an issue action card
-  }
-  ```
-* **Key States**:
-  * `isExpanded`: Toggles between **compact mode** (`w-[440px] h-[590px]`) and **expanded mode** (`w-[680px] h-[calc(100vh-6.5rem)]`).
-  * `showSettings`: Switches the card view between the live chat feed and the System Instructions / Gemini API configuration editor.
-  * `messages`: Message thread containing conversational text, structured markdown tables, action cards, and suggested quick action pills.
+* **Props**: `isOpen`, `onClose`, `onToggle`, `activeSpace`, `spaces`, `onSelectIssue`, `initialPrompt`, `onClearInitialPrompt`.
+* **Open and close** use Framer Motion (`AnimatePresence`): the card grows out of the round launcher and shrinks back into it. Messages slide in from their own side and the suggestion chips pop in one after another.
+* **Confirm and Undo**: when a prompt would change tickets, Viva replies with a preview and **Confirm / Cancel** buttons (`msg.pending`). After a confirmed change the reply carries an **Undo** button (`msg.undo`). Undo works until the page is reloaded.
+* **Settings tab**: system instruction, "confirm before changing anything", model choice (built-in, Gemini, OpenAI-compatible with base URL, model and key).
 
 ---
 
-## 💫 CSS Animations & Micro-Interactions
+## 🧠 What it can do
+
+| You say | What happens |
+|---|---|
+| "Move AP-10 to in progress", "Create a bug login crashes in Certifications", "Break down AP-10 into subtasks" | Preview, Confirm, change, Undo |
+| "Plan next sprint from my backlog" | Picks backlog tickets by priority within the sprint's capacity, only from spaces that work in that sprint. Preview, Confirm, Undo |
+| "Summarise this sprint" / "next sprint" | Counts, time passed, status (on pace, watch, at risk), high-priority work still open |
+| "Write my standup" | Done and started since the last working day, what is in progress, blockers |
+| "Show the risk radar", "which tickets are idle" | Sprints behind their time, over-committed sprints, tickets idle 5 days or more, overdue tickets |
+| "Show all spaces with number of tickets in each status", "What is in progress?", "Search for docker" | Tables and lists across every space (read-only) |
+
+Anything else goes to the configured model when there is one; otherwise to the built-in answers.
+
+---
+
+## 💫 Animations
+
+The launcher's floating and glowing are CSS (below). The chat card opening and closing, the messages and the suggestion chips use Framer Motion (see `src/components/common/motion.tsx`).
 
 Declared in [`src/index.css`](../../index.css):
 
@@ -91,22 +96,24 @@ Declared in [`src/index.css`](../../index.css):
 
 ---
 
-## ⚙️ LocalStorage Configuration Keys
+## ⚙️ Settings keys
 
-| Key | Type | Description |
-|---|---|---|
-| `lira_ai_system_instruction` | `string` | Custom system instruction prompt governing the agent's behavior. If unset, defaults to `DEFAULT_SYSTEM_INSTRUCTION`. |
-| `lira_gemini_api_key` | `string` | Optional Google Gemini API key. If empty, the agent uses the local offline engine. |
+All are mirrored to `data/settings.json`, except the API keys, which go to `data/private/secrets.json` (git-ignored). They are never sent to tablets or phones.
+
+| Key | Description |
+|---|---|
+| `lira_ai_system_instruction` | System instruction for the agent. Defaults to `DEFAULT_SYSTEM_INSTRUCTION`. |
+| `lira_ai_provider` | `local`, `gemini` or `openai`. If unset: Gemini when a key exists, otherwise local. |
+| `lira_gemini_api_key` | Google Gemini key (secret). |
+| `lira_ai_base_url`, `lira_ai_model`, `lira_ai_api_key` | OpenAI-compatible server (for example `http://localhost:11434/v1`, `llama3.1`). The key is a secret. |
+| `lira_ai_confirm_writes` | `0` turns the confirmation off. On by default. |
 
 ---
 
-## 🧪 Testing Intent Execution Locally
+## 🧪 Tests
 
-Standalone test scripts reside in the `scratch/` directory:
-* `test_future_spaces.cjs`: Verifies dynamic resolution of future space keys, names, and ticket identifiers.
-* `test_nlp_intents.cjs`: Validates status transitions, subtask breakdown, issue creation, and table formatting.
+Behaviour tests run in Vitest with an in-memory IndexedDB: `src/services/aiAgent.test.ts`, `aiIntent.test.ts`, `aiPhase6.test.ts` (preview, confirm, undo, sprint prompts, standup, risk, suggestions, provider) and `aiSecurity.test.ts` (prompt injection, key in a header).
 
-Run via Node:
 ```bash
-node test_future_spaces.cjs
+npm test
 ```

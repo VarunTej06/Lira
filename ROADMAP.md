@@ -1,18 +1,27 @@
-# Lira: Roadmap (Proposed)
+# Lira: Roadmap
 
-Proposed build order for the next versions. It is a draft: pick a phase number to start and it will be broken into concrete tasks.
+Build order for the versions of Lira. Pick a phase number to start and it will be broken into concrete tasks.
 
-| # | Phase | Theme | Size |
-|---|---|---|---|
-| 1 | Persistence cleanup and core tests | Foundation | Medium |
-| 2 | Routing and file splitting | Foundation | Medium |
-| 3 | Teams feature, real standup and invites | Collaboration | Large |
-| 4 | Sprint planning, rollover, retros, reports | Agile | Large |
-| 5 | Command palette, bulk edit, saved filters | Productivity | Medium |
-| 6 | Viva AI: confirm-and-undo, sprint-aware prompts | AI | Medium |
-| 7 | Decide on multi-user | Architecture | Decision, then Very large |
+| # | Phase | Theme | Size | Status |
+|---|---|---|---|---|
+| 1 | Persistence cleanup and core tests | Foundation | Medium | **Done** |
+| 2 | Routing and file splitting | Foundation | Medium | **Done** |
+| 3 | Teams feature, real standup and invites | Collaboration | Large | Deferred (depends on the multi-user decision) |
+| 4 | Sprint planning, rollover, retros, reports | Agile | Large | **Done** |
+| 5 | Command palette, bulk edit, saved filters | Productivity | Medium | Not started |
+| 6 | Viva AI: confirm-and-undo, sprint-aware prompts | AI | Medium | **Done** |
+| 7 | Decide on multi-user | Architecture | Decision, then Very large | Deferred: single-user and multi-user will live on separate branches |
 
-Phases 1 and 2 make every later phase cheaper, so they should come first.
+Phases 1 and 2 make every later phase cheaper, so they came first.
+
+### Also done, outside the phases
+
+- **Sprint length and sprint spaces:** monthly, weekly, bi-weekly or N-day sprints, and a choice of which spaces work in each sprint (Phase 4 follow-up).
+- **Sprint page filter:** by status and by space.
+- **Security review:** all 20 points checked, 8 fixed (see [SECURITY_REPORT.md](SECURITY_REPORT.md)): local API guard, safe file names and links, security headers, audit log, React Router 7, local fonts.
+- **Animations:** Framer Motion for dialogs, menus, tabs, the sidebar highlight, Viva, count-up numbers, line drawing and confetti (reduced-motion respected). A slide between pages and a click ring were tried and removed.
+- **Tablet and phone:** `npm run dev:lan` with a private link and QR code, a menu drawer for phones and upright tablets, always-visible hover actions on touch screens.
+- **Documentation:** README, SETUP and the AI module README brought up to date.
 
 > The same plan now lives inside Lira as a real roadmap: open **Roadmaps** in the sidebar (timeline, Now/Next/Later, table). Every item is an epic in the LIRA space, and each roadmap is saved as its own file in `data/roadmaps/`. In the app it is the **November plan**: every item takes about two days and everything finishes in November (the phase descriptions below are unchanged). December gets its own roadmap. When you finish an item here, update it there too.
 
@@ -148,8 +157,8 @@ Decide before starting Phase 3's real invites, since it changes how they are bui
 
 ## Cross-cutting, any phase
 
-- Accessibility: focus rings, aria labels on icon buttons, dark-mode contrast, reduced-motion everywhere.
-- Mobile and small-screen layout.
+- Accessibility: focus rings, aria labels on icon buttons, dark-mode contrast. (Reduced motion is respected by every animation.)
+- Mobile and small-screen layout: phone and tablet layouts are in; the board, wide tables and a few older screens still scroll sideways and could be tuned.
 - Performance: virtualise long lists, avoid loading all issues for every view.
 - Undo toasts for moves, deletes and bulk actions.
 - Consistent empty states, modals, tooltips and button sizes.

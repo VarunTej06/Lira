@@ -1,5 +1,7 @@
 # 05 — Technical Workflows & State Machine
 
+> **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
+
 ## 1. Kanban Drag-and-Drop Lifecycle
 
 ```
@@ -260,3 +262,18 @@ Persist: Trigger debounced `POST /api/save` → `data/lira-workspace.json`
          ▼
 Return ChatMessage with formatted Markdown confirmation and suggested next actions.
 ```
+
+## Update (November 2026)
+
+**A ticket reaches Done** (board, popup, bulk, Viva): the database hook sets `resolvedAt`, appends to `statusLog`, and fires a celebration (confetti). Reopening clears `resolvedAt`.
+
+**Closing a sprint:** Close dialog, choose where unfinished tickets go (default: the next sprint), optionally write the retrospective (went well, didn't, actions), then `completeSprint` moves the unfinished tickets (recording `sprintHistory` and an activity entry on each), marks the sprint closed and celebrates. An ended sprint with unfinished tickets shows a "Carry them over?" prompt on its page and on the overview.
+
+**Planning a sprint:** Planning view; dragging a ticket across calls `moveIssuesToSprint`. Points are summed against the capacity (typed in, or the average of the last closed sprints). Over capacity shows a warning. Only spaces that work in the sprint offer their tickets.
+
+**Viva changes (preview, confirm, undo):**
+1. `processUserMessage(..., { confirmWrites: true })` recognises a write and returns a preview (`buildPreview`) with `pending`.
+2. **Confirm** runs `confirmAndRun`, which snapshots all tickets, runs the normal handler, and stores the differences as an undo record (the last 20, in memory).
+3. **Undo** puts changed tickets back and removes created ones, without the Done and status-log bookkeeping (`restoringIssuesExactly`).
+
+**Roadmap items** stay in step with their epic and checklist task (`services/roadmapEpics.ts`).

@@ -1,3 +1,4 @@
+import { safeHttpUrl } from '../../utils/safeUrl';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Video, CalendarPlus, Download, Mail, Copy, Check, Trash2, Plus, Users, ListChecks, AlertTriangle,
@@ -363,8 +364,8 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
                         <div className="text-sm font-medium text-jira-text truncate">{s.title}</div>
                         <div className="text-[11px] text-jira-muted">{REPEAT_LABEL[s.repeat]} · {s.time} · {s.duration} min · {PLATFORM_LABEL[s.platform]} · {s.memberKeys.length} people</div>
                       </div>
-                      {s.link && (
-                        <a href={s.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-jira-blue text-white hover:bg-jira-blue-hover">
+                      {safeHttpUrl(s.link) && (
+                        <a href={safeHttpUrl(s.link)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-jira-blue text-white hover:bg-jira-blue-hover">
                           Join <ExternalLink className="w-3 h-3" />
                         </a>
                       )}

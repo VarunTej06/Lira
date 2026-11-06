@@ -55,6 +55,7 @@ Lira/                      <- repo root
 ├── Prompts and Architectures/
 ├── (App Screen Previews/ is git-ignored: third-party screenshots, kept locally only)
 ├── README.md              <- product overview and features
+├── SECURITY_REPORT.md     <- the 20-point security check and what was fixed
 ├── SETUP.md               <- this file
 └── ROADMAP.md             <- planned work
 ```

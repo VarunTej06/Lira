@@ -257,6 +257,10 @@ Lira v2.0 delivers an extensive suite of enterprise UX refinements, navigation u
 
 ---
 
+## 🔒 Security
+
+See [SECURITY_REPORT.md](SECURITY_REPORT.md) for the 20-point security check: what passed, what was fixed and what still applies.
+
 ## 🛡️ License
 
 Private workspace for MLOps & LLMOps engineering. All rights reserved.

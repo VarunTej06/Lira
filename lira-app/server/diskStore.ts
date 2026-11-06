@@ -38,6 +38,8 @@ function readJson(file: string): any | undefined {
   }
 }
 
+import { safeSpaceKey, hasPrototypePollution } from './guard.ts'
+
 const safeId = (id: unknown) => String(id).replace(/[^a-zA-Z0-9_-]/g, '_')
 export const roadmapsDir = (dataDir: string) => path.join(dataDir, 'roadmaps')
 
@@ -113,6 +115,7 @@ export function readStore(dataDir: string): Record<string, StoreEntries> {
  */
 export function writeStore(dataDir: string, files: Record<string, StoreEntries>, now = new Date()): string[] {
   const written: string[] = []
+  if (hasPrototypePollution(files)) throw new Error('Refusing to save: reserved key in data')
   for (const [name, entries] of Object.entries(files)) {
     if (!isStoreFile(name) || !entries || typeof entries !== 'object') continue
     if (name === 'roadmaps') {
@@ -180,7 +183,7 @@ export function createSpaceStore(dataDir: string) {
 
         // Read each space's JSON file
         for (const space of spaces) {
-          const key = String(space.key || `SPACE-${space.id}`).toUpperCase()
+          const key = safeSpaceKey(space.key, space.id)
           const spaceFile = path.resolve(spacesDir, `${key}.json`)
           if (fs.existsSync(spaceFile)) {
             try {
@@ -263,7 +266,7 @@ export function createSpaceStore(dataDir: string) {
 
     // 1. Write each space's dedicated JSON file
     for (const space of spaces) {
-      const key = String(space.key || `SPACE-${space.id}`).toUpperCase()
+      const key = safeSpaceKey(space.key, space.id)
       const fileName = `${key}.json`
       const filePath = path.resolve(spacesDir, fileName)
       activeFiles.add(fileName)

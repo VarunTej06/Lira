@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-06T12:37:20.036Z",
+  "savedAt": "2026-11-06T14:04:43.247Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -269,7 +269,8 @@
       ],
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-10-28T21:42:53.703Z",
-      "sprint": "2026-10"
+      "sprint": "2026-10",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 16,
@@ -462,7 +463,8 @@
       "parentId": 15,
       "epicId": 15,
       "epicLink": "Core Jira Frontend & Board Architecture",
-      "sprint": "2026-10"
+      "sprint": "2026-10",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 19,
@@ -538,7 +540,8 @@
       "createdAt": "2026-10-19T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "epicLink": "Core Jira Frontend & Board Architecture",
-      "sprint": "2026-10"
+      "sprint": "2026-10",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 20,
@@ -614,7 +617,8 @@
       "createdAt": "2026-10-24T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "epicLink": "Core Jira Frontend & Board Architecture",
-      "sprint": "2026-10"
+      "sprint": "2026-10",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 21,
@@ -684,7 +688,8 @@
       "createdAt": "2026-10-26T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "epicLink": "Core Jira Frontend & Board Architecture",
-      "sprint": "2026-10"
+      "sprint": "2026-10",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 22,
@@ -8549,7 +8554,8 @@
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
       "updatedAt": "2026-11-04T07:45:34.994Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 135,
@@ -8591,7 +8597,8 @@
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
       "updatedAt": "2026-11-04T07:45:34.994Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 136,
@@ -8633,7 +8640,8 @@
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
       "updatedAt": "2026-11-04T07:45:34.994Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 137,
@@ -8675,7 +8683,8 @@
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
       "updatedAt": "2026-11-04T07:45:34.994Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 138,
@@ -8717,7 +8726,8 @@
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
       "updatedAt": "2026-11-04T07:45:34.994Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 139,
@@ -8759,7 +8769,8 @@
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
       "updatedAt": "2026-11-04T07:45:34.994Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 140,
@@ -8802,7 +8813,8 @@
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
       "updatedAt": "2026-11-04T07:45:34.994Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 141,
@@ -8845,7 +8857,8 @@
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
       "updatedAt": "2026-11-04T08:35:54.340Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 142,
@@ -8888,7 +8901,8 @@
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
       "updatedAt": "2026-11-04T08:35:54.340Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 143,
@@ -8931,7 +8945,8 @@
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
       "updatedAt": "2026-11-04T08:35:54.340Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 144,
@@ -8974,7 +8989,8 @@
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
       "updatedAt": "2026-11-04T08:35:54.340Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 145,
@@ -9016,7 +9032,8 @@
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
       "updatedAt": "2026-11-04T08:35:54.340Z",
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "id": 159,
@@ -9233,7 +9250,8 @@
         "VY"
       ],
       "id": 163,
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "spaceId": 6,
@@ -9264,7 +9282,7 @@
           "createdAt": "2026-11-06T03:49:20.083Z"
         },
         {
-          "id": "p2done-dh4ayxsw",
+          "id": "p2done-niwdv0ci",
           "type": "status_change",
           "author": "VY",
           "authorInitials": "VY",
@@ -9475,7 +9493,7 @@
           "createdAt": "2026-11-06T03:49:20.342Z"
         },
         {
-          "id": "phase-4-complete-06g5rw",
+          "id": "phase-4-complete-1actsv",
           "type": "status_change",
           "author": "VY",
           "authorInitials": "VY",
@@ -9573,7 +9591,7 @@
           "createdAt": "2026-11-06T03:49:20.425Z"
         },
         {
-          "id": "phase-6-complete-xy5i93",
+          "id": "phase-6-complete-0b906k",
           "type": "status_change",
           "author": "VY",
           "authorInitials": "VY",
@@ -9674,7 +9692,8 @@
       "watchers": [
         "VY"
       ],
-      "id": 172
+      "id": 172,
+      "resolvedAt": "2026-11-06T13:54:17.095Z"
     },
     {
       "spaceId": 6,
@@ -9739,7 +9758,7 @@
           "createdAt": "2026-11-06T03:56:03.944Z"
         },
         {
-          "id": "p2done-adtb58aj",
+          "id": "p2done-owgrdu2s",
           "type": "status_change",
           "author": "VY",
           "authorInitials": "VY",
@@ -10111,7 +10130,7 @@
           "createdAt": "2026-11-06T04:18:30.876Z"
         },
         {
-          "id": "phase-4-complete-1psuoa",
+          "id": "phase-4-complete-qdlwhw",
           "type": "status_change",
           "author": "VY",
           "authorInitials": "VY",
@@ -10287,7 +10306,7 @@
           "createdAt": "2026-11-06T04:18:31.748Z"
         },
         {
-          "id": "phase-6-complete-aszgq9",
+          "id": "phase-6-complete-qljzot",
           "type": "status_change",
           "author": "VY",
           "authorInitials": "VY",

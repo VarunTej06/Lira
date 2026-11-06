@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Filter } from 'lucide-react';
+import { AnimatePresence, motion, menuPop } from '../common/motion';
 import type { Space } from '../../types/space';
 
 export interface SprintFilterValue { statuses: string[]; spaceIds: number[] }
@@ -44,8 +45,9 @@ export const SprintFilter: React.FC<SprintFilterProps> = ({ spaces, value, onCha
       >
         <Filter className="w-3.5 h-3.5" aria-hidden /> Filter{count > 0 && <span className="text-[11px] font-semibold">({count})</span>}
       </button>
+      <AnimatePresence>
       {open && (
-        <div className="absolute z-30 mt-1 left-0 w-72 bg-white border border-jira-border rounded-xl shadow-xl p-3 space-y-3" role="dialog" aria-label="Filter tickets">
+        <motion.div {...menuPop} style={{ transformOrigin: 'top left' }} className="absolute z-30 mt-1 left-0 w-72 bg-white border border-jira-border rounded-xl shadow-xl p-3 space-y-3" role="dialog" aria-label="Filter tickets">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-wide text-jira-muted mb-1">Status</div>
             <div className="flex flex-wrap gap-1.5">
@@ -69,8 +71,9 @@ export const SprintFilter: React.FC<SprintFilterProps> = ({ spaces, value, onCha
             </div>
           </div>
           <button onClick={() => onChange(EMPTY_FILTER)} disabled={!count} className="text-xs text-jira-blue hover:underline disabled:opacity-40 cursor-pointer">Clear filter</button>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -5,18 +5,23 @@ import { useIssueDetail, type IssueDetailModalProps } from './detail/useIssueDet
 import { IssueHeader } from './detail/IssueHeader';
 import { IssueMain } from './detail/IssueMain';
 import { IssueSidebar } from './detail/IssueSidebar';
+import { motion, dialogBackdrop, dialogPanel } from '../common/motion';
 
 /** The ticket popup: header, description / child work / activity on the left, details on the right. */
 export const IssueDetailModal: React.FC<IssueDetailModalProps> = (props) => {
   const s = useIssueDetail(props);
   if (!s) return null;
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+    <motion.div
+      {...dialogBackdrop}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
       onClick={e => { if (e.target === e.currentTarget) s.onClose(); }}
     >
-      <div
-        className="bg-white rounded-xl shadow-modal w-full flex flex-col overflow-hidden animate-scale-in"
+      <motion.div
+        initial={{ opacity: 0, x: 60, scale: 0.97 }}
+        animate={{ opacity: 1, x: 0, scale: 1 }}
+        transition={dialogPanel.transition}
+        className="bg-white rounded-xl shadow-modal w-full flex flex-col overflow-hidden"
         style={{ maxWidth: '1120px', maxHeight: '93vh' }}
         onClick={e => e.stopPropagation()}
       >
@@ -27,7 +32,7 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = (props) => {
           <IssueMain {...s} />
           <IssueSidebar {...s} />
         </div>
-      </div>
+      </motion.div>
     
       {/* Confirmation Modal for Issue Deletion */}
       <ConfirmDeleteModal
@@ -47,6 +52,6 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = (props) => {
           <span>Saved ✓</span>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };

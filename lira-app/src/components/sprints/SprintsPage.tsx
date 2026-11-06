@@ -17,6 +17,7 @@ import { RetroCard } from './RetroCard';
 import { EMPTY_FILTER, SprintFilter, type SprintFilterValue } from './SprintFilter';
 import { SprintSpacesPicker } from './SprintSpacesPicker';
 import { Modal } from '../common/Modal';
+import { CountUp, GrowBar, motion, slide, staggerChild, staggerParent, Toast } from '../common/motion';
 
 type View = 'sprint' | 'planning' | 'reports' | 'epics';
 const VIEWS: { id: View; label: string }[] = [
@@ -305,12 +306,12 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
           {/* Progress */}
           <div>
             <div className="flex justify-between text-xs text-jira-muted mb-1">
-              <span>{stats.done} of {stats.total} done · {stats.percent}%</span>
-              <span>{stats.donePoints}/{stats.points} points</span>
+              <span><CountUp value={stats.done} /> of {stats.total} done · <CountUp value={stats.percent} suffix="%" /></span>
+              <span><CountUp value={stats.donePoints} />/{stats.points} points</span>
             </div>
             <div className="h-2 rounded-full bg-gray-100 overflow-hidden flex">
-              <div className="bg-green-500" style={{ width: `${stats.total ? (stats.done / stats.total) * 100 : 0}%` }} />
-              <div className="bg-blue-500" style={{ width: `${stats.total ? (stats.inprogress / stats.total) * 100 : 0}%` }} />
+              <GrowBar className="bg-green-500" percent={stats.total ? (stats.done / stats.total) * 100 : 0} />
+              <GrowBar className="bg-blue-500" percent={stats.total ? (stats.inprogress / stats.total) * 100 : 0} />
             </div>
             {phase === 'active' && (
               <div className="relative h-1 mt-1">
@@ -328,7 +329,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               { label: 'Carried over in', v: stats.carriedIn, c: '#B45309' },
             ].map(t => (
               <div key={t.label} className="border border-jira-border rounded-md px-3 py-2">
-                <div className="text-xl font-semibold" style={{ color: t.c }}>{t.v}</div>
+                <div className="text-xl font-semibold" style={{ color: t.c }}><CountUp value={t.v} /></div>
                 <div className="text-[11px] text-jira-muted">{t.label}</div>
               </div>
             ))}
@@ -343,13 +344,15 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               role="tab"
               aria-selected={view === v.id}
               onClick={() => setView(v.id)}
-              className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 cursor-pointer transition-colors ${view === v.id ? 'border-jira-blue text-jira-blue' : 'border-transparent text-jira-muted hover:text-jira-text'}`}
+              className={`relative px-4 py-2 text-sm font-medium -mb-px border-b-2 border-transparent cursor-pointer transition-colors ${view === v.id ? 'text-jira-blue' : 'text-jira-muted hover:text-jira-text'}`}
             >
               {v.label}
+              {view === v.id && <motion.span layoutId="sprint-view-underline" transition={slide} className="absolute left-0 right-0 -bottom-[2px] h-0.5 rounded-full bg-jira-blue" aria-hidden />}
             </button>
           ))}
         </div>
 
+        <motion.div key={view} initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={slide} className="space-y-5">
         {view === 'sprint' && (
           <div className="flex items-center gap-2 -mt-2">
             <SprintFilter spaces={involved ? spaces.filter(s => involved.includes(s.id!)) || spaces : spaces} value={filter} onChange={setFilter} />
@@ -409,7 +412,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         )}
 
         {/* Tickets grouped by status */}
-        <div className="space-y-3">
+        <motion.div className="space-y-3" variants={staggerParent} initial="hidden" animate="show" key={`${sprint}-${scope}-${filter.statuses.join()}-${filter.spaceIds.join()}`}>
           {list.length === 0 && (
             <div className="bg-white border border-dashed border-jira-border rounded-lg py-12 text-center text-sm text-jira-muted">
               No tickets in {sprintName(sprint)}{scope !== 'all' ? ' for this space' : ''}.
@@ -422,7 +425,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             const sm = STATUS_META[status];
             const isCollapsed = collapsed.has(status);
             return (
-              <div key={status} className="bg-white border border-jira-border rounded-lg overflow-hidden">
+              <motion.div key={status} variants={staggerChild} className="bg-white border border-jira-border rounded-lg overflow-hidden">
                 <button
                   onClick={() => setCollapsed(prev => { const n = new Set(prev); n.has(status) ? n.delete(status) : n.add(status); return n; })}
                   className="w-full flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-jira-border text-left cursor-pointer"
@@ -444,10 +447,10 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
                     onClick={onIssueClick}
                   />
                 ))}
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
 
         {scope === 'all' && onOpenSpace && list.length > 0 && (
           <div className="flex flex-wrap gap-2 text-xs text-jira-muted items-center">
@@ -460,6 +463,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
           </div>
         )}
         </>)}
+        </motion.div>
       </div>
 
       <Modal isOpen={spacesOpen} onClose={() => setSpacesOpen(false)} title={`Spaces in ${sprintName(sprint)}`} size="md">
@@ -488,9 +492,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         onSaved={msg => { flash(msg); setRetroVersion(v => v + 1); }}
       />
 
-      {toast && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg shadow-lg z-50">{toast}</div>
-      )}
+      <Toast message={toast} />
     </div>
   );
 };
@@ -517,8 +519,8 @@ const BurndownChart: React.FC<{ data: ReturnType<typeof burndown>; total: number
         {[1, Math.ceil(n / 2), n].map(d => (
           <text key={d} x={x(d)} y={H - 6} fontSize="9" textAnchor="middle" fill="#6B778C">{d}</text>
         ))}
-        <polyline points={ideal} fill="none" stroke="#97A0AF" strokeWidth="1.5" strokeDasharray="4 3" />
-        {actualPts.length > 0 && <polyline points={actual} fill="none" stroke="#0052CC" strokeWidth="2" />}
+        <motion.polyline points={ideal} fill="none" stroke="#97A0AF" strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} />
+        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke="#0052CC" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
       </svg>
       <div className="flex gap-3 text-[10px] text-jira-muted">
         <span><span className="inline-block w-3 border-t-2 border-dashed border-gray-400 mr-1 align-middle" />Ideal</span>

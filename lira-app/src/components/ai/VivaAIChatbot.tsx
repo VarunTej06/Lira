@@ -12,6 +12,7 @@ import {
   getAiProvider, setAiProvider, getOpenAiConfig, setOpenAiConfig, getConfirmWrites, setConfirmWrites, type AiProvider,
 } from '../../services/aiAgentService';
 import { LiraAIAvatar } from './LiraAIAvatar';
+import { AnimatePresence, motion } from '../common/motion';
 
 interface VivaAIChatbotProps {
   isOpen: boolean;
@@ -56,17 +57,6 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
   const [provider, setProvider] = useState<AiProvider>(getAiProvider());
   const [oai, setOai] = useState(getOpenAiConfig());
   const [confirmWrites, setConfirmWritesState] = useState(getConfirmWrites());
-
-  // Keep the panel mounted while its closing animation plays
-  const [mounted, setMounted] = useState(isOpen);
-  useEffect(() => {
-    if (isOpen) {
-      setMounted(true);
-      return;
-    }
-    const t = window.setTimeout(() => setMounted(false), 260);
-    return () => window.clearTimeout(t);
-  }, [isOpen]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -198,14 +188,18 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
         </div>
       </div>
 
-      {mounted && (
-        <div
+      <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          key="viva-panel"
           role="dialog"
           aria-label="Viva AI"
+          initial={{ opacity: 0, scale: 0.2, y: 50 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.2, y: 50, transition: { duration: 0.22, ease: [0.5, 0, 0.75, 0] } }}
+          transition={{ type: 'spring', stiffness: 340, damping: 28, mass: 0.9 }}
           style={{ ...panelStyle, transformOrigin: panelOrigin }}
-          className={`fixed bottom-20 right-5 z-50 max-w-[calc(100vw-2.5rem)] bg-white/95 backdrop-blur-2xl border border-purple-500/25 shadow-[0_24px_60px_-12px_rgba(99,102,241,0.35)] rounded-3xl overflow-hidden flex flex-col font-sans ring-1 ring-black/10 transition-[width,height] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
-            isOpen ? 'animate-chat-pop' : 'animate-chat-out'
-          }`}
+          className="fixed bottom-20 right-5 z-50 max-w-[calc(100vw-2.5rem)] bg-white/95 backdrop-blur-2xl border border-purple-500/25 shadow-[0_24px_60px_-12px_rgba(99,102,241,0.35)] rounded-3xl overflow-hidden flex flex-col font-sans ring-1 ring-black/10 transition-[width,height] duration-300 ease-[cubic-bezier(.4,0,.2,1)]"
         >
           {/* Header */}
           <div className="h-[68px] bg-gradient-to-r from-[#0C1018] via-[#1A1F3A] to-[#0C1018] text-white flex items-center justify-between px-4 sm:px-5 flex-shrink-0 select-none relative">
@@ -359,7 +353,13 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
               <div className="flex-1 overflow-y-auto p-4 bg-jira-bg/40">
                 <div className={`space-y-4 mx-auto w-full ${maximized ? 'max-w-2xl' : ''}`}>
                   {messages.map(msg => (
-                    <div key={msg.id} className={`flex flex-col animate-msg-in ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, y: 16, x: msg.sender === 'user' ? 24 : -24, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                      className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
+                    >
                       <div className={`flex items-start gap-2 ${maximized ? 'max-w-[85%]' : 'max-w-[94%]'}`}>
                         {msg.sender === 'assistant' && (
                           <div className="flex-shrink-0 mt-0.5"><LiraAIAvatar size={26} hasSparkles={false} /></div>
@@ -431,23 +431,30 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                       {msg.suggestedActions && msg.suggestedActions.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mt-2 ml-8">
                           {msg.suggestedActions.map((action, i) => (
-                            <button
+                            <motion.button
                               key={i}
                               type="button"
                               onClick={() => handleSend(action)}
-                              style={{ animationDelay: `${120 + i * 70}ms` }}
-                              className="animate-msg-in px-2.5 py-1 bg-white hover:bg-purple-50 text-purple-700 hover:text-purple-900 border border-purple-200 rounded-full text-[10.5px] font-medium transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-1 cursor-pointer"
+                              initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              transition={{ type: 'spring', stiffness: 460, damping: 28, delay: 0.12 + i * 0.07 }}
+                              className="px-2.5 py-1 bg-white hover:bg-purple-50 text-purple-700 hover:text-purple-900 border border-purple-200 rounded-full text-[10.5px] font-medium transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-1 cursor-pointer"
                             >
                               <span>⚡</span> {action}
-                            </button>
+                            </motion.button>
                           ))}
                         </div>
                       )}
-                    </div>
+                    </motion.div>
                   ))}
 
                   {loading && (
-                    <div className="flex items-start gap-2 max-w-[85%] py-1 select-none animate-msg-in">
+                    <motion.div
+                      initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                      className="flex items-start gap-2 max-w-[85%] py-1 select-none"
+                    >
                       <div className="flex-shrink-0 mt-0.5"><LiraAIAvatar size={26} hasSparkles={true} /></div>
                       <div className="px-3.5 py-2 bg-gradient-to-r from-[#0C1018] via-[#1A1F3A] to-[#0C1018] rounded-2xl rounded-tl-md border border-purple-500/30 shadow-md text-white flex items-center gap-2.5">
                         <div className="flex items-center gap-1 py-0.5">
@@ -457,7 +464,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                         </div>
                         <span className="text-[11px] font-medium text-purple-200/90 tracking-wide">Viva AI is thinking…</span>
                       </div>
-                    </div>
+                    </motion.div>
                   )}
                   <div ref={messagesEndRef} />
                 </div>
@@ -490,8 +497,9 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
               </div>
             </>
           )}
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </>
   );
 };

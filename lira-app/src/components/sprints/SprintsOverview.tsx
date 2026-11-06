@@ -7,6 +7,7 @@ import {
   sprintDays, sprintEnd, sprintKindLabel, sprintLabel, sprintName, sprintPhase, sprintStart, sprintStats,
 } from '../../utils/sprintUtils';
 import { PhaseBadge } from './sprintParts';
+import { AnimatedValue, CountUp, GrowBar } from '../common/motion';
 
 interface SprintsOverviewProps {
   spaces: Space[];
@@ -85,7 +86,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
             <div key={t.label} className="bg-white border border-jira-border rounded-2xl px-4 py-3 flex items-center gap-3">
               <span className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${t.tone}`}>{t.icon}</span>
               <div className="min-w-0">
-                <div className="text-2xl font-semibold text-jira-text leading-none">{t.value}</div>
+                <div className="text-2xl font-semibold text-jira-text leading-none"><AnimatedValue value={t.value} /></div>
                 <div className="text-[11px] text-jira-muted mt-1">{t.label}</div>
                 <div className="text-[10px] text-jira-muted truncate">{t.sub}</div>
               </div>
@@ -146,8 +147,8 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                     <td className="px-3 py-2.5 text-emerald-600 font-medium">{r.stats.done}</td>
                     <td className="px-3 py-2.5 w-36">
                       <div className="flex items-center gap-2">
-                        <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden"><div className="h-full bg-green-500" style={{ width: `${r.stats.percent}%` }} /></div>
-                        <span className="w-8 text-right text-jira-text">{r.stats.percent}%</span>
+                        <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden"><GrowBar className="h-full bg-green-500" percent={r.stats.percent} /></div>
+                        <span className="w-8 text-right text-jira-text"><CountUp value={r.stats.percent} suffix="%" /></span>
                       </div>
                     </td>
                     <td className="px-3 py-2.5 text-jira-muted whitespace-nowrap">{r.stats.donePoints}/{r.stats.points}</td>

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Download, Printer } from 'lucide-react';
 import type { Issue } from '../../types/issue';
+import { motion } from '../common/motion';
 import { getSprintMeta, isSprintWork, issuesInSprint, sprintName } from '../../utils/sprintUtils';
 import {
   buildReport, reportHtml, reportMarkdown, type BurnupPoint, type FlowPoint, type SprintReport as Report,
@@ -41,8 +42,8 @@ const BurnupChart: React.FC<{ data: BurnupPoint[]; days: number }> = ({ data, da
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40" role="img" aria-label="Burnup chart: scope and completed work">
       <Axes max={max} days={days} />
-      <polyline points={data.map(d => `${x(d.day)},${y(d.scope)}`).join(' ')} fill="none" stroke="#97A0AF" strokeWidth="2" strokeDasharray="4 3" />
-      <polyline points={data.map(d => `${x(d.day)},${y(d.done)}`).join(' ')} fill="none" stroke="#00875A" strokeWidth="2" />
+      <motion.polyline points={data.map(d => `${x(d.day)},${y(d.scope)}`).join(' ')} fill="none" stroke="#97A0AF" strokeWidth="2" strokeDasharray="4 3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} />
+      <motion.polyline points={data.map(d => `${x(d.day)},${y(d.done)}`).join(' ')} fill="none" stroke="#00875A" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />
     </svg>
   );
 };
@@ -64,7 +65,9 @@ const FlowChart: React.FC<{ data: FlowPoint[]; days: number }> = ({ data, days }
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40" role="img" aria-label="Cumulative flow chart">
       <Axes max={max} days={days} />
-      {layers.map(l => <polygon key={l.k} points={l.pts} fill={FLOW_COLORS[l.k]} opacity="0.9" />)}
+      <motion.g initial={{ clipPath: 'inset(0 100% 0 0)' }} animate={{ clipPath: 'inset(0 0% 0 0)' }} transition={{ duration: 1.1, ease: 'easeInOut' }}>
+        {layers.map(l => <polygon key={l.k} points={l.pts} fill={FLOW_COLORS[l.k]} opacity="0.9" />)}
+      </motion.g>
     </svg>
   );
 };

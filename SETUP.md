@@ -211,3 +211,7 @@ npm run lint
 ```
 
 Tests cover the sprint logic, standup and invite builders, AI intent parsing, and the disk-persistence layer (including a test that wipes the browser and restores from disk).
+
+## Animations
+
+Motion uses `framer-motion`, set up in one file: `src/components/common/motion.tsx` (springs, dialog / menu / toast animations, count-up numbers, growing bars). Confetti is in `components/common/Confetti.tsx`; call `celebrate()` from `utils/celebrate.ts` to trigger it (it fires when a ticket reaches Done and when a sprint is closed). Use those pieces for anything new so it feels the same everywhere. People who ask their system for reduced motion get no movement, no count-up and no confetti.

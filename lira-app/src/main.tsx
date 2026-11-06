@@ -12,6 +12,8 @@ import '@fontsource/inter/900.css'
 import './index.css'
 import './theme-dark.css'
 import App from './App.tsx'
+import { MotionProvider } from './components/common/motion'
+import { Confetti } from './components/common/Confetti'
 import { initKvMirror, onKvChange } from './services/kvMirror'
 import { syncStructured } from './services/structuredStore'
 import { applyAccent, loadAccent } from './utils/accent'
@@ -22,9 +24,12 @@ initKvMirror().finally(() => {
   applyAccent(loadAccent()) // the saved accent colour, before the first paint of the app
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <MotionProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+        <Confetti />
+      </MotionProvider>
     </StrictMode>,
   )
 })

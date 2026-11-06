@@ -1,4 +1,4 @@
-# 🤖 Lira AI Copilot & Autonomous Agent Module (`src/components/ai`)
+# 🤖 Viva AI Copilot & Autonomous Agent Module (`src/components/ai`)
 
 > React components and client services powering the omnipresent, non-blocking AI Copilot and Autonomous Agent in Lira.
 
@@ -8,7 +8,7 @@
 
 ```
 src/components/ai/
-├── LiraAIAvatar.tsx           # Enhanced Lira AI SVG brand avatar component
+├── LiraAIAvatar.tsx           # Enhanced Viva AI SVG brand avatar component
 ├── LiraAICopilot.tsx          # Floating dialogue card, animated bottom-right trigger & settings
 └── README.md                  # Component documentation (this file)
 ```
@@ -24,7 +24,7 @@ src/services/
 ## 🎨 Component Overview
 
 ### 1. `LiraAIAvatar.tsx`
-Renders the official enhanced Lira AI Avatar as a scalable SVG.
+Renders the official enhanced Viva AI Avatar as a scalable SVG.
 
 * **Props**:
   ```typescript

@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-06T03:49:20.933Z",
+  "roadmap": {
+    "createdAt": "2026-11-06T03:28:32.441Z",
+    "description": "Roadmap to become MLOps and AI Engineer",
+    "id": "rm-mw4f06nt2",
+    "items": [],
+    "lanes": [
+      "Career",
+      "AI",
+      "MLOPS",
+      "Domain"
+    ],
+    "milestones": [],
+    "name": "MLOPS + AI Engineer"
+  }
+}

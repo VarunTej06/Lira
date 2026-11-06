@@ -1,0 +1,98 @@
+/*
+ * Dark theme overrides (applied when <html class="dark">).
+ * The jira-* design tokens flip through CSS variables in index.css; this file remaps the
+ * hard-coded light utilities (white / gray / slate) that components use directly.
+ * Soft colour tints (bg-blue-50, text-emerald-700 …) are generated in tailwind.config.js.
+ */
+
+/* Surfaces */
+.dark .bg-white,
+.dark .hover\:bg-white:hover,
+.dark .focus\:bg-white:focus { background-color: rgb(var(--jira-surface)); }
+.dark .bg-white\/95,
+.dark .bg-white\/80,
+.dark .bg-white\/70,
+.dark .bg-white\/60 { background-color: rgb(var(--jira-surface) / 0.85); }
+.dark .bg-\[\#F4F5F7\] { background-color: rgb(var(--surface-2)); }
+.dark .bg-\[\#091E4206\] { background-color: rgb(255 255 255 / 0.04); }
+.dark .hover\:bg-\[\#091E420A\]:hover { background-color: rgb(255 255 255 / 0.08); }
+
+.dark .bg-gray-50, .dark .bg-slate-50 { background-color: rgb(var(--surface-2)); }
+.dark .bg-gray-100, .dark .bg-slate-100 { background-color: rgb(var(--surface-3)); }
+.dark .bg-gray-200, .dark .bg-slate-200, .dark .bg-gray-300 { background-color: rgb(var(--surface-4)); }
+.dark .hover\:bg-gray-50:hover, .dark .hover\:bg-slate-50:hover { background-color: rgb(var(--surface-3)); }
+.dark .hover\:bg-gray-100:hover, .dark .hover\:bg-slate-100:hover, .dark .hover\:bg-gray-200:hover { background-color: rgb(var(--surface-4)); }
+
+.dark [class^='bg-gray-50/'], .dark [class*=' bg-gray-50/'],
+.dark [class^='bg-gray-100/'], .dark [class*=' bg-gray-100/'],
+.dark [class^='bg-gray-200/'], .dark [class*=' bg-gray-200/'],
+.dark [class^='bg-slate-50/'], .dark [class*=' bg-slate-50/'] { background-color: rgb(255 255 255 / 0.04); }
+.dark [class*='hover:bg-gray-50/']:hover,
+.dark [class*='hover:bg-gray-100/']:hover,
+.dark [class*='hover:bg-gray-200/']:hover { background-color: rgb(255 255 255 / 0.07); }
+
+/* Borders & dividers */
+.dark .border-gray-50, .dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300,
+.dark .border-slate-200, .dark .border-slate-300 { border-color: rgb(var(--jira-border)); }
+.dark .border-gray-400,
+.dark .hover\:border-gray-400:hover,
+.dark .hover\:border-gray-300:hover { border-color: rgb(var(--jira-muted) / 0.6); }
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: rgb(var(--jira-border)); }
+
+/* Text */
+.dark .text-gray-300 { color: #6e7681; }
+.dark .text-gray-400, .dark .text-slate-400 { color: #8b949e; }
+.dark .text-gray-500 { color: #9aa4af; }
+.dark .text-gray-600, .dark .text-slate-600 { color: #b1bac4; }
+.dark .text-gray-700, .dark .text-slate-700 { color: #c9d1d9; }
+.dark .text-gray-800, .dark .text-gray-900, .dark .text-slate-800 { color: #e6edf3; }
+.dark .hover\:text-gray-600:hover { color: #e6edf3; }
+
+/* Form controls */
+.dark input, .dark textarea, .dark select {
+  background-color: rgb(var(--surface-2));
+  color: rgb(var(--jira-text));
+  border-color: rgb(var(--jira-border));
+}
+.dark input::placeholder, .dark textarea::placeholder { color: rgb(var(--jira-muted) / 0.8); }
+.dark option { background-color: rgb(var(--jira-surface)); color: rgb(var(--jira-text)); }
+.dark input[type='checkbox'], .dark input[type='radio'] { background-color: initial; }
+/* inputs that are deliberately transparent / sit on coloured bars keep their look */
+.dark input.bg-transparent, .dark select.bg-transparent, .dark textarea.bg-transparent { background-color: transparent; }
+.dark input[class*='bg-white/'] { background-color: rgb(255 255 255 / 0.1); }
+
+/* Scrollbars */
+.dark ::-webkit-scrollbar-thumb { background: rgb(var(--surface-4)); }
+.dark ::-webkit-scrollbar-thumb:hover { background: rgb(var(--jira-muted) / 0.6); }
+.dark .lira-board-scrollbar { scrollbar-color: #4a5463 rgba(255, 255, 255, 0.05); }
+.dark .lira-board-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+.dark .lira-board-scrollbar::-webkit-scrollbar-thumb { background: #4a5463; background-clip: padding-box; }
+
+/* Elevation reads differently on dark surfaces */
+.dark .shadow-card,
+.dark .shadow-modal,
+.dark .shadow-dropdown { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); }
+
+.dark .hover\:bg-white\/80:hover,
+.dark .hover\:bg-white\/70:hover { background-color: rgb(255 255 255 / 0.08); }
+
+/*
+ * Inline-styled chips (status / priority / type badges set their colours with style="…").
+ * Re-tint the light Atlassian pastels into translucent dark equivalents and lift the dark text on them.
+ */
+.dark [style*="background-color: rgb(222, 235, 255)"] { background-color: rgb(38 132 255 / 0.2) !important; }
+.dark [style*="background-color: rgb(223, 225, 230)"] { background-color: rgb(255 255 255 / 0.1) !important; }
+.dark [style*="background-color: rgb(244, 245, 247)"] { background-color: rgb(255 255 255 / 0.08) !important; }
+.dark [style*="background-color: rgb(227, 252, 239)"] { background-color: rgb(54 179 126 / 0.2) !important; }
+.dark [style*="background-color: rgb(255, 235, 230)"] { background-color: rgb(255 86 48 / 0.2) !important; }
+.dark [style*="background-color: rgb(255, 247, 214)"] { background-color: rgb(255 171 0 / 0.2) !important; }
+.dark [style*="background-color: rgb(234, 230, 255)"] { background-color: rgb(128 119 214 / 0.25) !important; }
+.dark [style*="background-color: rgb(230, 252, 255)"] { background-color: rgb(0 184 217 / 0.2) !important; }
+
+.dark [style*="color: rgb(23, 43, 77)"]:not([style*="background-color: rgb(23, 43, 77)"]) { color: #e6edf3 !important; }
+.dark [style*="color: rgb(0, 82, 204)"]:not([style*="background-color: rgb(0, 82, 204)"]) { color: #4c9aff !important; }
+.dark [style*="color: rgb(0, 102, 68)"]:not([style*="background-color: rgb(0, 102, 68)"]) { color: #57d9a3 !important; }
+.dark [style*="color: rgb(222, 53, 11)"]:not([style*="background-color: rgb(222, 53, 11)"]) { color: #ff8f73 !important; }
+.dark [style*="color: rgb(101, 84, 192)"]:not([style*="background-color: rgb(101, 84, 192)"]) { color: #b3a6ff !important; }
+.dark [style*="color: rgb(107, 119, 140)"]:not([style*="background-color: rgb(107, 119, 140)"]) { color: #9aa4af !important; }

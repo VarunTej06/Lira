@@ -48,7 +48,7 @@ export const LiraAICopilot: React.FC<LiraAICopilotProps> = ({
       {
         id: 'welcome',
         sender: 'assistant',
-        text: `👋 **Welcome to Lira AI Agent & Copilot!**\n\nI have **omnipresent cross-space visibility** across all **${spaces.length} spaces** (including any new spaces or tickets you create in the future). Even if you are working in one space, you can ask me to fetch, search, move, or create tasks in **any other space**!\n\nTry clicking a prompt below or type your own command:`,
+        text: `👋 **Welcome to Viva AI Agent & Copilot!**\n\nI have **omnipresent cross-space visibility** across all **${spaces.length} spaces** (including any new spaces or tickets you create in the future). Even if you are working in one space, you can ask me to fetch, search, move, or create tasks in **any other space**!\n\nTry clicking a prompt below or type your own command:`,
         timestamp: new Date(),
         suggestedActions: [
           'What tasks are in Atmos?',
@@ -146,10 +146,10 @@ export const LiraAICopilot: React.FC<LiraAICopilotProps> = ({
             className={`relative rounded-2xl flex items-center justify-center p-0 cursor-pointer shadow-xl transition-all duration-300 hover:scale-108 active:scale-95 animate-float-subtle animate-pulse-glow ${
               isOpen ? 'ring-3 ring-purple-500 shadow-purple-500/40' : ''
             }`}
-            title="Open Lira AI Copilot"
-            aria-label="Toggle Lira AI Chatbot"
+            title="Open Viva AI Copilot"
+            aria-label="Toggle Viva AI Chatbot"
           >
-            {/* Enhanced Lira AI SVG Avatar with Lira brand & AI constellation */}
+            {/* Enhanced Viva AI SVG Avatar with Lira brand & AI constellation */}
             <LiraAIAvatar size={50} hasSparkles={true} />
 
             {/* Online / Active status pulse indicator */}
@@ -163,7 +163,7 @@ export const LiraAICopilot: React.FC<LiraAICopilotProps> = ({
           {!isOpen && (
             <div className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 absolute right-16 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 bg-[#1D2125] text-white text-xs font-semibold rounded-xl shadow-xl border border-white/10 flex items-center gap-1.5 translate-x-1 group-hover:translate-x-0">
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>Ask Lira AI Copilot</span>
+              <span>Ask Viva AI Copilot</span>
               <span className="text-[10px] text-purple-300 font-mono">⚡ Omnipresent</span>
             </div>
           )}
@@ -191,7 +191,7 @@ export const LiraAICopilot: React.FC<LiraAICopilotProps> = ({
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm tracking-tight text-white truncate">Lira AI Agent</span>
+                  <span className="font-bold text-sm tracking-tight text-white truncate">Viva AI Agent</span>
                   <span className="px-1.5 py-0.2 text-[9px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full flex-shrink-0">
                     {apiKeyInput ? 'Gemini 1.5' : 'Local Offline Engine'}
                   </span>
@@ -468,7 +468,7 @@ export const LiraAICopilot: React.FC<LiraAICopilotProps> = ({
                 {loading && (
                   <div className="flex items-center gap-2 text-jira-muted text-xs ml-8 py-2">
                     <RefreshCw className="w-3.5 h-3.5 animate-spin text-purple-600" />
-                    <span className="font-medium">Lira AI is analyzing across spaces…</span>
+                    <span className="font-medium">Viva AI is analyzing across spaces…</span>
                   </div>
                 )}
 

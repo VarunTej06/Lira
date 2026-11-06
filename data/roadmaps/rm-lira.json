@@ -1,0 +1,423 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-06T04:18:32.343Z",
+  "roadmap": {
+    "createdAt": "2026-11-06T00:00:00.000Z",
+    "description": "The November plan for Lira, taken from ROADMAP.md: each item takes about two days and everything finishes in November. December gets its own roadmap.",
+    "id": "rm-lira",
+    "items": [
+      {
+        "children": [
+          {
+            "done": true,
+            "id": "p1a",
+            "title": "Mirror all lira_* data to data/*.json"
+          },
+          {
+            "done": true,
+            "id": "p1b",
+            "title": "Dexie tables for projects, sprints, teams, standups"
+          },
+          {
+            "done": true,
+            "id": "p1c",
+            "title": "Only rewrite changed space files"
+          },
+          {
+            "done": true,
+            "id": "p1d",
+            "title": "Include new data in export/import"
+          },
+          {
+            "done": true,
+            "id": "p1e",
+            "title": "Vitest suite for sprint, standup, AI and persistence logic"
+          }
+        ],
+        "deps": [],
+        "description": "Projects, sprints, teams, standups and settings saved to JSON in data/. Structured Dexie tables. Vitest suite.",
+        "end": "2026-11-03",
+        "id": "p1",
+        "lane": "Foundation",
+        "owner": "VY",
+        "progress": 100,
+        "start": "2026-11-02",
+        "status": "done",
+        "title": "Phase 1: Persistence cleanup and core tests",
+        "epicKey": "LIRA-60",
+        "taskKey": "LIRA-69"
+      },
+      {
+        "children": [
+          {
+            "done": false,
+            "id": "p2a",
+            "title": "Add a router with real paths (/sprints/2026-11, /space/CERT/board)"
+          },
+          {
+            "done": false,
+            "id": "p2b",
+            "title": "Remove the duplicated global-tab lists; derive sidebar highlight from the route"
+          },
+          {
+            "done": false,
+            "id": "p2c",
+            "title": "Split ProjectDetailView, TopNavigation and aiAgentService (under ~500 lines each)"
+          },
+          {
+            "done": false,
+            "id": "p2d",
+            "title": "Fix the nested <button> DOM warning"
+          },
+          {
+            "done": false,
+            "id": "p2e",
+            "title": "Add an error boundary per page"
+          }
+        ],
+        "deps": [
+          "p1"
+        ],
+        "description": "Real URLs, back/forward and deep links. Split the very large components so later work is cheaper.",
+        "end": "2026-11-08",
+        "id": "p2",
+        "lane": "Foundation",
+        "owner": "VY",
+        "progress": 0,
+        "start": "2026-11-07",
+        "status": "planned",
+        "title": "Phase 2: Routing and file splitting",
+        "epicKey": "LIRA-61",
+        "taskKey": "LIRA-70"
+      },
+      {
+        "children": [
+          {
+            "done": false,
+            "id": "q1a",
+            "title": "Set up Playwright against npm run dev"
+          },
+          {
+            "done": false,
+            "id": "q1b",
+            "title": "Create Issue hierarchy rules (task/bug/epic/subtask)"
+          },
+          {
+            "done": false,
+            "id": "q1c",
+            "title": "Sidebar navigation and highlight"
+          },
+          {
+            "done": false,
+            "id": "q1d",
+            "title": "Light and dark theme screenshots"
+          }
+        ],
+        "deps": [
+          "p1"
+        ],
+        "description": "Light mode, hover menus, Viva AI open/close, standup popup, For you, Sprints overview, Create Issue rules.",
+        "end": "2026-11-10",
+        "id": "q1",
+        "lane": "Quality",
+        "owner": "VY",
+        "progress": 0,
+        "start": "2026-11-09",
+        "status": "planned",
+        "title": "Browser smoke tests (Playwright) for unverified pages",
+        "epicKey": "LIRA-62",
+        "taskKey": "LIRA-71"
+      },
+      {
+        "children": [
+          {
+            "done": false,
+            "id": "q2a",
+            "title": "Focus rings on all interactive elements"
+          },
+          {
+            "done": false,
+            "id": "q2b",
+            "title": "aria-labels for icon-only buttons"
+          },
+          {
+            "done": false,
+            "id": "q2c",
+            "title": "Contrast review of both themes"
+          },
+          {
+            "done": false,
+            "id": "q2d",
+            "title": "prefers-reduced-motion support"
+          }
+        ],
+        "deps": [],
+        "description": "Focus rings, aria labels on icon buttons, dark-mode contrast, reduced-motion everywhere.",
+        "end": "2026-11-12",
+        "id": "q2",
+        "lane": "Quality",
+        "owner": "VY",
+        "progress": 0,
+        "start": "2026-11-11",
+        "status": "planned",
+        "title": "Accessibility pass",
+        "epicKey": "LIRA-63",
+        "taskKey": "LIRA-72"
+      },
+      {
+        "children": [
+          {
+            "done": false,
+            "id": "a1a",
+            "title": "List what the team actually needs shared"
+          },
+          {
+            "done": false,
+            "id": "a1b",
+            "title": "Compare local + git sharing vs hosted backend"
+          },
+          {
+            "done": false,
+            "id": "a1c",
+            "title": "Record the decision"
+          }
+        ],
+        "deps": [],
+        "description": "Stay local and single-user, or add a backend (accounts, database, realtime). Must be decided before real invites in Phase 3.",
+        "end": "2026-11-14",
+        "id": "a1",
+        "lane": "Architecture",
+        "owner": "VY",
+        "progress": 0,
+        "start": "2026-11-13",
+        "status": "planned",
+        "title": "Phase 7: Decide on multi-user",
+        "epicKey": "LIRA-64",
+        "taskKey": "LIRA-73"
+      },
+      {
+        "children": [
+          {
+            "done": false,
+            "id": "p3a",
+            "title": "Team entity: members, roles, capacity"
+          },
+          {
+            "done": false,
+            "id": "p3b",
+            "title": "Assign teams to spaces and projects"
+          },
+          {
+            "done": false,
+            "id": "p3c",
+            "title": "Standup history and async updates"
+          },
+          {
+            "done": false,
+            "id": "p3d",
+            "title": "Real Google / Teams invites (depends on the decision)"
+          }
+        ],
+        "deps": [
+          "p2",
+          "a1"
+        ],
+        "description": "Named teams assigned to spaces and projects. Standup history, async standup, real calendar invites.",
+        "end": "2026-11-16",
+        "id": "p3",
+        "lane": "Collaboration",
+        "owner": "VY",
+        "progress": 0,
+        "start": "2026-11-15",
+        "status": "planned",
+        "title": "Phase 3: Teams, real standup and invites",
+        "epicKey": "LIRA-65",
+        "taskKey": "LIRA-74"
+      },
+      {
+        "children": [
+          {
+            "done": false,
+            "id": "p4a",
+            "title": "Sprint planning view with capacity"
+          },
+          {
+            "done": false,
+            "id": "p4b",
+            "title": "Automatic month-end rollover prompt"
+          },
+          {
+            "done": false,
+            "id": "p4c",
+            "title": "Retrospective at sprint close"
+          },
+          {
+            "done": false,
+            "id": "p4d",
+            "title": "Reports: burnup, CFD, cycle and lead time"
+          },
+          {
+            "done": false,
+            "id": "p4e",
+            "title": "Set resolvedAt when a ticket moves to Done"
+          }
+        ],
+        "deps": [
+          "p3"
+        ],
+        "description": "Two-column planning view, automatic month-end rollover, retrospectives, burnup, cumulative flow, scope change log.",
+        "end": "2026-11-18",
+        "id": "p4",
+        "lane": "Agile",
+        "owner": "VY",
+        "progress": 0,
+        "start": "2026-11-17",
+        "status": "planned",
+        "title": "Phase 4: Sprint planning, rollover, retros, reports",
+        "epicKey": "LIRA-66",
+        "taskKey": "LIRA-75"
+      },
+      {
+        "children": [
+          {
+            "done": false,
+            "id": "p5a",
+            "title": "Ctrl+K command palette"
+          },
+          {
+            "done": false,
+            "id": "p5b",
+            "title": "Keyboard shortcuts and help sheet"
+          },
+          {
+            "done": false,
+            "id": "p5c",
+            "title": "Bulk edit on board and list"
+          },
+          {
+            "done": false,
+            "id": "p5d",
+            "title": "Saved filters pinned to the sidebar"
+          }
+        ],
+        "deps": [
+          "p4"
+        ],
+        "description": "Ctrl+K palette, keyboard shortcuts, bulk edit, saved filters, templates and recurring tickets.",
+        "end": "2026-11-20",
+        "id": "p5",
+        "lane": "Productivity",
+        "owner": "VY",
+        "progress": 0,
+        "start": "2026-11-19",
+        "status": "planned",
+        "title": "Phase 5: Command palette, bulk edit, saved filters",
+        "epicKey": "LIRA-67",
+        "taskKey": "LIRA-76"
+      },
+      {
+        "children": [
+          {
+            "done": false,
+            "id": "p6a",
+            "title": "Preview, confirm and undo for writes"
+          },
+          {
+            "done": false,
+            "id": "p6b",
+            "title": "Sprint-aware prompts"
+          },
+          {
+            "done": false,
+            "id": "p6c",
+            "title": "Standup digest"
+          },
+          {
+            "done": false,
+            "id": "p6d",
+            "title": "Risk radar for sprints"
+          }
+        ],
+        "deps": [
+          "p5"
+        ],
+        "description": "Preview and undo for every AI write, sprint planning suggestions, standup digest, risk radar.",
+        "end": "2026-11-22",
+        "id": "p6",
+        "lane": "AI",
+        "owner": "VY",
+        "progress": 0,
+        "start": "2026-11-21",
+        "status": "planned",
+        "title": "Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
+        "epicKey": "LIRA-68",
+        "taskKey": "LIRA-77"
+      }
+    ],
+    "lanes": [
+      "Foundation",
+      "Quality",
+      "Architecture",
+      "Collaboration",
+      "Agile",
+      "Productivity",
+      "AI"
+    ],
+    "milestones": [
+      {
+        "date": "2026-11-03",
+        "id": "ms-p1",
+        "kind": "milestone",
+        "title": "Phase 1 complete"
+      },
+      {
+        "date": "2026-11-14",
+        "id": "ms-decision",
+        "kind": "milestone",
+        "title": "Decision: single-user vs backend"
+      },
+      {
+        "date": "2026-11-08",
+        "id": "ms-v31",
+        "kind": "release",
+        "title": "v3.1 Routing and structure"
+      },
+      {
+        "date": "2026-11-16",
+        "id": "ms-v32",
+        "kind": "release",
+        "title": "v3.2 Teams and invites"
+      },
+      {
+        "date": "2026-11-18",
+        "id": "ms-v33",
+        "kind": "release",
+        "title": "v3.3 Sprint planning"
+      },
+      {
+        "date": "2026-11-20",
+        "id": "ms-v34",
+        "kind": "release",
+        "title": "v3.4 Productivity"
+      },
+      {
+        "date": "2026-11-22",
+        "id": "ms-v35",
+        "kind": "release",
+        "title": "v3.5 Viva AI upgrades"
+      },
+      {
+        "id": "ms-dec",
+        "title": "Plan the December roadmap",
+        "date": "2026-11-30",
+        "kind": "milestone"
+      }
+    ],
+    "name": "Lira Platform Roadmap",
+    "projectKey": "LIRA",
+    "spaceKey": "LIRA",
+    "updatedAt": "2026-11-06T03:56:04.408Z",
+    "scheduleVersion": 2,
+    "pendingTicketSync": false
+  }
+}

@@ -4,6 +4,7 @@ import {
   RefreshCw, CheckCircle2, Save, Monitor, Check
 } from 'lucide-react';
 import { Modal } from '../common/Modal';
+import { ACCENTS, DEFAULT_ACCENT, loadAccent, parseHex, saveAccent } from '../../utils/accent';
 import { saveToDiskNow, initLocalDiskSync, subscribeToSyncStatus } from '../../services/localDiskSync';
 import { exportBackup, importBackup } from '../../db/storageService';
 
@@ -23,6 +24,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onToast,
 }) => {
   const [activeSection, setActiveSection] = useState<SettingsSection>(initialSection);
+  const [accent, setAccent] = useState<string>(loadAccent);
+  const chooseAccent = (hex: string, name?: string) => {
+    saveAccent(hex);
+    setAccent(hex.toUpperCase());
+    if (name) onToast?.(`Accent colour: ${name}`, 'success');
+  };
 
   // Sync section and theme when modal opens
   useEffect(() => {
@@ -322,7 +329,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <div>
                 <h3 className="text-base font-bold text-jira-text">Appearance &amp; Theme</h3>
                 <p className="text-xs text-jira-muted mt-1">
-                  Customize the look and visual theme of your Lira workspace. Themes apply immediately and persist in your browser.
+                  Customize the look and visual theme of your Lira workspace. Themes apply immediately and are saved with your workspace.
                 </p>
               </div>
 
@@ -390,22 +397,46 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
               {/* Accent Color Section */}
               <div className="border-t border-jira-border pt-4">
-                <h4 className="text-xs font-bold text-jira-muted uppercase tracking-wider mb-2">Accent Branding</h4>
-                <div className="flex items-center gap-3">
-                  {[
-                    { color: '#0052CC', label: 'Classic Jira Blue' },
-                    { color: '#6554C0', label: 'Royal Purple' },
-                    { color: '#00B8D9', label: 'Teal Sky' },
-                    { color: '#36B37E', label: 'Emerald' },
-                  ].map(c => (
-                    <button
-                      key={c.color}
-                      onClick={() => onToast?.(`Selected ${c.label}`, 'success')}
-                      className="w-8 h-8 rounded-full border-2 border-white shadow-xs hover:scale-110 transition-transform cursor-pointer"
-                      style={{ backgroundColor: c.color }}
-                      title={c.label}
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="text-xs font-bold text-jira-muted uppercase tracking-wider">Accent Branding</h4>
+                  {accent.toUpperCase() !== DEFAULT_ACCENT && (
+                    <button onClick={() => chooseAccent(DEFAULT_ACCENT, 'Classic Blue')} className="text-[11px] text-jira-blue hover:underline cursor-pointer">Reset to default</button>
+                  )}
+                </div>
+                <p className="text-xs text-jira-muted mb-3">Used for buttons, active tabs, links and highlights, in both themes. Saved with your other preferences.</p>
+                <div className="flex flex-wrap items-center gap-3">
+                  {ACCENTS.map(c => {
+                    const selected = accent.toUpperCase() === c.hex.toUpperCase();
+                    return (
+                      <button
+                        key={c.hex}
+                        onClick={() => chooseAccent(c.hex, c.name)}
+                        className={`relative w-8 h-8 rounded-full border-2 shadow-xs hover:scale-110 transition-transform cursor-pointer flex items-center justify-center ${selected ? 'border-white ring-2 ring-offset-2 ring-offset-transparent' : 'border-white/70'}`}
+                        style={{ backgroundColor: c.hex, boxShadow: selected ? `0 0 0 2px ${c.hex}` : undefined }}
+                        title={c.name}
+                        aria-label={`${c.name}${selected ? ' (selected)' : ''}`}
+                        aria-pressed={selected}
+                      >
+                        {selected && <Check className="w-4 h-4 text-white" />}
+                      </button>
+                    );
+                  })}
+                  <label className="relative w-8 h-8 rounded-full border-2 border-dashed border-jira-muted flex items-center justify-center cursor-pointer hover:scale-110 transition-transform overflow-hidden" title="Pick any colour">
+                    <span className="text-jira-muted text-base leading-none">+</span>
+                    <input
+                      type="color"
+                      value={parseHex(accent) ? accent : DEFAULT_ACCENT}
+                      onChange={e => chooseAccent(e.target.value)}
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      aria-label="Pick a custom accent colour"
                     />
-                  ))}
+                  </label>
+                </div>
+                <div className="mt-4 flex items-center gap-3 p-3 rounded-xl border border-jira-border">
+                  <button className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-jira-blue hover:bg-jira-blue-hover">Primary button</button>
+                  <span className="text-xs font-semibold text-jira-blue">Link</span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-jira-blue-light text-jira-blue font-semibold">Badge</span>
+                  <span className="text-[11px] text-jira-muted ml-auto">Preview</span>
                 </div>
               </div>
             </div>

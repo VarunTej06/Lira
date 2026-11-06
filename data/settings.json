@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-06T03:56:10.895Z",
+  "entries": {
+    "lira_active_space_id": "2",
+    "lira_roadmap_prefs": {
+      "collapsed": [],
+      "roadmapId": "rm-lira",
+      "showDeps": true,
+      "view": "timeline",
+      "zoom": "weeks"
+    },
+    "lira_sidebar_collapsed": "false",
+    "lira_sidebar_customization": {
+      "navOrder": [
+        "forYou",
+        "projects",
+        "sprints",
+        "allTickets",
+        "roadmaps",
+        "dashboards"
+      ],
+      "sectionOrder": [
+        "sec_spaces",
+        "sec_projects",
+        "sec_sprints",
+        "sec_hidden"
+      ],
+      "version": 2,
+      "visibility": {
+        "allTickets": true,
+        "dashboards": true,
+        "forYou": true,
+        "projects": true,
+        "roadmaps": true,
+        "sec_hidden": true,
+        "sec_projects": true,
+        "sec_spaces": true,
+        "sec_sprints": true,
+        "sprints": true
+      }
+    },
+    "lira_sidebar_pinned": [
+      "recent",
+      "apps",
+      "roadmaps",
+      "plans",
+      "filters",
+      "dashboards"
+    ],
+    "lira_theme": "dark"
+  }
+}

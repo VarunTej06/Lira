@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-05T13:08:22.761Z",
+  "savedAt": "2026-11-06T04:18:32.384Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -72,7 +72,7 @@
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-11-05T12:17:43.513Z",
-      "issueCount": 55,
+      "issueCount": 64,
       "file": "spaces/LIRA.json"
     },
     {
@@ -98,6 +98,18 @@
       "id": 14,
       "issueCount": 18,
       "file": "spaces/AI.json"
+    },
+    {
+      "name": "Test",
+      "key": "TEST",
+      "icon": "🚀",
+      "color": "#36B37E",
+      "description": "Test",
+      "createdAt": "2026-11-06T02:58:24.584Z",
+      "updatedAt": "2026-11-06T02:58:24.584Z",
+      "id": 16,
+      "issueCount": 0,
+      "file": "spaces/TEST.json"
     }
   ],
   "issues": [
@@ -212,7 +224,8 @@
       "watchers": [
         "VY"
       ],
-      "id": 1
+      "id": 1,
+      "sprint": "2026-09"
     },
     {
       "id": 15,
@@ -255,7 +268,8 @@
         "VY"
       ],
       "createdAt": "2026-10-18T08:15:46.633Z",
-      "updatedAt": "2026-10-28T21:42:53.703Z"
+      "updatedAt": "2026-10-28T21:42:53.703Z",
+      "sprint": "2026-10"
     },
     {
       "id": 16,
@@ -299,7 +313,8 @@
         "VY"
       ],
       "createdAt": "2026-10-26T08:15:46.633Z",
-      "updatedAt": "2026-10-28T08:15:46.633Z"
+      "updatedAt": "2026-10-28T08:15:46.633Z",
+      "sprint": "2026-10"
     },
     {
       "id": 17,
@@ -344,7 +359,8 @@
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
       "updatedAt": "2026-10-28T19:24:52.229Z",
-      "resolvedAt": "2026-10-28T09:37:55.127Z"
+      "resolvedAt": "2026-10-28T09:37:55.127Z",
+      "sprint": "2026-10"
     },
     {
       "id": 18,
@@ -445,7 +461,8 @@
       "updatedAt": "2026-10-28T19:27:06.155Z",
       "parentId": 15,
       "epicId": 15,
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 19,
@@ -520,7 +537,8 @@
       ],
       "createdAt": "2026-10-19T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 20,
@@ -595,7 +613,8 @@
       ],
       "createdAt": "2026-10-24T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 21,
@@ -664,7 +683,8 @@
       ],
       "createdAt": "2026-10-26T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 22,
@@ -718,6 +738,16 @@
           "authorInitials": "VY",
           "description": "started task",
           "createdAt": "2026-10-27T08:15:46.633Z"
+        },
+        {
+          "id": "494d34c0-3642-4f0d-a07e-51300149bdd1",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.781Z"
         }
       ],
       "attachments": [],
@@ -728,7 +758,11 @@
         "VY"
       ],
       "createdAt": "2026-10-27T08:15:46.633Z",
-      "updatedAt": "2026-11-04T07:50:03.498Z"
+      "updatedAt": "2026-11-05T15:08:26.760Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 23,
@@ -803,7 +837,8 @@
       "createdAt": "2026-10-25T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "resolvedAt": "2026-10-28T09:37:55.127Z",
-      "epicLink": "Core Jira Frontend & Board Architecture"
+      "epicLink": "Core Jira Frontend & Board Architecture",
+      "sprint": "2026-10"
     },
     {
       "id": 24,
@@ -857,6 +892,16 @@
           "authorInitials": "VY",
           "description": "created task",
           "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "a717c668-9c01-420c-8c0a-58d89596f819",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.814Z"
         }
       ],
       "attachments": [],
@@ -867,7 +912,11 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-10-28T08:15:46.633Z"
+      "updatedAt": "2026-11-05T15:08:26.813Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 25,
@@ -931,6 +980,16 @@
           "authorInitials": "VY",
           "description": "created task",
           "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "78cc3e38-f9a0-492f-9126-8798338c45dd",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.828Z"
         }
       ],
       "attachments": [],
@@ -941,8 +1000,12 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-10-28T20:11:31.229Z",
-      "epicLink": "DevOps & Cloud-Native Delivery"
+      "updatedAt": "2026-11-05T15:08:26.826Z",
+      "epicLink": "DevOps & Cloud-Native Delivery",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 26,
@@ -990,6 +1053,16 @@
           "authorInitials": "VY",
           "description": "created task",
           "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "eb588b14-0969-4169-b9f1-f2a1d154b7de",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.833Z"
         }
       ],
       "attachments": [],
@@ -1000,7 +1073,11 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-10-28T09:33:40.801Z"
+      "updatedAt": "2026-11-05T15:08:26.832Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 27,
@@ -1054,6 +1131,16 @@
           "authorInitials": "VY",
           "description": "created task",
           "createdAt": "2026-10-28T08:15:46.633Z"
+        },
+        {
+          "id": "ec60749d-fa73-406a-b658-941d6fc0bfe3",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.844Z"
         }
       ],
       "attachments": [],
@@ -1064,7 +1151,11 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-10-29T05:14:58.209Z"
+      "updatedAt": "2026-11-05T15:08:26.843Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 28,
@@ -1140,7 +1231,8 @@
       "createdAt": "2026-10-28T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "resolvedAt": "2026-10-28T09:37:55.127Z",
-      "epicLink": "AI Copilot & Autonomous Agentic Assistant"
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant",
+      "sprint": "2026-10"
     },
     {
       "id": 29,
@@ -1210,7 +1302,8 @@
       "createdAt": "2026-10-28T08:15:46.633Z",
       "updatedAt": "2026-10-28T20:11:31.229Z",
       "resolvedAt": "2026-10-28T09:37:55.127Z",
-      "epicLink": "AI Copilot & Autonomous Agentic Assistant"
+      "epicLink": "AI Copilot & Autonomous Agentic Assistant",
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1289,7 +1382,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1369,7 +1463,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1448,7 +1543,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1527,7 +1623,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 20,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1601,7 +1698,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1680,7 +1778,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 15,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1747,7 +1846,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1814,7 +1914,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 61,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 6,
@@ -1881,7 +1982,8 @@
       "createdAt": "2026-10-28T09:37:55.127Z",
       "updatedAt": "2026-10-28T09:37:55.127Z",
       "parentId": 18,
-      "epicId": 15
+      "epicId": 15,
+      "sprint": "2026-10"
     },
     {
       "spaceId": 14,
@@ -1921,13 +2023,27 @@
           "type": "created",
           "author": "VY",
           "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "910328c5-c07e-45ba-a82f-0fc8e26775e7",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.849Z"
         }
       ],
       "storyPoints": 3,
       "rank": 1000,
       "id": 39,
       "createdAt": "2026-10-28T18:34:09.142Z",
-      "updatedAt": "2026-10-31T14:47:02.561Z"
+      "updatedAt": "2026-11-05T15:08:26.848Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 14,
@@ -1967,13 +2083,27 @@
           "type": "created",
           "author": "VY",
           "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "852e1f8b-9ce3-4081-91fa-279f5e897207",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.863Z"
         }
       ],
       "storyPoints": 3,
       "rank": 1100,
       "id": 40,
       "createdAt": "2026-10-28T18:34:09.142Z",
-      "updatedAt": "2026-10-31T14:47:04.156Z"
+      "updatedAt": "2026-11-05T15:08:26.862Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 14,
@@ -2013,13 +2143,27 @@
           "type": "created",
           "author": "VY",
           "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "32f3e308-4e95-4859-82ef-0220855966ca",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.875Z"
         }
       ],
       "storyPoints": 5,
       "rank": 1200,
       "id": 41,
       "createdAt": "2026-10-28T18:34:09.142Z",
-      "updatedAt": "2026-10-31T14:47:06.855Z"
+      "updatedAt": "2026-11-05T15:08:26.874Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 14,
@@ -2067,13 +2211,27 @@
           "from": "todo",
           "to": "inprogress",
           "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "2980d4fe-bbd2-44e4-bf0b-718a902afdb8",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.880Z"
         }
       ],
       "storyPoints": 5,
       "rank": 1000,
       "id": 42,
       "createdAt": "2026-10-28T18:34:09.142Z",
-      "updatedAt": "2026-10-28T18:46:32.831Z"
+      "updatedAt": "2026-11-05T15:08:26.879Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 14,
@@ -2121,13 +2279,27 @@
           "from": "todo",
           "to": "inprogress",
           "createdAt": "2026-10-28T18:34:09.142Z"
+        },
+        {
+          "id": "6d7c597a-49b6-4ce3-bc70-e4617a95e962",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.891Z"
         }
       ],
       "storyPoints": 5,
       "rank": 1100,
       "id": 43,
       "createdAt": "2026-10-28T18:34:09.142Z",
-      "updatedAt": "2026-10-28T18:47:12.218Z"
+      "updatedAt": "2026-11-05T15:08:26.890Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -2174,6 +2346,16 @@
           "authorInitials": "AI",
           "description": "created this task via natural language agent command",
           "createdAt": "2026-10-28T18:51:39.331Z"
+        },
+        {
+          "id": "559efaf7-dda6-43f7-a0a0-6e7bd438c780",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.896Z"
         }
       ],
       "attachments": [],
@@ -2184,8 +2366,12 @@
         "VY"
       ],
       "createdAt": "2026-10-28T18:51:39.331Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z",
-      "id": 46
+      "updatedAt": "2026-11-05T15:08:26.895Z",
+      "id": 46,
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -2214,6 +2400,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "e2159604-70a7-4cc2-b6de-190646a672b9",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.900Z"
         }
       ],
       "attachments": [],
@@ -2225,7 +2421,11 @@
       ],
       "id": 47,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.899Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -2254,6 +2454,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "5eedd6ae-3143-4c5f-8e3f-145229b2a7b6",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.912Z"
         }
       ],
       "attachments": [],
@@ -2265,7 +2475,11 @@
       ],
       "id": 48,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.910Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -2296,6 +2510,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "e9167c77-3662-405d-a69d-66199f9a9be4",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.917Z"
         }
       ],
       "attachments": [],
@@ -2307,7 +2531,11 @@
       ],
       "id": 49,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-31T17:54:46.063Z"
+      "updatedAt": "2026-11-05T15:08:26.916Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -2336,6 +2564,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "86902016-976b-4fd0-8c6c-0388407aff76",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.928Z"
         }
       ],
       "attachments": [],
@@ -2347,7 +2585,11 @@
       ],
       "id": 50,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.927Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -2373,6 +2615,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "88a657de-f5fc-4a37-be02-9cce36830626",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.932Z"
         }
       ],
       "attachments": [],
@@ -2384,7 +2636,11 @@
       ],
       "id": 51,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.931Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 13,
@@ -2412,6 +2668,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T18:54:30.706Z"
+        },
+        {
+          "id": "9d30c87b-5db8-4db6-9a4a-62efafe573c8",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.944Z"
         }
       ],
       "attachments": [],
@@ -2423,7 +2689,11 @@
       ],
       "id": 52,
       "createdAt": "2026-10-28T18:54:30.706Z",
-      "updatedAt": "2026-10-28T18:54:30.706Z"
+      "updatedAt": "2026-11-05T15:08:26.943Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 5,
@@ -2464,7 +2734,8 @@
       ],
       "id": 53,
       "createdAt": "2026-10-28T19:03:34.766Z",
-      "updatedAt": "2026-10-28T19:03:34.766Z"
+      "updatedAt": "2026-10-28T19:03:34.766Z",
+      "sprint": "2026-10"
     },
     {
       "spaceId": 5,
@@ -2491,6 +2762,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T19:03:34.766Z"
+        },
+        {
+          "id": "32c1b807-d371-4780-b149-c290ca448253",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.948Z"
         }
       ],
       "attachments": [],
@@ -2502,7 +2783,11 @@
       ],
       "id": 54,
       "createdAt": "2026-10-28T19:03:34.766Z",
-      "updatedAt": "2026-10-28T19:03:34.766Z"
+      "updatedAt": "2026-11-05T15:08:26.947Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 5,
@@ -2532,6 +2817,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T19:03:34.766Z"
+        },
+        {
+          "id": "c24ad9b0-725d-47db-9059-779cca710961",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.958Z"
         }
       ],
       "attachments": [],
@@ -2543,7 +2838,11 @@
       ],
       "id": 55,
       "createdAt": "2026-10-28T19:03:34.766Z",
-      "updatedAt": "2026-10-28T19:03:34.766Z"
+      "updatedAt": "2026-11-05T15:08:26.957Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 5,
@@ -2574,6 +2873,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T19:03:34.766Z"
+        },
+        {
+          "id": "c0c50b20-fa92-40ab-b03b-4d8a01ea69aa",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.962Z"
         }
       ],
       "attachments": [],
@@ -2585,7 +2894,11 @@
       ],
       "id": 56,
       "createdAt": "2026-10-28T19:03:34.766Z",
-      "updatedAt": "2026-10-28T19:03:34.766Z"
+      "updatedAt": "2026-11-05T15:08:26.961Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 5,
@@ -2616,6 +2929,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T19:03:34.766Z"
+        },
+        {
+          "id": "948a156a-bde6-4e25-8589-29c18dd5dbdb",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.966Z"
         }
       ],
       "attachments": [],
@@ -2627,7 +2950,11 @@
       ],
       "id": 57,
       "createdAt": "2026-10-28T19:03:34.766Z",
-      "updatedAt": "2026-10-28T19:03:34.766Z"
+      "updatedAt": "2026-11-05T15:08:26.965Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 5,
@@ -2657,6 +2984,16 @@
           "authorInitials": "VY",
           "description": "created this task",
           "createdAt": "2026-10-28T19:03:34.766Z"
+        },
+        {
+          "id": "ca060297-28ed-4d2e-b8c3-23432fa36bf1",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.977Z"
         }
       ],
       "attachments": [],
@@ -2668,7 +3005,11 @@
       ],
       "id": 58,
       "createdAt": "2026-10-28T19:03:34.766Z",
-      "updatedAt": "2026-10-28T19:03:34.766Z"
+      "updatedAt": "2026-11-05T15:08:26.976Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 5,
@@ -2713,7 +3054,8 @@
       ],
       "id": 59,
       "createdAt": "2026-10-28T19:03:34.766Z",
-      "updatedAt": "2026-10-28T19:03:34.766Z"
+      "updatedAt": "2026-10-28T19:03:34.766Z",
+      "sprint": "2026-10"
     },
     {
       "spaceId": 5,
@@ -2757,7 +3099,8 @@
       ],
       "id": 60,
       "createdAt": "2026-10-28T19:03:34.766Z",
-      "updatedAt": "2026-10-31T18:15:16.525Z"
+      "updatedAt": "2026-10-31T18:15:16.525Z",
+      "sprint": "2026-10"
     },
     {
       "id": 61,
@@ -2814,7 +3157,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 62,
@@ -2878,7 +3222,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 63,
@@ -2922,7 +3267,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 64,
@@ -2966,7 +3312,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 65,
@@ -3010,7 +3357,8 @@
       ],
       "createdAt": "2026-10-28T21:37:51.587Z",
       "updatedAt": "2026-10-28T21:37:51.587Z",
-      "resolvedAt": "2026-10-28T21:37:51.587Z"
+      "resolvedAt": "2026-10-28T21:37:51.587Z",
+      "sprint": "2026-10"
     },
     {
       "id": 66,
@@ -3025,7 +3373,7 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": "2026-12-31T18:00:00.000Z",
+      "dueDate": "2026-12-30T00:00:00.000Z",
       "startDate": "2026-10-31T06:00:00.000Z",
       "labels": [
         "devops",
@@ -3081,7 +3429,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T06:26:14.519Z",
-      "updatedAt": "2026-10-31T06:26:14.519Z"
+      "updatedAt": "2026-11-05T13:55:19.004Z",
+      "sprint": "2026-10"
     },
     {
       "id": 67,
@@ -3143,6 +3492,16 @@
           "authorInitials": "VY",
           "description": "created task linked to epic AI-6",
           "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "c3f8c497-d6dc-4b49-9007-5a5631de4d16",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.981Z"
         }
       ],
       "attachments": [],
@@ -3153,7 +3512,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T06:26:14.519Z",
-      "updatedAt": "2026-10-31T06:26:14.519Z"
+      "updatedAt": "2026-11-05T15:08:26.980Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 68,
@@ -3171,7 +3534,7 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": "2026-11-25T18:00:00.000Z",
+      "dueDate": "2026-11-25T06:30:00.000Z",
       "startDate": "2026-10-31T06:00:00.000Z",
       "labels": [
         "dash0",
@@ -3216,6 +3579,16 @@
           "authorInitials": "VY",
           "description": "created task linked to epic AI-6",
           "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "a25b2051-677e-4c0f-8f72-5821b8153121",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.993Z"
         }
       ],
       "attachments": [],
@@ -3226,7 +3599,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T06:26:14.519Z",
-      "updatedAt": "2026-10-31T06:26:14.519Z"
+      "updatedAt": "2026-11-05T15:22:48.209Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 69,
@@ -3288,6 +3665,16 @@
           "authorInitials": "VY",
           "description": "created task linked to epic AI-6",
           "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "f25b9c1a-9242-4ac5-b52b-eff0ee4b20bc",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:26.997Z"
         }
       ],
       "attachments": [],
@@ -3298,7 +3685,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T06:26:14.519Z",
-      "updatedAt": "2026-10-31T06:26:14.519Z"
+      "updatedAt": "2026-11-05T15:08:26.997Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 70,
@@ -3361,6 +3752,16 @@
           "authorInitials": "VY",
           "description": "created task linked to epic AI-6",
           "createdAt": "2026-10-31T06:26:14.519Z"
+        },
+        {
+          "id": "8d5cacb7-5cc5-4817-b630-f9f1f01c08f6",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.024Z"
         }
       ],
       "attachments": [],
@@ -3371,7 +3772,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T06:26:14.519Z",
-      "updatedAt": "2026-10-31T06:26:14.519Z"
+      "updatedAt": "2026-11-05T15:08:27.023Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 71,
@@ -3443,7 +3848,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T08:00:00.000Z",
-      "updatedAt": "2026-10-31T12:00:00.000Z"
+      "updatedAt": "2026-10-31T12:00:00.000Z",
+      "sprint": "2026-10"
     },
     {
       "id": 72,
@@ -3547,7 +3953,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T08:00:00.000Z",
-      "updatedAt": "2026-10-31T12:00:00.000Z"
+      "updatedAt": "2026-10-31T12:00:00.000Z",
+      "sprint": "2026-10"
     },
     {
       "id": 73,
@@ -3609,6 +4016,16 @@
           "authorInitials": "VY",
           "description": "created task linked to epic AI-11",
           "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "96850766-ee6d-4800-95f9-f218c4257c04",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.028Z"
         }
       ],
       "attachments": [],
@@ -3622,7 +4039,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T08:00:00.000Z",
-      "updatedAt": "2026-10-31T14:55:09.062Z"
+      "updatedAt": "2026-11-05T15:08:27.027Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 74,
@@ -3684,6 +4105,16 @@
           "authorInitials": "VY",
           "description": "created task linked to epic AI-11",
           "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "7b99ff4b-aec0-4fa2-afd1-0e0237eda63c",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.030Z"
         }
       ],
       "attachments": [],
@@ -3697,7 +4128,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T08:00:00.000Z",
-      "updatedAt": "2026-10-31T14:55:06.832Z"
+      "updatedAt": "2026-11-05T15:08:27.030Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 75,
@@ -3760,7 +4195,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T08:00:00.000Z",
-      "updatedAt": "2026-10-31T08:00:00.000Z"
+      "updatedAt": "2026-10-31T08:00:00.000Z",
+      "sprint": "2026-10"
     },
     {
       "id": 76,
@@ -3822,6 +4258,16 @@
           "authorInitials": "VY",
           "description": "created task linked to epic AI-15",
           "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "e910a2f9-1522-444e-840a-77a379500bba",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.033Z"
         }
       ],
       "attachments": [],
@@ -3835,7 +4281,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T08:00:00.000Z",
-      "updatedAt": "2026-10-31T08:00:00.000Z"
+      "updatedAt": "2026-11-05T15:08:27.032Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 77,
@@ -3897,6 +4347,16 @@
           "authorInitials": "VY",
           "description": "created task linked to epic AI-15",
           "createdAt": "2026-10-31T08:00:00.000Z"
+        },
+        {
+          "id": "99e384ab-fbb7-4ff5-8adc-4f8a4713ebf2",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.041Z"
         }
       ],
       "attachments": [],
@@ -3910,7 +4370,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T08:00:00.000Z",
-      "updatedAt": "2026-10-31T08:00:00.000Z"
+      "updatedAt": "2026-11-05T15:08:27.041Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 78,
@@ -4004,7 +4468,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:06:36.244Z"
+      "updatedAt": "2026-10-31T18:06:36.244Z",
+      "sprint": "2026-10"
     },
     {
       "id": 79,
@@ -4061,7 +4526,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:11:35.900Z"
+      "updatedAt": "2026-10-31T18:11:35.900Z",
+      "sprint": "2026-10"
     },
     {
       "id": 80,
@@ -4138,7 +4604,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:21:32.751Z"
+      "updatedAt": "2026-10-31T18:21:32.751Z",
+      "sprint": "2026-10"
     },
     {
       "id": 81,
@@ -4205,6 +4672,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-14",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "07387a75-9b09-4eae-b43f-3c8fed6a231a",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.044Z"
         }
       ],
       "attachments": [],
@@ -4215,7 +4692,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:12:59.922Z"
+      "updatedAt": "2026-11-05T15:08:27.043Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 82,
@@ -4276,6 +4757,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-14",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "b7ba0e46-13e5-4046-b208-36f5f18ae057",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.047Z"
         }
       ],
       "attachments": [],
@@ -4286,7 +4777,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:12:14.317Z"
+      "updatedAt": "2026-11-05T15:08:27.047Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 83,
@@ -4353,6 +4848,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-14",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "9d343c7f-b86a-45e9-81e7-b670bba5ff87",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.057Z"
         }
       ],
       "attachments": [],
@@ -4363,7 +4868,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:06:36.244Z"
+      "updatedAt": "2026-11-05T15:08:27.057Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 84,
@@ -4416,6 +4925,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-14",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "16c9efc2-d4d7-4818-ab1e-e0b241ea3512",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.061Z"
         }
       ],
       "attachments": [],
@@ -4426,7 +4945,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:06:36.244Z"
+      "updatedAt": "2026-11-05T15:08:27.060Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 85,
@@ -4486,6 +5009,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-14",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "b6b3c50f-868a-4ce6-9f4f-e0752d30de49",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.064Z"
         }
       ],
       "attachments": [],
@@ -4496,7 +5029,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:06:36.244Z"
+      "updatedAt": "2026-11-05T15:08:27.064Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 86,
@@ -4555,6 +5092,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-14",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "bf90a36c-c7dc-4408-96d1-04646c6c625b",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.073Z"
         }
       ],
       "attachments": [],
@@ -4565,7 +5112,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:06:36.244Z"
+      "updatedAt": "2026-11-05T15:08:27.072Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 87,
@@ -4631,6 +5182,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-14",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "a9290eba-4452-4677-862d-ba98cdac0877",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.076Z"
         }
       ],
       "attachments": [],
@@ -4641,7 +5202,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:06:36.244Z"
+      "updatedAt": "2026-11-05T15:08:27.075Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 88,
@@ -4701,6 +5266,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-14",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "7bb52928-a6cd-4a90-b9fd-8c2410f0a84e",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.078Z"
         }
       ],
       "attachments": [],
@@ -4711,7 +5286,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:06:36.244Z"
+      "updatedAt": "2026-11-05T15:08:27.078Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 89,
@@ -4762,6 +5341,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-15",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "77b039ec-ee96-45ef-85aa-f331a80a02b7",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.083Z"
         }
       ],
       "attachments": [],
@@ -4772,7 +5361,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:13:39.937Z"
+      "updatedAt": "2026-11-05T15:08:27.082Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 90,
@@ -4829,6 +5422,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-15",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "9d3336b3-7e10-4823-90a3-50e5cb6af778",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.092Z"
         }
       ],
       "attachments": [],
@@ -4839,7 +5442,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:14:20.676Z"
+      "updatedAt": "2026-11-05T15:08:27.091Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 91,
@@ -4912,6 +5519,16 @@
           "author": "VY",
           "description": "created task linked to epic CERT-16",
           "createdAt": "2026-10-31T18:06:36.244Z"
+        },
+        {
+          "id": "5af84e36-0d05-46e5-b166-70936e638013",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.096Z"
         }
       ],
       "attachments": [],
@@ -4922,7 +5539,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:06:36.244Z",
-      "updatedAt": "2026-10-31T18:06:36.244Z"
+      "updatedAt": "2026-11-05T15:08:27.095Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "spaceId": 5,
@@ -4950,17 +5571,31 @@
           "authorInitials": "VY",
           "description": "created this issue",
           "createdAt": "2026-10-31T18:16:00.383Z"
+        },
+        {
+          "id": "e5b71d14-c978-4733-9e21-ee528c659301",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.099Z"
         }
       ],
       "attachments": [],
       "linkedIssues": [],
       "rank": 1793470560383,
       "createdAt": "2026-10-31T18:16:00.383Z",
-      "updatedAt": "2026-10-31T18:16:00.383Z",
+      "updatedAt": "2026-11-05T15:08:27.098Z",
       "watchers": [
         "VY"
       ],
-      "id": 93
+      "id": 93,
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 94,
@@ -5035,7 +5670,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "sprint": "2026-10"
     },
     {
       "id": 95,
@@ -5111,7 +5747,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "sprint": "2026-10"
     },
     {
       "id": 96,
@@ -5181,7 +5818,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "sprint": "2026-10"
     },
     {
       "id": 97,
@@ -5247,6 +5885,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-16",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "b8df0c7e-3264-42fe-84cc-7b4d54fffb97",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.108Z"
         }
       ],
       "attachments": [],
@@ -5257,7 +5905,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.107Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 98,
@@ -5352,7 +6004,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-10-31T18:28:16.718Z",
+      "sprint": "2026-10"
     },
     {
       "id": 99,
@@ -5417,6 +6070,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "54096048-db01-4f66-b847-27c98d5f8404",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.110Z"
         }
       ],
       "attachments": [],
@@ -5427,7 +6090,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.110Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 100,
@@ -5483,6 +6150,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "7f541bbd-9515-4ed4-a4b9-0dd3c7a52a8a",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.114Z"
         }
       ],
       "attachments": [],
@@ -5493,7 +6170,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.112Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 101,
@@ -5556,6 +6237,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-16",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "27f2862f-6af2-49dc-a017-2b56b54f761f",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.123Z"
         }
       ],
       "attachments": [],
@@ -5566,7 +6257,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.122Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 102,
@@ -5629,6 +6324,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "05f7a9e4-d169-4337-9616-aa14fb43412f",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.127Z"
         }
       ],
       "attachments": [],
@@ -5639,7 +6344,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:48:38.937Z"
+      "updatedAt": "2026-11-05T15:08:27.126Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 103,
@@ -5702,6 +6411,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-16",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "9a16fb1c-910a-46e4-86c5-af2b82c1cdb1",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.130Z"
         }
       ],
       "attachments": [],
@@ -5712,7 +6431,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.130Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 104,
@@ -5768,6 +6491,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-18",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "6a45671f-3ebb-4011-8dc5-e35518255172",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.134Z"
         }
       ],
       "attachments": [],
@@ -5778,7 +6511,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.133Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 105,
@@ -5835,6 +6572,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-18",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "e80bbe94-22a3-4098-a876-08b99c5db150",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.142Z"
         }
       ],
       "attachments": [],
@@ -5845,7 +6592,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.142Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 106,
@@ -5902,6 +6653,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-18",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "5037873a-a7db-455a-a59d-eb200897c73b",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.146Z"
         }
       ],
       "attachments": [],
@@ -5912,7 +6673,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:44:31.540Z"
+      "updatedAt": "2026-11-05T15:08:27.145Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 107,
@@ -5969,6 +6734,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "94321b84-bd07-49cd-bb3b-c3c342a37355",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.150Z"
         }
       ],
       "attachments": [],
@@ -5979,7 +6754,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:44:55.632Z"
+      "updatedAt": "2026-11-05T15:08:27.149Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 108,
@@ -6036,6 +6815,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-18",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "e0cec463-6358-4551-933e-f73c4875aa7c",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.158Z"
         }
       ],
       "attachments": [],
@@ -6046,7 +6835,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:47:09.216Z"
+      "updatedAt": "2026-11-05T15:08:27.157Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 109,
@@ -6103,6 +6896,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-16",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "3898c85e-6532-440a-b023-131781a9afa1",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.161Z"
         }
       ],
       "attachments": [],
@@ -6113,7 +6916,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:47:40.350Z"
+      "updatedAt": "2026-11-05T15:08:27.160Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 110,
@@ -6170,6 +6977,16 @@
           "author": "VY",
           "description": "created task linked to epic COUR-17",
           "createdAt": "2026-10-31T18:28:16.718Z"
+        },
+        {
+          "id": "382400aa-717a-457c-82d9-7aa847492035",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from October 2026 Sprint to November 2026 Sprint",
+          "oldValue": "October 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-05T15:08:27.163Z"
         }
       ],
       "attachments": [],
@@ -6180,7 +6997,11 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:28:16.718Z",
-      "updatedAt": "2026-10-31T18:28:16.718Z"
+      "updatedAt": "2026-11-05T15:08:27.163Z",
+      "sprint": "2026-11",
+      "sprintHistory": [
+        "2026-10"
+      ]
     },
     {
       "id": 111,
@@ -6246,7 +7067,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:52:48.174Z",
-      "updatedAt": "2026-10-31T18:52:48.174Z"
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "sprint": "2026-11"
     },
     {
       "id": 112,
@@ -6313,7 +7135,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:52:48.174Z",
-      "updatedAt": "2026-10-31T18:52:48.174Z"
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "sprint": "2026-11"
     },
     {
       "id": 113,
@@ -6380,7 +7203,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:52:48.174Z",
-      "updatedAt": "2026-10-31T18:52:48.174Z"
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "sprint": "2026-11"
     },
     {
       "id": 114,
@@ -6452,7 +7276,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:52:48.174Z",
-      "updatedAt": "2026-10-31T18:52:48.174Z"
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "sprint": "2026-11"
     },
     {
       "id": 115,
@@ -6522,7 +7347,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:52:48.174Z",
-      "updatedAt": "2026-10-31T18:52:48.174Z"
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "sprint": "2026-11"
     },
     {
       "id": 116,
@@ -6592,7 +7418,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:52:48.174Z",
-      "updatedAt": "2026-10-31T18:52:48.174Z"
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "sprint": "2026-11"
     },
     {
       "id": 117,
@@ -6662,7 +7489,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:52:48.174Z",
-      "updatedAt": "2026-10-31T18:52:48.174Z"
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "sprint": "2026-11"
     },
     {
       "id": 118,
@@ -6732,7 +7560,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:52:48.174Z",
-      "updatedAt": "2026-10-31T18:52:48.174Z"
+      "updatedAt": "2026-10-31T18:52:48.174Z",
+      "sprint": "2026-11"
     },
     {
       "id": 119,
@@ -6795,7 +7624,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-11-05T13:08:22.170Z"
+      "updatedAt": "2026-11-05T13:08:22.170Z",
+      "sprint": "2026-11"
     },
     {
       "id": 120,
@@ -6858,7 +7688,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 121,
@@ -6921,7 +7752,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 122,
@@ -6984,7 +7816,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 123,
@@ -7065,7 +7898,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T12:00:00.000Z"
+      "updatedAt": "2026-10-31T12:00:00.000Z",
+      "sprint": "2026-11"
     },
     {
       "id": 124,
@@ -7128,7 +7962,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 125,
@@ -7191,7 +8026,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T19:00:17.204Z"
+      "updatedAt": "2026-10-31T19:00:17.204Z",
+      "sprint": "2026-11"
     },
     {
       "id": 126,
@@ -7255,7 +8091,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T19:00:25.408Z"
+      "updatedAt": "2026-10-31T19:00:25.408Z",
+      "sprint": "2026-11"
     },
     {
       "id": 127,
@@ -7319,7 +8156,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 128,
@@ -7383,7 +8221,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 129,
@@ -7446,7 +8285,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 130,
@@ -7510,7 +8350,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 131,
@@ -7574,7 +8415,8 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z"
+      "updatedAt": "2026-10-31T18:58:39.340Z",
+      "sprint": "2026-11"
     },
     {
       "spaceId": 14,
@@ -7623,7 +8465,8 @@
       "storyPoints": null,
       "watchers": [],
       "id": 132,
-      "parentId": 71
+      "parentId": 71,
+      "sprint": "2026-11"
     },
     {
       "id": 133,
@@ -7663,7 +8506,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:55:52.796Z"
+      "updatedAt": "2026-11-04T07:55:52.796Z",
+      "sprint": "2026-11"
     },
     {
       "id": 134,
@@ -7704,7 +8548,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 135,
@@ -7745,7 +8590,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 136,
@@ -7786,7 +8632,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 137,
@@ -7827,7 +8674,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 138,
@@ -7868,7 +8716,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 139,
@@ -7909,7 +8758,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 140,
@@ -7951,7 +8801,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:45:34.994Z"
+      "updatedAt": "2026-11-04T07:45:34.994Z",
+      "sprint": "2026-11"
     },
     {
       "id": 141,
@@ -7993,7 +8844,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 142,
@@ -8035,7 +8887,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 143,
@@ -8077,7 +8930,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 144,
@@ -8119,7 +8973,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 145,
@@ -8160,7 +9015,8 @@
         "VY"
       ],
       "createdAt": "2026-11-04T08:35:54.340Z",
-      "updatedAt": "2026-11-04T08:35:54.340Z"
+      "updatedAt": "2026-11-04T08:35:54.340Z",
+      "sprint": "2026-11"
     },
     {
       "id": 159,
@@ -8204,7 +9060,8 @@
       ],
       "createdAt": "2026-11-05T12:30:00.000Z",
       "updatedAt": "2026-11-05T12:30:00.000Z",
-      "resolvedAt": "2026-11-05T12:30:00.000Z"
+      "resolvedAt": "2026-11-05T12:30:00.000Z",
+      "sprint": "2026-11"
     },
     {
       "id": 160,
@@ -8247,7 +9104,8 @@
       ],
       "createdAt": "2026-11-05T12:30:00.000Z",
       "updatedAt": "2026-11-05T12:30:00.000Z",
-      "resolvedAt": "2026-11-05T12:30:00.000Z"
+      "resolvedAt": "2026-11-05T12:30:00.000Z",
+      "sprint": "2026-11"
     },
     {
       "id": 161,
@@ -8290,7 +9148,8 @@
       ],
       "createdAt": "2026-11-05T12:30:00.000Z",
       "updatedAt": "2026-11-05T12:30:00.000Z",
-      "resolvedAt": "2026-11-05T12:30:00.000Z"
+      "resolvedAt": "2026-11-05T12:30:00.000Z",
+      "sprint": "2026-11"
     },
     {
       "id": 162,
@@ -8333,7 +9192,1036 @@
       ],
       "createdAt": "2026-11-05T12:30:00.000Z",
       "updatedAt": "2026-11-05T12:30:00.000Z",
-      "resolvedAt": "2026-11-05T12:30:00.000Z"
+      "resolvedAt": "2026-11-05T12:30:00.000Z",
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-60",
+      "title": "Phase 1: Persistence cleanup and core tests",
+      "description": "Projects, sprints, teams, standups and settings saved to JSON in data/. Structured Dexie tables. Vitest suite.",
+      "type": "epic",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-01T18:30:00.000Z",
+      "dueDate": "2026-11-02T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "85b16620-4cd7-45b9-9437-0e50ad8eff8c",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.004Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960004,
+      "createdAt": "2026-11-06T03:49:20.004Z",
+      "updatedAt": "2026-11-06T04:18:29.018Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 163,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-61",
+      "title": "Phase 2: Routing and file splitting",
+      "description": "Real URLs, back/forward and deep links. Split the very large components so later work is cheaper.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-06T18:30:00.000Z",
+      "dueDate": "2026-11-07T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "ac7e93b4-c6d1-4e8d-8f2e-4e7f91fe66df",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.083Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960083,
+      "createdAt": "2026-11-06T03:49:20.083Z",
+      "updatedAt": "2026-11-06T04:18:29.341Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 164,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-62",
+      "title": "Browser smoke tests (Playwright) for unverified pages",
+      "description": "Light mode, hover menus, Viva AI open/close, standup popup, For you, Sprints overview, Create Issue rules.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-08T18:30:00.000Z",
+      "dueDate": "2026-11-09T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "78bd1d09-0ded-4c60-905f-1d91854e85e6",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.153Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960153,
+      "createdAt": "2026-11-06T03:49:20.153Z",
+      "updatedAt": "2026-11-06T04:18:29.623Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 165,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-63",
+      "title": "Accessibility pass",
+      "description": "Focus rings, aria labels on icon buttons, dark-mode contrast, reduced-motion everywhere.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-10T18:30:00.000Z",
+      "dueDate": "2026-11-11T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "76e8f6d1-258d-4957-a176-35175d9cb69f",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.209Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960210,
+      "createdAt": "2026-11-06T03:49:20.209Z",
+      "updatedAt": "2026-11-06T04:18:29.879Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 166,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-64",
+      "title": "Phase 7: Decide on multi-user",
+      "description": "Stay local and single-user, or add a backend (accounts, database, realtime). Must be decided before real invites in Phase 3.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-12T18:30:00.000Z",
+      "dueDate": "2026-11-13T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "766b0c6a-c7df-4547-ba60-a09823570f8c",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.258Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960258,
+      "createdAt": "2026-11-06T03:49:20.258Z",
+      "updatedAt": "2026-11-06T04:18:30.215Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 167,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-65",
+      "title": "Phase 3: Teams, real standup and invites",
+      "description": "Named teams assigned to spaces and projects. Standup history, async standup, real calendar invites.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-14T18:30:00.000Z",
+      "dueDate": "2026-11-15T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "78136a29-72fb-4c03-979c-3824dd36f038",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.303Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960303,
+      "createdAt": "2026-11-06T03:49:20.303Z",
+      "updatedAt": "2026-11-06T04:18:30.344Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 168,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-66",
+      "title": "Phase 4: Sprint planning, rollover, retros, reports",
+      "description": "Two-column planning view, automatic month-end rollover, retrospectives, burnup, cumulative flow, scope change log.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-16T18:30:00.000Z",
+      "dueDate": "2026-11-17T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "cf1e4adf-7d5a-4b93-b23d-b8d9859ba644",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.342Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960342,
+      "createdAt": "2026-11-06T03:49:20.342Z",
+      "updatedAt": "2026-11-06T04:18:30.520Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 169,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-67",
+      "title": "Phase 5: Command palette, bulk edit, saved filters",
+      "description": "Ctrl+K palette, keyboard shortcuts, bulk edit, saved filters, templates and recurring tickets.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-18T18:30:00.000Z",
+      "dueDate": "2026-11-19T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "48708aee-3a2d-43e7-9783-4f29e0b7c736",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.394Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960394,
+      "createdAt": "2026-11-06T03:49:20.394Z",
+      "updatedAt": "2026-11-06T04:18:30.901Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 170,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-68",
+      "title": "Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
+      "description": "Preview and undo for every AI write, sprint planning suggestions, standup digest, risk radar.",
+      "type": "epic",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T18:30:00.000Z",
+      "dueDate": "2026-11-21T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "ec826aa5-44ee-4898-a0c9-1944afa7dba7",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:49:20.425Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "rank": 1793936960425,
+      "createdAt": "2026-11-06T03:49:20.425Z",
+      "updatedAt": "2026-11-06T04:18:31.340Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 171,
+      "sprint": "2026-11"
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-69",
+      "parentId": 163,
+      "epicId": 163,
+      "epicLink": "Phase 1: Persistence cleanup and core tests",
+      "title": "Deliver: Phase 1: Persistence cleanup and core tests",
+      "description": "Checklist for the roadmap item \"Phase 1: Persistence cleanup and core tests\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-01T18:30:00.000Z",
+      "dueDate": "2026-11-02T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p1a",
+          "title": "Mirror all lira_* data to data/*.json",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        },
+        {
+          "id": "p1b",
+          "title": "Dexie tables for projects, sprints, teams, standups",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        },
+        {
+          "id": "p1c",
+          "title": "Only rewrite changed space files",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        },
+        {
+          "id": "p1d",
+          "title": "Include new data in export/import",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        },
+        {
+          "id": "p1e",
+          "title": "Vitest suite for sprint, standup, AI and persistence logic",
+          "completed": true,
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "35aaaae3-c1e0-4676-aced-fd215d37bd25",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:03.846Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937363846,
+      "createdAt": "2026-11-06T03:56:03.846Z",
+      "updatedAt": "2026-11-06T04:18:29.183Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 172
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-70",
+      "parentId": 164,
+      "epicId": 164,
+      "epicLink": "Phase 2: Routing and file splitting",
+      "title": "Deliver: Phase 2: Routing and file splitting",
+      "description": "Checklist for the roadmap item \"Phase 2: Routing and file splitting\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-06T18:30:00.000Z",
+      "dueDate": "2026-11-07T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p2a",
+          "title": "Add a router with real paths (/sprints/2026-11, /space/CERT/board)",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2b",
+          "title": "Remove the duplicated global-tab lists; derive sidebar highlight from the route",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2c",
+          "title": "Split ProjectDetailView, TopNavigation and aiAgentService (under ~500 lines each)",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2d",
+          "title": "Fix the nested <button> DOM warning",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        },
+        {
+          "id": "p2e",
+          "title": "Add an error boundary per page",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "0d6f80a5-70fe-420c-b497-3301869b0332",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:03.944Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937363944,
+      "createdAt": "2026-11-06T03:56:03.944Z",
+      "updatedAt": "2026-11-06T04:18:29.471Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 173
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-71",
+      "parentId": 165,
+      "epicId": 165,
+      "epicLink": "Browser smoke tests (Playwright) for unverified pages",
+      "title": "Deliver: Browser smoke tests (Playwright) for unverified pages",
+      "description": "Checklist for the roadmap item \"Browser smoke tests (Playwright) for unverified pages\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-08T18:30:00.000Z",
+      "dueDate": "2026-11-09T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "q1a",
+          "title": "Set up Playwright against npm run dev",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        },
+        {
+          "id": "q1b",
+          "title": "Create Issue hierarchy rules (task/bug/epic/subtask)",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        },
+        {
+          "id": "q1c",
+          "title": "Sidebar navigation and highlight",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        },
+        {
+          "id": "q1d",
+          "title": "Light and dark theme screenshots",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d42144f7-9769-4f8c-9dcd-bd8794bfdb73",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.001Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364001,
+      "createdAt": "2026-11-06T03:56:04.001Z",
+      "updatedAt": "2026-11-06T04:18:29.747Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 174
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-72",
+      "parentId": 166,
+      "epicId": 166,
+      "epicLink": "Accessibility pass",
+      "title": "Deliver: Accessibility pass",
+      "description": "Checklist for the roadmap item \"Accessibility pass\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-10T18:30:00.000Z",
+      "dueDate": "2026-11-11T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "q2a",
+          "title": "Focus rings on all interactive elements",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        },
+        {
+          "id": "q2b",
+          "title": "aria-labels for icon-only buttons",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        },
+        {
+          "id": "q2c",
+          "title": "Contrast review of both themes",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        },
+        {
+          "id": "q2d",
+          "title": "prefers-reduced-motion support",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d626aa16-516d-4c03-aa3e-2372e8403597",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.063Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364063,
+      "createdAt": "2026-11-06T03:56:04.063Z",
+      "updatedAt": "2026-11-06T04:18:30.030Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 175
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-73",
+      "parentId": 167,
+      "epicId": 167,
+      "epicLink": "Phase 7: Decide on multi-user",
+      "title": "Deliver: Phase 7: Decide on multi-user",
+      "description": "Checklist for the roadmap item \"Phase 7: Decide on multi-user\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-12T18:30:00.000Z",
+      "dueDate": "2026-11-13T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "a1a",
+          "title": "List what the team actually needs shared",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.139Z"
+        },
+        {
+          "id": "a1b",
+          "title": "Compare local + git sharing vs hosted backend",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.139Z"
+        },
+        {
+          "id": "a1c",
+          "title": "Record the decision",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.139Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "829ce3e9-240b-45d1-87d8-e965006cdb84",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.139Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364139,
+      "createdAt": "2026-11-06T03:56:04.139Z",
+      "updatedAt": "2026-11-06T04:18:30.276Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 176
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-74",
+      "parentId": 168,
+      "epicId": 168,
+      "epicLink": "Phase 3: Teams, real standup and invites",
+      "title": "Deliver: Phase 3: Teams, real standup and invites",
+      "description": "Checklist for the roadmap item \"Phase 3: Teams, real standup and invites\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-14T18:30:00.000Z",
+      "dueDate": "2026-11-15T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p3a",
+          "title": "Team entity: members, roles, capacity",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        },
+        {
+          "id": "p3b",
+          "title": "Assign teams to spaces and projects",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        },
+        {
+          "id": "p3c",
+          "title": "Standup history and async updates",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        },
+        {
+          "id": "p3d",
+          "title": "Real Google / Teams invites (depends on the decision)",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "7849b6f3-ff20-4d64-a2e5-179d0306ddd2",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.207Z"
+        },
+        {
+          "id": "ad7d4b61-40d2-4c08-b184-91f22a49b798",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from December 2026 Sprint to November 2026 Sprint",
+          "oldValue": "December 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-06T04:18:30.502Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364207,
+      "createdAt": "2026-11-06T03:56:04.207Z",
+      "updatedAt": "2026-11-06T04:18:30.501Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 177,
+      "sprintHistory": []
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-75",
+      "parentId": 169,
+      "epicId": 169,
+      "epicLink": "Phase 4: Sprint planning, rollover, retros, reports",
+      "title": "Deliver: Phase 4: Sprint planning, rollover, retros, reports",
+      "description": "Checklist for the roadmap item \"Phase 4: Sprint planning, rollover, retros, reports\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-16T18:30:00.000Z",
+      "dueDate": "2026-11-17T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p4a",
+          "title": "Sprint planning view with capacity",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "p4b",
+          "title": "Automatic month-end rollover prompt",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "p4c",
+          "title": "Retrospective at sprint close",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "p4d",
+          "title": "Reports: burnup, CFD, cycle and lead time",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "p4e",
+          "title": "Set resolvedAt when a ticket moves to Done",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "c82121b3-4aeb-4dbe-9fd2-61627fbfd8f0",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.254Z"
+        },
+        {
+          "id": "55d6ad29-12bb-4f36-89d0-a0ae7f89ad1e",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from February 2027 Sprint to November 2026 Sprint",
+          "oldValue": "February 2027 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-06T04:18:30.876Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364254,
+      "createdAt": "2026-11-06T03:56:04.254Z",
+      "updatedAt": "2026-11-06T04:18:30.875Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 178,
+      "sprintHistory": []
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-76",
+      "parentId": 170,
+      "epicId": 170,
+      "epicLink": "Phase 5: Command palette, bulk edit, saved filters",
+      "title": "Deliver: Phase 5: Command palette, bulk edit, saved filters",
+      "description": "Checklist for the roadmap item \"Phase 5: Command palette, bulk edit, saved filters\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-18T18:30:00.000Z",
+      "dueDate": "2026-11-19T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p5a",
+          "title": "Ctrl+K command palette",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        },
+        {
+          "id": "p5b",
+          "title": "Keyboard shortcuts and help sheet",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        },
+        {
+          "id": "p5c",
+          "title": "Bulk edit on board and list",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        },
+        {
+          "id": "p5d",
+          "title": "Saved filters pinned to the sidebar",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "e38a9f49-ecc7-459f-a5fb-03b885507a4f",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.319Z"
+        },
+        {
+          "id": "a832af06-e567-4902-bc82-0e77776773ee",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from March 2027 Sprint to November 2026 Sprint",
+          "oldValue": "March 2027 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-06T04:18:31.301Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364319,
+      "createdAt": "2026-11-06T03:56:04.319Z",
+      "updatedAt": "2026-11-06T04:18:31.300Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 179,
+      "sprintHistory": []
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-77",
+      "parentId": 171,
+      "epicId": 171,
+      "epicLink": "Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
+      "title": "Deliver: Phase 6: Viva AI confirm-and-undo, sprint-aware prompts",
+      "description": "Checklist for the roadmap item \"Phase 6: Viva AI confirm-and-undo, sprint-aware prompts\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
+      "type": "task",
+      "status": "backlog",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T18:30:00.000Z",
+      "dueDate": "2026-11-21T18:30:00.000Z",
+      "labels": [
+        "roadmap"
+      ],
+      "subtasks": [
+        {
+          "id": "p6a",
+          "title": "Preview, confirm and undo for writes",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        },
+        {
+          "id": "p6b",
+          "title": "Sprint-aware prompts",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        },
+        {
+          "id": "p6c",
+          "title": "Standup digest",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        },
+        {
+          "id": "p6d",
+          "title": "Risk radar for sprints",
+          "completed": false,
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        }
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "id": "7a9eace6-b4ee-44c6-9bc3-b578964d68cf",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
+          "createdAt": "2026-11-06T03:56:04.399Z"
+        },
+        {
+          "id": "c2873902-7358-476f-b562-dc67948c1fb3",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from April 2027 Sprint to November 2026 Sprint",
+          "oldValue": "April 2027 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-06T04:18:31.748Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 1793937364399,
+      "createdAt": "2026-11-06T03:56:04.399Z",
+      "updatedAt": "2026-11-06T04:18:31.747Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 180,
+      "sprintHistory": []
     }
   ]
 }

@@ -1,15 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import {
   ChevronLeft, ChevronRight, Plus,
   Users, Folder, Settings,
   ChevronDown, MoreHorizontal, Star, Trash2, Archive,
-  Edit3, Palette, Clock, Filter, LayoutDashboard,
-  User, LayoutGrid, Map, Calendar, Database, Target,
-  List, FolderKanban, Eye, EyeOff, ArchiveRestore
+  Edit3, Palette, LayoutDashboard,
+  User, Map,
+  FolderKanban, Eye, EyeOff, ArchiveRestore, CalendarClock, Ticket
 } from 'lucide-react';
 import type { Space } from '../../types/space';
+import type { Project } from '../../types/project';
+import { canDeleteSprint, currentSprintKey, sprintLabel, sprintName, sprintPhase } from '../../utils/sprintUtils';
 import { deleteSpace } from '../../hooks/useSpaces';
-import { CustomiseSidebarModal, DEFAULT_SIDEBAR_CONFIG, type SidebarConfig } from './CustomiseSidebarModal';
+import { CustomiseSidebarModal, loadSidebarConfig, type SidebarConfig } from './CustomiseSidebarModal';
 
 interface LeftSidebarProps {
   spaces: Space[];
@@ -19,10 +21,25 @@ interface LeftSidebarProps {
   onEditSpace?: (space: Space) => void;
   onNavigateToFilters?: () => void;
   onNavigateToDashboards?: () => void;
+  onNavigateToRoadmaps?: () => void;
   onNavigateToTeams?: () => void;
   onNavigateToList?: () => void;
   onNavigateToCalendar?: () => void;
   onNavigateToProjects?: () => void;
+  onNavigateToSprints?: () => void;
+  onNavigateToForYou?: () => void;
+  projects?: Project[];
+  activeProjectId?: string;
+  onSelectProject?: (project: Project) => void;
+  onCreateProject?: () => void;
+  sprintKeys?: string[];
+  sprintCounts?: Record<string, { done: number; total: number }>;
+  activeSprint?: string;
+  onSelectSprint?: (key: string) => void;
+  onCreateSprint?: () => void;
+  onDeleteProject?: (project: Project) => void;
+  onDeleteSprint?: (key: string) => void;
+  onNavigateToAllTickets?: () => void;
   sidebarCollapsed?: boolean;
   setSidebarCollapsed?: (collapsed: boolean) => void;
   activeTab?: string;
@@ -40,12 +57,23 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onSpaceSelect,
   onCreateSpace,
   onEditSpace,
-  onNavigateToFilters,
   onNavigateToDashboards,
-  onNavigateToTeams,
-  onNavigateToList,
-  onNavigateToCalendar,
+  onNavigateToRoadmaps,
   onNavigateToProjects,
+  onNavigateToSprints,
+  onNavigateToForYou,
+  onNavigateToAllTickets,
+  projects = [],
+  activeProjectId,
+  onSelectProject,
+  onCreateProject,
+  sprintKeys = [],
+  sprintCounts = {},
+  activeSprint,
+  onSelectSprint,
+  onCreateSprint,
+  onDeleteProject,
+  onDeleteSprint,
   sidebarCollapsed = false,
   setSidebarCollapsed,
   activeTab,
@@ -61,13 +89,33 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   );
   const isCollapsed = setSidebarCollapsed !== undefined ? sidebarCollapsed : internalCollapsed;
   const [isRotating, setIsRotating] = useState(false);
-  const [spacesExpanded, setSpacesExpanded] = useState(true);
+  const [spacesExpanded, setSpacesExpanded] = useSectionState('spaces', true);
+  const [projectsExpanded, setProjectsExpanded] = useSectionState('projects', true);
+  const [sprintsExpanded, setSprintsExpanded] = useSectionState('sprints', true);
+  const [showAllSprints, setShowAllSprints] = useState(false);
   const [hiddenSpacesExpanded, setHiddenSpacesExpanded] = useState(true);
   const [archivedSpacesExpanded, setArchivedSpacesExpanded] = useState(false);
   const [hiddenHeaderMenuOpen, setHiddenHeaderMenuOpen] = useState(false);
   const hiddenMenuRef = useRef<HTMLDivElement>(null);
 
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  // Menu of a project or sprint row ("project:<id>" / "sprint:<YYYY-MM>")
+  const [rowMenu, setRowMenu] = useState<string | null>(null);
+
+  // Any open row menu closes when you click anywhere else, or press Escape
+  const openMenuKey = openMenuId !== null ? `space:${openMenuId}` : rowMenu;
+  useEffect(() => {
+    if (!openMenuKey) return;
+    const close = () => { setOpenMenuId(null); setRowMenu(null); };
+    const onDown = (e: MouseEvent) => {
+      const root = (e.target as Element | null)?.closest?.('[data-menu-root]');
+      if (!root || root.getAttribute('data-menu-root') !== openMenuKey) close();
+    };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [openMenuKey]);
   const [starredIds, setStarredIds] = useState<Set<number>>(new Set());
   const [showCustomiseModal, setShowCustomiseModal] = useState(false);
 
@@ -82,42 +130,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     return () => document.removeEventListener('mousedown', handleClick);
   }, [hiddenHeaderMenuOpen]);
 
-  // Sidebar dynamic customization preferences
-  const [sidebarConfig, setSidebarConfig] = useState<SidebarConfig>(() => {
-    try {
-      const saved = localStorage.getItem('lira_sidebar_customization');
-      return saved ? { ...DEFAULT_SIDEBAR_CONFIG, ...JSON.parse(saved) } : DEFAULT_SIDEBAR_CONFIG;
-    } catch {
-      return DEFAULT_SIDEBAR_CONFIG;
-    }
-  });
-
-  // Pinned Views persistence (lira_sidebar_pinned)
-  const [pinnedKeys, setPinnedKeys] = useState<string[]>(() => {
-    try {
-      const savedPinned = localStorage.getItem('lira_sidebar_pinned');
-      if (savedPinned) {
-        const parsed = JSON.parse(savedPinned);
-        if (Array.isArray(parsed)) return parsed;
-      }
-      const savedConfig = localStorage.getItem('lira_sidebar_customization');
-      if (savedConfig) {
-        const parsed = JSON.parse(savedConfig);
-        const vis = parsed.visibility || parsed;
-        const order = parsed.navOrder || DEFAULT_SIDEBAR_CONFIG.navOrder;
-        const active = order.filter(
-          (k: string) => k !== 'forYou' && k !== 'starred' && k !== 'spaces' && vis[k] === true
-        );
-        localStorage.setItem('lira_sidebar_pinned', JSON.stringify(active));
-        return active;
-      }
-    } catch {}
-    const defaultPinned = ['list', 'calendar'];
-    try {
-      localStorage.setItem('lira_sidebar_pinned', JSON.stringify(defaultPinned));
-    } catch {}
-    return defaultPinned;
-  });
+  // Sidebar layout (which items are shown and in what order), edited in the Customise dialog
+  const [sidebarConfig, setSidebarConfig] = useState<SidebarConfig>(loadSidebarConfig);
 
   const collapse = () => {
     setIsRotating(true);
@@ -142,8 +156,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   };
 
   const handleSpaceClick = (id: number) => {
+    setOpenMenuId(null);
     onSpaceSelect(id);
-    if (activeTab === 'Filters' || activeTab === 'Projects') {
+    if (GLOBAL_TABS.includes(activeTab ?? '')) {
       onTabChange?.('Board');
       if (setSidebarCollapsed) {
         setSidebarCollapsed(false);
@@ -155,11 +170,6 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
   const handleSaveConfig = (cfg: SidebarConfig) => {
     setSidebarConfig(cfg);
-    const pinned = (cfg.navOrder || DEFAULT_SIDEBAR_CONFIG.navOrder).filter(
-      k => k !== 'forYou' && k !== 'starred' && k !== 'spaces' && cfg.visibility?.[k] === true
-    );
-    setPinnedKeys(pinned);
-    localStorage.setItem('lira_sidebar_pinned', JSON.stringify(pinned));
   };
 
   const toggleStar = (id: number, e: React.MouseEvent) => {
@@ -180,38 +190,25 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     await deleteSpace(space.id);
   };
 
-  // Item definitions for ordered rendering
-  const navItemDefs: Record<string, { label: string; icon: React.ReactNode; action: () => void }> = {
-    forYou: { label: 'For you', icon: <User className="w-3.5 h-3.5 text-blue-400" />, action: () => handleSpaceClick(spaces[0]?.id || 1) },
-    projects: { label: 'Projects', icon: <FolderKanban className="w-3.5 h-3.5 text-violet-400" />, action: () => onNavigateToProjects?.() },
-    recent: { label: 'Recent', icon: <Clock className="w-3.5 h-3.5 text-amber-400" />, action: () => handleSpaceClick(spaces[0]?.id || 1) },
-    filters: { label: 'Filters', icon: <Filter className="w-3.5 h-3.5 text-sky-400" />, action: () => onNavigateToFilters?.() },
+  // Navigation items (the order and visibility come from the sidebar settings)
+  const navItemDefs: Record<string, { label: string; icon: React.ReactNode; tab?: string; action: () => void }> = {
+    forYou: { label: 'For you', icon: <User className="w-3.5 h-3.5 text-blue-400" />, tab: 'ForYou', action: () => onNavigateToForYou?.() },
+    projects: { label: 'Projects', icon: <FolderKanban className="w-3.5 h-3.5 text-violet-400" />, tab: 'Projects', action: () => onNavigateToProjects?.() },
+    sprints: { label: 'Sprints', icon: <CalendarClock className="w-3.5 h-3.5 text-teal-400" />, tab: 'SprintsHub', action: () => onNavigateToSprints?.() },
+    allTickets: { label: 'All tickets', icon: <Ticket className="w-3.5 h-3.5 text-yellow-400" />, tab: 'AllTickets', action: () => onNavigateToAllTickets?.() },
+    roadmaps: { label: 'Roadmaps', icon: <Map className="w-3.5 h-3.5 text-orange-400" />, tab: 'Roadmaps', action: () => onNavigateToRoadmaps?.() },
     dashboards: { label: 'Dashboards', icon: <LayoutDashboard className="w-3.5 h-3.5 text-purple-400" />, action: () => onNavigateToDashboards?.() },
-    teams: { label: 'Teams & Capacity', icon: <Users className="w-3.5 h-3.5 text-emerald-400" />, action: () => onNavigateToTeams?.() },
-    apps: { label: 'Apps', icon: <LayoutGrid className="w-3.5 h-3.5 text-pink-400" />, action: () => setShowCustomiseModal(true) },
-    roadmaps: { label: 'Roadmaps', icon: <Map className="w-3.5 h-3.5 text-orange-400" />, action: () => onNavigateToDashboards?.() },
-    plans: { label: 'Plans', icon: <Calendar className="w-3.5 h-3.5 text-indigo-400" />, action: () => onNavigateToDashboards?.() },
-    assets: { label: 'Assets', icon: <Database className="w-3.5 h-3.5 text-cyan-400" />, action: () => onNavigateToTeams?.() },
-    goals: { label: 'Goals', icon: <Target className="w-3.5 h-3.5 text-rose-400" />, action: () => onNavigateToDashboards?.() },
-    list: { label: 'List', icon: <List className="w-3.5 h-3.5 text-blue-400" />, action: () => onNavigateToList?.() },
-    calendar: { label: 'Calendar', icon: <Calendar className="w-3.5 h-3.5 text-indigo-400" />, action: () => onNavigateToCalendar?.() },
   };
 
-  const isKeyVisible = (key: string): boolean => {
-    if (sidebarConfig.visibility && typeof sidebarConfig.visibility[key] === 'boolean') {
-      return sidebarConfig.visibility[key];
-    }
-    const legacyVal = (sidebarConfig as unknown as Record<string, boolean>)[key];
-    if (typeof legacyVal === 'boolean') return legacyVal;
-    return key === 'forYou' || key === 'list' || key === 'calendar' || key === 'projects';
-  };
+  const isKeyVisible = (key: string): boolean => sidebarConfig.visibility[key] !== false;
+  const visibleNavKeys = sidebarConfig.navOrder.filter(k => navItemDefs[k] && isKeyVisible(k));
+  const visibleSectionKeys = sidebarConfig.sectionOrder.filter(isKeyVisible);
+  const collapsedShortcuts = visibleNavKeys.slice(0, 6);
 
-  const visibleAppKeys = (sidebarConfig.appsOrder || ['assets', 'teams', 'goals'])
-    .filter(k => isKeyVisible(k) && k !== 'projects');
-
-  const isStarredVisible = isKeyVisible('starred');
-  const isSpacesVisible = isKeyVisible('spaces');
-  const collapsedShortcuts = ['forYou', 'projects', ...pinnedKeys.filter(k => k !== 'projects')].slice(0, 4);
+  const curSprint = currentSprintKey();
+  const visibleSprintKeys = showAllSprints
+    ? [...sprintKeys].reverse()
+    : sprintKeys.filter(k => k >= prevOf(curSprint)).reverse().slice(0, 6);
 
   const visibleSpaces = spaces.filter(
     s => s.id && !hiddenSpaceIds.includes(s.id) && !archivedSpaceIds.includes(s.id)
@@ -223,14 +220,374 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     s => s.id && archivedSpaceIds.includes(s.id)
   );
 
+  const inSpaceView = !GLOBAL_TABS.includes(activeTab ?? '');
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [indicator, setIndicator] = useState({ top: 0, height: 0, visible: false });
+  // Glide between rows, but not on the very first appearance (it would slide in from the top)
+  const [indicatorAnimated, setIndicatorAnimated] = useState(false);
+  useEffect(() => {
+    if (indicator.visible && !indicatorAnimated) {
+      const t = window.setTimeout(() => setIndicatorAnimated(true), 80);
+      return () => window.clearTimeout(t);
+    }
+  }, [indicator.visible, indicatorAnimated]);
+
+  // Measure the active row and glide the highlight to it. Re-measures through the section
+  // expand/collapse animation so the highlight tracks rows while they move.
+  const measureKey = [activeTab, activeSpaceId, activeProjectId, activeSprint, spacesExpanded, projectsExpanded, sprintsExpanded, isCollapsed, spaces.length, projects.length, sprintKeys.length, showAllSprints, hiddenSpaceIds.length, archivedSpaceIds.length].join('|');
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    if (!panel || isCollapsed) return;
+    const measure = () => {
+      const el = panel.querySelector<HTMLElement>('[data-active="true"]');
+      if (!el) {
+        setIndicator(prev => (prev.visible ? { ...prev, visible: false } : prev));
+        return;
+      }
+      const top = el.getBoundingClientRect().top - panel.getBoundingClientRect().top + panel.scrollTop;
+      const height = el.getBoundingClientRect().height;
+      setIndicator(prev => (prev.visible && Math.abs(prev.top - top) < 0.5 && Math.abs(prev.height - height) < 0.5 ? prev : { top, height, visible: true }));
+    };
+    measure();
+    const start = performance.now();
+    let raf = 0;
+    const loop = () => {
+      measure();
+      if (performance.now() - start < 450) raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    // Keep the highlight on its row when layout shifts later (web fonts loading, sections resizing)
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : undefined;
+    ro?.observe(panel);
+    Array.from(panel.children).forEach(c => ro?.observe(c));
+    document.fonts?.ready.then(measure).catch(() => undefined);
+    return () => { cancelAnimationFrame(raf); ro?.disconnect(); };
+  }, [measureKey]);
+
+  // Collapsible blocks below the navigation; shown in the order chosen in the sidebar settings
+  const sectionBlocks: Record<string, React.ReactNode> = {
+    sec_spaces: (
+      <>
+      {/* ── Your Spaces Section ── */}
+      {(
+        <div className="py-2 border-b border-white/10">
+          <SectionHeader
+            title="Spaces"
+            count={visibleSpaces.length}
+            expanded={spacesExpanded}
+            onToggle={() => setSpacesExpanded(!spacesExpanded)}
+            onAdd={onCreateSpace}
+            addTitle="New space"
+          />
+
+          <div className="py-1">
+            <Collapsible open={spacesExpanded}>
+              <div className="mt-0.5">
+                {visibleSpaces.length === 0 ? (
+                  <div className="px-3 py-1.5 text-[11px] text-white/30 italic">
+                    No active spaces
+                  </div>
+                ) : (
+                  visibleSpaces.map(space => (
+                    <SpaceRow
+                      key={space.id}
+                      space={space}
+                      active={inSpaceView && activeSpaceId === space.id}
+                      starred={space.id ? starredIds.has(space.id) : false}
+                      onSelect={handleSpaceClick}
+                      onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
+                      menuOpen={openMenuId === space.id}
+                      onStar={e => toggleStar(space.id!, e)}
+                      onDelete={e => handleDelete(space, e)}
+                      onEdit={() => { onEditSpace?.(space); setOpenMenuId(null); }}
+                      onToggleHide={e => {
+                        e.stopPropagation();
+                        setOpenMenuId(null);
+                        onToggleHideSpace?.(space.id!);
+                      }}
+                      onToggleArchive={e => {
+                        e.stopPropagation();
+                        setOpenMenuId(null);
+                        onToggleArchiveSpace?.(space.id!);
+                      }}
+                    />
+                  ))
+                )}
+              </div>
+            </Collapsible>
+          </div>
+        </div>
+      )}
+
+      </>
+    ),
+    sec_projects: (
+      <>
+      {/* ── Projects Section ── */}
+      <div className="py-2 border-b border-white/10">
+        <SectionHeader
+          title="Projects"
+          count={projects.length}
+          expanded={projectsExpanded}
+          onToggle={() => setProjectsExpanded(!projectsExpanded)}
+          onAdd={onCreateProject}
+          addTitle="New project"
+        />
+        <Collapsible open={projectsExpanded}>
+          <div className="mt-0.5 px-2 space-y-0.5">
+            {projects.length === 0 ? (
+              <div className="px-2 py-1.5 text-[11px] text-white/30 italic">No projects yet</div>
+            ) : (
+              projects.map(p => {
+                const space = spaces.find(sp => sp.id === p.spaceId);
+                const active = activeProjectId === p.id && activeTab === 'Projects';
+                return (
+                  <div key={p.id} className="relative group" data-menu-root={`project:${p.id}`}>
+                    <button
+                      onClick={() => { setRowMenu(null); onSelectProject?.(p); }}
+                      title={p.name}
+                      data-active={active ? 'true' : undefined}
+                      className={`w-full flex items-center gap-2.5 pl-2.5 pr-2.5 group-hover:pr-8 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${
+                        active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+                      }`}
+                    >
+                      <span
+                        className="w-5 h-5 rounded-md flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0"
+                        style={{ backgroundColor: space?.color || '#0052CC' }}
+                      >
+                        {p.key.slice(0, 2)}
+                      </span>
+                      <span className="truncate flex-1">{p.name}</span>
+                    </button>
+                    <RowMenuButton
+                      open={rowMenu === `project:${p.id}`}
+                      onToggle={() => setRowMenu(rowMenu === `project:${p.id}` ? null : `project:${p.id}`)}
+                      label="Project actions"
+                    >
+                      <ContextItem icon={<FolderKanban className="w-3.5 h-3.5 text-violet-400" />} label="Open project" onClick={() => { setRowMenu(null); onSelectProject?.(p); }} />
+                      <div className="border-t border-white/10 my-1" />
+                      <ContextItem
+                        icon={<Trash2 className="w-3.5 h-3.5" />}
+                        label="Delete project"
+                        danger
+                        onClick={() => {
+                          setRowMenu(null);
+                          if (window.confirm(`Delete the project "${p.name}"? Its tickets stay in the ${space?.name ?? 'space'} space.`)) onDeleteProject?.(p);
+                        }}
+                      />
+                    </RowMenuButton>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </Collapsible>
+      </div>
+
+
+      </>
+    ),
+    sec_sprints: (
+      <>
+      {/* ── Sprints Section ── */}
+      <div className="py-2 border-b border-white/10">
+        <SectionHeader
+          title="Sprints"
+          count={sprintKeys.length}
+          expanded={sprintsExpanded}
+          onToggle={() => setSprintsExpanded(!sprintsExpanded)}
+          onAdd={onCreateSprint}
+          addTitle="New sprint"
+        />
+        <Collapsible open={sprintsExpanded}>
+          <div className="mt-0.5 px-2 space-y-0.5">
+            {visibleSprintKeys.map(k => {
+              const phase = sprintPhase(k);
+              const c = sprintCounts[k] || { done: 0, total: 0 };
+              const active = activeSprint === k && activeTab === 'SprintDetail';
+              return (
+                <div key={k} className="relative group" data-menu-root={`sprint:${k}`}>
+                  <button
+                    onClick={() => { setRowMenu(null); onSelectSprint?.(k); }}
+                    title={sprintName(k)}
+                    data-active={active ? 'true' : undefined}
+                    className={`w-full flex items-center gap-2.5 pl-2.5 pr-2.5 group-hover:pr-8 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${
+                      active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+                    }`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                        phase === 'active' ? 'bg-green-400' : phase === 'upcoming' ? 'bg-sky-400' : 'bg-white/30'
+                      }`}
+                    />
+                    <span className="truncate flex-1">{sprintLabel(k)}</span>
+                    {phase === 'active' && <span className="text-[9px] font-bold text-green-300">ACTIVE</span>}
+                    <span className="text-[10px] text-white/40 tabular-nums">{c.done}/{c.total}</span>
+                  </button>
+                  <RowMenuButton
+                    open={rowMenu === `sprint:${k}`}
+                    onToggle={() => setRowMenu(rowMenu === `sprint:${k}` ? null : `sprint:${k}`)}
+                    label="Sprint actions"
+                  >
+                    <ContextItem icon={<CalendarClock className="w-3.5 h-3.5 text-teal-400" />} label="Open sprint" onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} />
+                    <div className="border-t border-white/10 my-1" />
+                    {canDeleteSprint(k) ? (
+                      <ContextItem
+                        icon={<Trash2 className="w-3.5 h-3.5" />}
+                        label="Delete sprint"
+                        danger
+                        onClick={() => {
+                          setRowMenu(null);
+                          const msg = c.total > 0
+                            ? `Delete the ${sprintName(k)}?\n\nIts ${c.total} ${c.total === 1 ? 'ticket moves' : 'tickets move'} to the current sprint (${c.done} done). Nothing else is deleted.`
+                            : `Delete the ${sprintName(k)}? It has no tickets.`;
+                          if (window.confirm(msg)) onDeleteSprint?.(k);
+                        }}
+                      />
+                    ) : (
+                      <div className="px-3 py-2 text-[11px] text-white/40 leading-snug max-w-[200px]">The current and next sprints always exist, so they cannot be deleted.</div>
+                    )}
+                  </RowMenuButton>
+                </div>
+              );
+            })}
+            {sprintKeys.length > visibleSprintKeys.length || showAllSprints ? (
+              <button
+                onClick={() => setShowAllSprints(v => !v)}
+                className="w-full text-left px-2.5 py-1 text-[11px] text-white/40 hover:text-white/70 cursor-pointer"
+              >
+                {showAllSprints ? 'Show fewer' : `Show all ${sprintKeys.length} sprints`}
+              </button>
+            ) : null}
+          </div>
+        </Collapsible>
+      </div>
+
+
+      </>
+    ),
+    sec_hidden: (
+      <>
+      {/* ── Hidden Spaces Section ── */}
+      <div className="py-2 border-b border-white/10">
+        <div className="flex items-center justify-between px-3 py-1">
+          <button
+            onClick={() => setHiddenSpacesExpanded(!hiddenSpacesExpanded)}
+            className="flex items-center gap-1.5 text-white/50 hover:text-white/80 text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer group"
+          >
+            <ChevronDown className={`w-3 h-3 transition-transform ${hiddenSpacesExpanded ? '' : '-rotate-90'}`} />
+            <EyeOff className="w-3.5 h-3.5 text-amber-400" />
+            <span>Hidden Spaces</span>
+            <span className="bg-white/10 text-white/70 text-[9px] px-1.5 py-0.2 rounded-full font-bold ml-0.5">
+              {hiddenSpaces.length}
+            </span>
+          </button>
+
+          {/* Hidden Spaces Header 3-Dots Menu */}
+          <div className="relative" ref={hiddenMenuRef}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setHiddenHeaderMenuOpen(!hiddenHeaderMenuOpen);
+              }}
+              className="p-1 rounded hover:bg-white/10 text-white/40 hover:text-white transition-colors cursor-pointer"
+              title="Hidden spaces options"
+            >
+              <MoreHorizontal className="w-3.5 h-3.5" />
+            </button>
+
+            {hiddenHeaderMenuOpen && (
+              <div
+                className="absolute right-0 z-50 bg-[#1D2939] border border-white/10 rounded-lg shadow-xl py-1 min-w-[190px] animate-scale-in"
+                style={{ top: '100%', marginTop: 2 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ContextItem
+                  icon={<Eye className="w-3.5 h-3.5 text-blue-400" />}
+                  label="Unhide all spaces"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setHiddenHeaderMenuOpen(false);
+                    onUnhideAllSpaces?.();
+                  }}
+                />
+                <ContextItem
+                  icon={<Settings className="w-3.5 h-3.5 text-emerald-400" />}
+                  label="Space settings"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setHiddenHeaderMenuOpen(false);
+                    const target = hiddenSpaces[0] || spaces[0];
+                    if (target) onEditSpace?.(target);
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {hiddenSpacesExpanded && (
+          <div className="mt-0.5">
+            {hiddenSpaces.length === 0 ? (
+              <div className="px-3 py-1.5 text-[11px] text-white/30 italic">
+                No hidden spaces
+              </div>
+            ) : (
+              hiddenSpaces.map(space => (
+                <SpaceRow
+                  key={space.id}
+                  space={space}
+                  active={inSpaceView && activeSpaceId === space.id}
+                  starred={space.id ? starredIds.has(space.id) : false}
+                  isHidden
+                  onSelect={handleSpaceClick}
+                  onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
+                  menuOpen={openMenuId === space.id}
+                  onStar={e => toggleStar(space.id!, e)}
+                  onDelete={e => handleDelete(space, e)}
+                  onEdit={() => { onEditSpace?.(space); setOpenMenuId(null); }}
+                  onToggleHide={e => {
+                    e.stopPropagation();
+                    setOpenMenuId(null);
+                    onToggleHideSpace?.(space.id!);
+                  }}
+                  onToggleArchive={e => {
+                    e.stopPropagation();
+                    setOpenMenuId(null);
+                    onToggleArchiveSpace?.(space.id!);
+                  }}
+                />
+              ))
+            )}
+          </div>
+        )}
+      </div>
+
+
+      </>
+    ),
+  };
+
   return (
     <aside
-      className={`bg-[#1A2332] flex flex-col flex-shrink-0 border-r border-black/20 transition-all duration-300 overflow-x-hidden ${
-        isCollapsed ? 'w-[56px] items-center py-3 gap-2 overflow-y-auto' : 'w-64 overflow-y-auto'
+      className={`flex-shrink-0 p-2 pr-0 transition-[width] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
+        isCollapsed ? 'w-[68px]' : 'w-[272px]'
       }`}
     >
+      <div
+        ref={panelRef}
+        className="relative h-full flex flex-col rounded-2xl bg-gradient-to-b from-[#1D2A45] via-[#18233B] to-[#121A2C] border border-white/[0.08] shadow-[0_10px_34px_rgba(0,0,0,0.38)] overflow-x-hidden overflow-y-auto lira-sidebar-scroll"
+      >
+      {/* Sliding highlight: glides to whichever item is currently active */}
+      {!isCollapsed && (
+        <div
+          aria-hidden
+          className={`absolute left-2 right-2 z-0 rounded-xl bg-gradient-to-r from-jira-blue/35 to-jira-blue/10 ring-1 ring-jira-blue/40 shadow-[inset_3px_0_0_rgb(var(--jira-blue))] pointer-events-none ${indicatorAnimated ? 'transition-[top,height,opacity] duration-300 ease-[cubic-bezier(.4,0,.2,1)]' : ''}`}
+          style={{ top: indicator.top, height: indicator.height, opacity: indicator.visible ? 1 : 0 }}
+        />
+      )}
       {isCollapsed ? (
-        <div className="flex flex-col items-center w-full gap-2">
+        <div key="rail" className="relative z-10 flex flex-col items-center w-full gap-2 py-3 animate-sidebar-in">
           {/* Expand button with smooth animated chevron */}
           <button
             onClick={expand}
@@ -316,9 +673,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </div>
         </div>
       ) : (
-        <div className="w-64 flex flex-col flex-1 min-h-0">
+        <div key="full" className="relative z-10 w-full flex flex-col flex-1 min-h-0 animate-sidebar-in">
           {/* ── Navigation Section ── */}
-          <div className="py-2.5 border-b border-white/10 space-y-0.5">
+          <div className="py-2.5 px-2 border-b border-white/10 space-y-0.5">
             <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider flex items-center justify-between">
               <span>Navigation</span>
               <button
@@ -335,75 +692,35 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </button>
         </div>
 
-        {navItemDefs.forYou && (
-          <button
-            onClick={navItemDefs.forYou.action}
-            className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
-          >
-            <span>{navItemDefs.forYou.icon}</span>
-            <span>{navItemDefs.forYou.label}</span>
-          </button>
-        )}
-
-        {navItemDefs.projects && (
-          <button
-            onClick={navItemDefs.projects.action}
-            className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
-          >
-            <span>{navItemDefs.projects.icon}</span>
-            <span>{navItemDefs.projects.label}</span>
-          </button>
-        )}
+        {visibleNavKeys.map(k => {
+          const item = navItemDefs[k];
+          if (!item) return null;
+          const tab = item.tab;
+          const sprintRowShown = sprintsExpanded && visibleSprintKeys.includes(activeSprint ?? '');
+          const isActive =
+            (k === 'sprints'
+              // overview page, or a sprint page whose row isn't visible in the Sprints section
+              ? activeTab === 'SprintsHub' || (activeTab === 'SprintDetail' && !sprintRowShown)
+              : activeTab === tab) &&
+            !(k === 'projects' && activeProjectId);
+          return (
+            <button
+              key={k}
+              onClick={item.action}
+              data-active={isActive ? 'true' : undefined}
+              className={`group w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs transition-all duration-200 cursor-pointer text-left ${
+                isActive ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+              }`}
+            >
+              <span>{item.icon}</span>
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* ── Pinned Views Section ── */}
-      {pinnedKeys.filter(k => k !== 'projects').length > 0 && (
-        <div className="py-2.5 border-b border-white/10 space-y-0.5">
-          <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">
-            Pinned Views
-          </div>
-          {pinnedKeys.filter(k => k !== 'projects').map(key => {
-            const item = navItemDefs[key];
-            if (!item) return null;
-            return (
-              <button
-                key={key}
-                onClick={item.action}
-                className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
-              >
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* ── App Shortcuts Section ── */}
-      {visibleAppKeys.length > 0 && (
-        <div className="py-2.5 border-b border-white/10 space-y-0.5">
-          <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">
-            App Shortcuts
-          </div>
-          {visibleAppKeys.map(key => {
-            const item = navItemDefs[key];
-            if (!item) return null;
-            return (
-              <button
-                key={key}
-                onClick={item.action}
-                className="w-full flex items-center gap-3 px-3 py-2 text-xs text-white/70 hover:text-white hover:bg-white/5 transition-colors cursor-pointer text-left"
-              >
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
       {/* ── Starred Section ── */}
-      {isStarredVisible && starredIds.size > 0 && (
+      {starredIds.size > 0 && (
         <div className="py-2 border-b border-white/10">
           <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">
             Starred
@@ -412,7 +729,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             <SpaceRow
               key={space.id}
               space={space}
-              active={activeSpaceId === space.id}
+              active={inSpaceView && activeSpaceId === space.id}
               starred
               onSelect={handleSpaceClick}
               onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
@@ -435,169 +752,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
         </div>
       )}
 
-      {/* ── Your Spaces Section ── */}
-      {isSpacesVisible && (
-        <div className="py-2 border-b border-white/10">
-          <div className="flex items-center justify-between px-3 pt-2 pb-1">
-            <span className="text-white/40 text-[10px] font-semibold uppercase tracking-wider">
-              Your Spaces
-            </span>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={onCreateSpace}
-                className="p-1 rounded hover:bg-white/10 text-white/50 hover:text-white transition-colors cursor-pointer"
-                title="New space"
-              >
-                <Plus className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Spaces list expand/collapse toggle */}
-          <div className="py-1">
-            <button
-              onClick={() => setSpacesExpanded(!spacesExpanded)}
-              className="w-full flex items-center gap-2 px-3 py-1.5 text-white/40 text-[10px] font-semibold uppercase tracking-wider hover:text-white/60 transition-colors cursor-pointer"
-            >
-              <ChevronDown className={`w-3 h-3 transition-transform ${spacesExpanded ? '' : '-rotate-90'}`} />
-              <span>{spacesExpanded ? 'Hide' : 'Show'}</span>
-              <span className="bg-white/10 text-white/60 text-[9px] px-1.5 py-0.2 rounded-full font-bold ml-auto">
-                {visibleSpaces.length}
-              </span>
-            </button>
-
-            {spacesExpanded && (
-              <div className="mt-0.5">
-                {visibleSpaces.length === 0 ? (
-                  <div className="px-3 py-1.5 text-[11px] text-white/30 italic">
-                    No active spaces
-                  </div>
-                ) : (
-                  visibleSpaces.map(space => (
-                    <SpaceRow
-                      key={space.id}
-                      space={space}
-                      active={activeSpaceId === space.id}
-                      starred={space.id ? starredIds.has(space.id) : false}
-                      onSelect={handleSpaceClick}
-                      onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
-                      menuOpen={openMenuId === space.id}
-                      onStar={e => toggleStar(space.id!, e)}
-                      onDelete={e => handleDelete(space, e)}
-                      onEdit={() => { onEditSpace?.(space); setOpenMenuId(null); }}
-                      onToggleHide={e => {
-                        e.stopPropagation();
-                        setOpenMenuId(null);
-                        onToggleHideSpace?.(space.id!);
-                      }}
-                      onToggleArchive={e => {
-                        e.stopPropagation();
-                        setOpenMenuId(null);
-                        onToggleArchiveSpace?.(space.id!);
-                      }}
-                    />
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ── Hidden Spaces Section ── */}
-      <div className="py-2 border-b border-white/10">
-        <div className="flex items-center justify-between px-3 py-1">
-          <button
-            onClick={() => setHiddenSpacesExpanded(!hiddenSpacesExpanded)}
-            className="flex items-center gap-1.5 text-white/50 hover:text-white/80 text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer group"
-          >
-            <ChevronDown className={`w-3 h-3 transition-transform ${hiddenSpacesExpanded ? '' : '-rotate-90'}`} />
-            <EyeOff className="w-3.5 h-3.5 text-amber-400" />
-            <span>Hidden Spaces</span>
-            <span className="bg-white/10 text-white/70 text-[9px] px-1.5 py-0.2 rounded-full font-bold ml-0.5">
-              {hiddenSpaces.length}
-            </span>
-          </button>
-
-          {/* Hidden Spaces Header 3-Dots Menu */}
-          <div className="relative" ref={hiddenMenuRef}>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setHiddenHeaderMenuOpen(!hiddenHeaderMenuOpen);
-              }}
-              className="p-1 rounded hover:bg-white/10 text-white/40 hover:text-white transition-colors cursor-pointer"
-              title="Hidden spaces options"
-            >
-              <MoreHorizontal className="w-3.5 h-3.5" />
-            </button>
-
-            {hiddenHeaderMenuOpen && (
-              <div
-                className="absolute right-0 z-50 bg-[#1D2939] border border-white/10 rounded-lg shadow-xl py-1 min-w-[190px] animate-scale-in"
-                style={{ top: '100%', marginTop: 2 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <ContextItem
-                  icon={<Eye className="w-3.5 h-3.5 text-blue-400" />}
-                  label="Unhide all spaces"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setHiddenHeaderMenuOpen(false);
-                    onUnhideAllSpaces?.();
-                  }}
-                />
-                <ContextItem
-                  icon={<Settings className="w-3.5 h-3.5 text-emerald-400" />}
-                  label="Space settings"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setHiddenHeaderMenuOpen(false);
-                    const target = hiddenSpaces[0] || spaces[0];
-                    if (target) onEditSpace?.(target);
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-
-        {hiddenSpacesExpanded && (
-          <div className="mt-0.5">
-            {hiddenSpaces.length === 0 ? (
-              <div className="px-3 py-1.5 text-[11px] text-white/30 italic">
-                No hidden spaces
-              </div>
-            ) : (
-              hiddenSpaces.map(space => (
-                <SpaceRow
-                  key={space.id}
-                  space={space}
-                  active={activeSpaceId === space.id}
-                  starred={space.id ? starredIds.has(space.id) : false}
-                  isHidden
-                  onSelect={handleSpaceClick}
-                  onMenuOpen={() => setOpenMenuId(openMenuId === space.id ? null : space.id!)}
-                  menuOpen={openMenuId === space.id}
-                  onStar={e => toggleStar(space.id!, e)}
-                  onDelete={e => handleDelete(space, e)}
-                  onEdit={() => { onEditSpace?.(space); setOpenMenuId(null); }}
-                  onToggleHide={e => {
-                    e.stopPropagation();
-                    setOpenMenuId(null);
-                    onToggleHideSpace?.(space.id!);
-                  }}
-                  onToggleArchive={e => {
-                    e.stopPropagation();
-                    setOpenMenuId(null);
-                    onToggleArchiveSpace?.(space.id!);
-                  }}
-                />
-              ))
-            )}
-          </div>
-        )}
-      </div>
+      {visibleSectionKeys.map(k => <React.Fragment key={k}>{sectionBlocks[k]}</React.Fragment>)}
 
       {/* ── Archived Spaces Section ── */}
       {archivedSpaces.length > 0 && (
@@ -622,7 +777,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 <SpaceRow
                   key={space.id}
                   space={space}
-                  active={activeSpaceId === space.id}
+                  active={inSpaceView && activeSpaceId === space.id}
                   starred={space.id ? starredIds.has(space.id) : false}
                   isArchived
                   onSelect={handleSpaceClick}
@@ -649,10 +804,10 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
       )}
 
       {/* ── Customise sidebar footer ── */}
-      <div className="border-t border-white/10 px-3 py-3 mt-auto">
+      <div className="relative z-10 border-t border-white/10 px-2 py-2 mt-auto">
         <button
           onClick={() => setShowCustomiseModal(true)}
-          className="w-full flex items-center gap-2 text-xs text-white/50 hover:text-white transition-colors cursor-pointer"
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-white/50 hover:text-white hover:bg-white/[0.06] transition-all duration-200 cursor-pointer"
         >
           <Settings className="w-3.5 h-3.5" /> Customise sidebar
         </button>
@@ -665,6 +820,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
     onClose={() => setShowCustomiseModal(false)}
     onSave={handleSaveConfig}
   />
+  </div>
 </aside>
   );
 };
@@ -689,17 +845,18 @@ interface SpaceRowProps {
 const SpaceRow: React.FC<SpaceRowProps> = ({
   space, active, starred, isHidden, isArchived, onSelect, onMenuOpen, menuOpen, onStar, onDelete, onEdit, onToggleHide, onToggleArchive,
 }) => (
-  <div className="relative group">
+  <div className="relative group px-2" data-menu-root={`space:${space.id}`}>
     <button
       onClick={() => onSelect(space.id!)}
-      className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-all cursor-pointer ${
+      data-active={active ? 'true' : undefined}
+      className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-200 cursor-pointer ${
         active
-          ? 'bg-[#0052CC]/30 text-white border-r-2 border-[#0052CC]'
-          : 'text-white/60 hover:text-white hover:bg-white/5'
+          ? 'text-white font-medium'
+          : 'text-white/60 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
       }`}
     >
       <div
-        className="w-6 h-6 rounded flex items-center justify-center text-xs flex-shrink-0"
+        className="w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0"
         style={{ backgroundColor: space.color + '33', color: space.color }}
       >
         {space.icon}
@@ -768,6 +925,26 @@ const SpaceRow: React.FC<SpaceRowProps> = ({
   </div>
 );
 
+/** The "..." button that appears when you hover a project or sprint row, with its dropdown. */
+const RowMenuButton: React.FC<{ open: boolean; onToggle: () => void; label: string; children: React.ReactNode }> = ({ open, onToggle, label, children }) => (
+  <>
+    <button
+      onClick={e => { e.stopPropagation(); onToggle(); }}
+      className={`absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-white/20 text-white/50 hover:text-white transition-all cursor-pointer ${open ? 'opacity-100 bg-white/15 text-white' : 'opacity-0 group-hover:opacity-100'}`}
+      title={label}
+      aria-label={label}
+      aria-expanded={open}
+    >
+      <MoreHorizontal className="w-3.5 h-3.5" />
+    </button>
+    {open && (
+      <div className="absolute right-1 z-50 bg-[#1D2939] border border-white/10 rounded-lg shadow-xl py-1 min-w-[190px] animate-scale-in" style={{ top: '100%', marginTop: 2 }} onClick={e => e.stopPropagation()}>
+        {children}
+      </div>
+    )}
+  </>
+);
+
 const ContextItem: React.FC<{ icon: React.ReactNode; label: string; onClick: (e: React.MouseEvent) => void; danger?: boolean }> = ({
   icon, label, onClick, danger,
 }) => (
@@ -780,4 +957,75 @@ const ContextItem: React.FC<{ icon: React.ReactNode; label: string; onClick: (e:
     <span>{icon}</span>
     {label}
   </button>
+);
+
+const GLOBAL_TABS = ['ForYou', 'Filters', 'Projects', 'SprintsHub', 'SprintDetail', 'AllTickets', 'Roadmaps'];
+
+function prevOf(key: string): string {
+  const [y, m] = key.split('-').map(Number);
+  const d = new Date(y, m - 2, 1);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+/** Expanded/collapsed state of a sidebar section, remembered between sessions. */
+function useSectionState(name: string, initial: boolean): [boolean, (v: boolean) => void] {
+  const key = `lira_sidebar_section_${name}`;
+  const [open, setOpen] = useState<boolean>(() => {
+    try {
+      const v = localStorage.getItem(key);
+      return v === null ? initial : v === 'true';
+    } catch {
+      return initial;
+    }
+  });
+  const set = (v: boolean) => {
+    setOpen(v);
+    try { localStorage.setItem(key, String(v)); } catch { /* storage unavailable */ }
+  };
+  return [open, set];
+}
+
+/** Collapsible section title with an item count and a "+" action — used for Spaces, Projects and Sprints. */
+const SectionHeader: React.FC<{
+  title: string;
+  count: number;
+  expanded: boolean;
+  onToggle: () => void;
+  onAdd?: () => void;
+  addTitle: string;
+}> = ({ title, count, expanded, onToggle, onAdd, addTitle }) => (
+  <div className="flex items-center justify-between px-3 py-1">
+    <button
+      onClick={onToggle}
+      aria-expanded={expanded}
+      title={expanded ? `Minimise ${title}` : `Expand ${title}`}
+      className="flex items-center gap-1.5 text-white/50 hover:text-white/80 text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer"
+    >
+      <ChevronDown className={`w-3 h-3 transition-transform ${expanded ? '' : '-rotate-90'}`} />
+      <span>{title}</span>
+      <span className="bg-white/10 text-white/70 text-[9px] px-1.5 py-0.5 rounded-full font-bold">{count}</span>
+    </button>
+    {onAdd && (
+      <button
+        onClick={onAdd}
+        className="p-1 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors cursor-pointer"
+        title={addTitle}
+        aria-label={addTitle}
+      >
+        <Plus className="w-3.5 h-3.5" />
+      </button>
+    )}
+  </div>
+);
+
+/** Smoothly animates a section open/closed (height + fade) without needing a fixed height. */
+const Collapsible: React.FC<{ open: boolean; children: React.ReactNode }> = ({ open, children }) => (
+  <div
+    className={`grid transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
+      open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+    }`}
+    aria-hidden={!open}
+  >
+    <div className="overflow-hidden min-h-0">{children}</div>
+  </div>
 );

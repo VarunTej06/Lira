@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { CalendarClock } from 'lucide-react';
+import { currentSprintKey, getIssueSprint, moveIssuesToSprint, shiftSprint, sprintLabel, sprintName } from '../../utils/sprintUtils';
 import type { Issue, Priority, IssueStatus } from '../../types/issue';
 import { SelectDropdown } from '../common/Dropdown';
 import { Avatar } from '../common/Avatar';
@@ -43,6 +45,16 @@ const FieldRow: React.FC<FieldRowProps> = ({ icon, label, children }) => (
 );
 
 export const IssueSidebarDetails: React.FC<IssueSidebarDetailsProps> = ({ issue, onUpdate }) => {
+  const sprintOptions = useMemo(() => {
+    const cur = currentSprintKey();
+    const keys = new Set<string>([getIssueSprint(issue)]);
+    for (let d = -6; d <= 3; d++) keys.add(shiftSprint(cur, d));
+    return Array.from(keys).sort().reverse().map(k => ({
+      value: k,
+      label: `${sprintName(k)}${k === cur ? ' (current)' : ''}`,
+    }));
+  }, [issue]);
+
   const timePercent = issue.timeEstimate && issue.timeLogged
     ? Math.min(100, Math.round((issue.timeLogged / issue.timeEstimate) * 100))
     : 0;
@@ -57,6 +69,24 @@ export const IssueSidebarDetails: React.FC<IssueSidebarDetailsProps> = ({ issue,
           onChange={v => onUpdate({ status: v as IssueStatus })}
         />
       </FieldRow>
+
+      {/* Sprint (epics live outside sprints) */}
+      {issue.type !== 'epic' && (
+        <FieldRow icon={<CalendarClock className="w-3.5 h-3.5" />} label="Sprint">
+          <div className="space-y-1">
+            <SelectDropdown
+              value={getIssueSprint(issue)}
+              options={sprintOptions}
+              onChange={v => moveIssuesToSprint([issue], v)}
+            />
+            {(issue.sprintHistory || []).length > 0 && (
+              <p className="text-[11px] text-amber-700">
+                ↻ Carried over from {(issue.sprintHistory || []).map(k => sprintLabel(k, true)).join(', ')}
+              </p>
+            )}
+          </div>
+        </FieldRow>
+      )}
 
       {/* Assignee */}
       <FieldRow icon={<Users className="w-3.5 h-3.5" />} label="Assignee">

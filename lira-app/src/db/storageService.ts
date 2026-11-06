@@ -2,27 +2,32 @@ import { db } from './db';
 import type { Issue } from '../types/issue';
 import type { Space } from '../types/space';
 import { saveToDiskNow } from '../services/localDiskSync';
+import { flushKv, restoreFromBackup, snapshotForBackup } from '../services/kvMirror';
 
 export interface BackupData {
   version: string;
   exportedAt: string;
   spaces: Space[];
   issues: Issue[];
+  /** projects, sprints, teams, standups, board config and preferences (localStorage `lira_*` keys; API keys excluded) */
+  kv?: Record<string, string>;
 }
 
 export async function exportBackup(): Promise<void> {
   // 1. Save latest state directly to local PC disk (data/spaces/*.json)
   await saveToDiskNow();
+  await flushKv();
 
   // 2. Export and trigger browser download
   const spaces = await db.spaces.toArray();
   const issues = await db.issues.toArray();
 
   const backup: BackupData = {
-    version: '1.0.0',
+    version: '1.1.0',
     exportedAt: new Date().toISOString(),
     spaces,
     issues,
+    kv: snapshotForBackup(),
   };
 
   const json = JSON.stringify(backup, null, 2);
@@ -75,6 +80,13 @@ export async function importBackup(file: File): Promise<{ spaces: number; issues
 
         // Immediately sync imported data to local PC disk (data/spaces/*.json)
         await saveToDiskNow();
+
+        // Restore projects, sprints, teams, standups and preferences, then reload so every screen picks them up
+        if (backup.kv && typeof backup.kv === 'object') {
+          restoreFromBackup(backup.kv);
+          await flushKv();
+          setTimeout(() => window.location.reload(), 1500);
+        }
 
         resolve({ spaces: backup.spaces.length, issues: backup.issues.length });
       } catch (err) {

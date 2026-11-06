@@ -33,6 +33,11 @@ export function subscribeToSyncStatus(listener: (state: SyncState) => void): () 
 
 let syncTimeout: number | undefined;
 
+// Set while ticket changes are not yet on disk. If the page closes in that window, the browser copy is the
+// newer one, so on the next load it is pushed to disk instead of being overwritten by the older files.
+const ISSUES_DIRTY_KEY = 'lira__issues_dirty';
+let saveVersion = 0;
+
 /**
  * Initializes database from local disk file (d:/MLOps_LLMOps/Lira/data/lira-workspace.json).
  * If disk file has data, it hydrates IndexedDB with persistent disk data.
@@ -40,6 +45,12 @@ let syncTimeout: number | undefined;
  */
 export async function initLocalDiskSync(): Promise<void> {
   try {
+    const unsaved = localStorage.getItem(ISSUES_DIRTY_KEY) !== null && (await db.issues.count()) > 0;
+    if (unsaved) {
+      console.info('[LocalDiskSync] Unsaved browser changes found, saving them to disk instead of reloading from disk.');
+      await saveToDiskNow();
+      return;
+    }
     const res = await fetch('/api/data');
     if (!res.ok) throw new Error('API request failed');
     const diskData = await res.json();
@@ -99,6 +110,7 @@ export async function initLocalDiskSync(): Promise<void> {
 export async function saveToDiskNow(): Promise<boolean> {
   currentSyncState.status = 'saving';
   notifyListeners();
+  const sentVersion = saveVersion;
 
   try {
     const spaces = await db.spaces.toArray();
@@ -112,6 +124,9 @@ export async function saveToDiskNow(): Promise<boolean> {
 
     if (!res.ok) throw new Error('Failed to save to disk');
     const result = await res.json();
+    if (sentVersion === saveVersion) {
+      try { localStorage.removeItem(ISSUES_DIRTY_KEY); } catch { /* storage unavailable */ }
+    }
 
     currentSyncState = {
       status: 'synced',
@@ -132,6 +147,8 @@ export async function saveToDiskNow(): Promise<boolean> {
  * Triggers a debounced sync to local PC disk (called on any create/update/delete)
  */
 export function triggerDiskSync(): void {
+  saveVersion++;
+  try { localStorage.setItem(ISSUES_DIRTY_KEY, String(Date.now())); } catch { /* storage unavailable */ }
   currentSyncState.status = 'saving';
   notifyListeners();
 

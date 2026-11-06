@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-06T03:49:20.933Z",
+  "roadmaps": [
+    {
+      "id": "rm-lira",
+      "name": "Lira Platform Roadmap",
+      "file": "rm-lira.json",
+      "items": 9
+    },
+    {
+      "id": "rm-mw4f06nt2",
+      "name": "MLOPS + AI Engineer",
+      "file": "rm-mw4f06nt2.json",
+      "items": 0
+    }
+  ]
+}

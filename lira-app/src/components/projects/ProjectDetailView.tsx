@@ -3,7 +3,7 @@ import {
   ArrowLeft, BarChart3, KanbanSquare, Ticket, GitBranch,
   Settings, Plus, Search, ExternalLink, Check, Trash2, Save,
   Layers, Server, Clock, AlertCircle, CheckCircle2, TrendingUp,
-  X, Code, Workflow, Sliders
+  X, Code, Workflow, Sliders, CalendarClock
 } from 'lucide-react';
 import { KanbanBoard } from '../board/KanbanBoard';
 import { Button } from '../common/Button';
@@ -11,8 +11,13 @@ import { Avatar } from '../common/Avatar';
 import { ISSUE_TYPE_CONFIG } from '../../types/issue';
 import { formatRelativeDate, formatAbsoluteDate } from '../../utils/dateUtils';
 import type { Project } from '../../types/project';
+import { writeProjects } from '../../hooks/useProjects';
 import type { Space } from '../../types/space';
 import type { Issue } from '../../types/issue';
+import { allSprintKeys, getIssueSprint } from '../../utils/sprintUtils';
+import { SprintSelect, SprintChip, SprintFilterBar } from '../sprints/sprintParts';
+import { SprintsPage } from '../sprints/SprintsPage';
+import { StandupButton } from '../standup/StandupButton';
 
 interface ProjectDetailViewProps {
   project: Project;
@@ -26,7 +31,7 @@ interface ProjectDetailViewProps {
   onSwitchToSpace?: (spaceId: number) => void;
 }
 
-type TabType = 'overview' | 'board' | 'tickets' | 'technical' | 'settings';
+type TabType = 'overview' | 'board' | 'tickets' | 'sprints' | 'technical' | 'settings';
 type TicketSubTab = 'all' | 'open' | 'completed' | 'high_priority' | 'my_tasks';
 
 interface WorkflowStateItem {
@@ -140,6 +145,13 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
   // ── Tab 3: Tickets View State ──
   const [ticketSubTab, setTicketSubTab] = useState<TicketSubTab>('all');
   const [ticketSearch, setTicketSearch] = useState('');
+  const [ticketSprint, setTicketSprint] = useState('all');
+  const [boardSprint, setBoardSprint] = useState('all');
+  const boardIssues = useMemo(
+    () => boardSprint === 'all' ? projectIssues : projectIssues.filter(i => i.type === 'epic' || getIssueSprint(i) === boardSprint),
+    [projectIssues, boardSprint]
+  );
+  const sprintKeys = useMemo(() => allSprintKeys(projectIssues), [projectIssues]);
 
   const ticketCounts = useMemo(() => {
     return {
@@ -179,6 +191,10 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
         break;
     }
 
+    if (ticketSprint !== 'all') {
+      list = list.filter(i => i.type !== 'epic' && getIssueSprint(i) === ticketSprint);
+    }
+
     if (ticketSearch.trim()) {
       const q = ticketSearch.toLowerCase();
       list = list.filter(i =>
@@ -189,7 +205,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
     }
 
     return list;
-  }, [projectIssues, ticketSubTab, ticketSearch]);
+  }, [projectIssues, ticketSubTab, ticketSearch, ticketSprint]);
 
   // ── Tab 4: Technical Details Form State ──
   const [repoUrl, setRepoUrl] = useState(project.repoUrl || '');
@@ -242,7 +258,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
       if (raw) {
         const list: Project[] = JSON.parse(raw);
         const next = list.map(p => p.id === project.id ? updated : p);
-        localStorage.setItem('lira_projects', JSON.stringify(next));
+        writeProjects(next);
       }
     } catch (err) {
       console.error('Failed to update project in localStorage:', err);
@@ -467,6 +483,14 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Standup — right side of the banner so it is easy to spot */}
+          <div className="flex-shrink-0 md:self-center">
+            <StandupButton
+              prominent
+              scope={{ type: 'project', id: `project:${project.id}`, name: project.name, spaceId: project.spaceId, projectKey: project.key }}
+            />
+          </div>
         </div>
 
         {/* ── Navigation Tabs ── */}
@@ -511,6 +535,18 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
             <span className="text-xs bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded-full font-normal">
               {stats.total}
             </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('sprints')}
+            className={`flex items-center gap-2 pb-3 font-semibold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
+              activeTab === 'sprints'
+                ? 'border-jira-blue text-jira-blue'
+                : 'border-transparent text-jira-muted hover:text-jira-text'
+            }`}
+          >
+            <CalendarClock className="w-4 h-4" />
+            <span>Sprints</span>
           </button>
 
           <button
@@ -956,10 +992,12 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
               </div>
             </div>
 
+            <SprintFilterBar value={boardSprint} options={sprintKeys} onChange={setBoardSprint} onManage={() => setActiveTab('sprints')} />
+
             {/* Kanban Board Container */}
             <div className="flex-1 overflow-hidden min-h-0 flex flex-col">
               <KanbanBoard
-                issues={projectIssues}
+                issues={boardIssues}
                 space={space}
                 searchQuery={boardSearchQuery}
                 filterAssignee={filterAssignee}
@@ -1052,6 +1090,8 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                 </button>
               </div>
 
+              <SprintSelect value={ticketSprint} options={sprintKeys} onChange={setTicketSprint} allLabel="All sprints" title="Filter by sprint" className="!py-1.5 !rounded-lg" />
+
               {/* Search Within Tickets */}
               <div className="relative max-w-xs w-full">
                 <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -1073,6 +1113,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                     <th className="py-2.5 px-3 font-semibold text-gray-700 w-12 text-center">Type</th>
                     <th className="py-2.5 px-3 font-semibold text-gray-700 w-28">Key</th>
                     <th className="py-2.5 px-3 font-semibold text-gray-700 min-w-[220px]">Title</th>
+                    <th className="py-2.5 px-3 font-semibold text-gray-700 w-24">Sprint</th>
                     <th className="py-2.5 px-3 font-semibold text-gray-700 w-28">Status</th>
                     <th className="py-2.5 px-3 font-semibold text-gray-700 w-28">Priority</th>
                     <th className="py-2.5 px-3 font-semibold text-gray-700 w-36">Assignee</th>
@@ -1082,7 +1123,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                 <tbody className="divide-y divide-gray-200">
                   {ticketsToDisplay.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-12 text-center text-gray-500">
+                      <td colSpan={8} className="py-12 text-center text-gray-500">
                         <div className="flex flex-col items-center justify-center gap-2">
                           <Ticket className="w-8 h-8 text-gray-300" />
                           <p className="text-sm font-semibold text-jira-text">No tickets found</p>
@@ -1116,6 +1157,12 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
                           <div className="font-medium text-jira-text group-hover:text-jira-blue transition-colors line-clamp-1">
                             {issue.title}
                           </div>
+                        </td>
+
+                        <td className="py-2.5 px-3 whitespace-nowrap">
+                          {issue.type === 'epic'
+                            ? <span className="text-jira-muted">—</span>
+                            : <SprintChip sprint={getIssueSprint(issue)} carried={(issue.sprintHistory || []).length > 0} />}
                         </td>
 
                         {/* Status Badge */}
@@ -1154,6 +1201,20 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = ({
               </table>
             </div>
           </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════
+            TAB: SPRINTS (monthly sprints for this project's space)
+           ═══════════════════════════════════════════════════════ */}
+        {activeTab === 'sprints' && (
+          <SprintsPage
+            key={project.id}
+            spaces={space ? [space] : []}
+            issues={projectIssues}
+            lockedSpaceId={project.spaceId}
+            onIssueClick={issue => onIssueClick?.(issue)}
+            onAddIssue={onAddIssue}
+          />
         )}
 
         {/* ═══════════════════════════════════════════════════════

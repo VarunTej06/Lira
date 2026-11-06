@@ -5,12 +5,19 @@ import type { Space } from '../../types/space';
 import { createIssue, getNextIssueKey, useIssuesBySpace } from '../../hooks/useIssues';
 import type { Issue, Priority, IssueType } from '../../types/issue';
 import { v4 as uuidv4 } from 'uuid';
+import { currentSprintKey, shiftSprint, sprintName } from '../../utils/sprintUtils';
 
 interface CreateIssueModalProps {
   isOpen: boolean;
   onClose: () => void;
   space: Space | undefined;
   defaultStatus?: string;
+  /** Spaces offered in the picker (only used with chooseSpace). */
+  spaces?: Space[];
+  /** Ask which space the ticket belongs to instead of using `space`. */
+  chooseSpace?: boolean;
+  /** Sprint pre-selected when the modal opens. */
+  defaultSprint?: string;
 }
 
 const ISSUE_TYPES: { value: IssueType; label: string; icon: string }[] = [
@@ -31,9 +38,16 @@ const PRIORITIES: { value: Priority; label: string; icon: string }[] = [
 export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   isOpen,
   onClose,
-  space,
+  space: spaceProp,
   defaultStatus = 'todo',
+  spaces = [],
+  chooseSpace = false,
+  defaultSprint,
 }) => {
+  // When opened from a cross-space page (e.g. Sprints), the user picks which space gets the ticket
+  const [pickedSpaceId, setPickedSpaceId] = useState<number | undefined>(undefined);
+  // The space is always chosen explicitly; it is pre-selected when the caller already has a space in context.
+  const space = spaces.length > 0 ? spaces.find(s => s.id === pickedSpaceId) : spaceProp;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState<IssueType>('task');
@@ -42,6 +56,11 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   const [priority, setPriority] = useState<Priority>('medium');
   const [dueDate, setDueDate] = useState('');
   const [labels, setLabels] = useState('');
+  const [sprint, setSprint] = useState(currentSprintKey());
+  const sprintChoices = Array.from(new Set([
+    ...[-2, -1, 0, 1, 2, 3].map(d => shiftSprint(currentSprintKey(), d)),
+    ...(defaultSprint ? [defaultSprint] : []),
+  ])).sort();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -51,20 +70,25 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setStatus(defaultStatus);
+      setSprint(defaultSprint || currentSprintKey());
+      setPickedSpaceId(chooseSpace ? undefined : spaceProp?.id);
+      setParentId(undefined);
     }
-  }, [isOpen, defaultStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, defaultStatus, defaultSprint, chooseSpace, spaceProp?.id]);
 
+  // Hierarchy: Epic (top level, no parent) → Task / Bug (optionally linked to an epic) → Subtask (must link to a task)
   const potentialParents = spaceIssues.filter(i => {
     if (type === 'subtask') return i.type === 'task' || i.type === 'bug';
-    if (type === 'task') return i.type === 'epic';
-    if (type === 'bug') return i.type === 'epic' || i.type === 'task';
+    if (type === 'task' || type === 'bug') return i.type === 'epic';
     return false;
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) { setError('Title is required'); return; }
-    if (!space?.id) return;
+    if (!space?.id) { setError('Please choose a space for this ticket'); return; }
+    if (type === 'subtask' && !parentId) { setError('Choose the task this subtask belongs to'); return; }
 
     setLoading(true);
     setError('');
@@ -103,6 +127,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         }],
         attachments: [],
         linkedIssues: [],
+        sprint: type === 'epic' ? undefined : sprint,
         rank: Date.now(),
         createdAt: now,
         updatedAt: now,
@@ -127,6 +152,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     setPriority('medium');
     setDueDate('');
     setLabels('');
+    setSprint(currentSprintKey());
     setError('');
   };
 
@@ -136,8 +162,23 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title={`Create Issue in ${space?.name || 'Space'}`} size="lg">
+    <Modal isOpen={isOpen} onClose={handleClose} title={space ? `Create Issue in ${space.name}` : 'Create Issue'} size="lg">
       <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        {spaces.length > 0 && (
+          <div>
+            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Space <span className="text-red-500">*</span></label>
+            <select
+              value={pickedSpaceId ?? ''}
+              onChange={e => { setPickedSpaceId(e.target.value ? Number(e.target.value) : undefined); setParentId(undefined); setError(''); }}
+              autoFocus={!pickedSpaceId}
+              className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white cursor-pointer"
+            >
+              <option value="">Select a space…</option>
+              {spaces.map(s => <option key={s.id} value={s.id}>{s.icon} {s.name} ({s.key})</option>)}
+            </select>
+          </div>
+        )}
+
         {/* Issue type */}
         <div>
           <label className="block text-xs font-semibold text-jira-muted mb-2 uppercase tracking-wide">Issue Type</label>
@@ -164,17 +205,29 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         </div>
 
         {/* Parent selector (if applicable for issue type) */}
-        {potentialParents.length > 0 && (
+        {type === 'epic' ? (
+          <p className="text-xs text-jira-muted bg-gray-50 border border-jira-border rounded-xl px-3 py-2">
+            ⚡ Epics are top-level — they don't link to a parent. Choose the space above.
+          </p>
+        ) : (
           <div>
             <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">
-              Parent Item {type === 'subtask' ? '(Task)' : '(Epic)'}
+              {type === 'subtask' ? 'Parent task' : 'Epic'}{' '}
+              {type === 'subtask' ? <span className="text-red-500">*</span> : <span className="normal-case font-normal">(optional)</span>}
             </label>
             <select
               value={parentId || ''}
+              disabled={!space}
               onChange={e => setParentId(e.target.value ? Number(e.target.value) : undefined)}
-              className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
+              className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <option value="">None (Standalone issue)</option>
+              <option value="">
+                {!space
+                  ? 'Select a space first…'
+                  : potentialParents.length === 0
+                    ? `No ${type === 'subtask' ? 'tasks' : 'epics'} in ${space.name} yet`
+                    : type === 'subtask' ? 'Select the parent task…' : 'No epic (standalone)'}
+              </option>
               {potentialParents.map(p => (
                 <option key={p.id} value={p.id}>
                   {p.key} — {p.title}
@@ -240,6 +293,22 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
             </select>
           </div>
         </div>
+
+        {/* Sprint (epics live outside sprints) */}
+        {type !== 'epic' && (
+          <div>
+            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Sprint</label>
+            <select
+              value={sprint}
+              onChange={e => setSprint(e.target.value)}
+              className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white cursor-pointer"
+            >
+              {sprintChoices.map(k => (
+                <option key={k} value={k}>{sprintName(k)}{k === currentSprintKey() ? ' (current)' : ''}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Row: Due Date + Labels */}
         <div className="grid grid-cols-2 gap-4">

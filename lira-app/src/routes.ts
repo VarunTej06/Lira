@@ -7,6 +7,7 @@
  *   /sprints                      all sprints           /sprints/2026-11        one sprint
  *   /tickets                      all tickets
  *   /roadmaps                     all roadmaps          /roadmaps/<roadmapId>   one roadmap
+ *   /dashboards                   all dashboards        /dashboards/new  the wizard        /dashboards/<id>  one dashboard
  *   /space/<KEY>/<tab>            a space: summary | board | list | calendar | sprints | capacity | forms | ...
  *   ?issue=<KEY-123>              any page can show a ticket popup, e.g. /roadmaps/rm-lira?issue=LIRA-61
  *
@@ -25,6 +26,7 @@ export type AppRoute =
   | { kind: 'projects'; projectId?: string }
   | { kind: 'sprints'; sprintKey?: string }
   | { kind: 'roadmaps'; roadmapId?: string }
+  | { kind: 'dashboards'; dashboardId?: string }
   | { kind: 'space'; spaceKey: string; tab: string };
 
 const SPRINT_KEY = /^\d{4}-\d{2}(-\d{2})?$/; // a month, or a weekly / bi-weekly / N-day sprint's start date
@@ -43,6 +45,7 @@ export function parsePath(pathname: string): AppRoute {
     case 'projects': return { kind: 'projects', projectId: b };
     case 'sprints': return b && SPRINT_KEY.test(b) ? { kind: 'sprints', sprintKey: b } : { kind: 'sprints' };
     case 'roadmaps': return { kind: 'roadmaps', roadmapId: b };
+    case 'dashboards': return { kind: 'dashboards', dashboardId: b };
     case 'space': return b ? { kind: 'space', spaceKey: b.toUpperCase(), tab: tabFromSlug(c) ?? DEFAULT_SPACE_TAB } : { kind: 'home' };
     default: return { kind: 'home' };
   }
@@ -58,6 +61,7 @@ export function pathFor(route: AppRoute): string {
     case 'projects': return route.projectId ? `/projects/${seg(route.projectId)}` : '/projects';
     case 'sprints': return route.sprintKey ? `/sprints/${route.sprintKey}` : '/sprints';
     case 'roadmaps': return route.roadmapId ? `/roadmaps/${seg(route.roadmapId)}` : '/roadmaps';
+    case 'dashboards': return route.dashboardId ? `/dashboards/${seg(route.dashboardId)}` : '/dashboards';
     case 'space': return `/space/${seg(route.spaceKey)}/${route.tab.toLowerCase()}`;
   }
 }
@@ -74,6 +78,7 @@ export function tabOf(route: AppRoute): string {
     case 'projects': return 'Projects';
     case 'sprints': return route.sprintKey ? 'SprintDetail' : 'SprintsHub';
     case 'roadmaps': return 'Roadmaps';
+    case 'dashboards': return 'Dashboards';
     case 'space': return route.tab;
   }
 }
@@ -91,6 +96,7 @@ export function titleOf(route: AppRoute): string {
     case 'projects': return 'Projects';
     case 'sprints': return route.sprintKey ? `Sprint ${route.sprintKey}` : 'Sprints';
     case 'roadmaps': return 'Roadmaps';
+    case 'dashboards': return 'Dashboards';
     case 'space': return `${route.spaceKey} · ${route.tab}`;
     default: return 'Lira';
   }
@@ -119,6 +125,7 @@ export function routeForTab(tab: string, ctx: TabContext = {}): AppRoute {
     case 'SprintsHub': return { kind: 'sprints' };
     case 'SprintDetail': return ctx.sprintKey ? { kind: 'sprints', sprintKey: ctx.sprintKey } : { kind: 'sprints' };
     case 'Roadmaps': return { kind: 'roadmaps', roadmapId: ctx.roadmapId };
+    case 'Dashboards': return { kind: 'dashboards' };
     default: return ctx.spaceKey ? { kind: 'space', spaceKey: ctx.spaceKey.toUpperCase(), tab: SPACE_TABS.find(t => t === tab) ?? DEFAULT_SPACE_TAB } : { kind: 'home' };
   }
 }

@@ -1,4 +1,6 @@
 import { DialogHost } from './components/common/dialogs';
+import { DashboardsPage } from './components/dashboards/DashboardsPage';
+import { DashboardScheduler } from './components/dashboards/DashboardScheduler';
 import { SavedToastHost } from './components/common/SavedToast';
 import { LinkMenuHost } from './components/common/LinkMenu';
 import { getTheme } from './utils/theme';
@@ -232,7 +234,6 @@ export default function App() {
   }
 
   const spaceList = spaces || [];
-  const goSpaceTab = (tab: string) => { if (activeSpace) navigate(spacePath(activeSpace.key, tab)); };
   const pageKey = route.kind === 'space' ? `space:${route.spaceKey}` : route.kind;
 
   return (
@@ -254,7 +255,7 @@ export default function App() {
           activeSpaceId={activeSpaceId}
           onSpaceSelect={handleSelectSpace}
           onCreateSpace={() => setShowCreateSpace(true)}
-          onNavigateToDashboards={() => goSpaceTab('Summary')}
+          onNavigateToDashboards={() => navigate('/dashboards')}
           onNavigateToProjects={() => navigate('/projects')}
           onNavigateToSprints={() => navigate('/sprints')}
           onNavigateToRoadmaps={() => navigate('/roadmaps')}
@@ -311,6 +312,9 @@ export default function App() {
                   onOpenSprint={(key) => navigate(`/sprints/${key}`)}
                   onCreateIssue={() => handleAddIssue('todo', { chooseSpace: true })}
                 />} />
+
+              <Route path="/dashboards" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={openIssue} />} />
+              <Route path="/dashboards/:dashboardId" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={openIssue} />} />
 
               <Route path="/roadmaps" element={<RoadmapsRoute issues={allIssues} spaces={spaceList} />} />
               <Route path="/roadmaps/:roadmapId" element={<RoadmapsRoute issues={allIssues} spaces={spaceList} />} />
@@ -397,6 +401,7 @@ export default function App() {
       <DialogHost />
       <SavedToastHost />
       <LinkMenuHost />
+      <DashboardScheduler issues={allIssues} spaces={spaceList} />
 
       {/* Issue detail modal */}
       <ErrorBoundary

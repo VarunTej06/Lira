@@ -56,7 +56,7 @@ export const STATUS_BUTTON_STYLE: Record<string, { bg: string; text: string; hov
 /** The ticket fields that are edited in the popup and written together when "Save changes" is pressed. */
 const DRAFT_FIELDS = [
   'status', 'priority', 'assignee', 'assigneeInitials', 'labels', 'dueDate', 'startDate', 'storyPoints', 'type',
-  'parentId', 'epicId', 'epicLink', 'attachments', 'subtasks', 'activity', 'timeEstimate', 'blocked', 'blockedByIds', 'linkedIssues',
+  'parentId', 'epicId', 'epicLink', 'attachments', 'subtasks', 'activity', 'timeEstimate', 'blocked', 'blockedByIds', 'blockedAt', 'linkedIssues',
 ] as const satisfies readonly (keyof Issue)[];
 
 // Safe accessor helpers
@@ -185,8 +185,8 @@ export function useIssueDetail(props: IssueDetailModalProps) {
       if (!prev) return prev;
       const unique = [...new Set(ids)];
       const others = safeArr(prev.linkedIssues).filter(l => l.linkType !== 'blocked_by');
-      if (unique.length === 0) return { ...prev, blocked: false, blockedByIds: [], linkedIssues: others };
-      return { ...prev, blocked: true, blockedByIds: unique, linkedIssues: [...others, ...unique.map(id => ({ id: uuidv4(), issueId: id, linkType: 'blocked_by' as const }))] };
+      if (unique.length === 0) return { ...prev, blocked: false, blockedByIds: [], blockedAt: undefined, linkedIssues: others };
+      return { ...prev, blocked: true, blockedByIds: unique, blockedAt: prev.blocked && prev.blockedAt ? prev.blockedAt : new Date().toISOString(), linkedIssues: [...others, ...unique.map(id => ({ id: uuidv4(), issueId: id, linkType: 'blocked_by' as const }))] };
     });
   }, []);
 

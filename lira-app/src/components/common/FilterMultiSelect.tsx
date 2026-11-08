@@ -16,13 +16,19 @@ interface Props {
   searchable?: boolean;
   searchPlaceholder?: string;
   emptyText?: string;
+  /** One value at a time (radio buttons). Choosing closes the list. */
+  single?: boolean;
+  /** Highlight the button (a filter is set). Default: something is selected. */
+  active?: boolean;
+  /** Shown on the button after the label, for a single choice ("Sprint: Current"). */
+  valueLabel?: string;
 }
 
 /**
  * A small filter dropdown with a checkbox for every value, so one or several can be chosen.
  * The list scrolls inside the dropdown and is drawn above everything else, so it is never clipped.
  */
-export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selected, onToggle, onClear, searchable, searchPlaceholder = 'Search', emptyText = 'Nothing to choose' }) => {
+export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selected, onToggle, onClear, searchable, searchPlaceholder = 'Search', emptyText = 'Nothing to choose', single, valueLabel, active }) => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const trigger = useRef<HTMLButtonElement>(null);
@@ -70,12 +76,12 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
         aria-expanded={open}
         data-testid={`filter-${label.toLowerCase()}`}
         className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded transition-colors cursor-pointer ${
-          count > 0 ? 'border-lira-blue text-lira-blue bg-blue-50 hover:bg-blue-100' : 'text-lira-muted border-lira-border hover:bg-gray-50'
+          (active ?? count > 0) ? 'border-lira-blue text-lira-blue bg-blue-50 hover:bg-blue-100' : 'text-lira-muted border-lira-border hover:bg-gray-50'
         }`}
       >
         {icon}
-        {label}
-        {count > 0 && <span className="bg-blue-100 text-blue-700 text-xs rounded-full px-1.5 font-semibold">{count}</span>}
+        <span>{label}{single && valueLabel ? <span className="font-semibold">{`: ${valueLabel}`}</span> : null}</span>
+        {!single && count > 0 && <span className="bg-blue-100 text-blue-700 text-xs rounded-full px-1.5 font-semibold">{count}</span>}
         <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
 
@@ -112,8 +118,8 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
                   return (
                     <li key={o.value} role="option" aria-selected={on}>
                       <label className="flex items-center gap-2.5 px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50">
-                        <input type="checkbox" className="sr-only peer" checked={on} onChange={() => onToggle(o.value)} />
-                        <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-white' : 'border-gray-300 bg-white'}`}>
+                        <input type={single ? 'radio' : 'checkbox'} className="sr-only peer" checked={on} onChange={() => { onToggle(o.value); if (single) setOpen(false); }} />
+                        <span className={`w-4 h-4 ${single ? 'rounded-full' : 'rounded'} border flex items-center justify-center flex-shrink-0 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-white' : 'border-gray-300 bg-white'}`}>
                           {on && <Check className="w-3 h-3" strokeWidth={3} />}
                         </span>
                         {o.color && <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: o.color }} />}

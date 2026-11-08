@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { createSpaceStore, readStore, writeStore } from './server/diskStore.ts'
 import os from 'os'
+import { listSnapshots, readSnapshot, saveSnapshot } from './server/snapshots.ts'
 import { checkApiRequest, hasPrototypePollution, isThisComputer, LOCKED_PAGE, lanGate, loadLanToken, readBody, securityHeaders, writeAudit } from './server/guard.ts'
 
 // `npm run dev:lan` (vite --host) also lets your own tablet and phone in. Off by default.
@@ -142,6 +143,36 @@ function localFileDbPlugin(): Plugin {
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify({ error: 'Failed to write space data files' }))
           })
+          return
+        }
+
+        // Dashboard snapshots: Markdown files in data/snapshots
+        if (req.method === 'POST' && url === '/api/snapshot') {
+          readBody(req).then(body => {
+            const { name, markdown } = JSON.parse(body)
+            const saved = saveSnapshot(dataDir, name, markdown)
+            if (!saved) throw new Error('bad snapshot')
+            writeAudit(dataDir, 'save-snapshot', [saved.file])
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ success: true, ...saved }))
+          }).catch(() => {
+            res.statusCode = 400
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: 'Could not save the snapshot' }))
+          })
+          return
+        }
+        if (req.method === 'GET' && url === '/api/snapshots') {
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ files: listSnapshots(dataDir) }))
+          return
+        }
+        if (req.method === 'GET' && url === '/api/snapshot') {
+          const file = new URL(req.url || '', 'http://localhost').searchParams.get('file')
+          const text = readSnapshot(dataDir, file)
+          if (text === undefined) { res.statusCode = 404; res.end('Not found'); return }
+          res.setHeader('Content-Type', 'text/markdown; charset=utf-8')
+          res.end(text)
           return
         }
 

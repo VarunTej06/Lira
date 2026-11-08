@@ -3,14 +3,14 @@
  * Kept free of Vite imports so they can be unit-tested.
  *
  * Files written (all under <repo>/data):
- *   projects.json, sprints.json, teams.json, standups.json, board-config.json, settings.json
+ *   projects.json, sprints.json, teams.json, standups.json, board-config.json, dashboards.json, settings.json
  *   roadmaps/index.json + roadmaps/<id>.json   <- one file per roadmap
  *   private/secrets.json   <- git-ignored (API keys)
  */
 import fs from 'node:fs'
 import path from 'node:path'
 
-export const STORE_FILES = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'settings', 'secrets'] as const
+export const STORE_FILES = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'dashboards', 'settings', 'secrets'] as const
 export type StoreFile = (typeof STORE_FILES)[number]
 export type StoreEntries = Record<string, unknown>
 

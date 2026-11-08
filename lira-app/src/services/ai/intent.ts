@@ -1,6 +1,7 @@
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import type { RefinedPromptGoal } from './types';
+import { isDashboardRequest } from '../../utils/dashboards/promptBuilder';
 import { currentSprintKey, nextSprint, prevSprint, sprintName } from '../../utils/sprintUtils';
 
 function escapeRegex(str: string): string {
@@ -104,6 +105,11 @@ export function refineUserPrompt(
   }
   if (!targetSpace) {
     targetSpace = activeSpace;
+  }
+
+  // 2a. Dashboards: "build me a dashboard of ..."
+  if (isDashboardRequest(raw)) {
+    return { originalInput: raw, intent: 'dashboard_build', optimizedGoal: 'Build a dashboard from the description' };
   }
 
   // 2b. Sprint-aware requests: planning, summary, standup digest, risk radar

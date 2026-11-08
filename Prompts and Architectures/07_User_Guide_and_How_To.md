@@ -219,6 +219,16 @@ Your study notes, tickets, and progress are precious. Back them up in seconds:
 
 **Attach a file.** In a ticket, open Attachments and press **Add attachment**. Choose My computer, Google Drive, OneDrive, Dropbox or Web link. Drive, OneDrive and Dropbox take a share link: Lira does not sign in to those services.
 
+**Dashboards.** Open **Dashboards** in the sidebar.
+- **Start from a template** (My work, Sprint health, Team workload, Blocked and risks, Delivery and flow, Project progress, Roadmap view, Quality and bugs, Executive summary, Custom). The wizard asks four things: your goal, which spaces, sprint and period, whose work and which priorities, then which widgets to show. A live preview on the right shows the result as you choose. Name it and press **Create dashboard**.
+- **Or describe it.** Type, for example, "what is blocked in the current sprint and who is overloaded". Lira shows what it understood and the widgets it picked. Press **Create dashboard**, or **Adjust in the wizard**. You can also ask Viva: "create a dashboard of my overdue tickets this week".
+- **Customise.** Press **Customise** to drag widgets around, change their width (S, M, L, full) and height, open their settings (title, what to count, how to group, and filters for that widget only), add widgets from the gallery or remove them. Press **Done** when finished. Everything is saved as you go.
+- **Filters** at the top (Spaces, Sprint, Period, People, Priority, Type, Labels) apply to every widget except those with their own filters. "Period" limits finished work: open work always counts.
+- **Click** a number, a bar, a slice, a person or a due day to see the tickets behind it. Click a ticket to open it.
+- **Alerts.** Press **Alerts**, then "Add an alert": for example, warn when Blocked is more than 3. A red badge and red chips appear when a limit is passed, and the dashboard card on the list shows it too.
+- **Weekly snapshot.** Press **Snapshot**, tick "Take a snapshot every week" and choose a day and hour. While Lira is open, a Markdown file is saved in the `data/snapshots` folder at that time (if Lira was closed, it is saved the next time you open it). **Take a snapshot now** saves one straight away.
+- **Export and share.** **Export** gives a picture (PNG), print or save as PDF, a Markdown summary, or a dashboard file you can **Import** on another computer. **Share** copies the link to the dashboard.
+
 **Block a ticket.** In the ticket, under **Status**, press **Blocked** on the pill. Lira asks which ticket is blocking this one (search, or narrow by Epics, Tasks, Bugs, Subtasks). Tick one or more tickets, press **Mark as blocked**, then **Save changes**. The ticket keeps its status and column and its card shows "Blocked by KEY" ("+2" for more). Once blocked, use **Add** to link more tickets, or the cross on a ticket to remove it; pressing **Blocked** again does nothing. The tickets you link show "This ticket is blocking" in their own popup. Press **Not blocked** to clear everything. Use **Blocked** in the Status filter to list blocked work.
 
 **Paste a screenshot.** Click in a description or a comment and press Ctrl+V. The picture appears at the cursor, so you can write before and after it. It is also listed under Attachments.

@@ -135,6 +135,10 @@ Saved files are read only with `JSON.parse`. There is no `eval`, `new Function`,
 
 Run them with `npm test` in `lira-app`.
 
+## Dashboard snapshots
+
+`POST /api/snapshot` writes a Markdown file into `data/snapshots/`. The name is reduced to letters, digits and dashes (`server/snapshots.ts`), the size is limited to 1 MB, and only plain `.md` names in that folder can be listed or read (`GET /api/snapshots`, `GET /api/snapshot?file=`), so a request cannot reach other files. The calls go through the same host and origin guard as every other `/api` route, and each save is written to the audit log. Tests: `server/snapshots.test.ts`.
+
 ## Seeing the code in the browser's Network tab
 
 The browser can always show the files it was sent. That is how every web app works, so the front-end code can never be secret. What matters is what is in it and what the server allows.

@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-08T20:20:37.011Z",
+  "entries": {
+    "lira_dashboards": [
+      {
+        "createdAt": "2026-11-08T20:19:34.895Z",
+        "filters": {
+          "assignee": "all",
+          "labels": [],
+          "priorities": [],
+          "range": "all",
+          "spaceIds": [
+            6
+          ],
+          "sprint": "current",
+          "types": []
+        },
+        "goals": [],
+        "id": "dash-mw8a03fz1idv4j",
+        "name": "Sprint health",
+        "scenario": "sprint-health",
+        "starred": false,
+        "updatedAt": "2026-11-08T20:20:36.495Z",
+        "widgets": [
+          {
+            "config": {
+              "metric": "completion"
+            },
+            "entry": "stat-completion",
+            "height": 1,
+            "id": "w-mw8a03fz180xtu",
+            "size": "S",
+            "title": "Completion",
+            "type": "stat"
+          },
+          {
+            "config": {
+              "metric": "points_open"
+            },
+            "entry": "stat-points-left",
+            "height": 1,
+            "id": "w-mw8a03fz19lw8k",
+            "size": "S",
+            "title": "Points left",
+            "type": "stat"
+          },
+          {
+            "config": {
+              "metric": "points_done"
+            },
+            "entry": "stat-points-done",
+            "height": 1,
+            "id": "w-mw8a03fz1aqo7f",
+            "size": "S",
+            "title": "Points done",
+            "type": "stat"
+          },
+          {
+            "config": {
+              "metric": "blocked"
+            },
+            "entry": "stat-blocked",
+            "height": 1,
+            "id": "w-mw8a03fz1bz2eu",
+            "size": "S",
+            "title": "Blocked",
+            "type": "stat"
+          },
+          {
+            "config": {},
+            "entry": "burndown",
+            "height": 2,
+            "id": "w-mw8a03fz1co7l7",
+            "size": "M",
+            "title": "Sprint burndown",
+            "type": "burndown"
+          },
+          {
+            "config": {},
+            "entry": "burnup",
+            "height": 2,
+            "id": "w-mw8a03fz1d90jg",
+            "size": "M",
+            "title": "Sprint burnup",
+            "type": "burnup"
+          },
+          {
+            "config": {},
+            "entry": "cfd",
+            "height": 2,
+            "id": "w-mw8a03fz1ej8y5",
+            "size": "M",
+            "title": "Cumulative flow",
+            "type": "cfd"
+          },
+          {
+            "config": {
+              "groupBy": "status",
+              "measure": "count"
+            },
+            "entry": "bar-status",
+            "height": 2,
+            "id": "w-mw8a03fz1f44ci",
+            "size": "M",
+            "title": "Tickets by status",
+            "type": "bar"
+          },
+          {
+            "config": {
+              "limit": 8,
+              "list": "attention"
+            },
+            "entry": "list-attention",
+            "height": 2,
+            "id": "w-mw8a03fz1g614y",
+            "size": "XL",
+            "title": "Needs attention",
+            "type": "list"
+          },
+          {
+            "config": {},
+            "entry": "workload",
+            "height": 2,
+            "id": "w-mw8a03fz1hhlcc",
+            "size": "XL",
+            "title": "Team workload",
+            "type": "workload"
+          }
+        ]
+      }
+    ]
+  }
+}

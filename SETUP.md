@@ -48,7 +48,7 @@ Lira/                      <- repo root
 │   ├── spaces.json        <- manifest of all spaces
 │   ├── spaces/<KEY>.json  <- one file per space, holding its tickets
 │   ├── lira-workspace.json<- consolidated snapshot
-│   ├── projects.json, sprints.json, teams.json, standups.json, settings.json, board-config.json
+│   ├── projects.json, sprints.json, teams.json, standups.json, dashboards.json, settings.json, board-config.json
 │   ├── roadmaps/          <- one file per roadmap
 │   └── private/           <- git-ignored: API key, tablet link secret, audit log
 ├── lira-app/              <- the web app (run every command from HERE)
@@ -129,6 +129,8 @@ Everything you create or change is saved to JSON files in `data/`, so clearing b
 | Sprint goals, capacity, retrospectives, closed sprints, planned sprints, weekly / bi-weekly / N-day sprint definitions | `data/sprints.json` |
 | Teams and added team members | `data/teams.json` |
 | Standups and standup notes | `data/standups.json` |
+| Dashboards (widgets, filters, alerts, snapshot schedule) | `data/dashboards.json` |
+| Weekly dashboard snapshots | `data/snapshots/<name>-<date>.md` |
 | WIP limits, board settings, attachments, documents, forms | `data/board-config.json` |
 | Theme, profile, sidebar, notification and Viva AI settings | `data/settings.json` |
 | Which spaces work in each sprint, sprint capacity and retrospectives | `data/sprints.json` (with the other sprint data above) |
@@ -161,6 +163,7 @@ Every page has its own address, so refresh, Back/Forward and shared links work.
 | `/sprints`, `/sprints/2026-11`, `/sprints/2026-11-09` | Sprints overview, one monthly sprint, one weekly / bi-weekly / N-day sprint (named by its start date) |
 | `/tickets` | All tickets |
 | `/roadmaps`, `/roadmaps/<id>` | Roadmaps, one roadmap |
+| `/dashboards`, `/dashboards/new`, `/dashboards/<id>` | Dashboards, the new-dashboard wizard (`?scenario=sprint-health` starts from a template), one dashboard |
 | `/filters` | Filters |
 | `?issue=LIRA-12` | Added to any page: opens that ticket's popup, for example `/roadmaps/rm-lira?issue=LIRA-61` |
 
@@ -238,6 +241,16 @@ Tests (294) cover the sprint logic and reports, standup and invite builders, AI 
 - **Dates:** use `components/common/DatePicker.tsx`, not `<input type="date">`.
 - **Descriptions** use the rich text editor (`components/common/richtext/`). They are stored as HTML written by the editor; Markdown from older tickets is converted when opened. Code that needs the text (search, Viva, suggestions) uses `descriptionToText` from `utils/richText.ts`.
 - **Icons, not emojis:** ticket types and priorities use `TypeIcon` and `PriorityIcon` (`components/common/Icons.tsx`). The only emojis in Lira are the icons chosen for spaces.
+
+---
+
+## 11c. Dashboards (for developers)
+
+- `src/utils/dashboards/`: `types.ts` (what is saved), `metrics.ts` (all the numbers: pure functions), `catalog.ts` (widget gallery and scenarios), `data.ts` (widget -> data), `promptBuilder.ts` (build from a sentence, also used by Viva), `snapshot.ts` (weekly Markdown), `store.ts` (saved in `localStorage` key `lira_dashboards`, mirrored to `data/dashboards.json`).
+- `src/components/dashboards/`: the pages (`DashboardsHome`, `DashboardWizard`, `DashboardView`), the grid, the widgets and charts (plain SVG, no chart library), the modals, and `DashboardScheduler` (takes the weekly snapshots while Lira is open).
+- To add a widget: add a type to `WidgetType`, a case in `widgetData` (data.ts) and in `WidgetBody` (Widgets.tsx), and an entry in `CATALOG`. `dashboards.test.ts` checks that every catalog entry computes with and without tickets.
+- Snapshots are written by `server/snapshots.ts` (`POST /api/snapshot`); file names are reduced to letters, digits and dashes, and only `.md` files in `data/snapshots` can be read.
+- The picture export uses the `html-to-image` package (MIT), loaded only when you press Export.
 
 ---
 

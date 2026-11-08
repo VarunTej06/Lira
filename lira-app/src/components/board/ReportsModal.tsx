@@ -117,22 +117,22 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
       title={`Reports & Analytics · ${space?.name || 'Workspace'}`}
       size="xl"
     >
-      <div className="flex flex-col h-[600px] text-jira-text overflow-hidden">
+      <div className="flex flex-col h-[600px] text-lira-text overflow-hidden">
         {/* KPI Cards Row */}
-        <div className="p-6 pb-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50/60 border-b border-jira-border flex-shrink-0">
+        <div className="p-6 pb-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50/60 border-b border-lira-border flex-shrink-0">
           {/* 1. Total Issues */}
-          <div className="bg-white p-3.5 rounded-xl border border-jira-border shadow-xs">
-            <div className="flex items-center justify-between text-jira-muted mb-1">
+          <div className="bg-white p-3.5 rounded-xl border border-lira-border shadow-xs">
+            <div className="flex items-center justify-between text-lira-muted mb-1">
               <span className="text-[11px] font-bold uppercase tracking-wider">Total Work</span>
-              <Layers className="w-4 h-4 text-jira-blue" />
+              <Layers className="w-4 h-4 text-lira-blue" />
             </div>
-            <div className="text-2xl font-bold text-jira-text">{totalIssues}</div>
-            <div className="text-[11px] text-jira-muted mt-0.5">items in space</div>
+            <div className="text-2xl font-bold text-lira-text">{totalIssues}</div>
+            <div className="text-[11px] text-lira-muted mt-0.5">items in space</div>
           </div>
 
           {/* 2. Done Count */}
-          <div className="bg-white p-3.5 rounded-xl border border-jira-border shadow-xs">
-            <div className="flex items-center justify-between text-jira-muted mb-1">
+          <div className="bg-white p-3.5 rounded-xl border border-lira-border shadow-xs">
+            <div className="flex items-center justify-between text-lira-muted mb-1">
               <span className="text-[11px] font-bold uppercase tracking-wider">Done</span>
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             </div>
@@ -143,25 +143,25 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
           </div>
 
           {/* 3. In Progress Count */}
-          <div className="bg-white p-3.5 rounded-xl border border-jira-border shadow-xs">
-            <div className="flex items-center justify-between text-jira-muted mb-1">
+          <div className="bg-white p-3.5 rounded-xl border border-lira-border shadow-xs">
+            <div className="flex items-center justify-between text-lira-muted mb-1">
               <span className="text-[11px] font-bold uppercase tracking-wider">In Progress</span>
-              <Clock className="w-4 h-4 text-jira-blue" />
+              <Clock className="w-4 h-4 text-lira-blue" />
             </div>
-            <div className="text-2xl font-bold text-jira-blue">{inProgressCount}</div>
+            <div className="text-2xl font-bold text-lira-blue">{inProgressCount}</div>
             <div className="text-[11px] text-blue-700 font-semibold mt-0.5">
               {inFlightRate}% active in flight
             </div>
           </div>
 
           {/* 4. Velocity / Points */}
-          <div className="bg-white p-3.5 rounded-xl border border-jira-border shadow-xs">
-            <div className="flex items-center justify-between text-jira-muted mb-1">
+          <div className="bg-white p-3.5 rounded-xl border border-lira-border shadow-xs">
+            <div className="flex items-center justify-between text-lira-muted mb-1">
               <span className="text-[11px] font-bold uppercase tracking-wider">Story Points</span>
               <Award className="w-4 h-4 text-purple-600" />
             </div>
             <div className="text-2xl font-bold text-purple-700">
-              {donePoints} <span className="text-sm font-normal text-jira-muted">/ {totalPoints}</span>
+              {donePoints} <span className="text-sm font-normal text-lira-muted">/ {totalPoints}</span>
             </div>
             <div className="text-[11px] text-purple-700 font-semibold mt-0.5">
               {pointsCompletionRate}% points delivered
@@ -170,14 +170,14 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
         </div>
 
         {/* Chart View Switcher */}
-        <div className="flex items-center justify-between px-6 py-2 border-b border-jira-border bg-white flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-2 border-b border-lira-border bg-white flex-shrink-0">
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setChartType('status')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
                 chartType === 'status'
-                  ? 'bg-jira-blue text-white shadow-xs'
-                  : 'text-jira-muted hover:text-jira-text hover:bg-gray-100'
+                  ? 'bg-lira-blue text-white shadow-xs'
+                  : 'text-lira-muted hover:text-lira-text hover:bg-gray-100'
               }`}
             >
               <PieChart className="w-3.5 h-3.5" />
@@ -187,8 +187,8 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
               onClick={() => setChartType('priority')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
                 chartType === 'priority'
-                  ? 'bg-jira-blue text-white shadow-xs'
-                  : 'text-jira-muted hover:text-jira-text hover:bg-gray-100'
+                  ? 'bg-lira-blue text-white shadow-xs'
+                  : 'text-lira-muted hover:text-lira-text hover:bg-gray-100'
               }`}
             >
               <BarChart3 className="w-3.5 h-3.5" />
@@ -196,7 +196,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
             </button>
           </div>
 
-          <div className="text-xs text-jira-muted flex items-center gap-2">
+          <div className="text-xs text-lira-muted flex items-center gap-2">
             {criticalCount > 0 && (
               <span className="text-red-600 font-semibold flex items-center gap-1 bg-red-50 px-2 py-0.5 rounded border border-red-200 text-[11px]">
                 <Flame className="w-3 h-3 text-red-500" /> {criticalCount} high priority
@@ -208,13 +208,13 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
         {/* Charts & Visualizations Area */}
         <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
           {/* Left Column: Pure SVG Donut Chart */}
-          <div className="md:col-span-5 flex flex-col items-center justify-center p-4 bg-gray-50/50 rounded-2xl border border-jira-border">
-            <h4 className="text-xs font-bold text-jira-muted uppercase tracking-wider mb-4">
+          <div className="md:col-span-5 flex flex-col items-center justify-center p-4 bg-gray-50/50 rounded-2xl border border-lira-border">
+            <h4 className="text-xs font-bold text-lira-muted uppercase tracking-wider mb-4">
               {chartType === 'status' ? 'Status Ratio Donut' : 'Priority Distribution'}
             </h4>
 
             {totalIssues === 0 ? (
-              <div className="py-12 text-center text-jira-muted text-xs">No issues on board</div>
+              <div className="py-12 text-center text-lira-muted text-xs">No issues on board</div>
             ) : (
               <div className="relative w-44 h-44 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -247,10 +247,10 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
 
                 {/* Center text in donut hole */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                  <span className="text-2xl font-extrabold text-jira-text leading-none">
+                  <span className="text-2xl font-extrabold text-lira-text leading-none">
                     {chartType === 'status' ? `${completionRate}%` : totalIssues}
                   </span>
-                  <span className="text-[10px] text-jira-muted uppercase font-semibold mt-1">
+                  <span className="text-[10px] text-lira-muted uppercase font-semibold mt-1">
                     {chartType === 'status' ? 'Complete' : 'Total Items'}
                   </span>
                 </div>
@@ -262,8 +262,8 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
               {activeSegments.map(seg => (
                 <div key={seg.key} className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: seg.color }} />
-                  <span className="text-jira-text font-medium">{seg.label}:</span>
-                  <span className="font-bold text-jira-text">{seg.count}</span>
+                  <span className="text-lira-text font-medium">{seg.label}:</span>
+                  <span className="font-bold text-lira-text">{seg.count}</span>
                 </div>
               ))}
             </div>
@@ -271,7 +271,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
 
           {/* Right Column: Tailwind Horizontal Bar Charts */}
           <div className="md:col-span-7 flex flex-col justify-center space-y-4">
-            <h4 className="text-xs font-bold text-jira-muted uppercase tracking-wider mb-1">
+            <h4 className="text-xs font-bold text-lira-muted uppercase tracking-wider mb-1">
               Detailed Breakdown
             </h4>
 
@@ -287,8 +287,8 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
                   return (
                     <div key={item.label} className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-jira-text">{item.label}</span>
-                        <span className="text-jira-muted">
+                        <span className="font-semibold text-lira-text">{item.label}</span>
+                        <span className="text-lira-muted">
                           <strong className={item.textCol}>{item.count}</strong> ({pct}%)
                         </span>
                       </div>
@@ -315,9 +315,9 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
                   return (
                     <div key={item.label} className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-jira-text">{item.label}</span>
-                        <span className="text-jira-muted">
-                          <strong className="text-jira-text">{item.count}</strong> ({pct}%)
+                        <span className="font-semibold text-lira-text">{item.label}</span>
+                        <span className="text-lira-muted">
+                          <strong className="text-lira-text">{item.count}</strong> ({pct}%)
                         </span>
                       </div>
                       <div className={`w-full h-3 rounded-full ${item.barBg} overflow-hidden`}>
@@ -334,7 +334,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
 
             {/* Health summary callout */}
             <div className="p-3 bg-blue-50/50 border border-blue-200/70 rounded-xl text-xs text-blue-900 mt-2 flex items-start gap-2.5">
-              <TrendingUp className="w-4 h-4 text-jira-blue flex-shrink-0 mt-0.5" />
+              <TrendingUp className="w-4 h-4 text-lira-blue flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold">Project Progress: </span>
                 {completionRate >= 75
@@ -348,8 +348,8 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3 border-t border-jira-border bg-gray-50 flex items-center justify-between text-xs flex-shrink-0">
-          <span className="text-jira-muted text-[11px]">
+        <div className="px-6 py-3 border-t border-lira-border bg-gray-50 flex items-center justify-between text-xs flex-shrink-0">
+          <span className="text-lira-muted text-[11px]">
             Aggregated from {totalIssues} issues in {space?.name || 'current space'}
           </span>
           <Button variant="primary" size="sm" onClick={onClose}>

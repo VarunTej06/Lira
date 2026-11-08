@@ -9,19 +9,19 @@ export function GeneralSection(s: SettingsState) {
           {activeSection === 'general' && (
             <div className="space-y-5">
               <div>
-                <h3 className="text-base font-bold text-jira-text">General Preferences</h3>
-                <p className="text-xs text-jira-muted mt-1">
+                <h3 className="text-base font-bold text-lira-text">General Preferences</h3>
+                <p className="text-xs text-lira-muted mt-1">
                   Manage display language, localized timezone, and workspace regional standards.
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-jira-muted uppercase mb-1">Display Language</label>
+                  <label className="block text-xs font-bold text-lira-muted uppercase mb-1">Display Language</label>
                   <select
                     value={language}
                     onChange={e => setLanguage(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-jira-border rounded-lg bg-white"
+                    className="w-full px-3 py-2 text-sm border border-lira-border rounded-lg bg-white"
                   >
                     <option value="en-US">English (United States)</option>
                     <option value="en-GB">English (United Kingdom)</option>
@@ -31,11 +31,11 @@ export function GeneralSection(s: SettingsState) {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-jira-muted uppercase mb-1">Time Zone</label>
+                  <label className="block text-xs font-bold text-lira-muted uppercase mb-1">Time Zone</label>
                   <select
                     value={timeZone}
                     onChange={e => setTimeZone(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-jira-border rounded-lg bg-white"
+                    className="w-full px-3 py-2 text-sm border border-lira-border rounded-lg bg-white"
                   >
                     <option value="Asia/Kolkata">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</option>
                     <option value="UTC">(GMT+00:00) Coordinated Universal Time</option>
@@ -52,11 +52,11 @@ export function GeneralSection(s: SettingsState) {
                 </div>
               )}
 
-              <div className="flex justify-end gap-2 border-t border-jira-border pt-4">
+              <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
                 <button
                   type="button"
                   onClick={handleSaveGeneral}
-                  className="px-5 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer"
+                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer"
                 >
                   Save General Settings
                 </button>

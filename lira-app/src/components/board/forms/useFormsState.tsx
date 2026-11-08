@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../common/dialogs';
 import React, { useState, useEffect } from 'react';
 import type { Space } from '../../../types/space';
 
@@ -33,7 +34,7 @@ export const DEFAULT_SAMPLE_FORMS: IntakeForm[] = [
     description: 'Standard issue intake for bug triage and repro steps.',
     createdAt: new Date().toISOString(),
     fields: [
-      { id: 'f-1', name: 'Issue Summary', type: 'text', required: true },
+      { id: 'f-1', name: 'Issue Title', type: 'text', required: true },
       { id: 'f-2', name: 'Steps to Reproduce', type: 'textarea', required: true },
       { id: 'f-3', name: 'Severity', type: 'select', options: ['Critical', 'Major', 'Minor', 'Cosmetic'], required: true },
       { id: 'f-4', name: 'Browser / Environment', type: 'text', required: false },
@@ -171,8 +172,8 @@ export function useFormsState(props: FormsModalProps) {
     setTimeout(() => setSuccessToast(null), 2000);
   };
 
-  const handleDeleteForm = (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this intake form?')) return;
+  const handleDeleteForm = async (id: string) => {
+    if (!(await confirmDialog({ title: 'Delete form', message: 'Delete this intake form?', confirmLabel: 'Delete form', tone: 'danger' }))) return;
     const updated = forms.filter(f => f.id !== id);
     saveFormsToStorage(updated);
     if (previewForm?.id === id) setPreviewForm(null);

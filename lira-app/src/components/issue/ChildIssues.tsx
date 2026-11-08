@@ -1,3 +1,4 @@
+import { TypeIcon, PriorityIcon } from '../common/Icons';
 import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import type { Issue, IssueType } from '../../types/issue';
@@ -64,9 +65,9 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({
   return (
     <div className="space-y-1">
       {childIssues.length > 0 && (
-        <div className="border border-jira-border rounded-lg overflow-hidden">
+        <div className="border border-lira-border rounded-lg overflow-hidden">
           {/* Table header */}
-          <div className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 px-3 py-1.5 bg-gray-50 border-b border-jira-border text-[11px] font-semibold text-jira-muted uppercase tracking-wide">
+          <div className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 px-3 py-1.5 bg-gray-50 border-b border-lira-border text-[11px] font-semibold text-lira-muted uppercase tracking-wide">
             <span>Work</span>
             <span className="w-16 text-center">Priority</span>
             <span className="w-8 text-center">User</span>
@@ -75,37 +76,36 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({
 
           {/* Rows */}
           {childIssues.map(child => {
-            const cfg = ISSUE_TYPE_CONFIG[child.type] ?? ISSUE_TYPE_CONFIG.task;
             const pCfg = PRIORITY_CONFIG[child.priority] ?? PRIORITY_CONFIG.medium;
             const sBadge = STATUS_BADGE[child.status] ?? STATUS_BADGE.todo;
 
             return (
               <div
                 key={child.id}
-                className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 px-3 py-2 border-b border-jira-border last:border-0 hover:bg-gray-50 transition-colors group"
+                className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 px-3 py-2 border-b border-lira-border last:border-0 hover:bg-gray-50 transition-colors group"
               >
                 {/* Work column */}
                 <button
                   onClick={() => onIssueClick(child)}
                   className="flex items-center gap-2 text-left min-w-0"
                 >
-                  <span className="flex-shrink-0 text-sm" style={{ color: cfg.color }}>{cfg.symbol}</span>
-                  <span className="text-xs font-mono text-jira-muted flex-shrink-0">{child.key}</span>
-                  <span className="text-sm text-jira-text group-hover:text-jira-blue transition-colors truncate">
+                  <TypeIcon type={child.type} className="w-4 h-4" />
+                  <span className="text-xs font-mono text-lira-muted flex-shrink-0">{child.key}</span>
+                  <span className="text-sm text-lira-text group-hover:text-lira-blue transition-colors truncate">
                     {child.title}
                   </span>
                 </button>
 
                 {/* Priority */}
                 <div className="w-16 text-center text-sm" title={pCfg.label}>
-                  {pCfg.icon}
+                  <span className="inline-flex justify-center"><PriorityIcon priority={child.priority} className="w-4 h-4" /></span>
                 </div>
 
                 {/* Assignee */}
                 <div className="w-8 flex justify-center">
                   {child.assigneeInitials
                     ? <Avatar initials={child.assigneeInitials} size="xs" />
-                    : <div className="w-5 h-5 rounded-full border-2 border-dashed border-jira-border" />
+                    : <div className="w-5 h-5 rounded-full border-2 border-dashed border-lira-border" />
                   }
                 </div>
 
@@ -137,18 +137,16 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({
             <select
               value={selectedChildType}
               onChange={e => setSelectedChildType(e.target.value as IssueType)}
-              className="text-xs border border-jira-border rounded-md px-1.5 py-1.5 bg-white text-jira-text font-medium outline-none focus:border-jira-blue cursor-pointer"
+              className="text-xs border border-lira-border rounded-md px-1.5 py-1.5 bg-white text-lira-text font-medium outline-none focus:border-lira-blue cursor-pointer"
             >
               {availableTypes.map(t => (
                 <option key={t} value={t}>
-                  {ISSUE_TYPE_CONFIG[t].symbol} {ISSUE_TYPE_CONFIG[t].label}
+                  {ISSUE_TYPE_CONFIG[t].label}
                 </option>
               ))}
             </select>
           ) : (
-            <span className="text-sm flex-shrink-0" style={{ color: ISSUE_TYPE_CONFIG[selectedChildType]?.color }}>
-              {ISSUE_TYPE_CONFIG[selectedChildType]?.symbol}
-            </span>
+            <span className="flex-shrink-0"><TypeIcon type={selectedChildType} className="w-4 h-4" /></span>
           )}
           <input
             autoFocus
@@ -160,23 +158,23 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({
             }}
             placeholder={`${ISSUE_TYPE_CONFIG[selectedChildType]?.label || 'Child issue'} title…`}
             disabled={creating}
-            className="flex-1 text-sm border border-jira-border rounded-md px-3 py-1.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue"
+            className="flex-1 text-sm border border-lira-border rounded-md px-3 py-1.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue"
           />
           <button
             onClick={handleCreate}
             disabled={creating || !addingTitle.trim()}
-            className="px-3 py-1.5 text-xs bg-jira-blue text-white rounded-md hover:bg-blue-700 disabled:opacity-50 font-medium"
+            className="px-3 py-1.5 text-xs bg-lira-blue text-white rounded-md hover:bg-blue-700 disabled:opacity-50 font-medium"
           >
             {creating ? '…' : 'Add'}
           </button>
-          <button onClick={() => { setShowAdd(false); setAddingTitle(''); }} className="text-xs text-jira-muted hover:text-jira-text px-2">
+          <button onClick={() => { setShowAdd(false); setAddingTitle(''); }} className="text-xs text-lira-muted hover:text-lira-text px-2">
             Cancel
           </button>
         </div>
       ) : (
         <button
           onClick={() => setShowAdd(true)}
-          className="flex items-center gap-1.5 text-xs text-jira-muted hover:text-jira-blue mt-1 py-1 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-lira-muted hover:text-lira-blue mt-1 py-1 transition-colors"
         >
           <Plus className="w-3.5 h-3.5" />
           Create child issue

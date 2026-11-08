@@ -9,7 +9,7 @@ export function ActiveFilterChips(s: FiltersState) {
         {/* Active Filters Removable Chips */}
         {activeFiltersCount > 0 && (
           <div className="flex items-center gap-1.5 flex-wrap mt-2.5 px-1">
-            <span className="text-[11px] text-jira-muted font-medium">Applied:</span>
+            <span className="text-[11px] text-lira-muted font-medium">Applied:</span>
 
             {isRecentOnly && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-200 rounded-md text-[11px] font-medium">
@@ -91,7 +91,7 @@ export function ActiveFilterChips(s: FiltersState) {
 
             <button
               onClick={clearAllFilters}
-              className="text-[11px] text-jira-blue hover:underline ml-1 cursor-pointer font-medium"
+              className="text-[11px] text-lira-blue hover:underline ml-1 cursor-pointer font-medium"
             >
               Clear all
             </button>

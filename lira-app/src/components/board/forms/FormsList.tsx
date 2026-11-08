@@ -11,8 +11,8 @@ export function FormsList(s: FormsState) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-jira-text">Space Intake Forms</h3>
-                  <p className="text-xs text-jira-muted">
+                  <h3 className="text-sm font-bold text-lira-text">Space Intake Forms</h3>
+                  <p className="text-xs text-lira-muted">
                     Custom forms for stakeholders and team members to submit tasks into {space?.name || 'this space'}.
                   </p>
                 </div>
@@ -28,10 +28,10 @@ export function FormsList(s: FormsState) {
               </div>
 
               {forms.length === 0 ? (
-                <div className="text-center py-12 border-2 border-dashed border-jira-border rounded-xl">
-                  <FileText className="w-8 h-8 text-jira-muted mx-auto mb-2 opacity-50" />
-                  <p className="text-sm font-semibold text-jira-text">No intake forms yet</p>
-                  <p className="text-xs text-jira-muted mt-1 max-w-sm mx-auto">
+                <div className="text-center py-12 border-2 border-dashed border-lira-border rounded-xl">
+                  <FileText className="w-8 h-8 text-lira-muted mx-auto mb-2 opacity-50" />
+                  <p className="text-sm font-semibold text-lira-text">No intake forms yet</p>
+                  <p className="text-xs text-lira-muted mt-1 max-w-sm mx-auto">
                     Create forms to capture bug reports, customer feedback, and feature requests.
                   </p>
                   <Button
@@ -48,21 +48,21 @@ export function FormsList(s: FormsState) {
                   {forms.map(form => (
                     <div
                       key={form.id}
-                      className="border border-jira-border rounded-xl p-4 hover:border-jira-blue/50 hover:shadow-xs transition-all bg-white flex flex-col justify-between group"
+                      className="border border-lira-border rounded-xl p-4 hover:border-lira-blue/50 hover:shadow-xs transition-all bg-white flex flex-col justify-between group"
                     >
                       <div>
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2">
-                            <span className="p-1.5 bg-blue-50 text-jira-blue rounded-lg">
+                            <span className="p-1.5 bg-blue-50 text-lira-blue rounded-lg">
                               <FileText className="w-4 h-4" />
                             </span>
-                            <h4 className="text-sm font-bold text-jira-text group-hover:text-jira-blue transition-colors">
+                            <h4 className="text-sm font-bold text-lira-text group-hover:text-lira-blue transition-colors">
                               {form.title}
                             </h4>
                           </div>
                           <button
                             onClick={() => handleDeleteForm(form.id)}
-                            className="p-1 text-jira-muted hover:text-red-600 rounded transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                            className="p-1 text-lira-muted hover:text-red-600 rounded transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                             title="Delete form"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -70,26 +70,26 @@ export function FormsList(s: FormsState) {
                         </div>
 
                         {form.description && (
-                          <p className="text-xs text-jira-muted mt-2 line-clamp-2">
+                          <p className="text-xs text-lira-muted mt-2 line-clamp-2">
                             {form.description}
                           </p>
                         )}
 
-                        <div className="flex items-center gap-2 mt-3 text-[11px] text-jira-muted">
-                          <span className="font-semibold text-jira-text">{form.fields.length}</span> fields
+                        <div className="flex items-center gap-2 mt-3 text-[11px] text-lira-muted">
+                          <span className="font-semibold text-lira-text">{form.fields.length}</span> fields
                           <span>•</span>
                           <span>{new Date(form.createdAt).toLocaleDateString()}</span>
                         </div>
                       </div>
 
-                      <div className="pt-4 border-t border-jira-border/60 mt-3 flex items-center justify-between">
+                      <div className="pt-4 border-t border-lira-border/60 mt-3 flex items-center justify-between">
                         <button
                           onClick={() => setPreviewForm(form)}
-                          className="text-xs font-semibold text-jira-blue hover:underline flex items-center gap-1 cursor-pointer"
+                          className="text-xs font-semibold text-lira-blue hover:underline flex items-center gap-1 cursor-pointer"
                         >
                           <Eye className="w-3.5 h-3.5" /> Preview Form
                         </button>
-                        <ChevronRight className="w-4 h-4 text-jira-muted group-hover:translate-x-0.5 transition-transform" />
+                        <ChevronRight className="w-4 h-4 text-lira-muted group-hover:translate-x-0.5 transition-transform" />
                       </div>
                     </div>
                   ))}

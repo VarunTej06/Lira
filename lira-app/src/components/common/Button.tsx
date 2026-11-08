@@ -9,11 +9,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANT_CLASSES = {
-  primary: 'bg-jira-blue text-white hover:bg-jira-blue-hover active:bg-blue-900 shadow-sm',
-  secondary: 'bg-white text-jira-text border border-jira-border hover:bg-gray-50 shadow-sm',
-  ghost: 'text-jira-text hover:bg-gray-100 active:bg-gray-200',
+  primary: 'bg-lira-blue text-white hover:bg-lira-blue-hover active:bg-blue-900 shadow-sm',
+  secondary: 'bg-white text-lira-text border border-lira-border hover:bg-gray-50 shadow-sm',
+  ghost: 'text-lira-text hover:bg-gray-100 active:bg-gray-200',
   danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
-  outline: 'border border-jira-blue text-jira-blue hover:bg-jira-blue-light',
+  outline: 'border border-lira-blue text-lira-blue hover:bg-lira-blue-light',
 };
 
 const SIZE_CLASSES = {
@@ -38,7 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
       className={`
         inline-flex items-center justify-center font-medium rounded-md
         transition-all duration-150 ease-out
-        focus:outline-none focus:ring-2 focus:ring-jira-blue focus:ring-offset-1
+        focus:outline-none focus:ring-2 focus:ring-lira-blue focus:ring-offset-1
         disabled:opacity-50 disabled:cursor-not-allowed
         ${VARIANT_CLASSES[variant]}
         ${SIZE_CLASSES[size]}

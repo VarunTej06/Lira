@@ -10,8 +10,8 @@ export function NotificationsSection(s: SettingsState) {
           {activeSection === 'notifications' && (
             <div className="space-y-5">
               <div>
-                <h3 className="text-base font-bold text-jira-text">Notification Channels</h3>
-                <p className="text-xs text-jira-muted mt-1">
+                <h3 className="text-base font-bold text-lira-text">Notification Channels</h3>
+                <p className="text-xs text-lira-muted mt-1">
                   Configure real-time audit notifications and alerts for ticket updates.
                 </p>
               </div>
@@ -37,17 +37,17 @@ export function NotificationsSection(s: SettingsState) {
                   <div
                     key={item.key}
                     onClick={() => setNotificationPrefs(p => ({ ...p, [item.key]: !p[item.key] }))}
-                    className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-blue-50/20 rounded-xl border border-jira-border cursor-pointer transition-colors"
+                    className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-blue-50/20 rounded-xl border border-lira-border cursor-pointer transition-colors"
                   >
                     <div>
-                      <h4 className="text-sm font-semibold text-jira-text">{item.title}</h4>
-                      <p className="text-xs text-jira-muted">{item.desc}</p>
+                      <h4 className="text-sm font-semibold text-lira-text">{item.title}</h4>
+                      <p className="text-xs text-lira-muted">{item.desc}</p>
                     </div>
                     <input
                       type="checkbox"
                       checked={notificationPrefs[item.key]}
                       onChange={() => {}}
-                      className="w-4 h-4 text-jira-blue rounded border-gray-300 pointer-events-none"
+                      className="w-4 h-4 text-lira-blue rounded border-gray-300 pointer-events-none"
                     />
                   </div>
                 ))}
@@ -60,11 +60,11 @@ export function NotificationsSection(s: SettingsState) {
                 </div>
               )}
 
-              <div className="flex justify-end gap-2 border-t border-jira-border pt-4">
+              <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
                 <button
                   type="button"
                   onClick={handleSaveNotifications}
-                  className="px-5 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer"
+                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer"
                 >
                   Save Changes
                 </button>

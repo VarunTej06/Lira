@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../common/dialogs';
 import { Trash2, CalendarClock } from 'lucide-react';
 import { RowMenuButton, ContextItem, SectionHeader, Collapsible } from './parts';
 import { canDeleteSprint, sprintLabel, sprintName, sprintPhase } from '../../../utils/sprintUtils';
@@ -61,7 +62,7 @@ export function SprintsSection(s: SidebarState) {
                           const msg = c.total > 0
                             ? `Delete the ${sprintName(k)}?\n\nIts ${c.total} ${c.total === 1 ? 'ticket moves' : 'tickets move'} to the current sprint (${c.done} done). Nothing else is deleted.`
                             : `Delete the ${sprintName(k)}? It has no tickets.`;
-                          if (window.confirm(msg)) onDeleteSprint?.(k);
+                          void confirmDialog({ title: 'Delete sprint', message: msg, confirmLabel: 'Delete sprint', tone: 'danger' }).then(ok => { if (ok) onDeleteSprint?.(k); });
                         }}
                       />
                     ) : (

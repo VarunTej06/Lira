@@ -136,19 +136,19 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   };
 
   return (
-    <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-jira-border bg-jira-surface" style={{ maxHeight: 'calc(100vh - 330px)', minHeight: 320 }}>
+    <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 330px)', minHeight: 320 }}>
       <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + MILESTONE_H + height }}>
         {/* ── Sticky header (corner + period cells) ── */}
         <div className="sticky top-0 z-30 flex" style={{ height: HEADER_H }}>
-          <div className="sticky left-0 z-40 bg-jira-surface border-b border-r border-jira-border flex items-end px-4 pb-2 text-[11px] font-semibold uppercase tracking-wider text-jira-muted" style={{ width: LABEL_W }}>
+          <div className="sticky left-0 z-40 bg-lira-surface border-b border-r border-lira-border flex items-end px-4 pb-2 text-[11px] font-semibold uppercase tracking-wider text-lira-muted" style={{ width: LABEL_W }}>
             Work item
           </div>
-          <div className="relative bg-jira-surface border-b border-jira-border" style={{ width }}>
+          <div className="relative bg-lira-surface border-b border-lira-border" style={{ width }}>
             {header.top.map((c, i) => (
-              <div key={i} className="absolute top-0 h-6 flex items-center px-2 text-[11px] font-semibold text-jira-text border-r border-jira-border/70 overflow-hidden whitespace-nowrap" style={{ left: c.x, width: c.width }}>{c.label}</div>
+              <div key={i} className="absolute top-0 h-6 flex items-center px-2 text-[11px] font-semibold text-lira-text border-r border-lira-border/70 overflow-hidden whitespace-nowrap" style={{ left: c.x, width: c.width }}>{c.label}</div>
             ))}
             {header.bottom.map((c, i) => (
-              <div key={i} className="absolute top-6 h-[26px] flex items-center px-2 text-[11px] text-jira-muted border-r border-t border-jira-border/60 overflow-hidden whitespace-nowrap" style={{ left: c.x, width: c.width }}>{c.label}</div>
+              <div key={i} className="absolute top-6 h-[26px] flex items-center px-2 text-[11px] text-lira-muted border-r border-t border-lira-border/60 overflow-hidden whitespace-nowrap" style={{ left: c.x, width: c.width }}>{c.label}</div>
             ))}
             <div className="absolute top-[28px] -translate-x-1/2 px-1.5 rounded bg-red-500 text-white text-[9px] font-bold z-10 leading-[14px]" style={{ left: todayX }}>TODAY</div>
           </div>
@@ -156,18 +156,18 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
 
         {/* ── Milestones row ── */}
         <div className="flex" style={{ height: MILESTONE_H }}>
-          <div className="sticky left-0 z-20 bg-jira-surface border-b border-r border-jira-border flex items-center gap-2 px-4 text-xs font-semibold text-jira-text" style={{ width: LABEL_W }}>
-            <Flag className="w-3.5 h-3.5 text-jira-blue" /> Milestones &amp; releases
+          <div className="sticky left-0 z-20 bg-lira-surface border-b border-r border-lira-border flex items-center gap-2 px-4 text-xs font-semibold text-lira-text" style={{ width: LABEL_W }}>
+            <Flag className="w-3.5 h-3.5 text-lira-blue" /> Milestones &amp; releases
           </div>
-          <div className="relative border-b border-jira-border" style={{ width }}>
+          <div className="relative border-b border-lira-border" style={{ width }}>
             {milestones.map(m => (
               <button key={m.id} onClick={() => onOpenMilestone(m.id)} className="absolute -translate-x-[6px] flex flex-col items-start cursor-pointer hover:opacity-80 transition-opacity" style={{ left: m.x, top: 4 + m.tier * 20 }} title={`${m.title} · ${fmtShort(m.date)}`}>
-                <div className="flex items-center gap-1 whitespace-nowrap text-[10px] font-medium text-jira-text">
+                <div className="flex items-center gap-1 whitespace-nowrap text-[10px] font-medium text-lira-text">
                   {m.kind === 'release'
                     ? <Flag className="w-3 h-3 text-emerald-500 fill-emerald-500/30" />
                     : <Diamond className="w-3 h-3 text-violet-500 fill-violet-500/40" />}
                   <span>{m.title}</span>
-                  <span className="text-jira-muted">{fmtShort(m.date)}</span>
+                  <span className="text-lira-muted">{fmtShort(m.date)}</span>
                 </div>
               </button>
             ))}
@@ -176,40 +176,40 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
 
         {/* ── Body: labels + canvas ── */}
         <div className="flex" style={{ height }}>
-          <div className="sticky left-0 z-20 bg-jira-surface border-r border-jira-border" style={{ width: LABEL_W }}>
+          <div className="sticky left-0 z-20 bg-lira-surface border-r border-lira-border" style={{ width: LABEL_W }}>
             {rows.map(r => r.kind === 'lane' ? (
               <button
                 key={`l-${r.lane}`}
                 onClick={() => onToggleLane(r.lane)}
-                className="w-full flex items-center gap-2 px-3 text-left bg-jira-bg/70 border-b border-jira-border/70 cursor-pointer hover:bg-jira-bg"
+                className="w-full flex items-center gap-2 px-3 text-left bg-lira-bg/70 border-b border-lira-border/70 cursor-pointer hover:bg-lira-bg"
                 style={{ height: r.h }}
               >
-                <ChevronDown className={`w-3.5 h-3.5 text-jira-muted transition-transform ${collapsedLanes.includes(r.lane) ? '-rotate-90' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 text-lira-muted transition-transform ${collapsedLanes.includes(r.lane) ? '-rotate-90' : ''}`} />
                 <span className="w-2.5 h-2.5 rounded-sm" style={{ background: laneColor(roadmap, r.lane) }} />
-                <span className="text-xs font-semibold text-jira-text truncate">{r.lane}</span>
-                <span className="ml-auto text-[10px] text-jira-muted bg-jira-surface border border-jira-border rounded-full px-1.5">{r.count}</span>
+                <span className="text-xs font-semibold text-lira-text truncate">{r.lane}</span>
+                <span className="ml-auto text-[10px] text-lira-muted bg-lira-surface border border-lira-border rounded-full px-1.5">{r.count}</span>
               </button>
             ) : (
               <button
                 key={r.item.id}
                 onClick={() => onOpenItem(r.item.id)}
-                className="w-full flex items-center gap-2 pl-8 pr-3 text-left border-b border-jira-border/50 cursor-pointer hover:bg-jira-bg/60"
+                className="w-full flex items-center gap-2 pl-8 pr-3 text-left border-b border-lira-border/50 cursor-pointer hover:bg-lira-bg/60"
                 style={{ height: r.h }}
                 title={r.item.title}
               >
                 <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: STATUS_META[resolveItem(r.item, issues, today).status].color }} />
-                <span className="text-xs text-jira-text truncate">{r.item.title}</span>
-                {r.item.owner && <span className="ml-auto text-[9px] font-bold text-white bg-jira-blue/80 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">{r.item.owner.slice(0, 2).toUpperCase()}</span>}
+                <span className="text-xs text-lira-text truncate">{r.item.title}</span>
+                {r.item.owner && <span className="ml-auto text-[9px] font-bold text-white bg-lira-blue/80 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">{r.item.owner.slice(0, 2).toUpperCase()}</span>}
               </button>
             ))}
           </div>
 
           <div className="relative" style={{ width, height }}>
             {/* period gridlines */}
-            {header.bottom.map((c, i) => <div key={i} className="absolute top-0 bottom-0 border-r border-jira-border/40" style={{ left: c.x + c.width - 1 }} />)}
+            {header.bottom.map((c, i) => <div key={i} className="absolute top-0 bottom-0 border-r border-lira-border/40" style={{ left: c.x + c.width - 1 }} />)}
             {/* weekend / lane bands */}
             {rows.map(r => r.kind === 'lane' ? (
-              <div key={`b-${r.lane}`} className="absolute left-0 right-0 bg-jira-bg/70 border-b border-jira-border/70" style={{ top: r.y, height: r.h }}>
+              <div key={`b-${r.lane}`} className="absolute left-0 right-0 bg-lira-bg/70 border-b border-lira-border/70" style={{ top: r.y, height: r.h }}>
                 {(() => {
                   const inLane = items.filter(i => i.lane === r.lane);
                   if (!inLane.length) return null;
@@ -219,7 +219,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                 })()}
               </div>
             ) : (
-              <div key={`r-${r.item.id}`} className="absolute left-0 right-0 border-b border-jira-border/40" style={{ top: r.y, height: r.h }} />
+              <div key={`r-${r.item.id}`} className="absolute left-0 right-0 border-b border-lira-border/40" style={{ top: r.y, height: r.h }} />
             ))}
 
             {/* milestone guide lines */}
@@ -258,14 +258,14 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                   title={`${it.title}\n${fmtShort(it.start)} → ${fmtShort(it.end)} · ${progress}%`}
                 >
                   <div className="absolute inset-y-0 left-0" style={{ width: `${progress}%`, background: color, opacity: 0.6, borderRadius: progress >= 100 ? 5 : '5px 0 0 5px' }} />
-                  <div className="relative h-full flex items-center px-2 text-[11px] font-medium whitespace-nowrap overflow-hidden text-jira-text">
+                  <div className="relative h-full flex items-center px-2 text-[11px] font-medium whitespace-nowrap overflow-hidden text-lira-text">
                     <span className="truncate">{w > 90 ? it.title : ''}</span>
                     {w > 150 && <span className="ml-auto pl-2 opacity-80">{progress}%</span>}
                   </div>
                   <div className="absolute inset-y-0 left-0 w-2 cursor-ew-resize opacity-0 group-hover:opacity-100 bg-white/40 rounded-l-md" onPointerDown={e => startDrag(e, it.id, 'start')} />
                   <div className="absolute inset-y-0 right-0 w-2 cursor-ew-resize opacity-0 group-hover:opacity-100 bg-white/40 rounded-r-md" onPointerDown={e => startDrag(e, it.id, 'end')} />
                   {w <= 90 && (
-                    <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 text-[11px] text-jira-text whitespace-nowrap pointer-events-none">{it.title}</span>
+                    <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 text-[11px] text-lira-text whitespace-nowrap pointer-events-none">{it.title}</span>
                   )}
                 </div>
               );

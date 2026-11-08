@@ -1,3 +1,4 @@
+import { TypeIcon } from '../common/Icons';
 import React, { useMemo, useState } from 'react';
 import { AlertTriangle, GripVertical, Minus, Plus, Search } from 'lucide-react';
 import type { Issue } from '../../types/issue';
@@ -87,13 +88,13 @@ export const SprintPlanning: React.FC<SprintPlanningProps> = ({ issues, spaces, 
         draggable={!closed}
         onDragStart={e => dragStart(e, i)}
         onClick={() => onIssueClick(i)}
-        className="group flex items-center gap-2 px-2.5 py-2 border border-jira-border bg-white rounded-lg hover:shadow-sm cursor-pointer"
+        className="group flex items-center gap-2 px-2.5 py-2 border border-lira-border bg-white rounded-lg hover:shadow-sm cursor-pointer"
         data-testid={`plan-${side}-${i.key}`}
       >
-        <GripVertical className="w-3.5 h-3.5 text-jira-muted flex-shrink-0 cursor-grab" aria-hidden />
-        <span title={type.label} className="text-sm flex-shrink-0">{type.symbol}</span>
-        <span className="text-[11px] font-medium text-jira-muted flex-shrink-0">{i.key}</span>
-        <span className="flex-1 min-w-0 text-sm text-jira-text truncate">{i.title}</span>
+        <GripVertical className="w-3.5 h-3.5 text-lira-muted flex-shrink-0 cursor-grab" aria-hidden />
+        <span title={type.label} className="flex-shrink-0"><TypeIcon type={i.type} className="w-4 h-4" /></span>
+        <span className="text-[11px] font-medium text-lira-muted flex-shrink-0">{i.key}</span>
+        <span className="flex-1 min-w-0 text-sm text-lira-text truncate">{i.title}</span>
         {scope === 'all' && space && (
           <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded text-white flex-shrink-0" style={{ backgroundColor: space.color }}>{space.key}</span>
         )}
@@ -109,7 +110,7 @@ export const SprintPlanning: React.FC<SprintPlanningProps> = ({ issues, spaces, 
         {!closed && (
           <button
             onClick={e => { e.stopPropagation(); void (side === 'backlog' ? add([i]) : remove([i])); }}
-            className="p-1 rounded-md border border-jira-border bg-white hover:bg-gray-50 cursor-pointer flex-shrink-0"
+            className="p-1 rounded-md border border-lira-border bg-white hover:bg-gray-50 cursor-pointer flex-shrink-0"
             aria-label={side === 'backlog' ? `Add ${i.key} to sprint` : `Move ${i.key} out of sprint`}
             title={side === 'backlog' ? 'Add to this sprint' : `Move to ${sprintName(out)}`}
           >
@@ -125,13 +126,13 @@ export const SprintPlanning: React.FC<SprintPlanningProps> = ({ issues, spaces, 
   return (
     <div className="space-y-3">
       {/* Capacity */}
-      <div className="bg-white border border-jira-border rounded-xl p-4 space-y-2">
+      <div className="bg-white border border-lira-border rounded-xl p-4 space-y-2">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           <div>
-            <div className="text-[11px] uppercase tracking-wide text-jira-muted font-semibold">Committed</div>
-            <div className="text-lg font-semibold text-jira-text" data-testid="plan-points">{stats.points} <span className="text-xs font-normal text-jira-muted">points · {stats.total} tickets</span></div>
+            <div className="text-[11px] uppercase tracking-wide text-lira-muted font-semibold">Committed</div>
+            <div className="text-lg font-semibold text-lira-text" data-testid="plan-points">{stats.points} <span className="text-xs font-normal text-lira-muted">points · {stats.total} tickets</span></div>
           </div>
-          <label className="text-xs text-jira-muted flex items-center gap-2">
+          <label className="text-xs text-lira-muted flex items-center gap-2">
             Team capacity
             <input
               type="number"
@@ -144,13 +145,13 @@ export const SprintPlanning: React.FC<SprintPlanningProps> = ({ issues, spaces, 
                 setSprintMeta(scope, sprint, { capacity: v });
                 bump(n => n + 1);
               }}
-              className="w-20 text-sm border border-jira-border rounded-lg px-2 py-1 bg-white text-jira-text focus:outline-none focus:border-jira-blue"
+              className="w-20 text-sm border border-lira-border rounded-lg px-2 py-1 bg-white text-lira-text focus:outline-none focus:border-lira-blue"
             />
           </label>
           {capacity === undefined && suggestion !== null && (
             <button
               onClick={() => { setSprintMeta(scope, sprint, { capacity: suggestion }); bump(n => n + 1); }}
-              className="text-xs text-jira-blue hover:underline cursor-pointer"
+              className="text-xs text-lira-blue hover:underline cursor-pointer"
             >
               Use {suggestion} (average of the last closed sprints)
             </button>
@@ -170,51 +171,51 @@ export const SprintPlanning: React.FC<SprintPlanningProps> = ({ issues, spaces, 
         {unestimated > 0 && (
           <p className="text-[11px] text-amber-700">{unestimated} ticket{unestimated === 1 ? ' has' : 's have'} no story points, so the total may be understated.</p>
         )}
-        {closed && <p className="text-[11px] text-jira-muted">This sprint is closed. Planning is read-only.</p>}
+        {closed && <p className="text-[11px] text-lira-muted">This sprint is closed. Planning is read-only.</p>}
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
         {/* Backlog */}
         <section
           onDragOver={allow('backlog')} onDragLeave={() => setOver(null)} onDrop={e => drop(e, 'backlog')}
-          className={`rounded-xl border p-3 space-y-2 min-h-[240px] transition-colors ${over === 'backlog' ? 'border-jira-blue bg-jira-blue-light' : 'border-jira-border bg-gray-50'}`}
+          className={`rounded-xl border p-3 space-y-2 min-h-[240px] transition-colors ${over === 'backlog' ? 'border-lira-blue bg-lira-blue-light' : 'border-lira-border bg-gray-50'}`}
           aria-label="Backlog"
         >
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-jira-text">Backlog</h3>
-            <span className="text-xs text-jira-muted">{backlog.length}</span>
+            <h3 className="text-sm font-semibold text-lira-text">Backlog</h3>
+            <span className="text-xs text-lira-muted">{backlog.length}</span>
             <div className="ml-auto relative">
-              <Search className="w-3.5 h-3.5 text-jira-muted absolute left-2 top-1/2 -translate-y-1/2" aria-hidden />
+              <Search className="w-3.5 h-3.5 text-lira-muted absolute left-2 top-1/2 -translate-y-1/2" aria-hidden />
               <input
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="Search"
                 aria-label="Search the backlog"
-                className="text-xs border border-jira-border rounded-lg pl-7 pr-2 py-1 w-40 bg-white focus:outline-none focus:border-jira-blue"
+                className="text-xs border border-lira-border rounded-lg pl-7 pr-2 py-1 w-40 bg-white focus:outline-none focus:border-lira-blue"
               />
             </div>
           </div>
-          <p className="text-[11px] text-jira-muted">Open tickets that are not in this sprint. Drag them right, or use +.</p>
+          <p className="text-[11px] text-lira-muted">Open tickets that are not in this sprint. Drag them right, or use +.</p>
           <div className="space-y-1.5 max-h-[520px] overflow-y-auto pr-0.5">
             {backlog.map(i => card(i, 'backlog'))}
-            {backlog.length === 0 && <p className="text-xs text-jira-muted text-center py-8">{query ? 'No tickets match.' : 'Nothing left to plan.'}</p>}
+            {backlog.length === 0 && <p className="text-xs text-lira-muted text-center py-8">{query ? 'No tickets match.' : 'Nothing left to plan.'}</p>}
           </div>
         </section>
 
         {/* Sprint */}
         <section
           onDragOver={allow('sprint')} onDragLeave={() => setOver(null)} onDrop={e => drop(e, 'sprint')}
-          className={`rounded-xl border p-3 space-y-2 min-h-[240px] transition-colors ${over === 'sprint' ? 'border-jira-blue bg-jira-blue-light' : 'border-jira-border bg-gray-50'}`}
+          className={`rounded-xl border p-3 space-y-2 min-h-[240px] transition-colors ${over === 'sprint' ? 'border-lira-blue bg-lira-blue-light' : 'border-lira-border bg-gray-50'}`}
           aria-label="Sprint"
         >
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-jira-text">{sprintName(sprint)}</h3>
-            <span className="text-xs text-jira-muted">{inSprint.length}</span>
+            <h3 className="text-sm font-semibold text-lira-text">{sprintName(sprint)}</h3>
+            <span className="text-xs text-lira-muted">{inSprint.length}</span>
           </div>
-          <p className="text-[11px] text-jira-muted">Drag a ticket back to the backlog to move it to {sprintName(out)}.</p>
+          <p className="text-[11px] text-lira-muted">Drag a ticket back to the backlog to move it to {sprintName(out)}.</p>
           <div className="space-y-1.5 max-h-[520px] overflow-y-auto pr-0.5">
             {inSprint.map(i => card(i, 'sprint'))}
-            {inSprint.length === 0 && <p className="text-xs text-jira-muted text-center py-8">Empty. Drag tickets here from the backlog.</p>}
+            {inSprint.length === 0 && <p className="text-xs text-lira-muted text-center py-8">Empty. Drag tickets here from the backlog.</p>}
           </div>
         </section>
       </div>

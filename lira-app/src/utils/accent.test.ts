@@ -42,10 +42,10 @@ describe('accent colours', () => {
 
   it('writes overrides for both themes', () => {
     const css = accentCss('#059669')
-    expect(css).toContain(':root{--jira-blue:5 150 105;')
-    expect(css).toContain('.dark{--jira-blue:')
-    expect(css).toContain('--jira-blue-hover')
-    expect(css).toContain('--jira-blue-light')
+    expect(css).toContain(':root{--lira-blue:5 150 105;')
+    expect(css).toContain('.dark{--lira-blue:')
+    expect(css).toContain('--lira-blue-hover')
+    expect(css).toContain('--lira-blue-light')
   })
 
   it('applies, replaces and removes the page style', () => {

@@ -230,6 +230,17 @@ Tests (294) cover the sprint logic and reports, standup and invite builders, AI 
 
 ---
 
+## 11b. Editing, saving and dialogs
+
+- **The ticket popup is a draft.** Edit anything, then press **Save changes**: the ticket is saved and the popup closes. Closing (X, outside click, Escape) with unsaved changes asks "Discard changes?". Comments and new child tickets have their own buttons and are saved at once.
+- **Settings pages** (Appearance, Profile, General, Notifications) save with their **Save** button and close. The theme and the accent colour only change when you press Save, in all three places they can be set.
+- **Dialogs:** confirm, prompt and alert boxes are Lira's own (`components/common/dialogs.tsx`: `confirmDialog`, `promptDialog`, `alertDialog`). Do not use `window.confirm`, `window.prompt` or `alert`.
+- **Dates:** use `components/common/DatePicker.tsx`, not `<input type="date">`.
+- **Descriptions** use the rich text editor (`components/common/richtext/`). They are stored as HTML written by the editor; Markdown from older tickets is converted when opened. Code that needs the text (search, Viva, suggestions) uses `descriptionToText` from `utils/richText.ts`.
+- **Icons, not emojis:** ticket types and priorities use `TypeIcon` and `PriorityIcon` (`components/common/Icons.tsx`). The only emojis in Lira are the icons chosen for spaces.
+
+---
+
 ## 12. Animations
 
 Motion uses `framer-motion`, set up in one file: `src/components/common/motion.tsx` (springs, dialog / menu / toast animations, count-up numbers, growing bars). Confetti is in `components/common/Confetti.tsx`; call `celebrate()` from `utils/celebrate.ts` to trigger it (it fires when a ticket reaches Done and when a sprint is closed). Use those pieces for anything new so it feels the same everywhere. People who ask their system for reduced motion get no movement, no count-up and no confetti.

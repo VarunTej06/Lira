@@ -30,7 +30,7 @@ export const dialogBackdrop = {
 export const dialogPanel = {
   initial: { opacity: 0, y: 28, scale: 0.96 },
   animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: 16, scale: 0.97 },
+  exit: { opacity: 0, y: 12, scale: 0.98, transition: { duration: 0.14, ease: 'easeIn' as const } }, // closing is quick
   transition: pop,
 };
 
@@ -38,7 +38,7 @@ export const dialogPanel = {
 export const menuPop = {
   initial: { opacity: 0, scale: 0.92, y: -6 },
   animate: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: -4 },
+  exit: { opacity: 0, scale: 0.96, y: -4, transition: { duration: 0.1, ease: 'easeIn' as const } },
   transition: { type: 'spring' as const, stiffness: 600, damping: 32 },
 };
 

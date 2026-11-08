@@ -1,7 +1,7 @@
+import { TypeIcon, PriorityLabel } from '../../common/Icons';
 import { Filter, ArrowUpDown } from 'lucide-react';
 import type {  } from '../../../types/space';
 import { Avatar } from '../../common/Avatar';
-import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
 import type { FiltersState } from './useFiltersState';
 
 /** The matching tickets. */
@@ -11,11 +11,11 @@ export function ResultsTable(s: FiltersState) {
     <>
       {/* ── Main Results Table ── */}
       <div className="flex-1 overflow-y-auto px-6 pb-6">
-        <div className="bg-white border border-jira-border rounded-xl shadow-xs overflow-hidden">
+        <div className="bg-white border border-lira-border rounded-xl shadow-xs overflow-hidden">
           {/* Table Header Bar */}
-          <div className="bg-gray-50 border-b border-jira-border px-4 py-2.5 flex items-center justify-between text-xs font-semibold text-jira-muted">
+          <div className="bg-gray-50 border-b border-lira-border px-4 py-2.5 flex items-center justify-between text-xs font-semibold text-lira-muted">
             <span>
-              Showing <strong className="text-jira-text">{filteredIssues.length}</strong> of{' '}
+              Showing <strong className="text-lira-text">{filteredIssues.length}</strong> of{' '}
               {issues.length} work items
             </span>
             <span className="text-gray-400">Click any ticket to open details</span>
@@ -23,14 +23,14 @@ export function ResultsTable(s: FiltersState) {
 
           {filteredIssues.length === 0 ? (
             <div className="text-center py-16 px-4">
-              <Filter className="w-8 h-8 text-jira-muted mx-auto mb-2 opacity-50" />
-              <p className="text-sm font-semibold text-jira-text">No work items matched your filters</p>
-              <p className="text-xs text-jira-muted mt-1 max-w-sm mx-auto">
+              <Filter className="w-8 h-8 text-lira-muted mx-auto mb-2 opacity-50" />
+              <p className="text-sm font-semibold text-lira-text">No work items matched your filters</p>
+              <p className="text-xs text-lira-muted mt-1 max-w-sm mx-auto">
                 Try widening your search terms or clearing some of your status, priority, or space filters.
               </p>
               <button
                 onClick={clearAllFilters}
-                className="mt-4 px-4 py-2 bg-jira-blue text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
+                className="mt-4 px-4 py-2 bg-lira-blue text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 Reset all filters
               </button>
@@ -39,11 +39,11 @@ export function ResultsTable(s: FiltersState) {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-jira-border bg-gray-50/60 text-jira-muted uppercase tracking-wider text-[10px]">
+                  <tr className="border-b border-lira-border bg-gray-50/60 text-lira-muted uppercase tracking-wider text-[10px]">
                     <th className="py-2.5 px-4 w-12">Type</th>
                     <th
                       onClick={() => toggleSort('key')}
-                      className="py-2.5 px-4 w-28 cursor-pointer hover:text-jira-text"
+                      className="py-2.5 px-4 w-28 cursor-pointer hover:text-lira-text"
                     >
                       <span className="flex items-center gap-1">
                         Key <ArrowUpDown className="w-3 h-3" />
@@ -51,7 +51,7 @@ export function ResultsTable(s: FiltersState) {
                     </th>
                     <th
                       onClick={() => toggleSort('title')}
-                      className="py-2.5 px-4 cursor-pointer hover:text-jira-text"
+                      className="py-2.5 px-4 cursor-pointer hover:text-lira-text"
                     >
                       <span className="flex items-center gap-1">
                         Summary <ArrowUpDown className="w-3 h-3" />
@@ -60,7 +60,7 @@ export function ResultsTable(s: FiltersState) {
                     <th className="py-2.5 px-4 w-36">Space</th>
                     <th
                       onClick={() => toggleSort('status')}
-                      className="py-2.5 px-4 w-28 cursor-pointer hover:text-jira-text"
+                      className="py-2.5 px-4 w-28 cursor-pointer hover:text-lira-text"
                     >
                       <span className="flex items-center gap-1">
                         Status <ArrowUpDown className="w-3 h-3" />
@@ -68,7 +68,7 @@ export function ResultsTable(s: FiltersState) {
                     </th>
                     <th
                       onClick={() => toggleSort('priority')}
-                      className="py-2.5 px-4 w-24 cursor-pointer hover:text-jira-text"
+                      className="py-2.5 px-4 w-24 cursor-pointer hover:text-lira-text"
                     >
                       <span className="flex items-center gap-1">
                         Priority <ArrowUpDown className="w-3 h-3" />
@@ -77,7 +77,7 @@ export function ResultsTable(s: FiltersState) {
                     <th className="py-2.5 px-4 w-28">Assignee</th>
                     <th
                       onClick={() => toggleSort('updatedAt')}
-                      className="py-2.5 px-4 w-28 cursor-pointer hover:text-jira-text text-right"
+                      className="py-2.5 px-4 w-28 cursor-pointer hover:text-lira-text text-right"
                     >
                       <span className="flex items-center justify-end gap-1">
                         Updated <ArrowUpDown className="w-3 h-3" />
@@ -88,7 +88,6 @@ export function ResultsTable(s: FiltersState) {
                 <tbody className="divide-y divide-gray-100">
                   {filteredIssues.map(issue => {
                     const space = spaceMap[issue.spaceId];
-                    const typeConfig = ISSUE_TYPE_CONFIG[issue.type] || { symbol: '📋', label: issue.type };
 
                     return (
                       <tr
@@ -97,13 +96,13 @@ export function ResultsTable(s: FiltersState) {
                         className="hover:bg-blue-50/40 transition-colors cursor-pointer group"
                       >
                         <td className="py-3 px-4 text-center font-bold text-sm">
-                          {typeConfig.symbol}
+                          <span className="inline-flex"><TypeIcon type={issue.type} className="w-4 h-4" /></span>
                         </td>
-                        <td className="py-3 px-4 font-mono font-semibold text-jira-blue group-hover:underline">
+                        <td className="py-3 px-4 font-mono font-semibold text-lira-blue group-hover:underline">
                           {issue.key}
                         </td>
                         <td className="py-3 px-4">
-                          <div className="font-medium text-jira-text leading-snug group-hover:text-jira-blue transition-colors">
+                          <div className="font-medium text-lira-text leading-snug group-hover:text-lira-blue transition-colors">
                             {issue.title}
                           </div>
                           {issue.labels && issue.labels.length > 0 && (
@@ -160,11 +159,7 @@ export function ResultsTable(s: FiltersState) {
                           </span>
                         </td>
                         <td className="py-3 px-4 capitalize font-medium text-gray-600">
-                          {issue.priority === 'highest' && '🔴 Highest'}
-                          {issue.priority === 'high' && '🟠 High'}
-                          {issue.priority === 'medium' && '🟡 Medium'}
-                          {issue.priority === 'low' && '🟢 Low'}
-                          {issue.priority === 'lowest' && '⚪ Lowest'}
+                          <PriorityLabel priority={issue.priority} />
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex items-center gap-1.5">
@@ -173,7 +168,7 @@ export function ResultsTable(s: FiltersState) {
                               size="xs"
                               color={issue.assigneeInitials === 'VY' ? '#0052CC' : '#6B778C'}
                             />
-                            <span className="truncate max-w-[80px] text-jira-text font-medium">
+                            <span className="truncate max-w-[80px] text-lira-text font-medium">
                               {issue.assignee || 'Unassigned'}
                             </span>
                           </div>

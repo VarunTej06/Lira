@@ -105,8 +105,21 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
   const [openMenuKey, setOpenMenuKey] = useState<string | null>(null);
   const [draggedKey, setDraggedKey] = useState<string | null>(null);
 
+  // An open "..." menu closes on a click anywhere else (or Escape), not only on its own button
+  useEffect(() => {
+    if (!openMenuKey) return;
+    const away = (e: MouseEvent) => {
+      const holder = (e.target as Element | null)?.closest?.('[data-sidebar-menu]');
+      if (holder?.getAttribute('data-sidebar-menu') !== openMenuKey) setOpenMenuKey(null);
+    };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); setOpenMenuKey(null); } };
+    document.addEventListener('mousedown', away, true);
+    document.addEventListener('keydown', esc, true);
+    return () => { document.removeEventListener('mousedown', away, true); document.removeEventListener('keydown', esc, true); };
+  }, [openMenuKey]);
+
   const toggleVisibility = (key: string) => {
-    if (key === 'forYou') return; // locked, like Jira
+    if (key === 'forYou') return; // locked: it is always shown
     setVisibility(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
@@ -163,7 +176,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
               onDragEnd={() => setDraggedKey(null)}
               className={`group relative flex items-center justify-between p-2 rounded-lg transition-colors border ${
                 isVisible ? 'bg-blue-50/20 border-blue-100 hover:bg-blue-50/40' : 'bg-white border-transparent hover:bg-gray-50'
-              } ${draggedKey === key ? 'opacity-50 ring-2 ring-jira-blue' : ''}`}
+              } ${draggedKey === key ? 'opacity-50 ring-2 ring-lira-blue' : ''}`}
             >
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
                 {item.locked ? (
@@ -172,14 +185,14 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
                   </div>
                 ) : (
                   <div className="flex items-center gap-0.5 text-gray-400">
-                    <div className="cursor-grab active:cursor-grabbing p-0.5 hover:text-jira-blue" title="Drag to reorder">
+                    <div className="cursor-grab active:cursor-grabbing p-0.5 hover:text-lira-blue" title="Drag to reorder">
                       <GripVertical className="w-3.5 h-3.5" />
                     </div>
                     <div className="flex flex-col">
-                      <button type="button" onClick={() => moveItem(section, idx, idx - 1)} disabled={!canUp} className="p-0.2 hover:text-jira-blue disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed" title="Move up">
+                      <button type="button" onClick={() => moveItem(section, idx, idx - 1)} disabled={!canUp} className="p-0.2 hover:text-lira-blue disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed" title="Move up">
                         <ChevronUp className="w-3 h-3" />
                       </button>
-                      <button type="button" onClick={() => moveItem(section, idx, idx + 1)} disabled={!canDown} className="p-0.2 hover:text-jira-blue disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed" title="Move down">
+                      <button type="button" onClick={() => moveItem(section, idx, idx + 1)} disabled={!canDown} className="p-0.2 hover:text-lira-blue disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed" title="Move down">
                         <ChevronDown className="w-3 h-3" />
                       </button>
                     </div>
@@ -191,25 +204,25 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
                   checked={isVisible}
                   disabled={item.locked}
                   onChange={() => toggleVisibility(key)}
-                  className="w-4 h-4 text-jira-blue rounded border-gray-300 focus:ring-jira-blue cursor-pointer disabled:opacity-50"
+                  className="w-4 h-4 text-lira-blue rounded border-gray-300 focus:ring-lira-blue cursor-pointer disabled:opacity-50"
                 />
                 <span className="flex-shrink-0">{item.icon}</span>
-                <span className={`text-xs font-medium truncate ${isVisible ? 'text-jira-text' : 'text-jira-muted'}`}>{item.label}</span>
+                <span className={`text-xs font-medium truncate ${isVisible ? 'text-lira-text' : 'text-lira-muted'}`}>{item.label}</span>
               </div>
 
               {!item.locked && (
-                <div className="relative">
+                <div className="relative" data-sidebar-menu={key}>
                   <button
                     type="button"
                     onClick={() => setOpenMenuKey(openMenuKey === key ? null : key)}
-                    className="p-1 rounded text-gray-400 hover:text-jira-text hover:bg-gray-100 transition-colors cursor-pointer"
+                    className="p-1 rounded text-gray-400 hover:text-lira-text hover:bg-gray-100 transition-colors cursor-pointer"
                     title="More options"
                   >
                     <MoreHorizontal className="w-4 h-4" />
                   </button>
 
                   {openMenuKey === key && (
-                    <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-jira-border rounded-lg shadow-xl py-1 z-50 text-xs text-jira-text animate-scale-in" onClick={(e) => e.stopPropagation()}>
+                    <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-lira-border rounded-lg shadow-xl py-1 z-50 text-xs text-lira-text animate-scale-in" onClick={(e) => e.stopPropagation()}>
                       <button type="button" onClick={() => moveItem(section, idx, idx - 1)} disabled={!canUp} className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-gray-50 text-left disabled:opacity-40 cursor-pointer">
                         <ArrowUp className="w-3.5 h-3.5" /> Move up
                       </button>
@@ -240,8 +253,8 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Customise your sidebar" size="md">
-      <div className="p-6 space-y-5 text-jira-text max-h-[82vh] overflow-y-auto">
-        <p className="text-xs text-jira-muted leading-relaxed">
+      <div className="p-6 space-y-5 text-lira-text max-h-[82vh] overflow-y-auto">
+        <p className="text-xs text-lira-muted leading-relaxed">
           Selected items will always be visible in the sidebar. Drag items, or use the arrows, to change their order.
           <br />
           The changes you make here only affect you and not anyone else on your site.
@@ -250,35 +263,35 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
         {/* 1. Navigation */}
         <div>
           <div className="flex items-center justify-between mb-1">
-            <h3 className="text-sm font-bold text-jira-text">Navigation</h3>
-            <span className="text-[11px] text-jira-muted">Reorder &amp; toggle visibility</span>
+            <h3 className="text-sm font-bold text-lira-text">Navigation</h3>
+            <span className="text-[11px] text-lira-muted">Reorder &amp; toggle visibility</span>
           </div>
-          <p className="text-xs text-jira-muted mb-3">Pages shown at the top of the sidebar.</p>
+          <p className="text-xs text-lira-muted mb-3">Pages shown at the top of the sidebar.</p>
           {renderList('nav', navOrder, NAV_ITEMS)}
         </div>
 
         {/* 2. Sections */}
-        <div className="border-t border-jira-border pt-4">
+        <div className="border-t border-lira-border pt-4">
           <div className="flex items-center justify-between mb-1">
-            <h3 className="text-sm font-bold text-jira-text">Sections</h3>
-            <span className="text-[11px] text-jira-muted">Reorder &amp; toggle visibility</span>
+            <h3 className="text-sm font-bold text-lira-text">Sections</h3>
+            <span className="text-[11px] text-lira-muted">Reorder &amp; toggle visibility</span>
           </div>
-          <p className="text-xs text-jira-muted mb-3">Expandable lists below the navigation.</p>
+          <p className="text-xs text-lira-muted mb-3">Expandable lists below the navigation.</p>
           {renderList('sections', sectionOrder, SECTION_ITEMS)}
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between border-t border-jira-border pt-4">
-          <button type="button" onClick={handleResetDefaults} className="flex items-center gap-1.5 text-xs text-jira-muted hover:text-jira-text font-medium px-2 py-1.5 rounded hover:bg-gray-100 transition-colors cursor-pointer">
+        <div className="flex items-center justify-between border-t border-lira-border pt-4">
+          <button type="button" onClick={handleResetDefaults} className="flex items-center gap-1.5 text-xs text-lira-muted hover:text-lira-text font-medium px-2 py-1.5 rounded hover:bg-gray-100 transition-colors cursor-pointer">
             <RotateCcw className="w-3.5 h-3.5" />
             Reset to default
           </button>
 
           <div className="flex items-center gap-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-jira-muted hover:text-jira-text rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
+            <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
               Cancel
             </button>
-            <button type="button" onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer">
+            <button type="button" onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer">
               Save changes
             </button>
           </div>

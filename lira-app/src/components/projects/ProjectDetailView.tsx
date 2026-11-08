@@ -21,7 +21,7 @@ export const ProjectDetailView: React.FC<ProjectDetailViewProps> = (props) => {
   const { projectIssues } = data;
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-jira-bg font-sans">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-lira-bg font-sans">
       <ProjectHeader {...ctx} />
 
       {/* ── Main Tab Contents ── */}

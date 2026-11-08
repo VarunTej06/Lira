@@ -78,7 +78,7 @@ export async function processUserMessage(
     return {
       id: uuidv4(),
       sender: 'assistant',
-      text: `ℹ️ **Viva AI (Read-Only Mode)**\n\nI am the lightweight search & information assistant. I have full read access across all spaces to answer questions, search tickets, and generate status reports, but I cannot modify tickets or database records.\n\nTo execute **"${refinedGoal.optimizedGoal}"**, please use the **Lira Autonomous Agent**!`,
+      text: `**Viva AI (Read-Only Mode)**\n\nI am the lightweight search & information assistant. I have full read access across all spaces to answer questions, search tickets, and generate status reports, but I cannot modify tickets or database records.\n\nTo execute **"${refinedGoal.optimizedGoal}"**, please use the **Lira Autonomous Agent**!`,
       timestamp: now,
       refinedPrompt: refinedMetadata,
       actionTaken: {
@@ -115,7 +115,7 @@ export async function processUserMessage(
     return {
       id: uuidv4(),
       sender: 'assistant',
-      text: `👋 I am **Viva AI (Read-Only Assistant)**.\n\nI have active search & analytics visibility into **all ${allSpaces.length} spaces** and **${allIssues.length} tickets**. You can ask me naturally to fetch information:\n\n- *"Show all spaces with number of tickets in each To do, Backlog, In Progress and Done"*\n- *"What tasks are in Atmos?"*\n- *"Tell me about AP-7"*\n- *"What is in progress across all spaces?"*\n- *"Show all Epics across spaces"*\n- *"Search for docker"*\n\n*(To execute write tasks like creating or moving tickets, use the Viva AI Agent in the top bar!)*`,
+      text: `I am **Viva AI (Read-Only Assistant)**.\n\nI have active search & analytics visibility into **all ${allSpaces.length} spaces** and **${allIssues.length} tickets**. You can ask me naturally to fetch information:\n\n- *"Show all spaces with number of tickets in each To do, Backlog, In Progress and Done"*\n- *"What tasks are in Atmos?"*\n- *"Tell me about AP-7"*\n- *"What is in progress across all spaces?"*\n- *"Show all Epics across spaces"*\n- *"Search for docker"*\n\n*(To execute write tasks like creating or moving tickets, use the Viva AI Agent in the top bar!)*`,
       timestamp: now,
       refinedPrompt: refinedMetadata,
       suggestedActions: [
@@ -130,7 +130,7 @@ export async function processUserMessage(
   return {
     id: uuidv4(),
     sender: 'assistant',
-    text: `👋 I am **Viva AI Autonomous Agent**.\n\nI have full autonomous read and write visibility across **all ${allSpaces.length} spaces** and **${allIssues.length} tickets**. You can command or ask me naturally:\n\n- *"Move AP-10 to in progress"*\n- *"Create task 'Configure Helm' in Atmos"*\n- *"Break down AP-10 into subtasks"*\n- *"Show status breakdown of all spaces"*\n- *"Tell me about AP-7"*`,
+    text: `I am **Viva AI Autonomous Agent**.\n\nI have full autonomous read and write visibility across **all ${allSpaces.length} spaces** and **${allIssues.length} tickets**. You can command or ask me naturally:\n\n- *"Move AP-10 to in progress"*\n- *"Create task 'Configure Helm' in Atmos"*\n- *"Break down AP-10 into subtasks"*\n- *"Show status breakdown of all spaces"*\n- *"Tell me about AP-7"*`,
     timestamp: now,
     refinedPrompt: refinedMetadata,
     suggestedActions: [

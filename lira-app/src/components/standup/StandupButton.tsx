@@ -23,11 +23,11 @@ export const StandupButton: React.FC<StandupButtonProps> = ({ scope, className =
         title={`${CALL_TITLE[scope.type]} — agenda, schedule & invite the team`}
         className={`flex items-center gap-2 rounded-xl transition-all cursor-pointer ${
           prominent
-            ? 'px-4 py-2.5 text-sm font-semibold text-white bg-jira-blue border border-jira-blue shadow-[0_4px_14px_rgba(38,132,255,0.35)] hover:bg-jira-blue-hover hover:-translate-y-px'
-            : 'px-3 py-1.5 text-xs font-medium text-jira-text border border-jira-border hover:bg-gray-50 hover:border-jira-blue'
+            ? 'px-4 py-2.5 text-sm font-semibold text-white bg-lira-blue border border-lira-blue shadow-[0_4px_14px_rgba(38,132,255,0.35)] hover:bg-lira-blue-hover hover:-translate-y-px'
+            : 'px-3 py-1.5 text-xs font-medium text-lira-text border border-lira-border hover:bg-gray-50 hover:border-lira-blue'
         } ${className}`}
       >
-        <Video className={prominent ? 'w-4 h-4' : 'w-3.5 h-3.5 text-jira-blue'} />
+        <Video className={prominent ? 'w-4 h-4' : 'w-3.5 h-3.5 text-lira-blue'} />
         {!compact && (prominent ? `Schedule ${CALL_SHORT[scope.type].toLowerCase()}` : CALL_SHORT[scope.type])}
         <span className={`text-[9px] font-bold uppercase px-1 py-px rounded ${prominent ? 'bg-white/25 text-white' : 'bg-purple-100 text-purple-700'}`}>Beta</span>
       </button>

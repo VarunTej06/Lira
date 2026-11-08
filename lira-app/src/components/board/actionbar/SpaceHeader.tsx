@@ -21,7 +21,7 @@ export function SpaceHeader(s: ActionBarState) {
           )}
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold text-jira-text leading-tight">
+              <h1 className="text-lg font-bold text-lira-text leading-tight">
                 {space?.name || 'Select a space'}
               </h1>
               {isSpaceHidden && (
@@ -38,7 +38,7 @@ export function SpaceHeader(s: ActionBarState) {
               )}
             </div>
             {space?.description && (
-              <p className="text-xs text-jira-muted truncate max-w-xs">{space.description}</p>
+              <p className="text-xs text-lira-muted truncate max-w-xs">{space.description}</p>
             )}
           </div>
         </div>
@@ -49,17 +49,17 @@ export function SpaceHeader(s: ActionBarState) {
           )}
           <button
             onClick={() => setShowShare(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-jira-text border border-jira-border rounded hover:bg-gray-50 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-lira-text border border-lira-border rounded hover:bg-gray-50 transition-colors"
           >
             <Share2 className="w-3.5 h-3.5" />
             Share
           </button>
-          <button className="p-1.5 rounded hover:bg-gray-100 text-jira-muted transition-colors" title="Automations">
+          <button className="p-1.5 rounded hover:bg-gray-100 text-lira-muted transition-colors" title="Automations">
             <Zap className="w-4 h-4" />
           </button>
           <button
             onClick={onMaximize}
-            className="p-1.5 rounded hover:bg-gray-100 text-jira-muted transition-colors cursor-pointer"
+            className="p-1.5 rounded hover:bg-gray-100 text-lira-muted transition-colors cursor-pointer"
             title="Maximize board"
           >
             <Maximize2 className="w-4 h-4" />

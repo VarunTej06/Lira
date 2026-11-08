@@ -1,3 +1,4 @@
+import { confirmDialog, promptDialog } from '../common/dialogs';
 import React, { useMemo, useState } from 'react';
 import {
   Archive, ArchiveRestore, CalendarRange, Copy, Flag, Layers, Map, MoreHorizontal, Pencil, Plus, Search, Star, Target, Trash2, AlertTriangle,
@@ -10,7 +11,7 @@ import { NewRoadmapModal } from './RoadmapModals';
 
 type Tab = 'active' | 'starred' | 'archived';
 type Sort = 'updated' | 'name' | 'progress';
-const select = 'border border-jira-border rounded-lg px-2.5 py-1.5 text-xs bg-jira-surface text-jira-text focus:outline-none focus:ring-2 focus:ring-jira-blue/40 cursor-pointer';
+const select = 'border border-lira-border rounded-lg px-2.5 py-1.5 text-xs bg-lira-surface text-lira-text focus:outline-none focus:ring-2 focus:ring-lira-blue/40 cursor-pointer';
 
 interface Props { issues: Issue[]; spaces: Space[]; onOpen: (id: string) => void }
 
@@ -49,42 +50,42 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
   const tiles = [
     { label: 'Roadmaps', value: totals.roadmaps, sub: `${counts.archived} archived`, icon: <Map className="w-4 h-4" />, tone: 'text-orange-600 bg-orange-50' },
     { label: 'Epics planned', value: totals.items, sub: 'across all roadmaps', icon: <Layers className="w-4 h-4" />, tone: 'text-violet-600 bg-violet-50' },
-    { label: 'Average progress', value: `${totals.percent}%`, sub: 'weighted by duration', icon: <Target className="w-4 h-4" />, tone: 'text-jira-blue bg-blue-50' },
+    { label: 'Average progress', value: `${totals.percent}%`, sub: 'weighted by duration', icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-blue-50' },
     { label: 'Needs attention', value: totals.attention, sub: 'late or blocked epics', icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-jira-bg" onClick={() => setMenuFor(null)}>
+    <div className="flex-1 overflow-y-auto bg-lira-bg" onClick={() => setMenuFor(null)}>
       <div className="max-w-[1400px] mx-auto p-6 space-y-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-xl font-semibold text-jira-text flex items-center gap-2"><Map className="w-5 h-5 text-orange-500" /> Roadmaps</h1>
-            <p className="text-xs text-jira-muted mt-0.5">Plan work over time. Every item on a roadmap is an epic in Lira. Open a roadmap for the timeline, planner, Now/Next/Later and table views.</p>
+            <h1 className="text-xl font-semibold text-lira-text flex items-center gap-2"><Map className="w-5 h-5 text-orange-500" /> Roadmaps</h1>
+            <p className="text-xs text-lira-muted mt-0.5">Plan work over time. Every item on a roadmap is an epic in Lira. Open a roadmap for the timeline, planner, Now/Next/Later and table views.</p>
           </div>
-          <button onClick={() => setShowNew(true)} className="text-sm px-4 py-2 bg-jira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-4 h-4" /> Create roadmap</button>
+          <button onClick={() => setShowNew(true)} className="text-sm px-4 py-2 bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-4 h-4" /> Create roadmap</button>
         </div>
 
         <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
           {tiles.map(t => (
-            <div key={t.label} className="rounded-2xl border border-jira-border bg-jira-surface p-4">
+            <div key={t.label} className="rounded-2xl border border-lira-border bg-lira-surface p-4">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-jira-muted">{t.label}</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-lira-muted">{t.label}</span>
                 <span className={`w-7 h-7 rounded-lg flex items-center justify-center ${t.tone}`}>{t.icon}</span>
               </div>
-              <div className="text-2xl font-semibold text-jira-text mt-1">{t.value}</div>
-              <div className="text-[11px] text-jira-muted">{t.sub}</div>
+              <div className="text-2xl font-semibold text-lira-text mt-1">{t.value}</div>
+              <div className="text-[11px] text-lira-muted">{t.sub}</div>
             </div>
           ))}
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex rounded-lg border border-jira-border overflow-hidden bg-jira-surface">
+          <div className="flex rounded-lg border border-lira-border overflow-hidden bg-lira-surface">
             {(['active', 'starred', 'archived'] as Tab[]).map(t => (
-              <button key={t} onClick={() => setTab(t)} className={`px-3 py-1.5 text-xs capitalize cursor-pointer ${tab === t ? 'bg-jira-blue text-white' : 'text-jira-text hover:bg-jira-bg'}`}>{t} <span className="opacity-70">{counts[t]}</span></button>
+              <button key={t} onClick={() => setTab(t)} className={`px-3 py-1.5 text-xs capitalize cursor-pointer ${tab === t ? 'bg-lira-blue text-white' : 'text-lira-text hover:bg-lira-bg'}`}>{t} <span className="opacity-70">{counts[t]}</span></button>
             ))}
           </div>
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-jira-muted" />
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-lira-muted" />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search roadmaps" className={`${select} pl-8 w-52`} />
           </div>
           <select className={`${select} ml-auto`} value={sort} onChange={e => setSort(e.target.value as Sort)} aria-label="Sort roadmaps">
@@ -93,11 +94,11 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
         </div>
 
         {visible.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-jira-border bg-jira-surface py-14 text-center">
-            <Map className="w-9 h-9 mx-auto text-jira-muted mb-2" />
-            <p className="text-sm text-jira-text font-medium">{cards.length === 0 ? 'No roadmaps yet' : 'No roadmaps match'}</p>
-            <p className="text-xs text-jira-muted mt-1">{cards.length === 0 ? 'Create one, or start from the Lira product roadmap template.' : 'Try another tab or search.'}</p>
-            {cards.length === 0 && <button onClick={() => setShowNew(true)} className="mt-4 px-4 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg cursor-pointer">Create roadmap</button>}
+          <div className="rounded-2xl border border-dashed border-lira-border bg-lira-surface py-14 text-center">
+            <Map className="w-9 h-9 mx-auto text-lira-muted mb-2" />
+            <p className="text-sm text-lira-text font-medium">{cards.length === 0 ? 'No roadmaps yet' : 'No roadmaps match'}</p>
+            <p className="text-xs text-lira-muted mt-1">{cards.length === 0 ? 'Create one, or start from the Lira product roadmap template.' : 'Try another tab or search.'}</p>
+            {cards.length === 0 && <button onClick={() => setShowNew(true)} className="mt-4 px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg cursor-pointer">Create roadmap</button>}
           </div>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -110,53 +111,53 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
                   tabIndex={0}
                   onClick={e => { e.stopPropagation(); onOpen(rm.id); }}
                   onKeyDown={e => { if (e.key === 'Enter') onOpen(rm.id); }}
-                  className={`group relative rounded-2xl border border-jira-border bg-jira-surface p-4 cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5 transition-all ${rm.archived ? 'opacity-75' : ''}`}
+                  className={`group relative rounded-2xl border border-lira-border bg-lira-surface p-4 cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5 transition-all ${rm.archived ? 'opacity-75' : ''}`}
                 >
                   <div className="flex items-start gap-2">
                     <div className="w-9 h-9 rounded-xl bg-orange-500/15 text-orange-500 flex items-center justify-center flex-shrink-0"><Map className="w-4.5 h-4.5" /></div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="text-sm font-semibold text-jira-text truncate">{rm.name}</h3>
-                      <div className="text-[11px] text-jira-muted flex items-center gap-1.5 mt-0.5">
+                      <h3 className="text-sm font-semibold text-lira-text truncate">{rm.name}</h3>
+                      <div className="text-[11px] text-lira-muted flex items-center gap-1.5 mt-0.5">
                         {space ? <span className="flex items-center gap-1"><Layers className="w-3 h-3" />{space.name}</span> : <span>No space</span>}
-                        {rm.archived && <span className="px-1.5 rounded-full bg-jira-border/60">Archived</span>}
+                        {rm.archived && <span className="px-1.5 rounded-full bg-lira-border/60">Archived</span>}
                       </div>
                     </div>
-                    <button onClick={e => { e.stopPropagation(); patch(rm, { starred: !rm.starred }); }} className={`p-1 rounded-md cursor-pointer ${rm.starred ? 'text-yellow-400' : 'text-jira-muted opacity-0 group-hover:opacity-100'} hover:bg-jira-bg`} aria-label={rm.starred ? 'Remove star' : 'Star roadmap'}>
+                    <button onClick={e => { e.stopPropagation(); patch(rm, { starred: !rm.starred }); }} className={`p-1 rounded-md cursor-pointer ${rm.starred ? 'text-yellow-400' : 'text-lira-muted opacity-0 group-hover:opacity-100'} hover:bg-lira-bg`} aria-label={rm.starred ? 'Remove star' : 'Star roadmap'}>
                       <Star className={`w-4 h-4 ${rm.starred ? 'fill-yellow-400' : ''}`} />
                     </button>
                     <div className="relative">
-                      <button onClick={e => { e.stopPropagation(); setMenuFor(menuFor === rm.id ? null : rm.id); }} className="p-1 rounded-md text-jira-muted hover:text-jira-text hover:bg-jira-bg cursor-pointer" aria-label="Roadmap actions"><MoreHorizontal className="w-4 h-4" /></button>
+                      <button onClick={e => { e.stopPropagation(); setMenuFor(menuFor === rm.id ? null : rm.id); }} className="p-1 rounded-md text-lira-muted hover:text-lira-text hover:bg-lira-bg cursor-pointer" aria-label="Roadmap actions"><MoreHorizontal className="w-4 h-4" /></button>
                       {menuFor === rm.id && (
-                        <div className="absolute right-0 mt-1 w-44 rounded-lg border border-jira-border bg-jira-surface shadow-dropdown z-30 py-1 text-xs" onClick={e => e.stopPropagation()}>
-                          <MenuItem icon={<Pencil className="w-3.5 h-3.5" />} label="Rename" onClick={() => { setMenuFor(null); const n = window.prompt('Rename roadmap', rm.name); if (n?.trim()) patch(rm, { name: n.trim() }); }} />
+                        <div className="absolute right-0 mt-1 w-44 rounded-lg border border-lira-border bg-lira-surface shadow-dropdown z-30 py-1 text-xs" onClick={e => e.stopPropagation()}>
+                          <MenuItem icon={<Pencil className="w-3.5 h-3.5" />} label="Rename" onClick={async () => { setMenuFor(null); const n = await promptDialog({ title: 'Rename roadmap', label: 'Name', defaultValue: rm.name, confirmLabel: 'Rename' }); if (n) patch(rm, { name: n }); }} />
                           <MenuItem icon={<Copy className="w-3.5 h-3.5" />} label="Duplicate" onClick={() => { setMenuFor(null); add(duplicateRoadmap(rm)); }} />
                           <MenuItem icon={rm.archived ? <ArchiveRestore className="w-3.5 h-3.5" /> : <Archive className="w-3.5 h-3.5" />} label={rm.archived ? 'Unarchive' : 'Archive'} onClick={() => { setMenuFor(null); patch(rm, { archived: !rm.archived }); }} />
-                          <MenuItem danger icon={<Trash2 className="w-3.5 h-3.5" />} label="Delete" onClick={() => { setMenuFor(null); if (window.confirm(`Delete roadmap "${rm.name}"? Its epics stay in Lira.`)) remove(rm.id); }} />
+                          <MenuItem danger icon={<Trash2 className="w-3.5 h-3.5" />} label="Delete" onClick={async () => { setMenuFor(null); if (await confirmDialog({ title: 'Delete roadmap', message: `Delete the roadmap "${rm.name}"? Its epics stay in Lira.`, confirmLabel: 'Delete roadmap', tone: 'danger' })) remove(rm.id); }} />
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <p className="text-xs text-jira-muted mt-2 line-clamp-2 min-h-[32px]">{rm.description || 'No description'}</p>
+                  <p className="text-xs text-lira-muted mt-2 line-clamp-2 min-h-[32px]">{rm.description || 'No description'}</p>
 
                   <div className="mt-3">
-                    <div className="flex items-center justify-between text-[11px] mb-1"><span className="text-jira-muted">{summary.byStatus.done} of {summary.total} epics done</span><span className="font-semibold text-jira-text">{summary.percent}%</span></div>
-                    <div className="h-1.5 rounded-full bg-jira-border/60 overflow-hidden"><div className="h-full rounded-full bg-jira-blue" style={{ width: `${summary.percent}%` }} /></div>
+                    <div className="flex items-center justify-between text-[11px] mb-1"><span className="text-lira-muted">{summary.byStatus.done} of {summary.total} epics done</span><span className="font-semibold text-lira-text">{summary.percent}%</span></div>
+                    <div className="h-1.5 rounded-full bg-lira-border/60 overflow-hidden"><div className="h-full rounded-full bg-lira-blue" style={{ width: `${summary.percent}%` }} /></div>
                   </div>
 
                   <div className="flex flex-wrap gap-1.5 mt-3">
                     {(Object.keys(STATUS_META) as RoadmapStatus[]).filter(s => summary.byStatus[s] > 0).map(s => (
                       <span key={s} className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: STATUS_META[s].color + '22', color: STATUS_META[s].color }}>{summary.byStatus[s]} {STATUS_META[s].label.toLowerCase()}</span>
                     ))}
-                    {summary.total === 0 && <span className="text-[10px] text-jira-muted">Empty roadmap</span>}
+                    {summary.total === 0 && <span className="text-[10px] text-lira-muted">Empty roadmap</span>}
                   </div>
 
                   <div className="flex items-center gap-1 mt-3">
                     {rm.lanes.slice(0, 8).map(l => <span key={l} className="w-2 h-2 rounded-sm" style={{ background: laneColor(rm, l) }} title={l} />)}
-                    <span className="text-[10px] text-jira-muted ml-1">{rm.lanes.length} lanes</span>
+                    <span className="text-[10px] text-lira-muted ml-1">{rm.lanes.length} lanes</span>
                   </div>
 
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-jira-border/60 text-[11px] text-jira-muted">
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-lira-border/60 text-[11px] text-lira-muted">
                     <span className="flex items-center gap-1"><CalendarRange className="w-3 h-3" />{span.start ? `${fmtShort(span.start)} → ${fmtShort(span.end!)}` : 'No dates'}</span>
                     {summary.nextMilestone && <span className="flex items-center gap-1 truncate max-w-[50%]" title={summary.nextMilestone.title}><Flag className="w-3 h-3" />{summary.daysToNextMilestone === 0 ? 'today' : `${summary.daysToNextMilestone}d`}: {summary.nextMilestone.title}</span>}
                   </div>
@@ -172,5 +173,5 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
 };
 
 const MenuItem: React.FC<{ icon: React.ReactNode; label: string; onClick: () => void; danger?: boolean }> = ({ icon, label, onClick, danger }) => (
-  <button onClick={onClick} className={`w-full flex items-center gap-2 px-3 py-2 text-left cursor-pointer ${danger ? 'text-red-500 hover:bg-red-500/10' : 'text-jira-text hover:bg-jira-bg'}`}>{icon}{label}</button>
+  <button onClick={onClick} className={`w-full flex items-center gap-2 px-3 py-2 text-left cursor-pointer ${danger ? 'text-red-500 hover:bg-red-500/10' : 'text-lira-text hover:bg-lira-bg'}`}>{icon}{label}</button>
 );

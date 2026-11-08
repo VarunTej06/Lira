@@ -89,7 +89,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             className="w-2.5 h-2.5 rounded-full flex-shrink-0"
             style={{ backgroundColor: accentColor || style.dot }}
           />
-          <span className="text-sm font-semibold text-jira-text truncate">{title}</span>
+          <span className="text-sm font-semibold text-lira-text truncate">{title}</span>
 
           {activeLimit !== undefined && activeLimit > 0 ? (
             <span
@@ -118,12 +118,12 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             e.stopPropagation();
             onAddIssue(id);
           }}
-          className="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-jira-muted hover:text-jira-blue hover:bg-white/80 hover:shadow-2xs border border-transparent hover:border-jira-border transition-all cursor-pointer flex-shrink-0 group"
+          className="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-lira-muted hover:text-lira-blue hover:bg-white/80 hover:shadow-2xs border border-transparent hover:border-lira-border transition-all cursor-pointer flex-shrink-0 group"
           title={`Add issue to ${title}`}
           aria-label={`Add issue to ${title}`}
         >
-          <Plus className="w-3.5 h-3.5 text-jira-muted group-hover:text-jira-blue transition-colors" />
-          <span className="group-hover:text-jira-blue transition-colors">Add</span>
+          <Plus className="w-3.5 h-3.5 text-lira-muted group-hover:text-lira-blue transition-colors" />
+          <span className="group-hover:text-lira-blue transition-colors">Add</span>
         </button>
       </div>
 
@@ -137,7 +137,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             className={`
               flex flex-col gap-2.5 p-2 rounded-xl transition-colors duration-150 flex-1 w-full
               ${snapshot.isDraggingOver
-                ? 'bg-blue-50/95 border-2 border-dashed border-jira-blue/70 shadow-xs ring-2 ring-jira-blue/20'
+                ? 'bg-blue-50/95 border-2 border-dashed border-lira-blue/70 shadow-xs ring-2 ring-lira-blue/20'
                 : 'bg-[#091E4206] hover:bg-[#091E420A] border-2 border-transparent'
               }
             `}
@@ -158,14 +158,14 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             {issues.length === 0 && !snapshot.isDraggingOver && (
               <div
                 onClick={() => onAddIssue(id)}
-                className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-gray-200 hover:border-jira-blue/50 hover:bg-blue-50/20 rounded-xl text-center cursor-pointer transition-all group my-1 select-none flex-1 min-h-[140px]"
+                className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-gray-200 hover:border-lira-blue/50 hover:bg-blue-50/20 rounded-xl text-center cursor-pointer transition-all group my-1 select-none flex-1 min-h-[140px]"
                 role="button"
                 tabIndex={0}
               >
-                <span className="text-xs text-jira-muted group-hover:text-jira-blue font-medium">
+                <span className="text-xs text-lira-muted group-hover:text-lira-blue font-medium">
                   No {title.toLowerCase()} issues
                 </span>
-                <span className="text-xs text-jira-blue mt-1.5 font-semibold flex items-center gap-1 group-hover:underline">
+                <span className="text-xs text-lira-blue mt-1.5 font-semibold flex items-center gap-1 group-hover:underline">
                   <Plus className="w-3.5 h-3.5" /> Add issue
                 </span>
               </div>

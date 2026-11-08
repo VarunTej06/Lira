@@ -38,7 +38,7 @@ const BurnupChart: React.FC<{ data: BurnupPoint[]; days: number }> = ({ data, da
   const max = Math.max(1, ...data.map(d => d.scope));
   const x = (d: number) => P.l + ((d - 1) / Math.max(1, days - 1)) * iw;
   const y = (v: number) => P.t + ih - (v / max) * ih;
-  if (!data.length) return <p className="text-xs text-jira-muted py-10 text-center">The sprint has not started yet.</p>;
+  if (!data.length) return <p className="text-xs text-lira-muted py-10 text-center">The sprint has not started yet.</p>;
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40" role="img" aria-label="Burnup chart: scope and completed work">
       <Axes max={max} days={days} />
@@ -54,7 +54,7 @@ const FlowChart: React.FC<{ data: FlowPoint[]; days: number }> = ({ data, days }
   const max = Math.max(1, ...data.map(d => d.backlog + d.todo + d.inprogress + d.done));
   const x = (d: number) => P.l + ((d - 1) / Math.max(1, days - 1)) * iw;
   const y = (v: number) => P.t + ih - (v / max) * ih;
-  if (!data.length) return <p className="text-xs text-jira-muted py-10 text-center">The sprint has not started yet.</p>;
+  if (!data.length) return <p className="text-xs text-lira-muted py-10 text-center">The sprint has not started yet.</p>;
   // stacked from the bottom: done, in progress, to do, backlog
   const layers = (['done', 'inprogress', 'todo', 'backlog'] as const).map((k, idx, arr) => {
     const below = (d: FlowPoint) => arr.slice(0, idx).reduce((a, s) => a + d[s], 0);
@@ -73,10 +73,10 @@ const FlowChart: React.FC<{ data: FlowPoint[]; days: number }> = ({ data, days }
 };
 
 const Tile: React.FC<{ label: string; value: string; sub?: string }> = ({ label, value, sub }) => (
-  <div className="border border-jira-border rounded-xl px-3 py-2 bg-white">
-    <div className="text-xl font-semibold text-jira-text">{value}</div>
-    <div className="text-[11px] text-jira-muted">{label}</div>
-    {sub && <div className="text-[10px] text-jira-muted">{sub}</div>}
+  <div className="border border-lira-border rounded-xl px-3 py-2 bg-white">
+    <div className="text-xl font-semibold text-lira-text">{value}</div>
+    <div className="text-[11px] text-lira-muted">{label}</div>
+    {sub && <div className="text-[10px] text-lira-muted">{sub}</div>}
   </div>
 );
 
@@ -120,17 +120,17 @@ export const SprintReports: React.FC<SprintReportsProps> = ({ issues, sprint, sc
   return (
     <div className="space-y-4" data-testid="sprint-reports">
       <div className="flex flex-wrap items-center gap-2">
-        <h3 className="text-sm font-semibold text-jira-text">Report · {sprintName(sprint)}</h3>
+        <h3 className="text-sm font-semibold text-lira-text">Report · {sprintName(sprint)}</h3>
         <div className="ml-auto flex gap-2">
           <button
             onClick={() => download(`${file}.md`, reportMarkdown(report), 'text/markdown')}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-jira-border bg-white hover:bg-gray-50 text-jira-text cursor-pointer"
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-lira-border bg-white hover:bg-gray-50 text-lira-text cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" /> Markdown
           </button>
           <button
             onClick={() => printReport(report)}
-            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-jira-border bg-white hover:bg-gray-50 text-jira-text cursor-pointer"
+            className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-lira-border bg-white hover:bg-gray-50 text-lira-text cursor-pointer"
           >
             <Printer className="w-3.5 h-3.5" /> PDF
           </button>
@@ -145,18 +145,18 @@ export const SprintReports: React.FC<SprintReportsProps> = ({ issues, sprint, sc
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="bg-white border border-jira-border rounded-xl p-4">
-          <h4 className="text-sm font-semibold text-jira-text mb-1">Burnup</h4>
+        <div className="bg-white border border-lira-border rounded-xl p-4">
+          <h4 className="text-sm font-semibold text-lira-text mb-1">Burnup</h4>
           <BurnupChart data={burnup} days={report.days} />
-          <div className="flex gap-3 text-[10px] text-jira-muted">
+          <div className="flex gap-3 text-[10px] text-lira-muted">
             <span><span className="inline-block w-3 border-t-2 border-dashed border-gray-400 mr-1 align-middle" />Scope</span>
             <span><span className="inline-block w-3 border-t-2 mr-1 align-middle" style={{ borderColor: '#00875A' }} />Done</span>
           </div>
         </div>
-        <div className="bg-white border border-jira-border rounded-xl p-4">
-          <h4 className="text-sm font-semibold text-jira-text mb-1">Cumulative flow</h4>
+        <div className="bg-white border border-lira-border rounded-xl p-4">
+          <h4 className="text-sm font-semibold text-lira-text mb-1">Cumulative flow</h4>
           <FlowChart data={flow} days={report.days} />
-          <div className="flex flex-wrap gap-3 text-[10px] text-jira-muted">
+          <div className="flex flex-wrap gap-3 text-[10px] text-lira-muted">
             {(['done', 'inprogress', 'todo', 'backlog'] as const).map(k => (
               <span key={k}><span className="inline-block w-2 h-2 mr-1 rounded-sm" style={{ backgroundColor: FLOW_COLORS[k] }} />{{ done: 'Done', inprogress: 'In Progress', todo: 'To Do', backlog: 'Backlog' }[k]}</span>
             ))}
@@ -164,23 +164,23 @@ export const SprintReports: React.FC<SprintReportsProps> = ({ issues, sprint, sc
         </div>
       </div>
 
-      <div className="bg-white border border-jira-border rounded-xl overflow-hidden">
-        <div className="px-4 py-2.5 border-b border-jira-border flex items-center gap-2">
-          <h4 className="text-sm font-semibold text-jira-text">Scope changes</h4>
-          <span className="text-xs text-jira-muted">{added} added · {gone} taken out, after the first day</span>
+      <div className="bg-white border border-lira-border rounded-xl overflow-hidden">
+        <div className="px-4 py-2.5 border-b border-lira-border flex items-center gap-2">
+          <h4 className="text-sm font-semibold text-lira-text">Scope changes</h4>
+          <span className="text-xs text-lira-muted">{added} added · {gone} taken out, after the first day</span>
         </div>
         {changes.length === 0 ? (
-          <p className="text-xs text-jira-muted px-4 py-6 text-center">No tickets were added or removed after the first day.</p>
+          <p className="text-xs text-lira-muted px-4 py-6 text-center">No tickets were added or removed after the first day.</p>
         ) : (
           <ul>
             {changes.map((c, i) => (
-              <li key={`${c.issue.id}-${i}`} className="flex items-center gap-3 px-4 py-2 border-b border-jira-border last:border-0 text-sm hover:bg-gray-50 cursor-pointer" onClick={() => onIssueClick(c.issue)}>
-                <span className="text-xs text-jira-muted w-14 flex-shrink-0">{c.at.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+              <li key={`${c.issue.id}-${i}`} className="flex items-center gap-3 px-4 py-2 border-b border-lira-border last:border-0 text-sm hover:bg-gray-50 cursor-pointer" onClick={() => onIssueClick(c.issue)}>
+                <span className="text-xs text-lira-muted w-14 flex-shrink-0">{c.at.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                 <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded flex-shrink-0 ${c.kind === 'added' ? 'bg-amber-100 text-amber-800' : c.kind === 'carried' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
                   {c.kind === 'added' ? 'Added' : c.kind === 'carried' ? 'Carried over' : 'Removed'}
                 </span>
-                <span className="text-xs text-jira-muted flex-shrink-0">{c.issue.key}</span>
-                <span className="truncate text-jira-text">{c.issue.title}</span>
+                <span className="text-xs text-lira-muted flex-shrink-0">{c.issue.key}</span>
+                <span className="truncate text-lira-text">{c.issue.title}</span>
               </li>
             ))}
           </ul>

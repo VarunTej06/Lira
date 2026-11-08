@@ -116,7 +116,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-5">
         {/* Icon & Color */}
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-2 uppercase tracking-wide">Icon</label>
+          <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Icon</label>
           <div className="flex flex-wrap gap-2">
             {SPACE_ICONS.map(ic => (
               <button
@@ -124,7 +124,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
                 type="button"
                 onClick={() => setIcon(ic)}
                 className={`w-9 h-9 rounded-lg text-lg flex items-center justify-center transition-all ${
-                  icon === ic ? 'ring-2 ring-jira-blue scale-110' : 'hover:bg-gray-100'
+                  icon === ic ? 'ring-2 ring-lira-blue scale-110' : 'hover:bg-gray-100'
                 }`}
               >
                 {ic}
@@ -134,14 +134,14 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-2 uppercase tracking-wide">Color</label>
+          <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Color</label>
           <div className="flex gap-2 flex-wrap">
             {SPACE_COLORS.map(c => (
               <button
                 key={c}
                 type="button"
                 onClick={() => setColor(c)}
-                className={`w-7 h-7 rounded-full transition-all ${color === c ? 'ring-2 ring-offset-2 ring-jira-blue scale-110' : 'hover:scale-105'}`}
+                className={`w-7 h-7 rounded-full transition-all ${color === c ? 'ring-2 ring-offset-2 ring-lira-blue scale-110' : 'hover:scale-105'}`}
                 style={{ backgroundColor: c }}
               />
             ))}
@@ -149,7 +149,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">
+          <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">
             Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -157,48 +157,48 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
             value={name}
             onChange={e => handleNameChange(e.target.value)}
             placeholder="e.g. Python Mastery"
-            className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue transition-all"
+            className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue transition-all"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">
+          <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">
             Key <span className="text-red-500">*</span>
           </label>
           <input
             value={key}
             onChange={e => setKey(e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 6))}
             placeholder="e.g. PY"
-            className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue font-mono uppercase transition-all"
+            className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue font-mono uppercase transition-all"
           />
-          <p className="text-[10px] text-jira-muted mt-1">Used as ticket prefix (e.g. {key || 'KEY'}-1)</p>
+          <p className="text-[10px] text-lira-muted mt-1">Used as ticket prefix (e.g. {key || 'KEY'}-1)</p>
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Description</label>
+          <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Description</label>
           <textarea
             value={description}
             onChange={e => setDescription(e.target.value)}
             placeholder="Optional description..."
             rows={2}
-            className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue resize-none transition-all"
+            className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue resize-none transition-all"
           />
         </div>
 
         {error && <p className="text-xs text-red-500">{error}</p>}
 
         {/* Preview */}
-        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-jira-border">
+        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-lira-border">
           <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: color + '22', color }}>
             {icon}
           </div>
           <div>
-            <p className="text-sm font-semibold text-jira-text">{name || 'Space Name'}</p>
-            <p className="text-xs text-jira-muted font-mono">{key || 'KEY'}-1, {key || 'KEY'}-2...</p>
+            <p className="text-sm font-semibold text-lira-text">{name || 'Space Name'}</p>
+            <p className="text-xs text-lira-muted font-mono">{key || 'KEY'}-1, {key || 'KEY'}-2...</p>
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 pt-2 border-t border-jira-border">
+        <div className="flex justify-end gap-3 pt-2 border-t border-lira-border">
           <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
           <Button type="submit" variant="primary" loading={loading}>{submitLabel}</Button>
         </div>

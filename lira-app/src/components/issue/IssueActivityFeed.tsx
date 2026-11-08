@@ -22,7 +22,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
   const [commentText, setCommentText] = useState('');
   const [focused, setFocused] = useState(false);
 
-  const QUICK_CHIPS = ['Status update...', 'Thanks! 🙌', 'Agree! 👍', 'Will fix ASAP'];
+  const QUICK_CHIPS = ['Status update...', 'Thanks!', 'Agree!', 'Will fix ASAP'];
 
   const handleSubmit = () => {
     if (!commentText.trim()) return;
@@ -50,15 +50,15 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-1">
-        <span className="text-sm font-semibold text-jira-text mr-2">Activity</span>
+        <span className="text-sm font-semibold text-lira-text mr-2">Activity</span>
         {(['all', 'comments', 'history'] as ViewTab[]).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-2.5 py-1 text-xs rounded font-medium capitalize transition-all ${
               activeTab === tab
-                ? 'bg-jira-blue-light text-jira-blue'
-                : 'text-jira-muted hover:text-jira-text hover:bg-gray-100'
+                ? 'bg-lira-blue-light text-lira-blue'
+                : 'text-lira-muted hover:text-lira-text hover:bg-gray-100'
             }`}
           >
             {tab === 'history' ? 'History' : tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -77,7 +77,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
                 <button
                   key={chip}
                   onClick={() => { setCommentText(chip === 'Status update...' ? '' : chip + ' '); setFocused(true); }}
-                  className="px-3 py-1.5 text-xs border border-jira-border rounded-full hover:bg-gray-50 hover:border-jira-blue text-jira-muted hover:text-jira-blue transition-all"
+                  className="px-3 py-1.5 text-xs border border-lira-border rounded-full hover:bg-gray-50 hover:border-lira-blue text-lira-muted hover:text-lira-blue transition-all"
                 >
                   {chip}
                 </button>
@@ -85,7 +85,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
             </div>
           )}
 
-          <div className={`border rounded-lg transition-all ${focused ? 'border-jira-blue ring-1 ring-jira-blue' : 'border-jira-border'}`}>
+          <div className={`border rounded-lg transition-all ${focused ? 'border-lira-blue ring-1 ring-lira-blue' : 'border-lira-border'}`}>
             <textarea
               value={commentText}
               onChange={e => setCommentText(e.target.value)}
@@ -94,24 +94,24 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
               onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit(); }}
               placeholder="Add a comment..."
               rows={focused ? 3 : 1}
-              className="w-full text-sm p-3 resize-none focus:outline-none rounded-lg text-jira-text placeholder-jira-muted"
+              className="w-full text-sm p-3 resize-none focus:outline-none rounded-lg text-lira-text placeholder-lira-muted"
             />
             {focused && (
               <div className="flex items-center justify-between px-3 pb-2 border-t border-gray-100">
-                <span className="text-[10px] text-jira-muted">
+                <span className="text-[10px] text-lira-muted">
                   Pro tip: press <kbd className="px-1 py-0.5 bg-gray-100 rounded text-[10px] font-mono">Ctrl+Enter</kbd> to save
                 </span>
                 <div className="flex gap-2">
                   <button
                     onClick={() => { setCommentText(''); setFocused(false); }}
-                    className="px-3 py-1 text-xs text-jira-muted hover:text-jira-text rounded"
+                    className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSubmit}
                     disabled={!commentText.trim()}
-                    className="flex items-center gap-1.5 px-3 py-1 text-xs bg-jira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium"
+                    className="flex items-center gap-1.5 px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium"
                   >
                     <Send className="w-3 h-3" />
                     Save
@@ -132,22 +132,22 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
               {entry.type === 'comment' ? (
                 <div>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-sm font-semibold text-jira-text">{(entry.data as Comment).author || 'User'}</span>
-                    <span className="text-xs text-jira-muted">{formatRelativeDate(entry.date)}</span>
+                    <span className="text-sm font-semibold text-lira-text">{(entry.data as Comment).author || 'User'}</span>
+                    <span className="text-xs text-lira-muted">{formatRelativeDate(entry.date)}</span>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-3 text-sm text-jira-text whitespace-pre-wrap border border-jira-border">
+                  <div className="bg-gray-50 rounded-lg p-3 text-sm text-lira-text whitespace-pre-wrap border border-lira-border">
                     {(entry.data as Comment).content}
                   </div>
                 </div>
               ) : (
-                <div className="flex items-center gap-1.5 text-xs text-jira-muted">
-                  <span className="font-medium text-jira-text">{(entry.data as ActivityEntry).author || 'User'}</span>
+                <div className="flex items-center gap-1.5 text-xs text-lira-muted">
+                  <span className="font-medium text-lira-text">{(entry.data as ActivityEntry).author || 'User'}</span>
                   <span>{(entry.data as ActivityEntry).description || ((entry.data as ActivityEntry).type === 'created' ? 'created this issue' : (entry.data as ActivityEntry).type)}</span>
                   {(entry.data as ActivityEntry).oldValue && (
                     <>
-                      <span className="line-through text-jira-muted">{(entry.data as ActivityEntry).oldValue}</span>
+                      <span className="line-through text-lira-muted">{(entry.data as ActivityEntry).oldValue}</span>
                       <span>→</span>
-                      <span className="font-medium text-jira-text">{(entry.data as ActivityEntry).newValue}</span>
+                      <span className="font-medium text-lira-text">{(entry.data as ActivityEntry).newValue}</span>
                     </>
                   )}
                   <span className="ml-auto flex-shrink-0">{formatRelativeDate(entry.date)}</span>

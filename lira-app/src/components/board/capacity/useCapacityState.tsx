@@ -159,10 +159,10 @@ export function useCapacityState(props: CapacityViewProps) {
   // 4. Priority Grouping
   const priorityGroups = useMemo(() => {
     const groups = [
-      { id: 'highest', label: 'Highest Priority', dot: '🔴', color: 'border-red-200 bg-white', badge: 'bg-red-50 text-red-700' },
-      { id: 'high', label: 'High Priority', dot: '🟠', color: 'border-orange-200 bg-white', badge: 'bg-orange-50 text-orange-700' },
-      { id: 'medium', label: 'Medium Priority', dot: '🟡', color: 'border-amber-200 bg-white', badge: 'bg-amber-50 text-amber-700' },
-      { id: 'low', label: 'Low / Lowest Priority', dot: '🟢', color: 'border-emerald-200 bg-white', badge: 'bg-emerald-50 text-emerald-700' },
+      { id: 'highest', label: 'Highest Priority', dot: '#EF4444', color: 'border-red-200 bg-white', badge: 'bg-red-50 text-red-700' },
+      { id: 'high', label: 'High Priority', dot: '#F97316', color: 'border-orange-200 bg-white', badge: 'bg-orange-50 text-orange-700' },
+      { id: 'medium', label: 'Medium Priority', dot: '#FBBF24', color: 'border-amber-200 bg-white', badge: 'bg-amber-50 text-amber-700' },
+      { id: 'low', label: 'Low / Lowest Priority', dot: '#34D399', color: 'border-emerald-200 bg-white', badge: 'bg-emerald-50 text-emerald-700' },
     ];
     return groups.map(g => {
       const items = filteredIssues.filter(i =>

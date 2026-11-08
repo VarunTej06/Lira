@@ -298,7 +298,7 @@ Please fill in the last column. Where I have a recommendation it is in the third
 | 10 | **Viva AI in the public edition:** use Azure OpenAI from the server, let users bring their own key, or turn it off? | Cost and safety | Server-side Azure OpenAI with per-organisation limits | |
 | 11 | **Invites and notifications:** is email enough (Azure Communication Services), or do you also want Teams or Slack? | Scope of Phase D | Email first | |
 | 12 | **Offline sync:** should the local edition ever sync to the cloud? | Affects the data model now | Not for v1; keep the door open | |
-| 13 | **Name and brand:** is "Lira" clear to use publicly, and is any Jira-like look or wording to be avoided? | Legal risk | Check the name; keep the design original | |
+| 13 | **Name and brand:** is "Lira" clear to use publicly, and is any look or wording borrowed from another product to be avoided? | Legal risk | Check the name; keep the design original | |
 | 14 | **Quality bar for "perfect":** what would you accept as done? (for example: zero known high bugs, end-to-end tests on main flows, accessibility pass, performance targets) | Defines the exit of Phase A | Use the list in Phase A | |
 
 ---

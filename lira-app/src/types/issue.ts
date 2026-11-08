@@ -2,12 +2,13 @@ export type Priority = 'highest' | 'high' | 'medium' | 'low' | 'lowest';
 export type IssueType = 'task' | 'bug' | 'epic' | 'subtask';
 export type IssueStatus = 'backlog' | 'todo' | 'inprogress' | 'done' | string;
 
-export const ISSUE_TYPE_CONFIG: Record<IssueType, { label: string; color: string; bg: string; symbol: string }> = {
-  epic:    { label: 'Epic',    color: '#6554C0', bg: '#EAE6FF', symbol: '⚡' },
-  task:    { label: 'Task',    color: '#0052CC', bg: '#DEEBFF', symbol: '✅' },
-  bug:     { label: 'Bug',     color: '#DE350B', bg: '#FFEBE6', symbol: '🐛' },
-  subtask: { label: 'Subtask', color: '#6B778C', bg: '#F4F5F7', symbol: '↳' },
+export const ISSUE_TYPE_CONFIG: Record<IssueType, { label: string; color: string; bg: string }> = {
+  epic:    { label: 'Epic',    color: '#6554C0', bg: '#EAE6FF' },
+  task:    { label: 'Task',    color: '#0052CC', bg: '#DEEBFF' },
+  bug:     { label: 'Bug',     color: '#DE350B', bg: '#FFEBE6' },
+  subtask: { label: 'Subtask', color: '#6B778C', bg: '#F4F5F7' },
 };
+// The picture for each type is drawn by TypeIcon (components/common/Icons.tsx).
 
 export interface Subtask {
   id: string;

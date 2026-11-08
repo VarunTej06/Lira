@@ -9,9 +9,9 @@ export function NoSpaces({ onCreate }: { onCreate: () => void }) {
   return (
     <div className="flex-1 flex items-center justify-center">
       <div className="text-center space-y-4 max-w-md px-4">
-        <img src="/lira-full-logo.png" alt="Lira - Learner's Jira Workspace" className="h-20 mx-auto object-contain drop-shadow-sm" />
-        <p className="text-jira-muted text-sm">Select a space or create one to get started.</p>
-        <button onClick={onCreate} className="px-5 py-2.5 bg-jira-blue text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer">
+        <img src="/lira-full-logo.png" alt="Lira Workspace" className="h-20 mx-auto object-contain drop-shadow-sm" />
+        <p className="text-lira-muted text-sm">Select a space or create one to get started.</p>
+        <button onClick={onCreate} className="px-5 py-2.5 bg-lira-blue text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer">
           Create your first space
         </button>
       </div>

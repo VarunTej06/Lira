@@ -1,3 +1,4 @@
+import { descriptionToText } from '../../../utils/richText';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
@@ -162,7 +163,7 @@ export function useFiltersState(props: FiltersPageProps) {
         const q = searchQuery.toLowerCase();
         const matchesKey = issue.key.toLowerCase().includes(q);
         const matchesTitle = issue.title.toLowerCase().includes(q);
-        const matchesDesc = issue.description?.toLowerCase().includes(q);
+        const matchesDesc = descriptionToText(issue.description).toLowerCase().includes(q);
         const matchesLabel = issue.labels?.some(l => l.toLowerCase().includes(q));
         if (!matchesKey && !matchesTitle && !matchesDesc && !matchesLabel) return false;
       }

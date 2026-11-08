@@ -43,23 +43,23 @@ export const Dropdown: React.FC<DropdownProps> = ({
       {isOpen && (
         <div
           className={`
-            absolute z-50 mt-1 bg-white rounded-md shadow-dropdown border border-jira-border
+            absolute z-50 mt-1 bg-white rounded-md shadow-dropdown border border-lira-border
             min-w-[160px] py-1 animate-scale-in
             ${align === 'right' ? 'right-0' : 'left-0'}
           `}
         >
           {items.map((item, idx) => (
             <React.Fragment key={idx}>
-              {item.divider && <div className="my-1 border-t border-jira-border" />}
+              {item.divider && <div className="my-1 border-t border-lira-border" />}
               <button
                 className={`
                   w-full text-left px-3 py-2 text-sm flex items-center gap-2
                   hover:bg-gray-50 transition-colors
-                  ${item.danger ? 'text-red-600 hover:bg-red-50' : 'text-jira-text'}
+                  ${item.danger ? 'text-red-600 hover:bg-red-50' : 'text-lira-text'}
                 `}
                 onClick={() => { item.onClick(); setIsOpen(false); }}
               >
-                {item.icon && <span className="text-jira-muted">{item.icon}</span>}
+                {item.icon && <span className="text-lira-muted">{item.icon}</span>}
                 {item.label}
               </button>
             </React.Fragment>
@@ -103,7 +103,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
     <div ref={ref} className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-sm font-medium border border-transparent hover:border-jira-border hover:bg-gray-50 transition-all w-full"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded text-sm font-medium border border-transparent hover:border-lira-border hover:bg-gray-50 transition-all w-full"
         style={selected ? { color: selected.color, backgroundColor: selected.bgColor } : {}}
       >
         {selected?.icon}
@@ -111,7 +111,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
         <ChevronDown className="w-3.5 h-3.5 opacity-60 flex-shrink-0" />
       </button>
       {isOpen && (
-        <div className="absolute z-50 mt-1 bg-white rounded-md shadow-dropdown border border-jira-border min-w-full py-1 animate-scale-in left-0">
+        <div className="absolute z-50 mt-1 bg-white rounded-md shadow-dropdown border border-lira-border min-w-full py-1 animate-scale-in left-0">
           {options.map(opt => (
             <button
               key={opt.value}
@@ -125,7 +125,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
               >
                 {opt.label}
               </span>
-              {value === opt.value && <span className="ml-auto text-jira-blue">✓</span>}
+              {value === opt.value && <span className="ml-auto text-lira-blue">✓</span>}
             </button>
           ))}
         </div>

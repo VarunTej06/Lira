@@ -1,6 +1,6 @@
-# 🎯 Lira — Enterprise Offline-First Kanban & Engineering Workspace
+# Lira — Enterprise Offline-First Kanban & Engineering Workspace
 
-> **Lira** is an offline-first, enterprise-grade project tracking and engineering workspace modeled after Atlassian Jira, built with React 18, TypeScript, Tailwind CSS, Dexie IndexedDB, and automatic local PC file synchronization.
+> **Lira** is an offline-first, enterprise-grade project tracking and engineering workspace built with React 18, TypeScript, Tailwind CSS, Dexie IndexedDB, and automatic local PC file synchronization.
 
 [![React](https://img.shields.io/badge/React-18.3.1-blue.svg)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7.x-blue.svg)](https://www.typescriptlang.org/)
@@ -14,7 +14,7 @@
 
 ---
 
-## 🆕 What's new (November 2026)
+## What's new (November 2026)
 
 | Area | What you get |
 |---|---|
@@ -27,12 +27,15 @@
 | **Tablet and phone** | `npm run dev:lan` opens Lira to your own Wi-Fi behind a private link and QR code (**Settings, Other devices**). Phone and upright-tablet layouts use a menu drawer. |
 | **Motion** | Framer Motion: dialogs and menus animate in and out, sliding tab underline and sidebar highlight, count-up numbers, bars that grow, burndown lines that draw themselves, confetti when a ticket reaches Done or a sprint closes. Reduced-motion settings are respected. |
 | **Look** | Light and dark themes, 10+ accent colours, rounded panels, scroll bars kept inside their panels. |
+| **Editing and saving** | The ticket popup is a draft: nothing is written until **Save changes**, which also closes it, and closing with unsaved changes asks first. Settings pages close on Save. Theme and accent colour apply only when saved. Lira's own dialogs replace every browser confirm, prompt and alert. |
+| **Rich descriptions** | A full editor for ticket descriptions: headings, bold, italic, underline, strikethrough, bullet, numbered and checkbox lists, quotes, code, links, text colour, highlight, **@mentions**, and files (pictures show in the text, every file joins the ticket's attachments). Older Markdown descriptions open converted. |
+| **Dates** | A themed date picker everywhere a date is chosen, and a roomier month calendar with month and year pickers and "+N more" days. |
 | **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
 | **Code health** | Large files split into small parts (no component over about 500 lines), 294 automated tests. |
 
-## 🌟 Key Highlights
+## Key Highlights
 
-### 💾 1. Two-Way Local PC Disk Persistence & Sharded Storage
+### 1. Two-Way Local PC Disk Persistence & Sharded Storage
 * **Space-Segregated Storage Architecture**: Workspace data is partitioned cleanly into individual space files under [`data/spaces/<KEY>.json`](./data/spaces/) (e.g. `AI.json`, `CERT.json`, `COUR.json`, `CH.json`, `GT.json`, `LIRA.json`), paired with a manifest index in [`data/spaces.json`](./data/spaces.json). This prevents file bloat and ensures modular, scalable performance.
 * **Consolidated Master Snapshot & Dual-Sync**: On every change, Lira automatically updates both the individual space file (`data/spaces/<KEY>.json`) and a unified master snapshot at [`data/lira-workspace.json`](./data/lira-workspace.json) for 100% backward compatibility.
 * **No Cloud Required / 100% Offline**: All spaces, epics, tasks, subtasks, activities, and rankings are stored directly on your PC disk. No internet connection or external database is required.
@@ -41,22 +44,22 @@
 * **Unified Single-File Backup & Restore**:
   * **Export**: Clicking **Export JSON Backup** downloads a single, comprehensive timestamped backup file (`lira-backup-YYYY-MM-DD.json`) containing all spaces and issues across your entire workspace, while simultaneously refreshing local disk files.
   * **Import**: Uploading a single backup `.json` file restores all spaces and issues into in-browser Dexie IndexedDB and immediately dual-syncs them to individual space JSON files on disk.
-* **Persistent Status Bar**: Top navigation displays a real-time status indicator (`🟢 PC Saved` / `💾 Saving to PC…`) with manual immediate sync triggers.
+* **Persistent Status Bar**: Top navigation displays a real-time status indicator (` PC Saved` / ` Saving to PC…`) with manual immediate sync triggers.
 
-### 📋 2. Jira-Grade Kanban Board & Full-Height DnD
+### 2. Enterprise-Grade Kanban Board & Full-Height DnD
 * **Continuous Multi-Drag**: Powered by `@hello-pangea/dnd` with reactive state synchronization, eliminating draggable sensor unmount bugs and enabling infinite drag-and-drop operations across all columns.
 * **Full-Height Column Drop Targets**: Short columns dynamic stretch their droppable areas to match the tallest column on the board, allowing tasks to be promoted from the bottom of any column with full blue-zone detection.
 * **Active Edge Auto-Scrolling**: A high-performance `requestAnimationFrame` velocity loop monitors cursor proximity to board edges (top, bottom, left, right) and smoothly scrolls the board during active dragging.
 * **Fractional Ranking Engine**: Supports smooth, collision-free reordering between any two tasks (`newRank = (before + after) / 2`).
 * **Multi-Axis Mouse Controls**: Floating directional controls (top, bottom, left, right), alt-wheel horizontal scroll, and custom scrollbars.
-* **Jira-Style Delete Confirmation Modal**: Custom `ConfirmDeleteModal` with Atlassian styling and backdrop blur replaces browser `window.confirm()`, alerting users with explicit warnings when deleting parent tasks or epics with child issues.
+* **Delete Confirmation Modal**: Custom `ConfirmDeleteModal` with backdrop blur replaces browser `window.confirm()`, alerting users with explicit warnings when deleting parent tasks or epics with child issues.
 
-### ⚡ 3. Lira v2.0 Scope Refactor & Enterprise UX Engine
+### 3. Lira v2.0 Scope Refactor & Enterprise UX Engine
 * **Strict Pruning & Zero Bloat**: Purged all dead menus (`Projects`, `Dashboards`, `Teams` in top nav, old `SPACES` header row and bottom utility list in left sidebar, `Timeline`/`Approvals` in board tabs).
 * **Multi-Dimensional Filters Explorer**: Full-page interactive JQL query table filtering across Spaces, Status, Priority, Tags/Labels, Assignees, and Teams with instant CSV & JSON exports.
 * **Action-Detail Notifications Center**: Bell popover displaying concrete audit action details (created, status transitioned, comments, edits) with clickable direct ticket hyperlinks.
-* **Jira-Grade Settings Popover Menu & 8 Dedicated Modals**: Searchable admin panel modeled directly from Jira Cloud with working popups for General Settings, Notification Settings, System & Disk Backup, Jira Apps, Manage Spaces, Work Items Hierarchy, Marketplace Apps, User Management, and Billing.
-* **Interactive Account Options (`VY`) & Profile Editor**: Dedicated account popover matching Jira Cloud with Profile editor modal, email & initials manager, and Light/Dark workspace theme switcher.
+* **Settings Popover Menu & 8 Dedicated Modals**: Searchable admin panel with working popups for General Settings, Notification Settings, System & Disk Backup, Apps, Manage Spaces, Work Items Hierarchy, Marketplace Apps, User Management, and Billing.
+* **Interactive Account Options (`VY`) & Profile Editor**: Dedicated account popover with Profile editor modal, email & initials manager, and Light/Dark workspace theme switcher.
 * **Space Overflow Actions (`...`)**: Fully operational Board Settings modal (card density & badge toggles), WIP Limits engine (with column caps and over-capacity warnings), and Bulk Actions modal (batch status, priority, assignee, and deletion).
 * **Enhanced Capacity & Workload Allocation**: Complete 4-way grouping engine (`Status`, `Assignee`, `Priority`, `Epic`) with story point capacity load bars, throughput dials, and in-view quick filter chips (`All`, `Assigned to VY`, `In Flight`, `High Priority`, `Overdue`).
 * **Interactive & Reactive "Customise Your Sidebar"**: Modal drawer allowing users to customize visible navigation items (For you, Recent, Filters, Dashboards, Teams, Apps, Starred, Spaces) with instant reactive rendering and `localStorage` persistence.
@@ -64,7 +67,7 @@
 * **Seamless Project-to-Space Navigation**: Smoothly transition between the Projects overview/workspace and any Space board with automatic state switching and sidebar restoration.
 * **Aesthetic Geometric App Launcher**: Multi-tone gradient 9-module app switcher button with instant operational triggers for Lira Board, Lira AI, and local PC Backup & Restore.
 
-### 🤖 4. Viva AI: Copilot & Autonomous Agent
+### 4. Viva AI: Copilot & Autonomous Agent
 * **Floating launcher** in the bottom-right corner opens a curved chat card that grows out of the button and shrinks back into it. Compact and expanded sizes.
 * **Reads and writes across every space.** Search, status tables, create tickets, move them between statuses and sprints, add subtasks.
 * **Confirm and Undo.** Before changing anything Viva shows what it will do and waits for **Confirm**. Afterwards an **Undo** button puts every changed ticket back. (Settings can turn confirmation off.)
@@ -73,15 +76,15 @@
 * **Your choice of model.** The built-in engine (default, no network), Google Gemini, or any OpenAI-compatible server (Ollama, LM Studio...). Changes to tickets are always made by the built-in engine so they can be previewed and undone; a model only answers questions. Ticket text is treated as data, never as instructions.
 * Code: `src/services/ai/` (intent, handlers, preview, undo, provider) and `src/components/ai/`.
 
-### 🏷️ 5. 3-Tier Enterprise Work Item Hierarchy
-* **Epics** ⚡ → **Tasks** ✅ / **Bugs** 🐛 → **Subtasks** ↳
+### 5. 3-Tier Enterprise Work Item Hierarchy
+* **Epics** → **Tasks** / **Bugs** → **Subtasks**
 * **Story Removed**: Completely streamlined into Tasks and Epics across all spaces and code paths.
 * **Dynamic Type Conversion**: Upgrade or downgrade any ticket dynamically with automatic parent-child relinking and audit activity logging.
 * **Floating Portal Dropdowns**: Subtask placards display their parent task link; clicking opens an unclipped floating React Portal dropdown with viewport boundary collision detection.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 * **Node.js** 20.19+ or 22.12+ (Vite 8 needs it) and **npm** 10+
@@ -107,13 +110,13 @@ Full instructions, where data is stored, URLs, and the tablet and phone steps ar
 
 ---
 
-## 🧪 Tests
+## Tests
 
 `npm test` covers sprint logic (monthly and custom lengths, rollover, reports), standup and invite builders, AI intent parsing and the confirm / undo flow, the disk-persistence layer (including wiping the browser and restoring from disk), the local API guard, routes, and the animation helpers.
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```
 Lira/
@@ -153,7 +156,7 @@ Lira/
 
 ---
 
-## 🗂️ Active Spaces Across the Workspace
+## Active Spaces Across the Workspace
 
 Lira currently manages **9 active spaces** with **150+ tickets** across diverse technical domains:
 
@@ -171,13 +174,13 @@ Lira currently manages **9 active spaces** with **150+ tickets** across diverse 
 
 ---
 
-## 🛠️ DevOps & Production Roadmap (LIRA Space)
+## DevOps & Production Roadmap (LIRA Space)
 
 The `LIRA` space within the application tracks the work below. The current plan (phases, what is done) is in [ROADMAP.md](ROADMAP.md) and, inside Lira, under **Roadmaps**. Older releases first:
 
 | Key | Type | Title | Status |
 |---|---|---|---|
-| `LIRA-1` | Epic | Core Jira Frontend & Board Architecture | **Done** |
+| `LIRA-1` | Epic | Core Frontend & Board Architecture | **Done** |
 | `LIRA-6` | Epic | DevOps & Cloud-Native Delivery | **In Progress** |
 | `LIRA-7` | Task | Multi-Stage Dockerfile (Node.js 20 build + Nginx Alpine) | **In Progress** |
 | `LIRA-9` | Task | Azure Kubernetes Service (AKS) Manifests & Helm Charts | **To Do** |
@@ -189,12 +192,12 @@ The `LIRA` space within the application tracks the work below. The current plan 
 | `LIRA-31` | Task | Strict UI Pruning (Projects, Dashboards, Teams, SPACES Header, Timeline, Approvals) | **Done** |
 | `LIRA-32` | Task | Advanced Multi-Dimensional Filters Explorer Page | **Done** |
 | `LIRA-33` | Task | Notification Center with Action Details & Ticket Hyperlinks | **Done** |
-| `LIRA-34` | Task | Jira-Grade Settings Popover Menu with Admin Navigation | **Done** |
+| `LIRA-34` | Task | Settings Popover Menu with Admin Navigation | **Done** |
 | `LIRA-35` | Task | Interactive Customise Sidebar Drawer with Preference Persistence | **Done** |
 | `LIRA-36` | Task | Geometric Multi-Tone App Launcher & Backup/Restore Engine | **Done** |
 | `LIRA-37` | Task | Summary & Capacity Analytics Dashboards with Progress Dials | **Done** |
 | `LIRA-38` | Task | Interactive Account Profile (VY) Dropdown & Profile Editor Modal | **Done** |
-| `LIRA-39` | Task | Jira Settings Popover Complete Suite of 8 Admin Modals | **Done** |
+| `LIRA-39` | Task | Settings Popover Complete Suite of 8 Admin Modals | **Done** |
 | `LIRA-40` | Task | Space Three-Dots Menu: Board Settings, WIP Limits & Bulk Actions | **Done** |
 | `LIRA-41` | Task | Capacity View Grouping Engine & Real-Time Filter Chips | **Done** |
 | `LIRA-42` | Task | Dynamic Sidebar Customization & Reactive Section Rendering | **Done** |
@@ -218,7 +221,7 @@ The `LIRA` space within the application tracks the work below. The current plan 
 
 ---
 
-## 🚀 v2.0 Release Notes (earlier history)
+## v2.0 Release Notes (earlier history)
 
 Lira v2.0 delivers an extensive suite of enterprise UX refinements, navigation upgrades, and responsive layouts:
 
@@ -240,7 +243,7 @@ Lira v2.0 delivers an extensive suite of enterprise UX refinements, navigation u
    - **Export & Backup**: Direct administrative dashboard displaying local storage engine diagnostics, file sync paths, and backup actions.
 
 4. **Enhanced Action-Detail Notifications Center**:
-   - Refactored the Notifications bell popover to categorize audit events into `+ Created`, `✏️ Edited`, and `✓ Closed` transitions.
+   - Refactored the Notifications bell popover to categorize audit events into `+ Created`, ` Edited`, and ` Closed` transitions.
    - Formatted each notification with actor badges, action summaries, space chips, and explicit clickable ticket hyperlinks (`#KEY`).
    - Added category filter tabs (`All`, `Created`, `Edited`, `Closed`) and an "Only show unread" toggle switch with a "Mark all as read" control.
 
@@ -255,7 +258,7 @@ Lira v2.0 delivers an extensive suite of enterprise UX refinements, navigation u
    - Choices are persisted in `localStorage` (`lira_sidebar_customization`) and applied dynamically on sidebar render for both expanded and collapsed modes.
 
 7. **Modernized Quick-Links App Launcher**:
-   - Updated the top-left App Launcher button with the modern Atlassian 9-dot switcher visual design from `Switch Sites or Apps Screen.png`.
+   - Updated the top-left App Launcher button with a modern 9-dot switcher design.
    - Polished hover and active Tailwind styling with smooth transitions, border illumination, and active state ring effects while preserving the quick-links icon set (`Lira Board`, `Lira AI Assistant`, `Backup & Restore`, `GitHub Repo`).
 
 8. **Phase 2: Projects Architecture & Spaces Integration**:
@@ -264,20 +267,20 @@ Lira v2.0 delivers an extensive suite of enterprise UX refinements, navigation u
    - **Tabbed Project Workspace (`ProjectDetailView.tsx`)**:
      - **Board Tab**: Filtered Kanban board displaying exclusively the issues linked to the active project, with ticket search, quick assignee toggles, and column progress metrics.
      - **Technical Details Tab**: Comprehensive engineering metadata management for Git repository URLs (with direct external links), multi-environment tagging (Development, QA, Staging, Production), and architectural scope descriptions.
-     - **Project Settings Tab**: Jira-grade RBAC permissions note with offline administrator guidelines, 4-stage workflow states lifecycle (`Backlog`, `To Do`, `In Progress`, `Done`), and customizable project fields schema stub.
+     - **Project Settings Tab**: RBAC permissions note with offline administrator guidelines, 4-stage workflow states lifecycle (`Backlog`, `To Do`, `In Progress`, `Done`), and customizable project fields schema stub.
    - **Navigation & Routing Wiring (`App.tsx` & `LeftSidebar.tsx`)**: Added dedicated "Projects" navigation item with Lucide `FolderKanban` icon in LeftSidebar (both expanded and collapsed modes), AppLauncher quick-links, and reactive `activeTab === 'Projects'` view rendering.
 
 9. **Phase 4: Layout State, Routing & Theme Fixes**:
    - **Light/Dark Mode System Fix**: Configured Tailwind `darkMode: 'class'` strategy in `tailwind.config.js`. Synchronized theme changes directly to `document.documentElement.classList` (`dark` add/remove) across `SettingsModal.tsx`, `AccountDropdown.tsx`, and `TopNavigation.tsx` with persistence to `localStorage` key `lira_theme`. On app initialization in `App.tsx`, read and apply `lira_theme` immediately before and during initial render.
-   - **Board Maximize & Sidebar Auto-Collapse**: Added `sidebarCollapsed` state in `App.tsx` and wired to the board header maximize button (⤢ icon in `BoardActionBar`). When collapsed, `LeftSidebar` transitions smoothly (`transition-all duration-300`) to an icon-only 56px wide rail without text labels.
+   - **Board Maximize & Sidebar Auto-Collapse**: Added `sidebarCollapsed` state in `App.tsx` and wired to the board header maximize button ( icon in `BoardActionBar`). When collapsed, `LeftSidebar` transitions smoothly (`transition-all duration-300`) to an icon-only 56px wide rail without text labels.
    - **Filters Page Sidebar Behavior**: Automatically collapses sidebar when navigating to the Filters page (`activeTab === 'Filters'`). Supports manual sidebar expansion, and automatically restores full sidebar and routes to the Board view (`setActiveTab('Board')` and `setSidebarCollapsed(false)`) when clicking any space link from the icon rail, expanded sidebar, or Filters page issue list.
 
 ---
 
-## 🔒 Security
+## Security
 
 See [SECURITY_REPORT.md](SECURITY_REPORT.md) for the 20-point security check: what passed, what was fixed and what still applies.
 
-## 🛡️ License
+## License
 
 Private workspace for MLOps & LLMOps engineering. All rights reserved.

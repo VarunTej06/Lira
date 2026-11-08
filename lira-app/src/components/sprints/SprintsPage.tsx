@@ -143,26 +143,26 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
   const elapsed = daysElapsed(sprint);
 
   return (
-    <div className="flex-1 overflow-y-auto bg-jira-bg">
+    <div className="flex-1 overflow-y-auto bg-lira-bg">
       <div className="max-w-6xl mx-auto p-6 space-y-5">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-3 justify-between">
           <div>
             {onBack && (
-              <button onClick={onBack} className="text-xs text-jira-blue hover:underline cursor-pointer mb-1">← All sprints</button>
+              <button onClick={onBack} className="text-xs text-lira-blue hover:underline cursor-pointer mb-1">← All sprints</button>
             )}
-            <h1 className="text-xl font-semibold text-jira-text flex items-center gap-2">
-              <CalendarClock className="w-5 h-5 text-jira-blue" />
+            <h1 className="text-xl font-semibold text-lira-text flex items-center gap-2">
+              <CalendarClock className="w-5 h-5 text-lira-blue" />
               {lockedSpaceId ? `${spaceById.get(lockedSpaceId)?.name ?? 'Space'} sprints` : 'Sprints'}
             </h1>
-            <p className="text-xs text-jira-muted mt-0.5">Sprints run monthly, weekly, bi-weekly or for a set number of days.</p>
+            <p className="text-xs text-lira-muted mt-0.5">Sprints run monthly, weekly, bi-weekly or for a set number of days.</p>
           </div>
           <div className="flex items-center gap-2">
             {!lockedSpaceId && (
               <select
                 value={scope}
                 onChange={e => setScope(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                className="text-sm border border-jira-border rounded-md px-3 py-1.5 bg-white text-jira-text cursor-pointer"
+                className="text-sm border border-lira-border rounded-md px-3 py-1.5 bg-white text-lira-text cursor-pointer"
                 aria-label="Space"
               >
                 <option value="all">All spaces</option>
@@ -180,12 +180,12 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               className="!py-1.5 !text-sm"
             />
             {onCreateSprint && (
-              <button onClick={onCreateSprint} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg bg-jira-blue text-white hover:bg-jira-blue-hover cursor-pointer">
+              <button onClick={onCreateSprint} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg bg-lira-blue text-white hover:bg-lira-blue-hover cursor-pointer">
                 <Plus className="w-3.5 h-3.5" /> New sprint
               </button>
             )}
             {onOpenAllTickets && (
-              <button onClick={onOpenAllTickets} className="text-sm px-3 py-1.5 border border-jira-border rounded-md bg-white text-jira-text hover:bg-gray-50 cursor-pointer">
+              <button onClick={onOpenAllTickets} className="text-sm px-3 py-1.5 border border-lira-border rounded-md bg-white text-lira-text hover:bg-gray-50 cursor-pointer">
                 All tickets
               </button>
             )}
@@ -194,7 +194,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
         {/* Sprint timeline */}
         <div className="flex items-center gap-2">
-          <button onClick={() => setSprint(neighbourSprint(sprint, keys, -1))} className="p-1.5 rounded border border-jira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Previous sprint">
+          <button onClick={() => setSprint(neighbourSprint(sprint, keys, -1))} className="p-1.5 rounded border border-lira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Previous sprint">
             <ChevronLeft className="w-4 h-4" />
           </button>
           <div className="flex-1 flex gap-1.5 overflow-x-auto py-1">
@@ -207,23 +207,23 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
                   onClick={() => setSprint(k)}
                   ref={el => { if (el && active) el.scrollIntoView({ inline: 'center', block: 'nearest' }); }}
                   className={`flex-shrink-0 px-3 py-1.5 rounded-md border text-left cursor-pointer transition-colors ${
-                    active ? 'bg-jira-blue border-jira-blue text-white' : 'bg-white border-jira-border text-jira-text hover:bg-gray-50'
+                    active ? 'bg-lira-blue border-lira-blue text-white' : 'bg-white border-lira-border text-lira-text hover:bg-gray-50'
                   }`}
                 >
                   <div className="text-xs font-semibold flex items-center gap-1">
                     {sprintLabel(k, true)}
                     {k === currentSprintKey() && <span className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-white' : 'bg-green-500'}`} />}
                   </div>
-                  <div className={`text-[10px] ${active ? 'text-white/80' : 'text-jira-muted'}`}>{s.done}/{s.total} done</div>
+                  <div className={`text-[10px] ${active ? 'text-white/80' : 'text-lira-muted'}`}>{s.done}/{s.total} done</div>
                 </button>
               );
             })}
           </div>
-          <button onClick={() => setSprint(neighbourSprint(sprint, keys, 1))} className="p-1.5 rounded border border-jira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Next sprint">
+          <button onClick={() => setSprint(neighbourSprint(sprint, keys, 1))} className="p-1.5 rounded border border-lira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Next sprint">
             <ChevronRight className="w-4 h-4" />
           </button>
           {sprint !== currentSprintKey() && (
-            <button onClick={() => setSprint(currentSprintKey())} className="text-xs px-2.5 py-1.5 rounded border border-jira-border bg-white hover:bg-gray-50 cursor-pointer">
+            <button onClick={() => setSprint(currentSprintKey())} className="text-xs px-2.5 py-1.5 rounded border border-lira-border bg-white hover:bg-gray-50 cursor-pointer">
               Current
             </button>
           )}
@@ -256,34 +256,34 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         )}
 
         {/* Sprint summary */}
-        <div className="bg-white border border-jira-border rounded-lg p-5 space-y-4">
+        <div className="bg-white border border-lira-border rounded-lg p-5 space-y-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-semibold text-jira-text">{sprintName(sprint)}</h2>
+                <h2 className="text-lg font-semibold text-lira-text">{sprintName(sprint)}</h2>
                 <PhaseBadge sprint={sprint} />
                 {completed && <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded bg-green-100 text-green-700">Closed</span>}
               </div>
-              <p className="text-xs text-jira-muted mt-1">
+              <p className="text-xs text-lira-muted mt-1">
                 {sprintKindLabel(sprint)} · {fmt(sprintStart(sprint))} – {fmt(sprintEnd(sprint))} · {total} days
                 {phase === 'active' && ` · ${daysLeft(sprint)} day${daysLeft(sprint) === 1 ? '' : 's'} left`}
                 {completed && meta.completedAt && ` · closed ${new Date(meta.completedAt).toLocaleDateString()}`}
               </p>
-              <p className="text-xs text-jira-muted mt-1" data-testid="sprint-spaces">
+              <p className="text-xs text-lira-muted mt-1" data-testid="sprint-spaces">
                 Spaces: {involved ? involvedNames.join(', ') || `${involved.length} spaces` : 'all spaces'}
-                {' '}<button onClick={() => { setSpacesDraft(involved ?? []); setSpacesOpen(true); }} className="text-jira-blue hover:underline cursor-pointer">Edit</button>
+                {' '}<button onClick={() => { setSpacesDraft(involved ?? []); setSpacesOpen(true); }} className="text-lira-blue hover:underline cursor-pointer">Edit</button>
               </p>
             </div>
             <div className="flex items-center gap-2">
               {onAddIssue && phase !== 'past' && (
-                <button onClick={() => onAddIssue('todo', { sprint, spaceId: scope === 'all' ? undefined : scope })} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-md border border-jira-border bg-white hover:bg-gray-50 cursor-pointer">
+                <button onClick={() => onAddIssue('todo', { sprint, spaceId: scope === 'all' ? undefined : scope })} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-md border border-lira-border bg-white hover:bg-gray-50 cursor-pointer">
                   <Plus className="w-3.5 h-3.5" /> Create ticket
                 </button>
               )}
               <button
                 onClick={handleComplete}
                 disabled={list.length === 0 && !completed}
-                className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-md bg-jira-blue text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-md bg-lira-blue text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                 title={completed ? 'Edit the retrospective' : `Close the sprint. Done tickets stay; unfinished tickets move to ${sprintName(followingSprint(sprint, keys))}`}
               >
                 <CheckCircle2 className="w-4 h-4" /> {completed ? 'Retrospective' : 'Complete sprint'}
@@ -293,19 +293,31 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
           {/* Goal */}
           <div className="flex items-start gap-2">
-            <Target className="w-4 h-4 text-jira-muted mt-1.5 flex-shrink-0" />
+            <Target className="w-4 h-4 text-lira-muted mt-1.5 flex-shrink-0" />
             <input
               value={goalDraft}
               onChange={e => setGoalDraft(e.target.value)}
-              onBlur={() => setSprintMeta(scope, sprint, { goal: goalDraft })}
+              onKeyDown={e => { if (e.key === 'Enter') { setSprintMeta(scope, sprint, { goal: goalDraft.trim() }); setGoalDraft(goalDraft.trim()); setRetroVersion(v => v + 1); } }}
               placeholder={`Sprint goal for ${sprintLabel(sprint)}… (what must be true by the end?)`}
-              className="flex-1 text-sm border border-transparent hover:border-jira-border focus:border-jira-blue rounded px-2 py-1.5 bg-transparent text-jira-text outline-none"
+              aria-label="Sprint goal"
+              className="flex-1 text-sm border border-transparent hover:border-lira-border focus:border-lira-blue rounded px-2 py-1.5 bg-transparent text-lira-text outline-none"
             />
+            {goalDraft.trim() !== (meta.goal || '') && (
+              <>
+                <button onClick={() => setGoalDraft(meta.goal || '')} className="px-2.5 py-1.5 text-xs text-lira-muted hover:text-lira-text cursor-pointer">Cancel</button>
+                <button
+                  onClick={() => { setSprintMeta(scope, sprint, { goal: goalDraft.trim() }); setGoalDraft(goalDraft.trim()); setRetroVersion(v => v + 1); }}
+                  className="px-3 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-lira-blue-hover cursor-pointer"
+                >
+                  Save goal
+                </button>
+              </>
+            )}
           </div>
 
           {/* Progress */}
           <div>
-            <div className="flex justify-between text-xs text-jira-muted mb-1">
+            <div className="flex justify-between text-xs text-lira-muted mb-1">
               <span><CountUp value={stats.done} /> of {stats.total} done · <CountUp value={stats.percent} suffix="%" /></span>
               <span><CountUp value={stats.donePoints} />/{stats.points} points</span>
             </div>
@@ -328,26 +340,26 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               { label: 'Done', v: stats.done, c: STATUS_META.done.color },
               { label: 'Carried over in', v: stats.carriedIn, c: '#B45309' },
             ].map(t => (
-              <div key={t.label} className="border border-jira-border rounded-md px-3 py-2">
+              <div key={t.label} className="border border-lira-border rounded-md px-3 py-2">
                 <div className="text-xl font-semibold" style={{ color: t.c }}><CountUp value={t.v} /></div>
-                <div className="text-[11px] text-jira-muted">{t.label}</div>
+                <div className="text-[11px] text-lira-muted">{t.label}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Views */}
-        <div className="flex gap-1 border-b border-jira-border" role="tablist" aria-label="Sprint views">
+        <div className="flex gap-1 border-b border-lira-border" role="tablist" aria-label="Sprint views">
           {VIEWS.map(v => (
             <button
               key={v.id}
               role="tab"
               aria-selected={view === v.id}
               onClick={() => setView(v.id)}
-              className={`relative px-4 py-2 text-sm font-medium -mb-px border-b-2 border-transparent cursor-pointer transition-colors ${view === v.id ? 'text-jira-blue' : 'text-jira-muted hover:text-jira-text'}`}
+              className={`relative px-4 py-2 text-sm font-medium -mb-px border-b-2 border-transparent cursor-pointer transition-colors ${view === v.id ? 'text-lira-blue' : 'text-lira-muted hover:text-lira-text'}`}
             >
               {v.label}
-              {view === v.id && <motion.span layoutId="sprint-view-underline" transition={slide} className="absolute left-0 right-0 -bottom-[2px] h-0.5 rounded-full bg-jira-blue" aria-hidden />}
+              {view === v.id && <motion.span layoutId="sprint-view-underline" transition={slide} className="absolute left-0 right-0 -bottom-[2px] h-0.5 rounded-full bg-lira-blue" aria-hidden />}
             </button>
           ))}
         </div>
@@ -357,7 +369,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
           <div className="flex items-center gap-2 -mt-2">
             <SprintFilter spaces={involved ? spaces.filter(s => involved.includes(s.id!)) || spaces : spaces} value={filter} onChange={setFilter} />
             {(filter.statuses.length > 0 || filter.spaceIds.length > 0) && (
-              <span className="text-xs text-jira-muted" data-testid="filter-count">Showing {visible.length} of {list.length} tickets</span>
+              <span className="text-xs text-lira-muted" data-testid="filter-count">Showing {visible.length} of {list.length} tickets</span>
             )}
           </div>
         )}
@@ -371,14 +383,14 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
         {/* Charts */}
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="bg-white border border-jira-border rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-jira-text mb-2">Burndown</h3>
+          <div className="bg-white border border-lira-border rounded-lg p-4">
+            <h3 className="text-sm font-semibold text-lira-text mb-2">Burndown</h3>
             <BurndownChart data={burn} total={list.length} />
           </div>
-          <div className="bg-white border border-jira-border rounded-lg p-4">
+          <div className="bg-white border border-lira-border rounded-lg p-4">
             <div className="flex items-baseline justify-between mb-2">
-              <h3 className="text-sm font-semibold text-jira-text">Velocity (last sprints)</h3>
-              <span className="text-[11px] text-jira-muted">avg {velocity.avg} done / closed sprint</span>
+              <h3 className="text-sm font-semibold text-lira-text">Velocity (last sprints)</h3>
+              <span className="text-[11px] text-lira-muted">avg {velocity.avg} done / closed sprint</span>
             </div>
             <div className="flex items-end gap-3 h-32">
               {velocity.rows.map(r => (
@@ -387,11 +399,11 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
                     <div className="w-1/2 bg-gray-300 rounded-t" style={{ height: `${(r.total / velocity.max) * 100}%` }} />
                     <div className="w-1/2 bg-green-500 rounded-t" style={{ height: `${(r.done / velocity.max) * 100}%` }} />
                   </div>
-                  <span className={`text-[10px] ${r.key === sprint ? 'font-bold text-jira-blue' : 'text-jira-muted'}`}>{sprintLabel(r.key, true)}</span>
+                  <span className={`text-[10px] ${r.key === sprint ? 'font-bold text-lira-blue' : 'text-lira-muted'}`}>{sprintLabel(r.key, true)}</span>
                 </button>
               ))}
             </div>
-            <div className="flex gap-3 text-[10px] text-jira-muted mt-2">
+            <div className="flex gap-3 text-[10px] text-lira-muted mt-2">
               <span><span className="inline-block w-2 h-2 bg-gray-300 mr-1" />Committed</span>
               <span><span className="inline-block w-2 h-2 bg-green-500 mr-1" />Done</span>
             </div>
@@ -400,10 +412,10 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
         {/* Bulk bar */}
         {selectedIssues.length > 0 && (
-          <div className="sticky top-0 z-10 flex items-center gap-3 bg-jira-blue text-white rounded-lg px-4 py-2 shadow-md">
+          <div className="sticky top-0 z-10 flex items-center gap-3 bg-lira-blue text-white rounded-lg px-4 py-2 shadow-md">
             <span className="text-sm font-medium">{selectedIssues.length} selected</span>
             <span className="text-xs opacity-80">Move to</span>
-            <SprintSelect value="all" options={keys} onChange={v => v !== 'all' && handleBulkMove(v)} allLabel="Choose sprint…" className="text-jira-text" />
+            <SprintSelect value="all" options={keys} onChange={v => v !== 'all' && handleBulkMove(v)} allLabel="Choose sprint…" className="text-lira-text" />
             <button onClick={() => handleBulkMove(followingSprint(sprint, keys))} className="flex items-center gap-1 text-xs px-2.5 py-1 rounded bg-white/20 hover:bg-white/30 cursor-pointer">
               <ArrowRightCircle className="w-3.5 h-3.5" /> Next sprint
             </button>
@@ -414,7 +426,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         {/* Tickets grouped by status */}
         <motion.div className="space-y-3" variants={staggerParent} initial="hidden" animate="show" key={`${sprint}-${scope}-${filter.statuses.join()}-${filter.spaceIds.join()}`}>
           {list.length === 0 && (
-            <div className="bg-white border border-dashed border-jira-border rounded-lg py-12 text-center text-sm text-jira-muted">
+            <div className="bg-white border border-dashed border-lira-border rounded-lg py-12 text-center text-sm text-lira-muted">
               No tickets in {sprintName(sprint)}{scope !== 'all' ? ' for this space' : ''}.
               {phase !== 'past' && ' Create one, or move tickets here from another sprint.'}
             </div>
@@ -425,15 +437,15 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             const sm = STATUS_META[status];
             const isCollapsed = collapsed.has(status);
             return (
-              <motion.div key={status} variants={staggerChild} className="bg-white border border-jira-border rounded-lg overflow-hidden">
+              <motion.div key={status} variants={staggerChild} className="bg-white border border-lira-border rounded-lg overflow-hidden">
                 <button
                   onClick={() => setCollapsed(prev => { const n = new Set(prev); n.has(status) ? n.delete(status) : n.add(status); return n; })}
-                  className="w-full flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-jira-border text-left cursor-pointer"
+                  className="w-full flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border text-left cursor-pointer"
                 >
                   <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isCollapsed ? '' : 'rotate-90'}`} />
                   <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: sm.color }}>{sm.label}</span>
-                  <span className="text-xs text-jira-muted">{rows.length}</span>
-                  {status === 'done' && <span className="text-[10px] text-jira-muted ml-auto">stays in this sprint when it closes</span>}
+                  <span className="text-xs text-lira-muted">{rows.length}</span>
+                  {status === 'done' && <span className="text-[10px] text-lira-muted ml-auto">stays in this sprint when it closes</span>}
                 </button>
                 {!isCollapsed && rows.map(i => (
                   <TicketRow
@@ -453,10 +465,10 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         </motion.div>
 
         {scope === 'all' && onOpenSpace && list.length > 0 && (
-          <div className="flex flex-wrap gap-2 text-xs text-jira-muted items-center">
+          <div className="flex flex-wrap gap-2 text-xs text-lira-muted items-center">
             Jump to a space:
             {spaces.filter(s => list.some(i => i.spaceId === s.id)).map(s => (
-              <button key={s.id} onClick={() => onOpenSpace(s.id!)} className="px-2 py-1 rounded border border-jira-border bg-white hover:bg-gray-50 text-jira-text cursor-pointer">
+              <button key={s.id} onClick={() => onOpenSpace(s.id!)} className="px-2 py-1 rounded border border-lira-border bg-white hover:bg-gray-50 text-lira-text cursor-pointer">
                 {s.icon} {s.name} ({list.filter(i => i.spaceId === s.id).length})
               </button>
             ))}
@@ -469,12 +481,12 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
       <Modal isOpen={spacesOpen} onClose={() => setSpacesOpen(false)} title={`Spaces in ${sprintName(sprint)}`} size="md">
         <div className="p-6 space-y-4">
           <SprintSpacesPicker spaces={spaces} value={spacesDraft} onChange={setSpacesDraft} />
-          <p className="text-[11px] text-jira-muted">Tickets already in the sprint stay. This decides which spaces can add tickets from now on.</p>
+          <p className="text-[11px] text-lira-muted">Tickets already in the sprint stay. This decides which spaces can add tickets from now on.</p>
           <div className="flex justify-end gap-2">
-            <button onClick={() => setSpacesOpen(false)} className="text-sm px-3 py-1.5 rounded-lg border border-jira-border bg-white cursor-pointer">Cancel</button>
+            <button onClick={() => setSpacesOpen(false)} className="text-sm px-3 py-1.5 rounded-lg border border-lira-border bg-white cursor-pointer">Cancel</button>
             <button
               onClick={() => { setSprintSpaces(sprint, spacesDraft.length && spacesDraft.length < spaces.length ? spacesDraft : null); setSpacesOpen(false); flash('Sprint spaces updated'); }}
-              className="text-sm px-3 py-1.5 rounded-lg bg-jira-blue text-white cursor-pointer"
+              className="text-sm px-3 py-1.5 rounded-lg bg-lira-blue text-white cursor-pointer"
             >
               Save
             </button>
@@ -506,7 +518,7 @@ const BurndownChart: React.FC<{ data: ReturnType<typeof burndown>; total: number
   const ideal = data.map(p => `${x(p.day)},${y(p.ideal)}`).join(' ');
   const actualPts = data.filter(p => p.actual !== null);
   const actual = actualPts.map(p => `${x(p.day)},${y(p.actual!)}`).join(' ');
-  if (total === 0) return <p className="text-xs text-jira-muted py-10 text-center">No tickets to chart.</p>;
+  if (total === 0) return <p className="text-xs text-lira-muted py-10 text-center">No tickets to chart.</p>;
   return (
     <div>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-36" role="img" aria-label="Burndown chart">
@@ -522,9 +534,9 @@ const BurndownChart: React.FC<{ data: ReturnType<typeof burndown>; total: number
         <motion.polyline points={ideal} fill="none" stroke="#97A0AF" strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} />
         {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke="#0052CC" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
       </svg>
-      <div className="flex gap-3 text-[10px] text-jira-muted">
+      <div className="flex gap-3 text-[10px] text-lira-muted">
         <span><span className="inline-block w-3 border-t-2 border-dashed border-gray-400 mr-1 align-middle" />Ideal</span>
-        <span><span className="inline-block w-3 border-t-2 border-jira-blue mr-1 align-middle" />Remaining</span>
+        <span><span className="inline-block w-3 border-t-2 border-lira-blue mr-1 align-middle" />Remaining</span>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { PriorityIcon, TypeIcon } from '../../common/Icons';
 import { KanbanSquare, Settings, Plus, Layers, AlertCircle, CheckCircle2, TrendingUp } from 'lucide-react';
 import { Button } from '../../common/Button';
 import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
@@ -10,10 +11,10 @@ export function OverviewTab(ctx: DetailCtx) {
   return (
           <div className="flex-1 overflow-y-auto p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6">
             {/* Quick Actions Row */}
-            <div className="bg-white rounded-xl border border-jira-border p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
+            <div className="bg-white rounded-xl border border-lira-border p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-jira-muted">Project Workspace Actions</h3>
-                <p className="text-xs text-jira-text mt-0.5">Jump directly to issue authoring, Kanban execution, or project schema settings.</p>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-lira-muted">Project Workspace Actions</h3>
+                <p className="text-xs text-lira-text mt-0.5">Jump directly to issue authoring, Kanban execution, or project schema settings.</p>
               </div>
               <div className="flex items-center gap-2.5">
                 {onAddIssue && (
@@ -48,23 +49,23 @@ export function OverviewTab(ctx: DetailCtx) {
             {/* At-a-Glance Metrics Row (4 Stat Cards) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Stat 1: Total Issues */}
-              <div className="bg-white rounded-xl border border-jira-border p-5 shadow-xs flex items-center justify-between">
+              <div className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-jira-muted uppercase tracking-wider">Total Issues</p>
-                  <h4 className="text-2xl font-black text-jira-text mt-1">{stats.total}</h4>
-                  <p className="text-[11px] text-jira-muted mt-0.5">In this project scope</p>
+                  <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Total Issues</p>
+                  <h4 className="text-2xl font-black text-lira-text mt-1">{stats.total}</h4>
+                  <p className="text-[11px] text-lira-muted mt-0.5">In this project scope</p>
                 </div>
-                <div className="w-11 h-11 rounded-xl bg-blue-50 text-jira-blue flex items-center justify-center">
+                <div className="w-11 h-11 rounded-xl bg-blue-50 text-lira-blue flex items-center justify-center">
                   <Layers className="w-5 h-5" />
                 </div>
               </div>
 
               {/* Stat 2: Open Issues */}
-              <div className="bg-white rounded-xl border border-jira-border p-5 shadow-xs flex items-center justify-between">
+              <div className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-jira-muted uppercase tracking-wider">Open Issues</p>
+                  <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Open Issues</p>
                   <h4 className="text-2xl font-black text-amber-600 mt-1">{stats.open}</h4>
-                  <p className="text-[11px] text-jira-muted mt-0.5">Backlog + Todo + In Progress</p>
+                  <p className="text-[11px] text-lira-muted mt-0.5">Backlog + Todo + In Progress</p>
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
                   <AlertCircle className="w-5 h-5" />
@@ -72,11 +73,11 @@ export function OverviewTab(ctx: DetailCtx) {
               </div>
 
               {/* Stat 3: Completed Issues */}
-              <div className="bg-white rounded-xl border border-jira-border p-5 shadow-xs flex items-center justify-between">
+              <div className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-jira-muted uppercase tracking-wider">Completed Issues</p>
+                  <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Completed Issues</p>
                   <h4 className="text-2xl font-black text-emerald-600 mt-1">{stats.done}</h4>
-                  <p className="text-[11px] text-jira-muted mt-0.5">Done & verified</p>
+                  <p className="text-[11px] text-lira-muted mt-0.5">Done & verified</p>
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                   <CheckCircle2 className="w-5 h-5" />
@@ -84,11 +85,11 @@ export function OverviewTab(ctx: DetailCtx) {
               </div>
 
               {/* Stat 4: Completion % */}
-              <div className="bg-white rounded-xl border border-jira-border p-5 shadow-xs flex items-center justify-between">
+              <div className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-semibold text-jira-muted uppercase tracking-wider">Completion %</p>
+                  <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Completion %</p>
                   <h4 className="text-2xl font-black text-purple-600 mt-1">{stats.percent}%</h4>
-                  <p className="text-[11px] text-jira-muted mt-0.5">{stats.done} of {stats.total} resolved</p>
+                  <p className="text-[11px] text-lira-muted mt-0.5">{stats.done} of {stats.total} resolved</p>
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5" />
@@ -97,19 +98,19 @@ export function OverviewTab(ctx: DetailCtx) {
             </div>
 
             {/* Status Distribution Chart (Pure Tailwind / SVG Stacked Bar) */}
-            <div className="bg-white rounded-xl border border-jira-border p-6 shadow-xs space-y-4">
+            <div className="bg-white rounded-xl border border-lira-border p-6 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-jira-text">Status Distribution</h3>
-                  <p className="text-xs text-jira-muted mt-0.5">
+                  <h3 className="text-sm font-bold text-lira-text">Status Distribution</h3>
+                  <p className="text-xs text-lira-muted mt-0.5">
                     Proportional workflow breakdown across Backlog, To Do, In Progress, and Done stages.
                   </p>
                 </div>
-                <span className="text-xs font-semibold text-jira-muted">{stats.total} Items</span>
+                <span className="text-xs font-semibold text-lira-muted">{stats.total} Items</span>
               </div>
 
               {stats.total === 0 ? (
-                <div className="py-8 text-center text-xs text-jira-muted bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                <div className="py-8 text-center text-xs text-lira-muted bg-gray-50 rounded-xl border border-dashed border-gray-200">
                   No issues recorded yet for this project. Click <strong>Create Issue</strong> above to start.
                 </div>
               ) : (
@@ -170,9 +171,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     <div className="flex items-center gap-2 p-2.5 rounded-lg bg-gray-50 border border-gray-100">
                       <span className="w-3 h-3 rounded-full bg-slate-400 flex-shrink-0" />
                       <div className="text-xs">
-                        <span className="text-jira-muted font-medium">Backlog: </span>
-                        <span className="font-bold text-jira-text">{stats.backlog}</span>
-                        <span className="text-[10px] text-jira-muted ml-1">
+                        <span className="text-lira-muted font-medium">Backlog: </span>
+                        <span className="font-bold text-lira-text">{stats.backlog}</span>
+                        <span className="text-[10px] text-lira-muted ml-1">
                           ({stats.total > 0 ? Math.round((stats.backlog / stats.total) * 100) : 0}%)
                         </span>
                       </div>
@@ -181,9 +182,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     <div className="flex items-center gap-2 p-2.5 rounded-lg bg-blue-50/60 border border-blue-100">
                       <span className="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0" />
                       <div className="text-xs">
-                        <span className="text-jira-muted font-medium">To Do: </span>
-                        <span className="font-bold text-jira-blue">{stats.todo}</span>
-                        <span className="text-[10px] text-jira-muted ml-1">
+                        <span className="text-lira-muted font-medium">To Do: </span>
+                        <span className="font-bold text-lira-blue">{stats.todo}</span>
+                        <span className="text-[10px] text-lira-muted ml-1">
                           ({stats.total > 0 ? Math.round((stats.todo / stats.total) * 100) : 0}%)
                         </span>
                       </div>
@@ -192,9 +193,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     <div className="flex items-center gap-2 p-2.5 rounded-lg bg-amber-50/60 border border-amber-100">
                       <span className="w-3 h-3 rounded-full bg-amber-500 flex-shrink-0" />
                       <div className="text-xs">
-                        <span className="text-jira-muted font-medium">In Progress: </span>
+                        <span className="text-lira-muted font-medium">In Progress: </span>
                         <span className="font-bold text-amber-700">{stats.inProgress}</span>
-                        <span className="text-[10px] text-jira-muted ml-1">
+                        <span className="text-[10px] text-lira-muted ml-1">
                           ({stats.total > 0 ? Math.round((stats.inProgress / stats.total) * 100) : 0}%)
                         </span>
                       </div>
@@ -203,9 +204,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     <div className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-50/60 border border-emerald-100">
                       <span className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0" />
                       <div className="text-xs">
-                        <span className="text-jira-muted font-medium">Done: </span>
+                        <span className="text-lira-muted font-medium">Done: </span>
                         <span className="font-bold text-emerald-700">{stats.done}</span>
-                        <span className="text-[10px] text-jira-muted ml-1">
+                        <span className="text-[10px] text-lira-muted ml-1">
                           ({stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0}%)
                         </span>
                       </div>
@@ -216,11 +217,11 @@ export function OverviewTab(ctx: DetailCtx) {
             </div>
 
             {/* Priority Breakdown (Grid of 5 Priority Chips) */}
-            <div className="bg-white rounded-xl border border-jira-border p-6 shadow-xs space-y-3.5">
+            <div className="bg-white rounded-xl border border-lira-border p-6 shadow-xs space-y-3.5">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-jira-text">Priority Breakdown</h3>
-                  <p className="text-xs text-jira-muted mt-0.5">Issue volume classified by operational severity</p>
+                  <h3 className="text-sm font-bold text-lira-text">Priority Breakdown</h3>
+                  <p className="text-xs text-lira-muted mt-0.5">Issue volume classified by operational severity</p>
                 </div>
               </div>
 
@@ -229,7 +230,7 @@ export function OverviewTab(ctx: DetailCtx) {
                 <div className="p-3 rounded-xl border border-red-200 bg-red-50/50 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-red-700 flex items-center gap-1">
-                      <span>🔴</span> Highest
+                      <PriorityIcon priority="highest" /> Highest
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
@@ -244,7 +245,7 @@ export function OverviewTab(ctx: DetailCtx) {
                 <div className="p-3 rounded-xl border border-orange-200 bg-orange-50/50 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-orange-700 flex items-center gap-1">
-                      <span>🟠</span> High
+                      <PriorityIcon priority="high" /> High
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
@@ -259,7 +260,7 @@ export function OverviewTab(ctx: DetailCtx) {
                 <div className="p-3 rounded-xl border border-amber-200 bg-amber-50/50 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-amber-700 flex items-center gap-1">
-                      <span>🟡</span> Medium
+                      <PriorityIcon priority="medium" /> Medium
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
@@ -274,7 +275,7 @@ export function OverviewTab(ctx: DetailCtx) {
                 <div className="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-emerald-700 flex items-center gap-1">
-                      <span>🟢</span> Low
+                      <PriorityIcon priority="low" /> Low
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
@@ -289,7 +290,7 @@ export function OverviewTab(ctx: DetailCtx) {
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50/60 flex flex-col justify-between">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                      <span>⚪</span> Lowest
+                      <PriorityIcon priority="lowest" /> Lowest
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
@@ -303,26 +304,26 @@ export function OverviewTab(ctx: DetailCtx) {
             </div>
 
             {/* Recent Activity (Last 5 Updated Issues) */}
-            <div className="bg-white rounded-xl border border-jira-border p-6 shadow-xs space-y-4">
+            <div className="bg-white rounded-xl border border-lira-border p-6 shadow-xs space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-jira-text">Recent Activity</h3>
-                  <p className="text-xs text-jira-muted mt-0.5">Last 5 recently modified issues in this project</p>
+                  <h3 className="text-sm font-bold text-lira-text">Recent Activity</h3>
+                  <p className="text-xs text-lira-muted mt-0.5">Last 5 recently modified issues in this project</p>
                 </div>
                 <button
                   onClick={() => setActiveTab('tickets')}
-                  className="text-xs font-semibold text-jira-blue hover:underline cursor-pointer"
+                  className="text-xs font-semibold text-lira-blue hover:underline cursor-pointer"
                 >
                   View all ({stats.total}) →
                 </button>
               </div>
 
               {recentIssues.length === 0 ? (
-                <div className="py-8 text-center text-xs text-jira-muted bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                <div className="py-8 text-center text-xs text-lira-muted bg-gray-50 rounded-xl border border-dashed border-gray-200">
                   No issues available to display.
                 </div>
               ) : (
-                <div className="divide-y divide-gray-100 border border-jira-border rounded-xl overflow-hidden">
+                <div className="divide-y divide-gray-100 border border-lira-border rounded-xl overflow-hidden">
                   {recentIssues.map(issue => (
                     <div
                       key={issue.id || issue.key}
@@ -331,12 +332,12 @@ export function OverviewTab(ctx: DetailCtx) {
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <span className="text-base" title={ISSUE_TYPE_CONFIG[issue.type]?.label || issue.type}>
-                          {ISSUE_TYPE_CONFIG[issue.type]?.symbol || '📋'}
+                          <TypeIcon type={issue.type} className="w-4 h-4" />
                         </span>
-                        <span className="font-mono text-xs font-bold text-jira-blue group-hover:underline whitespace-nowrap">
+                        <span className="font-mono text-xs font-bold text-lira-blue group-hover:underline whitespace-nowrap">
                           {issue.key}
                         </span>
-                        <span className="text-xs text-jira-text font-medium truncate group-hover:text-jira-blue transition-colors">
+                        <span className="text-xs text-lira-text font-medium truncate group-hover:text-lira-blue transition-colors">
                           {issue.title}
                         </span>
                       </div>
@@ -345,7 +346,7 @@ export function OverviewTab(ctx: DetailCtx) {
                         <span className={`px-2 py-0.5 rounded text-[11px] font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>
                           {issue.status}
                         </span>
-                        <span className="text-xs text-jira-muted whitespace-nowrap">
+                        <span className="text-xs text-lira-muted whitespace-nowrap">
                           {formatRelativeDate(issue.updatedAt || issue.createdAt) || 'Recently'}
                         </span>
                       </div>

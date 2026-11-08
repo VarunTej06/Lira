@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../common/dialogs';
 import { Trash2, FolderKanban } from 'lucide-react';
 import { RowMenuButton, ContextItem, SectionHeader, Collapsible } from './parts';
 import type { SidebarState } from './useSidebarState';
@@ -57,7 +58,7 @@ export function ProjectsSection(s: SidebarState) {
                         danger
                         onClick={() => {
                           setRowMenu(null);
-                          if (window.confirm(`Delete the project "${p.name}"? Its tickets stay in the ${space?.name ?? 'space'} space.`)) onDeleteProject?.(p);
+                          void confirmDialog({ title: 'Delete project', message: `Delete the project "${p.name}"? Its tickets stay in the ${space?.name ?? 'space'} space.`, confirmLabel: 'Delete project', tone: 'danger' }).then(ok => { if (ok) onDeleteProject?.(p); });
                         }}
                       />
                     </RowMenuButton>

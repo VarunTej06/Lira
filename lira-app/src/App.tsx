@@ -1,3 +1,5 @@
+import { DialogHost } from './components/common/dialogs';
+import { getTheme } from './utils/theme';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { TopNavigation } from './components/layout/TopNavigation';
@@ -76,9 +78,7 @@ export default function App() {
 
   // Apply lira_theme on app mount immediately
   useEffect(() => {
-    const savedTheme = localStorage.getItem('lira_theme');
-    if (savedTheme === 'light') document.documentElement.classList.remove('dark');
-    else document.documentElement.classList.add('dark');
+    document.documentElement.classList.toggle('dark', getTheme() === 'dark');
   }, []);
 
   useEffect(() => { document.title = `${titleOf(route)} · Lira`; }, [route]);
@@ -220,10 +220,10 @@ export default function App() {
 
   if (!initialized) {
     return (
-      <div className="h-screen flex items-center justify-center bg-jira-bg">
+      <div className="h-screen flex items-center justify-center bg-lira-bg">
         <div className="text-center space-y-3">
           <img src="/lira-logo.png" alt="Lira Logo" className="w-16 h-16 mx-auto animate-pulse object-contain" />
-          <p className="text-jira-muted text-sm font-medium">Initializing Lira v2.0…</p>
+          <p className="text-lira-muted text-sm font-medium">Initializing Lira v2.0…</p>
         </div>
       </div>
     );
@@ -280,7 +280,7 @@ export default function App() {
           onEditSpace={(space) => { setEditingSpace(space); setShowCreateSpace(true); }}
         />
 
-        <main className="flex-1 min-w-0 flex flex-col overflow-hidden my-2 mr-2 ml-2 rounded-2xl border border-jira-border bg-jira-bg shadow-[0_4px_20px_rgba(9,30,66,0.10)]">
+        <main className="flex-1 min-w-0 flex flex-col overflow-hidden my-2 mr-2 ml-2 rounded-2xl border border-lira-border bg-lira-bg shadow-[0_4px_20px_rgba(9,30,66,0.10)]">
           <PageBoundary pageKey={pageKey}>
             <Routes>
               <Route path="/" element={activeSpace
@@ -393,14 +393,16 @@ export default function App() {
         </main>
       </div>
 
+      <DialogHost />
+
       {/* Issue detail modal */}
       <ErrorBoundary
         fallback={
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={closeModal}>
             <div className="bg-white rounded-xl p-8 max-w-md text-center shadow-modal">
-              <p className="text-lg font-semibold text-jira-text mb-2">Failed to render this issue</p>
-              <p className="text-sm text-jira-muted mb-4">There was an error displaying the issue details.</p>
-              <button onClick={closeModal} className="px-4 py-2 bg-jira-blue text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+              <p className="text-lg font-semibold text-lira-text mb-2">Failed to render this issue</p>
+              <p className="text-sm text-lira-muted mb-4">There was an error displaying the issue details.</p>
+              <button onClick={closeModal} className="px-4 py-2 bg-lira-blue text-white rounded-lg text-sm font-medium hover:bg-blue-700">
                 Close
               </button>
             </div>

@@ -21,7 +21,7 @@ export const FormsModal: React.FC<FormsModalProps> = (props) => {
       <div className="flex flex-col h-[580px]">
         <FormsTabs {...s} />
         {/* Body content */}
-        <div className="flex-1 overflow-y-auto p-6 text-jira-text">
+        <div className="flex-1 overflow-y-auto p-6 text-lira-text">
           {s.previewForm ? <FormPreview {...s} /> : s.activeTab === 'list' ? <FormsList {...s} /> : <FormBuilder {...s} />}
         </div>
       </div>

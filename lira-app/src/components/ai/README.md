@@ -1,10 +1,10 @@
-# 🤖 Viva AI Copilot & Autonomous Agent Module (`src/components/ai`)
+# Viva AI Copilot & Autonomous Agent Module (`src/components/ai`)
 
 > React components and client services powering the omnipresent, non-blocking AI Copilot and Autonomous Agent in Lira.
 
 ---
 
-## 📁 Module File Structure
+## Module File Structure
 
 ```
 src/components/ai/
@@ -34,7 +34,7 @@ src/services/ai/
 
 ---
 
-## 🎨 Component Overview
+## Component Overview
 
 ### `LiraAIAvatar.tsx`
 Renders the Viva AI avatar as a scalable SVG. Props: `size` (default 48), `className`, `hasSparkles` (default true). Gradient and filter ids come from `useId()` so several avatars never collide.
@@ -49,7 +49,7 @@ The floating launcher and the chat card.
 
 ---
 
-## 🧠 What it can do
+## What it can do
 
 | You say | What happens |
 |---|---|
@@ -64,7 +64,7 @@ Anything else goes to the configured model when there is one; otherwise to the b
 
 ---
 
-## 💫 Animations
+## Animations
 
 The launcher's floating and glowing are CSS (below). The chat card opening and closing, the messages and the suggestion chips use Framer Motion (see `src/components/common/motion.tsx`).
 
@@ -96,7 +96,7 @@ Declared in [`src/index.css`](../../index.css):
 
 ---
 
-## ⚙️ Settings keys
+## Settings keys
 
 All are mirrored to `data/settings.json`, except the API keys, which go to `data/private/secrets.json` (git-ignored). They are never sent to tablets or phones.
 
@@ -110,7 +110,7 @@ All are mirrored to `data/settings.json`, except the API keys, which go to `data
 
 ---
 
-## 🧪 Tests
+## Tests
 
 Behaviour tests run in Vitest with an in-memory IndexedDB: `src/services/aiAgent.test.ts`, `aiIntent.test.ts`, `aiPhase6.test.ts` (preview, confirm, undo, sprint prompts, standup, risk, suggestions, provider) and `aiSecurity.test.ts` (prompt injection, key in a header).
 

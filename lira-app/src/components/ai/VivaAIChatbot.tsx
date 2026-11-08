@@ -1,8 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  X, Send, Trash2, ArrowRight, Sparkles, User, Maximize2, Minimize2, Settings,
-  Shield, Key, FileText, RotateCcw, Check, Database,
-} from 'lucide-react';
+import { X, Send, Trash2, ArrowRight, Sparkles, User, Maximize2, Minimize2, Settings, Shield, Key, FileText, RotateCcw, Check, Database, Target, Undo2, Zap } from 'lucide-react';
 import type { Space } from '../../types/space';
 import type { Issue } from '../../types/issue';
 import {
@@ -29,7 +26,7 @@ interface VivaAIChatbotProps {
 const welcomeMessage = (spaceCount: number): ChatMessage => ({
   id: 'welcome',
   sender: 'assistant',
-  text: `👋 **Hi, I'm Viva AI.**\n\nI can **read and write** across all **${spaceCount} spaces** — search tickets, build status tables, create tickets, move them between statuses and sprints, and generate subtasks.\n\nTry one of these:`,
+  text: `**Hi, I'm Viva AI.**\n\nI can **read and write** across all **${spaceCount} spaces** — search tickets, build status tables, create tickets, move them between statuses and sprints, and generate subtasks.\n\nTry one of these:`,
   timestamp: new Date(),
   suggestedActions: [
     'Show all spaces with number of tickets in each To do, Backlog, In Progress and Done',
@@ -96,7 +93,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
       console.error('[Viva AI] request failed', err);
       setMessages(prev => [
         ...prev,
-        { id: String(Date.now()), sender: 'assistant', text: '⚠️ **Something went wrong.** Please try again.', timestamp: new Date() },
+        { id: String(Date.now()), sender: 'assistant', text: '**Something went wrong.** Please try again.', timestamp: new Date() },
       ]);
     } finally {
       setLoading(false);
@@ -116,7 +113,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
       setMessages(prev => [...prev, response]);
     } catch (err) {
       console.error('[Viva AI] confirmed action failed', err);
-      setMessages(prev => [...prev, { id: String(Date.now()), sender: 'assistant', text: '⚠️ **That did not work.** Nothing was changed.', timestamp: new Date() }]);
+      setMessages(prev => [...prev, { id: String(Date.now()), sender: 'assistant', text: '**That did not work.** Nothing was changed.', timestamp: new Date() }]);
     } finally {
       setLoading(false);
     }
@@ -128,7 +125,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
     const n = await undoAction(msg.undo.id);
     setMessages(prev => [
       ...prev.map(m => (m.id === msg.id && m.undo ? { ...m, undo: { ...m.undo, state: 'undone' as const } } : m)),
-      { id: String(Date.now()), sender: 'assistant', text: n === null ? '⚠️ I can no longer undo that one (it was too long ago, or the page was reloaded).' : `↩️ **Undone.** ${n} ticket${n === 1 ? '' : 's'} put back as they were.`, timestamp: new Date() },
+      { id: String(Date.now()), sender: 'assistant', text: n === null ? 'I can no longer undo that one (it was too long ago, or the page was reloaded).' : `**Undone.** ${n} ticket${n === 1 ? '' : 's'} put back as they were.`, timestamp: new Date() },
     ]);
   };
 
@@ -239,18 +236,18 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
           </div>
 
           {showSettings ? (
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/70 text-jira-text animate-fade-in">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/70 text-lira-text animate-fade-in">
               <div className="flex items-center justify-between pb-2 border-b border-gray-200">
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4 text-purple-600" />
                   <h3 className="font-bold text-sm">Viva AI settings</h3>
                 </div>
-                <button type="button" onClick={() => setShowSettings(false)} className="text-xs text-jira-blue hover:underline font-semibold cursor-pointer">
+                <button type="button" onClick={() => setShowSettings(false)} className="text-xs text-lira-blue hover:underline font-semibold cursor-pointer">
                   Back to chat →
                 </button>
               </div>
 
-              <div className="bg-white border border-jira-border rounded-2xl p-3">
+              <div className="bg-white border border-lira-border rounded-2xl p-3">
                 <div className="flex items-center gap-2 mb-2">
                   <Database className="w-3.5 h-3.5 text-indigo-600" />
                   <span className="text-xs font-bold uppercase tracking-wide">Connected spaces ({spaces.length})</span>
@@ -266,7 +263,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                 </div>
               </div>
 
-              <div className="bg-white border border-jira-border rounded-2xl p-3">
+              <div className="bg-white border border-lira-border rounded-2xl p-3">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
                     <FileText className="w-3.5 h-3.5 text-purple-600" />
@@ -275,7 +272,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                   <button
                     type="button"
                     onClick={() => { setInstructionText(DEFAULT_SYSTEM_INSTRUCTION); setSystemInstruction(DEFAULT_SYSTEM_INSTRUCTION); }}
-                    className="text-[10px] text-jira-muted hover:text-purple-600 flex items-center gap-1 cursor-pointer"
+                    className="text-[10px] text-lira-muted hover:text-purple-600 flex items-center gap-1 cursor-pointer"
                   >
                     <RotateCcw className="w-3 h-3" /> Reset default
                   </button>
@@ -288,14 +285,14 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                 />
               </div>
 
-              <div className="bg-white border border-jira-border rounded-2xl p-3 space-y-2">
+              <div className="bg-white border border-lira-border rounded-2xl p-3 space-y-2">
                 <label className="flex items-start gap-2 text-xs cursor-pointer">
                   <input type="checkbox" className="mt-0.5" checked={confirmWrites} onChange={e => setConfirmWritesState(e.target.checked)} />
-                  <span><span className="font-bold uppercase tracking-wide">Confirm before changing anything</span><br /><span className="text-jira-muted">Viva shows what it will do and waits for Confirm. Every change can be undone.</span></span>
+                  <span><span className="font-bold uppercase tracking-wide">Confirm before changing anything</span><br /><span className="text-lira-muted">Viva shows what it will do and waits for Confirm. Every change can be undone.</span></span>
                 </label>
               </div>
 
-              <div className="bg-white border border-jira-border rounded-2xl p-3 space-y-2">
+              <div className="bg-white border border-lira-border rounded-2xl p-3 space-y-2">
                 <div className="flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-purple-600" />
                   <label htmlFor="viva-provider" className="text-xs font-bold uppercase tracking-wide">Model</label>
@@ -317,10 +314,10 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                     <input aria-label="API key" type="password" value={oai.apiKey} onChange={e => setOai({ ...oai, apiKey: e.target.value })} placeholder="API key (not needed for a local server)" className="w-full text-xs border border-gray-300 rounded-xl px-2.5 py-2" />
                   </div>
                 )}
-                <p className="text-[10px] text-jira-muted">Changes to tickets are always made by the built-in engine, so they can be previewed and undone. The model answers questions.</p>
+                <p className="text-[10px] text-lira-muted">Changes to tickets are always made by the built-in engine, so they can be previewed and undone. The model answers questions.</p>
               </div>
 
-              <div className="bg-white border border-jira-border rounded-2xl p-3">
+              <div className="bg-white border border-lira-border rounded-2xl p-3">
                 <div className="flex items-center gap-1.5 mb-2">
                   <Key className="w-3.5 h-3.5 text-amber-500" />
                   <label className="text-xs font-bold uppercase tracking-wide">Gemini API key (used when Google Gemini is the model)</label>
@@ -333,7 +330,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                     placeholder="AIzaSy… (leave empty to use the built-in local engine)"
                     className="w-full text-xs border border-gray-300 rounded-xl pl-2.5 pr-14 py-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
                   />
-                  <button type="button" onClick={() => setShowApiKey(v => !v)} className="absolute right-2 top-2 text-[10px] text-jira-muted hover:text-jira-text cursor-pointer">
+                  <button type="button" onClick={() => setShowApiKey(v => !v)} className="absolute right-2 top-2 text-[10px] text-lira-muted hover:text-lira-text cursor-pointer">
                     {showApiKey ? 'Hide' : 'Show'}
                   </button>
                 </div>
@@ -350,7 +347,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
           ) : (
             <>
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-4 bg-jira-bg/40">
+              <div className="flex-1 overflow-y-auto p-4 bg-lira-bg/40">
                 <div className={`space-y-4 mx-auto w-full ${maximized ? 'max-w-2xl' : ''}`}>
                   {messages.map(msg => (
                     <motion.div
@@ -367,14 +364,14 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                         <div
                           className={`p-3 rounded-2xl leading-relaxed transition-[font-size] ${maximized ? 'text-sm' : 'text-xs'} ${
                             msg.sender === 'user'
-                              ? 'bg-jira-blue text-white rounded-tr-md shadow-sm font-medium'
-                              : 'bg-white text-jira-text rounded-tl-md shadow-card border border-jira-border/80'
+                              ? 'bg-lira-blue text-white rounded-tr-md shadow-sm font-medium'
+                              : 'bg-white text-lira-text rounded-tl-md shadow-card border border-lira-border/80'
                           }`}
                         >
                           {msg.refinedPrompt && msg.sender === 'assistant' && (
                             <div className="mb-2.5 px-2.5 py-1.5 rounded-xl bg-cyan-50/90 border border-cyan-200/90 text-xs">
                               <div className="flex items-center gap-1 text-cyan-800 font-bold text-[10px] uppercase tracking-wider mb-0.5">
-                                <span>🎯</span> Refined goal
+                                <Target className="w-3 h-3" /> Refined goal
                               </div>
                               <p className="text-[11px] text-slate-800 font-medium leading-snug">{msg.refinedPrompt.optimizedGoal}</p>
                             </div>
@@ -386,11 +383,11 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                             <div className="mt-2.5 flex items-center gap-2" data-testid="viva-confirm">
                               {msg.pending.state === 'waiting' ? (
                                 <>
-                                  <button type="button" onClick={() => resolvePending(msg, true)} className="px-3 py-1 bg-jira-blue text-white rounded-lg text-[11px] font-semibold cursor-pointer">Confirm</button>
-                                  <button type="button" onClick={() => resolvePending(msg, false)} className="px-3 py-1 bg-white border border-jira-border text-jira-text rounded-lg text-[11px] font-semibold cursor-pointer">Cancel</button>
+                                  <button type="button" onClick={() => resolvePending(msg, true)} className="px-3 py-1 bg-lira-blue text-white rounded-lg text-[11px] font-semibold cursor-pointer">Confirm</button>
+                                  <button type="button" onClick={() => resolvePending(msg, false)} className="px-3 py-1 bg-white border border-lira-border text-lira-text rounded-lg text-[11px] font-semibold cursor-pointer">Cancel</button>
                                 </>
                               ) : (
-                                <span className="text-[11px] text-jira-muted">{msg.pending.state === 'confirmed' ? '✔ Confirmed' : '✖ Cancelled, nothing changed'}</span>
+                                <span className="text-[11px] text-lira-muted">{msg.pending.state === 'confirmed' ? <span className="inline-flex items-center gap-1"><Check className="w-3 h-3" /> Confirmed</span> : <span className="inline-flex items-center gap-1"><X className="w-3 h-3" /> Cancelled, nothing changed</span>}</span>
                               )}
                             </div>
                           )}
@@ -398,23 +395,23 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                           {msg.undo && (
                             <div className="mt-2.5 flex items-center gap-2" data-testid="viva-undo">
                               {msg.undo.state === 'available' ? (
-                                <button type="button" onClick={() => undo(msg)} className="px-3 py-1 bg-white border border-jira-border text-jira-text rounded-lg text-[11px] font-semibold flex items-center gap-1 cursor-pointer">
+                                <button type="button" onClick={() => undo(msg)} className="px-3 py-1 bg-white border border-lira-border text-lira-text rounded-lg text-[11px] font-semibold flex items-center gap-1 cursor-pointer">
                                   <RotateCcw className="w-3 h-3" /> Undo ({msg.undo.changed} ticket{msg.undo.changed === 1 ? '' : 's'})
                                 </button>
-                              ) : <span className="text-[11px] text-jira-muted">↩ Undone</span>}
+                              ) : <span className="inline-flex items-center gap-1 text-[11px] text-lira-muted"><Undo2 className="w-3 h-3" /> Undone</span>}
                             </div>
                           )}
 
                           {msg.actionTaken?.issue && onSelectIssue && (
                             <div className="mt-2.5 p-2 bg-blue-50/70 rounded-xl border border-blue-200/60 flex items-center justify-between gap-2">
                               <div className="min-w-0">
-                                <span className="font-mono font-bold text-[10px] text-jira-blue block truncate">{msg.actionTaken.issue.key}</span>
-                                <span className="text-[11px] font-semibold text-jira-text truncate block">{msg.actionTaken.issue.title}</span>
+                                <span className="font-mono font-bold text-[10px] text-lira-blue block truncate">{msg.actionTaken.issue.key}</span>
+                                <span className="text-[11px] font-semibold text-lira-text truncate block">{msg.actionTaken.issue.title}</span>
                               </div>
                               <button
                                 type="button"
                                 onClick={() => onSelectIssue(msg.actionTaken!.issue!)}
-                                className="px-2 py-0.5 bg-white hover:bg-jira-blue hover:text-white text-jira-blue border border-jira-blue/30 rounded-lg text-[10.5px] font-semibold flex items-center gap-1 transition-all flex-shrink-0 cursor-pointer"
+                                className="px-2 py-0.5 bg-white hover:bg-lira-blue hover:text-white text-lira-blue border border-lira-blue/30 rounded-lg text-[10.5px] font-semibold flex items-center gap-1 transition-all flex-shrink-0 cursor-pointer"
                               >
                                 Open <ArrowRight className="w-3 h-3" />
                               </button>
@@ -422,7 +419,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                           )}
                         </div>
                         {msg.sender === 'user' && (
-                          <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 mt-0.5 text-jira-text">
+                          <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0 mt-0.5 text-lira-text">
                             <User className="w-3.5 h-3.5" />
                           </div>
                         )}
@@ -440,7 +437,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                               transition={{ type: 'spring', stiffness: 460, damping: 28, delay: 0.12 + i * 0.07 }}
                               className="px-2.5 py-1 bg-white hover:bg-purple-50 text-purple-700 hover:text-purple-900 border border-purple-200 rounded-full text-[10.5px] font-medium transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-1 cursor-pointer"
                             >
-                              <span>⚡</span> {action}
+                              <Zap className="w-3 h-3" /> {action}
                             </motion.button>
                           ))}
                         </div>
@@ -471,7 +468,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
               </div>
 
               {/* Input */}
-              <div className="p-3 bg-white border-t border-jira-border flex-shrink-0">
+              <div className="p-3 bg-white border-t border-lira-border flex-shrink-0">
                 <form
                   onSubmit={e => { e.preventDefault(); handleSend(); }}
                   className={`flex items-center gap-2 mx-auto w-full ${maximized ? 'max-w-3xl' : ''}`}

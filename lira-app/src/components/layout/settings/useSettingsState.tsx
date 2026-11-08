@@ -1,5 +1,7 @@
+import { confirmDialog } from '../../common/dialogs';
 import React, { useState, useEffect, useRef } from 'react';
 import { loadAccent, saveAccent } from '../../../utils/accent';
+import { applyTheme, getTheme } from '../../../utils/theme';
 import { saveToDiskNow, initLocalDiskSync, subscribeToSyncStatus } from '../../../services/localDiskSync';
 import { exportBackup, importBackup } from '../../../db/storageService';
 
@@ -22,35 +24,33 @@ export function useSettingsState(props: SettingsModalProps) {
   } = props;
   const [activeSection, setActiveSection] = useState<SettingsSection>(initialSection);
   const [accent, setAccent] = useState<string>(loadAccent);
-  const chooseAccent = (hex: string, name?: string) => {
-    saveAccent(hex);
+  // The accent is a draft until Save is pressed (see handleSaveAppearance)
+  const chooseAccent = (hex: string) => {
     setAccent(hex.toUpperCase());
-    if (name) onToast?.(`Accent colour: ${name}`, 'success');
   };
 
   // Sync section and theme when modal opens
   useEffect(() => {
     if (isOpen) {
       setActiveSection(initialSection);
-      const currentTheme = (localStorage.getItem('lira_theme') as 'light' | 'dark') ?? 'dark';
-      setTheme(currentTheme);
+      setTheme(getTheme()); // an unsaved choice from last time is dropped
+      setAccent(loadAccent());
     }
   }, [isOpen, initialSection]);
 
   // ── Appearance State ────────────────────────────────────────────────────────
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    return (localStorage.getItem('lira_theme') as 'light' | 'dark') ?? 'dark';
-  });
+  const [theme, setTheme] = useState<'light' | 'dark'>(getTheme);
 
-  const handleSelectTheme = (t: 'light' | 'dark') => {
-    setTheme(t);
-    localStorage.setItem('lira_theme', t);
-    if (t === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    onToast?.(`Theme switched to ${t === 'dark' ? 'Dark' : 'Light'} Mode`, 'success');
+  // Choosing only changes the draft; nothing is applied until Save
+  const handleSelectTheme = (t: 'light' | 'dark') => setTheme(t);
+
+  const appearanceChanged = theme !== getTheme() || accent.toUpperCase() !== loadAccent().toUpperCase();
+
+  const handleSaveAppearance = () => {
+    applyTheme(theme);
+    saveAccent(accent);
+    onToast?.('Appearance saved', 'success');
+    onClose();
   };
 
   // ── Profile State ───────────────────────────────────────────────────────────
@@ -93,10 +93,8 @@ export function useSettingsState(props: SettingsModalProps) {
     localStorage.setItem('lira_user_email', updated.email);
     localStorage.setItem('lira_user_initials', updated.initials);
     localStorage.setItem('lira_user_role', updated.role);
-    setProfileSaved(true);
-    showBottomToast('✓ Saved');
     onToast?.('Profile updated successfully!', 'success');
-    setTimeout(() => setProfileSaved(false), 2000);
+    onClose(); // saving closes the dialog
   };
 
   // ── Backup & Restore State ──────────────────────────────────────────────────
@@ -121,13 +119,13 @@ export function useSettingsState(props: SettingsModalProps) {
       if (ok) {
         showBottomToast('✓ Saved');
         onToast?.('Backup successfully saved to local PC disk (data/spaces/*.json)!', 'success');
-        setImportStatus('✅ Workspace saved to local PC disk successfully.');
+        setImportStatus('Workspace saved to local PC disk successfully.');
       } else {
         throw new Error('Save operation failed');
       }
     } catch {
       onToast?.('Failed to backup to disk. Please check console.', 'error');
-      setImportStatus('❌ Error saving backup to disk.');
+      setImportStatus('Error: could not save the backup to disk.');
     } finally {
       setBackupLoading(false);
       setTimeout(() => setImportStatus(null), 4000);
@@ -145,18 +143,17 @@ export function useSettingsState(props: SettingsModalProps) {
   };
 
   const handleRestoreFromDisk = async () => {
-    if (!window.confirm('Restore workspace from local PC disk files? Any unsaved in-memory changes will be reloaded.')) {
+    if (!(await confirmDialog({ title: 'Restore from disk', message: 'Restore the workspace from the local PC disk files? Any unsaved in-memory changes will be reloaded.', confirmLabel: 'Restore' }))) {
       return;
     }
     setRestoreLoading(true);
     try {
       await initLocalDiskSync();
-      showBottomToast('✓ Saved');
       onToast?.('Workspace successfully reloaded and restored from PC disk!', 'success');
-      setImportStatus('✅ Workspace restored from local PC disk files.');
+      setImportStatus('Workspace restored from local PC disk files.');
     } catch (err) {
       onToast?.(`Restore failed: ${err instanceof Error ? err.message : 'Unknown error'}`, 'error');
-      setImportStatus('❌ Error restoring workspace from disk.');
+      setImportStatus('Error: could not restore the workspace from disk.');
     } finally {
       setRestoreLoading(false);
       setTimeout(() => setImportStatus(null), 4000);
@@ -171,10 +168,10 @@ export function useSettingsState(props: SettingsModalProps) {
       const result = await importBackup(file);
       showBottomToast('✓ Saved');
       onToast?.(`Restored ${result.spaces} spaces and ${result.issues} issues!`, 'success');
-      setImportStatus(`✅ Successfully imported ${result.spaces} spaces and ${result.issues} issues.`);
+      setImportStatus(`Successfully imported ${result.spaces} spaces and ${result.issues} issues.`);
     } catch (err) {
       onToast?.(`Import failed: ${err instanceof Error ? err.message : 'Invalid file'}`, 'error');
-      setImportStatus(`❌ Import failed: ${err instanceof Error ? err.message : 'Invalid file'}`);
+      setImportStatus(`Error: import failed: ${err instanceof Error ? err.message : 'Invalid file'}`);
     } finally {
       setRestoreLoading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -210,10 +207,8 @@ export function useSettingsState(props: SettingsModalProps) {
     localStorage.setItem('lira_locale_prefs', JSON.stringify(localePrefs));
     localStorage.setItem('lira_pref_lang', language);
     localStorage.setItem('lira_pref_tz', timeZone);
-    setGeneralSaved(true);
-    showBottomToast('✓ Saved');
     onToast?.('General settings saved!', 'success');
-    setTimeout(() => setGeneralSaved(false), 2000);
+    onClose(); // saving closes the dialog
   };
 
   // ── Notification Preferences State ──────────────────────────────────────────
@@ -237,10 +232,8 @@ export function useSettingsState(props: SettingsModalProps) {
   const handleSaveNotifications = () => {
     localStorage.setItem('lira_notification_prefs', JSON.stringify(notificationPrefs));
     localStorage.setItem('lira_notif_config', JSON.stringify(notificationPrefs));
-    setNotifSaved(true);
-    showBottomToast('✓ Saved');
     onToast?.('Notification preferences saved!', 'success');
-    setTimeout(() => setNotifSaved(false), 2000);
+    onClose(); // saving closes the dialog
   };
 
   return {
@@ -256,6 +249,8 @@ export function useSettingsState(props: SettingsModalProps) {
     theme,
     setTheme,
     handleSelectTheme,
+    appearanceChanged,
+    handleSaveAppearance,
     name,
     setName,
     email,

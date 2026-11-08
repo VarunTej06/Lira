@@ -1,3 +1,4 @@
+import { PriorityIcon, TypeIcon } from '../../common/Icons';
 import { Search, Filter, X, ChevronDown, Check, Clock, CheckCircle2, Zap, Tag, Layers, User as UserIcon } from 'lucide-react';
 import type {  } from '../../../types/issue';
 import type {  } from '../../../types/space';
@@ -9,18 +10,18 @@ export function FilterControls(s: FiltersState) {
   const { issues, spaces, searchQuery, setSearchQuery, selectedSpaces, setSelectedSpaces, selectedStatuses, setSelectedStatuses, selectedPriorities, setSelectedPriorities, selectedTypes, setSelectedTypes, selectedAssignees, setSelectedAssignees, selectedLabels, setSelectedLabels, selectedTeam, setSelectedTeam, activePreset, openDropdown, setOpenDropdown, clearAllFilters, applyPreset, spaceMap, allLabels, allAssignees, allTeams, presetCounts, filteredIssues, activeFiltersCount } = s;
   return (
     <>
-        <div className="bg-white border border-jira-border rounded-xl shadow-xs overflow-visible">
+        <div className="bg-white border border-lira-border rounded-xl shadow-xs overflow-visible">
           {/* ── ROW 1: Search & Preset Pills (Tailwind Grid) ── */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center p-3.5 border-b border-jira-border">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center p-3.5 border-b border-lira-border">
             {/* Search Input */}
             <div className="md:col-span-5 lg:col-span-5 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-jira-muted" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-lira-muted" />
               <input
                 type="text"
                 placeholder="Search key (AI-18), title, description, or label…"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 text-xs bg-gray-50/70 border border-jira-border rounded-lg focus:outline-none focus:bg-white focus:border-jira-blue focus:ring-1 focus:ring-jira-blue transition-all"
+                className="w-full pl-9 pr-8 py-2 text-xs bg-gray-50/70 border border-lira-border rounded-lg focus:outline-none focus:bg-white focus:border-lira-blue focus:ring-1 focus:ring-lira-blue transition-all"
               />
               {searchQuery && (
                 <button
@@ -47,7 +48,7 @@ export function FilterControls(s: FiltersState) {
                     onClick={() => applyPreset(preset.id)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                       isActive
-                        ? 'bg-jira-blue text-white shadow-xs'
+                        ? 'bg-lira-blue text-white shadow-xs'
                         : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                     }`}
                   >
@@ -65,8 +66,8 @@ export function FilterControls(s: FiltersState) {
 
             {/* Counter & Quick Reset */}
             <div className="md:col-span-2 lg:col-span-2 flex items-center justify-end gap-2 text-xs">
-              <span className="text-jira-muted text-[11px] whitespace-nowrap">
-                <strong className="text-jira-text font-bold">{filteredIssues.length}</strong> of {issues.length}
+              <span className="text-lira-muted text-[11px] whitespace-nowrap">
+                <strong className="text-lira-text font-bold">{filteredIssues.length}</strong> of {issues.length}
               </span>
               {activeFiltersCount > 0 && (
                 <button
@@ -89,8 +90,8 @@ export function FilterControls(s: FiltersState) {
                 onClick={() => setOpenDropdown(openDropdown === 'space' ? null : 'space')}
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
                   selectedSpaces.length > 0
-                    ? 'bg-blue-50/60 border-jira-blue text-jira-blue font-semibold'
-                    : 'bg-white border-jira-border text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-50/60 border-lira-blue text-lira-blue font-semibold'
+                    : 'bg-white border-lira-border text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <span className="flex items-center gap-1.5 truncate">
@@ -107,7 +108,7 @@ export function FilterControls(s: FiltersState) {
               </button>
 
               {openDropdown === 'space' && (
-                <div className="absolute left-0 top-full mt-1 w-56 bg-white border border-jira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in max-h-56 overflow-y-auto">
+                <div className="absolute left-0 top-full mt-1 w-56 bg-white border border-lira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in max-h-56 overflow-y-auto">
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-1">Filter by Space</div>
                   {spaces.map(s => {
                     const active = selectedSpaces.includes(s.id!);
@@ -120,14 +121,14 @@ export function FilterControls(s: FiltersState) {
                           );
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${
-                          active ? 'bg-blue-50 text-jira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
+                          active ? 'bg-blue-50 text-lira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
                         }`}
                       >
                         <span className="flex items-center gap-2 truncate">
                           <span>{s.icon}</span>
                           <span className="truncate">{s.name}</span>
                         </span>
-                        {active && <Check className="w-3.5 h-3.5 text-jira-blue" />}
+                        {active && <Check className="w-3.5 h-3.5 text-lira-blue" />}
                       </button>
                     );
                   })}
@@ -142,8 +143,8 @@ export function FilterControls(s: FiltersState) {
                 onClick={() => setOpenDropdown(openDropdown === 'status' ? null : 'status')}
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
                   selectedStatuses.length > 0
-                    ? 'bg-blue-50/60 border-jira-blue text-jira-blue font-semibold'
-                    : 'bg-white border-jira-border text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-50/60 border-lira-blue text-lira-blue font-semibold'
+                    : 'bg-white border-lira-border text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <span className="flex items-center gap-1.5 truncate">
@@ -160,7 +161,7 @@ export function FilterControls(s: FiltersState) {
               </button>
 
               {openDropdown === 'status' && (
-                <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-jira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in">
+                <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-lira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in">
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-1">Filter by Status</div>
                   {[
                     { id: 'backlog', label: 'Backlog', color: 'bg-slate-100 text-slate-800' },
@@ -178,7 +179,7 @@ export function FilterControls(s: FiltersState) {
                           );
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${
-                          active ? 'bg-blue-50 text-jira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
+                          active ? 'bg-blue-50 text-lira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
                         }`}
                       >
                         <span className="flex items-center gap-2">
@@ -186,7 +187,7 @@ export function FilterControls(s: FiltersState) {
                             {st.label}
                           </span>
                         </span>
-                        {active && <Check className="w-3.5 h-3.5 text-jira-blue" />}
+                        {active && <Check className="w-3.5 h-3.5 text-lira-blue" />}
                       </button>
                     );
                   })}
@@ -201,8 +202,8 @@ export function FilterControls(s: FiltersState) {
                 onClick={() => setOpenDropdown(openDropdown === 'priority' ? null : 'priority')}
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
                   selectedPriorities.length > 0
-                    ? 'bg-blue-50/60 border-jira-blue text-jira-blue font-semibold'
-                    : 'bg-white border-jira-border text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-50/60 border-lira-blue text-lira-blue font-semibold'
+                    : 'bg-white border-lira-border text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <span className="flex items-center gap-1.5 truncate">
@@ -216,14 +217,14 @@ export function FilterControls(s: FiltersState) {
               </button>
 
               {openDropdown === 'priority' && (
-                <div className="absolute left-0 top-full mt-1 w-44 bg-white border border-jira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in">
+                <div className="absolute left-0 top-full mt-1 w-44 bg-white border border-lira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in">
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-1">Priority Tier</div>
                   {[
-                    { id: 'highest', label: '🔴 Highest' },
-                    { id: 'high', label: '🟠 High' },
-                    { id: 'medium', label: '🟡 Medium' },
-                    { id: 'low', label: '🟢 Low' },
-                    { id: 'lowest', label: '⚪ Lowest' },
+                    { id: 'highest', label: 'Highest' },
+                    { id: 'high', label: 'High' },
+                    { id: 'medium', label: 'Medium' },
+                    { id: 'low', label: 'Low' },
+                    { id: 'lowest', label: 'Lowest' },
                   ].map(p => {
                     const active = selectedPriorities.includes(p.id);
                     return (
@@ -235,11 +236,11 @@ export function FilterControls(s: FiltersState) {
                           );
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${
-                          active ? 'bg-blue-50 text-jira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
+                          active ? 'bg-blue-50 text-lira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
                         }`}
                       >
-                        <span>{p.label}</span>
-                        {active && <Check className="w-3.5 h-3.5 text-jira-blue" />}
+                        <span className="inline-flex items-center gap-1.5"><PriorityIcon priority={p.id} />{p.label}</span>
+                        {active && <Check className="w-3.5 h-3.5 text-lira-blue" />}
                       </button>
                     );
                   })}
@@ -254,8 +255,8 @@ export function FilterControls(s: FiltersState) {
                 onClick={() => setOpenDropdown(openDropdown === 'type' ? null : 'type')}
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
                   selectedTypes.length > 0
-                    ? 'bg-blue-50/60 border-jira-blue text-jira-blue font-semibold'
-                    : 'bg-white border-jira-border text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-50/60 border-lira-blue text-lira-blue font-semibold'
+                    : 'bg-white border-lira-border text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <span className="flex items-center gap-1.5 truncate">
@@ -269,13 +270,13 @@ export function FilterControls(s: FiltersState) {
               </button>
 
               {openDropdown === 'type' && (
-                <div className="absolute left-0 top-full mt-1 w-44 bg-white border border-jira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in">
+                <div className="absolute left-0 top-full mt-1 w-44 bg-white border border-lira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in">
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-1">Work Item Type</div>
                   {[
-                    { id: 'epic', label: '⚡ Epic' },
-                    { id: 'task', label: '✅ Task' },
-                    { id: 'bug', label: '🐛 Bug' },
-                    { id: 'subtask', label: '↳ Subtask' },
+                    { id: 'epic', label: 'Epic' },
+                    { id: 'task', label: 'Task' },
+                    { id: 'bug', label: 'Bug' },
+                    { id: 'subtask', label: 'Subtask' },
                   ].map(t => {
                     const active = selectedTypes.includes(t.id);
                     return (
@@ -287,11 +288,11 @@ export function FilterControls(s: FiltersState) {
                           );
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${
-                          active ? 'bg-blue-50 text-jira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
+                          active ? 'bg-blue-50 text-lira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
                         }`}
                       >
-                        <span>{t.label}</span>
-                        {active && <Check className="w-3.5 h-3.5 text-jira-blue" />}
+                        <span className="inline-flex items-center gap-1.5"><TypeIcon type={t.id} />{t.label}</span>
+                        {active && <Check className="w-3.5 h-3.5 text-lira-blue" />}
                       </button>
                     );
                   })}
@@ -306,8 +307,8 @@ export function FilterControls(s: FiltersState) {
                 onClick={() => setOpenDropdown(openDropdown === 'assignee' ? null : 'assignee')}
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
                   selectedAssignees.length > 0
-                    ? 'bg-blue-50/60 border-jira-blue text-jira-blue font-semibold'
-                    : 'bg-white border-jira-border text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-50/60 border-lira-blue text-lira-blue font-semibold'
+                    : 'bg-white border-lira-border text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <span className="flex items-center gap-1.5 truncate">
@@ -322,7 +323,7 @@ export function FilterControls(s: FiltersState) {
               </button>
 
               {openDropdown === 'assignee' && (
-                <div className="absolute left-0 top-full mt-1 w-52 bg-white border border-jira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in max-h-56 overflow-y-auto">
+                <div className="absolute left-0 top-full mt-1 w-52 bg-white border border-lira-border rounded-xl shadow-xl z-50 p-2 space-y-1 animate-scale-in max-h-56 overflow-y-auto">
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider px-2 py-1">Assignee</div>
                   {allAssignees.map(init => {
                     const active = selectedAssignees.includes(init);
@@ -335,14 +336,14 @@ export function FilterControls(s: FiltersState) {
                           );
                         }}
                         className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${
-                          active ? 'bg-blue-50 text-jira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
+                          active ? 'bg-blue-50 text-lira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'
                         }`}
                       >
                         <div className="flex items-center gap-2">
                           <Avatar initials={init} size="xs" color={init === 'VY' ? '#0052CC' : '#6B778C'} />
                           <span>{init === 'VY' ? 'Varun Tej (VY)' : init}</span>
                         </div>
-                        {active && <Check className="w-3.5 h-3.5 text-jira-blue" />}
+                        {active && <Check className="w-3.5 h-3.5 text-lira-blue" />}
                       </button>
                     );
                   })}
@@ -357,8 +358,8 @@ export function FilterControls(s: FiltersState) {
                 onClick={() => setOpenDropdown(openDropdown === 'tags' ? null : 'tags')}
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${
                   selectedLabels.length > 0 || selectedTeam !== 'all'
-                    ? 'bg-blue-50/60 border-jira-blue text-jira-blue font-semibold'
-                    : 'bg-white border-jira-border text-gray-700 hover:bg-gray-100'
+                    ? 'bg-blue-50/60 border-lira-blue text-lira-blue font-semibold'
+                    : 'bg-white border-lira-border text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <span className="flex items-center gap-1.5 truncate">
@@ -373,7 +374,7 @@ export function FilterControls(s: FiltersState) {
               </button>
 
               {openDropdown === 'tags' && (
-                <div className="absolute right-0 top-full mt-1 w-60 bg-white border border-jira-border rounded-xl shadow-xl z-50 p-2.5 space-y-2.5 animate-scale-in max-h-64 overflow-y-auto">
+                <div className="absolute right-0 top-full mt-1 w-60 bg-white border border-lira-border rounded-xl shadow-xl z-50 p-2.5 space-y-2.5 animate-scale-in max-h-64 overflow-y-auto">
                   {/* Team Filter */}
                   {allTeams.length > 0 && (
                     <div>

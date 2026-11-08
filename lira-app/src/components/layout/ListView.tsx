@@ -1,3 +1,4 @@
+import { TypeIcon, PriorityLabel } from '../common/Icons';
 import React, { useState, useMemo } from 'react';
 import {
   ArrowUpDown, ArrowUp, ArrowDown, ChevronLeft, ChevronRight,
@@ -135,9 +136,9 @@ export const ListView: React.FC<ListViewProps> = ({
       return <ArrowUpDown className="w-3.5 h-3.5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />;
     }
     return sortAsc ? (
-      <ArrowUp className="w-3.5 h-3.5 text-jira-blue" />
+      <ArrowUp className="w-3.5 h-3.5 text-lira-blue" />
     ) : (
-      <ArrowDown className="w-3.5 h-3.5 text-jira-blue" />
+      <ArrowDown className="w-3.5 h-3.5 text-lira-blue" />
     );
   };
 
@@ -157,15 +158,11 @@ export const ListView: React.FC<ListViewProps> = ({
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case 'highest':
-        return <span className="inline-flex items-center gap-1 text-red-600 font-medium">🔴 Highest</span>;
       case 'high':
-        return <span className="inline-flex items-center gap-1 text-orange-600 font-medium">🟠 High</span>;
       case 'medium':
-        return <span className="inline-flex items-center gap-1 text-amber-600 font-medium">🟡 Medium</span>;
       case 'low':
-        return <span className="inline-flex items-center gap-1 text-green-600 font-medium">🟢 Low</span>;
       case 'lowest':
-        return <span className="inline-flex items-center gap-1 text-blue-400 font-medium">⚪ Lowest</span>;
+        return <PriorityLabel priority={priority} />;
       default:
         return <span className="text-gray-500 capitalize">{priority}</span>;
     }
@@ -180,13 +177,13 @@ export const ListView: React.FC<ListViewProps> = ({
             <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Filter list by key, summary, assignee..."
+              placeholder="Filter list by key, title, assignee..."
               value={internalSearch}
               onChange={e => {
                 setInternalSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-jira-blue focus:border-jira-blue"
+              className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-lira-blue focus:border-lira-blue"
             />
           </div>
           <div className="text-xs text-gray-500 font-medium">
@@ -226,7 +223,7 @@ export const ListView: React.FC<ListViewProps> = ({
                 title="Sort by title"
               >
                 <div className="flex items-center gap-1">
-                  <span>Summary</span>
+                  <span>Title</span>
                   {renderSortIndicator('title')}
                 </div>
               </th>
@@ -287,7 +284,7 @@ export const ListView: React.FC<ListViewProps> = ({
               </tr>
             ) : (
               pagedIssues.map(issue => {
-                const typeConfig = ISSUE_TYPE_CONFIG[issue.type] || { symbol: '📋', label: issue.type };
+                const typeConfig = ISSUE_TYPE_CONFIG[issue.type] || { label: issue.type, color: '#6B778C', bg: '#F4F5F7' };
                 return (
                   <tr
                     key={issue.id || issue.key}
@@ -295,13 +292,13 @@ export const ListView: React.FC<ListViewProps> = ({
                     className="hover:bg-blue-50/50 transition-colors cursor-pointer group"
                   >
                     <td className="py-2.5 px-3 text-center text-sm">
-                      <span title={typeConfig.label}>{typeConfig.symbol}</span>
+                      <span title={typeConfig.label} className="inline-flex"><TypeIcon type={issue.type} className="w-4 h-4" /></span>
                     </td>
-                    <td className="py-2.5 px-3 font-mono font-semibold text-jira-blue group-hover:underline whitespace-nowrap">
+                    <td className="py-2.5 px-3 font-mono font-semibold text-lira-blue group-hover:underline whitespace-nowrap">
                       {issue.key}
                     </td>
                     <td className="py-2.5 px-3">
-                      <div className="font-medium text-gray-900 group-hover:text-jira-blue transition-colors line-clamp-1">
+                      <div className="font-medium text-gray-900 group-hover:text-lira-blue transition-colors line-clamp-1">
                         {issue.title}
                       </div>
                       {issue.labels && issue.labels.length > 0 && (
@@ -368,7 +365,7 @@ export const ListView: React.FC<ListViewProps> = ({
               setPageSize(Number(e.target.value));
               setPage(1);
             }}
-            className="border border-gray-300 rounded px-2 py-1 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-jira-blue cursor-pointer"
+            className="border border-gray-300 rounded px-2 py-1 bg-white text-xs focus:outline-none focus:ring-1 focus:ring-lira-blue cursor-pointer"
           >
             <option value={10}>10</option>
             <option value={15}>15</option>

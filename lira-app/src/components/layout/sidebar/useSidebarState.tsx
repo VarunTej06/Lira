@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../common/dialogs';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import type { Space } from '../../../types/space';
 import type { Project } from '../../../types/project';
@@ -182,7 +183,7 @@ export function useSidebarState(props: LeftSidebarProps) {
     e.stopPropagation();
     setOpenMenuId(null);
     if (!space.id) return;
-    if (!window.confirm(`Delete "${space.name}" and all its issues? This cannot be undone.`)) return;
+    if (!(await confirmDialog({ title: 'Delete space', message: `Delete "${space.name}" and all its issues? This cannot be undone.`, confirmLabel: 'Delete space', tone: 'danger' }))) return;
     await deleteSpace(space.id);
   };
 

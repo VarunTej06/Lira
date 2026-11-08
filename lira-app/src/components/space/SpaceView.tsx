@@ -1,3 +1,4 @@
+import { Construction } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BoardActionBar } from '../board/BoardActionBar';
@@ -133,11 +134,11 @@ export function SpaceView(p: SpaceViewProps) {
       )}
 
       {!known.includes(tab) && (
-        <div className="flex-1 flex items-center justify-center bg-jira-bg">
+        <div className="flex-1 flex items-center justify-center bg-lira-bg">
           <div className="text-center space-y-3">
-            <div className="text-5xl">🚧</div>
-            <p className="text-jira-muted text-sm font-medium">{tab} view — coming soon</p>
-            <Link to={spacePath(space.key, 'Board')} className="text-jira-blue text-sm hover:underline cursor-pointer">Back to Board</Link>
+            <Construction className="w-12 h-12 mx-auto text-lira-muted" />
+            <p className="text-lira-muted text-sm font-medium">{tab} view — coming soon</p>
+            <Link to={spacePath(space.key, 'Board')} className="text-lira-blue text-sm hover:underline cursor-pointer">Back to Board</Link>
           </div>
         </div>
       )}

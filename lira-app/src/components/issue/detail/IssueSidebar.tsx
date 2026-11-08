@@ -1,3 +1,4 @@
+import { DatePicker } from '../../common/DatePicker';
 import { ChevronDown, AlertTriangle, Zap, Settings, Clock, Tag, Users, Calendar, CheckSquare, ExternalLink, Target, Layers, Save } from 'lucide-react';
 import type { Priority, IssueType, IssueStatus } from '../../../types/issue';
 import { SelectDropdown } from '../../common/Dropdown';
@@ -13,9 +14,9 @@ export function IssueSidebar(s: IssueDetailState) {
   return (
     <>
           {/* ── RIGHT: Details sidebar ── */}
-          <div className="w-full md:w-72 flex-shrink-0 border-t md:border-t-0 md:border-l border-jira-border md:overflow-y-auto bg-gray-50/40">
-            {/* Status button — prominent at top like Jira */}
-            <div className="px-4 pt-4 pb-3 border-b border-jira-border space-y-2">
+          <div className="w-full md:w-72 flex-shrink-0 border-t md:border-t-0 md:border-l border-lira-border md:overflow-y-auto bg-gray-50/40">
+            {/* Status button — prominent at the top */}
+            <div className="px-4 pt-4 pb-3 border-b border-lira-border space-y-2">
               <div ref={statusMenuRef} className="relative">
                 <button
                   onClick={() => setShowStatusMenu(m => !m)}
@@ -26,7 +27,7 @@ export function IssueSidebar(s: IssueDetailState) {
                   <ChevronDown className="w-3.5 h-3.5 flex-shrink-0" />
                 </button>
                 {showStatusMenu && (
-                  <div className="absolute left-0 right-0 top-full mt-1 z-20 bg-white border border-jira-border rounded-lg shadow-dropdown py-1 animate-scale-in">
+                  <div className="absolute left-0 right-0 top-full mt-1 z-20 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 animate-scale-in">
                     {STATUS_OPTIONS.map(opt => (
                       <button
                         key={opt.value}
@@ -36,7 +37,7 @@ export function IssueSidebar(s: IssueDetailState) {
                         <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ color: opt.color, backgroundColor: opt.bgColor }}>
                           {opt.label}
                         </span>
-                        {local.status === opt.value && <span className="ml-auto text-jira-blue text-xs">✓</span>}
+                        {local.status === opt.value && <span className="ml-auto text-lira-blue text-xs">✓</span>}
                       </button>
                     ))}
                   </div>
@@ -44,7 +45,7 @@ export function IssueSidebar(s: IssueDetailState) {
               </div>
 
               {/* Automations button */}
-              <button className="flex items-center gap-2 px-3 py-1.5 w-full text-xs text-jira-muted border border-jira-border rounded-lg hover:bg-white transition-colors">
+              <button className="flex items-center gap-2 px-3 py-1.5 w-full text-xs text-lira-muted border border-lira-border rounded-lg hover:bg-white transition-colors">
                 <Zap className="w-3.5 h-3.5 text-yellow-500" />
                 <span>Automations</span>
               </button>
@@ -52,9 +53,9 @@ export function IssueSidebar(s: IssueDetailState) {
 
             {/* Details section */}
             <div className="px-4 py-3">
-              <p className="text-xs font-semibold text-jira-muted mb-3 uppercase tracking-wider flex items-center justify-between">
+              <p className="text-xs font-semibold text-lira-muted mb-3 uppercase tracking-wider flex items-center justify-between">
                 Details
-                <Settings className="w-3.5 h-3.5 cursor-pointer hover:text-jira-text" />
+                <Settings className="w-3.5 h-3.5 cursor-pointer hover:text-lira-text" />
               </p>
 
               <div className="space-y-0">
@@ -77,7 +78,7 @@ export function IssueSidebar(s: IssueDetailState) {
                           const val = e.target.value;
                           handleParentChange(val ? Number(val) : undefined);
                         }}
-                        className="w-full text-xs text-jira-text bg-white border border-jira-border hover:border-gray-400 rounded px-2 py-1 outline-none focus:border-jira-blue transition-colors cursor-pointer truncate"
+                        className="w-full text-xs text-lira-text bg-white border border-lira-border hover:border-gray-400 rounded px-2 py-1 outline-none focus:border-lira-blue transition-colors cursor-pointer truncate"
                         title="Select parent issue according to hierarchy"
                       >
                         <option value="">None (No parent)</option>
@@ -91,7 +92,7 @@ export function IssueSidebar(s: IssueDetailState) {
                         <button
                           type="button"
                           onClick={() => onNavigateToIssue?.(resolvedParent)}
-                          className="p-1 hover:bg-gray-100 rounded text-jira-muted hover:text-jira-blue transition-colors flex-shrink-0"
+                          className="p-1 hover:bg-gray-100 rounded text-lira-muted hover:text-lira-blue transition-colors flex-shrink-0"
                           title={`Go to parent ${resolvedParent.key}`}
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -101,7 +102,7 @@ export function IssueSidebar(s: IssueDetailState) {
                   </DetailRow>
                 ) : (
                   <DetailRow icon={<Target className="w-3.5 h-3.5" />} label="Parent">
-                    <span className="text-xs text-jira-muted italic">Epics are top-level hierarchy containers</span>
+                    <span className="text-xs text-lira-muted italic">Epics are top-level hierarchy containers</span>
                   </DetailRow>
                 )}
 
@@ -125,7 +126,7 @@ export function IssueSidebar(s: IssueDetailState) {
                           assigneeInitials: initials,
                         });
                       }}
-                      className="w-full text-xs text-jira-text bg-white border border-jira-border hover:border-gray-400 rounded px-2 py-1 outline-none focus:border-jira-blue transition-colors cursor-pointer"
+                      className="w-full text-xs text-lira-text bg-white border border-lira-border hover:border-gray-400 rounded px-2 py-1 outline-none focus:border-lira-blue transition-colors cursor-pointer"
                     >
                       {ASSIGNEE_OPTIONS.map(opt => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -138,11 +139,11 @@ export function IssueSidebar(s: IssueDetailState) {
                 </DetailRow>
 
                 <DetailRow icon={<Calendar className="w-3.5 h-3.5" />} label="Due date">
-                  <input
-                    type="date"
+                  <DatePicker
                     value={toDateInputValue(local.dueDate)}
-                    onChange={e => patch({ dueDate: e.target.value ? new Date(e.target.value) : undefined })}
-                    className="text-sm text-jira-text border-none outline-none bg-transparent cursor-pointer w-full"
+                    onChange={v => patch({ dueDate: v ? new Date(`${v}T12:00:00`) : undefined })}
+                    placeholder="No due date"
+                    aria-label="Due date"
                   />
                 </DetailRow>
 
@@ -179,7 +180,7 @@ export function IssueSidebar(s: IssueDetailState) {
                           }}
                         />
                       </div>
-                      <div className="flex justify-between text-[10px] text-jira-muted">
+                      <div className="flex justify-between text-[10px] text-lira-muted">
                         <span>{formatTimeTracking(local.timeLogged ?? 0)} logged</span>
                         <span>{formatTimeTracking(local.timeEstimate ?? 0)} est.</span>
                       </div>
@@ -188,24 +189,24 @@ export function IssueSidebar(s: IssueDetailState) {
                 )}
 
                 <DetailRow icon={<Calendar className="w-3.5 h-3.5" />} label="Start date">
-                  <input
-                    type="date"
+                  <DatePicker
                     value={toDateInputValue(local.startDate)}
-                    onChange={e => patch({ startDate: e.target.value ? new Date(e.target.value) : undefined })}
-                    className="text-sm text-jira-text border-none outline-none bg-transparent cursor-pointer w-full"
+                    onChange={v => patch({ startDate: v ? new Date(`${v}T12:00:00`) : undefined })}
+                    placeholder="No start date"
+                    aria-label="Start date"
                   />
                 </DetailRow>
 
                 {local.category !== undefined && (
                   <DetailRow icon={<Tag className="w-3.5 h-3.5" />} label="Category">
-                    <span className="text-sm text-jira-text">{local.category || 'Add option'}</span>
+                    <span className="text-sm text-lira-text">{local.category || 'Add option'}</span>
                   </DetailRow>
                 )}
 
                 <DetailRow icon={<Users className="w-3.5 h-3.5" />} label="Reporter">
                   <div className="flex items-center gap-2">
                     <Avatar initials={local.reporterInitials || 'VY'} size="xs" />
-                    <span className="text-sm text-jira-text">{local.reporter || local.reporterInitials || 'VY'}</span>
+                    <span className="text-sm text-lira-text">{local.reporter || local.reporterInitials || 'VY'}</span>
                   </div>
                 </DetailRow>
 
@@ -220,22 +221,22 @@ export function IssueSidebar(s: IssueDetailState) {
                       const val = e.target.value === '' ? undefined : Math.max(0, parseInt(e.target.value, 10));
                       patch({ storyPoints: val });
                     }}
-                    className="w-20 px-2 py-1 text-xs border border-jira-border hover:border-gray-400 rounded bg-white text-jira-text outline-none focus:border-jira-blue transition-colors"
+                    className="w-20 px-2 py-1 text-xs border border-lira-border hover:border-gray-400 rounded bg-white text-lira-text outline-none focus:border-lira-blue transition-colors"
                   />
                 </DetailRow>
               </div>
             </div>
 
             {/* Automation & Metadata */}
-            <div className="px-4 py-3 border-t border-jira-border">
-              <button className="flex items-center gap-2 text-xs font-semibold text-jira-muted mb-3 hover:text-jira-text w-full">
+            <div className="px-4 py-3 border-t border-lira-border">
+              <button className="flex items-center gap-2 text-xs font-semibold text-lira-muted mb-3 hover:text-lira-text w-full">
                 <Zap className="w-3.5 h-3.5 text-yellow-500" />
                 Automation
               </button>
-              <div className="bg-white border border-jira-border rounded-lg p-3 space-y-2 text-xs text-jira-muted">
+              <div className="bg-white border border-lira-border rounded-lg p-3 space-y-2 text-xs text-lira-muted">
                 <div className="flex justify-between">
                   <span>Recent rule runs</span>
-                  <button className="text-jira-blue hover:underline">Configure</button>
+                  <button className="text-lira-blue hover:underline">Configure</button>
                 </div>
                 <div className="flex justify-between"><span>Created</span><span>{formatRelativeDate(local.createdAt)}</span></div>
                 <div className="flex justify-between"><span>Updated</span><span>{formatRelativeDate(local.updatedAt)}</span></div>
@@ -250,11 +251,12 @@ export function IssueSidebar(s: IssueDetailState) {
             </div>
 
             {/* Save changes button */}
-            <div className="p-4 border-t border-jira-border bg-white sticky bottom-0 z-10 shadow-xs">
+            <div className="p-4 border-t border-lira-border bg-white sticky bottom-0 z-10 shadow-xs space-y-2">
+              {s.dirty && <p className="text-[11px] text-amber-600 text-center" data-testid="unsaved-note">You have unsaved changes</p>}
               <button
                 type="button"
                 onClick={handleSaveChanges}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-jira-blue hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-lira-blue hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
               >
                 <Save className="w-4 h-4" />
                 Save changes

@@ -1,5 +1,5 @@
 /**
- * Accent branding. The accent replaces Lira's blue (the --jira-blue colour variables behind every `jira-blue` utility:
+ * Accent branding. The accent replaces Lira's blue (the --lira-blue colour variables behind every `lira-blue` utility:
  * primary buttons, active tabs, focus rings, links, the sidebar highlight). Light and dark themes get matching shades.
  * The chosen colour is saved as `lira_accent`, so it is written to data/settings.json like the other preferences.
  */
@@ -61,7 +61,7 @@ export function accentCss(hex: string | null | undefined): string {
   const light = accentVars(hex, false);
   const dark = accentVars(hex, true);
   if (!light || !dark) return '';
-  const block = (v: NonNullable<typeof light>) => `--jira-blue:${v.blue};--jira-blue-hover:${v.hover};--jira-blue-light:${v.light};`;
+  const block = (v: NonNullable<typeof light>) => `--lira-blue:${v.blue};--lira-blue-hover:${v.hover};--lira-blue-light:${v.light};`;
   return `:root{${block(light)}}\n.dark{${block(dark)}}`;
 }
 

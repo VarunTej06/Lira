@@ -11,7 +11,7 @@ import { OverflowModals } from './actionbar/OverflowModals';
 export const BoardActionBar: React.FC<BoardActionBarProps> = (props) => {
   const s = useActionBarState(props);
   return (
-    <div className="flex-shrink-0 border-b border-jira-border bg-white">
+    <div className="flex-shrink-0 border-b border-lira-border bg-white">
       <SpaceHeader {...s} />
       <SubViewTabs {...s} />
       <SearchAndFilterBar {...s} />

@@ -1,3 +1,4 @@
+import { confirmDialog } from '../../common/dialogs';
 import React, { useEffect, useState } from 'react';
 import type { Project } from '../../../types/project';
 import { writeProjects } from '../../../hooks/useProjects';
@@ -147,8 +148,8 @@ export function useProjectForms(
     }
   };
 
-  const handleDeleteProject = () => {
-    if (window.confirm(`Are you sure you want to delete project "${project.name}"? This action cannot be undone.`)) {
+  const handleDeleteProject = async () => {
+    if (await confirmDialog({ title: 'Delete project', message: `Delete the project "${project.name}"? This cannot be undone. Its tickets stay in their space.`, confirmLabel: 'Delete project', tone: 'danger' })) {
       onDeleteProject?.(project.id);
     }
   };

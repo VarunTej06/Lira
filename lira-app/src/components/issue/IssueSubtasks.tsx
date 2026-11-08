@@ -39,13 +39,13 @@ export const IssueSubtasks: React.FC<IssueSubtasksProps> = ({ subtasks, onUpdate
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-jira-text">
+        <h3 className="text-sm font-semibold text-lira-text">
           Child Issues
-          {total > 0 && <span className="ml-2 text-jira-muted font-normal text-xs">({completed}/{total})</span>}
+          {total > 0 && <span className="ml-2 text-lira-muted font-normal text-xs">({completed}/{total})</span>}
         </h3>
         <button
           onClick={() => setAdding(true)}
-          className="flex items-center gap-1 text-xs text-jira-blue hover:text-blue-800 font-medium"
+          className="flex items-center gap-1 text-xs text-lira-blue hover:text-blue-800 font-medium"
         >
           <Plus className="w-3.5 h-3.5" />
           Add child issue
@@ -64,7 +64,7 @@ export const IssueSubtasks: React.FC<IssueSubtasksProps> = ({ subtasks, onUpdate
               }}
             />
           </div>
-          <p className="text-[10px] text-jira-muted">{Math.round(progress)}% complete</p>
+          <p className="text-[10px] text-lira-muted">{Math.round(progress)}% complete</p>
         </div>
       )}
 
@@ -79,20 +79,20 @@ export const IssueSubtasks: React.FC<IssueSubtasksProps> = ({ subtasks, onUpdate
               onClick={() => handleToggle(subtask.id)}
               className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 border-2 transition-all ${
                 subtask.completed
-                  ? 'border-jira-green bg-jira-green text-white'
-                  : 'border-jira-border hover:border-jira-blue'
+                  ? 'border-lira-green bg-lira-green text-white'
+                  : 'border-lira-border hover:border-lira-blue'
               }`}
             >
               {subtask.completed && <Check className="w-2.5 h-2.5" />}
             </button>
             <span className={`flex-1 text-sm transition-all ${
-              subtask.completed ? 'line-through text-jira-muted' : 'text-jira-text'
+              subtask.completed ? 'line-through text-lira-muted' : 'text-lira-text'
             }`}>
               {subtask.title}
             </span>
             <button
               onClick={() => handleDelete(subtask.id)}
-              className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-50 text-jira-muted hover:text-red-500 transition-all"
+              className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-50 text-lira-muted hover:text-red-500 transition-all"
             >
               <Trash2 className="w-3 h-3" />
             </button>
@@ -113,17 +113,17 @@ export const IssueSubtasks: React.FC<IssueSubtasksProps> = ({ subtasks, onUpdate
               if (e.key === 'Escape') { setAdding(false); setNewTitle(''); }
             }}
             placeholder="What needs to be done?"
-            className="flex-1 text-sm border border-jira-border rounded px-3 py-1.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue"
+            className="flex-1 text-sm border border-lira-border rounded px-3 py-1.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue"
           />
           <button
             onClick={handleAdd}
-            className="px-3 py-1.5 text-xs bg-jira-blue text-white rounded hover:bg-blue-700 font-medium"
+            className="px-3 py-1.5 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 font-medium"
           >
             Add
           </button>
           <button
             onClick={() => { setAdding(false); setNewTitle(''); }}
-            className="px-2 py-1.5 text-xs text-jira-muted hover:text-jira-text"
+            className="px-2 py-1.5 text-xs text-lira-muted hover:text-lira-text"
           >
             Cancel
           </button>
@@ -132,7 +132,7 @@ export const IssueSubtasks: React.FC<IssueSubtasksProps> = ({ subtasks, onUpdate
         total === 0 && (
           <button
             onClick={() => setAdding(true)}
-            className="w-full text-xs text-jira-muted hover:text-jira-text py-2 border border-dashed border-jira-border rounded-lg hover:border-jira-blue transition-colors"
+            className="w-full text-xs text-lira-muted hover:text-lira-text py-2 border border-dashed border-lira-border rounded-lg hover:border-lira-blue transition-colors"
           >
             + Add first subtask
           </button>

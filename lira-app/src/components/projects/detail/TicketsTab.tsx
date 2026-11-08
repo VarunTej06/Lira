@@ -1,3 +1,4 @@
+import { TypeIcon } from '../../common/Icons';
 import { Ticket, Search } from 'lucide-react';
 import { Avatar } from '../../common/Avatar';
 import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
@@ -12,15 +13,15 @@ export function TicketsTab(ctx: DetailCtx) {
   return (
           <div className="flex-1 flex flex-col overflow-hidden min-h-0 bg-white">
             {/* Sub-tabs & Search Toolbar */}
-            <div className="px-6 py-3 border-b border-jira-border bg-gray-50/50 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
+            <div className="px-6 py-3 border-b border-lira-border bg-gray-50/50 flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
               {/* Sub-tabs: All, Open, Completed, High Priority, My Tasks */}
               <div className="flex items-center gap-1.5 overflow-x-auto">
                 <button
                   onClick={() => setTicketSubTab('all')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'all'
-                      ? 'bg-jira-blue text-white shadow-2xs'
-                      : 'bg-white border border-jira-border text-jira-muted hover:text-jira-text'
+                      ? 'bg-lira-blue text-white shadow-2xs'
+                      : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>All</span>
@@ -33,8 +34,8 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('open')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'open'
-                      ? 'bg-jira-blue text-white shadow-2xs'
-                      : 'bg-white border border-jira-border text-jira-muted hover:text-jira-text'
+                      ? 'bg-lira-blue text-white shadow-2xs'
+                      : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>Open</span>
@@ -47,8 +48,8 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('completed')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'completed'
-                      ? 'bg-jira-blue text-white shadow-2xs'
-                      : 'bg-white border border-jira-border text-jira-muted hover:text-jira-text'
+                      ? 'bg-lira-blue text-white shadow-2xs'
+                      : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>Completed</span>
@@ -61,8 +62,8 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('high_priority')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'high_priority'
-                      ? 'bg-jira-blue text-white shadow-2xs'
-                      : 'bg-white border border-jira-border text-jira-muted hover:text-jira-text'
+                      ? 'bg-lira-blue text-white shadow-2xs'
+                      : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>High Priority</span>
@@ -75,8 +76,8 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('my_tasks')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'my_tasks'
-                      ? 'bg-jira-blue text-white shadow-2xs'
-                      : 'bg-white border border-jira-border text-jira-muted hover:text-jira-text'
+                      ? 'bg-lira-blue text-white shadow-2xs'
+                      : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>My Tasks</span>
@@ -96,7 +97,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   value={ticketSearch}
                   onChange={e => setTicketSearch(e.target.value)}
                   placeholder="Filter tickets..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-jira-border rounded-lg focus:outline-none focus:border-jira-blue shadow-2xs"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-lira-border rounded-lg focus:outline-none focus:border-lira-blue shadow-2xs"
                 />
               </div>
             </div>
@@ -122,8 +123,8 @@ export function TicketsTab(ctx: DetailCtx) {
                       <td colSpan={8} className="py-12 text-center text-gray-500">
                         <div className="flex flex-col items-center justify-center gap-2">
                           <Ticket className="w-8 h-8 text-gray-300" />
-                          <p className="text-sm font-semibold text-jira-text">No tickets found</p>
-                          <p className="text-xs text-jira-muted">
+                          <p className="text-sm font-semibold text-lira-text">No tickets found</p>
+                          <p className="text-xs text-lira-muted">
                             {ticketSearch ? 'Try adjusting your search query.' : 'There are no tickets matching the active sub-tab.'}
                           </p>
                         </div>
@@ -139,25 +140,25 @@ export function TicketsTab(ctx: DetailCtx) {
                         {/* Type Icon */}
                         <td className="py-2.5 px-3 text-center text-sm">
                           <span title={ISSUE_TYPE_CONFIG[issue.type]?.label || issue.type}>
-                            {ISSUE_TYPE_CONFIG[issue.type]?.symbol || '📋'}
+                            <TypeIcon type={issue.type} className="w-4 h-4" />
                           </span>
                         </td>
 
                         {/* Key */}
-                        <td className="py-2.5 px-3 font-mono font-bold text-jira-blue group-hover:underline whitespace-nowrap">
+                        <td className="py-2.5 px-3 font-mono font-bold text-lira-blue group-hover:underline whitespace-nowrap">
                           {issue.key}
                         </td>
 
                         {/* Title */}
                         <td className="py-2.5 px-3">
-                          <div className="font-medium text-jira-text group-hover:text-jira-blue transition-colors line-clamp-1">
+                          <div className="font-medium text-lira-text group-hover:text-lira-blue transition-colors line-clamp-1">
                             {issue.title}
                           </div>
                         </td>
 
                         <td className="py-2.5 px-3 whitespace-nowrap">
                           {issue.type === 'epic'
-                            ? <span className="text-jira-muted">—</span>
+                            ? <span className="text-lira-muted">—</span>
                             : <SprintChip sprint={getIssueSprint(issue)} carried={(issue.sprintHistory || []).length > 0} />}
                         </td>
 
@@ -180,14 +181,14 @@ export function TicketsTab(ctx: DetailCtx) {
                               initials={issue.assigneeInitials || (issue.assignee ? issue.assignee.slice(0, 2).toUpperCase() : 'UN')}
                               size="xs"
                             />
-                            <span className="truncate max-w-[110px] text-jira-text">
+                            <span className="truncate max-w-[110px] text-lira-text">
                               {issue.assignee || 'Unassigned'}
                             </span>
                           </div>
                         </td>
 
                         {/* Updated Date */}
-                        <td className="py-2.5 px-3 whitespace-nowrap text-jira-muted text-xs">
+                        <td className="py-2.5 px-3 whitespace-nowrap text-lira-muted text-xs">
                           {formatRelativeDate(issue.updatedAt || issue.createdAt) || formatAbsoluteDate(issue.updatedAt || issue.createdAt)}
                         </td>
                       </tr>

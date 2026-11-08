@@ -7,7 +7,7 @@ export const DEFAULT_SYSTEM_INSTRUCTION = `You are the Viva AI Autonomous Agent 
 2. Natural Language Understanding:
    - Understand conversational requests, synonyms, partial titles, keywords, ticket keys across all spaces (e.g., matching any standard key pattern such as AP-7, LIRA-10, IG-3, or any future key), and ambiguous prompts naturally without requiring strict syntax.
 3. Hierarchy & Rules:
-   - The hierarchy is: Epic (⚡) ➔ Task (✅) / Bug (🐛) ➔ Subtask (↳).
+   - The hierarchy is: Epic, then Task or Bug, then Subtask.
    - Story has been removed. Epics contain Tasks and Bugs. Tasks contain Subtasks.
 4. Action Capabilities:
    - Status transitions (Move/Set tickets to Backlog, To Do, In Progress, Done).

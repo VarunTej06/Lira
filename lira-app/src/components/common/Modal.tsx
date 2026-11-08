@@ -57,18 +57,18 @@ export const Modal: React.FC<ModalProps> = ({
         {...dialogPanel}
         className={`
           bg-white rounded-xl shadow-modal w-full
-          flex flex-col overflow-hidden text-jira-text
+          flex flex-col overflow-hidden text-lira-text
           ${SIZE_CLASSES[size]} ${className}
         `}
         style={{ maxHeight: '90vh' }}
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-jira-border flex-shrink-0 bg-white">
-            <h2 className="text-base font-bold text-jira-text">{title}</h2>
+          <div className="flex items-center justify-between px-6 py-4 border-b border-lira-border flex-shrink-0 bg-white">
+            <h2 className="text-base font-bold text-lira-text">{title}</h2>
             <button
               onClick={onClose}
-              className="p-1 rounded-lg hover:bg-gray-100 text-jira-muted hover:text-jira-text transition-colors cursor-pointer"
+              className="p-1 rounded-lg hover:bg-gray-100 text-lira-muted hover:text-lira-text transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>

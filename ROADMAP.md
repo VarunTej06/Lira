@@ -168,4 +168,4 @@ Decide before starting Phase 3's real invites, since it changes how they are bui
 
 ## Parking lot
 
-Ideas not yet scheduled: GitHub integration (branch or PR linked to ticket, auto-move on merge), Slack and Teams notifications, Jira CSV import, time tracking and worklogs, notifications inbox with @mentions, dependency graph, automation rules, follow-system theme and accent colours, first-run onboarding tour.
+Ideas not yet scheduled: GitHub integration (branch or PR linked to ticket, auto-move on merge), Slack and Teams notifications, CSV import from other trackers, time tracking and worklogs, notifications inbox with @mentions, dependency graph, automation rules, follow-system theme and accent colours, first-run onboarding tour.

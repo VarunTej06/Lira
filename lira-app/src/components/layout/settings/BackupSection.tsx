@@ -10,18 +10,18 @@ export function BackupSection(s: SettingsState) {
           {activeSection === 'backup' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-base font-bold text-jira-text">Export, Backup &amp; Local Disk Sync</h3>
-                <p className="text-xs text-jira-muted mt-1">
+                <h3 className="text-base font-bold text-lira-text">Export, Backup &amp; Local Disk Sync</h3>
+                <p className="text-xs text-lira-muted mt-1">
                   Connect directly to the local disk synchronization service to protect, export, or restore your workspace.
                 </p>
               </div>
 
               {/* Local Disk Persistence Card */}
-              <div className="p-4 bg-gray-50 rounded-xl border border-jira-border space-y-3">
+              <div className="p-4 bg-gray-50 rounded-xl border border-lira-border space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <HardDrive className="w-5 h-5 text-emerald-600" />
-                    <span className="text-sm font-bold text-jira-text">Local PC Storage Engine</span>
+                    <span className="text-sm font-bold text-lira-text">Local PC Storage Engine</span>
                   </div>
                   <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
                     syncState.status === 'saving'
@@ -34,12 +34,12 @@ export function BackupSection(s: SettingsState) {
                   </span>
                 </div>
 
-                <div className="text-xs text-jira-muted space-y-1">
+                <div className="text-xs text-lira-muted space-y-1">
                   <p>
-                    Storage Path: <code className="bg-white px-1.5 py-0.5 rounded border border-gray-200 font-mono text-[11px] text-jira-text">{syncState.filePath}</code>
+                    Storage Path: <code className="bg-white px-1.5 py-0.5 rounded border border-gray-200 font-mono text-[11px] text-lira-text">{syncState.filePath}</code>
                   </p>
                   <p>
-                    Dual-Sync Snapshot: <code className="bg-white px-1.5 py-0.5 rounded border border-gray-200 font-mono text-[11px] text-jira-text">data/lira-workspace.json</code>
+                    Dual-Sync Snapshot: <code className="bg-white px-1.5 py-0.5 rounded border border-gray-200 font-mono text-[11px] text-lira-text">data/lira-workspace.json</code>
                   </p>
                   {syncState.lastSaved && (
                     <p className="text-[11px] text-gray-500">
@@ -56,7 +56,7 @@ export function BackupSection(s: SettingsState) {
                   type="button"
                   onClick={handleBackupToDisk}
                   disabled={backupLoading}
-                  className="flex items-center justify-between p-3.5 bg-blue-50 hover:bg-blue-100 text-jira-blue border border-blue-200 rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
+                  className="flex items-center justify-between p-3.5 bg-blue-50 hover:bg-blue-100 text-lira-blue border border-blue-200 rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
                     <Save className={`w-4 h-4 ${backupLoading ? 'animate-spin' : 'group-hover:scale-110 transition-transform'}`} />
@@ -65,7 +65,7 @@ export function BackupSection(s: SettingsState) {
                       <div className="text-[11px] text-blue-600 font-normal">Sync database to PC disk</div>
                     </div>
                   </div>
-                  <span className="text-[10px] bg-jira-blue text-white px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[10px] bg-lira-blue text-white px-2 py-0.5 rounded-full font-bold">
                     Disk Save
                   </span>
                 </button>
@@ -74,13 +74,13 @@ export function BackupSection(s: SettingsState) {
                 <button
                   type="button"
                   onClick={handleExportBackupJson}
-                  className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-jira-text border border-jira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
+                  className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-lira-text border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
                     <Download className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
                     <div>
                       <div className="text-sm font-bold">Export Backup JSON</div>
-                      <div className="text-[11px] text-jira-muted font-normal">Download single backup file</div>
+                      <div className="text-[11px] text-lira-muted font-normal">Download single backup file</div>
                     </div>
                   </div>
                   <span className="text-[10px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">
@@ -112,13 +112,13 @@ export function BackupSection(s: SettingsState) {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={restoreLoading}
-                  className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-jira-text border border-jira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
+                  className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-lira-text border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
                     <Upload className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
                     <div>
                       <div className="text-sm font-bold">Import Backup File</div>
-                      <div className="text-[11px] text-jira-muted font-normal">Restore &amp; overwrite data</div>
+                      <div className="text-[11px] text-lira-muted font-normal">Restore &amp; overwrite data</div>
                     </div>
                   </div>
                   <span className="text-[10px] bg-purple-600 text-white px-2 py-0.5 rounded-full font-bold">
@@ -138,7 +138,7 @@ export function BackupSection(s: SettingsState) {
 
               {importStatus && (
                 <div className={`p-3 rounded-lg text-xs font-medium border ${
-                  importStatus.startsWith('✅')
+                  !importStatus.startsWith('Error')
                     ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
                     : 'bg-red-50 text-red-800 border-red-200'
                 }`}>

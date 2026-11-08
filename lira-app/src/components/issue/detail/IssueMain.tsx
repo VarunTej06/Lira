@@ -1,6 +1,8 @@
+import { RichTextEditor } from '../../common/richtext/RichTextEditor';
+import { promptDialog } from '../../common/dialogs';
+import { TypeIcon } from '../../common/Icons';
 import { Plus, ChevronDown, Paperclip, Link } from 'lucide-react';
 import type { IssueType } from '../../../types/issue';
-import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
 import { IssueSubtasks } from '../IssueSubtasks';
 import { IssueAttachments } from '../IssueAttachments';
 import { IssueActivityFeed } from '../IssueActivityFeed';
@@ -20,21 +22,21 @@ export function IssueMain(s: IssueDetailState) {
             <div className="flex items-center gap-2">
               {local.type !== 'subtask' && (
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     const type = local.type === 'epic' ? 'task' : 'subtask';
-                    const title = prompt(`New ${type} title:`);
+                    const title = await promptDialog({ title: `New ${type}`, label: 'Title', placeholder: 'What needs to be done?', confirmLabel: 'Create' });
                     if (title) handleCreateChildIssue(title, type as IssueType);
                   }}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-jira-muted border border-jira-border rounded-md hover:bg-gray-50 hover:text-jira-blue transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-lira-muted border border-lira-border rounded-md hover:bg-gray-50 hover:text-lira-blue transition-all"
                   title="Add child issue"
                 >
                   <Plus className="w-3.5 h-3.5" /> Child issue
                 </button>
               )}
-              <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-jira-muted border border-jira-border rounded-md hover:bg-gray-50 transition-all">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-lira-muted border border-lira-border rounded-md hover:bg-gray-50 transition-all">
                 <Link className="w-3.5 h-3.5" /> Link issue
               </button>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-jira-muted border border-jira-border rounded-md hover:bg-gray-50 transition-all">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-lira-muted border border-lira-border rounded-md hover:bg-gray-50 transition-all">
                 <Paperclip className="w-3.5 h-3.5" /> Attach
               </button>
             </div>
@@ -45,16 +47,14 @@ export function IssueMain(s: IssueDetailState) {
                 <button
                   type="button"
                   onClick={() => onNavigateToIssue?.(resolvedParent)}
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-md text-jira-text font-normal transition-colors group/parent shadow-2xs"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-md text-lira-text font-normal transition-colors group/parent shadow-2xs"
                   title={`Parent: ${resolvedParent.key} — ${resolvedParent.title}. Click to open parent.`}
                 >
-                  <span style={{ color: ISSUE_TYPE_CONFIG[resolvedParent.type]?.color }}>
-                    {ISSUE_TYPE_CONFIG[resolvedParent.type]?.symbol}
-                  </span>
-                  <span className="font-semibold text-jira-text font-mono text-[11px]">{resolvedParent.key}</span>
+                  <TypeIcon type={resolvedParent.type} />
+                  <span className="font-semibold text-lira-text font-mono text-[11px]">{resolvedParent.key}</span>
                   <span className="text-gray-300">|</span>
-                  <span className="text-jira-text max-w-sm truncate">{resolvedParent.title}</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-gray-400 group-hover/parent:text-jira-blue transition-colors ml-0.5" />
+                  <span className="text-lira-text max-w-sm truncate">{resolvedParent.title}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-gray-400 group-hover/parent:text-lira-blue transition-colors ml-0.5" />
                 </button>
               </div>
             )}
@@ -66,12 +66,12 @@ export function IssueMain(s: IssueDetailState) {
                 value={titleVal}
                 onChange={e => setTitleVal(e.target.value)}
                 onBlur={handleTitleSave}
-                onKeyDown={e => { if (e.key === 'Enter') handleTitleSave(); if (e.key === 'Escape') { setEditingTitle(false); setTitleVal(local.title); } }}
-                className="w-full text-2xl font-bold text-jira-text border-b-2 border-jira-blue outline-none pb-1 bg-transparent leading-tight"
+                onKeyDown={e => { if (e.key === 'Enter') handleTitleSave(); if (e.key === 'Escape') { e.stopPropagation(); setEditingTitle(false); setTitleVal(s.issue?.title ?? local.title); } }}
+                className="w-full text-2xl font-bold text-lira-text border-b-2 border-lira-blue outline-none pb-1 bg-transparent leading-tight"
               />
             ) : (
               <h1
-                className="text-2xl font-bold text-jira-text cursor-text hover:bg-blue-50/50 rounded px-1 -mx-1 py-0.5 transition-colors leading-tight"
+                className="text-2xl font-bold text-lira-text cursor-text hover:bg-blue-50/50 rounded px-1 -mx-1 py-0.5 transition-colors leading-tight"
                 onClick={() => setEditingTitle(true)}
               >
                 {local.title}
@@ -82,23 +82,21 @@ export function IssueMain(s: IssueDetailState) {
             <section>
               <button
                 onClick={() => setDescCollapsed(c => !c)}
-                className="flex items-center gap-1.5 w-full text-sm font-semibold text-jira-text mb-2 hover:text-jira-blue transition-colors group"
+                className="flex items-center gap-1.5 w-full text-sm font-semibold text-lira-text mb-2 hover:text-lira-blue transition-colors group"
               >
                 <ChevronDown className={`w-4 h-4 transition-transform ${descCollapsed ? '-rotate-90' : ''}`} />
                 Description
               </button>
               {!descCollapsed && (
                 <div>
-                  <textarea
+                  <RichTextEditor
                     value={descVal}
-                    onChange={e => setDescVal(e.target.value)}
+                    onChange={setDescVal}
+                    attachments={safeArr(local.attachments)}
+                    onAttachmentsChange={a => patch({ attachments: a })}
                     placeholder="Add a description..."
-                    rows={6}
-                    className="w-full text-sm text-jira-text border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue resize-none transition-all leading-relaxed"
+                    minHeight={160}
                   />
-                  {descVal !== local.description && (
-                    <p className="text-[10px] text-jira-muted mt-1 animate-pulse">Auto-saving…</p>
-                  )}
                 </div>
               )}
             </section>
@@ -107,12 +105,12 @@ export function IssueMain(s: IssueDetailState) {
             <section>
               <button
                 onClick={() => setAttCollapsed(c => !c)}
-                className="flex items-center gap-1.5 w-full text-sm font-semibold text-jira-text mb-2 hover:text-jira-blue transition-colors"
+                className="flex items-center gap-1.5 w-full text-sm font-semibold text-lira-text mb-2 hover:text-lira-blue transition-colors"
               >
                 <ChevronDown className={`w-4 h-4 transition-transform ${attCollapsed ? '-rotate-90' : ''}`} />
                 Attachments
                 {safeArr(local.attachments).length > 0 && (
-                  <span className="ml-1 text-xs text-jira-muted font-normal">({local.attachments!.length})</span>
+                  <span className="ml-1 text-xs text-lira-muted font-normal">({local.attachments!.length})</span>
                 )}
               </button>
               {!attCollapsed && (
@@ -128,12 +126,12 @@ export function IssueMain(s: IssueDetailState) {
               <section>
                 <button
                   onClick={() => setChildCollapsed(c => !c)}
-                  className="flex items-center gap-1.5 w-full text-sm font-semibold text-jira-text mb-2 hover:text-jira-blue transition-colors"
+                  className="flex items-center gap-1.5 w-full text-sm font-semibold text-lira-text mb-2 hover:text-lira-blue transition-colors"
                 >
                   <ChevronDown className={`w-4 h-4 transition-transform ${childCollapsed ? '-rotate-90' : ''}`} />
                   Child work items
                   {childCount > 0 && (
-                    <span className="ml-1 text-xs text-jira-muted font-normal">
+                    <span className="ml-1 text-xs text-lira-muted font-normal">
                       ({doneChildCount}/{childCount} done)
                     </span>
                   )}
@@ -145,10 +143,10 @@ export function IssueMain(s: IssueDetailState) {
                     {childCount > 0 && (
                       <div className="mb-3">
                         <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
-                          <div className="bg-jira-green transition-all" style={{ width: `${childProgress}%` }} />
-                          <div className="bg-jira-blue transition-all" style={{ width: `${Math.max(0, 100 - childProgress)}%`, opacity: 0.2 }} />
+                          <div className="bg-lira-green transition-all" style={{ width: `${childProgress}%` }} />
+                          <div className="bg-lira-blue transition-all" style={{ width: `${Math.max(0, 100 - childProgress)}%`, opacity: 0.2 }} />
                         </div>
-                        <p className="text-[10px] text-jira-muted mt-1">{childProgress}% Done</p>
+                        <p className="text-[10px] text-lira-muted mt-1">{childProgress}% Done</p>
                       </div>
                     )}
                     <ChildIssues
@@ -171,7 +169,7 @@ export function IssueMain(s: IssueDetailState) {
             )}
 
             {/* ── Activity ── */}
-            <div className="border-t border-jira-border pt-5">
+            <div className="border-t border-lira-border pt-5">
               <IssueActivityFeed
                 comments={safeArr(local.comments)}
                 activity={safeArr(local.activity)}

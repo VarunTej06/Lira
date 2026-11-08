@@ -1,29 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06T02:58:25.224Z",
+  "updatedAt": "2026-11-08T06:58:36.248Z",
   "entries": {
     "lira_projects": [
       {
         "category": "Software Engineering",
-        "createdAt": "2026-11-06T02:58:24.652Z",
-        "description": "Test",
-        "environments": [
-          "Development",
-          "Staging",
-          "Production"
-        ],
-        "id": "proj-1793933904652-ewzx7",
-        "key": "TEST",
-        "lead": "Varun Tej",
-        "name": "Test",
-        "repoUrl": "",
-        "spaceId": 16,
-        "updatedAt": "2026-11-06T02:58:24.652Z"
-      },
-      {
-        "category": "Software Engineering",
         "createdAt": "2026-10-18T08:15:46.633Z",
-        "description": "Enterprise Jira-grade offline engineering workspace, reactive Kanban drag-and-drop, and dual-sync PC persistence.",
+        "description": "Enterprise-grade offline engineering workspace, reactive Kanban drag-and-drop, and dual-sync PC persistence.",
         "environments": [
           "Development",
           "Staging",

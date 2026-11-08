@@ -1,3 +1,4 @@
+import { BlockedToggle } from './BlockedToggle';
 import { DatePicker } from '../../common/DatePicker';
 import { ChevronDown, AlertTriangle, Settings, Clock, Tag, Users, Calendar, CheckSquare, ExternalLink, Target, Layers, Save } from 'lucide-react';
 import type { Priority, IssueType, IssueStatus } from '../../../types/issue';
@@ -10,13 +11,14 @@ import type { IssueDetailState } from './useIssueDetail';
 
 /** Status, assignee, dates, labels and the other fields. */
 export function IssueSidebar(s: IssueDetailState) {
-  const {  onNavigateToIssue, local, showStatusMenu, setShowStatusMenu, statusMenuRef, resolvedParent, eligibleParents, patch, handleTypeChange, handleParentChange, handleSaveChanges, statusStyle } = s;
+  const {  onNavigateToIssue, local, showStatusMenu, setShowStatusMenu, statusMenuRef, resolvedParent, eligibleParents, patch, handleTypeChange, handleParentChange, handleSaveChanges, statusStyle, blockers, blocking, handleBlockedChange } = s;
   return (
     <>
           {/* ── RIGHT: Details sidebar ── */}
           <div className="w-full md:w-72 flex-shrink-0 border-t md:border-t-0 md:border-l border-lira-border md:overflow-y-auto bg-gray-50/40">
             {/* Status button — prominent at the top */}
             <div className="px-4 pt-4 pb-3 border-b border-lira-border space-y-2">
+              <p id="issue-status-label" className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Status</p>
               <div ref={statusMenuRef} className="relative">
                 <button
                   onClick={() => setShowStatusMenu(m => !m)}
@@ -44,6 +46,9 @@ export function IssueSidebar(s: IssueDetailState) {
                 )}
               </div>
 
+              <div className="pt-2">
+                <BlockedToggle issue={local} blocked={!!local.blocked} blockers={blockers} blocking={blocking} onChange={handleBlockedChange} onOpenIssue={onNavigateToIssue} />
+              </div>
             </div>
 
             {/* Details section */}

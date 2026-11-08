@@ -1,3 +1,4 @@
+import { statusLabel } from '../../../utils/status';
 import { confirmDialog } from '../../common/dialogs';
 import React, { useState } from 'react';
 import { Trash2, Check } from 'lucide-react';
@@ -266,7 +267,7 @@ export const BulkActionsModal: React.FC<{
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">
-                    {issue.status}
+                    {statusLabel(issue.status)}
                   </span>
                   <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">
                     {issue.priority}

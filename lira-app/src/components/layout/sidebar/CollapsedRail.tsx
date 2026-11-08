@@ -1,3 +1,4 @@
+import { pageLink, spaceLink } from '../../../utils/links';
 import { ChevronRight, Plus } from 'lucide-react';
 import type { SidebarState } from './useSidebarState';
 
@@ -29,7 +30,7 @@ export function CollapsedRail(s: SidebarState) {
             return (
               <button
                 key={k}
-                onClick={item.action}
+                onClick={item.action} {...pageLink(item.tab)}
                 className="w-9 h-9 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 title={item.label}
               >
@@ -54,7 +55,7 @@ export function CollapsedRail(s: SidebarState) {
             {visibleSpaces.map(space => (
               <button
                 key={space.id}
-                onClick={() => handleSpaceClick(space.id!)}
+                onClick={() => handleSpaceClick(space.id!)} {...spaceLink(space.key)}
                 className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all cursor-pointer flex-shrink-0 ${
                   activeSpaceId === space.id
                     ? 'ring-2 ring-white/60 text-white shadow-xs'
@@ -73,7 +74,7 @@ export function CollapsedRail(s: SidebarState) {
                 {hiddenSpaces.map(space => (
                   <button
                     key={space.id}
-                    onClick={() => handleSpaceClick(space.id!)}
+                    onClick={() => handleSpaceClick(space.id!)} {...spaceLink(space.key)}
                     className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all cursor-pointer flex-shrink-0 relative ${
                       activeSpaceId === space.id
                         ? 'ring-2 ring-amber-400 text-white shadow-xs'

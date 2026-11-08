@@ -1,3 +1,4 @@
+import { issueLink } from '../../utils/links';
 import { TypeIcon } from '../common/Icons';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
@@ -232,6 +233,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
   const chipTone = (issue: Issue) =>
     issue.status === 'done' ? 'border-l-emerald-500 bg-emerald-500/10'
+      : issue.blocked ? 'border-l-red-600 bg-red-600/15'
       : issue.status === 'inprogress' ? 'border-l-blue-500 bg-blue-500/10'
       : issue.priority === 'highest' || issue.priority === 'high' ? 'border-l-red-500 bg-red-500/10'
       : 'border-l-slate-400 bg-slate-500/10';
@@ -360,7 +362,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                           draggable
                           onDragStart={(e) => handleItemDragStart(e, issue)}
                           onDragEnd={handleItemDragEnd}
-                          onClick={() => onSelectIssue(issue)}
+                          onClick={() => onSelectIssue(issue)} {...issueLink(issue)}
                           className={`text-[11px] px-1.5 py-1 rounded-md border-l-[3px] leading-tight cursor-grab active:cursor-grabbing transition-all hover:shadow-sm hover:-translate-y-px group select-none ${chipTone(issue)} ${
                             isBeingDragged ? 'opacity-40 scale-95' : ''
                           } ${isDone ? 'opacity-70' : ''}`}
@@ -421,7 +423,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                       draggable
                       onDragStart={(e) => handleItemDragStart(e, issue)}
                       onDragEnd={handleItemDragEnd}
-                      onClick={() => onSelectIssue(issue)}
+                      onClick={() => onSelectIssue(issue)} {...issueLink(issue)}
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border rounded-lg text-xs transition-all cursor-grab active:cursor-grabbing select-none group ${
                         isBeingDragged ? 'opacity-40 border-dashed border-lira-blue scale-95' : 'border-lira-border hover:border-lira-blue hover:shadow-xs'
                       }`}

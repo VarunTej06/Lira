@@ -1,3 +1,4 @@
+import { issueLink } from '../../../utils/links';
 import { Clock, AlertTriangle } from 'lucide-react';
 import { Avatar } from '../../common/Avatar';
 import type { CapacityState } from './useCapacityState';
@@ -57,14 +58,19 @@ export function GroupByAssignee(s: CapacityState) {
                       title={`In Progress: ${member.inProgress}`}
                     />
                     <div
+                      className="bg-red-500 h-full transition-all duration-300"
+                      style={{ width: `${(member.blocked / member.total) * 100}%` }}
+                      title={`Blocked: ${member.blocked}`}
+                    />
+                    <div
                       className="bg-blue-400 h-full transition-all duration-300"
                       style={{ width: `${(member.todo / member.total) * 100}%` }}
                       title={`To Do: ${member.todo}`}
                     />
                   </div>
 
-                  {/* 4 Stage Counters */}
-                  <div className="grid grid-cols-4 gap-1.5 text-center pt-2">
+                  {/* Stage counters */}
+                  <div className="grid grid-cols-5 gap-1.5 text-center pt-2">
                     <div className="bg-gray-50 border border-lira-border rounded p-1.5">
                       <div className="text-[9px] text-lira-muted uppercase font-bold">Backlog</div>
                       <div className="text-xs font-bold text-slate-700">{member.backlog}</div>
@@ -76,6 +82,10 @@ export function GroupByAssignee(s: CapacityState) {
                     <div className="bg-amber-50/60 border border-amber-200 rounded p-1.5">
                       <div className="text-[9px] text-amber-600 uppercase font-bold">In Prog</div>
                       <div className="text-xs font-bold text-amber-700">{member.inProgress}</div>
+                    </div>
+                    <div className="bg-red-50/60 border border-red-200 rounded p-1.5">
+                      <div className="text-[9px] text-red-600 uppercase font-bold">Blocked</div>
+                      <div className="text-xs font-bold text-red-700">{member.blocked}</div>
                     </div>
                     <div className="bg-emerald-50/60 border border-emerald-200 rounded p-1.5">
                       <div className="text-[9px] text-emerald-600 uppercase font-bold">Done</div>
@@ -102,7 +112,7 @@ export function GroupByAssignee(s: CapacityState) {
                       {inProgressIssues.slice(0, 4).map(task => (
                         <div
                           key={task.id}
-                          onClick={() => onIssueClick?.(task)}
+                          onClick={() => onIssueClick?.(task)} {...issueLink(task)}
                           className="flex items-center justify-between p-2 rounded-lg border border-lira-border bg-gray-50/70 hover:bg-white hover:border-lira-blue transition-all cursor-pointer text-xs group"
                         >
                           <span className="font-bold text-lira-blue truncate mr-2 font-mono group-hover:underline">

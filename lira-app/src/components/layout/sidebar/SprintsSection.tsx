@@ -1,3 +1,4 @@
+import { sprintLink } from '../../../utils/links';
 import { confirmDialog } from '../../common/dialogs';
 import { Trash2, CalendarClock } from 'lucide-react';
 import { RowMenuButton, ContextItem, SectionHeader, Collapsible } from './parts';
@@ -28,7 +29,7 @@ export function SprintsSection(s: SidebarState) {
               return (
                 <div key={k} className="relative group" data-menu-root={`sprint:${k}`}>
                   <button
-                    onClick={() => { setRowMenu(null); onSelectSprint?.(k); }}
+                    onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} {...sprintLink(k)}
                     title={sprintName(k)}
                     data-active={active ? 'true' : undefined}
                     className={`w-full flex items-center gap-2.5 pl-2.5 pr-2.5 group-hover:pr-8 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${

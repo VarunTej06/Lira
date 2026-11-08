@@ -73,7 +73,9 @@ export function effectiveStatus(item: RoadmapItem, progress: number, today = new
 export function resolveItem(item: RoadmapItem, issues: Issue[], today = new Date()) {
   const epic = epicFor(item, issues);
   const progress = itemProgress(item, issues);
-  return { epic, progress, status: effectiveStatus(item, progress, today, epic?.status) };
+  const status = effectiveStatus(item, progress, today, epic?.status);
+  // an epic that is switched to Blocked shows as Blocked on the roadmap (unless it is finished)
+  return { epic, progress, status: epic?.blocked && status !== 'done' ? ('blocked' as RoadmapStatus) : status };
 }
 
 export function horizonOf(item: RoadmapItem, status: RoadmapStatus, today = new Date()): Horizon {

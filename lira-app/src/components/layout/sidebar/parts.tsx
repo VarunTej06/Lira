@@ -1,3 +1,4 @@
+import { spaceLink } from '../../../utils/links';
 import { motion, menuPop } from '../../common/motion';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -28,7 +29,7 @@ export const SpaceRow: React.FC<SpaceRowProps> = ({
 }) => (
   <div className="relative group px-2" data-menu-root={`space:${space.id}`}>
     <button
-      onClick={() => onSelect(space.id!)}
+      onClick={() => onSelect(space.id!)} {...spaceLink(space.key)}
       data-active={active ? 'true' : undefined}
       className={`w-full flex items-center gap-3 pl-3 pr-3 group-hover:pr-9 py-2 rounded-xl text-sm transition-all duration-200 cursor-pointer ${
         active

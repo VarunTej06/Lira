@@ -1,3 +1,4 @@
+import { spaceLink } from '../../../utils/links';
 import { ChevronDown } from 'lucide-react';
 import { MAIN_TABS, MORE_TABS } from './useActionBarState';
 import type { ActionBarState } from './useActionBarState';
@@ -5,6 +6,8 @@ import type { ActionBarState } from './useActionBarState';
 /** Summary, Board, List, Calendar, Sprints, Capacity and More. */
 export function SubViewTabs(s: ActionBarState) {
   const { activeTab, onTabChange, showMore, setShowMore, moreRef, handleMoreOptionClick } = s;
+  const spaceKey = /^\/space\/([^/]+)/.exec(window.location.pathname)?.[1];
+  const tabLink = (tab: string) => spaceKey ? spaceLink(decodeURIComponent(spaceKey), tab) : {};
   return (
     <>
       {/* Sub-view tabs */}
@@ -12,7 +15,7 @@ export function SubViewTabs(s: ActionBarState) {
         {MAIN_TABS.map(tab => (
           <button
             key={tab}
-            onClick={() => onTabChange(tab)}
+            onClick={() => onTabChange(tab)} {...tabLink(tab)}
             className={`
               px-3 py-2.5 text-sm font-medium transition-all border-b-2 -mb-px
               ${activeTab === tab
@@ -41,7 +44,7 @@ export function SubViewTabs(s: ActionBarState) {
               {MORE_TABS.map(tab => (
                 <button
                   key={tab}
-                  onClick={() => handleMoreOptionClick(tab)}
+                  onClick={() => handleMoreOptionClick(tab)} {...tabLink(tab)}
                   className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 text-lira-text transition-colors cursor-pointer"
                 >
                   {tab}

@@ -294,7 +294,7 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
                     {agenda.needsUpdate.map(n => <Row key={n.issue.id} issue={n.issue} note={n.reason} tone={sevTone[n.severity]} />)}
                   </Section>
                   <Section title="Blocked" icon={<Ban className="w-3.5 h-3.5 text-amber-500" />} count={agenda.blocked.length} empty="Nothing is blocked.">
-                    {agenda.blocked.map(b => <Row key={b.issue.id} issue={b.issue} note={`blocked by ${b.blockedBy.map(x => x.key).join(', ')}`} tone="bg-amber-100 text-amber-700" />)}
+                    {agenda.blocked.map(b => <Row key={b.issue.id} issue={b.issue} note={b.blockedBy.length ? `blocked by ${b.blockedBy.map(x => x.key).join(', ')}` : 'marked Blocked'} tone="bg-amber-100 text-amber-700" />)}
                   </Section>
                   <Section title="In progress" icon={<Clock className="w-3.5 h-3.5 text-lira-blue" />} count={agenda.inProgress.length} empty="Nothing in progress.">
                     {agenda.inProgress.map(i => <Row key={i.id} issue={i} />)}
@@ -332,7 +332,7 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
                       {p.blocked.length > 0 && (
                         <div className="px-3 py-1.5 bg-amber-50/60">
                           <div className="text-[10px] font-semibold uppercase tracking-wide text-amber-700 mb-0.5">Blockers</div>
-                          {p.blocked.map(b => <div key={b.issue.id} className="text-xs text-amber-800 truncate">{b.issue.key} ← {b.blockedBy.map(x => x.key).join(', ')}</div>)}
+                          {p.blocked.map(b => <div key={b.issue.id} className="text-xs text-amber-800 truncate">{b.issue.key}{b.blockedBy.length ? ` ← ${b.blockedBy.map(x => x.key).join(', ')}` : ' (blocked)'}</div>)}
                         </div>
                       )}
                     </div>

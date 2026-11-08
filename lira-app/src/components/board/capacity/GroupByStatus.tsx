@@ -1,3 +1,4 @@
+import { issueLink } from '../../../utils/links';
 import type { CapacityState } from './useCapacityState';
 
 /** Workload grouped by status. */
@@ -7,7 +8,7 @@ export function GroupByStatus(s: CapacityState) {
     <>
       {/* ─────────────────── 1. GROUP BY STATUS ─────────────────── */}
       {groupBy === 'status' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
           {statusGroups.map(stage => (
             <div
               key={stage.id}
@@ -48,7 +49,7 @@ export function GroupByStatus(s: CapacityState) {
                   stage.items.map(issue => (
                     <div
                       key={issue.id}
-                      onClick={() => onIssueClick?.(issue)}
+                      onClick={() => onIssueClick?.(issue)} {...issueLink(issue)}
                       className="p-3 rounded-lg border border-lira-border hover:border-lira-blue hover:bg-blue-50/20 transition-all cursor-pointer text-xs space-y-1.5 bg-white group"
                     >
                       <div className="flex items-center justify-between">

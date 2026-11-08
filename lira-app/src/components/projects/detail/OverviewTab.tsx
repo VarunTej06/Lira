@@ -1,3 +1,4 @@
+import { statusLabel } from '../../../utils/status';
 import { PriorityIcon, TypeIcon } from '../../common/Icons';
 import { KanbanSquare, Settings, Plus, Layers, AlertCircle, CheckCircle2, TrendingUp } from 'lucide-react';
 import { Button } from '../../common/Button';
@@ -167,7 +168,7 @@ export function OverviewTab(ctx: DetailCtx) {
                   </div>
 
                   {/* Legend Row with Counts & Percentages */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
                     <div className="flex items-center gap-2 p-2.5 rounded-lg bg-gray-50 border border-gray-100">
                       <span className="w-3 h-3 rounded-full bg-slate-400 flex-shrink-0" />
                       <div className="text-xs">
@@ -186,6 +187,17 @@ export function OverviewTab(ctx: DetailCtx) {
                         <span className="font-bold text-lira-blue">{stats.todo}</span>
                         <span className="text-[10px] text-lira-muted ml-1">
                           ({stats.total > 0 ? Math.round((stats.todo / stats.total) * 100) : 0}%)
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 p-2.5 rounded-lg bg-red-50/60 border border-red-100">
+                      <span className="w-3 h-3 rounded-full bg-red-500 flex-shrink-0" />
+                      <div className="text-xs">
+                        <span className="text-lira-muted font-medium">Blocked (flagged): </span>
+                        <span className="font-bold text-red-700">{stats.blocked}</span>
+                        <span className="text-[10px] text-lira-muted ml-1">
+                          ({stats.total > 0 ? Math.round((stats.blocked / stats.total) * 100) : 0}%)
                         </span>
                       </div>
                     </div>
@@ -344,7 +356,7 @@ export function OverviewTab(ctx: DetailCtx) {
 
                       <div className="flex items-center gap-3 flex-shrink-0">
                         <span className={`px-2 py-0.5 rounded text-[11px] font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>
-                          {issue.status}
+                          {statusLabel(issue.status)}
                         </span>
                         <span className="text-xs text-lira-muted whitespace-nowrap">
                           {formatRelativeDate(issue.updatedAt || issue.createdAt) || 'Recently'}

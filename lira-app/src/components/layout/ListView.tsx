@@ -1,3 +1,6 @@
+import { issueLink } from '../../utils/links';
+import { matchesStatusFilter, type SpaceFilters } from '../../utils/spaceFilters';
+import { statusLabel } from '../../utils/status';
 import { TypeIcon, PriorityLabel } from '../common/Icons';
 import React, { useState, useMemo } from 'react';
 import {
@@ -14,7 +17,7 @@ interface ListViewProps {
   space: Space | undefined;
   onSelectIssue: (issue: Issue) => void;
   searchQuery?: string;
-  activeFilters?: { priorities: string[]; labels: string[] };
+  activeFilters?: SpaceFilters;
 }
 
 type SortField = 'key' | 'title' | 'type' | 'status' | 'priority' | 'assignee' | 'dueDate' | 'createdAt';
@@ -57,6 +60,8 @@ export const ListView: React.FC<ListViewProps> = ({
       if (activeFilters?.priorities && activeFilters.priorities.length > 0) {
         if (!activeFilters.priorities.includes(issue.priority)) return false;
       }
+
+      if (!matchesStatusFilter(issue, activeFilters?.statuses)) return false;
 
       // Labels filter
       if (activeFilters?.labels && activeFilters.labels.length > 0) {
@@ -288,7 +293,7 @@ export const ListView: React.FC<ListViewProps> = ({
                 return (
                   <tr
                     key={issue.id || issue.key}
-                    onClick={() => onSelectIssue(issue)}
+                    onClick={() => onSelectIssue(issue)} {...issueLink(issue)}
                     className="hover:bg-blue-50/50 transition-colors cursor-pointer group"
                   >
                     <td className="py-2.5 px-3 text-center text-sm">
@@ -316,8 +321,9 @@ export const ListView: React.FC<ListViewProps> = ({
                     </td>
                     <td className="py-2.5 px-3 whitespace-nowrap">
                       <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold border capitalize ${getStatusBadge(issue.status)}`}>
-                        {issue.status}
+                        {statusLabel(issue.status)}
                       </span>
+                      {issue.blocked && <span className="ml-1 inline-block px-2 py-0.5 rounded text-[11px] font-semibold border bg-red-100 text-red-800 border-red-200">Blocked</span>}
                     </td>
                     <td className="py-2.5 px-3 whitespace-nowrap">
                       {getPriorityBadge(issue.priority)}

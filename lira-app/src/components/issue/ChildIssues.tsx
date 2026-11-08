@@ -1,3 +1,5 @@
+import { issueLink } from '../../utils/links';
+import { STATUS_META } from '../../utils/status';
 import { TypeIcon, PriorityIcon } from '../common/Icons';
 import React, { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
@@ -14,12 +16,7 @@ interface ChildIssuesProps {
   onCreateChild: (title: string, type: IssueType) => Promise<void>;
 }
 
-const STATUS_BADGE: Record<string, { label: string; color: string; bg: string }> = {
-  backlog:    { label: 'Backlog',     color: '#6B778C', bg: '#F4F5F7' },
-  todo:       { label: 'To Do',       color: '#172B4D', bg: '#DFE1E6' },
-  inprogress: { label: 'In Progress', color: '#0052CC', bg: '#DEEBFF' },
-  done:       { label: 'Done',        color: '#006644', bg: '#E3FCEF' },
-};
+const STATUS_BADGE: Record<string, { label: string; color: string; bg: string }> = STATUS_META;
 
 function getAvailableChildTypes(parentType: IssueType): IssueType[] {
   if (parentType === 'epic') return ['task', 'bug'];
@@ -86,7 +83,7 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({
               >
                 {/* Work column */}
                 <button
-                  onClick={() => onIssueClick(child)}
+                  onClick={() => onIssueClick(child)} {...issueLink(child)}
                   className="flex items-center gap-2 text-left min-w-0"
                 >
                   <TypeIcon type={child.type} className="w-4 h-4" />

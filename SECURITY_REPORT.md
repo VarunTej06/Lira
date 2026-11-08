@@ -135,6 +135,16 @@ Saved files are read only with `JSON.parse`. There is no `eval`, `new Function`,
 
 Run them with `npm test` in `lira-app`.
 
+## Seeing the code in the browser's Network tab
+
+The browser can always show the files it was sent. That is how every web app works, so the front-end code can never be secret. What matters is what is in it and what the server allows.
+
+- **`npm run dev`** (the development server) sends readable, separate source files so they can be debugged. Use it only on your own computer.
+- **`npm run build`** makes minified bundles with source maps switched off (`build.sourcemap: false` in `vite.config.ts`), so the browser gets compressed code with no original source files.
+- **Secrets are never in the front-end.** API keys live in `data/private/` and are only used by the server; other devices cannot read them.
+- **Real protection is on the server:** checking every request, who is allowed, and validating input. The front-end only draws the screens. Hiding code is not a security measure and does not replace this.
+- **Enterprise practice:** serve the built app over HTTPS from a production server (not the dev server), send security headers and a strict content policy, keep source maps private (upload them to an error-tracking service instead of serving them), run `npm audit`, and enforce login and roles in the API. This is the Phase 7 list below.
+
 ## Using Lira from a tablet or phone
 
 `npm run dev:lan` opens Lira to your own network. It is off by default, and when on it is protected: only plain home-network addresses are accepted as the host (never a web name), other devices must hold a secret 128-bit link (kept in `data/private/lan-token`, compared in constant time, stored as an HttpOnly, SameSite=Strict cookie), the page and the address it came from must match, and other devices never receive the API key and cannot overwrite it. The computer that runs Lira is always allowed, including when it opens its own network address; the link and QR code are only given to that computer (`/api/lan`). Tests: `server/guard.test.ts`, "network access".

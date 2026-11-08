@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { Avatar } from '../common/Avatar';
-import { formatRelativeDate } from '../../utils/dateUtils';
-import type { Comment, ActivityEntry } from '../../types/issue';
+import { formatRelativeDate, formatDayDateTime } from '../../utils/dateUtils';
+import type { Comment, ActivityEntry, Attachment } from '../../types/issue';
 import { v4 as uuidv4 } from 'uuid';
 import { Send, Pencil } from 'lucide-react';
+import { RichTextEditor } from '../common/richtext/RichTextEditor';
+import { CopyButton } from '../common/CopyButton';
+import { descriptionToText } from '../../utils/richText';
 
 interface IssueActivityFeedProps {
   comments: Comment[];
   activity: ActivityEntry[];
   onAddComment: (comment: Comment) => void;
-  /** Changes the text of a comment. Only the person who wrote it can do this. */
-  onEditComment?: (id: string, content: string) => void;
+  /** Changes a comment. Only the person who wrote it can do this. */
+  onEditComment?: (id: string, content: string, attachments: Attachment[]) => void;
 }
 
 /** The person using Lira, as set in their profile. */
@@ -29,40 +32,36 @@ export function isOwnComment(c: Comment): boolean {
   return [c.author, c.authorInitials].some(v => !!v && (v === me.initials || v === me.name));
 }
 
+/** A comment has something to post when it has text or a file. */
+export const hasCommentContent = (html: string, attachments: Attachment[]) => !!descriptionToText(html).trim() || attachments.length > 0;
+
 type ViewTab = 'all' | 'comments' | 'history';
 
-export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
-  comments,
-  activity,
-  onAddComment,
-  onEditComment,
-}) => {
+export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, activity, onAddComment, onEditComment }) => {
   const [activeTab, setActiveTab] = useState<ViewTab>('all');
-  const [commentText, setCommentText] = useState('');
+  const [draft, setDraft] = useState('');
+  const [draftFiles, setDraftFiles] = useState<Attachment[]>([]);
   const [focused, setFocused] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
-
-  const saveEdit = () => {
-    const text = editText.trim();
-    if (!editingId || !text) return;
-    onEditComment?.(editingId, text);
-    setEditingId(null);
-  };
+  const [editFiles, setEditFiles] = useState<Attachment[]>([]);
 
   const QUICK_CHIPS = ['Status update...', 'Thanks!', 'Agree!', 'Will fix ASAP'];
 
+  const reset = () => { setDraft(''); setDraftFiles([]); setFocused(false); };
+
   const handleSubmit = () => {
-    if (!commentText.trim()) return;
-    onAddComment({
-      id: uuidv4(),
-      author: currentUser().initials,
-      authorInitials: currentUser().initials,
-      content: commentText.trim(),
-      createdAt: new Date(),
-    });
-    setCommentText('');
-    setFocused(false);
+    if (!hasCommentContent(draft, draftFiles)) return;
+    const me = currentUser();
+    onAddComment({ id: uuidv4(), author: me.initials, authorInitials: me.initials, content: draft, attachments: draftFiles, createdAt: new Date() });
+    reset();
+  };
+
+  const startEdit = (c: Comment) => { setEditingId(c.id); setEditText(c.content); setEditFiles(c.attachments ?? []); };
+  const saveEdit = () => {
+    if (!editingId || !hasCommentContent(editText, editFiles)) return;
+    onEditComment?.(editingId, editText, editFiles);
+    setEditingId(null);
   };
 
   // Build combined feed
@@ -96,58 +95,63 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
 
       {/* Comment box */}
       <div className="flex gap-3">
-        <Avatar initials="VY" size="sm" color="#0052CC" className="flex-shrink-0 mt-1" />
-        <div className="flex-1">
-          {/* Quick chips */}
-          {!focused && commentText === '' && (
-            <div className="flex flex-wrap gap-2 mb-2">
-              {QUICK_CHIPS.map(chip => (
-                <button
-                  key={chip}
-                  onClick={() => { setCommentText(chip === 'Status update...' ? '' : chip + ' '); setFocused(true); }}
-                  className="px-3 py-1.5 text-xs border border-lira-border rounded-full hover:bg-gray-50 hover:border-lira-blue text-lira-muted hover:text-lira-blue transition-all"
-                >
-                  {chip}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div className={`border rounded-lg transition-all ${focused ? 'border-lira-blue ring-1 ring-lira-blue' : 'border-lira-border'}`}>
-            <textarea
-              value={commentText}
-              onChange={e => setCommentText(e.target.value)}
-              onFocus={() => setFocused(true)}
-              onBlur={() => { if (!commentText) setFocused(false); }}
-              onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit(); }}
-              placeholder="Add a comment..."
-              rows={focused ? 3 : 1}
-              className="w-full text-sm p-3 resize-none focus:outline-none rounded-lg text-lira-text placeholder-lira-muted"
-            />
-            {focused && (
-              <div className="flex items-center justify-between px-3 pb-2 border-t border-gray-100">
+        <Avatar initials={currentUser().initials} size="sm" color="#0052CC" className="flex-shrink-0 mt-1" />
+        <div className="flex-1 min-w-0">
+          {!focused ? (
+            <>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {QUICK_CHIPS.map(chip => (
+                  <button
+                    key={chip}
+                    onClick={() => { setDraft(chip === 'Status update...' ? '' : `<p>${chip} </p>`); setFocused(true); }}
+                    className="px-3 py-1.5 text-xs border border-lira-border rounded-full hover:bg-gray-50 hover:border-lira-blue text-lira-muted hover:text-lira-blue transition-all"
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setFocused(true)}
+                data-testid="comment-placeholder"
+                className="w-full text-left text-sm px-3 py-2.5 border border-lira-border rounded-lg text-lira-muted hover:border-lira-blue transition-colors cursor-text"
+              >
+                Add a comment... (you can paste screenshots and add files)
+              </button>
+            </>
+          ) : (
+            <div data-testid="comment-composer">
+              <RichTextEditor
+                variant="compact"
+                autoFocus
+                value={draft}
+                onChange={setDraft}
+                attachments={draftFiles}
+                onAttachmentsChange={setDraftFiles}
+                placeholder="Add a comment..."
+                minHeight={72}
+                ariaLabel="Add a comment"
+                onSubmit={handleSubmit}
+              />
+              <div className="flex items-center justify-between pt-2">
                 <span className="text-[10px] text-lira-muted">
-                  Pro tip: press <kbd className="px-1 py-0.5 bg-gray-100 rounded text-[10px] font-mono">Ctrl+Enter</kbd> to save
+                  Paste a screenshot anywhere in the text, or use the paperclip. <kbd className="px-1 py-0.5 bg-gray-100 rounded text-[10px] font-mono">Ctrl+Enter</kbd> to post
                 </span>
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => { setCommentText(''); setFocused(false); }}
-                    className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded"
-                  >
-                    Cancel
-                  </button>
+                  <button onClick={reset} className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded cursor-pointer">Cancel</button>
                   <button
                     onClick={handleSubmit}
-                    disabled={!commentText.trim()}
-                    className="flex items-center gap-1.5 px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium"
+                    disabled={!hasCommentContent(draft, draftFiles)}
+                    data-testid="post-comment"
+                    className="flex items-center gap-1.5 px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium cursor-pointer"
                   >
                     <Send className="w-3 h-3" />
                     Save
                   </button>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -156,56 +160,21 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
         {filtered.map((entry, idx) => (
           <div key={idx} className="flex gap-3">
             <Avatar initials={entry.data.authorInitials || (entry.data as ActivityEntry).author?.slice(0, 2) || 'VY'} size="sm" className="flex-shrink-0 mt-0.5" />
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               {entry.type === 'comment' ? (
-                <div>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-sm font-semibold text-lira-text">{(entry.data as Comment).author || 'User'}</span>
-                    <span className="text-xs text-lira-muted">{formatRelativeDate(entry.date)}</span>
-                    {(entry.data as Comment).updatedAt && <span className="text-xs text-lira-muted italic">(edited)</span>}
-                    {onEditComment && isOwnComment(entry.data as Comment) && editingId !== (entry.data as Comment).id && (
-                      <button
-                        type="button"
-                        onClick={() => { setEditingId((entry.data as Comment).id); setEditText((entry.data as Comment).content); }}
-                        className="ml-auto flex items-center gap-1 text-xs text-lira-muted hover:text-lira-blue cursor-pointer"
-                        data-testid="edit-comment"
-                      >
-                        <Pencil className="w-3 h-3" /> Edit
-                      </button>
-                    )}
-                  </div>
-                  {editingId === (entry.data as Comment).id ? (
-                    <div className="border border-lira-blue ring-1 ring-lira-blue rounded-lg">
-                      <textarea
-                        autoFocus
-                        value={editText}
-                        onChange={e => setEditText(e.target.value)}
-                        onKeyDown={e => {
-                          if (e.key === 'Escape') { e.stopPropagation(); setEditingId(null); }
-                          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) saveEdit();
-                        }}
-                        rows={3}
-                        aria-label="Edit comment"
-                        className="w-full text-sm p-3 resize-none focus:outline-none rounded-lg text-lira-text"
-                      />
-                      <div className="flex justify-end gap-2 px-3 pb-2 border-t border-gray-100 pt-2">
-                        <button onClick={() => setEditingId(null)} className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded cursor-pointer">Cancel</button>
-                        <button
-                          onClick={saveEdit}
-                          disabled={!editText.trim()}
-                          data-testid="save-comment-edit"
-                          className="px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium cursor-pointer"
-                        >
-                          Save
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="bg-gray-50 rounded-lg p-3 text-sm text-lira-text whitespace-pre-wrap border border-lira-border">
-                      {(entry.data as Comment).content}
-                    </div>
-                  )}
-                </div>
+                <CommentView
+                  comment={entry.data as Comment}
+                  date={entry.date}
+                  editing={editingId === (entry.data as Comment).id}
+                  canEdit={!!onEditComment && isOwnComment(entry.data as Comment)}
+                  onStartEdit={() => startEdit(entry.data as Comment)}
+                  editText={editText}
+                  setEditText={setEditText}
+                  editFiles={editFiles}
+                  setEditFiles={setEditFiles}
+                  onCancelEdit={() => setEditingId(null)}
+                  onSaveEdit={saveEdit}
+                />
               ) : (
                 <div className="flex items-center gap-1.5 text-xs text-lira-muted">
                   <span className="font-medium text-lira-text">{(entry.data as ActivityEntry).author || 'User'}</span>
@@ -217,7 +186,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
                       <span className="font-medium text-lira-text">{(entry.data as ActivityEntry).newValue}</span>
                     </>
                   )}
-                  <span className="ml-auto flex-shrink-0">{formatRelativeDate(entry.date)}</span>
+                  <time className="ml-auto flex-shrink-0" title={formatRelativeDate(entry.date)}>{formatDayDateTime(entry.date)}</time>
                 </div>
               )}
             </div>
@@ -227,3 +196,66 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
     </div>
   );
 };
+
+interface CommentViewProps {
+  comment: Comment;
+  date: Date | string;
+  editing: boolean;
+  canEdit: boolean;
+  onStartEdit: () => void;
+  editText: string;
+  setEditText: (v: string) => void;
+  editFiles: Attachment[];
+  setEditFiles: (a: Attachment[]) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: () => void;
+}
+
+const CommentView: React.FC<CommentViewProps> = ({ comment: c, date, editing, canEdit, onStartEdit, editText, setEditText, editFiles, setEditFiles, onCancelEdit, onSaveEdit }) => (
+  <div>
+    <div className="flex items-baseline gap-2 mb-1">
+      <span className="text-sm font-semibold text-lira-text">{c.author || 'User'}</span>
+      <time className="text-xs text-lira-muted" data-testid="comment-time" dateTime={new Date(date).toISOString()} title={formatRelativeDate(date)}>{formatDayDateTime(date)}</time>
+      {c.updatedAt && <span className="text-xs text-lira-muted italic" title={formatDayDateTime(c.updatedAt)}>(edited)</span>}
+      <span className="ml-auto flex items-center gap-3">
+        <CopyButton label="Copy" getText={() => descriptionToText(c.content)} getHtml={() => c.content} />
+        {canEdit && !editing && (
+          <button type="button" onClick={onStartEdit} className="flex items-center gap-1 text-xs text-lira-muted hover:text-lira-blue cursor-pointer" data-testid="edit-comment">
+            <Pencil className="w-3 h-3" /> Edit
+          </button>
+        )}
+      </span>
+    </div>
+    {editing ? (
+      <div data-testid="comment-editor">
+        <RichTextEditor
+          key="edit"
+          variant="compact"
+          autoFocus
+          value={editText}
+          onChange={setEditText}
+          attachments={editFiles}
+          onAttachmentsChange={setEditFiles}
+          minHeight={72}
+          ariaLabel="Edit comment"
+          onSubmit={onSaveEdit}
+        />
+        <div className="flex justify-end gap-2 pt-2">
+          <button onClick={onCancelEdit} className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded cursor-pointer">Cancel</button>
+          <button
+            onClick={onSaveEdit}
+            disabled={!hasCommentContent(editText, editFiles)}
+            data-testid="save-comment-edit"
+            className="px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium cursor-pointer"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    ) : (
+      <div className="bg-gray-50 rounded-lg px-3 py-2 border border-lira-border" data-testid="comment-body">
+        <RichTextEditor key="view" readOnly variant="compact" value={c.content} onChange={() => {}} attachments={c.attachments ?? []} ariaLabel="Comment" />
+      </div>
+    )}
+  </div>
+);

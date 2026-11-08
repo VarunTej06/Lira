@@ -146,6 +146,13 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
 
   const handleSave = () => {
     const finalConfig: SidebarConfig = { version: CONFIG_VERSION, navOrder, sectionOrder, visibility };
+    let previous = '';
+    try {
+      const raw = localStorage.getItem('lira_sidebar_customization');
+      const base = raw ? JSON.parse(raw) : { navOrder: DEFAULT_NAV_ORDER, sectionOrder: DEFAULT_SECTION_ORDER, visibility: DEFAULT_VISIBILITY };
+      previous = JSON.stringify([base.navOrder, base.sectionOrder, base.visibility]);
+    } catch { /* treat as changed */ }
+    if (previous === JSON.stringify([navOrder, sectionOrder, visibility])) { onClose(); return; }
     localStorage.setItem('lira_sidebar_customization', JSON.stringify(finalConfig));
     onSave?.(finalConfig);
     notifySaved('Sidebar saved');

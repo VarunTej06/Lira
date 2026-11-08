@@ -1,3 +1,4 @@
+import type { SpaceFilters } from '../../../utils/spaceFilters';
 import React, { useState, useRef, useEffect } from 'react';
 import type { Space } from '../../../types/space';
 import type { Issue } from '../../../types/issue';
@@ -15,7 +16,7 @@ export interface BoardActionBarProps {
   onFilterAssigneeToggle: () => void;
   activeTab: string;
   onTabChange: (tab: string) => void;
-  onFilterChange?: (filters: { priorities: string[]; labels: string[] }) => void;
+  onFilterChange?: (filters: SpaceFilters) => void;
   onGroupChange?: (groupBy: GroupBy) => void;
   onClearFilters?: () => void;
   availableLabels?: string[];
@@ -123,6 +124,7 @@ export function useActionBarState(props: BoardActionBarProps) {
   const [showFilter, setShowFilter] = useState(false);
   const [filterPriorities, setFilterPriorities] = useState<string[]>([]);
   const [filterLabels, setFilterLabels] = useState<string[]>([]);
+  const [filterStatuses, setFilterStatuses] = useState<string[]>([]);
   const filterRef = useRef<HTMLDivElement>(null);
   useClickOutside(filterRef, () => setShowFilter(false));
 
@@ -179,7 +181,7 @@ export function useActionBarState(props: BoardActionBarProps) {
       ? filterPriorities.filter(p => p !== value)
       : [...filterPriorities, value];
     setFilterPriorities(next);
-    onFilterChange?.({ priorities: next, labels: filterLabels });
+    onFilterChange?.({ priorities: next, labels: filterLabels, statuses: filterStatuses });
   };
 
   const handleLabelToggle = (label: string) => {
@@ -187,17 +189,33 @@ export function useActionBarState(props: BoardActionBarProps) {
       ? filterLabels.filter(l => l !== label)
       : [...filterLabels, label];
     setFilterLabels(next);
-    onFilterChange?.({ priorities: filterPriorities, labels: next });
+    onFilterChange?.({ priorities: filterPriorities, labels: next, statuses: filterStatuses });
+  };
+
+  const handleStatusToggle = (status: string) => {
+    const next = filterStatuses.includes(status) ? filterStatuses.filter(s => s !== status) : [...filterStatuses, status];
+    setFilterStatuses(next);
+    onFilterChange?.({ priorities: filterPriorities, labels: filterLabels, statuses: next });
+  };
+
+  /** Clears one dropdown, keeping the other filters. */
+  const handleClearGroup = (group: 'priorities' | 'labels' | 'statuses') => {
+    const next = { priorities: filterPriorities, labels: filterLabels, statuses: filterStatuses, [group]: [] as string[] };
+    if (group === 'priorities') setFilterPriorities([]);
+    if (group === 'labels') setFilterLabels([]);
+    if (group === 'statuses') setFilterStatuses([]);
+    onFilterChange?.(next);
   };
 
   const handleClearFilters = () => {
     setFilterPriorities([]);
     setFilterLabels([]);
-    onFilterChange?.({ priorities: [], labels: [] });
+    setFilterStatuses([]);
+    onFilterChange?.({ priorities: [], labels: [], statuses: [] });
     onClearFilters?.();
   };
 
-  const activeFilterCount = filterPriorities.length + filterLabels.length;
+  const activeFilterCount = filterPriorities.length + filterLabels.length + filterStatuses.length;
 
   // ── Group change ─────────────────────────────────────────────────────────────
   const handleGroupChange = (value: GroupBy) => {
@@ -303,6 +321,9 @@ export function useActionBarState(props: BoardActionBarProps) {
     setFilterPriorities,
     filterLabels,
     setFilterLabels,
+    filterStatuses,
+    handleStatusToggle,
+    handleClearGroup,
     filterRef,
     groupBy,
     setGroupBy,

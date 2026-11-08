@@ -1,3 +1,4 @@
+import { issueLink } from '../../utils/links';
 import { TypeIcon } from '../common/Icons';
 import React, { useMemo, useState } from 'react';
 import { AlertTriangle, GripVertical, Minus, Plus, Search } from 'lucide-react';
@@ -87,7 +88,7 @@ export const SprintPlanning: React.FC<SprintPlanningProps> = ({ issues, spaces, 
         key={i.id}
         draggable={!closed}
         onDragStart={e => dragStart(e, i)}
-        onClick={() => onIssueClick(i)}
+        onClick={() => onIssueClick(i)} {...issueLink(i)}
         className="group flex items-center gap-2 px-2.5 py-2 border border-lira-border bg-white rounded-lg hover:shadow-sm cursor-pointer"
         data-testid={`plan-${side}-${i.key}`}
       >

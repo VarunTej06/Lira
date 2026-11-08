@@ -27,6 +27,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
   const totalIssues = issues.length;
   const doneIssues = useMemo(() => issues.filter(i => i.status === 'done'), [issues]);
   const inProgressIssues = useMemo(() => issues.filter(i => i.status === 'inprogress'), [issues]);
+  const blockedCount = useMemo(() => issues.filter(i => i.blocked).length, [issues]);
   const todoIssues = useMemo(() => issues.filter(i => i.status === 'todo'), [issues]);
   const backlogIssues = useMemo(() => issues.filter(i => i.status === 'backlog'), [issues]);
 
@@ -280,6 +281,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({
                 {[
                   { label: 'Done', count: doneCount, color: 'bg-emerald-500', barBg: 'bg-emerald-100', textCol: 'text-emerald-700' },
                   { label: 'In Progress', count: inProgressCount, color: 'bg-blue-600', barBg: 'bg-blue-100', textCol: 'text-blue-700' },
+                  { label: 'Blocked (flagged)', count: blockedCount, color: 'bg-red-500', barBg: 'bg-red-100', textCol: 'text-red-700' },
                   { label: 'To Do', count: todoCount, color: 'bg-sky-500', barBg: 'bg-sky-100', textCol: 'text-sky-700' },
                   { label: 'Backlog', count: backlogCount, color: 'bg-gray-400', barBg: 'bg-gray-200', textCol: 'text-gray-600' },
                 ].map(item => {

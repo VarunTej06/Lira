@@ -1,3 +1,4 @@
+import { issueLink } from '../../utils/links';
 import React, { useMemo } from 'react';
 import type { Issue } from '../../types/issue';
 import { getIssueSprint, isDone, isSprintWork, sprintLabel, sprintPhase, sprintStart } from '../../utils/sprintUtils';
@@ -70,7 +71,7 @@ export const EpicTimeline: React.FC<EpicTimelineProps> = ({ issues, keys, scope,
             return (
               <tr key={r.epic.id} className="border-b border-lira-border last:border-0">
                 <td className="px-3 py-2 sticky left-0 bg-white">
-                  <button onClick={() => onIssueClick(r.epic)} className="text-left cursor-pointer hover:underline">
+                  <button onClick={() => onIssueClick(r.epic)} {...issueLink(r.epic)} className="text-left cursor-pointer hover:underline">
                     <span className="text-xs text-lira-muted mr-1.5">{r.epic.key}</span>
                     <span className="text-lira-text">{r.epic.title}</span>
                   </button>

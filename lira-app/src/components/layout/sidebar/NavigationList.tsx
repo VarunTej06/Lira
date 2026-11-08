@@ -1,3 +1,4 @@
+import { pageLink } from '../../../utils/links';
 import { ChevronLeft } from 'lucide-react';
 import { motion, slide } from '../../common/motion';
 import type { SidebarState } from './useSidebarState';
@@ -39,7 +40,7 @@ export function NavigationList(s: SidebarState) {
           return (
             <button
               key={k}
-              onClick={item.action}
+              onClick={item.action} {...pageLink(item.tab)}
               data-active={isActive ? 'true' : undefined}
               className={`group relative w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs transition-all duration-200 cursor-pointer text-left ${
                 isActive ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'

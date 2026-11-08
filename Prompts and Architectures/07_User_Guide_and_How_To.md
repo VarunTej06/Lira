@@ -219,7 +219,19 @@ Your study notes, tickets, and progress are precious. Back them up in seconds:
 
 **Attach a file.** In a ticket, open Attachments and press **Add attachment**. Choose My computer, Google Drive, OneDrive, Dropbox or Web link. Drive, OneDrive and Dropbox take a share link: Lira does not sign in to those services.
 
-**Edit a comment.** You can edit comments you wrote. Press **Edit** on your comment, change the text and press **Save**. It is marked "(edited)".
+**Block a ticket.** In the ticket, under **Status**, press **Blocked** on the pill. Lira asks which ticket is blocking this one (search, or narrow by Epics, Tasks, Bugs, Subtasks). Tick one or more tickets, press **Mark as blocked**, then **Save changes**. The ticket keeps its status and column and its card shows "Blocked by KEY" ("+2" for more). Once blocked, use **Add** to link more tickets, or the cross on a ticket to remove it; pressing **Blocked** again does nothing. The tickets you link show "This ticket is blocking" in their own popup. Press **Not blocked** to clear everything. Use **Blocked** in the Status filter to list blocked work.
+
+**Paste a screenshot.** Click in a description or a comment and press Ctrl+V. The picture appears at the cursor, so you can write before and after it. It is also listed under Attachments.
+
+**Saving.** Pressing Save changes without having changed anything just closes the window and shows no "saved" card.
+
+**Open in a new tab.** Right-click a ticket, project, sprint, roadmap, space or sidebar item and choose **Open in new tab** (or **Copy link**). Ctrl + click or middle-click opens it straight away.
+
+**Filter a space.** Use the Priority, Status and Labels dropdowns above the board. Tick one or more values in each. Type in the Labels box to find a label. **Clear filters** resets them.
+
+**Copy text.** Each comment has **Copy**, and the description has **Copy description**.
+
+**Edit a comment.** You can edit comments you wrote. Press **Edit** on your comment, change the text and press **Save**. It is marked "(edited)". Every comment shows the day, date and time it was written, for example "Sun, 8 Nov 2026 at 3:42 PM".
 
 **Delete something.** Deleting a space, project, roadmap, sprint or form asks in a Lira dialog with a red button. **Cancel** or Escape keeps it.
 

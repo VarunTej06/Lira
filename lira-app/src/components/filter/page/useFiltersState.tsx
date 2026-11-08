@@ -174,7 +174,7 @@ export function useFiltersState(props: FiltersPageProps) {
       }
 
       // Status
-      if (selectedStatuses.length > 0 && !selectedStatuses.includes(issue.status)) {
+      if (selectedStatuses.length > 0 && !selectedStatuses.includes(issue.status) && !(issue.blocked && selectedStatuses.includes('blocked'))) {
         return false;
       }
 

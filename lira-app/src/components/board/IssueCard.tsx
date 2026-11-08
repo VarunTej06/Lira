@@ -1,8 +1,10 @@
+import { issueLink } from '../../utils/links';
+import { STATUS_LIST, statusLabel } from '../../utils/status';
 import { TypeIcon, PriorityIcon } from '../common/Icons';
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Draggable } from '@hello-pangea/dnd';
-import { Calendar, MoreHorizontal, Trash2, Edit3, ChevronDown, Link as LinkIcon, Link2 } from 'lucide-react';
+import { Calendar, MoreHorizontal, Trash2, Edit3, ChevronDown, Link as LinkIcon, Link2, Ban } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { formatDueDate, isDueSoon, isOverdue } from '../../utils/dateUtils';
@@ -35,7 +37,8 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
   const [parentMenuCoords, setParentMenuCoords] = useState<{ top: number; left: number; width: number } | null>(null);
   const linkMenuRef = useRef<HTMLDivElement>(null);
   const priority = getPriorityConfig(issue.priority);
-  const accentColor = STATUS_ACCENT[issue.status];
+  const accentColor = issue.blocked ? '#DE350B' : STATUS_ACCENT[issue.status];
+  const blockers = (issue.blockedByIds ?? []).map(id => (allIssues || []).find(i => i.id === id)).filter((i): i is Issue => !!i);
   const subtasks = Array.isArray(issue.subtasks) ? issue.subtasks : [];
   const completedSubtasks = subtasks.filter(s => s.completed).length;
   const totalSubtasks = subtasks.length;
@@ -107,7 +110,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
           {/* Status accent bar */}
           {accentColor && <div className="h-1 w-full" style={{ backgroundColor: accentColor }} />}
 
-          <div className="p-3" onClick={() => onClick(issue)}>
+          <div className="p-3" onClick={() => onClick(issue)} {...issueLink(issue)}>
             {/* Title */}
             <p className="text-sm font-medium text-lira-text leading-snug mb-2 line-clamp-3 group-hover:text-lira-blue transition-colors">
               {issue.title}
@@ -227,6 +230,12 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
               </div>
             )}
 
+            {issue.blocked && (
+              <span data-testid="blocked-badge" className="inline-flex items-center gap-1 mb-2 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded bg-red-100 text-red-700" title="This ticket is blocked">
+                <Ban className="w-3 h-3" /> Blocked{blockers.length ? ` by ${blockers[0].key}${blockers.length > 1 ? ` +${blockers.length - 1}` : ''}` : ''}
+              </span>
+            )}
+
             {/* Labels */}
             {labels.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-2">
@@ -308,10 +317,10 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                       )}
 
                       <div className="px-3 pt-1.5 pb-0.5 text-[10px] font-semibold text-lira-muted uppercase tracking-wide">Set status</div>
-                      {['backlog', 'todo', 'inprogress', 'done'].map(s => (
+                      {STATUS_LIST.map(m => m.id as string).map(s => (
                         <button key={s} onClick={e => handleStatusChange(e, s)}
                           className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 text-lira-text ${issue.status === s ? 'font-semibold text-lira-blue' : ''}`}>
-                          {s === 'backlog' ? 'Backlog' : s === 'todo' ? 'To Do' : s === 'inprogress' ? 'In Progress' : 'Done'}
+                          {statusLabel(s)}
                         </button>
                       ))}
                       <div className="border-t border-lira-border my-1" />

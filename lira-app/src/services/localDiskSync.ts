@@ -144,6 +144,18 @@ export async function saveToDiskNow(): Promise<boolean> {
 }
 
 /**
+ * Writes any change that is still waiting for its (400 ms) turn to disk now. Called before a page is opened in a new tab,
+ * so the new tab always starts from the latest data.
+ */
+export function flushDiskSync(): void {
+  if (syncTimeout) {
+    window.clearTimeout(syncTimeout);
+    syncTimeout = undefined;
+    void saveToDiskNow();
+  }
+}
+
+/**
  * Triggers a debounced sync to local PC disk (called on any create/update/delete)
  */
 export function triggerDiskSync(): void {

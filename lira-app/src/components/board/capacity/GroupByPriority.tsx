@@ -1,3 +1,5 @@
+import { issueLink } from '../../../utils/links';
+import { statusLabel } from '../../../utils/status';
 import { ColorDot } from '../../common/Icons';
 import type { CapacityState } from './useCapacityState';
 
@@ -38,13 +40,13 @@ export function GroupByPriority(s: CapacityState) {
                   group.items.map(issue => (
                     <div
                       key={issue.id}
-                      onClick={() => onIssueClick?.(issue)}
+                      onClick={() => onIssueClick?.(issue)} {...issueLink(issue)}
                       className="p-2.5 rounded-lg border border-lira-border hover:border-lira-blue hover:bg-blue-50/30 transition-all cursor-pointer text-xs space-y-1 bg-white group"
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-mono font-bold text-lira-blue group-hover:underline">{issue.key}</span>
                         <span className="text-[9px] uppercase px-1.5 py-0.2 rounded bg-gray-100 font-semibold text-gray-600">
-                          {issue.status}
+                          {statusLabel(issue.status)}
                         </span>
                       </div>
                       <div className="font-medium text-lira-text line-clamp-2 leading-snug">

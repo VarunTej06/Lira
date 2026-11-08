@@ -1,3 +1,4 @@
+import { projectLink } from '../../../utils/links';
 import { confirmDialog } from '../../common/dialogs';
 import { Trash2, FolderKanban } from 'lucide-react';
 import { RowMenuButton, ContextItem, SectionHeader, Collapsible } from './parts';
@@ -29,7 +30,7 @@ export function ProjectsSection(s: SidebarState) {
                 return (
                   <div key={p.id} className="relative group" data-menu-root={`project:${p.id}`}>
                     <button
-                      onClick={() => { setRowMenu(null); onSelectProject?.(p); }}
+                      onClick={() => { setRowMenu(null); onSelectProject?.(p); }} {...projectLink(p.id)}
                       title={p.name}
                       data-active={active ? 'true' : undefined}
                       className={`w-full flex items-center gap-2.5 pl-2.5 pr-2.5 group-hover:pr-8 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${

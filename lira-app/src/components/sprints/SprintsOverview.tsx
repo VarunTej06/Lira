@@ -1,3 +1,4 @@
+import { sprintLink } from '../../utils/links';
 import React, { useMemo } from 'react';
 import { CalendarClock, Plus, AlertTriangle, TrendingUp, Layers, Target, ArrowRight } from 'lucide-react';
 import type { Issue } from '../../types/issue';
@@ -59,7 +60,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                 <span className="flex-1">
                   {sprintName(r.key)} ended with <strong>{r.stats.open}</strong> unfinished ticket{r.stats.open === 1 ? '' : 's'}. Carry {r.stats.open === 1 ? 'it' : 'them'} over?
                 </span>
-                <button onClick={() => onOpenSprint(r.key)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">Review</button>
+                <button onClick={() => onOpenSprint(r.key)} {...sprintLink(r.key)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">Review</button>
               </div>
             ))}
           </div>
@@ -105,7 +106,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
           </div>
           <div className="flex items-end gap-4 h-32">
             {lastSix.map(r => (
-              <button key={r.key} onClick={() => onOpenSprint(r.key)} title={`${sprintName(r.key)}: ${r.stats.done}/${r.stats.total}`}
+              <button key={r.key} onClick={() => onOpenSprint(r.key)} {...sprintLink(r.key)} title={`${sprintName(r.key)}: ${r.stats.done}/${r.stats.total}`}
                 className="flex-1 flex flex-col items-center justify-end h-full gap-1 cursor-pointer">
                 <div className="w-full flex items-end justify-center gap-1 flex-1">
                   <div className="w-1/3 bg-gray-300 rounded-t-md" style={{ height: `${(r.stats.total / maxTotal) * 100}%` }} />
@@ -127,14 +128,14 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
             <table className="w-full text-left text-xs">
               <thead className="bg-gray-50 text-lira-muted">
                 <tr>
-                  {['Sprint', 'Status', 'Dates', 'Tickets', 'To do', 'In progress', 'Done', 'Progress', 'Points', 'Carried', ''].map(h => (
+                  {['Sprint', 'Status', 'Dates', 'Tickets', 'To do', 'In progress', 'Blocked', 'Done', 'Progress', 'Points', 'Carried', ''].map(h => (
                     <th key={h} className="px-3 py-2.5 font-semibold whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-lira-border">
                 {rows.map(r => (
-                  <tr key={r.key} onClick={() => onOpenSprint(r.key)} className="hover:bg-gray-50 cursor-pointer transition-colors group">
+                  <tr key={r.key} onClick={() => onOpenSprint(r.key)} {...sprintLink(r.key)} className="hover:bg-gray-50 cursor-pointer transition-colors group">
                     <td className="px-3 py-2.5">
                       <div className="font-semibold text-lira-text whitespace-nowrap">{sprintName(r.key)}</div>
                       {r.goal && <div className="text-[10px] text-lira-muted truncate max-w-[200px]"><Target className="inline w-3 h-3 mr-1 -mt-0.5" />{r.goal}</div>}
@@ -144,6 +145,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                     <td className="px-3 py-2.5 font-semibold text-lira-text">{r.stats.total}</td>
                     <td className="px-3 py-2.5 text-lira-muted">{r.stats.todo + r.stats.backlog}</td>
                     <td className="px-3 py-2.5 text-lira-blue">{r.stats.inprogress}</td>
+                    <td className="px-3 py-2.5 text-red-600">{r.stats.blocked || '—'}</td>
                     <td className="px-3 py-2.5 text-emerald-600 font-medium">{r.stats.done}</td>
                     <td className="px-3 py-2.5 w-36">
                       <div className="flex items-center gap-2">
@@ -173,7 +175,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                   <th className="px-3 py-2.5 font-semibold">Space</th>
                   {lastSix.map(r => (
                     <th key={r.key} className="px-3 py-2.5 font-semibold text-center whitespace-nowrap">
-                      <button onClick={() => onOpenSprint(r.key)} className="hover:text-lira-blue cursor-pointer">{sprintLabel(r.key, true)}</button>
+                      <button onClick={() => onOpenSprint(r.key)} {...sprintLink(r.key)} className="hover:text-lira-blue cursor-pointer">{sprintLabel(r.key, true)}</button>
                     </th>
                   ))}
                 </tr>

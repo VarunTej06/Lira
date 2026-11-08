@@ -1,3 +1,4 @@
+import { matchesStatusFilter, type SpaceFilters } from '../../../utils/spaceFilters';
 import { useMemo, useState } from 'react';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
@@ -8,7 +9,7 @@ export interface CapacityViewProps {
   onIssueClick?: (issue: Issue) => void;
   searchQuery?: string;
   filterAssignee?: boolean;
-  activeFilters?: { priorities: string[]; labels: string[] };
+  activeFilters?: SpaceFilters;
   groupBy?: 'status' | 'assignee' | 'priority' | 'epic';
 }
 
@@ -20,6 +21,7 @@ export interface MemberWorkload {
   backlog: number;
   todo: number;
   inProgress: number;
+  blocked: number;
   done: number;
   overdue: number;
   storyPoints: number;
@@ -37,7 +39,7 @@ export function useCapacityState(props: CapacityViewProps) {
     activeFilters,
     groupBy = 'assignee',
   } = props;
-  const [localQuickFilter, setLocalQuickFilter] = useState<'all' | 'vy' | 'inprogress' | 'high' | 'overdue'>('all');
+  const [localQuickFilter, setLocalQuickFilter] = useState<'all' | 'vy' | 'inprogress' | 'blocked' | 'high' | 'overdue'>('all');
   const [selectedAssigneeFilter, setSelectedAssigneeFilter] = useState<string | null>(null);
 
   // 1. Apply Active Filters & Quick Filters
@@ -60,6 +62,7 @@ export function useCapacityState(props: CapacityViewProps) {
     }
 
     // Priority filter from popover
+    list = list.filter(i => matchesStatusFilter(i, activeFilters?.statuses));
     if (activeFilters?.priorities && activeFilters.priorities.length > 0) {
       list = list.filter(i => activeFilters.priorities.includes(i.priority));
     }
@@ -77,6 +80,8 @@ export function useCapacityState(props: CapacityViewProps) {
     // Quick filter chips inside Capacity view
     if (localQuickFilter === 'vy') {
       list = list.filter(i => i.assigneeInitials === 'VY' || i.assignee === 'Varun Tej');
+    } else if (localQuickFilter === 'blocked') {
+      list = list.filter(i => i.blocked);
     } else if (localQuickFilter === 'inprogress') {
       list = list.filter(i => i.status === 'inprogress');
     } else if (localQuickFilter === 'high') {
@@ -108,6 +113,7 @@ export function useCapacityState(props: CapacityViewProps) {
           backlog: 0,
           todo: 0,
           inProgress: 0,
+          blocked: 0,
           done: 0,
           overdue: 0,
           storyPoints: 0,
@@ -119,6 +125,7 @@ export function useCapacityState(props: CapacityViewProps) {
       m.total += 1;
       m.storyPoints += issue.storyPoints || 1;
       m.issues.push(issue);
+      if (issue.blocked) m.blocked += 1;
 
       if (issue.status === 'done') m.done += 1;
       else if (issue.status === 'inprogress') m.inProgress += 1;
@@ -146,10 +153,11 @@ export function useCapacityState(props: CapacityViewProps) {
       { id: 'backlog', label: 'Backlog Pool', desc: 'Items awaiting refinement & sprint commitment', dot: '#6B778C', color: 'border-slate-200 bg-white' },
       { id: 'todo', label: 'Ready (To Do)', desc: 'Prioritized & groomed items ready for active pickup', dot: '#172B4D', color: 'border-blue-200 bg-white' },
       { id: 'inprogress', label: 'In Flight (In Progress)', desc: 'Active development and implementation', dot: '#FFAB00', color: 'border-amber-200 bg-white' },
+      { id: 'blocked', label: 'Blocked', desc: 'Work that cannot move until something else is resolved', dot: '#DE350B', color: 'border-red-200 bg-white' },
       { id: 'done', label: 'Completed (Done)', desc: 'Verified, tested, and resolved work items', dot: '#36B37E', color: 'border-emerald-200 bg-white' },
     ];
     return statuses.map(s => {
-      const items = filteredIssues.filter(i => i.status === s.id);
+      const items = filteredIssues.filter(i => (s.id === 'blocked' ? !!i.blocked : i.status === s.id));
       const points = items.reduce((sum, i) => sum + (i.storyPoints || 1), 0);
       const pct = teamPoints > 0 ? Math.round((points / teamPoints) * 100) : 0;
       return { ...s, items, points, pct };
@@ -190,6 +198,7 @@ export function useCapacityState(props: CapacityViewProps) {
     filterAssignee ||
     (activeFilters?.priorities && activeFilters.priorities.length > 0) ||
     (activeFilters?.labels && activeFilters.labels.length > 0) ||
+    (activeFilters?.statuses && activeFilters.statuses.length > 0) ||
     selectedAssigneeFilter !== null ||
     localQuickFilter !== 'all';
 

@@ -1,3 +1,4 @@
+import { AttachPicker } from '../../issue/AttachPicker';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { EditorContent, useEditor, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -51,6 +52,13 @@ export interface RichTextEditorProps {
   /** Height of the writing area when empty, in pixels. */
   minHeight?: number;
   autoFocus?: boolean;
+  /** `compact` is the short toolbar used for comments. */
+  variant?: 'full' | 'compact';
+  /** Show the text only (no toolbar, not editable). Used to display saved comments. */
+  readOnly?: boolean;
+  ariaLabel?: string;
+  /** Called on Ctrl+Enter. */
+  onSubmit?: () => void;
 }
 
 const Btn: React.FC<{ label: string; active?: boolean; disabled?: boolean; onClick: () => void; children: React.ReactNode }> = ({ label, active, disabled, onClick, children }) => (
@@ -129,7 +137,11 @@ const ColorMenu: React.FC<{ label: string; icon: React.ReactNode; colors: { name
  */
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   value, onChange, attachments = [], onAttachmentsChange, placeholder = 'Add a description...', minHeight = 140, autoFocus,
+  variant = 'full', readOnly = false, ariaLabel = 'Description', onSubmit,
 }) => {
+  const compact = variant === 'compact';
+  const onSubmitRef = useRef(onSubmit);
+  onSubmitRef.current = onSubmit;
   const attachmentsRef = useRef(attachments);
   attachmentsRef.current = attachments;
   const onChangeRef = useRef(onChange);
@@ -137,29 +149,30 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const onAttachRef = useRef(onAttachmentsChange);
   onAttachRef.current = onAttachmentsChange;
   const lastEmitted = useRef<string>(value);
-  const fileInput = useRef<HTMLInputElement>(null);
   const [headingOpen, setHeadingOpen] = useState(false);
   const headingRef = useRef<HTMLDivElement>(null);
 
-  // files from the toolbar, a drop or a paste
-  const addFiles = useCallback(async (files: File[], editor: Editor | null) => {
-    if (!files.length || !editor) return;
-    const added: Attachment[] = [];
+  // attachments (files, pictures, links) go into the text at the cursor, and join the ticket's attachments
+  const insertAttachments = useCallback(async (items: Attachment[], editor: Editor | null) => {
+    if (!items.length || !editor) return;
     const tooBig: string[] = [];
-    for (const f of files) {
-      const { attachment, embedded } = await readAttachment(f);
-      added.push(attachment);
-      if (!embedded) tooBig.push(f.name);
-      if (attachment.type.startsWith('image/') && attachment.dataUrl) {
+    for (const attachment of items) {
+      if (attachment.url) {
+        editor.chain().focus().insertContent([
+          { type: 'text', text: attachment.name, marks: [{ type: 'link', attrs: { href: attachment.url } }] },
+          { type: 'text', text: ' ' },
+        ]).run();
+      } else if (attachment.type.startsWith('image/') && attachment.dataUrl) {
         editor.chain().focus().insertContent({ type: 'image', attrs: { src: attachment.dataUrl, alt: attachment.name, attachmentId: attachment.id } }).run();
       } else {
+        if (!attachment.dataUrl) tooBig.push(attachment.name);
         editor.chain().focus().insertContent([
           { type: 'text', text: attachment.name, marks: [{ type: 'link', attrs: { href: `#attachment-${attachment.id}` } }] },
           { type: 'text', text: ' ' },
         ]).run();
       }
     }
-    onAttachRef.current?.([...attachmentsRef.current, ...added]);
+    onAttachRef.current?.([...attachmentsRef.current, ...items]);
     if (tooBig.length) {
       await alertDialog({
         title: 'File not stored',
@@ -167,6 +180,17 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       });
     }
   }, []);
+
+  // files from a drop or a paste (a pasted screenshot is always called "image.png": give each one its own name)
+  const addFiles = useCallback(async (files: File[], editor: Editor | null) => {
+    if (!files.length || !editor) return;
+    const items: Attachment[] = [];
+    for (const f of files) {
+      const named = /^image\.(png|jpe?g|gif|webp)$/i.test(f.name) ? new File([f], `screenshot-${new Date().toISOString().replace(/[:T]/g, '-').slice(0, 19)}.${f.type.split('/')[1]?.replace('jpeg', 'jpg') || 'png'}`, { type: f.type }) : f;
+      items.push((await readAttachment(named)).attachment);
+    }
+    await insertAttachments(items, editor);
+  }, [insertAttachments]);
 
   const editor = useEditor({
     extensions: [
@@ -184,9 +208,14 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       AttachmentImage.configure({ allowBase64: true, inline: false }),
     ],
     content: toEditorHtml(value, attachments),
+    editable: !readOnly,
     autofocus: autoFocus ? 'end' : false,
     editorProps: {
-      attributes: { class: 'lira-rich-body', style: `min-height:${minHeight}px`, 'aria-label': 'Description', role: 'textbox', 'aria-multiline': 'true' },
+      attributes: { class: 'lira-rich-body', style: `min-height:${minHeight}px`, 'aria-label': ariaLabel, role: 'textbox', 'aria-multiline': 'true' },
+      handleKeyDown: (_view, event) => {
+        if (event.key === 'Enter' && (event.ctrlKey || event.metaKey) && onSubmitRef.current) { event.preventDefault(); onSubmitRef.current(); return true; }
+        return false;
+      },
       handleDrop: (_view, event) => {
         const files = Array.from((event as DragEvent).dataTransfer?.files ?? []);
         if (!files.length) return false;
@@ -195,7 +224,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         return true;
       },
       handlePaste: (_view, event) => {
-        const files = Array.from(event.clipboardData?.files ?? []);
+        // a screenshot or copied picture: take it from the files, or from the clipboard items
+        const cd = event.clipboardData;
+        let files = Array.from(cd?.files ?? []);
+        if (!files.length) files = Array.from(cd?.items ?? []).filter(i => i.kind === 'file').map(i => i.getAsFile()).filter((f): f is File => !!f);
         if (!files.length) return false;
         event.preventDefault();
         void addFilesRef.current(files);
@@ -218,8 +250,12 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     },
   });
 
+  // switching between reading and editing must not need a new editor
+  useEffect(() => { if (editor && editor.isEditable === readOnly) editor.setEditable(!readOnly); }, [editor, readOnly]);
+
   const addFilesRef = useRef<(files: File[]) => Promise<void>>(async () => {});
   addFilesRef.current = (files: File[]) => addFiles(files, editor);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   // a different ticket (or a reset) arrives from outside
   useEffect(() => {
@@ -236,6 +272,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   }, [headingOpen]);
 
   if (!editor) return <div className="rounded-lg border border-lira-border h-[200px] animate-pulse bg-gray-50" aria-busy />;
+  if (readOnly) return <div className="lira-rich lira-rich-readonly" data-testid="rich-view"><EditorContent editor={editor} /></div>;
 
   const setLink = async () => {
     const previous = editor.getAttributes('link').href as string | undefined;
@@ -252,7 +289,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   return (
     <div className="lira-rich rounded-lg border border-lira-border bg-white focus-within:border-lira-blue focus-within:ring-1 focus-within:ring-lira-blue transition-all" data-testid="rich-editor">
       <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-lira-border bg-gray-50/70 rounded-t-lg" role="toolbar" aria-label="Formatting">
-        <div className="relative" ref={headingRef}>
+        {!compact && <div className="relative" ref={headingRef}>
           <button
             type="button"
             aria-label="Text style"
@@ -276,38 +313,31 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
               ))}
             </div>
           )}
-        </div>
-        <Sep />
+        </div>}
+        {!compact && <Sep />}
         <Btn label="Bold" active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}><Bold className="w-4 h-4" /></Btn>
         <Btn label="Italic" active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}><Italic className="w-4 h-4" /></Btn>
         <Btn label="Underline" active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()}><UnderlineIcon className="w-4 h-4" /></Btn>
         <Btn label="Strikethrough" active={editor.isActive('strike')} onClick={() => editor.chain().focus().toggleStrike().run()}><Strikethrough className="w-4 h-4" /></Btn>
-        <ColorMenu label="Text colour" icon={<Palette className="w-4 h-4" />} colors={TEXT_COLORS} current={textColor} onPick={v => (v ? editor.chain().focus().setColor(v).run() : editor.chain().focus().unsetColor().run())} />
-        <ColorMenu label="Highlight" icon={<Highlighter className="w-4 h-4" />} colors={HIGHLIGHTS} current={highlightColor} onPick={v => (v ? editor.chain().focus().setHighlight({ color: v }).run() : editor.chain().focus().unsetHighlight().run())} />
+        {!compact && <ColorMenu label="Text colour" icon={<Palette className="w-4 h-4" />} colors={TEXT_COLORS} current={textColor} onPick={v => (v ? editor.chain().focus().setColor(v).run() : editor.chain().focus().unsetColor().run())} />}
+        {!compact && <ColorMenu label="Highlight" icon={<Highlighter className="w-4 h-4" />} colors={HIGHLIGHTS} current={highlightColor} onPick={v => (v ? editor.chain().focus().setHighlight({ color: v }).run() : editor.chain().focus().unsetHighlight().run())} />}
         <Sep />
         <Btn label="Bullet list" active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()}><List className="w-4 h-4" /></Btn>
         <Btn label="Numbered list" active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()}><ListOrdered className="w-4 h-4" /></Btn>
         <Btn label="Checkbox list" active={editor.isActive('taskList')} onClick={() => editor.chain().focus().toggleTaskList().run()}><ListChecks className="w-4 h-4" /></Btn>
-        <Btn label="Quote" active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="w-4 h-4" /></Btn>
-        <Btn label="Code" active={editor.isActive('code')} onClick={() => editor.chain().focus().toggleCode().run()}><Code className="w-4 h-4" /></Btn>
+        {!compact && <Btn label="Quote" active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()}><Quote className="w-4 h-4" /></Btn>}
+        {!compact && <Btn label="Code" active={editor.isActive('code')} onClick={() => editor.chain().focus().toggleCode().run()}><Code className="w-4 h-4" /></Btn>}
         <Btn label="Link" active={editor.isActive('link')} onClick={() => { void setLink(); }}><Link2 className="w-4 h-4" /></Btn>
         <Sep />
         <Btn label="Mention someone (@)" onClick={() => editor.chain().focus().insertContent('@').run()}><AtSign className="w-4 h-4" /></Btn>
-        <Btn label="Add files" onClick={() => fileInput.current?.click()}><Paperclip className="w-4 h-4" /></Btn>
-        <Sep />
-        <Btn label="Clear formatting" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}><RemoveFormatting className="w-4 h-4" /></Btn>
+        <Btn label="Add attachment" onClick={() => setPickerOpen(true)}><Paperclip className="w-4 h-4" /></Btn>
+        {!compact && <Sep />}
+        {!compact && <Btn label="Clear formatting" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}><RemoveFormatting className="w-4 h-4" /></Btn>}
         <Btn label="Undo" disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}><Undo2 className="w-4 h-4" /></Btn>
         <Btn label="Redo" disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}><Redo2 className="w-4 h-4" /></Btn>
-        <input
-          ref={fileInput}
-          type="file"
-          multiple
-          className="hidden"
-          aria-label="Choose files to add"
-          onChange={e => { const files = Array.from(e.target.files ?? []); e.target.value = ''; void addFiles(files, editor); }}
-        />
       </div>
-      <EditorContent editor={editor} className="max-h-[420px] overflow-y-auto px-3 py-2.5" />
+      <AttachPicker open={pickerOpen} onClose={() => setPickerOpen(false)} onAdd={items => { void insertAttachments(items, editor); }} />
+      <EditorContent editor={editor} className={`${compact ? 'max-h-[260px]' : 'max-h-[420px]'} overflow-y-auto px-3 py-2.5`} />
     </div>
   );
 };

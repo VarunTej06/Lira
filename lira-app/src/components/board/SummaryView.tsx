@@ -1,3 +1,5 @@
+import { issueLink } from '../../utils/links';
+import { statusLabel } from '../../utils/status';
 import { ColorDot } from '../common/Icons';
 import React, { useMemo } from 'react';
 import {
@@ -22,6 +24,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
     const total = issues.length;
     const done = issues.filter(i => i.status === 'done').length;
     const inProgress = issues.filter(i => i.status === 'inprogress').length;
+    const blocked = issues.filter(i => i.blocked).length;
     const todo = issues.filter(i => i.status === 'todo').length;
     const backlog = issues.filter(i => i.status === 'backlog').length;
 
@@ -76,6 +79,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
       total,
       done,
       inProgress,
+      blocked,
       todo,
       backlog,
       overdue,
@@ -188,6 +192,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
               { label: 'Backlog', count: stats.backlog, color: 'bg-slate-400', textColor: 'text-slate-600' },
               { label: 'To Do', count: stats.todo, color: 'bg-blue-500', textColor: 'text-blue-600' },
               { label: 'In Progress', count: stats.inProgress, color: 'bg-amber-500', textColor: 'text-amber-600' },
+              { label: 'Blocked (flagged)', count: stats.blocked, color: 'bg-red-500', textColor: 'text-red-600' },
               { label: 'Done', count: stats.done, color: 'bg-emerald-500', textColor: 'text-emerald-600' },
             ].map(col => {
               const pct = stats.total > 0 ? Math.round((col.count / stats.total) * 100) : 0;
@@ -269,7 +274,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
             {stats.epicProgress.map(({ epic, totalChildren, completedChildren, progress }) => (
               <div
                 key={epic.id}
-                onClick={() => onIssueClick(epic)}
+                onClick={() => onIssueClick(epic)} {...issueLink(epic)}
                 className="p-3.5 rounded-lg border border-lira-border hover:border-purple-300 hover:bg-purple-50/30 transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between mb-1.5">
@@ -312,7 +317,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
               {stats.highPriorityIssues.map(issue => (
                 <div
                   key={issue.id}
-                  onClick={() => onIssueClick(issue)}
+                  onClick={() => onIssueClick(issue)} {...issueLink(issue)}
                   className="flex items-center justify-between p-2.5 rounded-lg border border-lira-border hover:bg-gray-50 transition-all cursor-pointer group"
                 >
                   <div className="flex items-center gap-2.5 truncate pr-2">
@@ -324,7 +329,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                     </span>
                   </div>
                   <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
-                    {issue.status}
+                    {statusLabel(issue.status)}
                   </span>
                 </div>
               ))}

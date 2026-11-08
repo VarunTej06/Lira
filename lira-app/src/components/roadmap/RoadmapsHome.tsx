@@ -1,3 +1,4 @@
+import { roadmapLink } from '../../utils/links';
 import { confirmDialog, promptDialog } from '../common/dialogs';
 import React, { useMemo, useState } from 'react';
 import {
@@ -109,7 +110,7 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
                   key={rm.id}
                   role="button"
                   tabIndex={0}
-                  onClick={e => { e.stopPropagation(); onOpen(rm.id); }}
+                  onClick={e => { e.stopPropagation(); onOpen(rm.id); }} {...roadmapLink(rm.id)}
                   onKeyDown={e => { if (e.key === 'Enter') onOpen(rm.id); }}
                   className={`group relative rounded-2xl border border-lira-border bg-lira-surface p-4 cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5 transition-all ${rm.archived ? 'opacity-75' : ''}`}
                 >

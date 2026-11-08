@@ -1,5 +1,6 @@
 import { DialogHost } from './components/common/dialogs';
 import { SavedToastHost } from './components/common/SavedToast';
+import { LinkMenuHost } from './components/common/LinkMenu';
 import { getTheme } from './utils/theme';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -395,6 +396,7 @@ export default function App() {
 
       <DialogHost />
       <SavedToastHost />
+      <LinkMenuHost />
 
       {/* Issue detail modal */}
       <ErrorBoundary

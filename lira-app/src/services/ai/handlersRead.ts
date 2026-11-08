@@ -138,6 +138,7 @@ export async function handleSpaceQuery(c: AgentContext): Promise<ChatMessage | u
       backlog: spaceIssues.filter(i => i.status === 'backlog'),
       todo: spaceIssues.filter(i => i.status === 'todo'),
       inprogress: spaceIssues.filter(i => i.status === 'inprogress'),
+      blocked: spaceIssues.filter(i => i.blocked),
       done: spaceIssues.filter(i => i.status === 'done'),
     };
 
@@ -146,6 +147,8 @@ export async function handleSpaceQuery(c: AgentContext): Promise<ChatMessage | u
     text += `| **Backlog** | ${byStatus.backlog.length} | ${byStatus.backlog.map(i => `\`${i.key}\``).join(', ') || '—'} |\n`;
     text += `| **To Do** | ${byStatus.todo.length} | ${byStatus.todo.map(i => `\`${i.key}\``).join(', ') || '—'} |\n`;
     text += `| **In Progress** | ${byStatus.inprogress.length} | ${byStatus.inprogress.map(i => `\`${i.key}\``).join(', ') || '—'} |\n`;
+    text += `| **Blocked (flagged)** | ${byStatus.blocked.length} | ${byStatus.blocked.map(i => `\`${i.key}\``).join(', ') || '—'} |
+`;
     text += `| **Done** | ${byStatus.done.length} | ${byStatus.done.map(i => `\`${i.key}\``).join(', ') || '—'} |\n\n`;
 
     if (spaceIssues.length > 0) {

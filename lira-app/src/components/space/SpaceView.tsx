@@ -1,3 +1,4 @@
+import { EMPTY_SPACE_FILTERS, type SpaceFilters } from '../../utils/spaceFilters';
 import { Construction } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -40,7 +41,7 @@ interface SpaceViewProps {
 export function SpaceView(p: SpaceViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterAssignee, setFilterAssignee] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<{ priorities: string[]; labels: string[] }>({ priorities: [], labels: [] });
+  const [activeFilters, setActiveFilters] = useState<SpaceFilters>(EMPTY_SPACE_FILTERS);
   const [groupBy, setGroupBy] = useState<GroupBy>('status');
   const { space, tab, issues } = p;
 
@@ -65,7 +66,7 @@ export function SpaceView(p: SpaceViewProps) {
         onTabChange={p.onTabChange}
         onFilterChange={setActiveFilters}
         onGroupChange={setGroupBy}
-        onClearFilters={() => setActiveFilters({ priorities: [], labels: [] })}
+        onClearFilters={() => setActiveFilters(EMPTY_SPACE_FILTERS)}
         availableLabels={availableLabels}
         isSpaceHidden={p.isHidden}
         isSpaceArchived={p.isArchived}

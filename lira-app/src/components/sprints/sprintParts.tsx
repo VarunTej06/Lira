@@ -1,3 +1,5 @@
+import { issueLink } from '../../utils/links';
+import { STATUS_META, BLOCKED_META } from '../../utils/status';
 import { TypeIcon, PriorityIcon } from '../common/Icons';
 import React from 'react';
 import type { Issue } from '../../types/issue';
@@ -9,15 +11,10 @@ import {
   getIssueSprint, sprintLabel, sprintPhase, sprintName, moveIssuesToSprint, currentSprintKey, nextSprint,
 } from '../../utils/sprintUtils';
 
-export const STATUS_META: Record<string, { label: string; color: string; bg: string }> = {
-  backlog: { label: 'Backlog', color: '#6B778C', bg: '#F4F5F7' },
-  todo: { label: 'To Do', color: '#172B4D', bg: '#DFE1E6' },
-  inprogress: { label: 'In Progress', color: '#0052CC', bg: '#DEEBFF' },
-  done: { label: 'Done', color: '#006644', bg: '#E3FCEF' },
-};
+export { STATUS_META };
 
 export const statusMeta = (s: string) =>
-  STATUS_META[s?.toLowerCase()] || { label: s, color: '#6B778C', bg: '#F4F5F7' };
+  (STATUS_META as Record<string, { label: string; color: string; bg: string }>)[s?.toLowerCase()] || { label: s, color: '#6B778C', bg: '#F4F5F7' };
 
 export const PhaseBadge: React.FC<{ sprint: string }> = ({ sprint }) => {
   const phase = sprintPhase(sprint);
@@ -89,7 +86,7 @@ export const TicketRow: React.FC<TicketRowProps> = ({
 
   return (
     <div
-      onClick={() => onClick(issue)}
+      onClick={() => onClick(issue)} {...issueLink(issue)}
       className={`flex items-center gap-3 px-3 py-2 border-b border-lira-border last:border-0 hover:bg-gray-50 cursor-pointer transition-colors ${
         selected ? 'bg-blue-50' : ''
       }`}
@@ -107,6 +104,7 @@ export const TicketRow: React.FC<TicketRowProps> = ({
       <span title={type.label} className="flex-shrink-0"><TypeIcon type={issue.type} className="w-4 h-4" /></span>
       <span className="text-xs font-medium text-lira-muted w-20 flex-shrink-0">{issue.key}</span>
       <span className="flex-1 min-w-0 text-sm text-lira-text truncate">{issue.title}</span>
+      {issue.blocked && <span className="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-bold uppercase rounded" style={{ color: BLOCKED_META.color, backgroundColor: BLOCKED_META.bg }}>Blocked</span>}
       {showSpace && space && (
         <span
           className="text-[10px] font-semibold px-1.5 py-0.5 rounded flex-shrink-0 text-white"

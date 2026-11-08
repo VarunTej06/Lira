@@ -1,3 +1,4 @@
+import { issueLink } from '../../utils/links';
 import React, { useMemo } from 'react';
 import { Download, Printer } from 'lucide-react';
 import type { Issue } from '../../types/issue';
@@ -174,7 +175,7 @@ export const SprintReports: React.FC<SprintReportsProps> = ({ issues, sprint, sc
         ) : (
           <ul>
             {changes.map((c, i) => (
-              <li key={`${c.issue.id}-${i}`} className="flex items-center gap-3 px-4 py-2 border-b border-lira-border last:border-0 text-sm hover:bg-gray-50 cursor-pointer" onClick={() => onIssueClick(c.issue)}>
+              <li key={`${c.issue.id}-${i}`} className="flex items-center gap-3 px-4 py-2 border-b border-lira-border last:border-0 text-sm hover:bg-gray-50 cursor-pointer" onClick={() => onIssueClick(c.issue)} {...issueLink(c.issue)}>
                 <span className="text-xs text-lira-muted w-14 flex-shrink-0">{c.at.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                 <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded flex-shrink-0 ${c.kind === 'added' ? 'bg-amber-100 text-amber-800' : c.kind === 'carried' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
                   {c.kind === 'added' ? 'Added' : c.kind === 'carried' ? 'Carried over' : 'Removed'}

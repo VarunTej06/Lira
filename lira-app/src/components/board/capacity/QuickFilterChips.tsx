@@ -13,6 +13,7 @@ export function QuickFilterChips(s: CapacityState) {
             { id: 'all' as const, label: `All Items (${issues.length})` },
             { id: 'vy' as const, label: 'Assigned to VY' },
             { id: 'inprogress' as const, label: 'In Flight Only' },
+            { id: 'blocked' as const, label: 'Blocked' },
             { id: 'high' as const, label: 'High Priority' },
             { id: 'overdue' as const, label: `Overdue (${totalOverdue})` },
           ].map(chip => (

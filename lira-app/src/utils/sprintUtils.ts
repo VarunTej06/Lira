@@ -286,6 +286,7 @@ export interface SprintStats {
   total: number;
   done: number;
   inprogress: number;
+  blocked: number;
   todo: number;
   backlog: number;
   open: number;
@@ -303,6 +304,7 @@ export function sprintStats(list: Issue[]): SprintStats {
     total: list.length,
     done,
     inprogress: by('inprogress'),
+    blocked: list.filter(i => i.blocked).length,
     todo: by('todo'),
     backlog: by('backlog'),
     open: list.length - done,

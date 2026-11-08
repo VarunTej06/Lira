@@ -1,3 +1,4 @@
+import { issueLink, projectLink, sprintLink } from '../../utils/links';
 import React, { useMemo } from 'react';
 import { Sparkles, AlertTriangle, Clock, CheckCircle2, ListTodo, ArrowRight, FolderKanban, CalendarClock, Activity } from 'lucide-react';
 import type { Issue } from '../../types/issue';
@@ -146,7 +147,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
 
           <div className="space-y-5">
             <Card title={sprintName(cur)} icon={<CalendarClock className="w-4 h-4 text-teal-500" />}
-              action={<button onClick={() => onOpenSprint(cur)} className="text-xs text-lira-blue hover:underline cursor-pointer flex items-center gap-1">Open <ArrowRight className="w-3 h-3" /></button>}>
+              action={<button onClick={() => onOpenSprint(cur)} {...sprintLink(cur)} className="text-xs text-lira-blue hover:underline cursor-pointer flex items-center gap-1">Open <ArrowRight className="w-3 h-3" /></button>}>
               <div className="p-4 space-y-3">
                 <div className="flex justify-between text-xs text-lira-muted">
                   <span>{curStats.done} of {curStats.total} done</span>
@@ -156,8 +157,8 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                   <div className="bg-green-500" style={{ width: `${curStats.total ? (curStats.done / curStats.total) * 100 : 0}%` }} />
                   <div className="bg-blue-500" style={{ width: `${curStats.total ? (curStats.inprogress / curStats.total) * 100 : 0}%` }} />
                 </div>
-                <div className="grid grid-cols-3 gap-2 text-center">
-                  {[['To Do', curStats.todo + curStats.backlog], ['In progress', curStats.inprogress], ['Done', curStats.done]].map(([l, v]) => (
+                <div className="grid grid-cols-4 gap-2 text-center">
+                  {[['To Do', curStats.todo + curStats.backlog], ['In progress', curStats.inprogress], ['Blocked', curStats.blocked], ['Done', curStats.done]].map(([l, v]) => (
                     <div key={l as string} className="rounded-xl bg-gray-50 border border-lira-border py-2">
                       <div className="text-lg font-semibold text-lira-text">{v}</div>
                       <div className="text-[10px] text-lira-muted">{l}</div>
@@ -189,7 +190,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
             <Card title="Projects" icon={<FolderKanban className="w-4 h-4 text-violet-500" />}>
               <div className="p-2">
                 {projects.length === 0 ? empty('No projects yet') : projects.map(p => (
-                  <button key={p.id} onClick={() => onOpenProject(p)}
+                  <button key={p.id} onClick={() => onOpenProject(p)} {...projectLink(p.id)}
                     className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors text-left cursor-pointer">
                     <span className="w-8 h-8 rounded-lg bg-lira-blue text-white text-[10px] font-bold flex items-center justify-center">{p.key.slice(0, 2)}</span>
                     <span className="flex-1 min-w-0 text-sm font-medium text-lira-text truncate">{p.name}</span>
@@ -200,7 +201,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
 
             <Card title="Recent activity" icon={<Activity className="w-4 h-4 text-lira-muted" />}>
               {activity.length === 0 ? empty('No activity yet') : activity.map((a, idx) => (
-                <button key={idx} onClick={() => onIssueClick(a.issue)}
+                <button key={idx} onClick={() => onIssueClick(a.issue)} {...issueLink(a.issue)}
                   className="w-full text-left px-4 py-2 border-b border-lira-border last:border-0 hover:bg-gray-50 transition-colors cursor-pointer">
                   <div className="text-xs text-lira-text truncate"><span className="font-mono text-lira-muted">{a.issue.key}</span> {a.text}</div>
                   <div className="text-[10px] text-lira-muted">{formatRelativeDate(a.at)}</div>

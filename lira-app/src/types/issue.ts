@@ -21,9 +21,10 @@ export interface Comment {
   id: string;
   author: string;
   authorInitials: string;
-  content: string;
+  content: string; // HTML written by the comment editor (older comments are plain text)
   createdAt: Date;
   updatedAt?: Date;
+  attachments?: Attachment[]; // files and pictures added inside the comment
 }
 
 export interface ActivityEntry {
@@ -68,6 +69,10 @@ export interface Issue {
   description: string;
   type: IssueType;
   status: IssueStatus;
+  /** Blocked is a flag, not a status: the ticket keeps its status and shows it is waiting on another ticket. */
+  blocked?: boolean;
+  /** The tickets it is waiting on (their ids). Each link is also kept in linkedIssues as 'blocked_by'. */
+  blockedByIds?: number[];
   priority: Priority;
   assignee?: string;
   assigneeInitials?: string;

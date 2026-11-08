@@ -4,6 +4,7 @@ import type { Attachment, AttachmentSource } from '../../types/issue';
 import { readAttachment, formatBytes, SOURCE_LABEL } from '../../utils/attachments';
 import { alertDialog } from '../common/dialogs';
 import { AttachPicker } from './AttachPicker';
+import { formatDayDateTime } from '../../utils/dateUtils';
 
 const LINK_ICON: Record<AttachmentSource, React.ReactNode> = {
   file: <FileText className="w-5 h-5 text-lira-blue" />,
@@ -13,12 +14,16 @@ const LINK_ICON: Record<AttachmentSource, React.ReactNode> = {
   link: <Link2 className="w-5 h-5 text-amber-600" />,
 };
 
+export interface CommentFile { attachment: Attachment; author: string; at: Date | string }
+
 interface IssueAttachmentsProps {
   attachments: Attachment[];
   onUpdate: (attachments: Attachment[]) => void;
+  /** Files added inside comments. They are listed here too, but are removed by editing the comment. */
+  fromComments?: CommentFile[];
 }
 
-export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments, onUpdate }) => {
+export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments, onUpdate, fromComments = [] }) => {
   const [dragging, setDragging] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -128,6 +133,33 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {fromComments.length > 0 && (
+        <div data-testid="comment-attachments">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-lira-muted mb-1.5">Added in comments</p>
+          <div className="grid grid-cols-2 gap-2">
+            {fromComments.map(({ attachment: att, author, at }) => (
+              <div key={`${att.id}`} className="flex items-center gap-2 p-2 border border-lira-border rounded-lg bg-gray-50/50">
+                {att.dataUrl && att.type.startsWith('image/') ? (
+                  <img src={att.dataUrl} alt={att.name} className="w-10 h-10 object-cover rounded flex-shrink-0" />
+                ) : (
+                  <div className="w-10 h-10 bg-blue-50 rounded flex items-center justify-center flex-shrink-0">{LINK_ICON[att.source ?? 'file']}</div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-lira-text truncate">{att.name}</p>
+                  <p className="text-[10px] text-lira-muted truncate">{att.url ? SOURCE_LABEL[att.source ?? 'link'] : formatBytes(att.size)} · {author}, {formatDayDateTime(at)}</p>
+                </div>
+                {att.dataUrl && (
+                  <a href={att.dataUrl} download={att.name} className="p-1 rounded hover:bg-gray-200 text-lira-muted" aria-label={`Download ${att.name}`}><Download className="w-3 h-3" /></a>
+                )}
+                {att.url && (
+                  <a href={att.url} target="_blank" rel="noopener noreferrer" className="p-1 rounded hover:bg-gray-200 text-lira-muted" aria-label={`Open ${att.name}`}><ExternalLink className="w-3 h-3" /></a>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

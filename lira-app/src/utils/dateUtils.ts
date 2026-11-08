@@ -85,3 +85,14 @@ export function formatTimeTracking(minutes: number): string {
   if (hours === 0) return `${mins}m`;
   return `${hours}h ${mins}m`;
 }
+
+/** Day, date and time, for example "Sun, 8 Nov 2026 at 3:42 PM". Used on comments and history. */
+export function formatDayDateTime(date: Date | string | undefined | null): string {
+  const d = toValidDate(date);
+  if (!d) return '';
+  try {
+    return `${format(d, 'EEE, d MMM yyyy')} at ${format(d, 'h:mm a')}`;
+  } catch {
+    return '';
+  }
+}

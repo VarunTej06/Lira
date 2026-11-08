@@ -48,6 +48,7 @@ export function useSettingsState(props: SettingsModalProps) {
   const appearanceChanged = theme !== getTheme() || accent.toUpperCase() !== loadAccent().toUpperCase();
 
   const handleSaveAppearance = () => {
+    if (!appearanceChanged) { onClose(); return; }
     applyTheme(theme);
     saveAccent(accent);
     notifySaved('Appearance saved');
@@ -89,6 +90,7 @@ export function useSettingsState(props: SettingsModalProps) {
       initials: cleanInitials,
       role: role.trim() || 'Software Engineer',
     };
+    if (updated.name === profile.name && updated.email === profile.email && updated.initials === profile.initials && updated.role === profile.role) { onClose(); return; }
     localStorage.setItem('lira_user_profile', JSON.stringify(updated));
     localStorage.setItem('lira_user_name', updated.name);
     localStorage.setItem('lira_user_email', updated.email);
@@ -202,8 +204,10 @@ export function useSettingsState(props: SettingsModalProps) {
     return localStorage.getItem('lira_pref_tz') || 'Asia/Kolkata';
   });
   const [generalSaved, setGeneralSaved] = useState(false);
+  const initialLocale = useRef({ language, timeZone });
 
   const handleSaveGeneral = () => {
+    if (language === initialLocale.current.language && timeZone === initialLocale.current.timeZone) { onClose(); return; }
     const localePrefs = { language, timeZone };
     localStorage.setItem('lira_locale_prefs', JSON.stringify(localePrefs));
     localStorage.setItem('lira_pref_lang', language);
@@ -229,8 +233,10 @@ export function useSettingsState(props: SettingsModalProps) {
     };
   });
   const [notifSaved, setNotifSaved] = useState(false);
+  const initialNotif = useRef(JSON.stringify(notificationPrefs));
 
   const handleSaveNotifications = () => {
+    if (JSON.stringify(notificationPrefs) === initialNotif.current) { onClose(); return; }
     localStorage.setItem('lira_notification_prefs', JSON.stringify(notificationPrefs));
     localStorage.setItem('lira_notif_config', JSON.stringify(notificationPrefs));
     notifySaved('Notification preferences saved');

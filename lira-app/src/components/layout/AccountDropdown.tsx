@@ -38,6 +38,8 @@ export const AccountDropdown: React.FC = () => {
 
 
   const saveProfile = () => {
+    const same = userName === (localStorage.getItem('lira_user_name') || 'Varuntej Yadla') && userEmail === (localStorage.getItem('lira_user_email') || 'yvaruntej0612@gmail.com') && userInitials === (localStorage.getItem('lira_user_initials') || 'VY');
+    if (same) { setShowProfileModal(false); return; }
     const profile = {
       name: userName,
       email: userEmail,

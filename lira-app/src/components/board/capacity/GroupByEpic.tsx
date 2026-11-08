@@ -1,3 +1,5 @@
+import { issueLink } from '../../../utils/links';
+import { statusLabel } from '../../../utils/status';
 import { Zap } from 'lucide-react';
 import type { CapacityState } from './useCapacityState';
 
@@ -42,13 +44,13 @@ export function GroupByEpic(s: CapacityState) {
                 {children.map(child => (
                   <div
                     key={child.id}
-                    onClick={() => onIssueClick?.(child)}
+                    onClick={() => onIssueClick?.(child)} {...issueLink(child)}
                     className="flex items-center justify-between p-2 rounded-lg border border-lira-border hover:bg-gray-50 transition-all cursor-pointer text-xs group"
                   >
                     <span className="font-mono font-bold text-lira-blue mr-2 group-hover:underline">{child.key}</span>
                     <span className="truncate flex-1 text-lira-text">{child.title}</span>
                     <span className="text-[10px] uppercase font-semibold text-gray-500 ml-2">
-                      {child.status}
+                      {statusLabel(child.status)}
                     </span>
                   </div>
                 ))}

@@ -1,3 +1,5 @@
+import { CopyButton } from '../../common/CopyButton';
+import { descriptionToText, isHtmlDescription } from '../../../utils/richText';
 import { RichTextEditor } from '../../common/richtext/RichTextEditor';
 import { promptDialog } from '../../common/dialogs';
 import { TypeIcon } from '../../common/Icons';
@@ -13,6 +15,7 @@ import type { IssueDetailState } from './useIssueDetail';
 /** Title, description, attachments, child work items, subtasks and activity. */
 export function IssueMain(s: IssueDetailState) {
   const {  onNavigateToIssue,  local, editingTitle, setEditingTitle, titleVal, setTitleVal, descVal, setDescVal, descCollapsed, setDescCollapsed, attCollapsed, setAttCollapsed, childCollapsed, setChildCollapsed, childIssues, resolvedParent, patch, handleTitleSave, handleAddComment, handleEditComment, handleCreateChildIssue, childCount, doneChildCount, childProgress } = s;
+  const commentFiles = safeArr(local.comments).flatMap(c => safeArr(c.attachments).map(attachment => ({ attachment, author: c.author || 'User', at: c.createdAt })));
   return (
     <>
           {/* ── LEFT: Main content ── */}
@@ -77,13 +80,16 @@ export function IssueMain(s: IssueDetailState) {
 
             {/* ── Description ── */}
             <section>
-              <button
-                onClick={() => setDescCollapsed(c => !c)}
-                className="flex items-center gap-1.5 w-full text-sm font-semibold text-lira-text mb-2 hover:text-lira-blue transition-colors group"
-              >
-                <ChevronDown className={`w-4 h-4 transition-transform ${descCollapsed ? '-rotate-90' : ''}`} />
-                Description
-              </button>
+              <div className="flex items-center mb-2">
+                <button
+                  onClick={() => setDescCollapsed(c => !c)}
+                  className="flex items-center gap-1.5 flex-1 text-left text-sm font-semibold text-lira-text hover:text-lira-blue transition-colors group"
+                >
+                  <ChevronDown className={`w-4 h-4 transition-transform ${descCollapsed ? '-rotate-90' : ''}`} />
+                  Description
+                </button>
+                <CopyButton label="Copy description" getText={() => descriptionToText(descVal)} getHtml={() => (descVal && isHtmlDescription(descVal) ? descVal : undefined)} />
+              </div>
               {!descCollapsed && (
                 <div>
                   <RichTextEditor
@@ -106,14 +112,15 @@ export function IssueMain(s: IssueDetailState) {
               >
                 <ChevronDown className={`w-4 h-4 transition-transform ${attCollapsed ? '-rotate-90' : ''}`} />
                 Attachments
-                {safeArr(local.attachments).length > 0 && (
-                  <span className="ml-1 text-xs text-lira-muted font-normal">({local.attachments!.length})</span>
+                {safeArr(local.attachments).length + commentFiles.length > 0 && (
+                  <span className="ml-1 text-xs text-lira-muted font-normal">({safeArr(local.attachments).length + commentFiles.length})</span>
                 )}
               </button>
               {!attCollapsed && (
                 <IssueAttachments
                   attachments={safeArr(local.attachments)}
                   onUpdate={a => patch({ attachments: a })}
+                  fromComments={commentFiles}
                 />
               )}
             </section>

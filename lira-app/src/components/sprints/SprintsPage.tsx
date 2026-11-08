@@ -9,6 +9,7 @@ import {
   sprintDays, sprintEnd, sprintLabel, sprintName, sprintPhase, sprintStart, sprintStats,
 } from '../../utils/sprintUtils';
 import { PhaseBadge, SprintSelect, STATUS_META, TicketRow } from './sprintParts';
+import { BLOCKED_META } from '../../utils/status';
 import { StandupButton } from '../standup/StandupButton';
 import { SprintPlanning } from './SprintPlanning';
 import { SprintReports } from './SprintReports';
@@ -338,6 +339,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               { label: 'Backlog', v: stats.backlog, c: STATUS_META.backlog.color },
               { label: 'To Do', v: stats.todo, c: STATUS_META.todo.color },
               { label: 'In Progress', v: stats.inprogress, c: STATUS_META.inprogress.color },
+              { label: 'Blocked', v: stats.blocked, c: BLOCKED_META.color },
               { label: 'Done', v: stats.done, c: STATUS_META.done.color },
               { label: 'Carried over in', v: stats.carriedIn, c: '#B45309' },
             ].map(t => (

@@ -1,3 +1,4 @@
+import { projectLink } from '../../utils/links';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   FolderKanban, Plus, Search, Layers, ChevronRight, SlidersHorizontal
@@ -290,7 +291,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
               return (
                 <div
                   key={project.id}
-                  onClick={() => handleSelectProject(project)}
+                  onClick={() => handleSelectProject(project)} {...projectLink(project.id)}
                   className="bg-white rounded-xl border border-lira-border hover:border-lira-blue/60 p-5 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between group"
                 >
                   {/* Card Header */}

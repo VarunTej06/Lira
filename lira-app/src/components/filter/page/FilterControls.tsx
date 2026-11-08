@@ -167,6 +167,7 @@ export function FilterControls(s: FiltersState) {
                     { id: 'backlog', label: 'Backlog', color: 'bg-slate-100 text-slate-800' },
                     { id: 'todo', label: 'To Do', color: 'bg-blue-100 text-blue-800' },
                     { id: 'inprogress', label: 'In Progress', color: 'bg-amber-100 text-amber-800' },
+                    { id: 'blocked', label: 'Blocked (flag)', color: 'bg-red-100 text-red-800' },
                     { id: 'done', label: 'Done', color: 'bg-emerald-100 text-emerald-800' },
                   ].map(st => {
                     const active = selectedStatuses.includes(st.id);

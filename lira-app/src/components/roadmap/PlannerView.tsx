@@ -1,3 +1,4 @@
+import { issueLink } from '../../utils/links';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { CalendarDays, ChevronDown, ChevronRight, GripHorizontal, Plus, Zap } from 'lucide-react';
 import type { Issue } from '../../types/issue';
@@ -212,7 +213,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 }
                 const t = r.issue;
                 return (
-                  <button key={`t-${t.id}`} onClick={() => onOpenIssue(t)} className="w-full flex items-center gap-2 pl-14 pr-3 text-left border-b border-lira-border/40 hover:bg-lira-bg/50 cursor-pointer" style={{ height: r.h }} title={t.title}>
+                  <button key={`t-${t.id}`} onClick={() => onOpenIssue(t)} {...issueLink(t)} className="w-full flex items-center gap-2 pl-14 pr-3 text-left border-b border-lira-border/40 hover:bg-lira-bg/50 cursor-pointer" style={{ height: r.h }} title={t.title}>
                     <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: ticketColor(t.status) }} />
                     <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{t.key}</span>
                     <span className="text-xs text-lira-text truncate">{t.title}</span>

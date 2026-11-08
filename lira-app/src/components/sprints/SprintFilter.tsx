@@ -2,15 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Filter } from 'lucide-react';
 import { AnimatePresence, motion, menuPop } from '../common/motion';
 import type { Space } from '../../types/space';
+import { STATUS_LIST } from '../../utils/status';
 
 export interface SprintFilterValue { statuses: string[]; spaceIds: number[] }
 export const EMPTY_FILTER: SprintFilterValue = { statuses: [], spaceIds: [] };
-const STATUSES = [
-  { id: 'backlog', label: 'Backlog' },
-  { id: 'todo', label: 'To Do' },
-  { id: 'inprogress', label: 'In Progress' },
-  { id: 'done', label: 'Done' },
-];
+const STATUSES = STATUS_LIST.map(s => ({ id: s.id as string, label: s.label }));
 
 interface SprintFilterProps {
   spaces: Space[];

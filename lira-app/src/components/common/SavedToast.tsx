@@ -1,5 +1,6 @@
 import React, { useEffect, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
+import { X } from 'lucide-react';
 import { AnimatePresence, motion } from './motion';
 
 /**
@@ -21,7 +22,9 @@ const emit = () => listeners.forEach(l => l());
 const subscribe = (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; };
 const snapshot = () => current;
 
-const SHOW_MS = 2400;
+const SHOW_MS = 3800;
+const RING_R = 12;
+const RING_LEN = 2 * Math.PI * RING_R;
 
 export function notifySaved(text = 'Changes saved') {
   counter += 1;
@@ -29,6 +32,13 @@ export function notifySaved(text = 'Changes saved') {
   emit();
   window.clearTimeout(timer);
   timer = window.setTimeout(() => { current = null; emit(); }, SHOW_MS);
+}
+
+/** Closes the card now. */
+export function dismissSaved() {
+  window.clearTimeout(timer);
+  current = null;
+  emit();
 }
 
 export const SavedToastHost: React.FC = () => {
@@ -48,7 +58,7 @@ export const SavedToastHost: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -16, scale: 0.96, transition: { duration: 0.16, ease: 'easeIn' as const } }}
             transition={{ type: 'spring', stiffness: 420, damping: 28 }}
-            className="relative flex items-center gap-3 pl-3 pr-5 py-2.5 rounded-2xl bg-white text-lira-text border border-lira-border shadow-2xl overflow-hidden"
+            className="relative pointer-events-auto flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl bg-white text-lira-text border border-lira-border shadow-2xl overflow-hidden"
           >
             <span className="relative flex w-9 h-9 items-center justify-center flex-shrink-0">
               <motion.span
@@ -72,14 +82,30 @@ export const SavedToastHost: React.FC = () => {
                 />
               </svg>
             </span>
-            <span className="text-sm font-semibold">{msg.text}</span>
-            <motion.span
-              aria-hidden
-              className="absolute left-0 bottom-0 h-0.5 bg-emerald-500 origin-left w-full"
-              initial={{ scaleX: 1 }}
-              animate={{ scaleX: 0 }}
-              transition={{ duration: SHOW_MS / 1000, ease: 'linear' }}
-            />
+            <span className="text-sm font-semibold pr-1">{msg.text}</span>
+            <button
+              type="button"
+              onClick={dismissSaved}
+              aria-label="Close notification"
+              data-testid="saved-toast-close"
+              className="group -m-1 p-1 rounded-full cursor-pointer focus:outline-none"
+            >
+              <span className="relative flex w-7 h-7 items-center justify-center rounded-full text-gray-500 transition-colors group-hover:bg-red-50 group-hover:text-red-600 group-focus-visible:ring-2 group-focus-visible:ring-red-300">
+                {/* a full circle around the cross that empties over the time the card stays */}
+                <svg viewBox="0 0 28 28" className="absolute inset-0 w-full h-full -rotate-90" aria-hidden data-testid="saved-toast-ring">
+                  <circle cx="14" cy="14" r={RING_R} fill="none" strokeWidth="2" className="stroke-gray-200 transition-colors group-hover:stroke-red-200" />
+                  <motion.circle
+                    cx="14" cy="14" r={RING_R} fill="none" strokeWidth="2" strokeLinecap="round"
+                    className="stroke-emerald-500 transition-colors group-hover:stroke-red-500"
+                    strokeDasharray={RING_LEN}
+                    initial={{ strokeDashoffset: 0 }}
+                    animate={{ strokeDashoffset: RING_LEN }}
+                    transition={{ duration: SHOW_MS / 1000, ease: 'linear' }}
+                  />
+                </svg>
+                <X className="relative w-3.5 h-3.5" strokeWidth={2.5} />
+              </span>
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

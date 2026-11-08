@@ -1,10 +1,11 @@
 import {  } from '../../common/DatePicker';
 import { TypeIcon, PriorityIcon } from '../../common/Icons';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Issue, Comment, IssueType, ActivityEntry } from '../../../types/issue';
+import type { Issue, Comment, IssueType, ActivityEntry, Attachment } from '../../../types/issue';
 import { notifySaved } from '../../common/SavedToast';
+import { STATUS_LIST } from '../../../utils/status';
 import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
-import { updateIssue, deleteIssue, useChildIssues, createIssue, getNextIssueKey, useIssue, useIssuesBySpace } from '../../../hooks/useIssues';
+import { updateIssue, deleteIssue, useChildIssues, createIssue, getNextIssueKey, useIssue, useIssuesBySpace, useAllIssues } from '../../../hooks/useIssues';
 import { confirmDialog, alertDialog } from '../../common/dialogs';
 import { PRIORITY_CONFIG } from '../../../utils/priorityUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,12 +17,7 @@ export interface IssueDetailModalProps {
   parentIssue?: Issue | null;
 }
 
-export const STATUS_OPTIONS = [
-  { value: 'backlog', label: 'Backlog', color: '#6B778C', bgColor: '#F4F5F7' },
-  { value: 'todo', label: 'To Do', color: '#172B4D', bgColor: '#DFE1E6' },
-  { value: 'inprogress', label: 'In Progress', color: '#0052CC', bgColor: '#DEEBFF' },
-  { value: 'done', label: 'Done', color: '#006644', bgColor: '#E3FCEF' },
-];
+export const STATUS_OPTIONS = STATUS_LIST.map(s => ({ value: s.id as string, label: s.label, color: s.color, bgColor: s.bg }));
 
 export const ISSUE_TYPE_OPTIONS: { value: IssueType; label: string; icon: React.ReactNode; color: string; bgColor: string }[] = [
   { value: 'epic', label: 'Epic', icon: <TypeIcon type="epic" />, color: '#6554C0', bgColor: '#EAE6FF' },
@@ -60,7 +56,7 @@ export const STATUS_BUTTON_STYLE: Record<string, { bg: string; text: string; hov
 /** The ticket fields that are edited in the popup and written together when "Save changes" is pressed. */
 const DRAFT_FIELDS = [
   'status', 'priority', 'assignee', 'assigneeInitials', 'labels', 'dueDate', 'startDate', 'storyPoints', 'type',
-  'parentId', 'epicId', 'epicLink', 'attachments', 'subtasks', 'activity', 'timeEstimate',
+  'parentId', 'epicId', 'epicLink', 'attachments', 'subtasks', 'activity', 'timeEstimate', 'blocked', 'blockedByIds', 'linkedIssues',
 ] as const satisfies readonly (keyof Issue)[];
 
 // Safe accessor helpers
@@ -107,6 +103,9 @@ export function useIssueDetail(props: IssueDetailModalProps) {
   const parentFromDb = useIssue(local?.parentId ?? local?.epicId);
   const resolvedParent = parentIssue ?? parentFromDb ?? null;
   const spaceIssues = useIssuesBySpace(local?.spaceId) || [];
+  const everyIssue = useAllIssues() || [];
+  const blockers = (local?.blocked ? local.blockedByIds ?? [] : []).map(id => everyIssue.find(i => i.id === id)).filter((i): i is Issue => !!i);
+  const blocking = local?.id ? everyIssue.filter(i => i.blocked && i.blockedByIds?.includes(local.id!)) : []; // tickets waiting on this one
 
   // Eligible parent issues according to the hierarchy
   const eligibleParents = spaceIssues.filter(i => {
@@ -178,6 +177,17 @@ export function useIssueDetail(props: IssueDetailModalProps) {
   /** Edits the draft only. Nothing is saved until "Save changes". */
   const patch = useCallback(async (changes: Partial<Issue>) => {
     setLocal(prev => (prev ? { ...prev, ...changes } : prev));
+  }, []);
+
+  /** Turns the Blocked switch on (with the ticket it waits on) or off. It edits the draft; Save changes writes it. */
+  const handleBlockedChange = useCallback((ids: number[]) => {
+    setLocal(prev => {
+      if (!prev) return prev;
+      const unique = [...new Set(ids)];
+      const others = safeArr(prev.linkedIssues).filter(l => l.linkType !== 'blocked_by');
+      if (unique.length === 0) return { ...prev, blocked: false, blockedByIds: [], linkedIssues: others };
+      return { ...prev, blocked: true, blockedByIds: unique, linkedIssues: [...others, ...unique.map(id => ({ id: uuidv4(), issueId: id, linkType: 'blocked_by' as const }))] };
+    });
   }, []);
 
   const handleTypeChange = useCallback(async (newType: IssueType) => {
@@ -252,6 +262,8 @@ export function useIssueDetail(props: IssueDetailModalProps) {
 
   const handleSaveChanges = useCallback(async () => {
     if (!local?.id) return;
+    // nothing was changed: just close, and do not claim that something was saved
+    if (!dirtyRef.current) { onClose(); return; }
     if (!titleVal.trim()) {
       await alertDialog({ title: 'Title needed', message: 'The title cannot be empty.' });
       return;
@@ -264,9 +276,27 @@ export function useIssueDetail(props: IssueDetailModalProps) {
       }
     }
     await updateIssue(local.id, changes);
+    // keep the other end of the link in step: the blocking ticket "blocks" this one
+    const before = issue?.blocked ? issue.blockedByIds ?? [] : [];
+    const after = local.blocked ? local.blockedByIds ?? [] : [];
+    const removed = before.filter(id => !after.includes(id));
+    const added = after.filter(id => !before.includes(id));
+    if (removed.length || added.length) {
+      const { db } = await import('../../../db/db');
+      for (const id of removed) {
+        const old = await db.issues.get(id);
+        if (old) await updateIssue(id, { linkedIssues: safeArr(old.linkedIssues).filter(l => !(l.linkType === 'blocks' && l.issueId === local.id)) });
+      }
+      for (const id of added) {
+        const nb = await db.issues.get(id);
+        if (nb && !safeArr(nb.linkedIssues).some(l => l.linkType === 'blocks' && l.issueId === local.id)) {
+          await updateIssue(id, { linkedIssues: [...safeArr(nb.linkedIssues), { id: uuidv4(), issueId: local.id, linkType: 'blocks' as const }] });
+        }
+      }
+    }
     notifySaved('Changes saved');
     onClose(); // saving closes the ticket
-  }, [local, titleVal, descVal, detachChildren, childIssues, onClose]);
+  }, [local, issue, titleVal, descVal, detachChildren, childIssues, onClose]);
 
   const handleAddComment = useCallback(async (comment: Comment) => {
     if (!local) return;
@@ -277,9 +307,9 @@ export function useIssueDetail(props: IssueDetailModalProps) {
   }, [local]);
 
   /** Comments are saved at once, like posting one. Only the author's own comment can be changed. */
-  const handleEditComment = useCallback(async (id: string, content: string) => {
+  const handleEditComment = useCallback(async (id: string, content: string, attachments: Attachment[]) => {
     if (!local?.id) return;
-    const next = safeArr(local.comments).map(c => (c.id === id ? { ...c, content, updatedAt: new Date() } : c));
+    const next = safeArr(local.comments).map(c => (c.id === id ? { ...c, content, attachments, updatedAt: new Date() } : c));
     setLocal(prev => (prev ? { ...prev, comments: next } : prev));
     await updateIssue(local.id, { comments: next });
   }, [local]);
@@ -385,6 +415,9 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     handleConfirmDelete,
     bannerColor,
     statusStyle,
+    blockers,
+    blocking,
+    handleBlockedChange,
     typeConfig,
     childCount,
     doneChildCount,

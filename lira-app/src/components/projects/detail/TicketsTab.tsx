@@ -1,3 +1,4 @@
+import { statusLabel } from '../../../utils/status';
 import { TypeIcon } from '../../common/Icons';
 import { Ticket, Search } from 'lucide-react';
 import { Avatar } from '../../common/Avatar';
@@ -165,7 +166,7 @@ export function TicketsTab(ctx: DetailCtx) {
                         {/* Status Badge */}
                         <td className="py-2.5 px-3 whitespace-nowrap">
                           <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>
-                            {issue.status}
+                            {statusLabel(issue.status)}
                           </span>
                         </td>
 

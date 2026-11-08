@@ -1,3 +1,5 @@
+import { issueLink } from '../../../utils/links';
+import { statusLabel } from '../../../utils/status';
 import { TypeIcon, PriorityLabel } from '../../common/Icons';
 import { Filter, ArrowUpDown } from 'lucide-react';
 import type {  } from '../../../types/space';
@@ -92,7 +94,7 @@ export function ResultsTable(s: FiltersState) {
                     return (
                       <tr
                         key={issue.key}
-                        onClick={() => onSelectIssue(issue)}
+                        onClick={() => onSelectIssue(issue)} {...issueLink(issue)}
                         className="hover:bg-blue-50/40 transition-colors cursor-pointer group"
                       >
                         <td className="py-3 px-4 text-center font-bold text-sm">
@@ -155,8 +157,9 @@ export function ResultsTable(s: FiltersState) {
                                 : 'bg-slate-100 text-slate-700'
                             }`}
                           >
-                            {issue.status}
+                            {statusLabel(issue.status)}
                           </span>
+                          {issue.blocked && <span className="ml-1 inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-100 text-red-700">Blocked</span>}
                         </td>
                         <td className="py-3 px-4 capitalize font-medium text-gray-600">
                           <PriorityLabel priority={issue.priority} />

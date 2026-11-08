@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-08T11:10:16.008Z",
+  "savedAt": "2026-11-08T12:27:15.253Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -10384,7 +10384,7 @@
       "epicId": 15,
       "epicLink": "Core Lira Frontend & Board Architecture",
       "title": "UI and Dropdown bugs",
-      "description": "<ol><li><p>Dropdown box when clicked on three dots for each item in Side Bar settings is not closing when clicked on outside. Have to click on three dots only to minimise it. It hsould not work like that. Should be close if clicked anywhere on screen.</p></li><li><p>Dark mode is being applied right after selecting the theme, but should be applied only if clicked Done / Save whatever button we have. We can change dark mode form two places i think it should apply at both places. if popup is closed then dark mode should not be applied.</p></li><li><p>Any ticket or anything i am updating in Lira it should be updated only after i click save button.</p></li><li><p>Remove all the instances or placeholders wherever the old product name is mentioned in our entire codebase and readme and architectures. There should be no traces of it.</p></li><li><p>Whenever we are creating issues - It is asking for summary. But it should be named as Title.</p></li><li><p>Update all the placeholders of calender we are using in LIRA. Current Calender is not looking good.</p></li><li><p>Delete for Projects/ Roadmaps is still showing chrome popup for confirmation. It should be like delete space popup only.</p></li><li><p>Remove all the emojis in the codebase files. Except the emojios or icon we used for spaces. You can have icons for all that will be visible in the UI like we used under the navigation for \"for you, projects, roadmaps, projects, tickets\" in the side bar</p></li><li><p>Once clicked on Save changes the popup should close for any screen - Ticket screen, etc.</p></li><li><p>I should be able to add attachments insdie the description as well. And give the Edit text related features as well like Bold Itlaic, Bullet points, checkboxes, Underline, Strikethrough, Headings, Add files, Tag users using @, Colors to text, highlight text, etc..</p></li><li><p>See the comments for more bugs</p></li></ol><p></p>",
+      "description": "<ol><li><p>Dropdown box when clicked on three dots for each item in Side Bar settings is not closing when clicked on outside. Have to click on three dots only to minimise it. It hsould not work like that. Should be close if clicked anywhere on screen.</p></li><li><p>Dark mode is being applied right after selecting the theme, but should be applied only if clicked Done / Save whatever button we have. We can change dark mode form two places i think it should apply at both places. if popup is closed then dark mode should not be applied.</p></li><li><p>Any ticket or anything i am updating in Lira it should be updated only after i click save button.</p></li><li><p>Remove all the instances or placeholders wherever the old product name is mentioned in our entire codebase and readme and architectures. There should be no traces of it.</p></li><li><p>Whenever we are creating issues - It is asking for summary. But it should be named as Title.</p></li><li><p>Update all the placeholders of calender we are using in LIRA. Current Calender is not looking good.</p></li><li><p>Delete for Projects/ Roadmaps is still showing chrome popup for confirmation. It should be like delete space popup only.</p></li><li><p>Remove all the emojis in the codebase files. Except the emojios or icon we used for spaces. You can have icons for all that will be visible in the UI like we used under the navigation for \"for you, projects, roadmaps, projects, tickets\" in the side bar</p></li><li><p>Once clicked on Save changes the popup should close for any screen - Ticket screen, etc.</p></li><li><p>I should be able to add attachments insdie the description as well. And give the Edit text related features as well like Bold Itlaic, Bullet points, checkboxes, Underline, Strikethrough, Headings, Add files, Tag users using @, Colors to text, highlight text, etc..</p></li><li><p>See the comments section for more bugs</p></li></ol><p></p>",
       "type": "bug",
       "status": "inprogress",
       "priority": "highest",
@@ -10466,7 +10466,7 @@
       "sprint": "2026-11",
       "rank": 800,
       "createdAt": "2026-11-07T17:24:29.304Z",
-      "updatedAt": "2026-11-08T11:10:15.307Z",
+      "updatedAt": "2026-11-08T12:27:14.520Z",
       "watchers": [
         "VY"
       ],

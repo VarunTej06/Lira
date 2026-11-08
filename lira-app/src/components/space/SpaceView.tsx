@@ -29,7 +29,6 @@ interface SpaceViewProps {
   onIssueClick: (issue: Issue) => void;
   onAddIssue: (status: string, opts?: { sprint?: string; spaceId?: number; chooseSpace?: boolean }) => void;
   onOpenAllTickets: () => void;
-  onMaximize: () => void;
   isHidden: boolean;
   isArchived: boolean;
   onToggleHide: () => void;
@@ -68,7 +67,6 @@ export function SpaceView(p: SpaceViewProps) {
         onGroupChange={setGroupBy}
         onClearFilters={() => setActiveFilters({ priorities: [], labels: [] })}
         availableLabels={availableLabels}
-        onMaximize={p.onMaximize}
         isSpaceHidden={p.isHidden}
         isSpaceArchived={p.isArchived}
         onToggleHideSpace={p.onToggleHide}

@@ -1,5 +1,6 @@
+import { notifySaved } from '../../common/SavedToast';
 import React, { useState } from 'react';
-import { Check, Layers, User, Tag, Calendar, Eye } from 'lucide-react';
+import { Layers, User, Tag, Calendar, Eye } from 'lucide-react';
 import { Modal } from '../../common/Modal';
 import type { Space } from '../../../types/space';
 
@@ -42,17 +43,12 @@ export const BoardSettingsModal: React.FC<{
     }
   });
 
-  const [saved, setSaved] = useState(false);
-
   const handleSave = () => {
     localStorage.setItem(storageKey, JSON.stringify(config));
     localStorage.setItem('lira_board_settings', JSON.stringify(config));
     window.dispatchEvent(new Event('lira_board_settings_changed'));
-    setSaved(true);
-    setTimeout(() => {
-      setSaved(false);
-      onClose();
-    }, 2000);
+    notifySaved('Board settings saved');
+    onClose();
   };
 
   return (
@@ -131,12 +127,6 @@ export const BoardSettingsModal: React.FC<{
           </div>
         </div>
 
-        {saved && (
-          <div className="p-2.5 bg-emerald-50 text-emerald-700 text-xs rounded-lg border border-emerald-200 font-semibold flex items-center gap-2">
-            <Check className="w-4 h-4" /> Board settings updated successfully!
-          </div>
-        )}
-
         <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
           <button
             type="button"
@@ -155,13 +145,6 @@ export const BoardSettingsModal: React.FC<{
         </div>
       </div>
 
-      {/* 2-second green toast */}
-      {saved && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
-          <Check className="w-4 h-4 text-white" />
-          <span>✓ Saved</span>
-        </div>
-      )}
     </Modal>
   );
 };

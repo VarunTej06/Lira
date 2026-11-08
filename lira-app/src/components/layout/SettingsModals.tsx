@@ -1,3 +1,4 @@
+import { notifySaved } from '../common/SavedToast';
 import { Bot, HardDrive, Zap, Brain } from 'lucide-react';
 import { TypeIcon } from '../common/Icons';
 import React, { useState } from 'react';
@@ -11,14 +12,12 @@ export const GeneralSettingsModal: React.FC<{
 }> = ({ isOpen, onClose }) => {
   const [language, setLanguage] = useState('en-US');
   const [timeZone, setTimeZone] = useState('Asia/Kolkata');
-  const [saved, setSaved] = useState(false);
-
   const handleSave = () => {
     localStorage.setItem('lira_locale_prefs', JSON.stringify({ language, timeZone }));
     localStorage.setItem('lira_pref_lang', language);
     localStorage.setItem('lira_pref_tz', timeZone);
-    setSaved(true);
-    setTimeout(() => { setSaved(false); onClose(); }, 1000);
+    notifySaved('General settings saved');
+    onClose();
   };
 
   return (
@@ -59,12 +58,6 @@ export const GeneralSettingsModal: React.FC<{
           </div>
         </div>
 
-        {saved && (
-          <div className="p-2.5 bg-emerald-50 text-emerald-700 text-xs rounded-lg border border-emerald-200 font-medium">
-            ✓ Preferences saved successfully!
-          </div>
-        )}
-
         <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
           <button onClick={onClose} className="px-4 py-2 text-sm text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100">
             Cancel
@@ -86,14 +79,12 @@ export const NotificationSettingsModal: React.FC<{
   const [inApp, setInApp] = useState(true);
   const [sounds, setSounds] = useState(false);
   const [mentionsOnly, setMentionsOnly] = useState(false);
-  const [saved, setSaved] = useState(false);
-
   const handleSave = () => {
     const prefs = { inApp, sounds, mentionsOnly };
     localStorage.setItem('lira_notification_prefs', JSON.stringify(prefs));
     localStorage.setItem('lira_notif_config', JSON.stringify(prefs));
-    setSaved(true);
-    setTimeout(() => { setSaved(false); onClose(); }, 1000);
+    notifySaved('Notification settings saved');
+    onClose();
   };
 
   return (
@@ -123,12 +114,6 @@ export const NotificationSettingsModal: React.FC<{
             </div>
           ))}
         </div>
-
-        {saved && (
-          <div className="p-2.5 bg-emerald-50 text-emerald-700 text-xs rounded-lg border border-emerald-200 font-medium">
-            ✓ Notification settings updated!
-          </div>
-        )}
 
         <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
           <button onClick={onClose} className="px-4 py-2 text-sm text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100">

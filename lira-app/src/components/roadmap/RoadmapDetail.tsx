@@ -1,3 +1,4 @@
+import { notifySaved } from '../common/SavedToast';
 import { confirmDialog, promptDialog } from '../common/dialogs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
@@ -154,6 +155,7 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
       const exists = r.items.some(i => i.id === next.id);
       return { ...r, lanes, items: exists ? r.items.map(i => (i.id === next.id ? next : i)) : [...r.items, next] };
     });
+    notifySaved('Roadmap item saved');
     setEditing(null);
   };
 
@@ -175,6 +177,7 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
   const saveMs = (m: ReturnType<typeof blankMilestone>) => {
     update(roadmap.id, r => ({ ...r, milestones: r.milestones.some(x => x.id === m.id) ? r.milestones.map(x => (x.id === m.id ? m : x)) : [...r.milestones, { ...m, id: m.id || newId('ms') }] }));
     setEditingMs(null);
+    notifySaved('Milestone saved');
   };
   const exportCsv = () => {
     const blob = new Blob([toCsv(roadmap, issues, today)], { type: 'text/csv;charset=utf-8' });

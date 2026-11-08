@@ -3,7 +3,7 @@
   "spaceId": 6,
   "spaceKey": "LIRA",
   "spaceName": "Lira",
-  "updatedAt": "2026-11-08T07:01:24.758Z",
+  "updatedAt": "2026-11-08T07:39:44.654Z",
   "issueCount": 66,
   "space": {
     "id": 6,
@@ -4004,8 +4004,9 @@
           "id": "34cae0c9-66f2-4894-89e0-150137b26745",
           "author": "VY",
           "authorInitials": "VY",
-          "content": "Comment added anywhere in LIRA should include time, date and day",
-          "createdAt": "2026-11-08T07:00:28.372Z"
+          "content": "Comment added anywhere in LIRA should include time, date and day - Still not showing date and time\n\nAdd Blocked status to All the tickets - Epics, Subtasks, tasks, Bugs. No need to have separate column in Spaces for that but we need to have this status in all the respective placeholders where ever is required - Projects, Sprints, Roadmaps, spaces wherever we are showing tickets of all statuses. Should be included in the filter ddropdowns whereever required\n\nAdd a cross sign to close the changes saved notification with a small circle around it and it hsould be highlighted when mouse is hover on or around it.\n\nIn the ticket description popup - The status of the ticket is directly being showed with a dropdown but there is no title to explain the dropdown - Add title called Status above the dropdown",
+          "createdAt": "2026-11-08T07:00:28.372Z",
+          "updatedAt": "2026-11-08T07:39:43.916Z"
         }
       ],
       "activity": [
@@ -4023,7 +4024,7 @@
       "sprint": "2026-11",
       "rank": 800,
       "createdAt": "2026-11-07T17:24:29.304Z",
-      "updatedAt": "2026-11-08T07:01:20.976Z",
+      "updatedAt": "2026-11-08T07:39:43.916Z",
       "watchers": [
         "VY"
       ],

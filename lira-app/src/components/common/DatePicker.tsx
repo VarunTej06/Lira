@@ -1,7 +1,8 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CalendarDays, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { AnimatePresence, motion, menuPop } from './motion';
+import { MonthYearGrid } from './MonthYearGrid';
 
 /**
  * Lira's date picker. It replaces the browser's own `<input type="date">`, which looks different in every browser and
@@ -50,13 +51,14 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   value, onChange, min, max, placeholder = 'Select a date', className = '', id, disabled, clearable = true, 'aria-label': ariaLabel,
 }) => {
   const [open, setOpen] = useState(false);
+  const [picking, setPicking] = useState(false); // choosing a month and year instead of a day
   const selected = fromKey(value);
   const [view, setView] = useState(() => selected ?? new Date());
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
 
-  useEffect(() => { if (open) setView(fromKey(value) ?? new Date()); }, [open, value]);
+  useEffect(() => { if (open) { setView(fromKey(value) ?? new Date()); setPicking(false); } }, [open, value]);
 
   // place the calendar under the field, or above it when there is no room
   useLayoutEffect(() => {
@@ -68,7 +70,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     if (top + h > window.innerHeight - margin) top = Math.max(margin, a.top - 6 - h);
     const left = Math.min(Math.max(margin, a.left), window.innerWidth - w - margin);
     setPos({ top, left });
-  }, [open, view]);
+  }, [open, view, picking]);
 
   useEffect(() => {
     if (!open) return;
@@ -130,10 +132,23 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               className="w-[272px] bg-white border border-lira-border rounded-2xl shadow-2xl p-3 text-lira-text"
             >
               <div className="flex items-center justify-between mb-2">
-                <button type="button" onClick={() => shift(-1)} aria-label="Previous month" className="p-1.5 rounded-lg hover:bg-gray-100 text-lira-muted cursor-pointer"><ChevronLeft className="w-4 h-4" /></button>
-                <div className="text-sm font-semibold">{view.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</div>
-                <button type="button" onClick={() => shift(1)} aria-label="Next month" className="p-1.5 rounded-lg hover:bg-gray-100 text-lira-muted cursor-pointer"><ChevronRight className="w-4 h-4" /></button>
+                <button type="button" onClick={() => shift(-1)} disabled={picking} aria-label="Previous month" className="p-1.5 rounded-lg hover:bg-gray-100 text-lira-muted cursor-pointer disabled:opacity-30"><ChevronLeft className="w-4 h-4" /></button>
+                <button
+                  type="button"
+                  onClick={() => setPicking(p => !p)}
+                  aria-expanded={picking}
+                  aria-label="Choose month and year"
+                  data-testid="month-year-toggle"
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-sm font-semibold hover:bg-gray-100 cursor-pointer"
+                >
+                  {view.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                  <ChevronDown className={`w-3.5 h-3.5 text-lira-muted transition-transform ${picking ? 'rotate-180' : ''}`} />
+                </button>
+                <button type="button" onClick={() => shift(1)} disabled={picking} aria-label="Next month" className="p-1.5 rounded-lg hover:bg-gray-100 text-lira-muted cursor-pointer disabled:opacity-30"><ChevronRight className="w-4 h-4" /></button>
               </div>
+              {picking ? (
+                <MonthYearGrid year={view.getFullYear()} month={view.getMonth()} onPick={(y, m) => { setView(new Date(y, m, 1)); setPicking(false); }} />
+              ) : (<>
               <div className="grid grid-cols-7 text-center text-[10px] font-semibold uppercase tracking-wide text-lira-muted mb-1">
                 {WEEKDAYS.map(d => <div key={d} className="py-1">{d}</div>)}
               </div>
@@ -166,6 +181,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                 <button type="button" onClick={() => pick(today)} disabled={disabledDay(today)} className="text-xs font-semibold text-lira-blue hover:underline disabled:opacity-40 cursor-pointer">Today</button>
                 {clearable && <button type="button" onClick={() => { onChange(''); setOpen(false); }} className="text-xs text-lira-muted hover:text-lira-text cursor-pointer">Clear</button>}
               </div>
+              </>)}
             </motion.div>
           )}
         </AnimatePresence>,

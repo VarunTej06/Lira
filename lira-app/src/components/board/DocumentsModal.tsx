@@ -1,3 +1,4 @@
+import { notifySaved } from '../common/SavedToast';
 import { confirmDialog } from '../common/dialogs';
 import React, { useState, useEffect } from 'react';
 import {
@@ -246,7 +247,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
             <Button
               variant="primary"
               size="xs"
-              onClick={() => { handleSave(); onClose(); }}
+              onClick={() => { handleSave(); notifySaved('Document saved'); onClose(); }}
               className="flex items-center gap-1"
             >
               <Save className="w-3.5 h-3.5" />
@@ -381,7 +382,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
             <Button
               variant="primary"
               size="xs"
-              onClick={() => { handleSave(); onClose(); }}
+              onClick={() => { handleSave(); notifySaved('Document saved'); onClose(); }}
               className="flex items-center gap-1"
             >
               <Save className="w-3.5 h-3.5" />

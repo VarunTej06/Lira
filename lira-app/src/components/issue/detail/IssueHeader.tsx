@@ -1,5 +1,5 @@
 import { TypeIcon } from '../../common/Icons';
-import { X, Maximize2, Share2, MoreHorizontal, Eye, ChevronDown, ChevronRight, Trash2, ExternalLink, Link } from 'lucide-react';
+import { X, Share2, MoreHorizontal, Eye, ChevronDown, ChevronRight, Trash2, ExternalLink, Link } from 'lucide-react';
 import type {  IssueType } from '../../../types/issue';
 import { ISSUE_TYPE_OPTIONS, safeArr } from './useIssueDetail';
 import type { IssueDetailState } from './useIssueDetail';
@@ -106,9 +106,6 @@ export function IssueHeader(s: IssueDetailState) {
               )}
             </div>
 
-            <button className="p-1.5 rounded hover:bg-gray-100 text-lira-muted transition-colors" title="Fullscreen">
-              <Maximize2 className="w-4 h-4" />
-            </button>
             <button onClick={onClose} className="p-1.5 rounded hover:bg-gray-100 text-lira-muted transition-colors">
               <X className="w-4 h-4" />
             </button>

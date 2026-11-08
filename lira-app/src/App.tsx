@@ -1,4 +1,5 @@
 import { DialogHost } from './components/common/dialogs';
+import { SavedToastHost } from './components/common/SavedToast';
 import { getTheme } from './utils/theme';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -378,7 +379,6 @@ export default function App() {
                     onIssueClick={openIssue}
                     onAddIssue={handleAddIssue}
                     onOpenAllTickets={() => navigate('/tickets')}
-                    onMaximize={() => setSidebarCollapsed(true)}
                     isHidden={hiddenSpaceIds.includes(routeSpace.id!)}
                     isArchived={archivedSpaceIds.includes(routeSpace.id!)}
                     onToggleHide={() => toggleHideSpace(routeSpace.id!)}
@@ -394,6 +394,7 @@ export default function App() {
       </div>
 
       <DialogHost />
+      <SavedToastHost />
 
       {/* Issue detail modal */}
       <ErrorBoundary

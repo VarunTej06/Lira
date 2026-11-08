@@ -1,10 +1,11 @@
 import { TypeIcon } from '../common/Icons';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   ChevronLeft, ChevronRight, Calendar as CalendarIcon,
   Clock, CheckCircle2, ChevronDown, ChevronUp, GripVertical,
   CalendarPlus
 } from 'lucide-react';
+import { MonthYearGrid } from '../common/MonthYearGrid';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { updateIssue } from '../../hooks/useIssues';
@@ -217,7 +218,16 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   const monthIssueCount = useMemo(() => calendarDays.reduce((n, d) => n + (d.isCurrentMonth ? (dateToIssues.get(d.key)?.length ?? 0) : 0), 0), [calendarDays, dateToIssues]);
   const monthDoneCount = useMemo(() => calendarDays.reduce((n, d) => n + (d.isCurrentMonth ? (dateToIssues.get(d.key) || []).filter(i => i.status === 'done').length : 0), 0), [calendarDays, dateToIssues]);
   const toggleExpanded = (key: string) => setExpanded(prev => { const n = new Set(prev); if (n.has(key)) n.delete(key); else n.add(key); return n; });
-  const years = useMemo(() => Array.from({ length: 9 }, (_, i) => new Date().getFullYear() - 4 + i), []);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const away = (e: MouseEvent) => { if (!pickerRef.current?.contains(e.target as Node)) setPickerOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setPickerOpen(false); };
+    document.addEventListener('mousedown', away);
+    document.addEventListener('keydown', esc);
+    return () => { document.removeEventListener('mousedown', away); document.removeEventListener('keydown', esc); };
+  }, [pickerOpen]);
   const MAX_VISIBLE = 3;
 
   const chipTone = (issue: Issue) =>
@@ -236,24 +246,24 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
           </span>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <select
-                aria-label="Month"
-                value={month}
-                onChange={e => setCurrentDate(new Date(year, Number(e.target.value), 1))}
-                className="text-lg font-bold text-lira-text bg-transparent border-none outline-none cursor-pointer hover:text-lira-blue -ml-1 pr-1"
-              >
-                {Array.from({ length: 12 }, (_, m) => (
-                  <option key={m} value={m}>{new Date(2000, m, 1).toLocaleString('default', { month: 'long' })}</option>
-                ))}
-              </select>
-              <select
-                aria-label="Year"
-                value={year}
-                onChange={e => setCurrentDate(new Date(Number(e.target.value), month, 1))}
-                className="text-lg font-bold text-lira-text bg-transparent border-none outline-none cursor-pointer hover:text-lira-blue"
-              >
-                {(years.includes(year) ? years : [...years, year].sort()).map(y => <option key={y} value={y}>{y}</option>)}
-              </select>
+              <div className="relative" ref={pickerRef}>
+                <button
+                  type="button"
+                  onClick={() => setPickerOpen(o => !o)}
+                  aria-expanded={pickerOpen}
+                  aria-label="Choose month and year"
+                  data-testid="calendar-month-year"
+                  className="flex items-center gap-1.5 -ml-2 px-2 py-0.5 rounded-lg text-lg font-bold text-lira-text hover:bg-gray-100 cursor-pointer"
+                >
+                  {monthName} {year}
+                  <ChevronDown className={`w-4 h-4 text-lira-muted transition-transform ${pickerOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {pickerOpen && (
+                  <div className="absolute left-0 top-full mt-2 z-30 w-[272px] bg-white border border-lira-border rounded-2xl shadow-2xl p-3 animate-scale-in">
+                    <MonthYearGrid year={year} month={month} onPick={(y, m) => { setCurrentDate(new Date(y, m, 1)); setPickerOpen(false); }} />
+                  </div>
+                )}
+              </div>
               {space && (
                 <span className="text-xs px-2 py-0.5 rounded-md font-medium flex items-center gap-1" style={{ backgroundColor: (space.color || '#0052CC') + '22', color: space.color || '#0052CC' }}>
                   <span>{space.icon || '📁'}</span>

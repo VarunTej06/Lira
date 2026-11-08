@@ -1,5 +1,5 @@
 import { DatePicker } from '../../common/DatePicker';
-import { ChevronDown, AlertTriangle, Zap, Settings, Clock, Tag, Users, Calendar, CheckSquare, ExternalLink, Target, Layers, Save } from 'lucide-react';
+import { ChevronDown, AlertTriangle, Settings, Clock, Tag, Users, Calendar, CheckSquare, ExternalLink, Target, Layers, Save } from 'lucide-react';
 import type { Priority, IssueType, IssueStatus } from '../../../types/issue';
 import { SelectDropdown } from '../../common/Dropdown';
 import { Avatar } from '../../common/Avatar';
@@ -44,11 +44,6 @@ export function IssueSidebar(s: IssueDetailState) {
                 )}
               </div>
 
-              {/* Automations button */}
-              <button className="flex items-center gap-2 px-3 py-1.5 w-full text-xs text-lira-muted border border-lira-border rounded-lg hover:bg-white transition-colors">
-                <Zap className="w-3.5 h-3.5 text-yellow-500" />
-                <span>Automations</span>
-              </button>
             </div>
 
             {/* Details section */}
@@ -227,17 +222,10 @@ export function IssueSidebar(s: IssueDetailState) {
               </div>
             </div>
 
-            {/* Automation & Metadata */}
+            {/* Metadata */}
             <div className="px-4 py-3 border-t border-lira-border">
-              <button className="flex items-center gap-2 text-xs font-semibold text-lira-muted mb-3 hover:text-lira-text w-full">
-                <Zap className="w-3.5 h-3.5 text-yellow-500" />
-                Automation
-              </button>
+              <p className="text-xs font-semibold text-lira-muted mb-3 uppercase tracking-wider">Activity</p>
               <div className="bg-white border border-lira-border rounded-lg p-3 space-y-2 text-xs text-lira-muted">
-                <div className="flex justify-between">
-                  <span>Recent rule runs</span>
-                  <button className="text-lira-blue hover:underline">Configure</button>
-                </div>
                 <div className="flex justify-between"><span>Created</span><span>{formatRelativeDate(local.createdAt)}</span></div>
                 <div className="flex justify-between"><span>Updated</span><span>{formatRelativeDate(local.updatedAt)}</span></div>
                 {local.resolvedAt && <div className="flex justify-between"><span>Resolved</span><span>{formatRelativeDate(local.resolvedAt)}</span></div>}

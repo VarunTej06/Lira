@@ -215,11 +215,15 @@ Your study notes, tickets, and progress are precious. Back them up in seconds:
 
 **Write a description.** The description box is a full editor. Use the toolbar for headings, bold, italic, underline, strikethrough, bullet, numbered and checkbox lists, quotes, code, links, text colour and highlight. Type **@** to mention a person. Use the paperclip, drop files, or paste a picture to add files: pictures appear in the text and every file is added to the ticket's attachments (files up to 2 MB are stored in Lira).
 
-**Pick a date.** Click the date field to open the calendar. **Today** and **Clear** are at the bottom.
+**Pick a date.** Click the date field to open the calendar. **Today** and **Clear** are at the bottom. Click the month and year at the top to choose another month or year quickly.
+
+**Attach a file.** In a ticket, open Attachments and press **Add attachment**. Choose My computer, Google Drive, OneDrive, Dropbox or Web link. Drive, OneDrive and Dropbox take a share link: Lira does not sign in to those services.
+
+**Edit a comment.** You can edit comments you wrote. Press **Edit** on your comment, change the text and press **Save**. It is marked "(edited)".
 
 **Delete something.** Deleting a space, project, roadmap, sprint or form asks in a Lira dialog with a red button. **Cancel** or Escape keeps it.
 
-**Change the theme.** Account menu, Theme (or Settings, Appearance): choose, then **Save**. Closing without saving leaves the theme as it was.
+**Change the theme.** Settings, Appearance: choose, then **Save**. Closing without saving leaves the theme as it was.
 
 **Create a sprint with a length and spaces.** Sprints, then **New sprint**. Choose Monthly, Weekly, Bi-weekly or Number of days (1 to 90), the start date (or the month), an optional name and goal, and which spaces work in it ("All spaces" by default). Custom sprints cannot overlap each other.
 

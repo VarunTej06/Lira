@@ -27,9 +27,10 @@
 | **Tablet and phone** | `npm run dev:lan` opens Lira to your own Wi-Fi behind a private link and QR code (**Settings, Other devices**). Phone and upright-tablet layouts use a menu drawer. |
 | **Motion** | Framer Motion: dialogs and menus animate in and out, sliding tab underline and sidebar highlight, count-up numbers, bars that grow, burndown lines that draw themselves, confetti when a ticket reaches Done or a sprint closes. Reduced-motion settings are respected. |
 | **Look** | Light and dark themes, 10+ accent colours, rounded panels, scroll bars kept inside their panels. |
-| **Editing and saving** | The ticket popup is a draft: nothing is written until **Save changes**, which also closes it, and closing with unsaved changes asks first. Settings pages close on Save. Theme and accent colour apply only when saved. Lira's own dialogs replace every browser confirm, prompt and alert. |
+| **Editing and saving** | The ticket popup is a draft: nothing is written until **Save changes**, which also closes it, and closing with unsaved changes asks first. Settings pages close on Save. Theme and accent colour apply only when saved. Every save shows a small animated "saved" card. Lira's own dialogs replace every browser confirm, prompt and alert. You can edit your own comments. |
 | **Rich descriptions** | A full editor for ticket descriptions: headings, bold, italic, underline, strikethrough, bullet, numbered and checkbox lists, quotes, code, links, text colour, highlight, **@mentions**, and files (pictures show in the text, every file joins the ticket's attachments). Older Markdown descriptions open converted. |
-| **Dates** | A themed date picker everywhere a date is chosen, and a roomier month calendar with month and year pickers and "+N more" days. |
+| **Attachments** | **Add attachment** opens a window to choose the source: this computer (drag and drop or browse), a Google Drive, OneDrive or Dropbox share link, or any web link. |
+| **Dates** | A themed date picker everywhere a date is chosen. Click the month and year to jump to any month of any year. The month calendar has the same chooser and "+N more" days. |
 | **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
 | **Code health** | Large files split into small parts (no component over about 500 lines), 294 automated tests. |
 

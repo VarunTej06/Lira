@@ -1,3 +1,4 @@
+import { notifySaved } from '../../common/SavedToast';
 import { confirmDialog } from '../../common/dialogs';
 import React, { useState, useEffect } from 'react';
 import type { Space } from '../../../types/space';
@@ -166,7 +167,7 @@ export function useFormsState(props: FormsModalProps) {
     setFormDesc('');
     setFields([]);
     setBuilderError(null);
-    setSuccessToast('Form saved ✓');
+    notifySaved('Form saved');
     setActiveTab('list');
 
     setTimeout(() => setSuccessToast(null), 2000);

@@ -37,6 +37,9 @@ export interface ActivityEntry {
   createdAt: Date;
 }
 
+/** Where an attachment comes from: a file stored in the ticket, or a link to one online. */
+export type AttachmentSource = 'file' | 'drive' | 'onedrive' | 'dropbox' | 'link';
+
 export interface Attachment {
   id: string;
   name: string;
@@ -45,6 +48,8 @@ export interface Attachment {
   dataUrl?: string; // base64 for images
   data?: ArrayBuffer; // binary for non-images
   createdAt: Date;
+  url?: string; // a link to the file, when it is not stored in the ticket
+  source?: AttachmentSource;
 }
 
 export interface LinkedIssue {

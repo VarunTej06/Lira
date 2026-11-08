@@ -1,11 +1,11 @@
-import { Share2, Zap, Maximize2, EyeOff, Archive } from 'lucide-react';
+import { Share2, EyeOff, Archive } from 'lucide-react';
 import type {  } from '../../../types/space';
 import { StandupButton } from '../../standup/StandupButton';
 import type { ActionBarState } from './useActionBarState';
 
 /** Space name, standup, share and quick actions. */
 export function SpaceHeader(s: ActionBarState) {
-  const { space, onMaximize, isSpaceHidden, isSpaceArchived, setShowShare } = s;
+  const { space, isSpaceHidden, isSpaceArchived, setShowShare } = s;
   return (
     <>
       {/* Space header */}
@@ -53,16 +53,6 @@ export function SpaceHeader(s: ActionBarState) {
           >
             <Share2 className="w-3.5 h-3.5" />
             Share
-          </button>
-          <button className="p-1.5 rounded hover:bg-gray-100 text-lira-muted transition-colors" title="Automations">
-            <Zap className="w-4 h-4" />
-          </button>
-          <button
-            onClick={onMaximize}
-            className="p-1.5 rounded hover:bg-gray-100 text-lira-muted transition-colors cursor-pointer"
-            title="Maximize board"
-          >
-            <Maximize2 className="w-4 h-4" />
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import {  } from '../../common/DatePicker';
 import { TypeIcon, PriorityIcon } from '../../common/Icons';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Issue, Comment, IssueType, ActivityEntry } from '../../../types/issue';
+import { notifySaved } from '../../common/SavedToast';
 import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
 import { updateIssue, deleteIssue, useChildIssues, createIssue, getNextIssueKey, useIssue, useIssuesBySpace } from '../../../hooks/useIssues';
 import { confirmDialog, alertDialog } from '../../common/dialogs';
@@ -263,6 +264,7 @@ export function useIssueDetail(props: IssueDetailModalProps) {
       }
     }
     await updateIssue(local.id, changes);
+    notifySaved('Changes saved');
     onClose(); // saving closes the ticket
   }, [local, titleVal, descVal, detachChildren, childIssues, onClose]);
 
@@ -272,6 +274,14 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     const newComments = [...safeArr(local.comments), comment];
     setLocal(prev => (prev ? { ...prev, comments: newComments } : prev));
     await updateIssue(local.id, { comments: newComments });
+  }, [local]);
+
+  /** Comments are saved at once, like posting one. Only the author's own comment can be changed. */
+  const handleEditComment = useCallback(async (id: string, content: string) => {
+    if (!local?.id) return;
+    const next = safeArr(local.comments).map(c => (c.id === id ? { ...c, content, updatedAt: new Date() } : c));
+    setLocal(prev => (prev ? { ...prev, comments: next } : prev));
+    await updateIssue(local.id, { comments: next });
   }, [local]);
 
   const handleCreateChildIssue = useCallback(async (title: string, type: IssueType) => {
@@ -370,6 +380,7 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     handleTitleSave,
     handleSaveChanges,
     handleAddComment,
+    handleEditComment,
     handleCreateChildIssue,
     handleConfirmDelete,
     bannerColor,

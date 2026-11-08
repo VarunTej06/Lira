@@ -60,10 +60,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
         phone ? 'fixed inset-y-0 left-0 z-[60] w-[min(300px,86vw)] pr-2' : isCollapsed ? 'w-[68px]' : 'w-[272px]'
       }`}
     >
-      <div
-        ref={panelRef}
-        className="relative h-full flex flex-col rounded-2xl bg-gradient-to-b from-[#1D2A45] via-[#18233B] to-[#121A2C] border border-white/[0.08] shadow-[0_10px_34px_rgba(0,0,0,0.38)] overflow-x-hidden overflow-y-auto lira-sidebar-scroll"
-      >
+      <div className="relative h-full flex flex-col rounded-2xl bg-gradient-to-b from-[#1D2A45] via-[#18233B] to-[#121A2C] border border-white/[0.08] shadow-[0_10px_34px_rgba(0,0,0,0.38)] overflow-hidden">
+      {/* Everything except the settings button scrolls here; the button below stays at the bottom */}
+      <div ref={panelRef} className="relative flex-1 min-h-0 flex flex-col overflow-x-hidden overflow-y-auto lira-sidebar-scroll">
       {/* Sliding highlight: glides to whichever item is currently active */}
       {!isCollapsed && (
         <div
@@ -75,14 +74,15 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
         {isCollapsed ? (
           <CollapsedRail {...s} />
         ) : (
-          <div key="full" className="relative z-10 w-full flex flex-col flex-1 min-h-0 animate-sidebar-in">
+          <div key="full" className="relative z-10 w-full flex flex-col flex-shrink-0 animate-sidebar-in">
             <NavigationList {...s} />
             <StarredSection {...s} />
             {visibleSectionKeys.map(k => <React.Fragment key={k}>{sections[k]}</React.Fragment>)}
             <ArchivedSection {...s} />
-            <SidebarFooter {...s} />
           </div>
         )}
+      </div>
+      {!isCollapsed && <SidebarFooter {...s} />}
 
         <CustomiseSidebarModal
           isOpen={showCustomiseModal}

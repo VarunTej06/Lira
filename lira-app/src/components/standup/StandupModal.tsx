@@ -1,3 +1,4 @@
+import { notifySaved } from '../common/SavedToast';
 import { DatePicker } from '../common/DatePicker';
 import { TypeIcon } from '../common/Icons';
 import { safeHttpUrl } from '../../utils/safeUrl';
@@ -165,7 +166,7 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
     const s = draft();
     window.location.href = mailtoUrl(s, invitedEmails, `${description(s)}\n\nWhen: ${startEnd(s).start.toLocaleString()} (${REPEAT_LABEL[s.repeat]}, ${s.duration} min)`);
   };
-  const saveOnly = () => { persist(draft()); flash('Saved'); };
+  const saveOnly = () => { persist(draft()); notifySaved('Standup saved'); };
 
   const removeSaved = (id: string) => {
     const all = loadStandups().filter(s => s.id !== id);

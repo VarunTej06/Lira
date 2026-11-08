@@ -1,3 +1,4 @@
+import { notifySaved } from '../../common/SavedToast';
 import { confirmDialog } from '../../common/dialogs';
 import React, { useState, useEffect, useRef } from 'react';
 import { loadAccent, saveAccent } from '../../../utils/accent';
@@ -49,7 +50,7 @@ export function useSettingsState(props: SettingsModalProps) {
   const handleSaveAppearance = () => {
     applyTheme(theme);
     saveAccent(accent);
-    onToast?.('Appearance saved', 'success');
+    notifySaved('Appearance saved');
     onClose();
   };
 
@@ -93,7 +94,7 @@ export function useSettingsState(props: SettingsModalProps) {
     localStorage.setItem('lira_user_email', updated.email);
     localStorage.setItem('lira_user_initials', updated.initials);
     localStorage.setItem('lira_user_role', updated.role);
-    onToast?.('Profile updated successfully!', 'success');
+    notifySaved('Profile saved');
     onClose(); // saving closes the dialog
   };
 
@@ -207,7 +208,7 @@ export function useSettingsState(props: SettingsModalProps) {
     localStorage.setItem('lira_locale_prefs', JSON.stringify(localePrefs));
     localStorage.setItem('lira_pref_lang', language);
     localStorage.setItem('lira_pref_tz', timeZone);
-    onToast?.('General settings saved!', 'success');
+    notifySaved('General settings saved');
     onClose(); // saving closes the dialog
   };
 
@@ -232,7 +233,7 @@ export function useSettingsState(props: SettingsModalProps) {
   const handleSaveNotifications = () => {
     localStorage.setItem('lira_notification_prefs', JSON.stringify(notificationPrefs));
     localStorage.setItem('lira_notif_config', JSON.stringify(notificationPrefs));
-    onToast?.('Notification preferences saved!', 'success');
+    notifySaved('Notification preferences saved');
     onClose(); // saving closes the dialog
   };
 

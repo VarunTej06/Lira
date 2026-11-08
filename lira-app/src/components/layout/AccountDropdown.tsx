@@ -1,9 +1,8 @@
 import { alertDialog } from '../common/dialogs';
-import { applyTheme, useSavedTheme, type Theme } from '../../utils/theme';
+import { notifySaved } from '../common/SavedToast';
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  User, Settings, Sun, Moon, Users, LogOut,
-  ChevronRight, Check
+  User, Settings, Users, LogOut,
 } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
@@ -22,9 +21,6 @@ function useClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () =
 export const AccountDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [showThemeModal, setShowThemeModal] = useState(false);
-  const theme = useSavedTheme();                       // what is applied now
-  const [draftTheme, setDraftTheme] = useState<Theme>(theme); // what is selected in the dialog (applied on Save)
 
   const [userName, setUserName] = useState(() => localStorage.getItem('lira_user_name') || 'Varuntej Yadla');
   const [userEmail, setUserEmail] = useState(() => localStorage.getItem('lira_user_email') || 'yvaruntej0612@gmail.com');
@@ -40,9 +36,6 @@ export const AccountDropdown: React.FC = () => {
     return () => document.removeEventListener('keydown', handler);
   }, [open]);
 
-  const selectTheme = (t: Theme) => setDraftTheme(t);
-  const closeThemeDialog = () => setShowThemeModal(false);
-  const saveTheme = () => { applyTheme(draftTheme); setShowThemeModal(false); };
 
   const saveProfile = () => {
     const profile = {
@@ -55,6 +48,7 @@ export const AccountDropdown: React.FC = () => {
     localStorage.setItem('lira_user_name', userName);
     localStorage.setItem('lira_user_email', userEmail);
     localStorage.setItem('lira_user_initials', userInitials);
+    notifySaved('Profile saved');
     setShowProfileModal(false);
   };
 
@@ -99,20 +93,6 @@ export const AccountDropdown: React.FC = () => {
             >
               <Settings className="w-4 h-4 text-gray-500" />
               <span>Account settings</span>
-            </button>
-
-            <button
-              onClick={() => { setOpen(false); setDraftTheme(theme); setShowThemeModal(true); }}
-              className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left"
-            >
-              <div className="flex items-center gap-3">
-                {theme === 'dark' ? <Moon className="w-4 h-4 text-purple-600" /> : <Sun className="w-4 h-4 text-amber-500" />}
-                <span>Theme</span>
-              </div>
-              <div className="flex items-center gap-1 text-xs text-lira-muted">
-                <span className="capitalize">{theme}</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </div>
             </button>
 
             <div className="border-t border-lira-border my-1" />
@@ -195,46 +175,6 @@ export const AccountDropdown: React.FC = () => {
               className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 shadow-xs"
             >
               Save Profile
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Theme Selector Modal */}
-      <Modal isOpen={showThemeModal} onClose={closeThemeDialog} title="Select Appearance Theme" size="sm">
-        <div className="p-6 space-y-4 text-lira-text">
-          <p className="text-xs text-lira-muted">Choose your preferred visual theme for the Lira workspace interface.</p>
-          <div className="space-y-2">
-            {[
-              { id: 'dark' as const, label: 'Dark theme', desc: 'Dark palette, easy on the eyes', icon: <Moon className="w-4 h-4 text-purple-600" /> },
-              { id: 'light' as const, label: 'Light theme', desc: 'Clean, bright layout with white cards', icon: <Sun className="w-4 h-4 text-amber-500" /> },
-            ].map(item => (
-              <div
-                key={item.id}
-                onClick={() => selectTheme(item.id)}
-                className={`flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
-                  draftTheme === item.id ? 'border-lira-blue bg-blue-50/50 ring-1 ring-lira-blue' : 'border-lira-border hover:bg-gray-50'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-gray-100">{item.icon}</div>
-                  <div>
-                    <h5 className="text-sm font-semibold text-lira-text">{item.label}</h5>
-                    <p className="text-xs text-lira-muted">{item.desc}</p>
-                  </div>
-                </div>
-                {draftTheme === item.id && <Check className="w-4 h-4 text-lira-blue" />}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
-            <button onClick={closeThemeDialog} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer">Cancel</button>
-            <button
-              onClick={saveTheme}
-              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-lira-blue-hover shadow-xs cursor-pointer"
-            >
-              Save
             </button>
           </div>
         </div>

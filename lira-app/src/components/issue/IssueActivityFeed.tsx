@@ -3,12 +3,30 @@ import { Avatar } from '../common/Avatar';
 import { formatRelativeDate } from '../../utils/dateUtils';
 import type { Comment, ActivityEntry } from '../../types/issue';
 import { v4 as uuidv4 } from 'uuid';
-import { Send } from 'lucide-react';
+import { Send, Pencil } from 'lucide-react';
 
 interface IssueActivityFeedProps {
   comments: Comment[];
   activity: ActivityEntry[];
   onAddComment: (comment: Comment) => void;
+  /** Changes the text of a comment. Only the person who wrote it can do this. */
+  onEditComment?: (id: string, content: string) => void;
+}
+
+/** The person using Lira, as set in their profile. */
+function currentUser() {
+  try {
+    return {
+      name: localStorage.getItem('lira_user_name') || 'Varuntej Yadla',
+      initials: localStorage.getItem('lira_user_initials') || 'VY',
+    };
+  } catch { return { name: 'Varuntej Yadla', initials: 'VY' }; }
+}
+
+/** A comment can be edited by the person who wrote it. */
+export function isOwnComment(c: Comment): boolean {
+  const me = currentUser();
+  return [c.author, c.authorInitials].some(v => !!v && (v === me.initials || v === me.name));
 }
 
 type ViewTab = 'all' | 'comments' | 'history';
@@ -17,10 +35,20 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
   comments,
   activity,
   onAddComment,
+  onEditComment,
 }) => {
   const [activeTab, setActiveTab] = useState<ViewTab>('all');
   const [commentText, setCommentText] = useState('');
   const [focused, setFocused] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
+
+  const saveEdit = () => {
+    const text = editText.trim();
+    if (!editingId || !text) return;
+    onEditComment?.(editingId, text);
+    setEditingId(null);
+  };
 
   const QUICK_CHIPS = ['Status update...', 'Thanks!', 'Agree!', 'Will fix ASAP'];
 
@@ -28,8 +56,8 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
     if (!commentText.trim()) return;
     onAddComment({
       id: uuidv4(),
-      author: 'VY',
-      authorInitials: 'VY',
+      author: currentUser().initials,
+      authorInitials: currentUser().initials,
       content: commentText.trim(),
       createdAt: new Date(),
     });
@@ -134,10 +162,49 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({
                   <div className="flex items-baseline gap-2 mb-1">
                     <span className="text-sm font-semibold text-lira-text">{(entry.data as Comment).author || 'User'}</span>
                     <span className="text-xs text-lira-muted">{formatRelativeDate(entry.date)}</span>
+                    {(entry.data as Comment).updatedAt && <span className="text-xs text-lira-muted italic">(edited)</span>}
+                    {onEditComment && isOwnComment(entry.data as Comment) && editingId !== (entry.data as Comment).id && (
+                      <button
+                        type="button"
+                        onClick={() => { setEditingId((entry.data as Comment).id); setEditText((entry.data as Comment).content); }}
+                        className="ml-auto flex items-center gap-1 text-xs text-lira-muted hover:text-lira-blue cursor-pointer"
+                        data-testid="edit-comment"
+                      >
+                        <Pencil className="w-3 h-3" /> Edit
+                      </button>
+                    )}
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-3 text-sm text-lira-text whitespace-pre-wrap border border-lira-border">
-                    {(entry.data as Comment).content}
-                  </div>
+                  {editingId === (entry.data as Comment).id ? (
+                    <div className="border border-lira-blue ring-1 ring-lira-blue rounded-lg">
+                      <textarea
+                        autoFocus
+                        value={editText}
+                        onChange={e => setEditText(e.target.value)}
+                        onKeyDown={e => {
+                          if (e.key === 'Escape') { e.stopPropagation(); setEditingId(null); }
+                          if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) saveEdit();
+                        }}
+                        rows={3}
+                        aria-label="Edit comment"
+                        className="w-full text-sm p-3 resize-none focus:outline-none rounded-lg text-lira-text"
+                      />
+                      <div className="flex justify-end gap-2 px-3 pb-2 border-t border-gray-100 pt-2">
+                        <button onClick={() => setEditingId(null)} className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded cursor-pointer">Cancel</button>
+                        <button
+                          onClick={saveEdit}
+                          disabled={!editText.trim()}
+                          data-testid="save-comment-edit"
+                          className="px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium cursor-pointer"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-50 rounded-lg p-3 text-sm text-lira-text whitespace-pre-wrap border border-lira-border">
+                      {(entry.data as Comment).content}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="flex items-center gap-1.5 text-xs text-lira-muted">

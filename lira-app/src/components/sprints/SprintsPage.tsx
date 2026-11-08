@@ -1,3 +1,4 @@
+import { notifySaved } from '../common/SavedToast';
 import React, { useMemo, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, CheckCircle2, ArrowRightCircle, CalendarClock, Target, AlertTriangle, Plus } from 'lucide-react';
 import type { Issue } from '../../types/issue';
@@ -297,7 +298,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             <input
               value={goalDraft}
               onChange={e => setGoalDraft(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') { setSprintMeta(scope, sprint, { goal: goalDraft.trim() }); setGoalDraft(goalDraft.trim()); setRetroVersion(v => v + 1); } }}
+              onKeyDown={e => { if (e.key === 'Enter') { setSprintMeta(scope, sprint, { goal: goalDraft.trim() }); setGoalDraft(goalDraft.trim()); setRetroVersion(v => v + 1); notifySaved('Sprint goal saved'); } }}
               placeholder={`Sprint goal for ${sprintLabel(sprint)}… (what must be true by the end?)`}
               aria-label="Sprint goal"
               className="flex-1 text-sm border border-transparent hover:border-lira-border focus:border-lira-blue rounded px-2 py-1.5 bg-transparent text-lira-text outline-none"
@@ -306,7 +307,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               <>
                 <button onClick={() => setGoalDraft(meta.goal || '')} className="px-2.5 py-1.5 text-xs text-lira-muted hover:text-lira-text cursor-pointer">Cancel</button>
                 <button
-                  onClick={() => { setSprintMeta(scope, sprint, { goal: goalDraft.trim() }); setGoalDraft(goalDraft.trim()); setRetroVersion(v => v + 1); }}
+                  onClick={() => { setSprintMeta(scope, sprint, { goal: goalDraft.trim() }); setGoalDraft(goalDraft.trim()); setRetroVersion(v => v + 1); notifySaved('Sprint goal saved'); }}
                   className="px-3 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-lira-blue-hover cursor-pointer"
                 >
                   Save goal

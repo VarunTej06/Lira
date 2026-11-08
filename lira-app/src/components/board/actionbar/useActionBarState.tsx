@@ -20,7 +20,6 @@ export interface BoardActionBarProps {
   onClearFilters?: () => void;
   availableLabels?: string[];
   onBulkAction?: () => void;
-  onMaximize?: () => void;
   isSpaceHidden?: boolean;
   isSpaceArchived?: boolean;
   onToggleHideSpace?: () => void;
@@ -104,7 +103,6 @@ export function useActionBarState(props: BoardActionBarProps) {
     onClearFilters,
     availableLabels = [],
     onBulkAction,
-    onMaximize,
     isSpaceHidden = false,
     isSpaceArchived = false,
     onToggleHideSpace,
@@ -285,7 +283,6 @@ export function useActionBarState(props: BoardActionBarProps) {
     onClearFilters,
     availableLabels,
     onBulkAction,
-    onMaximize,
     isSpaceHidden,
     isSpaceArchived,
     onToggleHideSpace,

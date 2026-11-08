@@ -1,3 +1,4 @@
+import { notifySaved } from '../common/SavedToast';
 import React, { useState, useEffect } from 'react';
 import {
   GripVertical, MoreHorizontal, User, Map, Folder, Ticket, CalendarClock, LayoutDashboard, EyeOff as HiddenIcon,
@@ -147,6 +148,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
     const finalConfig: SidebarConfig = { version: CONFIG_VERSION, navOrder, sectionOrder, visibility };
     localStorage.setItem('lira_sidebar_customization', JSON.stringify(finalConfig));
     onSave?.(finalConfig);
+    notifySaved('Sidebar saved');
     onClose();
   };
 

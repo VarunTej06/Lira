@@ -1,23 +1,26 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { Upload, X, FileText, Download } from 'lucide-react';
-import type { Attachment } from '../../types/issue';
-import { readAttachment } from '../../utils/attachments';
+import React, { useState, useCallback } from 'react';
+import { Upload, X, FileText, Download, Plus, ExternalLink, HardDrive, Cloud, Package, Link2 } from 'lucide-react';
+import type { Attachment, AttachmentSource } from '../../types/issue';
+import { readAttachment, formatBytes, SOURCE_LABEL } from '../../utils/attachments';
 import { alertDialog } from '../common/dialogs';
+import { AttachPicker } from './AttachPicker';
+
+const LINK_ICON: Record<AttachmentSource, React.ReactNode> = {
+  file: <FileText className="w-5 h-5 text-lira-blue" />,
+  drive: <HardDrive className="w-5 h-5 text-emerald-600" />,
+  onedrive: <Cloud className="w-5 h-5 text-sky-600" />,
+  dropbox: <Package className="w-5 h-5 text-indigo-600" />,
+  link: <Link2 className="w-5 h-5 text-amber-600" />,
+};
 
 interface IssueAttachmentsProps {
   attachments: Attachment[];
   onUpdate: (attachments: Attachment[]) => void;
 }
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
 export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments, onUpdate }) => {
   const [dragging, setDragging] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const processFiles = useCallback(async (files: FileList) => {
     const newAttachments: Attachment[] = [];
@@ -48,14 +51,23 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-lira-text">Attachments</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-lira-text">Attachments</h3>
+        <button
+          type="button"
+          onClick={() => setPickerOpen(true)}
+          className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-lira-text border border-lira-border rounded-md hover:bg-gray-50 cursor-pointer"
+        >
+          <Plus className="w-3.5 h-3.5" /> Add attachment
+        </button>
+      </div>
 
       {/* Drop zone */}
       <div
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => setPickerOpen(true)}
         className={`
           border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-all
           ${dragging
@@ -66,13 +78,6 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
       >
         <Upload className="w-5 h-5 mx-auto mb-2 text-lira-muted" />
         <p className="text-xs text-lira-muted">Drop files here or <span className="text-lira-blue font-medium">browse</span></p>
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          className="hidden"
-          onChange={e => e.target.files && processFiles(e.target.files)}
-        />
       </div>
 
       {/* Attachment list */}
@@ -84,14 +89,26 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
                 <img src={att.dataUrl} alt={att.name} className="w-10 h-10 object-cover rounded flex-shrink-0" />
               ) : (
                 <div className="w-10 h-10 bg-blue-50 rounded flex items-center justify-center flex-shrink-0">
-                  <FileText className="w-5 h-5 text-lira-blue" />
+                  {LINK_ICON[att.source ?? 'file']}
                 </div>
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-lira-text truncate">{att.name}</p>
-                <p className="text-[10px] text-lira-muted">{formatBytes(att.size)}</p>
+                <p className="text-[10px] text-lira-muted">{att.url ? SOURCE_LABEL[att.source ?? 'link'] : formatBytes(att.size)}</p>
               </div>
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                {att.url && (
+                  <a
+                    href={att.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1 rounded hover:bg-gray-200 text-lira-muted"
+                    title="Open link"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
                 {att.dataUrl && (
                   <a
                     href={att.dataUrl}
@@ -113,6 +130,8 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
           ))}
         </div>
       )}
+
+      <AttachPicker open={pickerOpen} onClose={() => setPickerOpen(false)} onAdd={items => onUpdate([...attachments, ...items])} />
     </div>
   );
 };

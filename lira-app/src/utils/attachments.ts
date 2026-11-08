@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { Attachment } from '../types/issue';
+import type { Attachment, AttachmentSource } from '../types/issue';
 
 /** Files are kept inside the ticket (as a data URL) up to this size. Bigger files are listed by name only. */
 export const MAX_EMBED_BYTES = 2 * 1024 * 1024;
@@ -20,6 +20,16 @@ export async function readAttachment(file: File): Promise<ReadAttachment> {
   const embedded = file.size <= MAX_EMBED_BYTES;
   if (embedded) attachment.dataUrl = await readAsDataUrl(file);
   return { attachment, embedded };
+}
+
+export const SOURCE_LABEL: Record<AttachmentSource, string> = {
+  file: 'this computer', drive: 'Google Drive', onedrive: 'OneDrive', dropbox: 'Dropbox', link: 'the web page',
+};
+
+export function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 /** Saves an attachment to the computer. */

@@ -1,7 +1,7 @@
 import { RichTextEditor } from '../../common/richtext/RichTextEditor';
 import { promptDialog } from '../../common/dialogs';
 import { TypeIcon } from '../../common/Icons';
-import { Plus, ChevronDown, Paperclip, Link } from 'lucide-react';
+import { Plus, ChevronDown, Link } from 'lucide-react';
 import type { IssueType } from '../../../types/issue';
 import { IssueSubtasks } from '../IssueSubtasks';
 import { IssueAttachments } from '../IssueAttachments';
@@ -12,7 +12,7 @@ import type { IssueDetailState } from './useIssueDetail';
 
 /** Title, description, attachments, child work items, subtasks and activity. */
 export function IssueMain(s: IssueDetailState) {
-  const {  onNavigateToIssue,  local, editingTitle, setEditingTitle, titleVal, setTitleVal, descVal, setDescVal, descCollapsed, setDescCollapsed, attCollapsed, setAttCollapsed, childCollapsed, setChildCollapsed, childIssues, resolvedParent, patch, handleTitleSave, handleAddComment, handleCreateChildIssue, childCount, doneChildCount, childProgress } = s;
+  const {  onNavigateToIssue,  local, editingTitle, setEditingTitle, titleVal, setTitleVal, descVal, setDescVal, descCollapsed, setDescCollapsed, attCollapsed, setAttCollapsed, childCollapsed, setChildCollapsed, childIssues, resolvedParent, patch, handleTitleSave, handleAddComment, handleEditComment, handleCreateChildIssue, childCount, doneChildCount, childProgress } = s;
   return (
     <>
           {/* ── LEFT: Main content ── */}
@@ -35,9 +35,6 @@ export function IssueMain(s: IssueDetailState) {
               )}
               <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-lira-muted border border-lira-border rounded-md hover:bg-gray-50 transition-all">
                 <Link className="w-3.5 h-3.5" /> Link issue
-              </button>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-lira-muted border border-lira-border rounded-md hover:bg-gray-50 transition-all">
-                <Paperclip className="w-3.5 h-3.5" /> Attach
               </button>
             </div>
 
@@ -174,6 +171,7 @@ export function IssueMain(s: IssueDetailState) {
                 comments={safeArr(local.comments)}
                 activity={safeArr(local.activity)}
                 onAddComment={handleAddComment}
+                onEditComment={handleEditComment}
               />
             </div>
           </div>

@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-08T19:14:19.075Z",
+  "updatedAt": "2026-11-08T21:33:31.862Z",
   "entries": {
     "lira_accent": "#DB2777",
-    "lira_active_space_id": "4",
+    "lira_active_space_id": "6",
     "lira_notif_config": {
       "inAppFeed": true,
       "mentionsOnly": true,

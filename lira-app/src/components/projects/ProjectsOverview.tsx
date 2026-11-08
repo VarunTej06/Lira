@@ -1,3 +1,4 @@
+import { CountUp, GrowBar } from '../common/motion';
 import { projectLink } from '../../utils/links';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
@@ -376,15 +377,12 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
                   <div className="mt-4 pt-3 border-t border-gray-100">
                     <div className="flex items-center justify-between text-xs mb-1.5 text-lira-muted">
                       <span className="text-[11px] font-medium">
-                        {totalIssues} issue{totalIssues !== 1 ? 's' : ''} ({doneIssues} done)
+                        <CountUp value={totalIssues} /> issue{totalIssues !== 1 ? 's' : ''} (<CountUp value={doneIssues} /> done)
                       </span>
-                      <span className="font-semibold text-emerald-600 text-[11px]">{percent}%</span>
+                      <span className="font-semibold text-emerald-600 text-[11px]"><CountUp value={percent} suffix="%" /></span>
                     </div>
                     <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-emerald-500 rounded-full transition-all duration-300"
-                        style={{ width: `${percent}%` }}
-                      />
+                      <GrowBar className="h-full bg-emerald-500 rounded-full" percent={percent} />
                     </div>
                   </div>
                 </div>

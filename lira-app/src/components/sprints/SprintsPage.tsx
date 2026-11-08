@@ -1,5 +1,7 @@
+import { keepPlace } from '../../utils/keepPlace';
 import { notifySaved } from '../common/SavedToast';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { matchesStatusFilter } from '../../utils/spaceFilters';
 import { ChevronLeft, ChevronRight, CheckCircle2, ArrowRightCircle, CalendarClock, Target, AlertTriangle, Plus } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
@@ -19,7 +21,7 @@ import { RetroCard } from './RetroCard';
 import { EMPTY_FILTER, SprintFilter, type SprintFilterValue } from './SprintFilter';
 import { SprintSpacesPicker } from './SprintSpacesPicker';
 import { Modal } from '../common/Modal';
-import { CountUp, GrowBar, motion, slide, staggerChild, staggerParent, Toast } from '../common/motion';
+import { CountUp, GrowBar, GrowColumn, motion, slide, staggerChild, staggerParent, Toast } from '../common/motion';
 
 type View = 'sprint' | 'planning' | 'reports' | 'epics';
 const VIEWS: { id: View; label: string }[] = [
@@ -57,6 +59,13 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
   const [sprint, setSprint] = useState(currentSprintKey());
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [goalDraft, setGoalDraft] = useState('');
+  // The strip of sprint chips scrolls sideways to show the sprint you are on. It moves only the strip: never the page.
+  const stripRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const strip = stripRef.current;
+    const chip = strip?.querySelector<HTMLElement>('[data-active-sprint="true"]');
+    if (strip && chip) strip.scrollLeft = chip.offsetLeft - strip.clientWidth / 2 + chip.clientWidth / 2;
+  }, [sprint]);
   const [toast, setToast] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [view, setView] = useState<View>('sprint');
@@ -119,7 +128,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
   // the status / space filter only narrows the ticket list below; the numbers above stay for the whole sprint
   const visible = useMemo(
-    () => list.filter(i => (!filter.statuses.length || filter.statuses.includes(i.status?.toLowerCase())) && (!filter.spaceIds.length || filter.spaceIds.includes(i.spaceId))),
+    () => list.filter(i => matchesStatusFilter(i, filter.statuses.map(s => s.toLowerCase())) && (!filter.spaceIds.length || filter.spaceIds.includes(i.spaceId))),
     [list, filter],
   );
   const involved = getSprintSpaces(sprint);
@@ -199,7 +208,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
           <button onClick={() => setSprint(neighbourSprint(sprint, keys, -1))} className="p-1.5 rounded border border-lira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Previous sprint">
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <div className="flex-1 flex gap-1.5 overflow-x-auto py-1">
+          <div ref={stripRef} className="relative flex-1 flex gap-1.5 overflow-x-auto py-1">
             {keys.map(k => {
               const s = sprintStats(issuesInSprint(scoped, k));
               const active = k === sprint;
@@ -207,7 +216,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
                 <button
                   key={k}
                   onClick={() => setSprint(k)}
-                  ref={el => { if (el && active) el.scrollIntoView({ inline: 'center', block: 'nearest' }); }}
+                  data-active-sprint={active ? 'true' : undefined}
                   className={`flex-shrink-0 px-3 py-1.5 rounded-md border text-left cursor-pointer transition-colors ${
                     active ? 'bg-lira-blue border-lira-blue text-white' : 'bg-white border-lira-border text-lira-text hover:bg-gray-50'
                   }`}
@@ -334,7 +343,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {[
               { label: 'Backlog', v: stats.backlog, c: STATUS_META.backlog.color },
               { label: 'To Do', v: stats.todo, c: STATUS_META.todo.color },
@@ -343,9 +352,9 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               { label: 'Done', v: stats.done, c: STATUS_META.done.color },
               { label: 'Carried over in', v: stats.carriedIn, c: '#B45309' },
             ].map(t => (
-              <div key={t.label} className="border border-lira-border rounded-md px-3 py-2">
-                <div className="text-xl font-semibold" style={{ color: t.c }}><CountUp value={t.v} /></div>
-                <div className="text-[11px] text-lira-muted">{t.label}</div>
+              <div key={t.label} className="border border-lira-border rounded-md px-2.5 py-1.5 min-w-0">
+                <div className="text-lg font-semibold leading-tight" style={{ color: t.c }}><CountUp value={t.v} /></div>
+                <div className="text-[11px] text-lira-muted truncate">{t.label}</div>
               </div>
             ))}
           </div>
@@ -378,7 +387,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         )}
 
         {view === 'planning' && <SprintPlanning issues={issues} spaces={spaces} sprint={sprint} keys={keys} scope={scope} onIssueClick={onIssueClick} flash={flash} />}
-        {view === 'reports' && <SprintReports issues={issues} sprint={sprint} scope={scope} onIssueClick={onIssueClick} />}
+        {view === 'reports' && <SprintReports key={`${sprint}-${scope}`} issues={issues} sprint={sprint} scope={scope} onIssueClick={onIssueClick} />}
         {view === 'epics' && <EpicTimeline issues={issues} keys={keys} scope={scope} sprint={sprint} onIssueClick={onIssueClick} onPickSprint={k => { setSprint(k); setView('sprint'); }} />}
 
         {view === 'sprint' && (<>
@@ -388,7 +397,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-white border border-lira-border rounded-lg p-4">
             <h3 className="text-sm font-semibold text-lira-text mb-2">Burndown</h3>
-            <BurndownChart data={burn} total={list.length} />
+            <BurndownChart key={`${sprint}-${scope}`} data={burn} total={list.length} />
           </div>
           <div className="bg-white border border-lira-border rounded-lg p-4">
             <div className="flex items-baseline justify-between mb-2">
@@ -396,11 +405,11 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               <span className="text-[11px] text-lira-muted">avg {velocity.avg} done / closed sprint</span>
             </div>
             <div className="flex items-end gap-3 h-32">
-              {velocity.rows.map(r => (
+              {velocity.rows.map((r, n) => (
                 <button key={r.key} onClick={() => setSprint(r.key)} className="flex-1 flex flex-col items-center justify-end h-full gap-1 cursor-pointer group" title={`${sprintName(r.key)}: ${r.done}/${r.total} done`}>
                   <div className="w-full flex items-end justify-center gap-0.5 flex-1">
-                    <div className="w-1/2 bg-gray-300 rounded-t" style={{ height: `${(r.total / velocity.max) * 100}%` }} />
-                    <div className="w-1/2 bg-green-500 rounded-t" style={{ height: `${(r.done / velocity.max) * 100}%` }} />
+                    <GrowColumn className="w-1/2 bg-gray-300 rounded-t" delay={n * 0.08} heightPercent={(r.total / velocity.max) * 100} />
+                    <GrowColumn className="w-1/2 bg-green-500 rounded-t" delay={n * 0.08 + 0.1} heightPercent={(r.done / velocity.max) * 100} />
                   </div>
                   <span className={`text-[10px] ${r.key === sprint ? 'font-bold text-lira-blue' : 'text-lira-muted'}`}>{sprintLabel(r.key, true)}</span>
                 </button>
@@ -442,7 +451,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             return (
               <motion.div key={status} variants={staggerChild} className="bg-white border border-lira-border rounded-lg overflow-hidden">
                 <button
-                  onClick={() => setCollapsed(prev => { const n = new Set(prev); n.has(status) ? n.delete(status) : n.add(status); return n; })}
+                  onClick={e => keepPlace(e.currentTarget, () => setCollapsed(prev => { const n = new Set(prev); n.has(status) ? n.delete(status) : n.add(status); return n; }))}
                   className="w-full flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border text-left cursor-pointer"
                 >
                   <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isCollapsed ? '' : 'rotate-90'}`} />
@@ -534,8 +543,8 @@ const BurndownChart: React.FC<{ data: ReturnType<typeof burndown>; total: number
         {[1, Math.ceil(n / 2), n].map(d => (
           <text key={d} x={x(d)} y={H - 6} fontSize="9" textAnchor="middle" fill="#6B778C">{d}</text>
         ))}
-        <motion.polyline points={ideal} fill="none" stroke="#97A0AF" strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} />
-        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke="#0052CC" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
+        <motion.polyline points={ideal} fill="none" stroke="#97A0AF" strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} />
+        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke="#0052CC" strokeWidth="2" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
       </svg>
       <div className="flex gap-3 text-[10px] text-lira-muted">
         <span><span className="inline-block w-3 border-t-2 border-dashed border-gray-400 mr-1 align-middle" />Ideal</span>

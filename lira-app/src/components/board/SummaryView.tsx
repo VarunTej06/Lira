@@ -1,3 +1,4 @@
+import { CountUp, GrowBar, motion } from '../common/motion';
 import { issueLink } from '../../utils/links';
 import { statusLabel } from '../../utils/status';
 import { ColorDot } from '../common/Icons';
@@ -122,10 +123,15 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
         <div className="flex items-center gap-4 bg-gray-50 px-4 py-2.5 rounded-lg border border-lira-border">
           <div className="text-right">
             <div className="text-[11px] font-semibold uppercase text-lira-muted tracking-wider">Completion Rate</div>
-            <div className="text-2xl font-extrabold text-lira-text">{stats.completionRate}%</div>
+            <div className="text-2xl font-extrabold text-lira-text"><CountUp value={stats.completionRate} suffix="%" /></div>
           </div>
-          <div className="w-12 h-12 rounded-full border-4 border-emerald-500 flex items-center justify-center font-bold text-xs text-emerald-700 bg-emerald-50">
-            {stats.done}/{stats.total}
+          <div className="relative w-12 h-12 rounded-full flex items-center justify-center font-bold text-xs text-emerald-700 bg-emerald-50" data-testid="completion-ring">
+            {/* the ring fills up to the completion rate */}
+            <svg viewBox="0 0 48 48" className="absolute inset-0 w-full h-full -rotate-90" aria-hidden>
+              <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" strokeWidth="4" className="text-emerald-100" />
+              <motion.circle cx="24" cy="24" r="21" fill="none" stroke="#10B981" strokeWidth="4" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: Math.max(0.001, Math.min(1, stats.completionRate / 100)) }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }} />
+            </svg>
+            <span className="relative"><CountUp value={stats.done} />/{stats.total}</span>
           </div>
         </div>
       </div>
@@ -137,7 +143,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider">Total Issues</span>
             <Layers className="w-4 h-4 text-blue-500" />
           </div>
-          <div className="text-2xl font-bold text-lira-text">{stats.total}</div>
+          <div className="text-2xl font-bold text-lira-text"><CountUp value={stats.total} /></div>
           <div className="text-xs text-lira-muted mt-1">Across all Kanban columns</div>
         </div>
 
@@ -146,9 +152,9 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider">In Progress</span>
             <Clock className="w-4 h-4 text-amber-500" />
           </div>
-          <div className="text-2xl font-bold text-amber-600">{stats.inProgress}</div>
+          <div className="text-2xl font-bold text-amber-600"><CountUp value={stats.inProgress} /></div>
           <div className="text-xs text-lira-muted mt-1">
-            {stats.total > 0 ? Math.round((stats.inProgress / stats.total) * 100) : 0}% of active workload
+            <CountUp value={stats.total > 0 ? Math.round((stats.inProgress / stats.total) * 100) : 0} suffix="%" /> of active workload
           </div>
         </div>
 
@@ -157,9 +163,9 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
             <span className="text-xs font-semibold uppercase tracking-wider">Completed</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
           </div>
-          <div className="text-2xl font-bold text-emerald-600">{stats.done}</div>
+          <div className="text-2xl font-bold text-emerald-600"><CountUp value={stats.done} /></div>
           <div className="text-xs text-lira-muted mt-1">
-            {stats.completionRate}% resolved successfully
+            <CountUp value={stats.completionRate} suffix="%" /> resolved successfully
           </div>
         </div>
 
@@ -169,7 +175,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
             <AlertTriangle className={`w-4 h-4 ${stats.overdue > 0 ? 'text-red-500' : 'text-gray-400'}`} />
           </div>
           <div className={`text-2xl font-bold ${stats.overdue > 0 ? 'text-red-600' : 'text-gray-600'}`}>
-            {stats.overdue}
+            <CountUp value={stats.overdue} />
           </div>
           <div className="text-xs text-lira-muted mt-1">Requires immediate attention</div>
         </div>
@@ -201,14 +207,11 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                   <div className="flex justify-between text-xs font-medium">
                     <span className="text-lira-text">{col.label}</span>
                     <span className={col.textColor}>
-                      {col.count} <span className="text-lira-muted">({pct}%)</span>
+                      <CountUp value={col.count} /> <span className="text-lira-muted">(<CountUp value={pct} suffix="%" />)</span>
                     </span>
                   </div>
                   <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full ${col.color} transition-all duration-500 rounded-full`}
-                      style={{ width: `${pct}%` }}
-                    />
+                    <GrowBar className={`h-full ${col.color} rounded-full`} percent={pct} />
                   </div>
                 </div>
               );
@@ -243,14 +246,11 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                       <ColorDot color={p.dot} /> {p.label}
                     </span>
                     <span className="text-lira-muted">
-                      {count} <span className="text-gray-400">({pct}%)</span>
+                      <CountUp value={count} /> <span className="text-gray-400">(<CountUp value={pct} suffix="%" />)</span>
                     </span>
                   </div>
                   <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full ${p.color} transition-all duration-500 rounded-full`}
-                      style={{ width: `${pct}%` }}
-                    />
+                    <GrowBar className={`h-full ${p.color} rounded-full`} percent={pct} />
                   </div>
                 </div>
               );
@@ -282,18 +282,15 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                     <Zap className="w-3 h-3" /> {epic.key}
                   </span>
                   <span className="text-xs font-semibold text-lira-muted group-hover:text-purple-700 transition-colors flex items-center gap-0.5">
-                    {progress}% <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100" />
+                    <CountUp value={progress} suffix="%" /> <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100" />
                   </span>
                 </div>
                 <div className="text-sm font-semibold text-lira-text truncate mb-2">{epic.title}</div>
                 <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden mb-1.5">
-                  <div
-                    className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full transition-all duration-500"
-                    style={{ width: `${progress}%` }}
-                  />
+                  <GrowBar className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full" percent={progress} />
                 </div>
                 <div className="text-[11px] text-lira-muted flex justify-between">
-                  <span>{completedChildren} of {totalChildren} work items done</span>
+                  <span><CountUp value={completedChildren} /> of {totalChildren} work items done</span>
                   <span className="capitalize text-gray-500">{epic.status}</span>
                 </div>
               </div>

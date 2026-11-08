@@ -9,6 +9,7 @@ import {
 } from '../../utils/sprintUtils';
 import { formatRelativeDate } from '../../utils/dateUtils';
 import { TicketRow } from '../sprints/sprintParts';
+import { CountUp, SequenceBar } from '../common/motion';
 
 interface ForYouPageProps {
   spaces: Space[];
@@ -24,6 +25,17 @@ interface ForYouPageProps {
 const PRIORITY_RANK: Record<string, number> = { highest: 0, high: 1, medium: 2, low: 3, lowest: 4 };
 const isMine = (i: Issue) => i.assigneeInitials === 'VY' || i.assignee === 'VY' || i.assignee === 'Varun Tej';
 const DAY = 86_400_000;
+
+const Card: React.FC<{ title: string; icon?: React.ReactNode; action?: React.ReactNode; children: React.ReactNode }> = ({ title, icon, action, children }) => (
+  <section className="bg-white border border-lira-border rounded-2xl overflow-hidden">
+    <header className="flex items-center justify-between px-4 py-3 border-b border-lira-border">
+      <h2 className="text-sm font-semibold text-lira-text flex items-center gap-2">{icon}{title}</h2>
+      {action}
+    </header>
+    {children}
+  </section>
+);
+
 
 /** Personal landing page: what's on my plate, what's late, and shortcuts into every part of Lira. */
 export const ForYouPage: React.FC<ForYouPageProps> = ({
@@ -77,16 +89,6 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
     { label: 'Done this sprint', value: doneThisSprint, icon: <CheckCircle2 className="w-4 h-4" />, tone: 'text-emerald-600 bg-emerald-50' },
   ];
 
-  const Card: React.FC<{ title: string; icon?: React.ReactNode; action?: React.ReactNode; children: React.ReactNode }> = ({ title, icon, action, children }) => (
-    <section className="bg-white border border-lira-border rounded-2xl overflow-hidden">
-      <header className="flex items-center justify-between px-4 py-3 border-b border-lira-border">
-        <h2 className="text-sm font-semibold text-lira-text flex items-center gap-2">{icon}{title}</h2>
-        {action}
-      </header>
-      {children}
-    </section>
-  );
-
   const empty = (text: string) => <p className="px-4 py-8 text-center text-sm text-lira-muted">{text}</p>;
 
   return (
@@ -113,7 +115,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
             <div key={s.label} className="bg-white border border-lira-border rounded-2xl px-4 py-3 flex items-center gap-3">
               <span className={`w-9 h-9 rounded-xl flex items-center justify-center ${s.tone}`}>{s.icon}</span>
               <div>
-                <div className="text-2xl font-semibold text-lira-text leading-none">{s.value}</div>
+                <div className="text-2xl font-semibold text-lira-text leading-none"><CountUp value={s.value} /></div>
                 <div className="text-[11px] text-lira-muted mt-1">{s.label}</div>
               </div>
             </div>
@@ -123,7 +125,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
         <div className="grid lg:grid-cols-3 gap-5">
           <div className="lg:col-span-2 space-y-5">
             <Card title="Assigned to me" icon={<ListTodo className="w-4 h-4 text-lira-blue" />}
-              action={<span className="text-xs text-lira-muted">{myOpen.length} open</span>}>
+              action={<span className="text-xs text-lira-muted"><CountUp value={myOpen.length} suffix=" open" /></span>}>
               {myOpen.length === 0 ? empty('Nothing assigned to you — enjoy the quiet.') :
                 myOpen.slice(0, 8).map(i => (
                   <TicketRow key={i.id} issue={i} space={spaceById.get(i.spaceId)} showSpace showSprint sprintOptions={sprintKeys} onClick={onIssueClick} />
@@ -150,17 +152,20 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
               action={<button onClick={() => onOpenSprint(cur)} {...sprintLink(cur)} className="text-xs text-lira-blue hover:underline cursor-pointer flex items-center gap-1">Open <ArrowRight className="w-3 h-3" /></button>}>
               <div className="p-4 space-y-3">
                 <div className="flex justify-between text-xs text-lira-muted">
-                  <span>{curStats.done} of {curStats.total} done</span>
-                  <span className="font-semibold text-lira-text">{curStats.percent}%</span>
+                  <span><CountUp value={curStats.done} /> of {curStats.total} done</span>
+                  <span className="font-semibold text-lira-text"><CountUp value={curStats.percent} suffix="%" /></span>
                 </div>
-                <div className="h-2 rounded-full bg-gray-100 overflow-hidden flex">
-                  <div className="bg-green-500" style={{ width: `${curStats.total ? (curStats.done / curStats.total) * 100 : 0}%` }} />
-                  <div className="bg-blue-500" style={{ width: `${curStats.total ? (curStats.inprogress / curStats.total) * 100 : 0}%` }} />
+                <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+                  {/* one smooth movement from left to right: green, and straight on into blue */}
+                  <SequenceBar className="h-full" segments={[
+                    { percent: curStats.total ? (curStats.done / curStats.total) * 100 : 0, className: 'bg-green-500' },
+                    { percent: curStats.total ? (curStats.inprogress / curStats.total) * 100 : 0, className: 'bg-blue-500' },
+                  ]} />
                 </div>
                 <div className="grid grid-cols-4 gap-2 text-center">
                   {[['To Do', curStats.todo + curStats.backlog], ['In progress', curStats.inprogress], ['Blocked', curStats.blocked], ['Done', curStats.done]].map(([l, v]) => (
                     <div key={l as string} className="rounded-xl bg-gray-50 border border-lira-border py-2">
-                      <div className="text-lg font-semibold text-lira-text">{v}</div>
+                      <div className="text-lg font-semibold text-lira-text"><CountUp value={v as number} /></div>
                       <div className="text-[10px] text-lira-muted">{l}</div>
                     </div>
                   ))}
@@ -178,7 +183,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                       <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style={{ backgroundColor: s.color + '26' }}>{s.icon}</span>
                       <span className="flex-1 min-w-0">
                         <span className="block text-sm font-medium text-lira-text truncate">{s.name}</span>
-                        <span className="block text-[11px] text-lira-muted">{open} open</span>
+                        <span className="block text-[11px] text-lira-muted"><CountUp value={open} suffix=" open" /></span>
                       </span>
                       <ArrowRight className="w-3.5 h-3.5 text-lira-muted" />
                     </button>

@@ -1,3 +1,4 @@
+import { CountUp, motion } from '../../common/motion';
 import { statusLabel } from '../../../utils/status';
 import { PriorityIcon, TypeIcon } from '../../common/Icons';
 import { KanbanSquare, Settings, Plus, Layers, AlertCircle, CheckCircle2, TrendingUp } from 'lucide-react';
@@ -53,7 +54,7 @@ export function OverviewTab(ctx: DetailCtx) {
               <div className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Total Issues</p>
-                  <h4 className="text-2xl font-black text-lira-text mt-1">{stats.total}</h4>
+                  <h4 className="text-2xl font-black text-lira-text mt-1"><CountUp value={stats.total} /></h4>
                   <p className="text-[11px] text-lira-muted mt-0.5">In this project scope</p>
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-blue-50 text-lira-blue flex items-center justify-center">
@@ -65,7 +66,7 @@ export function OverviewTab(ctx: DetailCtx) {
               <div className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Open Issues</p>
-                  <h4 className="text-2xl font-black text-amber-600 mt-1">{stats.open}</h4>
+                  <h4 className="text-2xl font-black text-amber-600 mt-1"><CountUp value={stats.open} /></h4>
                   <p className="text-[11px] text-lira-muted mt-0.5">Backlog + Todo + In Progress</p>
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
@@ -77,7 +78,7 @@ export function OverviewTab(ctx: DetailCtx) {
               <div className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Completed Issues</p>
-                  <h4 className="text-2xl font-black text-emerald-600 mt-1">{stats.done}</h4>
+                  <h4 className="text-2xl font-black text-emerald-600 mt-1"><CountUp value={stats.done} /></h4>
                   <p className="text-[11px] text-lira-muted mt-0.5">Done & verified</p>
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -89,8 +90,8 @@ export function OverviewTab(ctx: DetailCtx) {
               <div className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">Completion %</p>
-                  <h4 className="text-2xl font-black text-purple-600 mt-1">{stats.percent}%</h4>
-                  <p className="text-[11px] text-lira-muted mt-0.5">{stats.done} of {stats.total} resolved</p>
+                  <h4 className="text-2xl font-black text-purple-600 mt-1"><CountUp value={stats.percent} suffix="%" /></h4>
+                  <p className="text-[11px] text-lira-muted mt-0.5"><CountUp value={stats.done} /> of {stats.total} resolved</p>
                 </div>
                 <div className="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
                   <TrendingUp className="w-5 h-5" />
@@ -107,7 +108,7 @@ export function OverviewTab(ctx: DetailCtx) {
                     Proportional workflow breakdown across Backlog, To Do, In Progress, and Done stages.
                   </p>
                 </div>
-                <span className="text-xs font-semibold text-lira-muted">{stats.total} Items</span>
+                <span className="text-xs font-semibold text-lira-muted"><CountUp value={stats.total} suffix=" Items" /></span>
               </div>
 
               {stats.total === 0 ? (
@@ -119,51 +120,59 @@ export function OverviewTab(ctx: DetailCtx) {
                   {/* Horizontal Stacked Bar */}
                   <div className="h-7 w-full bg-gray-100 rounded-xl overflow-hidden flex shadow-inner border border-gray-200/80">
                     {stats.backlog > 0 && (
-                      <div
-                        style={{ width: `${(stats.backlog / stats.total) * 100}%` }}
-                        className="bg-slate-400 hover:bg-slate-500 transition-all flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer"
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(stats.backlog / stats.total) * 100}%` }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.00 }}
+                        className="bg-slate-400 flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer"
                         title={`Backlog: ${stats.backlog} (${Math.round((stats.backlog / stats.total) * 100)}%)`}
                       >
                         {stats.backlog / stats.total >= 0.1 && (
                           <span>{Math.round((stats.backlog / stats.total) * 100)}%</span>
                         )}
-                      </div>
+                      </motion.div>
                     )}
 
                     {stats.todo > 0 && (
-                      <div
-                        style={{ width: `${(stats.todo / stats.total) * 100}%` }}
-                        className="bg-blue-500 hover:bg-blue-600 transition-all flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer"
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(stats.todo / stats.total) * 100}%` }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.20 }}
+                        className="bg-blue-500 flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer"
                         title={`To Do: ${stats.todo} (${Math.round((stats.todo / stats.total) * 100)}%)`}
                       >
                         {stats.todo / stats.total >= 0.1 && (
                           <span>{Math.round((stats.todo / stats.total) * 100)}%</span>
                         )}
-                      </div>
+                      </motion.div>
                     )}
 
                     {stats.inProgress > 0 && (
-                      <div
-                        style={{ width: `${(stats.inProgress / stats.total) * 100}%` }}
-                        className="bg-amber-500 hover:bg-amber-600 transition-all flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer"
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(stats.inProgress / stats.total) * 100}%` }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.40 }}
+                        className="bg-amber-500 flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer"
                         title={`In Progress: ${stats.inProgress} (${Math.round((stats.inProgress / stats.total) * 100)}%)`}
                       >
                         {stats.inProgress / stats.total >= 0.1 && (
                           <span>{Math.round((stats.inProgress / stats.total) * 100)}%</span>
                         )}
-                      </div>
+                      </motion.div>
                     )}
 
                     {stats.done > 0 && (
-                      <div
-                        style={{ width: `${(stats.done / stats.total) * 100}%` }}
-                        className="bg-emerald-500 hover:bg-emerald-600 transition-all flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer"
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(stats.done / stats.total) * 100}%` }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.60 }}
+                        className="bg-emerald-500 flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer"
                         title={`Done: ${stats.done} (${Math.round((stats.done / stats.total) * 100)}%)`}
                       >
                         {stats.done / stats.total >= 0.1 && (
                           <span>{Math.round((stats.done / stats.total) * 100)}%</span>
                         )}
-                      </div>
+                      </motion.div>
                     )}
                   </div>
 
@@ -173,9 +182,9 @@ export function OverviewTab(ctx: DetailCtx) {
                       <span className="w-3 h-3 rounded-full bg-slate-400 flex-shrink-0" />
                       <div className="text-xs">
                         <span className="text-lira-muted font-medium">Backlog: </span>
-                        <span className="font-bold text-lira-text">{stats.backlog}</span>
+                        <span className="font-bold text-lira-text"><CountUp value={stats.backlog} /></span>
                         <span className="text-[10px] text-lira-muted ml-1">
-                          ({stats.total > 0 ? Math.round((stats.backlog / stats.total) * 100) : 0}%)
+                          (<CountUp value={stats.total > 0 ? Math.round((stats.backlog / stats.total) * 100) : 0} suffix="%" />)
                         </span>
                       </div>
                     </div>
@@ -184,9 +193,9 @@ export function OverviewTab(ctx: DetailCtx) {
                       <span className="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0" />
                       <div className="text-xs">
                         <span className="text-lira-muted font-medium">To Do: </span>
-                        <span className="font-bold text-lira-blue">{stats.todo}</span>
+                        <span className="font-bold text-lira-blue"><CountUp value={stats.todo} /></span>
                         <span className="text-[10px] text-lira-muted ml-1">
-                          ({stats.total > 0 ? Math.round((stats.todo / stats.total) * 100) : 0}%)
+                          (<CountUp value={stats.total > 0 ? Math.round((stats.todo / stats.total) * 100) : 0} suffix="%" />)
                         </span>
                       </div>
                     </div>
@@ -195,9 +204,9 @@ export function OverviewTab(ctx: DetailCtx) {
                       <span className="w-3 h-3 rounded-full bg-red-500 flex-shrink-0" />
                       <div className="text-xs">
                         <span className="text-lira-muted font-medium">Blocked (flagged): </span>
-                        <span className="font-bold text-red-700">{stats.blocked}</span>
+                        <span className="font-bold text-red-700"><CountUp value={stats.blocked} /></span>
                         <span className="text-[10px] text-lira-muted ml-1">
-                          ({stats.total > 0 ? Math.round((stats.blocked / stats.total) * 100) : 0}%)
+                          (<CountUp value={stats.total > 0 ? Math.round((stats.blocked / stats.total) * 100) : 0} suffix="%" />)
                         </span>
                       </div>
                     </div>
@@ -206,9 +215,9 @@ export function OverviewTab(ctx: DetailCtx) {
                       <span className="w-3 h-3 rounded-full bg-amber-500 flex-shrink-0" />
                       <div className="text-xs">
                         <span className="text-lira-muted font-medium">In Progress: </span>
-                        <span className="font-bold text-amber-700">{stats.inProgress}</span>
+                        <span className="font-bold text-amber-700"><CountUp value={stats.inProgress} /></span>
                         <span className="text-[10px] text-lira-muted ml-1">
-                          ({stats.total > 0 ? Math.round((stats.inProgress / stats.total) * 100) : 0}%)
+                          (<CountUp value={stats.total > 0 ? Math.round((stats.inProgress / stats.total) * 100) : 0} suffix="%" />)
                         </span>
                       </div>
                     </div>
@@ -217,9 +226,9 @@ export function OverviewTab(ctx: DetailCtx) {
                       <span className="w-3 h-3 rounded-full bg-emerald-500 flex-shrink-0" />
                       <div className="text-xs">
                         <span className="text-lira-muted font-medium">Done: </span>
-                        <span className="font-bold text-emerald-700">{stats.done}</span>
+                        <span className="font-bold text-emerald-700"><CountUp value={stats.done} /></span>
                         <span className="text-[10px] text-lira-muted ml-1">
-                          ({stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0}%)
+                          (<CountUp value={stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0} suffix="%" />)
                         </span>
                       </div>
                     </div>
@@ -246,9 +255,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
-                    <span className="text-xl font-bold text-red-800">{priorityCounts.highest}</span>
+                    <span className="text-xl font-bold text-red-800"><CountUp value={priorityCounts.highest} /></span>
                     <span className="text-[10px] text-red-600 font-medium">
-                      {stats.total > 0 ? Math.round((priorityCounts.highest / stats.total) * 100) : 0}%
+                      <CountUp value={stats.total > 0 ? Math.round((priorityCounts.highest / stats.total) * 100) : 0} suffix="%" />
                     </span>
                   </div>
                 </div>
@@ -261,9 +270,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
-                    <span className="text-xl font-bold text-orange-800">{priorityCounts.high}</span>
+                    <span className="text-xl font-bold text-orange-800"><CountUp value={priorityCounts.high} /></span>
                     <span className="text-[10px] text-orange-600 font-medium">
-                      {stats.total > 0 ? Math.round((priorityCounts.high / stats.total) * 100) : 0}%
+                      <CountUp value={stats.total > 0 ? Math.round((priorityCounts.high / stats.total) * 100) : 0} suffix="%" />
                     </span>
                   </div>
                 </div>
@@ -276,9 +285,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
-                    <span className="text-xl font-bold text-amber-800">{priorityCounts.medium}</span>
+                    <span className="text-xl font-bold text-amber-800"><CountUp value={priorityCounts.medium} /></span>
                     <span className="text-[10px] text-amber-600 font-medium">
-                      {stats.total > 0 ? Math.round((priorityCounts.medium / stats.total) * 100) : 0}%
+                      <CountUp value={stats.total > 0 ? Math.round((priorityCounts.medium / stats.total) * 100) : 0} suffix="%" />
                     </span>
                   </div>
                 </div>
@@ -291,9 +300,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
-                    <span className="text-xl font-bold text-emerald-800">{priorityCounts.low}</span>
+                    <span className="text-xl font-bold text-emerald-800"><CountUp value={priorityCounts.low} /></span>
                     <span className="text-[10px] text-emerald-600 font-medium">
-                      {stats.total > 0 ? Math.round((priorityCounts.low / stats.total) * 100) : 0}%
+                      <CountUp value={stats.total > 0 ? Math.round((priorityCounts.low / stats.total) * 100) : 0} suffix="%" />
                     </span>
                   </div>
                 </div>
@@ -306,9 +315,9 @@ export function OverviewTab(ctx: DetailCtx) {
                     </span>
                   </div>
                   <div className="mt-2 flex items-baseline justify-between">
-                    <span className="text-xl font-bold text-slate-800">{priorityCounts.lowest}</span>
+                    <span className="text-xl font-bold text-slate-800"><CountUp value={priorityCounts.lowest} /></span>
                     <span className="text-[10px] text-slate-600 font-medium">
-                      {stats.total > 0 ? Math.round((priorityCounts.lowest / stats.total) * 100) : 0}%
+                      <CountUp value={stats.total > 0 ? Math.round((priorityCounts.lowest / stats.total) * 100) : 0} suffix="%" />
                     </span>
                   </div>
                 </div>

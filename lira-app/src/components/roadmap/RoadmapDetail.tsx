@@ -1,3 +1,5 @@
+import { notifySaved } from '../common/SavedToast';
+import { confirmDialog, promptDialog } from '../common/dialogs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertTriangle, ArrowLeft, CalendarClock, CalendarRange, ChevronsDownUp, ChevronsUpDown, Download, Flag, GanttChartSquare, GitBranch,
@@ -28,7 +30,7 @@ const loadPrefs = (): Prefs => {
   } catch { return { view: 'timeline', zoom: 'months', showDeps: true, collapsed: [] }; }
 };
 
-const select = 'border border-jira-border rounded-lg px-2.5 py-1.5 text-xs bg-jira-surface text-jira-text focus:outline-none focus:ring-2 focus:ring-jira-blue/40 cursor-pointer';
+const select = 'border border-lira-border rounded-lg px-2.5 py-1.5 text-xs bg-lira-surface text-lira-text focus:outline-none focus:ring-2 focus:ring-lira-blue/40 cursor-pointer';
 const openIssueEvent = (issue: Issue) => window.dispatchEvent(new CustomEvent('lira-open-issue', { detail: issue }));
 
 interface Props { roadmapId: string; issues: Issue[]; spaces: Space[]; onBack: () => void }
@@ -106,11 +108,11 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
 
   if (!roadmap || !summary) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-jira-bg">
+      <div className="flex-1 flex items-center justify-center bg-lira-bg">
         <div className="text-center space-y-3">
-          <Map className="w-10 h-10 mx-auto text-jira-muted" />
-          <p className="text-jira-muted text-sm">This roadmap no longer exists.</p>
-          <button onClick={onBack} className="px-4 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg cursor-pointer">Back to roadmaps</button>
+          <Map className="w-10 h-10 mx-auto text-lira-muted" />
+          <p className="text-lira-muted text-sm">This roadmap no longer exists.</p>
+          <button onClick={onBack} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg cursor-pointer">Back to roadmaps</button>
         </div>
       </div>
     );
@@ -153,6 +155,7 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
       const exists = r.items.some(i => i.id === next.id);
       return { ...r, lanes, items: exists ? r.items.map(i => (i.id === next.id ? next : i)) : [...r.items, next] };
     });
+    notifySaved('Roadmap item saved');
     setEditing(null);
   };
 
@@ -174,6 +177,7 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
   const saveMs = (m: ReturnType<typeof blankMilestone>) => {
     update(roadmap.id, r => ({ ...r, milestones: r.milestones.some(x => x.id === m.id) ? r.milestones.map(x => (x.id === m.id ? m : x)) : [...r.milestones, { ...m, id: m.id || newId('ms') }] }));
     setEditingMs(null);
+    notifySaved('Milestone saved');
   };
   const exportCsv = () => {
     const blob = new Blob([toCsv(roadmap, issues, today)], { type: 'text/csv;charset=utf-8' });
@@ -189,7 +193,7 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
   const toggleLane = (lane: string) => setPrefs({ collapsed: prefs.collapsed.includes(lane) ? prefs.collapsed.filter(l => l !== lane) : [...prefs.collapsed, lane] });
 
   const tiles = [
-    { label: 'Overall progress', value: `${summary.percent}%`, sub: `${summary.byStatus.done} of ${summary.total} epics done`, icon: <Target className="w-4 h-4" />, tone: 'text-jira-blue bg-blue-50' },
+    { label: 'Overall progress', value: `${summary.percent}%`, sub: `${summary.byStatus.done} of ${summary.total} epics done`, icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-blue-50' },
     { label: 'Next milestone', value: summary.nextMilestone ? (summary.daysToNextMilestone === 0 ? 'Today' : `${summary.daysToNextMilestone}d`) : '—', sub: summary.nextMilestone?.title || 'None scheduled', icon: <Flag className="w-4 h-4" />, tone: 'text-violet-600 bg-violet-50' },
     { label: 'In progress', value: summary.byStatus.inprogress, sub: `${summary.byStatus.planned} planned`, icon: <CalendarClock className="w-4 h-4" />, tone: 'text-teal-600 bg-teal-50' },
     { label: 'Needs attention', value: summary.overdue + summary.byStatus.blocked + conflicts, sub: `${summary.overdue} late · ${summary.byStatus.blocked} blocked · ${conflicts} dependency`, icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
@@ -203,13 +207,13 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto bg-jira-bg">
+    <div className="flex-1 overflow-y-auto bg-lira-bg">
       <div className="max-w-[1400px] mx-auto p-6 space-y-5">
         {/* header */}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <button onClick={onBack} className="flex items-center gap-1.5 text-xs text-jira-muted hover:text-jira-blue cursor-pointer mb-1.5"><ArrowLeft className="w-3.5 h-3.5" /> All roadmaps</button>
-            <h1 className="text-xl font-semibold text-jira-text flex items-center gap-2 flex-wrap">
+            <button onClick={onBack} className="flex items-center gap-1.5 text-xs text-lira-muted hover:text-lira-blue cursor-pointer mb-1.5"><ArrowLeft className="w-3.5 h-3.5" /> All roadmaps</button>
+            <h1 className="text-xl font-semibold text-lira-text flex items-center gap-2 flex-wrap">
               <Map className="w-5 h-5 text-orange-500" /> {roadmap.name}
               {space ? (
                 <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-500 flex items-center gap-1"><Layers className="w-3 h-3" /> Epics in {space.name}</span>
@@ -225,19 +229,19 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
                 </select>
               )}
             </h1>
-            <p className="text-xs text-jira-muted mt-0.5 max-w-3xl">{roadmap.description || 'Plan work over time, track progress and keep dependencies visible.'}</p>
+            <p className="text-xs text-lira-muted mt-0.5 max-w-3xl">{roadmap.description || 'Plan work over time, track progress and keep dependencies visible.'}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={exportCsv} className="text-xs px-3 py-1.5 border border-jira-border rounded-lg bg-jira-surface text-jira-text hover:bg-jira-bg cursor-pointer flex items-center gap-1.5"><Download className="w-3.5 h-3.5" /> Export CSV</button>
-            <button onClick={() => setEditingMs({ ms: blankMilestone(today), isNew: true })} className="text-xs px-3 py-1.5 border border-jira-border rounded-lg bg-jira-surface text-jira-text hover:bg-jira-bg cursor-pointer flex items-center gap-1.5"><Flag className="w-3.5 h-3.5" /> Milestone</button>
-            <button onClick={() => setEditing({ item: blankItem(roadmap, today), isNew: true })} className="text-xs px-3 py-1.5 bg-jira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-3.5 h-3.5" /> Add epic</button>
+            <button onClick={exportCsv} className="text-xs px-3 py-1.5 border border-lira-border rounded-lg bg-lira-surface text-lira-text hover:bg-lira-bg cursor-pointer flex items-center gap-1.5"><Download className="w-3.5 h-3.5" /> Export CSV</button>
+            <button onClick={() => setEditingMs({ ms: blankMilestone(today), isNew: true })} className="text-xs px-3 py-1.5 border border-lira-border rounded-lg bg-lira-surface text-lira-text hover:bg-lira-bg cursor-pointer flex items-center gap-1.5"><Flag className="w-3.5 h-3.5" /> Milestone</button>
+            <button onClick={() => setEditing({ item: blankItem(roadmap, today), isNew: true })} className="text-xs px-3 py-1.5 bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-3.5 h-3.5" /> Add epic</button>
             <div className="relative">
-              <button onClick={() => setMenuOpen(o => !o)} className="p-1.5 rounded-lg border border-jira-border bg-jira-surface text-jira-muted hover:text-jira-text cursor-pointer" aria-label="Roadmap options"><MoreHorizontal className="w-4 h-4" /></button>
+              <button onClick={() => setMenuOpen(o => !o)} className="p-1.5 rounded-lg border border-lira-border bg-lira-surface text-lira-muted hover:text-lira-text cursor-pointer" aria-label="Roadmap options"><MoreHorizontal className="w-4 h-4" /></button>
               {menuOpen && (
-                <div className="absolute right-0 mt-1 w-48 rounded-lg border border-jira-border bg-jira-surface shadow-dropdown z-40 py-1 text-xs" onMouseLeave={() => setMenuOpen(false)}>
-                  <button className="w-full text-left px-3 py-2 hover:bg-jira-bg cursor-pointer text-jira-text" onClick={() => { setMenuOpen(false); const n = window.prompt('Rename roadmap', roadmap.name); if (n?.trim()) update(roadmap.id, r => ({ ...r, name: n.trim() })); }}>Rename roadmap</button>
-                  <button className="w-full text-left px-3 py-2 hover:bg-jira-bg cursor-pointer text-jira-text" onClick={() => { setMenuOpen(false); const d = window.prompt('Description', roadmap.description || ''); if (d !== null) update(roadmap.id, r => ({ ...r, description: d.trim() })); }}>Edit description</button>
-                  <button className="w-full text-left px-3 py-2 hover:bg-red-500/10 text-red-500 cursor-pointer" onClick={() => { setMenuOpen(false); if (window.confirm(`Delete roadmap "${roadmap.name}"? Its epics stay in Lira.`)) { remove(roadmap.id); onBack(); } }}>Delete roadmap</button>
+                <div className="absolute right-0 mt-1 w-48 rounded-lg border border-lira-border bg-lira-surface shadow-dropdown z-40 py-1 text-xs" onMouseLeave={() => setMenuOpen(false)}>
+                  <button className="w-full text-left px-3 py-2 hover:bg-lira-bg cursor-pointer text-lira-text" onClick={async () => { setMenuOpen(false); const n = await promptDialog({ title: 'Rename roadmap', label: 'Name', defaultValue: roadmap.name, confirmLabel: 'Rename' }); if (n) update(roadmap.id, r => ({ ...r, name: n })); }}>Rename roadmap</button>
+                  <button className="w-full text-left px-3 py-2 hover:bg-lira-bg cursor-pointer text-lira-text" onClick={async () => { setMenuOpen(false); const d = await promptDialog({ title: 'Edit description', label: 'Description', defaultValue: roadmap.description || '', required: false, confirmLabel: 'Save' }); if (d !== null) update(roadmap.id, r => ({ ...r, description: d })); }}>Edit description</button>
+                  <button className="w-full text-left px-3 py-2 hover:bg-red-500/10 text-red-500 cursor-pointer" onClick={async () => { setMenuOpen(false); if (await confirmDialog({ title: 'Delete roadmap', message: `Delete the roadmap "${roadmap.name}"? Its epics stay in Lira.`, confirmLabel: 'Delete roadmap', tone: 'danger' })) { remove(roadmap.id); onBack(); } }}>Delete roadmap</button>
                 </div>
               )}
             </div>
@@ -254,25 +258,25 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
         {/* tiles */}
         <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
           {tiles.map(t => (
-            <div key={t.label} className="rounded-2xl border border-jira-border bg-jira-surface p-4">
+            <div key={t.label} className="rounded-2xl border border-lira-border bg-lira-surface p-4">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-jira-muted">{t.label}</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-lira-muted">{t.label}</span>
                 <span className={`w-7 h-7 rounded-lg flex items-center justify-center ${t.tone}`}>{t.icon}</span>
               </div>
-              <div className="text-2xl font-semibold text-jira-text mt-1">{t.value}</div>
-              <div className="text-[11px] text-jira-muted truncate">{t.sub}</div>
+              <div className="text-2xl font-semibold text-lira-text mt-1">{t.value}</div>
+              <div className="text-[11px] text-lira-muted truncate">{t.sub}</div>
             </div>
           ))}
         </div>
 
         {/* status distribution */}
-        <div className="rounded-2xl border border-jira-border bg-jira-surface px-4 py-3">
-          <div className="flex h-2.5 rounded-full overflow-hidden bg-jira-border/50">
+        <div className="rounded-2xl border border-lira-border bg-lira-surface px-4 py-3">
+          <div className="flex h-2.5 rounded-full overflow-hidden bg-lira-border/50">
             {(Object.keys(STATUS_META) as RoadmapStatus[]).map(s => summary.byStatus[s] > 0 && (
               <div key={s} style={{ width: `${(summary.byStatus[s] / statusTotal) * 100}%`, background: STATUS_META[s].color }} title={`${STATUS_META[s].label}: ${summary.byStatus[s]}`} />
             ))}
           </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[11px] text-jira-muted">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[11px] text-lira-muted">
             {(Object.keys(STATUS_META) as RoadmapStatus[]).map(s => (
               <span key={s} className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background: STATUS_META[s].color }} />{STATUS_META[s].label} {summary.byStatus[s]}</span>
             ))}
@@ -281,13 +285,13 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
 
         {/* toolbar */}
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex rounded-lg border border-jira-border overflow-hidden bg-jira-surface">
+          <div className="flex rounded-lg border border-lira-border overflow-hidden bg-lira-surface">
             {viewTabs.map(v => (
-              <button key={v.key} onClick={() => setPrefs({ view: v.key })} className={`px-3 py-1.5 text-xs flex items-center gap-1.5 cursor-pointer transition-colors ${prefs.view === v.key ? 'bg-jira-blue text-white' : 'text-jira-text hover:bg-jira-bg'}`}>{v.icon}{v.label}</button>
+              <button key={v.key} onClick={() => setPrefs({ view: v.key })} className={`px-3 py-1.5 text-xs flex items-center gap-1.5 cursor-pointer transition-colors ${prefs.view === v.key ? 'bg-lira-blue text-white' : 'text-lira-text hover:bg-lira-bg'}`}>{v.icon}{v.label}</button>
             ))}
           </div>
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-jira-muted" />
+            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-lira-muted" />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search roadmap" className={`${select} pl-8 w-44`} />
           </div>
           <select className={select} value={period} onChange={e => setPeriod(e.target.value as typeof period)} aria-label="Period">
@@ -309,18 +313,18 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
             <div className="flex items-center gap-2 ml-auto">
               {prefs.view === 'timeline' && (
                 <>
-                  <div className="flex rounded-lg border border-jira-border overflow-hidden bg-jira-surface">
+                  <div className="flex rounded-lg border border-lira-border overflow-hidden bg-lira-surface">
                     {(['weeks', 'months', 'quarters'] as Zoom[]).map(z => (
-                      <button key={z} onClick={() => setPrefs({ zoom: z })} className={`px-2.5 py-1.5 text-xs capitalize cursor-pointer ${prefs.zoom === z ? 'bg-jira-blue text-white' : 'text-jira-text hover:bg-jira-bg'}`}>{z}</button>
+                      <button key={z} onClick={() => setPrefs({ zoom: z })} className={`px-2.5 py-1.5 text-xs capitalize cursor-pointer ${prefs.zoom === z ? 'bg-lira-blue text-white' : 'text-lira-text hover:bg-lira-bg'}`}>{z}</button>
                     ))}
                   </div>
-                  <button onClick={() => setPrefs({ showDeps: !prefs.showDeps })} className={`px-2.5 py-1.5 text-xs rounded-lg border cursor-pointer flex items-center gap-1.5 ${prefs.showDeps ? 'border-jira-blue text-jira-blue bg-blue-50' : 'border-jira-border text-jira-text bg-jira-surface'}`}><GitBranch className="w-3.5 h-3.5" /> Dependencies</button>
+                  <button onClick={() => setPrefs({ showDeps: !prefs.showDeps })} className={`px-2.5 py-1.5 text-xs rounded-lg border cursor-pointer flex items-center gap-1.5 ${prefs.showDeps ? 'border-lira-blue text-lira-blue bg-blue-50' : 'border-lira-border text-lira-text bg-lira-surface'}`}><GitBranch className="w-3.5 h-3.5" /> Dependencies</button>
                 </>
               )}
-              <button onClick={() => setPrefs({ collapsed: allCollapsed ? [] : [...roadmap.lanes] })} className="px-2.5 py-1.5 text-xs rounded-lg border border-jira-border bg-jira-surface text-jira-text hover:bg-jira-bg cursor-pointer flex items-center gap-1.5">
+              <button onClick={() => setPrefs({ collapsed: allCollapsed ? [] : [...roadmap.lanes] })} className="px-2.5 py-1.5 text-xs rounded-lg border border-lira-border bg-lira-surface text-lira-text hover:bg-lira-bg cursor-pointer flex items-center gap-1.5">
                 {allCollapsed ? <ChevronsUpDown className="w-3.5 h-3.5" /> : <ChevronsDownUp className="w-3.5 h-3.5" />}{allCollapsed ? 'Expand lanes' : 'Collapse lanes'}
               </button>
-              <button onClick={() => setTodayKey(k => k + 1)} className="px-2.5 py-1.5 text-xs rounded-lg border border-jira-border bg-jira-surface text-jira-text hover:bg-jira-bg cursor-pointer">Today</button>
+              <button onClick={() => setTodayKey(k => k + 1)} className="px-2.5 py-1.5 text-xs rounded-lg border border-lira-border bg-lira-surface text-lira-text hover:bg-lira-bg cursor-pointer">Today</button>
             </div>
           )}
         </div>
@@ -348,7 +352,7 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
               onOpenMilestone={id => { const ms = roadmap.milestones.find(m => m.id === id); if (ms) setEditingMs({ ms, isNew: false }); }}
               scrollToTodayKey={todayKey}
             />
-            <p className="text-[11px] text-jira-muted">Drag a bar to reschedule it, drag its edges to change the length, click it to edit. Dashed lines are milestones (violet) and releases (green). Dates are saved on the epic too.</p>
+            <p className="text-[11px] text-lira-muted">Drag a bar to reschedule it, drag its edges to change the length, click it to edit. Dashed lines are milestones (violet) and releases (green). Dates are saved on the epic too.</p>
           </>
         )}
         {prefs.view === 'planner' && (

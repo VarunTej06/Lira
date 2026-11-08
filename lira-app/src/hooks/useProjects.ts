@@ -15,7 +15,7 @@ export const DEFAULT_PROJECTS = (spaces: Space[]): Project[] => {
       id: 'proj-lira-core',
       name: 'Lira Core Platform',
       key: liraSpace ? liraSpace.key : 'LIRA',
-      description: 'Enterprise Jira-grade offline engineering workspace, reactive Kanban drag-and-drop, and dual-sync PC persistence.',
+      description: 'Enterprise-grade offline engineering workspace, reactive Kanban drag-and-drop, and dual-sync PC persistence.',
       lead: 'Varun Tej',
       spaceId: liraSpace?.id || 6,
       repoUrl: 'https://github.com/VarunTej06/Lira',

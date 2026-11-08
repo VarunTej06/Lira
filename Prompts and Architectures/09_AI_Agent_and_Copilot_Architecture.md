@@ -54,7 +54,7 @@ Previously, the AI drawer was a full-height slide-over panel (`fixed inset-y-0 r
   * **Float / Breathing**: Powered by `@keyframes float-subtle` in `src/index.css`, translating vertically by 4px in a 3.2s infinite ease-in-out cycle.
   * **Ambient Pulsing Halo**: Powered by `@keyframes pulse-glow`, rhythmically breathing an ethereal violet-indigo glow ring (`box-shadow`).
   * **Real-Time Status Indicator**: A pulsing emerald badge (`#10B981`) anchored to the bottom-right corner confirms the agent's live connection to the database.
-  * **Interactive Tooltip**: Hovering triggers an instant floating badge: *"Ask Lira AI Copilot ⚡ Omnipresent"*.
+  * **Interactive Tooltip**: Hovering triggers an instant floating badge: *"Ask Lira AI Copilot  Omnipresent"*.
 
 ### 2.2 Enhanced Lira AI Avatar SVG (`LiraAIAvatar.tsx`)
 Constructed from the foundational Lira `favicon.svg` branding, elevated with AI-native visual tokens:
@@ -63,8 +63,8 @@ Constructed from the foundational Lira `favicon.svg` branding, elevated with AI-
 |---|---|---|
 | **Base Squircle** | `rect rx="13"` with multi-stop gradient | Electric Indigo (`#4F46E5`) → Royal Purple (`#7C3AED`) → Classic Lira Navy (`#0052CC`) → Cyan (`#0284C7`) |
 | **Glow Rim** | `stroke="url(#rimGrad)" strokeWidth="1.5"` | Luminous violet-cyan border |
-| **Iconic "L"** | Pure white bold glyph with SVG drop-shadow | Preserves instant brand recognition with Atlassian-grade weight |
-| **AI Constellation** | 4-point golden/cyan star (`✦`) + micro-stars | Signals autonomous intelligence and generative capability |
+| **Iconic "L"** | Pure white bold glyph with SVG drop-shadow | Preserves instant brand recognition with enterprise-grade weight |
+| **AI Constellation** | 4-point golden/cyan star (``) + micro-stars | Signals autonomous intelligence and generative capability |
 | **Cyber Arc** | `strokeDasharray="2 3"` energetic orbit arc | Subtle circuitry ring orbiting the lower-left to upper-right |
 | **Unique Scoping** | React `useId()` sanitization | Eliminates SVG `id` collisions when multiple avatars render simultaneously |
 
@@ -103,7 +103,7 @@ Rather than relying on hardcoded space names, `findTargetSpace()` employs a 4-ti
 
 ## 4. Configurable System Instructions Specification
 
-The Lira AI Copilot is governed by an omnipresent System Instruction prompt stored in browser `localStorage` (`lira_ai_system_instruction`). Users can inspect, customize, or reset this prompt directly via the **⚙️ Settings View** inside the dialogue card.
+The Lira AI Copilot is governed by an omnipresent System Instruction prompt stored in browser `localStorage` (`lira_ai_system_instruction`). Users can inspect, customize, or reset this prompt directly via the ** Settings View** inside the dialogue card.
 
 ### Default System Instruction Directives:
 ```markdown
@@ -116,7 +116,7 @@ You are the Lira AI Autonomous Agent & Chief Agile Copilot, an intelligent proje
 2. Natural Language Understanding:
    - Understand conversational requests, synonyms, partial titles, keywords, ticket keys across all spaces (e.g., matching any standard key pattern such as AP-7, LIRA-10, IG-3, or any future key), and ambiguous prompts naturally without requiring strict syntax.
 3. Hierarchy & Rules:
-   - The hierarchy is: Epic (⚡) ➔ Task (✅) / Bug (🐛) ➔ Subtask (↳).
+   - The hierarchy is: Epic, then Task or Bug, then Subtask.
    - Story has been removed. Epics contain Tasks and Bugs. Tasks contain Subtasks.
 4. Action Capabilities:
    - Status transitions (Move/Set tickets to Backlog, To Do, In Progress, Done).
@@ -203,7 +203,7 @@ To eliminate ambiguous or substandard AI responses, Lira implements an automated
 3. **Explicit Goal Statement**:
    - Formulates an explicit, verifiable objective (e.g., *"Generate 4-column status breakdown matrix across all 8 spaces"* or *"Transition ticket AP-10 to DONE"*).
 4. **Transparent User Visibility**:
-   - Every assistant response bubble renders a **`🎯 Refined Goal`** badge at the top, showing the user exactly how their prompt was interpreted, optimized, and achieved.
+   - Every assistant response bubble renders a **` Refined Goal`** badge at the top, showing the user exactly how their prompt was interpreted, optimized, and achieved.
 
 ---
 

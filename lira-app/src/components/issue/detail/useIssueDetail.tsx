@@ -1,8 +1,12 @@
+import {  } from '../../common/DatePicker';
+import { TypeIcon, PriorityIcon } from '../../common/Icons';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Issue, Comment, IssueType, ActivityEntry } from '../../../types/issue';
+import type { Issue, Comment, IssueType, ActivityEntry, Attachment } from '../../../types/issue';
+import { notifySaved } from '../../common/SavedToast';
+import { STATUS_LIST } from '../../../utils/status';
 import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
-import { updateIssue, deleteIssue, useChildIssues, createIssue, getNextIssueKey, useIssue, useIssuesBySpace } from '../../../hooks/useIssues';
-import { useDebounce } from '../../../hooks/useDebounce';
+import { updateIssue, deleteIssue, useChildIssues, createIssue, getNextIssueKey, useIssue, useIssuesBySpace, useAllIssues } from '../../../hooks/useIssues';
+import { confirmDialog, alertDialog } from '../../common/dialogs';
 import { PRIORITY_CONFIG } from '../../../utils/priorityUtils';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,24 +17,19 @@ export interface IssueDetailModalProps {
   parentIssue?: Issue | null;
 }
 
-export const STATUS_OPTIONS = [
-  { value: 'backlog', label: 'Backlog', color: '#6B778C', bgColor: '#F4F5F7' },
-  { value: 'todo', label: 'To Do', color: '#172B4D', bgColor: '#DFE1E6' },
-  { value: 'inprogress', label: 'In Progress', color: '#0052CC', bgColor: '#DEEBFF' },
-  { value: 'done', label: 'Done', color: '#006644', bgColor: '#E3FCEF' },
-];
+export const STATUS_OPTIONS = STATUS_LIST.map(s => ({ value: s.id as string, label: s.label, color: s.color, bgColor: s.bg }));
 
 export const ISSUE_TYPE_OPTIONS: { value: IssueType; label: string; icon: React.ReactNode; color: string; bgColor: string }[] = [
-  { value: 'epic', label: 'Epic', icon: <span>⚡</span>, color: '#6554C0', bgColor: '#EAE6FF' },
-  { value: 'task', label: 'Task', icon: <span>✅</span>, color: '#0052CC', bgColor: '#DEEBFF' },
-  { value: 'bug', label: 'Bug', icon: <span>🐛</span>, color: '#DE350B', bgColor: '#FFEBE6' },
-  { value: 'subtask', label: 'Subtask', icon: <span>↳</span>, color: '#6B778C', bgColor: '#F4F5F7' },
+  { value: 'epic', label: 'Epic', icon: <TypeIcon type="epic" />, color: '#6554C0', bgColor: '#EAE6FF' },
+  { value: 'task', label: 'Task', icon: <TypeIcon type="task" />, color: '#0052CC', bgColor: '#DEEBFF' },
+  { value: 'bug', label: 'Bug', icon: <TypeIcon type="bug" />, color: '#DE350B', bgColor: '#FFEBE6' },
+  { value: 'subtask', label: 'Subtask', icon: <TypeIcon type="subtask" />, color: '#6B778C', bgColor: '#F4F5F7' },
 ];
 
 export const PRIORITY_OPTIONS = Object.entries(PRIORITY_CONFIG).map(([value, cfg]) => ({
   value,
   label: cfg.label,
-  icon: <span>{cfg.icon}</span>,
+  icon: <PriorityIcon priority={value} />,
   color: cfg.color,
   bgColor: cfg.bgColor,
 }));
@@ -54,13 +53,20 @@ export const STATUS_BUTTON_STYLE: Record<string, { bg: string; text: string; hov
   done: { bg: '#E3FCEF', text: '#006644', hover: '#ABF5D1' },
 };
 
+/** The ticket fields that are edited in the popup and written together when "Save changes" is pressed. */
+const DRAFT_FIELDS = [
+  'status', 'priority', 'assignee', 'assigneeInitials', 'labels', 'dueDate', 'startDate', 'storyPoints', 'type',
+  'parentId', 'epicId', 'epicLink', 'attachments', 'subtasks', 'activity', 'timeEstimate', 'blocked', 'blockedByIds', 'linkedIssues',
+] as const satisfies readonly (keyof Issue)[];
+
 // Safe accessor helpers
 export const safeArr = <T,>(v: T[] | undefined): T[] => Array.isArray(v) ? v : [];
 export const toDateInputValue = (val: Date | string | undefined | null): string => {
   if (!val) return '';
   try {
     const d = new Date(val);
-    return isNaN(d.getTime()) ? '' : d.toISOString().split('T')[0];
+    if (isNaN(d.getTime())) return '';
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; // the local day
   } catch {
     return '';
   }
@@ -86,16 +92,20 @@ export function useIssueDetail(props: IssueDetailModalProps) {
   const [attCollapsed, setAttCollapsed] = useState(false);
   const [childCollapsed, setChildCollapsed] = useState(false);
   const [savedToast, setSavedToast] = useState(false);
+  /** Set when the type was changed to Subtask and its children should be detached once the ticket is saved. */
+  const [detachChildren, setDetachChildren] = useState(false);
   const statusMenuRef = useRef<HTMLDivElement>(null);
   const typeMenuRef = useRef<HTMLDivElement>(null);
   const moreMenuRef = useRef<HTMLDivElement>(null);
-  const debouncedDesc = useDebounce(descVal, 800);
 
   // Get child issues from DB reactively
   const childIssues = useChildIssues(local?.id) || [];
   const parentFromDb = useIssue(local?.parentId ?? local?.epicId);
   const resolvedParent = parentIssue ?? parentFromDb ?? null;
   const spaceIssues = useIssuesBySpace(local?.spaceId) || [];
+  const everyIssue = useAllIssues() || [];
+  const blockers = (local?.blocked ? local.blockedByIds ?? [] : []).map(id => everyIssue.find(i => i.id === id)).filter((i): i is Issue => !!i);
+  const blocking = local?.id ? everyIssue.filter(i => i.blocked && i.blockedByIds?.includes(local.id!)) : []; // tickets waiting on this one
 
   // Eligible parent issues according to the hierarchy
   const eligibleParents = spaceIssues.filter(i => {
@@ -106,27 +116,52 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     return false;
   });
 
+  // Everything edited in the popup is a DRAFT. Nothing is written until "Save changes" is pressed.
   useEffect(() => {
     setLocal(issue ? { ...issue } : null);
     setTitleVal(issue?.title ?? '');
     setDescVal(issue?.description ?? '');
     setEditingTitle(false);
-  }, [issue]);
+    setDetachChildren(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issue?.id]);
 
-  // Auto-save description
+  // Comments are posted with their own button and saved at once, so keep the draft in step with them
   useEffect(() => {
-    if (!local?.id || debouncedDesc === local.description) return;
-    updateIssue(local.id, { description: debouncedDesc });
-    setLocal(prev => prev ? { ...prev, description: debouncedDesc } : prev);
-  }, [debouncedDesc]);
+    if (!issue) return;
+    setLocal(prev => (prev && prev.id === issue.id ? { ...prev, comments: issue.comments } : prev));
+  }, [issue?.comments, issue?.id]);
+
+  // Has anything been changed since the ticket was opened?
+  const dirty = !!issue && !!local && (
+    titleVal.trim() !== issue.title ||
+    descVal !== (issue.description ?? '') ||
+    detachChildren ||
+    DRAFT_FIELDS.some(k => JSON.stringify(local[k] ?? null) !== JSON.stringify(issue[k] ?? null))
+  );
+
+  // Closing (X, outside click, Escape) asks first when there are unsaved changes
+  const dirtyRef = useRef(false);
+  dirtyRef.current = dirty;
+  const requestClose = useCallback(async () => {
+    if (!dirtyRef.current) { onClose(); return; }
+    const discard = await confirmDialog({
+      title: 'Discard changes?',
+      message: 'You have unsaved changes to this ticket. If you close it now they are lost.',
+      confirmLabel: 'Discard changes',
+      cancelLabel: 'Keep editing',
+      tone: 'danger',
+    });
+    if (discard) onClose();
+  }, [onClose]);
 
   // Close on ESC
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') void requestClose(); };
     document.addEventListener('keydown', handler);
     document.body.style.overflow = 'hidden';
     return () => { document.removeEventListener('keydown', handler); document.body.style.overflow = ''; };
-  }, [onClose]);
+  }, [requestClose]);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -139,12 +174,21 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  /** Edits the draft only. Nothing is saved until "Save changes". */
   const patch = useCallback(async (changes: Partial<Issue>) => {
-    if (!local?.id) return;
-    const updated = { ...local, ...changes, updatedAt: new Date() };
-    setLocal(updated);
-    await updateIssue(local.id, changes);
-  }, [local]);
+    setLocal(prev => (prev ? { ...prev, ...changes } : prev));
+  }, []);
+
+  /** Turns the Blocked switch on (with the ticket it waits on) or off. It edits the draft; Save changes writes it. */
+  const handleBlockedChange = useCallback((ids: number[]) => {
+    setLocal(prev => {
+      if (!prev) return prev;
+      const unique = [...new Set(ids)];
+      const others = safeArr(prev.linkedIssues).filter(l => l.linkType !== 'blocked_by');
+      if (unique.length === 0) return { ...prev, blocked: false, blockedByIds: [], linkedIssues: others };
+      return { ...prev, blocked: true, blockedByIds: unique, linkedIssues: [...others, ...unique.map(id => ({ id: uuidv4(), issueId: id, linkType: 'blocked_by' as const }))] };
+    });
+  }, []);
 
   const handleTypeChange = useCallback(async (newType: IssueType) => {
     if (!local?.id || local.type === newType) return;
@@ -163,15 +207,15 @@ export function useIssueDetail(props: IssueDetailModalProps) {
 
     // Hierarchy Impact 2: Converting to Subtask -> cannot have child issues
     if (newType === 'subtask' && childIssues.length > 0) {
-      const confirmDetach = window.confirm(
-        `Converting ${local.key} to Subtask will detach its ${childIssues.length} child issue(s), because subtasks cannot have child issues. Proceed?`
-      );
+      const confirmDetach = await confirmDialog({
+        title: 'Convert to subtask',
+        message: `Converting ${local.key} to a subtask will detach its ${childIssues.length} child issue${childIssues.length === 1 ? '' : 's'} when you save, because subtasks cannot have child issues.`,
+        confirmLabel: 'Convert',
+      });
       if (!confirmDetach) return;
-      for (const child of childIssues) {
-        if (child.id) {
-          await updateIssue(child.id, { parentId: undefined, epicId: undefined, epicLink: undefined });
-        }
-      }
+      setDetachChildren(true);
+    } else if (newType !== 'subtask') {
+      setDetachChildren(false);
     }
 
     // Hierarchy Impact 3: Activity log entry
@@ -211,42 +255,64 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     });
   }, [local, spaceIssues, patch]);
 
+  // Leaving the title box keeps the text as part of the draft; it is saved with everything else
   const handleTitleSave = useCallback(async () => {
     setEditingTitle(false);
-    if (titleVal.trim() && titleVal !== local?.title) {
-      await patch({ title: titleVal.trim() });
-    }
-  }, [titleVal, local, patch]);
+  }, []);
 
   const handleSaveChanges = useCallback(async () => {
     if (!local?.id) return;
+    // nothing was changed: just close, and do not claim that something was saved
+    if (!dirtyRef.current) { onClose(); return; }
     if (!titleVal.trim()) {
-      alert('Issue title cannot be empty.');
+      await alertDialog({ title: 'Title needed', message: 'The title cannot be empty.' });
       return;
     }
-    const changes: Partial<Issue> = {
-      title: titleVal.trim(),
-      description: descVal,
-      status: local.status,
-      priority: local.priority,
-      assignee: local.assignee,
-      assigneeInitials: local.assigneeInitials,
-      labels: local.labels,
-      dueDate: local.dueDate,
-      storyPoints: local.storyPoints,
-      updatedAt: new Date(),
-    };
+    const changes: Partial<Issue> = { title: titleVal.trim(), description: descVal, updatedAt: new Date() };
+    for (const k of DRAFT_FIELDS) (changes as Record<string, unknown>)[k] = local[k];
+    if (detachChildren) {
+      for (const child of childIssues) {
+        if (child.id) await updateIssue(child.id, { parentId: undefined, epicId: undefined, epicLink: undefined });
+      }
+    }
     await updateIssue(local.id, changes);
-    setLocal(prev => prev ? { ...prev, ...changes } : null);
-    setSavedToast(true);
-    setTimeout(() => setSavedToast(false), 2000);
-  }, [local, titleVal, descVal]);
+    // keep the other end of the link in step: the blocking ticket "blocks" this one
+    const before = issue?.blocked ? issue.blockedByIds ?? [] : [];
+    const after = local.blocked ? local.blockedByIds ?? [] : [];
+    const removed = before.filter(id => !after.includes(id));
+    const added = after.filter(id => !before.includes(id));
+    if (removed.length || added.length) {
+      const { db } = await import('../../../db/db');
+      for (const id of removed) {
+        const old = await db.issues.get(id);
+        if (old) await updateIssue(id, { linkedIssues: safeArr(old.linkedIssues).filter(l => !(l.linkType === 'blocks' && l.issueId === local.id)) });
+      }
+      for (const id of added) {
+        const nb = await db.issues.get(id);
+        if (nb && !safeArr(nb.linkedIssues).some(l => l.linkType === 'blocks' && l.issueId === local.id)) {
+          await updateIssue(id, { linkedIssues: [...safeArr(nb.linkedIssues), { id: uuidv4(), issueId: local.id, linkType: 'blocks' as const }] });
+        }
+      }
+    }
+    notifySaved('Changes saved');
+    onClose(); // saving closes the ticket
+  }, [local, issue, titleVal, descVal, detachChildren, childIssues, onClose]);
 
   const handleAddComment = useCallback(async (comment: Comment) => {
     if (!local) return;
+    if (!local.id) return;
     const newComments = [...safeArr(local.comments), comment];
-    await patch({ comments: newComments });
-  }, [local, patch]);
+    setLocal(prev => (prev ? { ...prev, comments: newComments } : prev));
+    await updateIssue(local.id, { comments: newComments });
+  }, [local]);
+
+  /** Comments are saved at once, like posting one. Only the author's own comment can be changed. */
+  const handleEditComment = useCallback(async (id: string, content: string, attachments: Attachment[]) => {
+    if (!local?.id) return;
+    const next = safeArr(local.comments).map(c => (c.id === id ? { ...c, content, attachments, updatedAt: new Date() } : c));
+    setLocal(prev => (prev ? { ...prev, comments: next } : prev));
+    await updateIssue(local.id, { comments: next });
+  }, [local]);
 
   const handleCreateChildIssue = useCallback(async (title: string, type: IssueType) => {
     if (!local?.id || !local.spaceId) return;
@@ -302,7 +368,8 @@ export function useIssueDetail(props: IssueDetailModalProps) {
 
   return {
     issue,
-    onClose,
+    onClose: requestClose,
+    dirty,
     onNavigateToIssue,
     parentIssue,
     local,
@@ -332,7 +399,6 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     statusMenuRef,
     typeMenuRef,
     moreMenuRef,
-    debouncedDesc,
     childIssues,
     parentFromDb,
     resolvedParent,
@@ -344,10 +410,14 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     handleTitleSave,
     handleSaveChanges,
     handleAddComment,
+    handleEditComment,
     handleCreateChildIssue,
     handleConfirmDelete,
     bannerColor,
     statusStyle,
+    blockers,
+    blocking,
+    handleBlockedChange,
     typeConfig,
     childCount,
     doneChildCount,

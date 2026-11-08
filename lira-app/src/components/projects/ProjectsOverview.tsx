@@ -1,3 +1,4 @@
+import { projectLink } from '../../utils/links';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   FolderKanban, Plus, Search, Layers, ChevronRight, SlidersHorizontal
@@ -155,21 +156,21 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-jira-bg font-sans">
+    <div className="flex-1 flex flex-col h-full overflow-y-auto bg-lira-bg font-sans">
       {/* ── Page Header ── */}
-      <div className="bg-white border-b border-jira-border px-8 py-6 flex-shrink-0">
+      <div className="bg-white border-b border-lira-border px-8 py-6 flex-shrink-0">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center shadow-xs">
                 <FolderKanban className="w-5 h-5" />
               </div>
-              <h1 className="text-xl font-bold text-jira-text tracking-tight">Projects</h1>
+              <h1 className="text-xl font-bold text-lira-text tracking-tight">Projects</h1>
               <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
                 {projects.length} Total
               </span>
             </div>
-            <p className="text-xs text-jira-muted mt-1 max-w-xl">
+            <p className="text-xs text-lira-muted mt-1 max-w-xl">
               Directory of software engineering initiatives, technical architectures, environments, and Space associations.
             </p>
           </div>
@@ -187,7 +188,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
       </div>
 
       {/* ── Filter Toolbar ── */}
-      <div className="bg-white/60 backdrop-blur-xs border-b border-jira-border px-8 py-3.5 flex-shrink-0">
+      <div className="bg-white/60 backdrop-blur-xs border-b border-lira-border px-8 py-3.5 flex-shrink-0">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           {/* Search Input */}
           <div className="flex items-center gap-3 flex-1 min-w-[260px] max-w-md">
@@ -198,7 +199,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Search projects by name, key, lead, or description..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-jira-border rounded-lg focus:outline-none focus:border-jira-blue shadow-2xs transition-all"
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-lira-border rounded-lg focus:outline-none focus:border-lira-blue shadow-2xs transition-all"
               />
             </div>
           </div>
@@ -207,11 +208,11 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
           <div className="flex items-center gap-3 text-xs">
             {/* Space Filter */}
             <div className="flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-jira-muted" />
+              <Layers className="w-3.5 h-3.5 text-lira-muted" />
               <select
                 value={selectedSpaceFilter}
                 onChange={e => setSelectedSpaceFilter(e.target.value)}
-                className="px-2.5 py-1.5 bg-white border border-jira-border rounded-lg text-jira-text cursor-pointer focus:outline-none focus:border-jira-blue"
+                className="px-2.5 py-1.5 bg-white border border-lira-border rounded-lg text-lira-text cursor-pointer focus:outline-none focus:border-lira-blue"
               >
                 <option value="all">All Spaces ({spaces.length})</option>
                 {spaces.map(s => (
@@ -224,11 +225,11 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
 
             {/* Sort Dropdown */}
             <div className="flex items-center gap-1.5">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-jira-muted" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-lira-muted" />
               <select
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value as 'recent' | 'name' | 'key')}
-                className="px-2.5 py-1.5 bg-white border border-jira-border rounded-lg text-jira-text cursor-pointer focus:outline-none focus:border-jira-blue"
+                className="px-2.5 py-1.5 bg-white border border-lira-border rounded-lg text-lira-text cursor-pointer focus:outline-none focus:border-lira-blue"
               >
                 <option value="recent">Recently Updated</option>
                 <option value="name">Project Name (A-Z)</option>
@@ -242,13 +243,13 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
       {/* ── Main Projects Grid ── */}
       <div className="p-8 max-w-7xl mx-auto w-full flex-1">
         {filteredProjects.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-jira-border p-12 text-center max-w-md mx-auto shadow-xs my-8 space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-blue-50 text-jira-blue mx-auto flex items-center justify-center text-2xl shadow-inner">
-              📁
+          <div className="bg-white rounded-2xl border border-lira-border p-12 text-center max-w-md mx-auto shadow-xs my-8 space-y-4">
+            <div className="w-14 h-14 rounded-2xl bg-blue-50 text-lira-blue mx-auto flex items-center justify-center text-2xl shadow-inner">
+              <FolderKanban className="w-7 h-7" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-jira-text">No projects found</h3>
-              <p className="text-xs text-jira-muted mt-1 leading-relaxed">
+              <h3 className="text-base font-bold text-lira-text">No projects found</h3>
+              <p className="text-xs text-lira-muted mt-1 leading-relaxed">
                 {searchQuery || selectedSpaceFilter !== 'all'
                   ? 'No projects match your search criteria. Try clearing active filters.'
                   : 'Get started by creating your first technical project.'}
@@ -290,8 +291,8 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
               return (
                 <div
                   key={project.id}
-                  onClick={() => handleSelectProject(project)}
-                  className="bg-white rounded-xl border border-jira-border hover:border-jira-blue/60 p-5 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between group"
+                  onClick={() => handleSelectProject(project)} {...projectLink(project.id)}
+                  className="bg-white rounded-xl border border-lira-border hover:border-lira-blue/60 p-5 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between group"
                 >
                   {/* Card Header */}
                   <div>
@@ -307,15 +308,15 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
                           {matchedSpace?.icon || '📁'}
                         </div>
                         <div>
-                          <h2 className="text-sm font-bold text-jira-text group-hover:text-jira-blue transition-colors line-clamp-1">
+                          <h2 className="text-sm font-bold text-lira-text group-hover:text-lira-blue transition-colors line-clamp-1">
                             {project.name}
                           </h2>
                           <div className="flex items-center gap-1.5 mt-0.5">
-                            <span className="font-mono text-[11px] font-bold bg-blue-50 text-jira-blue px-1.5 py-0.2 rounded border border-blue-200">
+                            <span className="font-mono text-[11px] font-bold bg-blue-50 text-lira-blue px-1.5 py-0.2 rounded border border-blue-200">
                               {project.key}
                             </span>
-                            <span className="text-jira-muted text-[11px]">·</span>
-                            <span className="text-[11px] text-jira-muted truncate max-w-[130px]">
+                            <span className="text-lira-muted text-[11px]">·</span>
+                            <span className="text-[11px] text-lira-muted truncate max-w-[130px]">
                               {project.category || 'Software'}
                             </span>
                           </div>
@@ -329,21 +330,21 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
                           className="!px-2 !py-1"
                           scope={{ type: 'project', id: `project:${project.id}`, name: project.name, spaceId: project.spaceId, projectKey: project.key }}
                         />
-                      <div className="p-1 rounded-md text-gray-400 group-hover:text-jira-blue group-hover:bg-blue-50 transition-all flex-shrink-0">
+                      <div className="p-1 rounded-md text-gray-400 group-hover:text-lira-blue group-hover:bg-blue-50 transition-all flex-shrink-0">
                         <ChevronRight className="w-4 h-4" />
                       </div>
                       </div>
                     </div>
 
                     {/* Description */}
-                    <p className="text-xs text-jira-muted line-clamp-2 mt-2 leading-relaxed min-h-[36px]">
+                    <p className="text-xs text-lira-muted line-clamp-2 mt-2 leading-relaxed min-h-[36px]">
                       {project.description || 'No project description provided.'}
                     </p>
 
                     {/* Associated Space Tag */}
                     <div className="mt-3.5 pt-3 border-t border-gray-100 flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] uppercase font-semibold text-jira-muted">Space:</span>
+                        <span className="text-[10px] uppercase font-semibold text-lira-muted">Space:</span>
                         {matchedSpace ? (
                           <span
                             className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium border"
@@ -362,8 +363,8 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
                       </div>
 
                       {/* Lead */}
-                      <div className="flex items-center gap-1 text-[11px] text-jira-muted font-medium">
-                        <span className="w-5 h-5 rounded-full bg-jira-blue text-white text-[9px] font-bold flex items-center justify-center">
+                      <div className="flex items-center gap-1 text-[11px] text-lira-muted font-medium">
+                        <span className="w-5 h-5 rounded-full bg-lira-blue text-white text-[9px] font-bold flex items-center justify-center">
                           {project.lead?.slice(0, 2).toUpperCase() || 'VY'}
                         </span>
                         <span className="truncate max-w-[80px]">{project.lead || 'Varun Tej'}</span>
@@ -373,7 +374,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
 
                   {/* Card Footer: Progress Bar & Ticket Counts */}
                   <div className="mt-4 pt-3 border-t border-gray-100">
-                    <div className="flex items-center justify-between text-xs mb-1.5 text-jira-muted">
+                    <div className="flex items-center justify-between text-xs mb-1.5 text-lira-muted">
                       <span className="text-[11px] font-medium">
                         {totalIssues} issue{totalIssues !== 1 ? 's' : ''} ({doneIssues} done)
                       </span>

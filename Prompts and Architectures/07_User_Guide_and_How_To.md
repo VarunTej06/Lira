@@ -30,7 +30,7 @@ The first time you open the app, Lira will:
 
 ### How to Create a New Learning Space
 
-A **Space** in Lira is like a Jira Project — an isolated workspace for one
+A **Space** in Lira is like a project — an isolated workspace for one
 topic area (e.g., AWS, Kubernetes, Python).
 
 **Steps:**
@@ -99,8 +99,8 @@ to any issue.
    click the zone to open the file picker.
 4. The file is stored inside IndexedDB (no internet needed).
 5. Images show as thumbnails; other files show as file-type icons.
-6. Click the **⬇ Download** button to retrieve the file later.
-7. Click **✕** on a thumbnail to remove an attachment.
+6. Click the ** Download** button to retrieve the file later.
+7. Click **** on a thumbnail to remove an attachment.
 
 > **Tip:** Attach your cheat sheets and last-minute review PDFs here — they
 > survive browser restarts and are always exactly where your tickets are.
@@ -140,7 +140,7 @@ Lira comes with a built-in, omnipresent AI Assistant with cross-space visibility
    - Click the **Lira AI** button in the top navigation bar.
 2. **Interact with the Non-Blocking Dialogue Box**:
    - The dialogue card floats nicely at the bottom-right with rounded corners on all 4 sides (`rounded-3xl`), leaving your Kanban board fully visible in the background.
-   - Click the **Maximize button** (`↗`) in the header to expand into a spacious view (`w-[680px]`) for wide cross-space comparison tables.
+   - Click the **Maximize button** (the `Maximize2` icon) in the header to expand into a spacious view (`w-[680px]`) for wide cross-space comparison tables.
 3. **Cross-Space Commands (Works from Anywhere)**:
    - *"What tasks are in Atmos?"* (queries Atmos space even if you are on Lira board)
    - *"Tell me about AP-7"* or *"What is IG-3?"*
@@ -151,7 +151,7 @@ Lira comes with a built-in, omnipresent AI Assistant with cross-space visibility
    - *"Break down AP-10 into subtasks"*
    - The agent analyzes the title and writes domain-specific engineering checklist items directly into the ticket.
 5. **Configure System Instructions & Cloud LLM**:
-   - Click the **⚙️ Settings** icon in the dialogue card header.
+   - Click the ** Settings** icon in the dialogue card header.
    - View and edit the System Instructions governing cross-space directives and response rules.
    - (Optional) Paste a free Google Gemini API key to activate Cloud LLM reasoning with automatic local offline fallback.
 6. **Open Tickets from Chat**:
@@ -168,8 +168,8 @@ Your data is never trapped in ephemeral browser memory.
    d:\MLOps_LLMOps\Lira\data\lira-workspace.json
    ```
 2. The top navigation bar displays a live indicator:
-   - `🟢 PC Saved`: All changes are safely written to disk.
-   - `💾 Saving to PC…`: Disk flush currently in progress.
+   - ` PC Saved`: All changes are safely written to disk.
+   - ` Saving to PC…`: Disk flush currently in progress.
 3. You can click the status badge at any time to force an immediate save.
 
 ---
@@ -178,7 +178,7 @@ Your data is never trapped in ephemeral browser memory.
 
 Your study notes, tickets, and progress are precious. Back them up in seconds:
 
-1. Click the **⬇** (download/backup) icon in the **top navigation bar**.
+1. Click the **** (download/backup) icon in the **top navigation bar**.
 2. A modal opens with **Export JSON Backup** and **Import JSON Backup**.
 3. Click **Export JSON Backup**:
    - Updates `data/lira-workspace.json` on your PC with a fresh snapshot.
@@ -210,6 +210,32 @@ Your study notes, tickets, and progress are precious. Back them up in seconds:
 | `Tab` | Navigate form fields |
 
 ## Update (November 2026)
+
+**Edit a ticket.** Open it, change what you need, then press **Save changes**. The ticket saves and closes. If you close it first (X, outside click or Escape), Lira asks whether to discard your changes.
+
+**Write a description.** The description box is a full editor. Use the toolbar for headings, bold, italic, underline, strikethrough, bullet, numbered and checkbox lists, quotes, code, links, text colour and highlight. Type **@** to mention a person. Use the paperclip, drop files, or paste a picture to add files: pictures appear in the text and every file is added to the ticket's attachments (files up to 2 MB are stored in Lira).
+
+**Pick a date.** Click the date field to open the calendar. **Today** and **Clear** are at the bottom. Click the month and year at the top to choose another month or year quickly.
+
+**Attach a file.** In a ticket, open Attachments and press **Add attachment**. Choose My computer, Google Drive, OneDrive, Dropbox or Web link. Drive, OneDrive and Dropbox take a share link: Lira does not sign in to those services.
+
+**Block a ticket.** In the ticket, under **Status**, press **Blocked** on the pill. Lira asks which ticket is blocking this one (search, or narrow by Epics, Tasks, Bugs, Subtasks). Tick one or more tickets, press **Mark as blocked**, then **Save changes**. The ticket keeps its status and column and its card shows "Blocked by KEY" ("+2" for more). Once blocked, use **Add** to link more tickets, or the cross on a ticket to remove it; pressing **Blocked** again does nothing. The tickets you link show "This ticket is blocking" in their own popup. Press **Not blocked** to clear everything. Use **Blocked** in the Status filter to list blocked work.
+
+**Paste a screenshot.** Click in a description or a comment and press Ctrl+V. The picture appears at the cursor, so you can write before and after it. It is also listed under Attachments.
+
+**Saving.** Pressing Save changes without having changed anything just closes the window and shows no "saved" card.
+
+**Open in a new tab.** Right-click a ticket, project, sprint, roadmap, space or sidebar item and choose **Open in new tab** (or **Copy link**). Ctrl + click or middle-click opens it straight away.
+
+**Filter a space.** Use the Priority, Status and Labels dropdowns above the board. Tick one or more values in each. Type in the Labels box to find a label. **Clear filters** resets them.
+
+**Copy text.** Each comment has **Copy**, and the description has **Copy description**.
+
+**Edit a comment.** You can edit comments you wrote. Press **Edit** on your comment, change the text and press **Save**. It is marked "(edited)". Every comment shows the day, date and time it was written, for example "Sun, 8 Nov 2026 at 3:42 PM".
+
+**Delete something.** Deleting a space, project, roadmap, sprint or form asks in a Lira dialog with a red button. **Cancel** or Escape keeps it.
+
+**Change the theme.** Settings, Appearance: choose, then **Save**. Closing without saving leaves the theme as it was.
 
 **Create a sprint with a length and spaces.** Sprints, then **New sprint**. Choose Monthly, Weekly, Bi-weekly or Number of days (1 to 90), the start date (or the month), an optional name and goal, and which spaces work in it ("All spaces" by default). Custom sprints cannot overlap each other.
 

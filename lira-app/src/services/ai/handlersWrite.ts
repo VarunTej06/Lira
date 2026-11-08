@@ -1,3 +1,4 @@
+import { descriptionToText } from '../../utils/richText';
 import { createIssue, updateIssue, getNextIssueKey } from '../../hooks/useIssues';
 import { v4 as uuidv4 } from 'uuid';
 import type { Issue, Priority, IssueType } from '../../types/issue';
@@ -29,7 +30,7 @@ export async function handleStatusTransition(c: AgentContext): Promise<ChatMessa
       return {
         id: uuidv4(),
         sender: 'assistant',
-        text: `✅ **Updated Status**: Moved **${updated.key}** (*${updated.title}*) in **${space ? space.name : 'Workspace'}** to **${targetStatus.toUpperCase()}**.`,
+        text: `**Updated Status**: Moved **${updated.key}** (*${updated.title}*) in **${space ? space.name : 'Workspace'}** to **${targetStatus.toUpperCase()}**.`,
         timestamp: now,
         refinedPrompt: refinedMetadata,
         actionTaken: {
@@ -74,7 +75,7 @@ export async function handleSubtaskBreakdown(c: AgentContext): Promise<ChatMessa
       return {
         id: uuidv4(),
         sender: 'assistant',
-        text: `🤖 **Autonomous Breakdown Complete** for **${targetIssue.key}** (*${targetIssue.title}*) in **${space?.name || 'Workspace'}**:\n\nAdded **${generatedSubtasks.length} new subtasks** directly to the ticket:\n\n${subtasksList}`,
+        text: `**Autonomous Breakdown Complete** for **${targetIssue.key}** (*${targetIssue.title}*) in **${space?.name || 'Workspace'}**:\n\nAdded **${generatedSubtasks.length} new subtasks** directly to the ticket:\n\n${subtasksList}`,
         timestamp: now,
         refinedPrompt: refinedMetadata,
         actionTaken: {
@@ -106,17 +107,17 @@ export async function handleTicketDetail(c: AgentContext): Promise<ChatMessage |
     const sub = targetIssue.subtasks || [];
     const completedSub = sub.filter(s => s.completed).length;
 
-    let responseText = `### 📋 Ticket Details: **${targetIssue.key}**\n\n`;
+    let responseText = `### Ticket Details: **${targetIssue.key}**\n\n`;
     responseText += `- **Title**: ${targetIssue.title}\n`;
     responseText += `- **Space**: ${space?.icon || '📁'} **${space?.name || 'Unknown'}** (\`${space?.key || '?'}\`)\n`;
     responseText += `- **Type**: \`${targetIssue.type.toUpperCase()}\` | **Priority**: \`${targetIssue.priority.toUpperCase()}\`\n`;
     responseText += `- **Status**: **${targetIssue.status.toUpperCase()}**\n`;
     responseText += `- **Assignee**: ${targetIssue.assignee || 'Unassigned'} | **Reporter**: ${targetIssue.reporter || 'VY'}\n`;
     if (targetIssue.dueDate) responseText += `- **Due Date**: ${new Date(targetIssue.dueDate).toLocaleDateString()}\n`;
-    if (targetIssue.epicLink) responseText += `- **Parent Epic**: ⚡ **${targetIssue.epicLink}**\n`;
+    if (targetIssue.epicLink) responseText += `- **Parent Epic**: **${targetIssue.epicLink}**\n`;
     if (sub.length > 0) responseText += `- **Subtasks**: ${completedSub}/${sub.length} completed (${Math.round((completedSub / sub.length) * 100)}%)\n`;
     if (targetIssue.description) {
-      const descPreview = targetIssue.description.split('\n').slice(0, 4).join('\n').trim();
+      const descPreview = descriptionToText(targetIssue.description).split('\n').slice(0, 4).join('\n').trim();
       responseText += `\n**Description Preview:**\n> ${descPreview.replace(/\n/g, '\n> ')}\n`;
     }
 
@@ -207,7 +208,7 @@ export async function handleCreateIssue(c: AgentContext): Promise<ChatMessage | 
       return {
         id: uuidv4(),
         sender: 'assistant',
-        text: `🎉 **Created Issue**: **${created.key}** (*${created.title}*)\n- **Space**: ${spaceToUse.icon} **${spaceToUse.name}** (\`${spaceToUse.key}\`)\n- **Type**: \`${rawType.toUpperCase()}\` | **Status**: **${status.toUpperCase()}** | **Priority**: \`${priority.toUpperCase()}\`\n- Added 3 initial subtasks automatically.`,
+        text: `**Created Issue**: **${created.key}** (*${created.title}*)\n- **Space**: ${spaceToUse.icon} **${spaceToUse.name}** (\`${spaceToUse.key}\`)\n- **Type**: \`${rawType.toUpperCase()}\` | **Status**: **${status.toUpperCase()}** | **Priority**: \`${priority.toUpperCase()}\`\n- Added 3 initial subtasks automatically.`,
         timestamp: now,
         refinedPrompt: refinedMetadata,
         actionTaken: {

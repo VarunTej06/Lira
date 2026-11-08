@@ -9,7 +9,7 @@
 | Framework | React | 18.3 | Component tree, hooks, concurrent rendering |
 | Language | TypeScript | 5.x | Static types, IDE intelligence |
 | Build tool | Vite | 8.x | Sub-second HMR, ESM-native dev server |
-| Styling | Tailwind CSS | 3.x | Utility-first CSS with custom Atlassian tokens |
+| Styling | Tailwind CSS | 3.x | Utility-first CSS with custom design tokens |
 | Icons | lucide-react | latest | 1000+ consistent SVG icons |
 | Drag & Drop | @hello-pangea/dnd | 18.x | Beautiful, accessible Kanban DnD |
 | Database | Dexie.js | 4.x | Type-safe IndexedDB wrapper |
@@ -85,20 +85,20 @@ App.tsx  (root state orchestrator)
 All tokens are defined in `tailwind.config.js` under `theme.extend.colors`:
 
 ```js
-'jira-bg':          '#F4F5F7',  // Page background
-'jira-surface':     '#FFFFFF',  // Card & modal surfaces
-'jira-border':      '#DFE1E6',  // Subtle borders
-'jira-text':        '#172B4D',  // High-contrast body text
-'jira-muted':       '#6B778C',  // Labels, captions, placeholders
-'jira-blue':        '#0052CC',  // Primary action / links
-'jira-blue-light':  '#DEEBFF',  // In-Progress status bg
-'jira-blue-hover':  '#0065FF',  // Button hover
-'jira-amber':       '#FFAB00',  // In Progress accent strip
-'jira-amber-light': '#FFF7D6',  // In Progress status bg (light)
-'jira-green':       '#36B37E',  // Done accent strip
-'jira-green-light': '#E3FCEF',  // Done status bg
-'jira-red':         '#DE350B',  // Bug / danger
-'jira-purple':      '#6554C0',  // Epic type colour
+'lira-bg':          '#F4F5F7',  // Page background
+'lira-surface':     '#FFFFFF',  // Card & modal surfaces
+'lira-border':      '#DFE1E6',  // Subtle borders
+'lira-text':        '#172B4D',  // High-contrast body text
+'lira-muted':       '#6B778C',  // Labels, captions, placeholders
+'lira-blue':        '#0052CC',  // Primary action / links
+'lira-blue-light':  '#DEEBFF',  // In-Progress status bg
+'lira-blue-hover':  '#0065FF',  // Button hover
+'lira-amber':       '#FFAB00',  // In Progress accent strip
+'lira-amber-light': '#FFF7D6',  // In Progress status bg (light)
+'lira-green':       '#36B37E',  // Done accent strip
+'lira-green-light': '#E3FCEF',  // Done status bg
+'lira-red':         '#DE350B',  // Bug / danger
+'lira-purple':      '#6554C0',  // Epic type colour
 'nav-bg':           '#1D2125',  // Top navigation bar
 'nav-sidebar':      '#1A2332',  // Left sidebar
 'nav-sidebar-active':'#0052CC', // Active space indicator
@@ -117,10 +117,10 @@ All tokens are defined in `tailwind.config.js` under `theme.extend.colors`:
 
 | Type | Symbol | Colour | Background |
 |------|--------|--------|-----------|
-| Epic | ⚡ | `#6554C0` | `#EAE6FF` |
-| Task | ✅ | `#0052CC` | `#DEEBFF` |
-| Bug | 🐛 | `#DE350B` | `#FFEBE6` |
-| Subtask | ↳ | `#6B778C` | `#F4F5F7` |
+| Epic | Zap icon | `#6554C0` | `#EAE6FF` |
+| Task | Check-square icon | `#0052CC` | `#DEEBFF` |
+| Bug | Bug icon | `#DE350B` | `#FFEBE6` |
+| Subtask | Corner-arrow icon | `#6B778C` | `#F4F5F7` |
 
 ---
 

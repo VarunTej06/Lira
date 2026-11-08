@@ -1,3 +1,6 @@
+import { notifySaved } from '../common/SavedToast';
+import { DatePicker } from '../common/DatePicker';
+import { TypeIcon } from '../common/Icons';
 import { safeHttpUrl } from '../../utils/safeUrl';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
@@ -8,7 +11,6 @@ import { Modal } from '../common/Modal';
 import { Avatar } from '../common/Avatar';
 import { useAllIssues } from '../../hooks/useIssues';
 import type { Issue } from '../../types/issue';
-import { ISSUE_TYPE_CONFIG } from '../../types/issue';
 import {
   type Standup, type StandupScope, type TeamMember, type Platform, type Repeat,
   PLATFORM_LABEL, REPEAT_LABEL, CALL_EVENT, CALL_TITLE, agendaText, buildAgenda, downloadText, googleCalendarUrl, icsFile,
@@ -164,7 +166,7 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
     const s = draft();
     window.location.href = mailtoUrl(s, invitedEmails, `${description(s)}\n\nWhen: ${startEnd(s).start.toLocaleString()} (${REPEAT_LABEL[s.repeat]}, ${s.duration} min)`);
   };
-  const saveOnly = () => { persist(draft()); flash('Saved'); };
+  const saveOnly = () => { persist(draft()); notifySaved('Standup saved'); };
 
   const removeSaved = (id: string) => {
     const all = loadStandups().filter(s => s.id !== id);
@@ -207,46 +209,46 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
 
   // ── small UI helpers ──
   const Row: React.FC<{ issue: Issue; note?: string; tone?: string }> = ({ issue, note, tone }) => (
-    <button onClick={() => openIssue(issue)} className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-gray-50 border-b border-jira-border last:border-0 transition-colors cursor-pointer">
-      <span className="text-sm">{(ISSUE_TYPE_CONFIG[issue.type] ?? ISSUE_TYPE_CONFIG.task).symbol}</span>
-      <span className="font-mono text-[11px] text-jira-muted w-20 flex-shrink-0">{issue.key}</span>
-      <span className="flex-1 min-w-0 text-sm text-jira-text truncate">{issue.title}</span>
+    <button onClick={() => openIssue(issue)} className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-gray-50 border-b border-lira-border last:border-0 transition-colors cursor-pointer">
+      <TypeIcon type={issue.type} className="w-4 h-4" />
+      <span className="font-mono text-[11px] text-lira-muted w-20 flex-shrink-0">{issue.key}</span>
+      <span className="flex-1 min-w-0 text-sm text-lira-text truncate">{issue.title}</span>
       {note && <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap ${tone || 'bg-gray-100 text-gray-600'}`}>{note}</span>}
       <Avatar initials={issue.assigneeInitials} size="xs" />
     </button>
   );
 
   const Section: React.FC<{ title: string; icon: React.ReactNode; count: number; empty: string; children: React.ReactNode }> = ({ title, icon, count, empty, children }) => (
-    <section className="border border-jira-border rounded-2xl overflow-hidden bg-white">
-      <header className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-jira-border">
-        {icon}<h3 className="text-xs font-semibold text-jira-text uppercase tracking-wide">{title}</h3>
-        <span className="text-[11px] text-jira-muted">{count}</span>
+    <section className="border border-lira-border rounded-2xl overflow-hidden bg-white">
+      <header className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
+        {icon}<h3 className="text-xs font-semibold text-lira-text uppercase tracking-wide">{title}</h3>
+        <span className="text-[11px] text-lira-muted">{count}</span>
       </header>
-      {count === 0 ? <p className="px-3 py-4 text-xs text-jira-muted">{empty}</p> : children}
+      {count === 0 ? <p className="px-3 py-4 text-xs text-lira-muted">{empty}</p> : children}
     </section>
   );
 
   const sevTone = { high: 'bg-red-100 text-red-700', medium: 'bg-amber-100 text-amber-700', low: 'bg-gray-100 text-gray-600' };
   const scopeLabel = { space: 'Space', project: 'Project', sprint: 'Sprint' }[scope.type];
-  const field = 'w-full text-sm border border-jira-border rounded-xl px-3 py-2 bg-white text-jira-text focus:outline-none focus:border-jira-blue';
-  const lbl = 'block text-[11px] font-semibold text-jira-muted mb-1 uppercase tracking-wide';
+  const field = 'w-full text-sm border border-lira-border rounded-xl px-3 py-2 bg-white text-lira-text focus:outline-none focus:border-lira-blue';
+  const lbl = 'block text-[11px] font-semibold text-lira-muted mb-1 uppercase tracking-wide';
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={CALL_TITLE[scope.type]} size="xl">
       <div className="flex flex-col max-h-[78vh]">
         {/* Header strip */}
-        <div className="px-6 pt-4 pb-3 border-b border-jira-border flex flex-wrap items-center gap-3">
-          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg bg-blue-50 text-jira-blue">{scopeLabel}</span>
-          <h2 className="text-base font-semibold text-jira-text truncate">{scope.name}</h2>
+        <div className="px-6 pt-4 pb-3 border-b border-lira-border flex flex-wrap items-center gap-3">
+          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg bg-blue-50 text-lira-blue">{scopeLabel}</span>
+          <h2 className="text-base font-semibold text-lira-text truncate">{scope.name}</h2>
           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Beta</span>
-          <span className="text-xs text-jira-muted ml-auto">{scoped.length} tickets · {members.length} people</span>
+          <span className="text-xs text-lira-muted ml-auto">{scoped.length} tickets · {members.length} people</span>
         </div>
 
         {/* Tabs */}
-        <div className="px-6 flex gap-1 border-b border-jira-border">
+        <div className="px-6 flex gap-1 border-b border-lira-border">
           {([['agenda', 'Agenda', <ListChecks key="a" className="w-3.5 h-3.5" />], ['schedule', 'Schedule & invite', <CalendarPlus key="s" className="w-3.5 h-3.5" />], ['team', `Team (${members.length})`, <Users key="t" className="w-3.5 h-3.5" />]] as const).map(([id, label, icon]) => (
             <button key={id} onClick={() => setTab(id as Tab)}
-              className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors cursor-pointer ${tab === id ? 'text-jira-blue border-jira-blue' : 'text-jira-muted border-transparent hover:text-jira-text'}`}>
+              className={`flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors cursor-pointer ${tab === id ? 'text-lira-blue border-lira-blue' : 'text-lira-muted border-transparent hover:text-lira-text'}`}>
               {icon}{label}
             </button>
           ))}
@@ -261,68 +263,68 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {[
                   { l: 'Need an update', v: agenda.needsUpdate.length, c: 'text-red-600' },
-                  { l: 'In progress', v: agenda.inProgress.length, c: 'text-jira-blue' },
+                  { l: 'In progress', v: agenda.inProgress.length, c: 'text-lira-blue' },
                   { l: 'Blocked', v: agenda.blocked.length, c: 'text-amber-600' },
-                  { l: 'To do / backlog', v: agenda.upNext.length + agenda.backlog.length, c: 'text-jira-text' },
+                  { l: 'To do / backlog', v: agenda.upNext.length + agenda.backlog.length, c: 'text-lira-text' },
                   { l: 'Done · 24h', v: agenda.doneRecently.length, c: 'text-emerald-600' },
                 ].map(t => (
-                  <div key={t.l} className="border border-jira-border rounded-xl px-3 py-2 bg-white">
+                  <div key={t.l} className="border border-lira-border rounded-xl px-3 py-2 bg-white">
                     <div className={`text-xl font-semibold ${t.c}`}>{t.v}</div>
-                    <div className="text-[11px] text-jira-muted">{t.l}</div>
+                    <div className="text-[11px] text-lira-muted">{t.l}</div>
                   </div>
                 ))}
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="inline-flex rounded-xl border border-jira-border overflow-hidden text-xs">
+                <div className="inline-flex rounded-xl border border-lira-border overflow-hidden text-xs">
                   {(['status', 'person'] as const).map(v => (
-                    <button key={v} onClick={() => setView(v)} className={`px-3 py-1.5 cursor-pointer ${view === v ? 'bg-jira-blue text-white' : 'bg-white text-jira-muted hover:text-jira-text'}`}>
+                    <button key={v} onClick={() => setView(v)} className={`px-3 py-1.5 cursor-pointer ${view === v ? 'bg-lira-blue text-white' : 'bg-white text-lira-muted hover:text-lira-text'}`}>
                       {v === 'status' ? 'By status' : 'By person'}
                     </button>
                   ))}
                 </div>
-                <button onClick={copyAgenda} className="ml-auto flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-jira-border bg-white hover:bg-gray-50 text-jira-text cursor-pointer">
+                <button onClick={copyAgenda} className="ml-auto flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-xl border border-lira-border bg-white hover:bg-gray-50 text-lira-text cursor-pointer">
                   {copied ? <><Check className="w-3.5 h-3.5 text-emerald-500" /> Copied</> : <><Copy className="w-3.5 h-3.5" /> Copy call notes</>}
                 </button>
               </div>
 
               {view === 'status' ? (
                 <div className="space-y-3">
-                  <Section title="Needs an update" icon={<AlertTriangle className="w-3.5 h-3.5 text-red-500" />} count={agenda.needsUpdate.length} empty="Everything is up to date 🎉">
+                  <Section title="Needs an update" icon={<AlertTriangle className="w-3.5 h-3.5 text-red-500" />} count={agenda.needsUpdate.length} empty="Everything is up to date">
                     {agenda.needsUpdate.map(n => <Row key={n.issue.id} issue={n.issue} note={n.reason} tone={sevTone[n.severity]} />)}
                   </Section>
                   <Section title="Blocked" icon={<Ban className="w-3.5 h-3.5 text-amber-500" />} count={agenda.blocked.length} empty="Nothing is blocked.">
-                    {agenda.blocked.map(b => <Row key={b.issue.id} issue={b.issue} note={`blocked by ${b.blockedBy.map(x => x.key).join(', ')}`} tone="bg-amber-100 text-amber-700" />)}
+                    {agenda.blocked.map(b => <Row key={b.issue.id} issue={b.issue} note={b.blockedBy.length ? `blocked by ${b.blockedBy.map(x => x.key).join(', ')}` : 'marked Blocked'} tone="bg-amber-100 text-amber-700" />)}
                   </Section>
-                  <Section title="In progress" icon={<Clock className="w-3.5 h-3.5 text-jira-blue" />} count={agenda.inProgress.length} empty="Nothing in progress.">
+                  <Section title="In progress" icon={<Clock className="w-3.5 h-3.5 text-lira-blue" />} count={agenda.inProgress.length} empty="Nothing in progress.">
                     {agenda.inProgress.map(i => <Row key={i.id} issue={i} />)}
                   </Section>
                   <Section title="Done in the last 24 hours" icon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />} count={agenda.doneRecently.length} empty="Nothing finished yet.">
                     {agenda.doneRecently.map(i => <Row key={i.id} issue={i} />)}
                   </Section>
-                  <Section title="Up next · To do" icon={<ListChecks className="w-3.5 h-3.5 text-jira-muted" />} count={agenda.upNext.length} empty="Nothing waiting.">
+                  <Section title="Up next · To do" icon={<ListChecks className="w-3.5 h-3.5 text-lira-muted" />} count={agenda.upNext.length} empty="Nothing waiting.">
                     {agenda.upNext.slice(0, 8).map(i => <Row key={i.id} issue={i} />)}
                   </Section>
-                  <Section title="Backlog (top)" icon={<ListChecks className="w-3.5 h-3.5 text-jira-muted" />} count={agenda.backlog.length} empty="Backlog is empty.">
+                  <Section title="Backlog (top)" icon={<ListChecks className="w-3.5 h-3.5 text-lira-muted" />} count={agenda.backlog.length} empty="Backlog is empty.">
                     {agenda.backlog.slice(0, 6).map(i => <Row key={i.id} issue={i} />)}
                   </Section>
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 gap-3">
-                  {people.length === 0 && <p className="text-sm text-jira-muted">No assigned tickets in this scope.</p>}
+                  {people.length === 0 && <p className="text-sm text-lira-muted">No assigned tickets in this scope.</p>}
                   {people.map(p => (
-                    <div key={p.key} className="border border-jira-border rounded-2xl bg-white overflow-hidden">
-                      <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-jira-border">
+                    <div key={p.key} className="border border-lira-border rounded-2xl bg-white overflow-hidden">
+                      <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
                         <Avatar initials={p.key === '—' ? '?' : p.key} size="sm" />
-                        <span className="text-sm font-semibold text-jira-text">{p.name}</span>
+                        <span className="text-sm font-semibold text-lira-text">{p.name}</span>
                         {p.stale.length > 0 && <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700">{p.stale.length} need update</span>}
                       </div>
                       {[['Yesterday', p.done], ['Today', p.doing], ['Next', p.next]].map(([label, list]) => (
-                        <div key={label as string} className="px-3 py-1.5 border-b border-jira-border last:border-0">
-                          <div className="text-[10px] font-semibold uppercase tracking-wide text-jira-muted mb-0.5">{label as string}</div>
-                          {(list as Issue[]).length === 0 ? <div className="text-xs text-jira-muted">—</div> : (list as Issue[]).map(i => (
-                            <button key={i.id} onClick={() => openIssue(i)} className="block w-full text-left text-xs text-jira-text truncate hover:text-jira-blue cursor-pointer py-0.5">
-                              <span className="font-mono text-jira-muted mr-1.5">{i.key}</span>{i.title}
+                        <div key={label as string} className="px-3 py-1.5 border-b border-lira-border last:border-0">
+                          <div className="text-[10px] font-semibold uppercase tracking-wide text-lira-muted mb-0.5">{label as string}</div>
+                          {(list as Issue[]).length === 0 ? <div className="text-xs text-lira-muted">—</div> : (list as Issue[]).map(i => (
+                            <button key={i.id} onClick={() => openIssue(i)} className="block w-full text-left text-xs text-lira-text truncate hover:text-lira-blue cursor-pointer py-0.5">
+                              <span className="font-mono text-lira-muted mr-1.5">{i.key}</span>{i.title}
                             </button>
                           ))}
                         </div>
@@ -330,7 +332,7 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
                       {p.blocked.length > 0 && (
                         <div className="px-3 py-1.5 bg-amber-50/60">
                           <div className="text-[10px] font-semibold uppercase tracking-wide text-amber-700 mb-0.5">Blockers</div>
-                          {p.blocked.map(b => <div key={b.issue.id} className="text-xs text-amber-800 truncate">{b.issue.key} ← {b.blockedBy.map(x => x.key).join(', ')}</div>)}
+                          {p.blocked.map(b => <div key={b.issue.id} className="text-xs text-amber-800 truncate">{b.issue.key}{b.blockedBy.length ? ` ← ${b.blockedBy.map(x => x.key).join(', ')}` : ' (blocked)'}</div>)}
                         </div>
                       )}
                     </div>
@@ -355,21 +357,21 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
           {tab === 'schedule' && (
             <>
               {saved.length > 0 && (
-                <section className="border border-jira-border rounded-2xl overflow-hidden bg-white">
-                  <header className="px-3 py-2 bg-gray-50 border-b border-jira-border text-xs font-semibold text-jira-text uppercase tracking-wide">Scheduled calls</header>
+                <section className="border border-lira-border rounded-2xl overflow-hidden bg-white">
+                  <header className="px-3 py-2 bg-gray-50 border-b border-lira-border text-xs font-semibold text-lira-text uppercase tracking-wide">Scheduled calls</header>
                   {saved.map(s => (
-                    <div key={s.id} className="flex items-center gap-3 px-3 py-2 border-b border-jira-border last:border-0">
-                      <Video className="w-4 h-4 text-jira-blue flex-shrink-0" />
+                    <div key={s.id} className="flex items-center gap-3 px-3 py-2 border-b border-lira-border last:border-0">
+                      <Video className="w-4 h-4 text-lira-blue flex-shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium text-jira-text truncate">{s.title}</div>
-                        <div className="text-[11px] text-jira-muted">{REPEAT_LABEL[s.repeat]} · {s.time} · {s.duration} min · {PLATFORM_LABEL[s.platform]} · {s.memberKeys.length} people</div>
+                        <div className="text-sm font-medium text-lira-text truncate">{s.title}</div>
+                        <div className="text-[11px] text-lira-muted">{REPEAT_LABEL[s.repeat]} · {s.time} · {s.duration} min · {PLATFORM_LABEL[s.platform]} · {s.memberKeys.length} people</div>
                       </div>
                       {safeHttpUrl(s.link) && (
-                        <a href={safeHttpUrl(s.link)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-jira-blue text-white hover:bg-jira-blue-hover">
+                        <a href={safeHttpUrl(s.link)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-lira-blue text-white hover:bg-lira-blue-hover">
                           Join <ExternalLink className="w-3 h-3" />
                         </a>
                       )}
-                      <button onClick={() => removeSaved(s.id)} className="p-1.5 rounded-lg text-jira-muted hover:text-red-600 hover:bg-red-50 cursor-pointer" title="Remove"><Trash2 className="w-3.5 h-3.5" /></button>
+                      <button onClick={() => removeSaved(s.id)} className="p-1.5 rounded-lg text-lira-muted hover:text-red-600 hover:bg-red-50 cursor-pointer" title="Remove"><Trash2 className="w-3.5 h-3.5" /></button>
                     </div>
                   ))}
                 </section>
@@ -382,7 +384,7 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
                 </div>
                 <div>
                   <label className={lbl}>Start date</label>
-                  <input type="date" className={field} value={startDate} min={todayStr()} onChange={e => setStartDate(e.target.value)} />
+                  <DatePicker value={startDate} min={todayStr()} onChange={setStartDate} clearable={false} aria-label="Start date" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -414,36 +416,36 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-jira-border bg-gray-50 px-4 py-3 text-xs text-jira-muted">
-                Inviting the <strong className="text-jira-text">{scope.name}</strong> team: <strong className="text-jira-text">{invitedEmails.length}</strong> of {invited.length} people have an email
-                {missingEmail.length > 0 && <> — missing: {missingEmail.map(m => m.name).join(', ')} (<button className="text-jira-blue underline cursor-pointer" onClick={() => setTab('team')}>add emails</button>)</>}.
+              <div className="rounded-2xl border border-lira-border bg-gray-50 px-4 py-3 text-xs text-lira-muted">
+                Inviting the <strong className="text-lira-text">{scope.name}</strong> team: <strong className="text-lira-text">{invitedEmails.length}</strong> of {invited.length} people have an email
+                {missingEmail.length > 0 && <> — missing: {missingEmail.map(m => m.name).join(', ')} (<button className="text-lira-blue underline cursor-pointer" onClick={() => setTab('team')}>add emails</button>)</>}.
                 Lira opens a pre-filled invite for everyone; you confirm it in your calendar, which then emails the whole team.
               </div>
 
               <div className="grid sm:grid-cols-2 gap-2">
-                <button onClick={sendGoogle} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-jira-border bg-white hover:border-jira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
+                <button onClick={sendGoogle} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-lira-border bg-white hover:border-lira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
                   <span className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center"><Video className="w-4 h-4" /></span>
-                  <span><span className="block text-sm font-semibold text-jira-text">Google Meet invite</span><span className="block text-[11px] text-jira-muted">Pre-filled Google Calendar event, whole team as guests</span></span>
+                  <span><span className="block text-sm font-semibold text-lira-text">Google Meet invite</span><span className="block text-[11px] text-lira-muted">Pre-filled Google Calendar event, whole team as guests</span></span>
                 </button>
-                <button onClick={sendTeams} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-jira-border bg-white hover:border-jira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
+                <button onClick={sendTeams} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-lira-border bg-white hover:border-lira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
                   <span className="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center"><Video className="w-4 h-4" /></span>
-                  <span><span className="block text-sm font-semibold text-jira-text">Microsoft Teams invite</span><span className="block text-[11px] text-jira-muted">Pre-filled Teams meeting with all attendees</span></span>
+                  <span><span className="block text-sm font-semibold text-lira-text">Microsoft Teams invite</span><span className="block text-[11px] text-lira-muted">Pre-filled Teams meeting with all attendees</span></span>
                 </button>
-                <button onClick={downloadIcs} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-jira-border bg-white hover:border-jira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
+                <button onClick={downloadIcs} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-lira-border bg-white hover:border-lira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
                   <span className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center"><Download className="w-4 h-4" /></span>
-                  <span><span className="block text-sm font-semibold text-jira-text">Download .ics</span><span className="block text-[11px] text-jira-muted">Works with Outlook, Apple Calendar and others</span></span>
+                  <span><span className="block text-sm font-semibold text-lira-text">Download .ics</span><span className="block text-[11px] text-lira-muted">Works with Outlook, Apple Calendar and others</span></span>
                 </button>
-                <button onClick={emailTeam} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-jira-border bg-white hover:border-jira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
+                <button onClick={emailTeam} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-lira-border bg-white hover:border-lira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
                   <span className="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center"><Mail className="w-4 h-4" /></span>
-                  <span><span className="block text-sm font-semibold text-jira-text">Email the team</span><span className="block text-[11px] text-jira-muted">Draft with time and tickets that need updates</span></span>
+                  <span><span className="block text-sm font-semibold text-lira-text">Email the team</span><span className="block text-[11px] text-lira-muted">Draft with time and tickets that need updates</span></span>
                 </button>
               </div>
 
               <div className="flex items-center justify-between">
-                <button onClick={() => window.open('https://meet.google.com/new', '_blank', 'noopener')} className="text-xs text-jira-blue hover:underline cursor-pointer flex items-center gap-1">
+                <button onClick={() => window.open('https://meet.google.com/new', '_blank', 'noopener')} className="text-xs text-lira-blue hover:underline cursor-pointer flex items-center gap-1">
                   <Video className="w-3.5 h-3.5" /> Start an instant Google Meet now
                 </button>
-                <button onClick={saveOnly} className="text-sm px-4 py-2 rounded-xl bg-jira-blue text-white hover:bg-jira-blue-hover cursor-pointer flex items-center gap-1.5">
+                <button onClick={saveOnly} className="text-sm px-4 py-2 rounded-xl bg-lira-blue text-white hover:bg-lira-blue-hover cursor-pointer flex items-center gap-1.5">
                   <Calendar className="w-4 h-4" /> Save call
                 </button>
               </div>
@@ -453,9 +455,9 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
           {/* ───────── TEAM ───────── */}
           {tab === 'team' && (
             <>
-              <div className="rounded-2xl border border-jira-border bg-gray-50 px-4 py-3 text-xs text-jira-muted space-y-1">
+              <div className="rounded-2xl border border-lira-border bg-gray-50 px-4 py-3 text-xs text-lira-muted space-y-1">
                 <p>
-                  <strong className="text-jira-text">Invites go to the team assigned to this {scopeLabel.toLowerCase()}.</strong>{' '}
+                  <strong className="text-lira-text">Invites go to the team assigned to this {scopeLabel.toLowerCase()}.</strong>{' '}
                   {scope.type === 'sprint'
                     ? 'The sprint team is everyone with a ticket in it, plus anyone added to its space.'
                     : scope.type === 'project'
@@ -464,27 +466,27 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
                 </p>
                 <p>Dedicated Teams (named groups per space and project) are coming in a later version — they will replace this automatic list. Emails are remembered for every space, project and sprint.</p>
               </div>
-              <section className="border border-jira-border rounded-2xl overflow-hidden bg-white">
-                {members.length === 0 && <p className="px-4 py-6 text-sm text-jira-muted">No assignees yet — add people below.</p>}
+              <section className="border border-lira-border rounded-2xl overflow-hidden bg-white">
+                {members.length === 0 && <p className="px-4 py-6 text-sm text-lira-muted">No assignees yet — add people below.</p>}
                 {members.map(m => (
-                  <div key={m.key} className="flex items-center gap-3 px-3 py-2 border-b border-jira-border last:border-0">
+                  <div key={m.key} className="flex items-center gap-3 px-3 py-2 border-b border-lira-border last:border-0">
                     <input type="checkbox" checked={selected.has(m.key)} onChange={() => setSelected(prev => { const n = new Set(prev); n.has(m.key) ? n.delete(m.key) : n.add(m.key); return n; })} className="cursor-pointer" aria-label={`Invite ${m.name}`} />
                     <Avatar initials={m.key.length <= 3 ? m.key : m.name.slice(0, 2).toUpperCase()} size="sm" />
-                    <input className="text-sm border border-transparent hover:border-jira-border focus:border-jira-blue rounded-lg px-2 py-1 bg-transparent text-jira-text w-40 outline-none" value={m.name} onChange={e => updateMember(m, { name: e.target.value })} />
+                    <input className="text-sm border border-transparent hover:border-lira-border focus:border-lira-blue rounded-lg px-2 py-1 bg-transparent text-lira-text w-40 outline-none" value={m.name} onChange={e => updateMember(m, { name: e.target.value })} />
                     <input
-                      className={`flex-1 text-sm border rounded-lg px-2 py-1 bg-white text-jira-text outline-none focus:border-jira-blue ${m.email && !EMAIL_RE.test(m.email) ? 'border-red-300' : 'border-jira-border'}`}
+                      className={`flex-1 text-sm border rounded-lg px-2 py-1 bg-white text-lira-text outline-none focus:border-lira-blue ${m.email && !EMAIL_RE.test(m.email) ? 'border-red-300' : 'border-lira-border'}`}
                       placeholder="email@company.com" value={m.email} onChange={e => updateMember(m, { email: e.target.value })}
                     />
-                    {extras.includes(m.key) && <button onClick={() => removeExtra(m.key)} className="p-1.5 rounded-lg text-jira-muted hover:text-red-600 hover:bg-red-50 cursor-pointer" title="Remove from this team"><Trash2 className="w-3.5 h-3.5" /></button>}
+                    {extras.includes(m.key) && <button onClick={() => removeExtra(m.key)} className="p-1.5 rounded-lg text-lira-muted hover:text-red-600 hover:bg-red-50 cursor-pointer" title="Remove from this team"><Trash2 className="w-3.5 h-3.5" /></button>}
                   </div>
                 ))}
               </section>
               <div className="flex gap-2 items-end">
                 <div className="w-44"><label className={lbl}>Name</label><input className={field} value={newName} onChange={e => setNewName(e.target.value)} placeholder="Teammate" /></div>
                 <div className="flex-1"><label className={lbl}>Email</label><input className={field} value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="name@company.com" onKeyDown={e => e.key === 'Enter' && addExtra()} /></div>
-                <button onClick={addExtra} className="flex items-center gap-1 text-sm px-3 py-2 rounded-xl border border-jira-border bg-white hover:bg-gray-50 text-jira-text cursor-pointer"><Plus className="w-4 h-4" /> Add</button>
+                <button onClick={addExtra} className="flex items-center gap-1 text-sm px-3 py-2 rounded-xl border border-lira-border bg-white hover:bg-gray-50 text-lira-text cursor-pointer"><Plus className="w-4 h-4" /> Add</button>
               </div>
-              <p className="text-[11px] text-jira-muted flex items-center gap-1"><UserRound className="w-3 h-3" /> Emails are stored only in this browser.</p>
+              <p className="text-[11px] text-lira-muted flex items-center gap-1"><UserRound className="w-3 h-3" /> Emails are stored only in this browser.</p>
             </>
           )}
         </div>

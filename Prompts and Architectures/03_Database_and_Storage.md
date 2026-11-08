@@ -77,7 +77,7 @@ export interface Space {
   id?: number;          // auto-assigned by Dexie
   name: string;         // "Certifications"
   key: string;          // "CERT" — used as ticket prefix
-  icon: string;         // emoji "🏆"
+  icon: string;         // emoji ""
   color: string;        // hex "#0052CC"
   description?: string;
   createdAt: Date;

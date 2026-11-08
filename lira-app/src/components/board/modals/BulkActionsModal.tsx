@@ -1,3 +1,5 @@
+import { statusLabel } from '../../../utils/status';
+import { confirmDialog } from '../../common/dialogs';
 import React, { useState } from 'react';
 import { Trash2, Check } from 'lucide-react';
 import { Modal } from '../../common/Modal';
@@ -53,7 +55,7 @@ export const BulkActionsModal: React.FC<{
       setSavedToast(true);
       setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
     } catch (err) {
-      setFeedback(`❌ Error: ${err instanceof Error ? err.message : 'Failed'}`);
+      setFeedback(`Error: ${err instanceof Error ? err.message : 'Failed'}`);
     } finally {
       setIsProcessing(false);
     }
@@ -71,7 +73,7 @@ export const BulkActionsModal: React.FC<{
       setSavedToast(true);
       setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
     } catch (err) {
-      setFeedback(`❌ Error: ${err instanceof Error ? err.message : 'Failed'}`);
+      setFeedback(`Error: ${err instanceof Error ? err.message : 'Failed'}`);
     } finally {
       setIsProcessing(false);
     }
@@ -93,7 +95,7 @@ export const BulkActionsModal: React.FC<{
       setSavedToast(true);
       setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
     } catch (err) {
-      setFeedback(`❌ Error: ${err instanceof Error ? err.message : 'Failed'}`);
+      setFeedback(`Error: ${err instanceof Error ? err.message : 'Failed'}`);
     } finally {
       setIsProcessing(false);
     }
@@ -102,7 +104,7 @@ export const BulkActionsModal: React.FC<{
   // Perform bulk delete
   const handleBulkDelete = async () => {
     if (selectedIds.size === 0) return;
-    if (!window.confirm(`Permanently delete ${selectedIds.size} selected work items? This cannot be undone.`)) {
+    if (!(await confirmDialog({ title: 'Delete work items', message: `Permanently delete ${selectedIds.size} selected work item${selectedIds.size === 1 ? '' : 's'}? This cannot be undone.`, confirmLabel: 'Delete', tone: 'danger' }))) {
       return;
     }
     setIsProcessing(true);
@@ -115,7 +117,7 @@ export const BulkActionsModal: React.FC<{
       setSelectedIds(new Set());
       setTimeout(() => { setFeedback(null); onClose(); }, 1200);
     } catch (err) {
-      setFeedback(`❌ Error: ${err instanceof Error ? err.message : 'Failed'}`);
+      setFeedback(`Error: ${err instanceof Error ? err.message : 'Failed'}`);
     } finally {
       setIsProcessing(false);
     }
@@ -123,22 +125,22 @@ export const BulkActionsModal: React.FC<{
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Bulk Actions · ${space?.name || 'Workspace'}`} size="lg">
-      <div className="p-6 space-y-4 text-jira-text">
-        <p className="text-xs text-jira-muted">
+      <div className="p-6 space-y-4 text-lira-text">
+        <p className="text-xs text-lira-muted">
           Select multiple work items to update statuses, reassign owners, or batch update priorities in bulk.
         </p>
 
         {/* Action Controls Header */}
-        <div className="bg-gray-50 border border-jira-border rounded-xl p-3.5 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-jira-border pb-2.5">
+        <div className="bg-gray-50 border border-lira-border rounded-xl p-3.5 space-y-3">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-lira-border pb-2.5">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-jira-text">
-                Selected: <span className="text-jira-blue">{selectedIds.size}</span> of {issues.length}
+              <span className="text-xs font-bold text-lira-text">
+                Selected: <span className="text-lira-blue">{selectedIds.size}</span> of {issues.length}
               </span>
               <button
                 type="button"
                 onClick={toggleSelectAll}
-                className="text-xs text-jira-blue font-semibold hover:underline cursor-pointer ml-2"
+                className="text-xs text-lira-blue font-semibold hover:underline cursor-pointer ml-2"
               >
                 {allSelected ? 'Deselect all' : 'Select all'}
               </button>
@@ -161,12 +163,12 @@ export const BulkActionsModal: React.FC<{
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* 1. Status */}
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-jira-muted uppercase">Change Status</label>
+              <label className="text-[10px] font-bold text-lira-muted uppercase">Change Status</label>
               <div className="flex gap-1.5">
                 <select
                   value={batchStatus}
                   onChange={e => setBatchStatus(e.target.value)}
-                  className="flex-1 px-2 py-1.5 text-xs border border-jira-border rounded-lg bg-white"
+                  className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white"
                 >
                   <option value="backlog">Backlog</option>
                   <option value="todo">To Do</option>
@@ -177,7 +179,7 @@ export const BulkActionsModal: React.FC<{
                   type="button"
                   onClick={handleBulkStatus}
                   disabled={selectedIds.size === 0 || isProcessing}
-                  className="px-2.5 py-1.5 text-xs font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
+                  className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
                 >
                   Apply
                 </button>
@@ -186,12 +188,12 @@ export const BulkActionsModal: React.FC<{
 
             {/* 2. Priority */}
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-jira-muted uppercase">Set Priority</label>
+              <label className="text-[10px] font-bold text-lira-muted uppercase">Set Priority</label>
               <div className="flex gap-1.5">
                 <select
                   value={batchPriority}
                   onChange={e => setBatchPriority(e.target.value)}
-                  className="flex-1 px-2 py-1.5 text-xs border border-jira-border rounded-lg bg-white"
+                  className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white"
                 >
                   <option value="highest">Highest</option>
                   <option value="high">High</option>
@@ -203,7 +205,7 @@ export const BulkActionsModal: React.FC<{
                   type="button"
                   onClick={handleBulkPriority}
                   disabled={selectedIds.size === 0 || isProcessing}
-                  className="px-2.5 py-1.5 text-xs font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
+                  className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
                 >
                   Apply
                 </button>
@@ -212,12 +214,12 @@ export const BulkActionsModal: React.FC<{
 
             {/* 3. Assignee */}
             <div className="space-y-1">
-              <label className="text-[10px] font-bold text-jira-muted uppercase">Reassign To</label>
+              <label className="text-[10px] font-bold text-lira-muted uppercase">Reassign To</label>
               <div className="flex gap-1.5">
                 <select
                   value={batchAssignee}
                   onChange={e => setBatchAssignee(e.target.value)}
-                  className="flex-1 px-2 py-1.5 text-xs border border-jira-border rounded-lg bg-white"
+                  className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white"
                 >
                   <option value="Varun Tej">Varun Tej (VY)</option>
                   <option value="Unassigned">Unassigned</option>
@@ -226,7 +228,7 @@ export const BulkActionsModal: React.FC<{
                   type="button"
                   onClick={handleBulkAssignee}
                   disabled={selectedIds.size === 0 || isProcessing}
-                  className="px-2.5 py-1.5 text-xs font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
+                  className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
                 >
                   Apply
                 </button>
@@ -242,7 +244,7 @@ export const BulkActionsModal: React.FC<{
         )}
 
         {/* Scrollable Issues List */}
-        <div className="max-h-64 overflow-y-auto border border-jira-border rounded-xl divide-y divide-jira-border">
+        <div className="max-h-64 overflow-y-auto border border-lira-border rounded-xl divide-y divide-lira-border">
           {issues.map(issue => {
             const isChecked = selectedIds.has(issue.id!);
             return (
@@ -258,16 +260,16 @@ export const BulkActionsModal: React.FC<{
                     type="checkbox"
                     checked={isChecked}
                     onChange={() => {}}
-                    className="w-4 h-4 text-jira-blue rounded border-gray-300 pointer-events-none"
+                    className="w-4 h-4 text-lira-blue rounded border-gray-300 pointer-events-none"
                   />
-                  <span className="font-mono font-bold text-jira-blue flex-shrink-0">{issue.key}</span>
-                  <span className="truncate text-jira-text font-medium">{issue.title}</span>
+                  <span className="font-mono font-bold text-lira-blue flex-shrink-0">{issue.key}</span>
+                  <span className="truncate text-lira-text font-medium">{issue.title}</span>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-jira-muted">
-                    {issue.status}
+                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">
+                    {statusLabel(issue.status)}
                   </span>
-                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-jira-muted">
+                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">
                     {issue.priority}
                   </span>
                 </div>
@@ -276,11 +278,11 @@ export const BulkActionsModal: React.FC<{
           })}
         </div>
 
-        <div className="flex justify-end border-t border-jira-border pt-4">
+        <div className="flex justify-end border-t border-lira-border pt-4">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs"
+            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs"
           >
             Done
           </button>

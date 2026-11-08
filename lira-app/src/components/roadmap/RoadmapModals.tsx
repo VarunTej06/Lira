@@ -1,3 +1,5 @@
+import { DatePicker } from '../common/DatePicker';
+import { confirmDialog } from '../common/dialogs';
 import React, { useEffect, useState } from 'react';
 import { ExternalLink, Layers, Plus, Trash2, X } from 'lucide-react';
 import { Modal } from '../common/Modal';
@@ -8,10 +10,10 @@ import {
   type MilestoneKind, type Roadmap, type RoadmapItem, type RoadmapMilestone, type RoadmapStatus,
 } from '../../utils/roadmapUtils';
 
-const input = 'w-full border border-jira-border rounded-lg px-3 py-2 text-sm bg-jira-surface text-jira-text focus:outline-none focus:ring-2 focus:ring-jira-blue/40';
-const label = 'block text-xs font-semibold text-jira-muted mb-1';
-const primary = 'px-4 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
-const ghost = 'px-4 py-2 text-sm font-medium text-jira-muted hover:text-jira-text rounded-lg hover:bg-jira-bg transition-colors cursor-pointer';
+const input = 'w-full border border-lira-border rounded-lg px-3 py-2 text-sm bg-lira-surface text-lira-text focus:outline-none focus:ring-2 focus:ring-lira-blue/40';
+const label = 'block text-xs font-semibold text-lira-muted mb-1';
+const primary = 'px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+const ghost = 'px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg hover:bg-lira-bg transition-colors cursor-pointer';
 
 // ─── Item (= epic) ───────────────────────────────────────────────────────────
 
@@ -74,7 +76,7 @@ export const ItemModal: React.FC<ItemModalProps> = ({ roadmap, item, isNew, issu
 
   return (
     <Modal isOpen onClose={onClose} title={isNew ? 'Add roadmap item (epic)' : 'Edit roadmap item'} size="lg">
-      <div className="p-6 space-y-4 text-jira-text max-h-[78vh] overflow-y-auto">
+      <div className="p-6 space-y-4 text-lira-text max-h-[78vh] overflow-y-auto">
         {/* epic banner */}
         <div className="flex items-start gap-3 rounded-xl border border-violet-300/50 bg-violet-500/10 px-3 py-2.5 text-xs">
           <Layers className="w-4 h-4 text-violet-500 mt-0.5 flex-shrink-0" />
@@ -131,11 +133,11 @@ export const ItemModal: React.FC<ItemModalProps> = ({ roadmap, item, isNew, issu
           </div>
           <div>
             <label className={label}>Start</label>
-            <input type="date" className={input} value={draft.start} onChange={e => set({ start: e.target.value })} />
+            <DatePicker value={draft.start} onChange={v => set({ start: v })} clearable={false} aria-label="Start" />
           </div>
           <div>
             <label className={label}>End</label>
-            <input type="date" className={input} value={draft.end} onChange={e => set({ end: e.target.value })} />
+            <DatePicker value={draft.end} onChange={v => set({ end: v })} clearable={false} aria-label="End" />
             {!datesOk && <p className="text-[11px] text-red-500 mt-1">End must be on or after the start</p>}
           </div>
           <div>
@@ -151,7 +153,7 @@ export const ItemModal: React.FC<ItemModalProps> = ({ roadmap, item, isNew, issu
         {/* checklist */}
         <div>
           <label className={label}>Checklist {hasChildren && `· ${draft.children.filter(c => c.done).length}/${draft.children.length} done`}</label>
-          <p className="text-[11px] text-jira-muted mb-1.5">
+          <p className="text-[11px] text-lira-muted mb-1.5">
             {draft.taskKey
               ? <>Saved as the subtasks of one task, <button type="button" onClick={() => onOpenEpic(draft.taskKey!)} className="font-mono text-violet-500 hover:underline cursor-pointer">{draft.taskKey}</button>, under this epic.</>
               : 'Saved as the subtasks of one new task under this epic (created when you save).'}
@@ -160,36 +162,36 @@ export const ItemModal: React.FC<ItemModalProps> = ({ roadmap, item, isNew, issu
             {draft.children.map(c => (
               <div key={c.id} className="flex items-center gap-2 group">
                 <input type="checkbox" checked={c.done} onChange={() => set({ children: draft.children.map(x => x.id === c.id ? { ...x, done: !x.done } : x) })} className="w-4 h-4 cursor-pointer" />
-                <span className={`flex-1 text-sm ${c.done ? 'line-through text-jira-muted' : ''}`}>{c.title}</span>
-                <button onClick={() => set({ children: draft.children.filter(x => x.id !== c.id) })} className="opacity-0 group-hover:opacity-100 text-jira-muted hover:text-red-500 cursor-pointer" aria-label="Remove checklist item"><X className="w-3.5 h-3.5" /></button>
+                <span className={`flex-1 text-sm ${c.done ? 'line-through text-lira-muted' : ''}`}>{c.title}</span>
+                <button onClick={() => set({ children: draft.children.filter(x => x.id !== c.id) })} className="opacity-0 group-hover:opacity-100 text-lira-muted hover:text-red-500 cursor-pointer" aria-label="Remove checklist item"><X className="w-3.5 h-3.5" /></button>
               </div>
             ))}
           </div>
           <div className="flex gap-2 mt-2">
             <input className={input} placeholder="Add a checklist item" value={childText} onChange={e => setChildText(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addChild(); } }} />
-            <button onClick={addChild} className="px-3 rounded-lg border border-jira-border text-jira-text hover:bg-jira-bg cursor-pointer" aria-label="Add checklist item"><Plus className="w-4 h-4" /></button>
+            <button onClick={addChild} className="px-3 rounded-lg border border-lira-border text-lira-text hover:bg-lira-bg cursor-pointer" aria-label="Add checklist item"><Plus className="w-4 h-4" /></button>
           </div>
         </div>
 
         {/* dependencies */}
         <div>
           <label className={label}>Depends on (must finish first)</label>
-          {others.length === 0 ? <p className="text-xs text-jira-muted">No other items yet.</p> : (
-            <div className="max-h-36 overflow-y-auto rounded-lg border border-jira-border divide-y divide-jira-border/60">
+          {others.length === 0 ? <p className="text-xs text-lira-muted">No other items yet.</p> : (
+            <div className="max-h-36 overflow-y-auto rounded-lg border border-lira-border divide-y divide-lira-border/60">
               {others.map(o => (
-                <label key={o.id} className="flex items-center gap-2 px-3 py-1.5 text-xs cursor-pointer hover:bg-jira-bg/60">
+                <label key={o.id} className="flex items-center gap-2 px-3 py-1.5 text-xs cursor-pointer hover:bg-lira-bg/60">
                   <input type="checkbox" checked={draft.deps.includes(o.id)} onChange={() => set({ deps: draft.deps.includes(o.id) ? draft.deps.filter(d => d !== o.id) : [...draft.deps, o.id] })} className="w-4 h-4" />
                   <span className="flex-1 truncate">{o.title}</span>
-                  <span className="text-jira-muted">ends {o.end}</span>
+                  <span className="text-lira-muted">ends {o.end}</span>
                 </label>
               ))}
             </div>
           )}
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-jira-border">
+        <div className="flex items-center justify-between pt-3 border-t border-lira-border">
           {!isNew ? (
-            <button onClick={() => { if (window.confirm(`Remove "${draft.title}" from the roadmap?${draft.epicKey ? `\n\nThe epic ${draft.epicKey} stays in Lira.` : ''}`)) onDelete(draft.id); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:bg-red-500/10 px-3 py-2 rounded-lg cursor-pointer">
+            <button onClick={async () => { if (await confirmDialog({ title: 'Remove from roadmap', message: `Remove "${draft.title}" from the roadmap?${draft.epicKey ? `\n\nThe epic ${draft.epicKey} stays in Lira.` : ''}`, confirmLabel: 'Remove', tone: 'danger' })) onDelete(draft.id); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:bg-red-500/10 px-3 py-2 rounded-lg cursor-pointer">
               <Trash2 className="w-4 h-4" /> Remove
             </button>
           ) : <span />}
@@ -219,10 +221,10 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({ milestone, isNew
   if (!draft) return null;
   return (
     <Modal isOpen onClose={onClose} title={isNew ? 'Add milestone or release' : 'Edit milestone'} size="sm">
-      <div className="p-6 space-y-4 text-jira-text">
+      <div className="p-6 space-y-4 text-lira-text">
         <div><label className={label}>Name</label><input autoFocus className={input} value={draft.title} onChange={e => setDraft({ ...draft, title: e.target.value })} /></div>
         <div className="grid grid-cols-2 gap-3">
-          <div><label className={label}>Date</label><input type="date" className={input} value={draft.date} onChange={e => setDraft({ ...draft, date: e.target.value })} /></div>
+          <div><label className={label}>Date</label><DatePicker value={draft.date} onChange={v => setDraft({ ...draft, date: v })} clearable={false} aria-label="Date" /></div>
           <div>
             <label className={label}>Type</label>
             <select className={input} value={draft.kind} onChange={e => setDraft({ ...draft, kind: e.target.value as MilestoneKind })}>
@@ -230,7 +232,7 @@ export const MilestoneModal: React.FC<MilestoneModalProps> = ({ milestone, isNew
             </select>
           </div>
         </div>
-        <div className="flex items-center justify-between pt-3 border-t border-jira-border">
+        <div className="flex items-center justify-between pt-3 border-t border-lira-border">
           {!isNew ? <button onClick={() => onDelete(draft.id)} className="flex items-center gap-1.5 text-sm text-red-500 hover:bg-red-500/10 px-3 py-2 rounded-lg cursor-pointer"><Trash2 className="w-4 h-4" /> Delete</button> : <span />}
           <div className="flex gap-2">
             <button onClick={onClose} className={ghost}>Cancel</button>
@@ -262,7 +264,7 @@ export const NewRoadmapModal: React.FC<{ spaces: Space[]; onCreate: (rm: Roadmap
 
   return (
     <Modal isOpen onClose={onClose} title="Create roadmap" size="md">
-      <div className="p-6 space-y-4 text-jira-text">
+      <div className="p-6 space-y-4 text-lira-text">
         <div><label className={label}>Name</label><input autoFocus className={input} value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Q1 Platform roadmap" /></div>
         <div><label className={label}>Description</label><textarea className={`${input} min-h-[60px]`} value={description} onChange={e => setDescription(e.target.value)} /></div>
         <div>
@@ -270,20 +272,20 @@ export const NewRoadmapModal: React.FC<{ spaces: Space[]; onCreate: (rm: Roadmap
           <select className={input} value={spaceKey} onChange={e => setSpaceKey(e.target.value)}>
             {spaces.map(s => <option key={s.id} value={s.key}>{s.name} ({s.key})</option>)}
           </select>
-          <p className="text-[11px] text-jira-muted mt-1">Every item on the roadmap becomes an epic in this space, in the Backlog.</p>
+          <p className="text-[11px] text-lira-muted mt-1">Every item on the roadmap becomes an epic in this space, in the Backlog.</p>
         </div>
         <div>
           <label className={label}>Start from</label>
           <div className="grid grid-cols-2 gap-2">
             {([['blank', 'Blank roadmap', 'Your own lanes, no items'], ['lira', 'Lira product roadmap', 'Phases 1–7 from ROADMAP.md']] as const).map(([k, t, d]) => (
-              <button key={k} type="button" onClick={() => setTemplate(k)} className={`text-left rounded-xl border px-3 py-2 cursor-pointer transition-colors ${template === k ? 'border-jira-blue bg-blue-500/10' : 'border-jira-border hover:bg-jira-bg'}`}>
-                <div className="text-sm font-semibold">{t}</div><div className="text-[11px] text-jira-muted">{d}</div>
+              <button key={k} type="button" onClick={() => setTemplate(k)} className={`text-left rounded-xl border px-3 py-2 cursor-pointer transition-colors ${template === k ? 'border-lira-blue bg-blue-500/10' : 'border-lira-border hover:bg-lira-bg'}`}>
+                <div className="text-sm font-semibold">{t}</div><div className="text-[11px] text-lira-muted">{d}</div>
               </button>
             ))}
           </div>
         </div>
         {template === 'blank' && <div><label className={label}>Lanes (comma separated)</label><input className={input} value={lanes} onChange={e => setLanes(e.target.value)} /></div>}
-        <div className="flex justify-end gap-2 pt-3 border-t border-jira-border">
+        <div className="flex justify-end gap-2 pt-3 border-t border-lira-border">
           <button onClick={onClose} className={ghost}>Cancel</button>
           <button disabled={!name.trim() || !spaceKey} onClick={create} className={primary}>Create roadmap</button>
         </div>

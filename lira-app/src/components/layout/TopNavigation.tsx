@@ -86,11 +86,11 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
     try {
       const result = await importBackup(file);
       const msg = `Imported ${result.spaces} spaces and ${result.issues} issues!`;
-      setImportStatus(`✅ ${msg}`);
+      setImportStatus(msg);
       showToast(msg, 'success');
     } catch (err) {
       const errText = `Import failed: ${err instanceof Error ? err.message : 'Unknown error'}`;
-      setImportStatus(`❌ ${errText}`);
+      setImportStatus(`Error: ${errText}`);
       showToast(errText, 'error');
     } finally {
       setImporting(false);
@@ -102,11 +102,11 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
     try {
       await exportBackup();
       const msg = 'Backup downloaded & synced to PC disk (data/spaces/*.json)!';
-      setImportStatus(`✅ ${msg}`);
+      setImportStatus(msg);
       showToast(msg, 'success');
     } catch (err) {
       const errText = `Export failed: ${err instanceof Error ? err.message : 'Unknown error'}`;
-      setImportStatus(`❌ ${errText}`);
+      setImportStatus(`Error: ${errText}`);
       showToast(errText, 'error');
     }
   }, [showToast]);
@@ -148,7 +148,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Create button */}
       <button
         onClick={onCreateIssue}
-        className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-jira-blue to-jira-blue-hover hover:brightness-110 text-white text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgb(var(--jira-blue)/0.35)] hover:shadow-[0_6px_18px_rgb(var(--jira-blue)/0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
+        className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-lira-blue to-lira-blue-hover hover:brightness-110 text-white text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgb(var(--lira-blue)/0.35)] hover:shadow-[0_6px_18px_rgb(var(--lira-blue)/0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
         title="Create a ticket — you'll choose the space"
       >
         <Plus className="w-4 h-4" />
@@ -245,7 +245,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         onImportClick={() => fileRef.current?.click()}
       />
 
-      {/* Jira Settings Modals */}
+      {/* Settings modals */}
       <GeneralSettingsModal isOpen={showGeneralModal} onClose={() => setShowGeneralModal(false)} />
       <NotificationSettingsModal isOpen={showNotifModal} onClose={() => setShowNotifModal(false)} />
       <ManageSpacesModal

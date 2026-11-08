@@ -1,3 +1,4 @@
+import { STATUS_META } from '../../utils/status';
 import React from 'react';
 
 interface BadgeProps {
@@ -32,14 +33,8 @@ interface StatusBadgeProps {
   size?: 'sm' | 'md';
 }
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; bgColor: string }> = {
-  backlog: { label: 'Backlog', color: '#6B778C', bgColor: '#F4F5F7' },
-  todo: { label: 'To Do', color: '#172B4D', bgColor: '#DFE1E6' },
-  inprogress: { label: 'In Progress', color: '#0052CC', bgColor: '#DEEBFF' },
-  done: { label: 'Done', color: '#006644', bgColor: '#E3FCEF' },
-};
-
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'sm' }) => {
-  const config = STATUS_CONFIG[status] || { label: status, color: '#172B4D', bgColor: '#DFE1E6' };
+  const meta = (STATUS_META as Record<string, { label: string; color: string; bg: string }>)[status];
+  const config = meta ? { label: meta.label, color: meta.color, bgColor: meta.bg } : { label: status, color: '#172B4D', bgColor: '#DFE1E6' };
   return <Badge label={config.label} color={config.color} bgColor={config.bgColor} size={size} />;
 };

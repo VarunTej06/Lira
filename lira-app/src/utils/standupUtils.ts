@@ -185,11 +185,11 @@ export function buildAgenda(scoped: Issue[], everything: Issue[], now = Date.now
 
   const blocked = open.map(i => ({
     issue: i,
-    blockedBy: (i.linkedIssues || [])
-      .filter(l => l.linkType === 'blocked_by')
-      .map(l => byId.get(l.issueId))
-      .filter((x): x is Issue => !!x && !isDone(x)),
-  })).filter(b => b.blockedBy.length > 0);
+    blockedBy: [
+      ...(i.blockedByIds ?? []).map(id => byId.get(id)),
+      ...(i.linkedIssues || []).filter(l => l.linkType === 'blocked_by').map(l => byId.get(l.issueId)),
+    ].filter((x, n, all): x is Issue => !!x && !isDone(x) && all.indexOf(x) === n),
+  })).filter(b => b.issue.blocked || b.blockedBy.length > 0); // switched to Blocked, or linked to an open blocker
 
   return {
     needsUpdate,

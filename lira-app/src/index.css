@@ -4,19 +4,19 @@
 
 @layer base {
   :root {
-    --jira-bg: 244 245 247;
-    --jira-surface: 255 255 255;
-    --jira-border: 223 225 230;
-    --jira-text: 23 43 77;
-    --jira-muted: 107 119 140;
-    --jira-blue: 0 82 204;
-    --jira-blue-hover: 0 101 255;
-    --jira-blue-light: 222 235 255;
-    --jira-amber-light: 255 247 214;
-    --jira-green-light: 227 252 239;
-    --jira-red-light: 255 235 230;
-    --jira-purple-light: 234 230 255;
-    --jira-teal-light: 230 252 255;
+    --lira-bg: 244 245 247;
+    --lira-surface: 255 255 255;
+    --lira-border: 223 225 230;
+    --lira-text: 23 43 77;
+    --lira-muted: 107 119 140;
+    --lira-blue: 0 82 204;
+    --lira-blue-hover: 0 101 255;
+    --lira-blue-light: 222 235 255;
+    --lira-amber-light: 255 247 214;
+    --lira-green-light: 227 252 239;
+    --lira-red-light: 255 235 230;
+    --lira-purple-light: 234 230 255;
+    --lira-teal-light: 230 252 255;
     --app-frame: 230 234 241;
     --surface-2: 250 251 252;
     --surface-3: 244 245 247;
@@ -25,19 +25,19 @@
   }
 
   .dark {
-    --jira-bg: 13 17 23;
-    --jira-surface: 22 27 34;
-    --jira-border: 48 54 61;
-    --jira-text: 230 237 243;
-    --jira-muted: 139 148 158;
-    --jira-blue: 38 132 255;
-    --jira-blue-hover: 76 154 255;
-    --jira-blue-light: 17 45 92;
-    --jira-amber-light: 66 49 8;
-    --jira-green-light: 12 58 40;
-    --jira-red-light: 74 24 16;
-    --jira-purple-light: 44 36 88;
-    --jira-teal-light: 8 55 66;
+    --lira-bg: 13 17 23;
+    --lira-surface: 22 27 34;
+    --lira-border: 48 54 61;
+    --lira-text: 230 237 243;
+    --lira-muted: 139 148 158;
+    --lira-blue: 38 132 255;
+    --lira-blue-hover: 76 154 255;
+    --lira-blue-light: 17 45 92;
+    --lira-amber-light: 66 49 8;
+    --lira-green-light: 12 58 40;
+    --lira-red-light: 74 24 16;
+    --lira-purple-light: 44 36 88;
+    --lira-teal-light: 8 55 66;
     --app-frame: 8 11 16;
     --surface-2: 28 34 43;
     --surface-3: 36 43 54;
@@ -64,7 +64,7 @@
   }
 
   body {
-    @apply font-sans text-jira-text;
+    @apply font-sans text-lira-text;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -112,7 +112,7 @@
   cursor: grabbing;
 }
 
-/* Jira-style Kanban Board Scrollbar - prominent in right corner, easy to drag with mouse */
+/* Kanban board scrollbar - prominent in right corner, easy to drag with mouse */
 .lira-board-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: #B3BAC5 rgba(9, 30, 66, 0.04);
@@ -224,4 +224,56 @@
   [data-menu-trigger] {
     opacity: 1 !important;
   }
+}
+
+/* ── Rich text description editor ───────────────────────────────────────── */
+.lira-rich-body { outline: none; font-size: 14px; line-height: 1.6; color: rgb(var(--lira-text)); word-break: break-word; }
+.lira-rich-body > * + * { margin-top: 0.5rem; }
+.lira-rich-body h1 { font-size: 1.5rem; font-weight: 700; line-height: 1.3; }
+.lira-rich-body h2 { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+.lira-rich-body h3 { font-size: 1.1rem; font-weight: 600; line-height: 1.3; }
+.lira-rich-body ul { list-style: disc; padding-left: 1.4rem; }
+.lira-rich-body ol { list-style: decimal; padding-left: 1.4rem; }
+.lira-rich-body li > p { margin: 0; }
+.lira-rich-body ul[data-type='taskList'] { list-style: none; padding-left: 0.1rem; }
+.lira-rich-body ul[data-type='taskList'] li { display: flex; align-items: flex-start; gap: 0.5rem; }
+.lira-rich-body ul[data-type='taskList'] li > label { margin-top: 0.3rem; user-select: none; flex-shrink: 0; }
+.lira-rich-body ul[data-type='taskList'] li > label input { width: 15px; height: 15px; cursor: pointer; accent-color: rgb(var(--lira-blue)); }
+.lira-rich-body ul[data-type='taskList'] li > div { flex: 1; min-width: 0; }
+.lira-rich-body ul[data-type='taskList'] li[data-checked='true'] > div { text-decoration: line-through; color: rgb(var(--lira-muted)); }
+.lira-rich-body blockquote { border-left: 3px solid rgb(var(--lira-border)); padding-left: 0.85rem; color: rgb(var(--lira-muted)); }
+.lira-rich-body code { background: rgb(var(--lira-border) / 0.55); padding: 0.1rem 0.3rem; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; }
+.lira-rich-body pre { background: #0b1220; color: #e5e7eb; padding: 0.75rem; border-radius: 8px; overflow: auto; }
+.lira-rich-body pre code { background: transparent; padding: 0; color: inherit; }
+.lira-rich-body mark { border-radius: 3px; padding: 0 2px; color: #172B4D; }
+.lira-rich-body img { max-width: 100%; height: auto; border-radius: 8px; display: block; }
+.lira-rich-body img.ProseMirror-selectednode { outline: 2px solid rgb(var(--lira-blue)); }
+.lira-rich-body a { color: rgb(var(--lira-blue)); text-decoration: underline; cursor: pointer; }
+.lira-rich-body hr { border: 0; border-top: 1px solid rgb(var(--lira-border)); margin: 0.75rem 0; }
+.lira-rich-body p.is-editor-empty:first-child::before { content: attr(data-placeholder); float: left; height: 0; pointer-events: none; color: rgb(var(--lira-muted)); }
+.lira-mention { background: rgb(var(--lira-blue) / 0.14); color: rgb(var(--lira-blue)); border-radius: 4px; padding: 0 4px; font-weight: 600; }
+.lira-mention-list { position: fixed; z-index: 400; min-width: 200px; max-height: 240px; overflow-y: auto; background: rgb(var(--lira-surface)); border: 1px solid rgb(var(--lira-border)); border-radius: 12px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28); padding: 4px; }
+.lira-mention-item { display: block; width: 100%; text-align: left; padding: 6px 10px; border-radius: 8px; font-size: 13px; color: rgb(var(--lira-text)); background: transparent; border: 0; cursor: pointer; }
+.lira-mention-item:hover, .lira-mention-item.is-selected { background: rgb(var(--lira-blue) / 0.14); color: rgb(var(--lira-blue)); }
+.lira-mention-empty { padding: 6px 10px; font-size: 12px; color: rgb(var(--lira-muted)); }
+
+/* ── Blocked switch: small flames that keep rising around the white half while a ticket is blocked ── */
+.lira-fire { animation: lira-fire-glow 1.1s ease-in-out infinite alternate; }
+.lira-fire-wrap { position: absolute; inset: 0; pointer-events: none; }
+.lira-flame { position: absolute; color: #FF8A00; fill: #FFC53D; opacity: 0; transform-origin: 50% 100%; animation: lira-flame-rise 1.5s ease-out infinite; filter: drop-shadow(0 0 3px rgba(255, 120, 0, 0.9)); }
+.lira-flame:nth-child(3n) { color: #FF4500; fill: #FF8A00; }
+.lira-flame:nth-child(3n+1) { color: #FFB000; fill: #FFE066; }
+@keyframes lira-fire-glow {
+  0%   { box-shadow: 0 0 5px 1px rgba(255, 170, 0, 0.75), 0 0 12px 2px rgba(255, 90, 0, 0.45), 0 -3px 9px 0 rgba(255, 210, 60, 0.55); }
+  50%  { box-shadow: 0 0 8px 2px rgba(255, 110, 0, 0.85), 0 0 18px 4px rgba(255, 60, 0, 0.5), 0 -5px 12px 1px rgba(255, 190, 40, 0.65); }
+  100% { box-shadow: 0 0 6px 1px rgba(255, 200, 40, 0.8), 0 0 15px 3px rgba(255, 80, 0, 0.4), 0 -4px 10px 0 rgba(255, 220, 90, 0.5); }
+}
+@keyframes lira-flame-rise {
+  0%   { opacity: 0; transform: translate(0, 5px) scale(0.5); }
+  25%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx, 0), -13px) scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lira-fire { animation: none; box-shadow: 0 0 8px 2px rgba(255, 120, 0, 0.7); }
+  .lira-flame { animation: none; opacity: 0.8; }
 }

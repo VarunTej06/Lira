@@ -1,10 +1,12 @@
+import { issueLink } from '../../utils/links';
+import { STATUS_LIST, statusLabel } from '../../utils/status';
+import { TypeIcon, PriorityIcon } from '../common/Icons';
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Draggable } from '@hello-pangea/dnd';
-import { Calendar, MoreHorizontal, Trash2, Edit3, ChevronDown, Link as LinkIcon } from 'lucide-react';
+import { Calendar, MoreHorizontal, Trash2, Edit3, ChevronDown, Link as LinkIcon, Link2, Ban } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
-import { ISSUE_TYPE_CONFIG } from '../../types/issue';
 import { formatDueDate, isDueSoon, isOverdue } from '../../utils/dateUtils';
 import { getPriorityConfig } from '../../utils/priorityUtils';
 import { Avatar } from '../common/Avatar';
@@ -35,12 +37,12 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
   const [parentMenuCoords, setParentMenuCoords] = useState<{ top: number; left: number; width: number } | null>(null);
   const linkMenuRef = useRef<HTMLDivElement>(null);
   const priority = getPriorityConfig(issue.priority);
-  const accentColor = STATUS_ACCENT[issue.status];
+  const accentColor = issue.blocked ? '#DE350B' : STATUS_ACCENT[issue.status];
+  const blockers = (issue.blockedByIds ?? []).map(id => (allIssues || []).find(i => i.id === id)).filter((i): i is Issue => !!i);
   const subtasks = Array.isArray(issue.subtasks) ? issue.subtasks : [];
   const completedSubtasks = subtasks.filter(s => s.completed).length;
   const totalSubtasks = subtasks.length;
   const labels = Array.isArray(issue.labels) ? issue.labels : [];
-  const typeCfg = ISSUE_TYPE_CONFIG[issue.type] ?? ISSUE_TYPE_CONFIG.task;
 
   // Resolve parent issue from space issues list
   const parentIssue = (allIssues || []).find(
@@ -72,11 +74,11 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
   }, [menuOpen, parentMenuOpen, linkMenuOpen]);
 
   const dueDateColor = () => {
-    if (!issue.dueDate) return 'text-jira-muted';
-    if (issue.status === 'done') return 'text-jira-muted';
+    if (!issue.dueDate) return 'text-lira-muted';
+    if (issue.status === 'done') return 'text-lira-muted';
     if (isOverdue(issue.dueDate)) return 'text-red-500';
     if (isDueSoon(issue.dueDate)) return 'text-amber-500';
-    return 'text-jira-muted';
+    return 'text-lira-muted';
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -103,14 +105,14 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`bg-white rounded-lg shadow-card border border-jira-border cursor-pointer group hover:shadow-card-hover overflow-hidden ${snapshot.isDragging ? 'shadow-modal rotate-1 opacity-90 scale-[1.02]' : ''}`}
+          className={`bg-white rounded-lg shadow-card border border-lira-border cursor-pointer group hover:shadow-card-hover overflow-hidden ${snapshot.isDragging ? 'shadow-modal rotate-1 opacity-90 scale-[1.02]' : ''}`}
         >
           {/* Status accent bar */}
           {accentColor && <div className="h-1 w-full" style={{ backgroundColor: accentColor }} />}
 
-          <div className="p-3" onClick={() => onClick(issue)}>
+          <div className="p-3" onClick={() => onClick(issue)} {...issueLink(issue)}>
             {/* Title */}
-            <p className="text-sm font-medium text-jira-text leading-snug mb-2 line-clamp-3 group-hover:text-jira-blue transition-colors">
+            <p className="text-sm font-medium text-lira-text leading-snug mb-2 line-clamp-3 group-hover:text-lira-blue transition-colors">
               {issue.title}
             </p>
 
@@ -140,13 +142,13 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                       setParentMenuOpen(true);
                     }
                   }}
-                  className="w-full flex items-center justify-between px-2.5 py-1 text-xs border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-md text-jira-text font-normal transition-colors text-left group/parent shadow-2xs"
+                  className="w-full flex items-center justify-between px-2.5 py-1 text-xs border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-md text-lira-text font-normal transition-colors text-left group/parent shadow-2xs"
                   title={`Parent: ${parentIssue.key} — ${parentIssue.title}`}
                 >
-                  <span className="truncate text-xs text-jira-text font-normal pr-1">
+                  <span className="truncate text-xs text-lira-text font-normal pr-1">
                     {parentIssue.title}
                   </span>
-                  <ChevronDown className={`w-3.5 h-3.5 text-gray-500 flex-shrink-0 group-hover/parent:text-jira-blue transition-transform duration-150 ${parentMenuOpen ? 'rotate-180 text-jira-blue' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 text-gray-500 flex-shrink-0 group-hover/parent:text-lira-blue transition-transform duration-150 ${parentMenuOpen ? 'rotate-180 text-lira-blue' : ''}`} />
                 </button>
 
                 {/* Render via Portal so it pops out of the small card box without being clipped by overflow-hidden */}
@@ -161,11 +163,11 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                       zIndex: 9999,
                     }}
                     onClick={e => e.stopPropagation()}
-                    className="bg-white border border-jira-border rounded-xl shadow-2xl py-1 max-h-60 overflow-y-auto animate-scale-in"
+                    className="bg-white border border-lira-border rounded-xl shadow-2xl py-1 max-h-60 overflow-y-auto animate-scale-in"
                   >
-                    <div className="px-3 py-1.5 text-[10px] font-semibold text-jira-muted uppercase tracking-wider border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                    <div className="px-3 py-1.5 text-[10px] font-semibold text-lira-muted uppercase tracking-wider border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
                       <span>Linked Parent</span>
-                      <span className="font-mono text-[9px] bg-gray-200/80 px-1.5 py-0.5 rounded text-jira-text font-semibold">{parentIssue.key}</span>
+                      <span className="font-mono text-[9px] bg-gray-200/80 px-1.5 py-0.5 rounded text-lira-text font-semibold">{parentIssue.key}</span>
                     </div>
 
                     <button
@@ -174,15 +176,15 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                         setParentMenuOpen(false);
                         onClick(parentIssue);
                       }}
-                      className="w-full text-left px-3 py-2 text-xs text-jira-blue hover:bg-blue-50 font-medium flex items-center gap-2 border-b border-gray-100 transition-colors"
+                      className="w-full text-left px-3 py-2 text-xs text-lira-blue hover:bg-blue-50 font-medium flex items-center gap-2 border-b border-gray-100 transition-colors"
                     >
-                      <span>🔗</span>
+                      <Link2 className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">Open {parentIssue.key} ({parentIssue.title})</span>
                     </button>
 
                     {eligibleParents.length > 0 && (
                       <>
-                        <div className="px-3 pt-2 pb-1 text-[10px] text-jira-muted font-medium bg-gray-50/80">
+                        <div className="px-3 pt-2 pb-1 text-[10px] text-lira-muted font-medium bg-gray-50/80">
                           Change parent to:
                         </div>
                         {eligibleParents.map(p => (
@@ -200,10 +202,10 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                               }
                             }}
                             className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 truncate transition-colors ${
-                              p.id === parentIssue.id ? 'bg-blue-50 text-jira-blue font-semibold' : 'text-jira-text'
+                              p.id === parentIssue.id ? 'bg-blue-50 text-lira-blue font-semibold' : 'text-lira-text'
                             }`}
                           >
-                            <span className="text-[10px] font-mono text-jira-muted flex-shrink-0">{p.key}</span>
+                            <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{p.key}</span>
                             <span className="truncate">{p.title}</span>
                           </button>
                         ))}
@@ -228,6 +230,12 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
               </div>
             )}
 
+            {issue.blocked && (
+              <span data-testid="blocked-badge" className="inline-flex items-center gap-1 mb-2 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide rounded bg-red-100 text-red-700" title="This ticket is blocked">
+                <Ban className="w-3 h-3" /> Blocked{blockers.length ? ` by ${blockers[0].key}${blockers.length > 1 ? ` +${blockers.length - 1}` : ''}` : ''}
+              </span>
+            )}
+
             {/* Labels */}
             {labels.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-2">
@@ -237,7 +245,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                   </span>
                 ))}
                 {labels.length > 3 && (
-                  <span className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-gray-100 text-jira-muted">
+                  <span className="px-1.5 py-0.5 text-[10px] font-medium rounded bg-gray-100 text-lira-muted">
                     +{labels.length - 3}
                   </span>
                 )}
@@ -247,7 +255,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
             {/* Subtask progress */}
             {totalSubtasks > 0 && (
               <div className="mb-2">
-                <div className="flex items-center justify-between text-[10px] text-jira-muted mb-0.5">
+                <div className="flex items-center justify-between text-[10px] text-lira-muted mb-0.5">
                   <span>{completedSubtasks}/{totalSubtasks} tasks</span>
                   <span>{Math.round((completedSubtasks / totalSubtasks) * 100)}%</span>
                 </div>
@@ -263,8 +271,8 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
             {/* Footer */}
             <div className="flex items-center justify-between gap-1 mt-2.5 pt-2 border-t border-gray-50">
               <div className="flex items-center gap-1.5 min-w-0">
-                <span className="text-xs flex-shrink-0" style={{ color: typeCfg.color }}>{typeCfg.symbol}</span>
-                <span className="text-[10px] font-semibold text-jira-muted font-mono">{issue.key}</span>
+                <TypeIcon type={issue.type} className="w-3.5 h-3.5" />
+                <span className="text-[10px] font-semibold text-lira-muted font-mono">{issue.key}</span>
               </div>
 
               <div className="flex items-center gap-2 flex-shrink-0">
@@ -274,7 +282,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                     {formatDueDate(issue.dueDate)}
                   </div>
                 )}
-                <span className="text-sm" title={priority.label}>{priority.icon}</span>
+                <span title={priority.label}><PriorityIcon priority={issue.priority} className="w-4 h-4" /></span>
                 {issue.assigneeInitials && (
                   <Avatar initials={issue.assigneeInitials} size="xs" color="#0052CC" />
                 )}
@@ -283,16 +291,16 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                 <div ref={menuRef} className="relative" onClick={e => e.stopPropagation()}>
                   <button
                     onClick={e => { e.stopPropagation(); setMenuOpen(m => !m); }}
-                    className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-gray-100 text-jira-muted hover:text-jira-text transition-all"
+                    className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-gray-100 text-lira-muted hover:text-lira-text transition-all"
                     title="Card actions"
                   >
                     <MoreHorizontal className="w-3.5 h-3.5" />
                   </button>
                   {menuOpen && (
-                    <div className="absolute right-0 bottom-6 z-30 bg-white border border-jira-border rounded-lg shadow-dropdown py-1 min-w-[160px] animate-scale-in">
+                    <div className="absolute right-0 bottom-6 z-30 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 min-w-[160px] animate-scale-in">
                       <button onClick={() => { setMenuOpen(false); onClick(issue); }}
-                        className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-jira-text">
-                        <Edit3 className="w-3.5 h-3.5 text-jira-muted" /> Open
+                        className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-lira-text">
+                        <Edit3 className="w-3.5 h-3.5 text-lira-muted" /> Open
                       </button>
 
                       {/* Link parent option if not linked yet */}
@@ -302,20 +310,20 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                             setMenuOpen(false);
                             setLinkMenuOpen(true);
                           }}
-                          className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-2 text-jira-text"
+                          className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-2 text-lira-text"
                         >
-                          <LinkIcon className="w-3.5 h-3.5 text-jira-muted" /> Link to parent...
+                          <LinkIcon className="w-3.5 h-3.5 text-lira-muted" /> Link to parent...
                         </button>
                       )}
 
-                      <div className="px-3 pt-1.5 pb-0.5 text-[10px] font-semibold text-jira-muted uppercase tracking-wide">Set status</div>
-                      {['backlog', 'todo', 'inprogress', 'done'].map(s => (
+                      <div className="px-3 pt-1.5 pb-0.5 text-[10px] font-semibold text-lira-muted uppercase tracking-wide">Set status</div>
+                      {STATUS_LIST.map(m => m.id as string).map(s => (
                         <button key={s} onClick={e => handleStatusChange(e, s)}
-                          className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 text-jira-text ${issue.status === s ? 'font-semibold text-jira-blue' : ''}`}>
-                          {s === 'backlog' ? 'Backlog' : s === 'todo' ? 'To Do' : s === 'inprogress' ? 'In Progress' : 'Done'}
+                          className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 text-lira-text ${issue.status === s ? 'font-semibold text-lira-blue' : ''}`}>
+                          {statusLabel(s)}
                         </button>
                       ))}
-                      <div className="border-t border-jira-border my-1" />
+                      <div className="border-t border-lira-border my-1" />
                       <button onClick={handleDeleteClick}
                         className="w-full text-left px-3 py-2 text-sm hover:bg-red-50 flex items-center gap-2 text-red-600">
                         <Trash2 className="w-3.5 h-3.5" /> Delete
@@ -327,9 +335,9 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                   {linkMenuOpen && (
                     <div
                       ref={linkMenuRef}
-                      className="absolute right-0 bottom-6 z-40 bg-white border border-jira-border rounded-lg shadow-dropdown py-1 min-w-[200px] max-w-[260px] max-h-56 overflow-y-auto animate-scale-in"
+                      className="absolute right-0 bottom-6 z-40 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 min-w-[200px] max-w-[260px] max-h-56 overflow-y-auto animate-scale-in"
                     >
-                      <div className="px-3 py-1 text-[10px] font-semibold text-jira-muted uppercase tracking-wide border-b border-gray-100">
+                      <div className="px-3 py-1 text-[10px] font-semibold text-lira-muted uppercase tracking-wide border-b border-gray-100">
                         Select Parent
                       </div>
                       {eligibleParents.map(p => (
@@ -344,9 +352,9 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, space: _spac
                               });
                             }
                           }}
-                          className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 truncate text-jira-text"
+                          className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 truncate text-lira-text"
                         >
-                          <span className="text-[10px] font-mono text-jira-muted flex-shrink-0">{p.key}</span>
+                          <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{p.key}</span>
                           <span className="truncate">{p.title}</span>
                         </button>
                       ))}

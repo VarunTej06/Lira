@@ -2,8 +2,8 @@
 
 > **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
 
-> **Lira (Learner's Jira)** is a 100% offline-first, browser-based personal project management tool
-> modelled exactly on Atlassian Jira Work Management.  No cloud account, no API keys, no server.
+> **Lira** is a 100% offline-first, browser-based personal project management tool
+> in the style of an enterprise work-management product.  No cloud account, no API keys, no server.
 
 ---
 
@@ -12,10 +12,10 @@
 Below is the full master prompt used to design and scaffold Lira.
 
 ```
-# Enterprise Specification: Lira (Learner's Jira)
+# Enterprise Specification: Lira
 
 You are an expert full-stack engineer and UI/UX designer.  Build Lira — a
-production-ready, pixel-accurate, offline-first personal Jira clone tailored
+production-ready, offline-first personal project management app tailored
 for Day-to-Day (D2D) learning tracking, technical certification roadmaps, and
 self-directed project management.
 
@@ -25,7 +25,7 @@ self-directed project management.
 - Reactivity: useLiveQuery() for automatic UI re-renders on DB changes.
 - Full JSON export/import backup engine.
 
-## UI Tokens (Atlassian Design System)
+## UI Tokens (Lira design tokens)
 | Token              | Value     |
 |--------------------|-----------|
 | Page background    | #F4F5F7   |
@@ -42,7 +42,7 @@ self-directed project management.
 ## Issue Hierarchy
 Epic → Task → Subtask
 - All stored as Issue rows; linked via parentId field.
-- Child work items table in detail modal (like Jira).
+- Child work items table in the detail modal.
 - Status, priority, assignee visible on each child row.
 
 ## Core Features
@@ -65,18 +65,17 @@ React 18 + TypeScript + Vite + Tailwind CSS (v3) + Dexie.js +
 ### 2.1 Zero-Cloud Dependency
 Every byte of data lives in the browser's IndexedDB on the user's own machine.
 There is no authentication server, no REST API, no WebSocket.  Lira works
-completely offline — on an aeroplane, in a lab without Wi-Fi, or after Atlassian
-goes down.
+completely offline — on an aeroplane, in a lab without Wi-Fi, or when a
+hosted service is down.
 
-### 2.2 Atlassian Design System Alignment
-Lira replicates the exact Jira Work Management visual language:
+### 2.2 Design System
+Lira has its own consistent visual language:
 - **Spacing:** 4-point grid (Tailwind defaults).
-- **Typography:** Inter (Google Fonts) — same weight distribution as Jira's
-  "Atlassian Sans".
-- **Colour tokens:** Hard-coded Tailwind extensions matching Jira's CSS custom
-  properties (see `tailwind.config.js`).
+- **Typography:** Inter (bundled with the app) in weights 300 to 900.
+- **Colour tokens:** Tailwind extensions backed by CSS variables so they flip with
+  the theme (see `tailwind.config.js` and `index.css`).
 - **Component patterns:** Status badges, priority icons, avatar circles, and
-  drag handles are pixel-matched to Jira's component library.
+  drag handles share one set of component patterns.
 
 ### 2.3 High Resilience
 | Risk | Mitigation |
@@ -146,8 +145,7 @@ field creates the tree structure.  The `epicId` field caches the root Epic ID
 for fast "show all issues in this epic" queries.
 
 Child work items appear as an interactive table inside each issue's detail modal
-with live status changes, priority icons, and assignee avatars — matching the
-Jira "Child work items" section exactly.
+with live status changes, priority icons, and assignee avatars.
 
 ---
 

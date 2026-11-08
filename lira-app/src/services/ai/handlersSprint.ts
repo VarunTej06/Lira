@@ -25,11 +25,11 @@ export async function handleSprintPlan(c: AgentContext): Promise<ChatMessage | u
   if (g.intent !== 'sprint_plan' || !g.targetSprint) return undefined;
   const plan = planSprintFromBacklog(c.allIssues, g.targetSprint, g.targetSpace?.id);
   if (!plan.picked.length) {
-    return reply(c, `📭 Nothing from the backlog fits **${sprintName(g.targetSprint)}**${plan.skipped.length ? ` (${plan.skipped.length} tickets are too big for the remaining capacity of ${Math.max(0, plan.capacity - plan.alreadyPoints)} points)` : ' (the backlog is empty, or those spaces are not in this sprint)'}.`,
+    return reply(c, `Nothing from the backlog fits **${sprintName(g.targetSprint)}**${plan.skipped.length ? ` (${plan.skipped.length} tickets are too big for the remaining capacity of ${Math.max(0, plan.capacity - plan.alreadyPoints)} points)` : ' (the backlog is empty, or those spaces are not in this sprint)'}.`,
       ['Show the risk radar', 'Summarise this sprint']);
   }
   const moved = await moveIssuesToSprint(plan.picked, g.targetSprint);
-  return reply(c, `🗓️ **Planned ${sprintName(g.targetSprint)}**: moved ${moved} backlog ticket${moved === 1 ? '' : 's'} in.\n\n${describePlan(plan)}`,
+  return reply(c, `**Planned ${sprintName(g.targetSprint)}**: moved ${moved} backlog ticket${moved === 1 ? '' : 's'} in.\n\n${describePlan(plan)}`,
     [`Summarise ${g.targetSprint === currentSprintKey() ? 'this' : 'next'} sprint`, 'Show the risk radar'], { actionTaken: { type: 'sprint_plan', details: `Moved ${moved} tickets to ${sprintName(g.targetSprint)}` } });
 }
 

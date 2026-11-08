@@ -1,3 +1,4 @@
+import { descriptionToText } from '../../utils/richText';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Lightbulb } from 'lucide-react';
 import type { Issue, Priority } from '../../types/issue';
@@ -31,7 +32,7 @@ export const TicketSuggestions: React.FC<TicketSuggestionsProps> = ({
   }, [title, description]);
 
   const s = useMemo(
-    () => (settled.title.trim().length >= 4 ? suggestForTicket(settled.title, settled.description, type, existing, spaceId) : null),
+    () => (settled.title.trim().length >= 4 ? suggestForTicket(settled.title, descriptionToText(settled.description), type, existing, spaceId) : null),
     [settled, type, existing, spaceId],
   );
   if (!s) return null;

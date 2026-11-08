@@ -1,3 +1,6 @@
+import { issueLink } from '../../../utils/links';
+import { statusLabel } from '../../../utils/status';
+import { Zap } from 'lucide-react';
 import type { CapacityState } from './useCapacityState';
 
 /** Workload grouped by epic. */
@@ -11,14 +14,14 @@ export function GroupByEpic(s: CapacityState) {
           {epicGroups.map(({ epic, children, done, progress, points }) => (
             <div
               key={epic.id}
-              className="bg-white rounded-xl border border-jira-border shadow-xs p-5 space-y-4 hover:border-jira-blue transition-all"
+              className="bg-white rounded-xl border border-lira-border shadow-xs p-5 space-y-4 hover:border-lira-blue transition-all"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded-lg flex items-center gap-1">
-                    ⚡ {epic.key}
+                    <Zap className="w-3 h-3" /> {epic.key}
                   </span>
-                  <h3 className="text-sm font-bold text-jira-text truncate max-w-sm">{epic.title}</h3>
+                  <h3 className="text-sm font-bold text-lira-text truncate max-w-sm">{epic.title}</h3>
                 </div>
                 <span className="text-xs font-bold text-purple-700">{progress}%</span>
               </div>
@@ -31,7 +34,7 @@ export function GroupByEpic(s: CapacityState) {
                 />
               </div>
 
-              <div className="text-xs text-jira-muted flex justify-between font-medium">
+              <div className="text-xs text-lira-muted flex justify-between font-medium">
                 <span>{done} of {children.length} child tasks done · {points} pts</span>
                 <span className="capitalize">{epic.status}</span>
               </div>
@@ -41,13 +44,13 @@ export function GroupByEpic(s: CapacityState) {
                 {children.map(child => (
                   <div
                     key={child.id}
-                    onClick={() => onIssueClick?.(child)}
-                    className="flex items-center justify-between p-2 rounded-lg border border-jira-border hover:bg-gray-50 transition-all cursor-pointer text-xs group"
+                    onClick={() => onIssueClick?.(child)} {...issueLink(child)}
+                    className="flex items-center justify-between p-2 rounded-lg border border-lira-border hover:bg-gray-50 transition-all cursor-pointer text-xs group"
                   >
-                    <span className="font-mono font-bold text-jira-blue mr-2 group-hover:underline">{child.key}</span>
-                    <span className="truncate flex-1 text-jira-text">{child.title}</span>
+                    <span className="font-mono font-bold text-lira-blue mr-2 group-hover:underline">{child.key}</span>
+                    <span className="truncate flex-1 text-lira-text">{child.title}</span>
                     <span className="text-[10px] uppercase font-semibold text-gray-500 ml-2">
-                      {child.status}
+                      {statusLabel(child.status)}
                     </span>
                   </div>
                 ))}

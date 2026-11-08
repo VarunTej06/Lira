@@ -1,10 +1,10 @@
-# 🚀 Lira Web Application (`lira-app`)
+# Lira Web Application (`lira-app`)
 
 > Core web application frontend for **Lira** — built with React 18, TypeScript, Tailwind CSS, `@hello-pangea/dnd`, Dexie IndexedDB, and Vite local PC disk synchronization middleware.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Layer | Technology | Purpose |
 |---|---|---|
@@ -23,7 +23,7 @@
 
 ---
 
-## 📦 Getting Started
+## Getting Started
 
 ```bash
 npm install
@@ -43,7 +43,7 @@ Run every command from `lira-app/`. See the root [SETUP.md](../SETUP.md) for the
 
 ---
 
-## 🔄 Local PC Disk Synchronization Engine
+## Local PC Disk Synchronization Engine
 
 Everything you create is saved as JSON under `../data/` (the repo's `data/` folder), so clearing the browser loses nothing. The browser (IndexedDB and localStorage) is a fast cache.
 
@@ -88,11 +88,11 @@ data/
    - **Protection** (`server/guard.ts`): host and origin must be this computer (or, with `dev:lan`, your own network), writes must be JSON and under 50 MB, file names are sanitised, reserved keys are refused, security headers on every response, and each save is noted in `data/private/audit.log`.
 
 5. **UI Status Indicator**:
-   The top navigation displays `🟢 PC Saved` or `💾 Saving to PC…` so you always know when your data has been committed to disk.
+   The top navigation displays ` PC Saved` or ` Saving to PC…` so you always know when your data has been committed to disk.
 
 ---
 
-## 🤖 Viva AI
+## Viva AI
 
 The chat card in the bottom-right corner (`src/components/ai/VivaAIChatbot.tsx`, logic in `src/services/ai/`). See [`src/components/ai/README.md`](src/components/ai/README.md) for the details.
 
@@ -102,7 +102,7 @@ The chat card in the bottom-right corner (`src/components/ai/VivaAIChatbot.tsx`,
 
 ---
 
-## 🧩 Source layout
+## Source layout
 
 ```
 server/

@@ -1,3 +1,4 @@
+import { PriorityLabel } from '../../common/Icons';
 /** Small helpers that colour a status and show a priority. */
 // Helper badge styles
 export function getStatusBadgeClass(status: string) {
@@ -17,15 +18,11 @@ export function getStatusBadgeClass(status: string) {
 export function getPriorityBadge(priority: string) {
   switch (priority?.toLowerCase()) {
     case 'highest':
-      return <span className="inline-flex items-center gap-1 text-red-600 font-medium">🔴 Highest</span>;
     case 'high':
-      return <span className="inline-flex items-center gap-1 text-orange-600 font-medium">🟠 High</span>;
     case 'medium':
-      return <span className="inline-flex items-center gap-1 text-amber-600 font-medium">🟡 Medium</span>;
     case 'low':
-      return <span className="inline-flex items-center gap-1 text-green-600 font-medium">🟢 Low</span>;
     case 'lowest':
-      return <span className="inline-flex items-center gap-1 text-blue-400 font-medium">⚪ Lowest</span>;
+      return <PriorityLabel priority={priority.toLowerCase()} />;
     default:
       return <span className="text-gray-500 capitalize">{priority}</span>;
   }

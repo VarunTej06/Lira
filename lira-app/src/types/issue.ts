@@ -2,12 +2,13 @@ export type Priority = 'highest' | 'high' | 'medium' | 'low' | 'lowest';
 export type IssueType = 'task' | 'bug' | 'epic' | 'subtask';
 export type IssueStatus = 'backlog' | 'todo' | 'inprogress' | 'done' | string;
 
-export const ISSUE_TYPE_CONFIG: Record<IssueType, { label: string; color: string; bg: string; symbol: string }> = {
-  epic:    { label: 'Epic',    color: '#6554C0', bg: '#EAE6FF', symbol: '⚡' },
-  task:    { label: 'Task',    color: '#0052CC', bg: '#DEEBFF', symbol: '✅' },
-  bug:     { label: 'Bug',     color: '#DE350B', bg: '#FFEBE6', symbol: '🐛' },
-  subtask: { label: 'Subtask', color: '#6B778C', bg: '#F4F5F7', symbol: '↳' },
+export const ISSUE_TYPE_CONFIG: Record<IssueType, { label: string; color: string; bg: string }> = {
+  epic:    { label: 'Epic',    color: '#6554C0', bg: '#EAE6FF' },
+  task:    { label: 'Task',    color: '#0052CC', bg: '#DEEBFF' },
+  bug:     { label: 'Bug',     color: '#DE350B', bg: '#FFEBE6' },
+  subtask: { label: 'Subtask', color: '#6B778C', bg: '#F4F5F7' },
 };
+// The picture for each type is drawn by TypeIcon (components/common/Icons.tsx).
 
 export interface Subtask {
   id: string;
@@ -20,9 +21,10 @@ export interface Comment {
   id: string;
   author: string;
   authorInitials: string;
-  content: string;
+  content: string; // HTML written by the comment editor (older comments are plain text)
   createdAt: Date;
   updatedAt?: Date;
+  attachments?: Attachment[]; // files and pictures added inside the comment
 }
 
 export interface ActivityEntry {
@@ -36,6 +38,9 @@ export interface ActivityEntry {
   createdAt: Date;
 }
 
+/** Where an attachment comes from: a file stored in the ticket, or a link to one online. */
+export type AttachmentSource = 'file' | 'drive' | 'onedrive' | 'dropbox' | 'link';
+
 export interface Attachment {
   id: string;
   name: string;
@@ -44,6 +49,8 @@ export interface Attachment {
   dataUrl?: string; // base64 for images
   data?: ArrayBuffer; // binary for non-images
   createdAt: Date;
+  url?: string; // a link to the file, when it is not stored in the ticket
+  source?: AttachmentSource;
 }
 
 export interface LinkedIssue {
@@ -62,6 +69,10 @@ export interface Issue {
   description: string;
   type: IssueType;
   status: IssueStatus;
+  /** Blocked is a flag, not a status: the ticket keeps its status and shows it is waiting on another ticket. */
+  blocked?: boolean;
+  /** The tickets it is waiting on (their ids). Each link is also kept in linkedIssues as 'blocked_by'. */
+  blockedByIds?: number[];
   priority: Priority;
   assignee?: string;
   assigneeInitials?: string;

@@ -1,9 +1,19 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06T18:08:56.705Z",
+  "updatedAt": "2026-11-08T11:02:31.111Z",
   "entries": {
-    "lira_accent": "#059669",
-    "lira_active_space_id": "2",
+    "lira_accent": "#DB2777",
+    "lira_active_space_id": "6",
+    "lira_notif_config": {
+      "inAppFeed": true,
+      "mentionsOnly": true,
+      "soundFeedback": true
+    },
+    "lira_notification_prefs": {
+      "inAppFeed": true,
+      "mentionsOnly": true,
+      "soundFeedback": true
+    },
     "lira_roadmap_prefs": {
       "collapsed": [],
       "roadmapId": "rm-lira",

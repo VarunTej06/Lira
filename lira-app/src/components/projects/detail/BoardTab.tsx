@@ -8,7 +8,7 @@ export function BoardTab(ctx: DetailCtx) {
   return (
           <div className="flex-1 flex flex-col overflow-hidden min-h-0">
             {/* Filter Sub-bar */}
-            <div className="bg-white/80 backdrop-blur-xs border-b border-jira-border px-6 py-2.5 flex items-center justify-between flex-wrap gap-3 flex-shrink-0">
+            <div className="bg-white/80 backdrop-blur-xs border-b border-lira-border px-6 py-2.5 flex items-center justify-between flex-wrap gap-3 flex-shrink-0">
               <div className="flex items-center gap-3 flex-1 min-w-[240px]">
                 {/* Search */}
                 <div className="relative flex-1 max-w-sm">
@@ -18,7 +18,7 @@ export function BoardTab(ctx: DetailCtx) {
                     value={boardSearchQuery}
                     onChange={e => setBoardSearchQuery(e.target.value)}
                     placeholder={`Search issues in ${project.name}...`}
-                    className="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-jira-border rounded-lg focus:outline-none focus:border-jira-blue focus:bg-white transition-all"
+                    className="w-full pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-lira-border rounded-lg focus:outline-none focus:border-lira-blue focus:bg-white transition-all"
                   />
                 </div>
 
@@ -27,8 +27,8 @@ export function BoardTab(ctx: DetailCtx) {
                   onClick={() => setFilterAssignee(v => !v)}
                   className={`text-xs px-2.5 py-1.5 rounded-lg border font-medium transition-all cursor-pointer ${
                     filterAssignee
-                      ? 'bg-blue-50 border-jira-blue text-jira-blue'
-                      : 'bg-white border-jira-border text-jira-muted hover:text-jira-text'
+                      ? 'bg-blue-50 border-lira-blue text-lira-blue'
+                      : 'bg-white border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   Only My Issues (VY)
@@ -38,7 +38,7 @@ export function BoardTab(ctx: DetailCtx) {
                 <select
                   value={boardPriorityFilter}
                   onChange={e => setBoardPriorityFilter(e.target.value)}
-                  className="text-xs px-2.5 py-1.5 bg-white border border-jira-border rounded-lg text-jira-text cursor-pointer focus:outline-none focus:border-jira-blue"
+                  className="text-xs px-2.5 py-1.5 bg-white border border-lira-border rounded-lg text-lira-text cursor-pointer focus:outline-none focus:border-lira-blue"
                 >
                   <option value="">All Priorities</option>
                   <option value="highest">Highest</option>
@@ -49,9 +49,9 @@ export function BoardTab(ctx: DetailCtx) {
               </div>
 
               {/* Progress Summary Metrics */}
-              <div className="flex items-center gap-3 text-xs text-jira-muted">
+              <div className="flex items-center gap-3 text-xs text-lira-muted">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-jira-text">{stats.done}/{stats.total}</span>
+                  <span className="font-semibold text-lira-text">{stats.done}/{stats.total}</span>
                   <span>done</span>
                 </div>
                 <div className="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">

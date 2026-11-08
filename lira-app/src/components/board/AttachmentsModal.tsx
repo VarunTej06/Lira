@@ -1,3 +1,4 @@
+import { confirmDialog } from '../common/dialogs';
 import React, { useState, useRef, useEffect } from 'react';
 import {
   UploadCloud, File, FileText, Image as ImageIcon,
@@ -163,8 +164,8 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
     saveAttachments(updated);
   };
 
-  const handleClearAll = () => {
-    if (!window.confirm('Clear all attachments for this space?')) return;
+  const handleClearAll = async () => {
+    if (!(await confirmDialog({ title: 'Clear attachments', message: 'Clear all attachments for this space?', confirmLabel: 'Clear all', tone: 'danger' }))) return;
     attachments.forEach(a => { if (a.previewUrl) URL.revokeObjectURL(a.previewUrl); });
     saveAttachments([]);
   };
@@ -184,7 +185,7 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
       title={`Space Attachments · ${space?.name || 'Workspace'}`}
       size="lg"
     >
-      <div className="flex flex-col h-[560px] text-jira-text">
+      <div className="flex flex-col h-[560px] text-lira-text">
         {/* Upload Dropzone */}
         <div className="p-6 pb-4 flex-shrink-0">
           <input
@@ -203,20 +204,20 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
             className={`
               border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all select-none
               ${isDraggingOver
-                ? 'border-jira-blue bg-blue-50/80 ring-4 ring-jira-blue/15 scale-[1.01]'
-                : 'border-jira-border bg-gray-50/60 hover:bg-gray-100/60 hover:border-jira-blue/60'
+                ? 'border-lira-blue bg-blue-50/80 ring-4 ring-lira-blue/15 scale-[1.01]'
+                : 'border-lira-border bg-gray-50/60 hover:bg-gray-100/60 hover:border-lira-blue/60'
               }
             `}
           >
             <div className="flex flex-col items-center justify-center space-y-2">
-              <div className="p-3 bg-white rounded-full shadow-xs border border-jira-border text-jira-blue">
+              <div className="p-3 bg-white rounded-full shadow-xs border border-lira-border text-lira-blue">
                 <UploadCloud className="w-6 h-6 animate-pulse" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-jira-text">
-                  Drop files to upload or <span className="text-jira-blue hover:underline">browse</span>
+                <p className="text-sm font-semibold text-lira-text">
+                  Drop files to upload or <span className="text-lira-blue hover:underline">browse</span>
                 </p>
-                <p className="text-xs text-jira-muted mt-0.5">
+                <p className="text-xs text-lira-muted mt-0.5">
                   Supports images, documents, PDFs, specifications (unlimited local storage)
                 </p>
               </div>
@@ -233,9 +234,9 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
         )}
 
         {/* Header summary row */}
-        <div className="px-6 py-2 flex items-center justify-between text-xs text-jira-muted border-b border-jira-border flex-shrink-0">
+        <div className="px-6 py-2 flex items-center justify-between text-xs text-lira-muted border-b border-lira-border flex-shrink-0">
           <div className="flex items-center gap-2 font-medium">
-            <Paperclip className="w-3.5 h-3.5 text-jira-muted" />
+            <Paperclip className="w-3.5 h-3.5 text-lira-muted" />
             <span>Files ({attachments.length})</span>
             <span>•</span>
             <span>Total size: {formatBytes(totalBytes)}</span>
@@ -244,7 +245,7 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
           {attachments.length > 0 && (
             <button
               onClick={handleClearAll}
-              className="text-jira-muted hover:text-red-600 transition-colors cursor-pointer text-xs font-medium"
+              className="text-lira-muted hover:text-red-600 transition-colors cursor-pointer text-xs font-medium"
             >
               Clear all
             </button>
@@ -254,16 +255,16 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
         {/* Preview List */}
         <div className="flex-1 overflow-y-auto px-6 py-3 space-y-2">
           {attachments.length === 0 ? (
-            <div className="text-center py-12 text-jira-muted">
+            <div className="text-center py-12 text-lira-muted">
               <File className="w-8 h-8 mx-auto mb-2 opacity-40" />
               <p className="text-xs font-medium">No attachments uploaded yet</p>
-              <p className="text-[11px] text-jira-muted mt-0.5">Drop files into the zone above to attach to this space.</p>
+              <p className="text-[11px] text-lira-muted mt-0.5">Drop files into the zone above to attach to this space.</p>
             </div>
           ) : (
             attachments.map(att => (
               <div
                 key={att.id}
-                className="flex items-center justify-between p-3 border border-jira-border rounded-xl hover:border-jira-blue/40 hover:bg-gray-50/50 transition-all group bg-white shadow-2xs"
+                className="flex items-center justify-between p-3 border border-lira-border rounded-xl hover:border-lira-blue/40 hover:bg-gray-50/50 transition-all group bg-white shadow-2xs"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">
                   {/* Thumbnail preview if image, otherwise type icon */}
@@ -271,19 +272,19 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
                     <img
                       src={att.previewUrl}
                       alt={att.name}
-                      className="w-10 h-10 rounded-lg object-cover border border-jira-border flex-shrink-0"
+                      className="w-10 h-10 rounded-lg object-cover border border-lira-border flex-shrink-0"
                     />
                   ) : (
-                    <div className="w-10 h-10 rounded-lg bg-gray-50 border border-jira-border flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-lg bg-gray-50 border border-lira-border flex items-center justify-center flex-shrink-0">
                       {getFileIcon(att.type)}
                     </div>
                   )}
 
                   <div className="min-w-0 flex-1">
-                    <h5 className="text-xs font-bold text-jira-text truncate group-hover:text-jira-blue transition-colors" title={att.name}>
+                    <h5 className="text-xs font-bold text-lira-text truncate group-hover:text-lira-blue transition-colors" title={att.name}>
                       {att.name}
                     </h5>
-                    <div className="flex items-center gap-2 mt-0.5 text-[11px] text-jira-muted">
+                    <div className="flex items-center gap-2 mt-0.5 text-[11px] text-lira-muted">
                       <span>{formatBytes(att.size)}</span>
                       <span>•</span>
                       <span>{new Date(att.uploadedAt).toLocaleDateString()}</span>
@@ -297,7 +298,7 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
                       href={att.previewUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-1.5 text-jira-muted hover:text-jira-blue rounded-lg hover:bg-gray-100 transition-colors"
+                      className="p-1.5 text-lira-muted hover:text-lira-blue rounded-lg hover:bg-gray-100 transition-colors"
                       title="Open image in new tab"
                     >
                       <Download className="w-4 h-4" />
@@ -305,7 +306,7 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
                   )}
                   <button
                     onClick={() => handleDelete(att.id)}
-                    className="p-1.5 text-jira-muted hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                    className="p-1.5 text-lira-muted hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
                     title="Delete attachment"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -317,9 +318,9 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3 border-t border-jira-border bg-gray-50 flex items-center justify-between text-xs flex-shrink-0">
-          <span className="text-jira-muted text-[11px]">
-            Storage: <strong className="font-mono text-jira-text">{storageKey}</strong>
+        <div className="px-6 py-3 border-t border-lira-border bg-gray-50 flex items-center justify-between text-xs flex-shrink-0">
+          <span className="text-lira-muted text-[11px]">
+            Storage: <strong className="font-mono text-lira-text">{storageKey}</strong>
           </span>
           <div className="flex items-center gap-2">
             <Button variant="primary" size="sm" onClick={handleSaveExplicit}>

@@ -1,5 +1,5 @@
+import { notifySaved } from '../../common/SavedToast';
 import React, { useState } from 'react';
-import { Check } from 'lucide-react';
 import { Modal } from '../../common/Modal';
 import type { Space } from '../../../types/space';
 
@@ -49,8 +49,6 @@ export const WIPLimitsModal: React.FC<{
     }
   });
 
-  const [saved, setSaved] = useState(false);
-
   const handleSave = () => {
     localStorage.setItem('lira_wip_config', JSON.stringify(config));
     if (config.enabled) {
@@ -60,31 +58,28 @@ export const WIPLimitsModal: React.FC<{
     }
     window.dispatchEvent(new Event('lira_wip_limits_changed'));
     onConfigSaved?.(config);
-    setSaved(true);
-    setTimeout(() => {
-      setSaved(false);
-      onClose();
-    }, 2000);
+    notifySaved('WIP limits saved');
+    onClose();
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Work in Progress (WIP) Limits · ${space?.name || 'Workspace'}`} size="md">
-      <div className="p-6 space-y-5 text-jira-text">
-        <p className="text-xs text-jira-muted leading-relaxed">
+      <div className="p-6 space-y-5 text-lira-text">
+        <p className="text-xs text-lira-muted leading-relaxed">
           WIP limits restrict the maximum number of items in active workflow columns to prevent bottlenecks and enforce focus. Set 0 for unlimited.
         </p>
 
         {/* Master Toggle */}
-        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-jira-border">
+        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-lira-border">
           <div>
-            <h4 className="text-sm font-bold text-jira-text">Enforce Column WIP Limits</h4>
-            <p className="text-xs text-jira-muted">Visual warning indicators when a column exceeds its capacity</p>
+            <h4 className="text-sm font-bold text-lira-text">Enforce Column WIP Limits</h4>
+            <p className="text-xs text-lira-muted">Visual warning indicators when a column exceeds its capacity</p>
           </div>
           <button
             type="button"
             onClick={() => setConfig(prev => ({ ...prev, enabled: !prev.enabled }))}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${
-              config.enabled ? 'bg-jira-blue' : 'bg-gray-300'
+              config.enabled ? 'bg-lira-blue' : 'bg-gray-300'
             }`}
           >
             <span
@@ -97,7 +92,7 @@ export const WIPLimitsModal: React.FC<{
 
         {/* Column limit inputs */}
         <div className="space-y-3">
-          <label className="text-xs font-bold text-jira-muted uppercase tracking-wider block">
+          <label className="text-xs font-bold text-lira-muted uppercase tracking-wider block">
             Column Capacity Maximums
           </label>
 
@@ -108,8 +103,8 @@ export const WIPLimitsModal: React.FC<{
               { key: 'backlog' as const, label: 'Backlog Limit (0 = ∞)', defaultVal: 0, desc: 'Ideation pool' },
               { key: 'done' as const, label: 'Done Limit (0 = ∞)', defaultVal: 0, desc: 'Completed deliverables' },
             ].map(col => (
-              <div key={col.key} className="p-3 bg-white border border-jira-border rounded-xl space-y-1">
-                <div className="text-xs font-semibold text-jira-text">{col.label}</div>
+              <div key={col.key} className="p-3 bg-white border border-lira-border rounded-xl space-y-1">
+                <div className="text-xs font-semibold text-lira-text">{col.label}</div>
                 <div className="flex items-center gap-2">
                   <input
                     type="number"
@@ -123,46 +118,33 @@ export const WIPLimitsModal: React.FC<{
                         limits: { ...prev.limits, [col.key]: val },
                       }));
                     }}
-                    className="w-20 px-2 py-1 text-sm border border-jira-border rounded font-bold text-center bg-gray-50 focus:bg-white focus:border-jira-blue"
+                    className="w-20 px-2 py-1 text-sm border border-lira-border rounded font-bold text-center bg-gray-50 focus:bg-white focus:border-lira-blue"
                   />
-                  <span className="text-[11px] text-jira-muted">{col.desc}</span>
+                  <span className="text-[11px] text-lira-muted">{col.desc}</span>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {saved && (
-          <div className="p-2.5 bg-emerald-50 text-emerald-700 text-xs rounded-lg border border-emerald-200 font-semibold flex items-center gap-2">
-            <Check className="w-4 h-4" /> WIP limits saved successfully!
-          </div>
-        )}
-
-        <div className="flex justify-end gap-2 border-t border-jira-border pt-4">
+        <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm text-jira-muted hover:text-jira-text rounded-lg hover:bg-gray-100 cursor-pointer"
+            className="px-4 py-2 text-sm text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100 cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-2 text-sm font-semibold bg-jira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs"
+            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs"
           >
             Save WIP Limits
           </button>
         </div>
       </div>
 
-      {/* 2-second green toast */}
-      {saved && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
-          <Check className="w-4 h-4 text-white" />
-          <span>✓ Saved</span>
-        </div>
-      )}
     </Modal>
   );
 };

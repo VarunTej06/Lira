@@ -102,9 +102,9 @@ export function riskRadarText(issues: Issue[], keys: string[], spaces: Space[], 
   const rows = keys.filter(k => sprintPhase(k) !== 'upcoming').map(k => ({ k, r: sprintRisk(issuesInSprint(issues, k), k) }))
     .filter(({ r, k }) => r.level !== 'ok' && (sprintPhase(k) === 'active' || !getSprintMeta('all', k).completedAt));
   const idle = idleTickets(issues, now);
-  const out: string[] = ['### 🚨 Risk radar', ''];
-  if (!rows.length) out.push('✅ No sprint looks at risk right now.');
-  for (const { k, r } of rows) out.push(`- ${r.level === 'atrisk' ? '🔴' : '🟡'} **${sprintName(k)}**: ${r.reasons.join('; ')}`);
+  const out: string[] = ['### Risk radar', ''];
+  if (!rows.length) out.push('No sprint looks at risk right now.');
+  for (const { k, r } of rows) out.push(`- ${r.level === 'atrisk' ? 'At risk' : 'Watch'}: **${sprintName(k)}**: ${r.reasons.join('; ')}`);
   out.push('', `**Idle tickets** (in progress, no change for 5 days or more): ${idle.length || 'none'}`);
   idle.slice(0, 8).forEach(x => out.push(line(x.issue, sm, ` — ${x.idleDays} days`)));
   const overdue = issues.filter(i => isSprintWork(i) && !isDone(i) && i.dueDate && new Date(i.dueDate) < now);
@@ -122,11 +122,11 @@ export function sprintSummaryText(issues: Issue[], key: string, spaces: Space[])
   const risk = sprintRisk(list, key);
   const meta = getSprintMeta('all', key);
   const sm = new Map(spaces.filter(x => x.id).map(x => [x.id!, x]));
-  const out = [`### 📊 ${sprintName(key)}`, ''];
+  const out = [`### ${sprintName(key)}`, ''];
   if (meta.goal) out.push(`**Goal:** ${meta.goal}`, '');
   out.push(`- **${s.done} of ${s.total}** tickets done (${s.percent}%), ${s.donePoints} of ${s.points} points`);
   out.push(`- To do ${s.todo + s.backlog} · In progress ${s.inprogress} · Done ${s.done}`);
-  out.push(`- Time passed: ${risk.elapsedPct}% · Status: ${risk.level === 'ok' ? '🟢 on pace' : risk.level === 'watch' ? '🟡 watch' : '🔴 at risk'}`);
+  out.push(`- Time passed: ${risk.elapsedPct}% · Status: ${risk.level === 'ok' ? 'on pace' : risk.level === 'watch' ? 'watch' : 'at risk'}`);
   risk.reasons.forEach(r => out.push(`  - ${r}`));
   const bySpace = new Map<number, Issue[]>();
   list.forEach(i => bySpace.set(i.spaceId, [...(bySpace.get(i.spaceId) || []), i]));
@@ -160,8 +160,8 @@ export function standupDigestText(issues: Issue[], spaces: Space[], now: Date, a
     ...idleTickets(work, now).map(x => ({ i: x.issue, why: `no change for ${x.idleDays} days` })),
     ...work.filter(i => !isDone(i) && i.dueDate && new Date(i.dueDate) < now).map(i => ({ i, why: 'overdue' })),
   ];
-  const out = ['### 🗣️ Standup', '', `**Since ${since.toLocaleDateString('en-US', { weekday: 'long' })}**`];
-  if (done.length) done.forEach(i => out.push(line(i, sm, ' — done ✅')));
+  const out = ['### Standup', '', `**Since ${since.toLocaleDateString('en-US', { weekday: 'long' })}**`];
+  if (done.length) done.forEach(i => out.push(line(i, sm, ' — done ')));
   if (started.length) started.forEach(i => out.push(line(i, sm, ' — started')));
   if (!done.length && !started.length) out.push('- Nothing moved to In Progress or Done.');
   out.push('', '**Today**');

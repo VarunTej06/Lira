@@ -71,7 +71,7 @@ navigator.storage.persisted().then(console.log);
 
 ### 4. Clearing Cache Safely (Without Losing IndexedDB)
 
-> ⚠️ **Important:** "Clear site data" in browser settings usually wipes
+>  **Important:** "Clear site data" in browser settings usually wipes
 > IndexedDB.  Use the targeted approach below instead.
 
 **Safe cache clearing (clears CSS/JS cache only):**
@@ -121,7 +121,7 @@ Then import your JSON backup.
 
 **Fix:**
 1. Open the issue detail modal.
-2. Click ✕ on the broken attachment to remove it.
+2. Click  on the broken attachment to remove it.
 3. Re-upload the file.
 
 If attachments are consistently failing for large files (>5 MB), note that
@@ -164,7 +164,7 @@ error usually occurs if the board component failed to mount.
 2. **Open http://localhost:5173** — you will see the seed data (default
    certification tickets) because all user data is gone.
 
-3. **Click the backup icon** (⬇) in the top navigation bar.
+3. **Click the backup icon** in the top navigation bar.
 
 4. **Click "Import Backup"** and select your JSON file.
 
@@ -216,7 +216,7 @@ with >50 cards.
    // In console — patch the issue:
    const db = window.__liraDb; // not available by default
    ```
-3. **Export your backup** (top nav → ⬇).
+3. **Export your backup** (top nav → ).
 4. Open the JSON file and find the problematic issue.
 5. Add the missing field: `"labels": []`, `"subtasks": []`, etc.
 6. **Import the patched backup**.
@@ -226,7 +226,7 @@ with >50 cards.
 ### 11. AI Copilot Not Responding or Behaving Unexpectedly
 
 **Scenario A: Custom System Instructions produce unwanted formatting or behavior.**
-* **Fix**: Open the AI Copilot dialogue card → click ⚙️ **Settings** → click **"Reset default"** above the system prompt textarea → click **"Save AI Configuration"**. This instantly restores the canonical factory directives.
+* **Fix**: Open the AI Copilot dialogue card → click  **Settings** → click **"Reset default"** above the system prompt textarea → click **"Save AI Configuration"**. This instantly restores the canonical factory directives.
 * **Console Command (Manual Reset)**:
   ```javascript
   localStorage.removeItem('lira_ai_system_instruction');

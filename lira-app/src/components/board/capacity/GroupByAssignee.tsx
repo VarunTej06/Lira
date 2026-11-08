@@ -1,3 +1,4 @@
+import { issueLink } from '../../../utils/links';
 import { Clock, AlertTriangle } from 'lucide-react';
 import { Avatar } from '../../common/Avatar';
 import type { CapacityState } from './useCapacityState';
@@ -17,15 +18,15 @@ export function GroupByAssignee(s: CapacityState) {
             return (
               <div
                 key={member.initials}
-                className="bg-white rounded-xl border border-jira-border shadow-xs p-5 space-y-4 hover:border-jira-blue transition-all"
+                className="bg-white rounded-xl border border-lira-border shadow-xs p-5 space-y-4 hover:border-lira-blue transition-all"
               >
                 {/* Member Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Avatar initials={member.initials} size="md" color={member.avatarColor} />
                     <div>
-                      <h3 className="text-sm font-bold text-jira-text leading-tight">{member.name}</h3>
-                      <p className="text-[11px] text-jira-muted font-medium">
+                      <h3 className="text-sm font-bold text-lira-text leading-tight">{member.name}</h3>
+                      <p className="text-[11px] text-lira-muted font-medium">
                         {member.storyPoints} Story Points · {member.total} Work Items
                       </p>
                     </div>
@@ -42,7 +43,7 @@ export function GroupByAssignee(s: CapacityState) {
                 {/* Progress Breakdown Bar */}
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-semibold">
-                    <span className="text-jira-muted">Sprint Delivery Progress</span>
+                    <span className="text-lira-muted">Sprint Delivery Progress</span>
                     <span className="text-emerald-600">{completionPct}% Done</span>
                   </div>
                   <div className="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden flex">
@@ -57,16 +58,21 @@ export function GroupByAssignee(s: CapacityState) {
                       title={`In Progress: ${member.inProgress}`}
                     />
                     <div
+                      className="bg-red-500 h-full transition-all duration-300"
+                      style={{ width: `${(member.blocked / member.total) * 100}%` }}
+                      title={`Blocked: ${member.blocked}`}
+                    />
+                    <div
                       className="bg-blue-400 h-full transition-all duration-300"
                       style={{ width: `${(member.todo / member.total) * 100}%` }}
                       title={`To Do: ${member.todo}`}
                     />
                   </div>
 
-                  {/* 4 Stage Counters */}
-                  <div className="grid grid-cols-4 gap-1.5 text-center pt-2">
-                    <div className="bg-gray-50 border border-jira-border rounded p-1.5">
-                      <div className="text-[9px] text-jira-muted uppercase font-bold">Backlog</div>
+                  {/* Stage counters */}
+                  <div className="grid grid-cols-5 gap-1.5 text-center pt-2">
+                    <div className="bg-gray-50 border border-lira-border rounded p-1.5">
+                      <div className="text-[9px] text-lira-muted uppercase font-bold">Backlog</div>
                       <div className="text-xs font-bold text-slate-700">{member.backlog}</div>
                     </div>
                     <div className="bg-blue-50/60 border border-blue-200 rounded p-1.5">
@@ -77,6 +83,10 @@ export function GroupByAssignee(s: CapacityState) {
                       <div className="text-[9px] text-amber-600 uppercase font-bold">In Prog</div>
                       <div className="text-xs font-bold text-amber-700">{member.inProgress}</div>
                     </div>
+                    <div className="bg-red-50/60 border border-red-200 rounded p-1.5">
+                      <div className="text-[9px] text-red-600 uppercase font-bold">Blocked</div>
+                      <div className="text-xs font-bold text-red-700">{member.blocked}</div>
+                    </div>
                     <div className="bg-emerald-50/60 border border-emerald-200 rounded p-1.5">
                       <div className="text-[9px] text-emerald-600 uppercase font-bold">Done</div>
                       <div className="text-xs font-bold text-emerald-700">{member.done}</div>
@@ -85,8 +95,8 @@ export function GroupByAssignee(s: CapacityState) {
                 </div>
 
                 {/* Active in-progress task list */}
-                <div className="border-t border-jira-border pt-3 space-y-2">
-                  <div className="flex items-center justify-between text-xs font-semibold text-jira-muted">
+                <div className="border-t border-lira-border pt-3 space-y-2">
+                  <div className="flex items-center justify-between text-xs font-semibold text-lira-muted">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-amber-500" />
                       Active In Progress ({inProgressIssues.length})
@@ -94,7 +104,7 @@ export function GroupByAssignee(s: CapacityState) {
                   </div>
 
                   {inProgressIssues.length === 0 ? (
-                    <p className="text-xs text-jira-muted py-2.5 text-center bg-gray-50 rounded-lg">
+                    <p className="text-xs text-lira-muted py-2.5 text-center bg-gray-50 rounded-lg">
                       No active tickets in progress.
                     </p>
                   ) : (
@@ -102,20 +112,20 @@ export function GroupByAssignee(s: CapacityState) {
                       {inProgressIssues.slice(0, 4).map(task => (
                         <div
                           key={task.id}
-                          onClick={() => onIssueClick?.(task)}
-                          className="flex items-center justify-between p-2 rounded-lg border border-jira-border bg-gray-50/70 hover:bg-white hover:border-jira-blue transition-all cursor-pointer text-xs group"
+                          onClick={() => onIssueClick?.(task)} {...issueLink(task)}
+                          className="flex items-center justify-between p-2 rounded-lg border border-lira-border bg-gray-50/70 hover:bg-white hover:border-lira-blue transition-all cursor-pointer text-xs group"
                         >
-                          <span className="font-bold text-jira-blue truncate mr-2 font-mono group-hover:underline">
+                          <span className="font-bold text-lira-blue truncate mr-2 font-mono group-hover:underline">
                             {task.key}
                           </span>
-                          <span className="text-jira-text truncate flex-1">{task.title}</span>
+                          <span className="text-lira-text truncate flex-1">{task.title}</span>
                           <span className="text-[10px] ml-2 font-semibold text-gray-500 uppercase">
                             {task.priority}
                           </span>
                         </div>
                       ))}
                       {inProgressIssues.length > 4 && (
-                        <div className="text-[10px] text-jira-muted text-right font-medium">
+                        <div className="text-[10px] text-lira-muted text-right font-medium">
                           +{inProgressIssues.length - 4} more active tickets
                         </div>
                       )}

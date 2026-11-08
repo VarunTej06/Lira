@@ -1,3 +1,5 @@
+import { notifySaved } from '../common/SavedToast';
+import { confirmDialog } from '../common/dialogs';
 import React, { useState, useEffect } from 'react';
 import {
   FileText, Save, Check, Eye, Edit3, Download,
@@ -19,19 +21,19 @@ const DEFAULT_DOC_TEMPLATE = `# Space Documentation & Notes
 Welcome to the project documentation space for **[SPACE_NAME]**.
 Keep your architecture decisions, sprint notes, and links here.
 
-## 🚀 Quick Links & Resources
+## Quick Links & Resources
 - **Repository**: [GitHub](https://github.com)
 - **Design Specs**: Figma workspace
 - **Staging URL**: https://staging.example.com
 
-## 📋 Sprint Objectives
+## Sprint Objectives
 - [x] Complete MVP core features
 - [ ] Implement space documentation modal
 - [ ] Connect drag-and-drop calendar triage
 
-## 💡 Architecture Decisions
+## Architecture Decisions
 1. **Local-first Dexie DB**: IndexedDB storage ensures 100% offline access.
-2. **Tailwind CSS**: Strict adherence to Atlassian Jira design tokens.
+2. **Tailwind CSS**: Strict adherence to the Lira design tokens.
 `;
 
 export const DocumentsModal: React.FC<DocumentsModalProps> = ({
@@ -131,8 +133,8 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleReset = () => {
-    if (window.confirm('Reset this document to the default template? Any unsaved edits will be lost.')) {
+  const handleReset = async () => {
+    if (await confirmDialog({ title: 'Reset document', message: 'Reset this document to the default template? Any unsaved edits will be lost.', confirmLabel: 'Reset', tone: 'danger' })) {
       const templated = DEFAULT_DOC_TEMPLATE.replace(/\[SPACE_NAME\]/g, space?.name || 'Workspace');
       setContent(templated);
       handleSave(templated);
@@ -144,40 +146,40 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
     const lines = md.split('\n');
     return lines.map((line, idx) => {
       if (line.startsWith('# ')) {
-        return <h1 key={idx} className="text-xl font-bold text-jira-text border-b pb-1 mt-3 mb-2">{line.slice(2)}</h1>;
+        return <h1 key={idx} className="text-xl font-bold text-lira-text border-b pb-1 mt-3 mb-2">{line.slice(2)}</h1>;
       }
       if (line.startsWith('## ')) {
-        return <h2 key={idx} className="text-base font-bold text-jira-text mt-3 mb-1.5">{line.slice(3)}</h2>;
+        return <h2 key={idx} className="text-base font-bold text-lira-text mt-3 mb-1.5">{line.slice(3)}</h2>;
       }
       if (line.startsWith('### ')) {
-        return <h3 key={idx} className="text-sm font-bold text-jira-text mt-2 mb-1">{line.slice(4)}</h3>;
+        return <h3 key={idx} className="text-sm font-bold text-lira-text mt-2 mb-1">{line.slice(4)}</h3>;
       }
       if (line.startsWith('- [x] ') || line.startsWith('- [X] ')) {
         return (
           <div key={idx} className="flex items-center gap-2 my-0.5 text-xs text-gray-500 line-through">
-            <input type="checkbox" checked readOnly className="rounded text-jira-blue" />
+            <input type="checkbox" checked readOnly className="rounded text-lira-blue" />
             <span>{line.slice(6)}</span>
           </div>
         );
       }
       if (line.startsWith('- [ ] ')) {
         return (
-          <div key={idx} className="flex items-center gap-2 my-0.5 text-xs text-jira-text">
-            <input type="checkbox" checked={false} readOnly className="rounded text-jira-blue" />
+          <div key={idx} className="flex items-center gap-2 my-0.5 text-xs text-lira-text">
+            <input type="checkbox" checked={false} readOnly className="rounded text-lira-blue" />
             <span>{line.slice(6)}</span>
           </div>
         );
       }
       if (line.startsWith('- ') || line.startsWith('* ')) {
         return (
-          <li key={idx} className="text-xs text-jira-text ml-4 list-disc my-0.5">
+          <li key={idx} className="text-xs text-lira-text ml-4 list-disc my-0.5">
             {line.slice(2)}
           </li>
         );
       }
       if (/^\d+\.\s/.test(line)) {
         return (
-          <li key={idx} className="text-xs text-jira-text ml-4 list-decimal my-0.5">
+          <li key={idx} className="text-xs text-lira-text ml-4 list-decimal my-0.5">
             {line.replace(/^\d+\.\s/, '')}
           </li>
         );
@@ -186,7 +188,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
         return <div key={idx} className="h-2" />;
       }
       return (
-        <p key={idx} className="text-xs text-jira-text leading-relaxed my-1">
+        <p key={idx} className="text-xs text-lira-text leading-relaxed my-1">
           {line}
         </p>
       );
@@ -203,16 +205,16 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
       title={`Documents & Notes · ${space?.name || 'Workspace'}`}
       size="xl"
     >
-      <div className="flex flex-col h-[600px] text-jira-text">
+      <div className="flex flex-col h-[600px] text-lira-text">
         {/* Header Toolbar */}
-        <div className="flex items-center justify-between px-6 py-2.5 border-b border-jira-border bg-gray-50/70 flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-2.5 border-b border-lira-border bg-gray-50/70 flex-shrink-0">
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setActiveTab('edit')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'edit'
-                  ? 'bg-jira-blue text-white shadow-xs'
-                  : 'text-jira-muted hover:text-jira-text hover:bg-gray-200/60'
+                  ? 'bg-lira-blue text-white shadow-xs'
+                  : 'text-lira-muted hover:text-lira-text hover:bg-gray-200/60'
               }`}
             >
               <Edit3 className="w-3.5 h-3.5" />
@@ -222,8 +224,8 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
               onClick={() => setActiveTab('preview')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'preview'
-                  ? 'bg-jira-blue text-white shadow-xs'
-                  : 'text-jira-muted hover:text-jira-text hover:bg-gray-200/60'
+                  ? 'bg-lira-blue text-white shadow-xs'
+                  : 'text-lira-muted hover:text-lira-text hover:bg-gray-200/60'
               }`}
             >
               <Eye className="w-3.5 h-3.5" />
@@ -245,7 +247,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
             <Button
               variant="primary"
               size="xs"
-              onClick={() => handleSave()}
+              onClick={() => { if (!isSaved) { handleSave(); notifySaved('Document saved'); } onClose(); }}
               className="flex items-center gap-1"
             >
               <Save className="w-3.5 h-3.5" />
@@ -256,12 +258,12 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
 
         {/* Markdown Action Controls Toolbar (only when editing) */}
         {activeTab === 'edit' && (
-          <div className="flex items-center justify-between px-6 py-1.5 border-b border-jira-border bg-white text-xs text-jira-muted flex-shrink-0">
+          <div className="flex items-center justify-between px-6 py-1.5 border-b border-lira-border bg-white text-xs text-lira-muted flex-shrink-0">
             <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => insertMarkdown('**', '**')}
-                className="p-1.5 hover:bg-gray-100 hover:text-jira-text rounded cursor-pointer"
+                className="p-1.5 hover:bg-gray-100 hover:text-lira-text rounded cursor-pointer"
                 title="Bold"
               >
                 <Bold className="w-3.5 h-3.5" />
@@ -269,7 +271,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
               <button
                 type="button"
                 onClick={() => insertMarkdown('*', '*')}
-                className="p-1.5 hover:bg-gray-100 hover:text-jira-text rounded cursor-pointer"
+                className="p-1.5 hover:bg-gray-100 hover:text-lira-text rounded cursor-pointer"
                 title="Italic"
               >
                 <Italic className="w-3.5 h-3.5" />
@@ -277,16 +279,16 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
               <button
                 type="button"
                 onClick={() => insertMarkdown('## ')}
-                className="p-1.5 hover:bg-gray-100 hover:text-jira-text rounded cursor-pointer"
+                className="p-1.5 hover:bg-gray-100 hover:text-lira-text rounded cursor-pointer"
                 title="Heading"
               >
                 <Heading className="w-3.5 h-3.5" />
               </button>
-              <div className="w-px h-4 bg-jira-border mx-1" />
+              <div className="w-px h-4 bg-lira-border mx-1" />
               <button
                 type="button"
                 onClick={() => insertMarkdown('- ')}
-                className="p-1.5 hover:bg-gray-100 hover:text-jira-text rounded cursor-pointer"
+                className="p-1.5 hover:bg-gray-100 hover:text-lira-text rounded cursor-pointer"
                 title="Bullet List"
               >
                 <List className="w-3.5 h-3.5" />
@@ -294,7 +296,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
               <button
                 type="button"
                 onClick={() => insertMarkdown('- [ ] ')}
-                className="p-1.5 hover:bg-gray-100 hover:text-jira-text rounded cursor-pointer"
+                className="p-1.5 hover:bg-gray-100 hover:text-lira-text rounded cursor-pointer"
                 title="Checklist Item"
               >
                 <CheckSquare className="w-3.5 h-3.5" />
@@ -302,7 +304,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
               <button
                 type="button"
                 onClick={() => insertMarkdown('```\n', '\n```')}
-                className="p-1.5 hover:bg-gray-100 hover:text-jira-text rounded cursor-pointer"
+                className="p-1.5 hover:bg-gray-100 hover:text-lira-text rounded cursor-pointer"
                 title="Code Block"
               >
                 <Code className="w-3.5 h-3.5" />
@@ -313,7 +315,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="p-1.5 hover:bg-gray-100 hover:text-jira-text rounded cursor-pointer flex items-center gap-1 text-[11px]"
+                className="p-1.5 hover:bg-gray-100 hover:text-lira-text rounded cursor-pointer flex items-center gap-1 text-[11px]"
                 title="Copy markdown text"
               >
                 <Copy className="w-3 h-3" />
@@ -322,7 +324,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
               <button
                 type="button"
                 onClick={handleDownload}
-                className="p-1.5 hover:bg-gray-100 hover:text-jira-text rounded cursor-pointer flex items-center gap-1 text-[11px]"
+                className="p-1.5 hover:bg-gray-100 hover:text-lira-text rounded cursor-pointer flex items-center gap-1 text-[11px]"
                 title="Export as Markdown (.md)"
               >
                 <Download className="w-3 h-3" />
@@ -350,15 +352,15 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               placeholder="Type your markdown documentation, sprint plan, or architecture notes here... (Ctrl+S to save)"
-              className="w-full flex-1 p-4 font-mono text-xs text-jira-text border border-jira-border rounded-xl resize-none focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue leading-relaxed bg-gray-50/30"
+              className="w-full flex-1 p-4 font-mono text-xs text-lira-text border border-lira-border rounded-xl resize-none focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue leading-relaxed bg-gray-50/30"
               spellCheck={false}
             />
           ) : (
-            <div className="w-full flex-1 p-6 border border-jira-border rounded-xl overflow-y-auto bg-gray-50/20">
+            <div className="w-full flex-1 p-6 border border-lira-border rounded-xl overflow-y-auto bg-gray-50/20">
               {content.trim() ? (
                 renderMarkdown(content)
               ) : (
-                <div className="text-center py-16 text-jira-muted">
+                <div className="text-center py-16 text-lira-muted">
                   <FileText className="w-10 h-10 mx-auto mb-2 opacity-40" />
                   <p className="text-xs">This document is empty. Switch to the editor to add notes.</p>
                 </div>
@@ -368,9 +370,9 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
         </div>
 
         {/* Footer Meta */}
-        <div className="px-6 py-2.5 border-t border-jira-border bg-gray-50 flex items-center justify-between text-[11px] text-jira-muted flex-shrink-0">
+        <div className="px-6 py-2.5 border-t border-lira-border bg-gray-50 flex items-center justify-between text-[11px] text-lira-muted flex-shrink-0">
           <div className="flex items-center gap-3">
-            <span>Storage: <strong className="font-mono text-jira-text">{storageKey}</strong></span>
+            <span>Storage: <strong className="font-mono text-lira-text">{storageKey}</strong></span>
             <span>•</span>
             <span>{words} words</span>
             <span>•</span>
@@ -380,7 +382,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
             <Button
               variant="primary"
               size="xs"
-              onClick={() => handleSave()}
+              onClick={() => { if (!isSaved) { handleSave(); notifySaved('Document saved'); } onClose(); }}
               className="flex items-center gap-1"
             >
               <Save className="w-3.5 h-3.5" />

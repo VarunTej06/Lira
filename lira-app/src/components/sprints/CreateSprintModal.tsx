@@ -1,3 +1,4 @@
+import { DatePicker } from '../common/DatePicker';
 import React, { useMemo, useState } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
@@ -83,7 +84,7 @@ export const CreateSprintModal: React.FC<CreateSprintModalProps> = ({ isOpen, on
     <Modal isOpen={isOpen} onClose={onClose} title="Create sprint" size="md">
       <form onSubmit={submit} className="p-6 space-y-5">
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-2 uppercase tracking-wide">Sprint duration</label>
+          <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Sprint duration</label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Sprint duration">
             {DURATIONS.map(d => (
               <button
@@ -93,11 +94,11 @@ export const CreateSprintModal: React.FC<CreateSprintModalProps> = ({ isOpen, on
                 aria-checked={kind === d.kind}
                 onClick={() => setKind(d.kind)}
                 className={`rounded-xl border px-3 py-2 text-left transition-colors cursor-pointer ${
-                  kind === d.kind ? 'border-jira-blue bg-jira-blue-light text-jira-blue' : 'border-jira-border bg-white text-jira-text hover:bg-gray-50'
+                  kind === d.kind ? 'border-lira-blue bg-lira-blue-light text-lira-blue' : 'border-lira-border bg-white text-lira-text hover:bg-gray-50'
                 }`}
               >
                 <div className="text-sm font-semibold">{d.label}</div>
-                <div className="text-[10px] text-jira-muted">{d.hint}</div>
+                <div className="text-[10px] text-lira-muted">{d.hint}</div>
               </button>
             ))}
           </div>
@@ -105,7 +106,7 @@ export const CreateSprintModal: React.FC<CreateSprintModalProps> = ({ isOpen, on
 
         {!custom ? (
           <div>
-            <label className="block text-xs font-semibold text-jira-muted mb-2 uppercase tracking-wide">Sprint month</label>
+            <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Sprint month</label>
             <div className="grid grid-cols-3 gap-2">
               {months.map(m => {
                 const exists = planned.has(m);
@@ -116,11 +117,11 @@ export const CreateSprintModal: React.FC<CreateSprintModalProps> = ({ isOpen, on
                     type="button"
                     onClick={() => setMonth(m)}
                     className={`rounded-xl border px-3 py-2 text-left transition-colors cursor-pointer ${
-                      active ? 'border-jira-blue bg-jira-blue-light text-jira-blue' : 'border-jira-border bg-white text-jira-text hover:bg-gray-50'
+                      active ? 'border-lira-blue bg-lira-blue-light text-lira-blue' : 'border-lira-border bg-white text-lira-text hover:bg-gray-50'
                     }`}
                   >
                     <div className="text-sm font-semibold">{sprintStart(m).toLocaleString('en-US', { month: 'short', year: 'numeric' })}</div>
-                    <div className="text-[10px] text-jira-muted">{sprintPhase(m) === 'active' ? 'Current' : exists ? 'Already planned' : 'Free'}</div>
+                    <div className="text-[10px] text-lira-muted">{sprintPhase(m) === 'active' ? 'Current' : exists ? 'Already planned' : 'Free'}</div>
                   </button>
                 );
               })}
@@ -129,18 +130,12 @@ export const CreateSprintModal: React.FC<CreateSprintModalProps> = ({ isOpen, on
         ) : (
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="sprint-start" className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Start date</label>
-              <input
-                id="sprint-start"
-                type="date"
-                value={start}
-                onChange={e => setStart(e.target.value)}
-                className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
-              />
+              <label htmlFor="sprint-start" className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Start date</label>
+              <DatePicker id="sprint-start" value={start} onChange={setStart} clearable={false} aria-label="Start date" />
             </div>
             {kind === 'days' ? (
               <div>
-                <label htmlFor="sprint-days" className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Number of days</label>
+                <label htmlFor="sprint-days" className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Number of days</label>
                 <input
                   id="sprint-days"
                   type="number"
@@ -148,41 +143,41 @@ export const CreateSprintModal: React.FC<CreateSprintModalProps> = ({ isOpen, on
                   max={MAX_SPRINT_DAYS}
                   value={days}
                   onChange={e => setDays(Number(e.target.value))}
-                  className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
+                  className="w-full text-sm border border-lira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white"
                 />
               </div>
             ) : (
               <div>
-                <label htmlFor="sprint-name" className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Name (optional)</label>
+                <label htmlFor="sprint-name" className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Name (optional)</label>
                 <input
                   id="sprint-name"
                   value={name}
                   onChange={e => setName(e.target.value)}
                   placeholder="Sprint 12"
-                  className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
+                  className="w-full text-sm border border-lira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white"
                 />
               </div>
             )}
             {kind === 'days' && (
               <div className="col-span-2">
-                <label htmlFor="sprint-name" className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Name (optional)</label>
+                <label htmlFor="sprint-name" className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Name (optional)</label>
                 <input
                   id="sprint-name"
                   value={name}
                   onChange={e => setName(e.target.value)}
                   placeholder="Sprint 12"
-                  className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
+                  className="w-full text-sm border border-lira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white"
                 />
               </div>
             )}
           </div>
         )}
 
-        <div className="rounded-xl bg-gray-50 border border-jira-border px-4 py-3 text-sm text-jira-text" aria-live="polite">
+        <div className="rounded-xl bg-gray-50 border border-lira-border px-4 py-3 text-sm text-lira-text" aria-live="polite">
           {!custom ? (
             <>
               <strong>{sprintName(month)}</strong>
-              <span className="text-jira-muted">
+              <span className="text-lira-muted">
                 {' '}· {fmt(sprintStart(month))} – {fmt(sprintEnd(month))} · {sprintDays(month)} days
                 {sprintPhase(month) === 'active' && ` · ${daysLeft(month)} left`}
               </span>
@@ -190,7 +185,7 @@ export const CreateSprintModal: React.FC<CreateSprintModalProps> = ({ isOpen, on
           ) : customEnd ? (
             <>
               <strong>{name.trim() || `Sprint ${fmt(parseDay(start))}–${fmt(customEnd)}`}</strong>
-              <span className="text-jira-muted"> · {fmt(parseDay(start))} – {fmt(customEnd)} · {length} day{length === 1 ? '' : 's'}</span>
+              <span className="text-lira-muted"> · {fmt(parseDay(start))} – {fmt(customEnd)} · {length} day{length === 1 ? '' : 's'}</span>
               {overlap && <div className="mt-1 text-red-600 text-xs">Overlaps the sprint starting {fmt(parseDay(overlap))}. Pick another start date or a shorter length.</div>}
             </>
           ) : (
@@ -201,12 +196,12 @@ export const CreateSprintModal: React.FC<CreateSprintModalProps> = ({ isOpen, on
         {spaces.length > 0 && <SprintSpacesPicker spaces={spaces} value={spaceIds} onChange={setSpaceIds} />}
 
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Sprint goal (optional)</label>
+          <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Sprint goal (optional)</label>
           <input
             value={goal}
             onChange={e => setGoal(e.target.value)}
             placeholder="What should be true by the end of this sprint?"
-            className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
+            className="w-full text-sm border border-lira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white"
           />
         </div>
 

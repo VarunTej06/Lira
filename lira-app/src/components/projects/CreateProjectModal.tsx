@@ -163,10 +163,10 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-5">
         {/* Header callout */}
         <div className="flex items-start gap-3 p-3 bg-blue-50/60 border border-blue-200/80 rounded-xl text-xs text-blue-800">
-          <FolderKanban className="w-5 h-5 text-jira-blue flex-shrink-0 mt-0.5" />
+          <FolderKanban className="w-5 h-5 text-lira-blue flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-semibold text-jira-blue">Lira Project Architecture</p>
-            <p className="text-jira-muted mt-0.5">
+            <p className="font-semibold text-lira-blue">Lira Project Architecture</p>
+            <p className="text-lira-muted mt-0.5">
               Projects organize technical initiatives, boards, environments, and team workflows. Each project binds to a Space for issue tracking and storage partitioning.
             </p>
           </div>
@@ -175,7 +175,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
         {/* Project Name & Key */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-jira-muted uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-lira-muted uppercase tracking-wider mb-1.5">
               Project Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -185,12 +185,12 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
               value={name}
               onChange={e => handleNameChange(e.target.value)}
               placeholder="e.g. MLOps Automated Pipeline"
-              className="w-full text-sm border border-jira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue transition-all"
+              className="w-full text-sm border border-lira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-jira-muted uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-lira-muted uppercase tracking-wider mb-1.5">
               Key / Prefix <span className="text-red-500">*</span>
             </label>
             <input
@@ -200,16 +200,16 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
               onChange={e => handleKeyChange(e.target.value)}
               placeholder="e.g. MLOP"
               maxLength={6}
-              className="w-full text-sm font-mono uppercase border border-jira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue transition-all"
+              className="w-full text-sm font-mono uppercase border border-lira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue transition-all"
             />
-            <p className="text-[10px] text-jira-muted mt-1 font-mono">Issues: {key || 'KEY'}-1</p>
+            <p className="text-[10px] text-lira-muted mt-1 font-mono">Issues: {key || 'KEY'}-1</p>
           </div>
         </div>
 
         {/* Lead / Owner & Category */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-jira-muted uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-lira-muted uppercase tracking-wider mb-1.5">
               Project Lead / Owner <span className="text-red-500">*</span>
             </label>
             <input
@@ -218,15 +218,15 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
               value={lead}
               onChange={e => setLead(e.target.value)}
               placeholder="e.g. Varun Tej"
-              className="w-full text-sm border border-jira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue transition-all"
+              className="w-full text-sm border border-lira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-jira-muted uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-semibold text-lira-muted uppercase tracking-wider mb-1.5">
               Project Category
             </label>
-            <div className="flex items-center gap-2 h-[42px] px-3.5 bg-gray-50 border border-jira-border rounded-lg text-sm text-jira-text">
+            <div className="flex items-center gap-2 h-[42px] px-3.5 bg-gray-50 border border-lira-border rounded-lg text-sm text-lira-text">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>Software Engineering</span>
             </div>
@@ -235,7 +235,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
 
         {/* Description */}
         <div>
-          <label className="block text-xs font-semibold text-jira-muted uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-semibold text-lira-muted uppercase tracking-wider mb-1.5">
             Description
           </label>
           <textarea
@@ -243,13 +243,13 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
             onChange={e => setDescription(e.target.value)}
             placeholder="High-level mission, engineering deliverables, repository goals, and architectural scope..."
             rows={2}
-            className="w-full text-sm border border-jira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-jira-blue resize-none transition-all"
+            className="w-full text-sm border border-lira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-lira-blue resize-none transition-all"
           />
         </div>
 
         {/* Space Association Radio Section */}
-        <div className="space-y-3 pt-2 border-t border-jira-border">
-          <label className="block text-xs font-semibold text-jira-muted uppercase tracking-wider">
+        <div className="space-y-3 pt-2 border-t border-lira-border">
+          <label className="block text-xs font-semibold text-lira-muted uppercase tracking-wider">
             Space Association <span className="text-red-500">*</span>
           </label>
 
@@ -259,7 +259,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
               onClick={() => setAssociationType('existing')}
               className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
                 associationType === 'existing'
-                  ? 'border-jira-blue bg-blue-50/40 shadow-xs'
+                  ? 'border-lira-blue bg-blue-50/40 shadow-xs'
                   : 'border-gray-200 hover:border-gray-300 bg-white'
               }`}
             >
@@ -269,12 +269,12 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                   name="spaceAssociation"
                   checked={associationType === 'existing'}
                   onChange={() => setAssociationType('existing')}
-                  className="w-4 h-4 text-jira-blue focus:ring-jira-blue cursor-pointer"
+                  className="w-4 h-4 text-lira-blue focus:ring-lira-blue cursor-pointer"
                 />
-                <Layers className="w-4 h-4 text-jira-blue" />
-                <span className="text-sm font-semibold text-jira-text">Link to existing Space</span>
+                <Layers className="w-4 h-4 text-lira-blue" />
+                <span className="text-sm font-semibold text-lira-text">Link to existing Space</span>
               </div>
-              <p className="text-xs text-jira-muted mt-1.5 pl-6">
+              <p className="text-xs text-lira-muted mt-1.5 pl-6">
                 Bind this project to an already established Space and its Kanban board issues.
               </p>
             </div>
@@ -284,7 +284,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
               onClick={() => setAssociationType('new')}
               className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
                 associationType === 'new'
-                  ? 'border-jira-blue bg-blue-50/40 shadow-xs'
+                  ? 'border-lira-blue bg-blue-50/40 shadow-xs'
                   : 'border-gray-200 hover:border-gray-300 bg-white'
               }`}
             >
@@ -294,12 +294,12 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                   name="spaceAssociation"
                   checked={associationType === 'new'}
                   onChange={() => setAssociationType('new')}
-                  className="w-4 h-4 text-jira-blue focus:ring-jira-blue cursor-pointer"
+                  className="w-4 h-4 text-lira-blue focus:ring-lira-blue cursor-pointer"
                 />
                 <PlusCircle className="w-4 h-4 text-emerald-600" />
-                <span className="text-sm font-semibold text-jira-text">Create new Space</span>
+                <span className="text-sm font-semibold text-lira-text">Create new Space</span>
               </div>
-              <p className="text-xs text-jira-muted mt-1.5 pl-6">
+              <p className="text-xs text-lira-muted mt-1.5 pl-6">
                 Provision a brand new isolated workspace partition and disk shard.
               </p>
             </div>
@@ -307,14 +307,14 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
 
           {/* Sub-form for Option 1: Existing Space dropdown */}
           {associationType === 'existing' && (
-            <div className="p-3 bg-gray-50 border border-jira-border rounded-xl space-y-2 animate-fade-in">
-              <label className="block text-xs font-medium text-jira-text">
+            <div className="p-3 bg-gray-50 border border-lira-border rounded-xl space-y-2 animate-fade-in">
+              <label className="block text-xs font-medium text-lira-text">
                 Select Space to Link:
               </label>
               <select
                 value={selectedSpaceId}
                 onChange={e => setSelectedSpaceId(Number(e.target.value))}
-                className="w-full text-sm border border-jira-border rounded-lg px-3 py-2 bg-white text-jira-text focus:outline-none focus:border-jira-blue cursor-pointer"
+                className="w-full text-sm border border-lira-border rounded-lg px-3 py-2 bg-white text-lira-text focus:outline-none focus:border-lira-blue cursor-pointer"
               >
                 {spaces.map(sp => (
                   <option key={sp.id} value={sp.id}>
@@ -327,18 +327,18 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
 
           {/* Sub-form for Option 2: New Space details */}
           {associationType === 'new' && (
-            <div className="p-3.5 bg-gray-50 border border-jira-border rounded-xl space-y-3 animate-fade-in">
+            <div className="p-3.5 bg-gray-50 border border-lira-border rounded-xl space-y-3 animate-fade-in">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-jira-text uppercase tracking-wider">
+                <span className="text-xs font-semibold text-lira-text uppercase tracking-wider">
                   New Space Customization
                 </span>
-                <span className="text-[11px] text-jira-muted font-mono">
+                <span className="text-[11px] text-lira-muted font-mono">
                   {key || 'KEY'}.json on disk
                 </span>
               </div>
 
               <div>
-                <label className="block text-xs text-jira-muted mb-1.5">Space Icon</label>
+                <label className="block text-xs text-lira-muted mb-1.5">Space Icon</label>
                 <div className="flex flex-wrap gap-1.5">
                   {SPACE_ICONS.map(ic => (
                     <button
@@ -347,7 +347,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                       onClick={() => setNewSpaceIcon(ic)}
                       className={`w-8 h-8 rounded-lg text-base flex items-center justify-center transition-all cursor-pointer ${
                         newSpaceIcon === ic
-                          ? 'ring-2 ring-jira-blue bg-white shadow-xs scale-105'
+                          ? 'ring-2 ring-lira-blue bg-white shadow-xs scale-105'
                           : 'hover:bg-white/70'
                       }`}
                     >
@@ -358,7 +358,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs text-jira-muted mb-1.5">Space Color Accent</label>
+                <label className="block text-xs text-lira-muted mb-1.5">Space Color Accent</label>
                 <div className="flex gap-2 flex-wrap items-center">
                   {SPACE_COLORS.map(c => (
                     <button
@@ -367,7 +367,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                       onClick={() => setNewSpaceColor(c)}
                       className={`w-6 h-6 rounded-full transition-all cursor-pointer flex items-center justify-center ${
                         newSpaceColor === c
-                          ? 'ring-2 ring-offset-2 ring-jira-blue scale-110 shadow-xs'
+                          ? 'ring-2 ring-offset-2 ring-lira-blue scale-110 shadow-xs'
                           : 'hover:scale-105'
                       }`}
                       style={{ backgroundColor: c }}
@@ -388,7 +388,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
         )}
 
         {/* Actions */}
-        <div className="flex justify-end items-center gap-3 pt-3 border-t border-jira-border">
+        <div className="flex justify-end items-center gap-3 pt-3 border-t border-lira-border">
           <Button type="button" variant="ghost" onClick={() => { resetForm(); onClose(); }}>
             Cancel
           </Button>

@@ -11,20 +11,20 @@ export function ProjectHeader(ctx: DetailCtx) {
   return (
     <>
       {/* ── Top Project Header & Breadcrumbs ── */}
-      <div className="bg-white border-b border-jira-border px-6 pt-4 pb-0 flex-shrink-0">
+      <div className="bg-white border-b border-lira-border px-6 pt-4 pb-0 flex-shrink-0">
         {/* Breadcrumb Navigation */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <button
               onClick={onBack}
-              className="p-1.5 rounded-lg hover:bg-gray-100 text-jira-muted hover:text-jira-text transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
+              className="p-1.5 rounded-lg hover:bg-gray-100 text-lira-muted hover:text-lira-text transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
               title="Return to Projects Overview"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>All Projects</span>
             </button>
             <span className="text-gray-300">/</span>
-            <span className="text-xs font-semibold text-jira-text">{project.name}</span>
+            <span className="text-xs font-semibold text-lira-text">{project.name}</span>
           </div>
 
           {/* Quick Header Actions */}
@@ -55,10 +55,10 @@ export function ProjectHeader(ctx: DetailCtx) {
 
             <div>
               <div className="flex items-center flex-wrap gap-2.5">
-                <h1 className="text-xl font-bold text-jira-text tracking-tight">
+                <h1 className="text-xl font-bold text-lira-text tracking-tight">
                   {project.name}
                 </h1>
-                <span className="font-mono text-xs font-bold bg-blue-100 text-jira-blue px-2 py-0.5 rounded border border-blue-200">
+                <span className="font-mono text-xs font-bold bg-blue-100 text-lira-blue px-2 py-0.5 rounded border border-blue-200">
                   {project.key}
                 </span>
                 {project.category && (
@@ -69,16 +69,16 @@ export function ProjectHeader(ctx: DetailCtx) {
               </div>
 
               {/* Description */}
-              <p className="text-xs text-jira-muted mt-1 max-w-3xl line-clamp-2 leading-relaxed">
-                {project.description || 'Enterprise Jira-grade technical project workspace.'}
+              <p className="text-xs text-lira-muted mt-1 max-w-3xl line-clamp-2 leading-relaxed">
+                {project.description || 'Enterprise-grade technical project workspace.'}
               </p>
 
               {/* Lead, Created Date & Linked Space Tag */}
-              <div className="flex items-center flex-wrap gap-3 mt-2 text-xs text-jira-muted">
+              <div className="flex items-center flex-wrap gap-3 mt-2 text-xs text-lira-muted">
                 {/* Lead Avatar */}
                 <div className="flex items-center gap-1.5">
                   <Avatar initials={project.lead ? project.lead.slice(0, 2).toUpperCase() : 'VY'} size="xs" />
-                  <span>Lead: <strong className="text-jira-text">{project.lead || 'Varun Tej'}</strong></span>
+                  <span>Lead: <strong className="text-lira-text">{project.lead || 'Varun Tej'}</strong></span>
                 </div>
 
                 <span className="text-gray-300">•</span>
@@ -95,12 +95,12 @@ export function ProjectHeader(ctx: DetailCtx) {
                 {space && space.id !== undefined ? (
                   <button
                     onClick={() => onSwitchToSpace?.(space.id!)}
-                    className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-50 hover:bg-blue-50 border border-jira-border hover:border-jira-blue rounded-md text-jira-text text-xs transition-all cursor-pointer group"
+                    className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-50 hover:bg-blue-50 border border-lira-border hover:border-lira-blue rounded-md text-lira-text text-xs transition-all cursor-pointer group"
                     title={`Switch workspace to space ${space.name}`}
                   >
                     <span>{space.icon || '📁'}</span>
-                    <span>Space: <strong className="group-hover:text-jira-blue">{space.name}</strong></span>
-                    <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-jira-blue" />
+                    <span>Space: <strong className="group-hover:text-lira-blue">{space.name}</strong></span>
+                    <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-lira-blue" />
                   </button>
                 ) : (
                   <span className="text-gray-400 italic">No linked space</span>
@@ -124,8 +124,8 @@ export function ProjectHeader(ctx: DetailCtx) {
             onClick={() => setActiveTab('overview')}
             className={`flex items-center gap-2 pb-3 font-semibold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
               activeTab === 'overview'
-                ? 'border-jira-blue text-jira-blue'
-                : 'border-transparent text-jira-muted hover:text-jira-text'
+                ? 'border-lira-blue text-lira-blue'
+                : 'border-transparent text-lira-muted hover:text-lira-text'
             }`}
           >
             <BarChart3 className="w-4 h-4" />
@@ -136,8 +136,8 @@ export function ProjectHeader(ctx: DetailCtx) {
             onClick={() => setActiveTab('board')}
             className={`flex items-center gap-2 pb-3 font-semibold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
               activeTab === 'board'
-                ? 'border-jira-blue text-jira-blue'
-                : 'border-transparent text-jira-muted hover:text-jira-text'
+                ? 'border-lira-blue text-lira-blue'
+                : 'border-transparent text-lira-muted hover:text-lira-text'
             }`}
           >
             <KanbanSquare className="w-4 h-4" />
@@ -151,8 +151,8 @@ export function ProjectHeader(ctx: DetailCtx) {
             onClick={() => setActiveTab('tickets')}
             className={`flex items-center gap-2 pb-3 font-semibold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
               activeTab === 'tickets'
-                ? 'border-jira-blue text-jira-blue'
-                : 'border-transparent text-jira-muted hover:text-jira-text'
+                ? 'border-lira-blue text-lira-blue'
+                : 'border-transparent text-lira-muted hover:text-lira-text'
             }`}
           >
             <Ticket className="w-4 h-4" />
@@ -166,8 +166,8 @@ export function ProjectHeader(ctx: DetailCtx) {
             onClick={() => setActiveTab('sprints')}
             className={`flex items-center gap-2 pb-3 font-semibold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
               activeTab === 'sprints'
-                ? 'border-jira-blue text-jira-blue'
-                : 'border-transparent text-jira-muted hover:text-jira-text'
+                ? 'border-lira-blue text-lira-blue'
+                : 'border-transparent text-lira-muted hover:text-lira-text'
             }`}
           >
             <CalendarClock className="w-4 h-4" />
@@ -178,8 +178,8 @@ export function ProjectHeader(ctx: DetailCtx) {
             onClick={() => setActiveTab('technical')}
             className={`flex items-center gap-2 pb-3 font-semibold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
               activeTab === 'technical'
-                ? 'border-jira-blue text-jira-blue'
-                : 'border-transparent text-jira-muted hover:text-jira-text'
+                ? 'border-lira-blue text-lira-blue'
+                : 'border-transparent text-lira-muted hover:text-lira-text'
             }`}
           >
             <GitBranch className="w-4 h-4" />
@@ -190,8 +190,8 @@ export function ProjectHeader(ctx: DetailCtx) {
             onClick={() => setActiveTab('settings')}
             className={`flex items-center gap-2 pb-3 font-semibold transition-all border-b-2 cursor-pointer whitespace-nowrap ${
               activeTab === 'settings'
-                ? 'border-jira-blue text-jira-blue'
-                : 'border-transparent text-jira-muted hover:text-jira-text'
+                ? 'border-lira-blue text-lira-blue'
+                : 'border-transparent text-lira-muted hover:text-lira-text'
             }`}
           >
             <Settings className="w-4 h-4" />

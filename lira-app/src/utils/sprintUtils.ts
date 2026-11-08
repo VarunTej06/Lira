@@ -29,7 +29,7 @@ export interface SprintMeta {
 }
 
 export const isDone = (i: Issue) => i.status?.toLowerCase() === 'done';
-/** Epics are long-running containers and live outside sprints (as in Jira). */
+/** Epics are long-running containers and live outside sprints (they are containers for the work inside them). */
 export const isSprintWork = (i: Issue) => i.type !== 'epic';
 
 export function sprintKey(d: Date): string {
@@ -286,6 +286,7 @@ export interface SprintStats {
   total: number;
   done: number;
   inprogress: number;
+  blocked: number;
   todo: number;
   backlog: number;
   open: number;
@@ -303,6 +304,7 @@ export function sprintStats(list: Issue[]): SprintStats {
     total: list.length,
     done,
     inprogress: by('inprogress'),
+    blocked: list.filter(i => i.blocked).length,
     todo: by('todo'),
     backlog: by('backlog'),
     open: list.length - done,

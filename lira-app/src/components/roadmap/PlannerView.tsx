@@ -1,5 +1,6 @@
+import { issueLink } from '../../utils/links';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { CalendarDays, ChevronDown, ChevronRight, GripHorizontal, Plus } from 'lucide-react';
+import { CalendarDays, ChevronDown, ChevronRight, GripHorizontal, Plus, Zap } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import {
   PX_PER_DAY, STATUS_META, buildHeader, buildPlannerRows, computeRange, daysBetween, fmtDay, fmtShort, laneColor, movedDate,
@@ -143,21 +144,21 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-jira-muted">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-lira-muted">
         <span className="flex items-center gap-1.5"><GripHorizontal className="w-3.5 h-3.5" /> Drag an epic bar or a ticket chip to another day or month. Edges of a bar change its length.</span>
         <span>{ticketCount} tickets shown{unscheduled > 0 ? ` · ${unscheduled} without a due date (dashed, at the start of their sprint month)` : ''}</span>
       </div>
 
-      <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-jira-border bg-jira-surface" style={{ maxHeight: 'calc(100vh - 360px)', minHeight: 320 }}>
+      <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 360px)', minHeight: 320 }}>
         <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + height }}>
           {/* header */}
           <div className="sticky top-0 z-30 flex" style={{ height: HEADER_H }}>
-            <div className="sticky left-0 z-40 bg-jira-surface border-b border-r border-jira-border flex items-end px-4 pb-2 text-[11px] font-semibold uppercase tracking-wider text-jira-muted" style={{ width: LABEL_W }}>
+            <div className="sticky left-0 z-40 bg-lira-surface border-b border-r border-lira-border flex items-end px-4 pb-2 text-[11px] font-semibold uppercase tracking-wider text-lira-muted" style={{ width: LABEL_W }}>
               Lane · Epic · Ticket
             </div>
-            <div className="relative bg-jira-surface border-b border-jira-border" style={{ width }}>
-              {header.top.map((c, i) => <div key={i} className="absolute top-0 h-6 flex items-center px-2 text-[11px] font-semibold text-jira-text border-r border-jira-border/70" style={{ left: c.x, width: c.width }}>{c.label}</div>)}
-              {header.bottom.map((c, i) => <div key={i} className="absolute top-6 h-[26px] flex items-center px-2 text-[11px] text-jira-muted border-r border-t border-jira-border/60" style={{ left: c.x, width: c.width }}>{c.label}</div>)}
+            <div className="relative bg-lira-surface border-b border-lira-border" style={{ width }}>
+              {header.top.map((c, i) => <div key={i} className="absolute top-0 h-6 flex items-center px-2 text-[11px] font-semibold text-lira-text border-r border-lira-border/70" style={{ left: c.x, width: c.width }}>{c.label}</div>)}
+              {header.bottom.map((c, i) => <div key={i} className="absolute top-6 h-[26px] flex items-center px-2 text-[11px] text-lira-muted border-r border-t border-lira-border/60" style={{ left: c.x, width: c.width }}>{c.label}</div>)}
               <div className="absolute top-[28px] -translate-x-1/2 px-1.5 rounded bg-red-500 text-white text-[9px] font-bold z-10 leading-[14px]" style={{ left: todayX }}>TODAY</div>
             </div>
           </div>
@@ -165,25 +166,25 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
           {/* body */}
           <div className="flex" style={{ height }}>
             {/* labels */}
-            <div className="sticky left-0 z-20 bg-jira-surface border-r border-jira-border" style={{ width: LABEL_W }}>
+            <div className="sticky left-0 z-20 bg-lira-surface border-r border-lira-border" style={{ width: LABEL_W }}>
               {rows.map(r => {
                 if (r.kind === 'lane') return (
-                  <button key={`l-${r.lane}`} onClick={() => onToggleLane(r.lane)} className="w-full flex items-center gap-2 px-3 text-left bg-jira-bg/70 border-b border-jira-border/70 cursor-pointer hover:bg-jira-bg" style={{ height: r.h }}>
-                    <ChevronDown className={`w-3.5 h-3.5 text-jira-muted transition-transform ${collapsedLanes.includes(r.lane) ? '-rotate-90' : ''}`} />
+                  <button key={`l-${r.lane}`} onClick={() => onToggleLane(r.lane)} className="w-full flex items-center gap-2 px-3 text-left bg-lira-bg/70 border-b border-lira-border/70 cursor-pointer hover:bg-lira-bg" style={{ height: r.h }}>
+                    <ChevronDown className={`w-3.5 h-3.5 text-lira-muted transition-transform ${collapsedLanes.includes(r.lane) ? '-rotate-90' : ''}`} />
                     <span className="w-2.5 h-2.5 rounded-sm" style={{ background: laneColor(roadmap, r.lane) }} />
-                    <span className="text-xs font-semibold text-jira-text truncate">{r.lane}</span>
-                    <span className="ml-auto text-[10px] text-jira-muted bg-jira-surface border border-jira-border rounded-full px-1.5">{r.count}</span>
+                    <span className="text-xs font-semibold text-lira-text truncate">{r.lane}</span>
+                    <span className="ml-auto text-[10px] text-lira-muted bg-lira-surface border border-lira-border rounded-full px-1.5">{r.count}</span>
                   </button>
                 );
                 if (r.kind === 'epic') {
                   const { status } = resolveItem(r.item, issues, today);
                   const isAdding = adding?.id === r.item.id;
                   return (
-                    <div key={`e-${r.item.id}`} className="group flex items-center gap-1.5 pl-5 pr-2 border-b border-jira-border/50 hover:bg-jira-bg/50" style={{ height: r.h }}>
-                      <button onClick={() => toggleEpic(r.item.id)} disabled={r.tickets.length === 0} className="p-0.5 text-jira-muted disabled:opacity-30 cursor-pointer" aria-label={r.expanded ? 'Collapse epic' : 'Expand epic'}>
+                    <div key={`e-${r.item.id}`} className="group flex items-center gap-1.5 pl-5 pr-2 border-b border-lira-border/50 hover:bg-lira-bg/50" style={{ height: r.h }}>
+                      <button onClick={() => toggleEpic(r.item.id)} disabled={r.tickets.length === 0} className="p-0.5 text-lira-muted disabled:opacity-30 cursor-pointer" aria-label={r.expanded ? 'Collapse epic' : 'Expand epic'}>
                         {r.expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                       </button>
-                      <span className="w-4 h-4 rounded flex items-center justify-center text-[9px] bg-violet-500/20 text-violet-500 flex-shrink-0" title="Epic">⚡</span>
+                      <span className="w-4 h-4 rounded flex items-center justify-center text-[9px] bg-violet-500/20 text-violet-500 flex-shrink-0" title="Epic"><Zap className="w-3 h-3" /></span>
                       {isAdding ? (
                         <input
                           autoFocus
@@ -192,19 +193,19 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                           onKeyDown={e => { if (e.key === 'Enter') submitAdd(); if (e.key === 'Escape') setAdding(null); }}
                           onBlur={() => setAdding(null)}
                           placeholder={`New task in ${r.epic?.key}…  Enter to add`}
-                          className="flex-1 min-w-0 border border-jira-blue rounded px-2 py-1 text-xs bg-jira-surface text-jira-text focus:outline-none"
+                          className="flex-1 min-w-0 border border-lira-blue rounded px-2 py-1 text-xs bg-lira-surface text-lira-text focus:outline-none"
                         />
                       ) : (
                         <button onClick={() => onOpenItem(r.item.id)} className="flex-1 min-w-0 flex items-center gap-2 text-left cursor-pointer" title={r.item.title}>
-                          <span className="text-[10px] font-mono text-jira-muted flex-shrink-0">{r.epic?.key || r.item.epicKey || 'no epic'}</span>
-                          <span className="text-xs font-medium text-jira-text truncate">{r.item.title}</span>
+                          <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{r.epic?.key || r.item.epicKey || 'no epic'}</span>
+                          <span className="text-xs font-medium text-lira-text truncate">{r.item.title}</span>
                         </button>
                       )}
                       {!isAdding && (
                         <>
                           <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold flex-shrink-0" style={{ background: STATUS_META[status].color + '22', color: STATUS_META[status].color }}>{STATUS_META[status].label}</span>
-                          {r.tickets.length > 0 && <span className="text-[10px] text-jira-muted flex-shrink-0">{r.tickets.length}</span>}
-                          {r.epic && <button onClick={() => setAdding({ id: r.item.id, text: '' })} className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-jira-muted hover:text-jira-blue hover:bg-jira-bg cursor-pointer flex-shrink-0" title="Add a task to this epic" aria-label="Add a task to this epic"><Plus className="w-3.5 h-3.5" /></button>}
+                          {r.tickets.length > 0 && <span className="text-[10px] text-lira-muted flex-shrink-0">{r.tickets.length}</span>}
+                          {r.epic && <button onClick={() => setAdding({ id: r.item.id, text: '' })} className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-lira-muted hover:text-lira-blue hover:bg-lira-bg cursor-pointer flex-shrink-0" title="Add a task to this epic" aria-label="Add a task to this epic"><Plus className="w-3.5 h-3.5" /></button>}
                         </>
                       )}
                     </div>
@@ -212,11 +213,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                 }
                 const t = r.issue;
                 return (
-                  <button key={`t-${t.id}`} onClick={() => onOpenIssue(t)} className="w-full flex items-center gap-2 pl-14 pr-3 text-left border-b border-jira-border/40 hover:bg-jira-bg/50 cursor-pointer" style={{ height: r.h }} title={t.title}>
+                  <button key={`t-${t.id}`} onClick={() => onOpenIssue(t)} {...issueLink(t)} className="w-full flex items-center gap-2 pl-14 pr-3 text-left border-b border-lira-border/40 hover:bg-lira-bg/50 cursor-pointer" style={{ height: r.h }} title={t.title}>
                     <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: ticketColor(t.status) }} />
-                    <span className="text-[10px] font-mono text-jira-muted flex-shrink-0">{t.key}</span>
-                    <span className="text-xs text-jira-text truncate">{t.title}</span>
-                    {t.assigneeInitials && <span className="ml-auto text-[9px] font-bold text-white bg-jira-blue/70 rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0">{t.assigneeInitials.slice(0, 2)}</span>}
+                    <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{t.key}</span>
+                    <span className="text-xs text-lira-text truncate">{t.title}</span>
+                    {t.assigneeInitials && <span className="ml-auto text-[9px] font-bold text-white bg-lira-blue/70 rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0">{t.assigneeInitials.slice(0, 2)}</span>}
                   </button>
                 );
               })}
@@ -224,11 +225,11 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
             {/* canvas */}
             <div className="relative" style={{ width, height }}>
-              {header.bottom.map((c, i) => <div key={i} className="absolute top-0 bottom-0 border-r border-jira-border/40" style={{ left: c.x + c.width - 1 }} />)}
+              {header.bottom.map((c, i) => <div key={i} className="absolute top-0 bottom-0 border-r border-lira-border/40" style={{ left: c.x + c.width - 1 }} />)}
               {rows.map(r => (
                 <div
                   key={`bg-${r.kind}-${r.kind === 'lane' ? r.lane : r.kind === 'epic' ? r.item.id : r.issue.id}`}
-                  className={`absolute left-0 right-0 border-b ${r.kind === 'lane' ? 'bg-jira-bg/70 border-jira-border/70' : r.kind === 'epic' ? 'border-jira-border/50' : 'border-jira-border/30 bg-jira-bg/20'}`}
+                  className={`absolute left-0 right-0 border-b ${r.kind === 'lane' ? 'bg-lira-bg/70 border-lira-border/70' : r.kind === 'epic' ? 'border-lira-border/50' : 'border-lira-border/30 bg-lira-bg/20'}`}
                   style={{ top: r.y, height: r.h }}
                 />
               ))}
@@ -255,13 +256,13 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       title={`${r.item.title}\n${fmtShort(live.start)} → ${fmtShort(live.end)} · ${progress}%`}
                     >
                       <div className="absolute inset-y-0 left-0" style={{ width: `${progress}%`, background: color, opacity: 0.55, borderRadius: progress >= 100 ? 5 : '5px 0 0 5px' }} />
-                      <div className="relative h-full flex items-center px-2 text-[11px] font-medium whitespace-nowrap overflow-hidden text-jira-text">
+                      <div className="relative h-full flex items-center px-2 text-[11px] font-medium whitespace-nowrap overflow-hidden text-lira-text">
                         <span className="truncate">{w > 100 ? r.item.title : ''}</span>
                         {w > 170 && <span className="ml-auto pl-2 opacity-80">{progress}%</span>}
                       </div>
                       <div className="absolute inset-y-0 left-0 w-2 cursor-ew-resize opacity-0 group-hover:opacity-100 bg-white/40 rounded-l-md" onPointerDown={e => start(e, 'epic', r.item.id, 'start')} />
                       <div className="absolute inset-y-0 right-0 w-2 cursor-ew-resize opacity-0 group-hover:opacity-100 bg-white/40 rounded-r-md" onPointerDown={e => start(e, 'epic', r.item.id, 'end')} />
-                      {w <= 100 && <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 text-[11px] text-jira-text whitespace-nowrap pointer-events-none">{r.item.title}</span>}
+                      {w <= 100 && <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 text-[11px] text-lira-text whitespace-nowrap pointer-events-none">{r.item.title}</span>}
                     </div>
                   );
                 }
@@ -281,8 +282,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
                       title={`${t.key} · ${t.title}\n${base.scheduled ? `Due ${fmtDay(base.date)}` : 'No due date: drag to schedule'}`}
                     >
                       <CalendarDays className="w-3 h-3 flex-shrink-0" style={{ color }} />
-                      <span className="font-mono text-[10px] text-jira-muted">{t.key}</span>
-                      <span className="truncate text-jira-text">{t.title}</span>
+                      <span className="font-mono text-[10px] text-lira-muted">{t.key}</span>
+                      <span className="truncate text-lira-text">{t.title}</span>
                     </div>
                   );
                 }
@@ -294,7 +295,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       </div>
 
       {drag?.moved && tip && (
-        <div className="fixed z-[100] pointer-events-none px-2 py-1 rounded-md bg-jira-text text-jira-bg text-[11px] font-semibold shadow-lg" style={{ left: drag.x + 14, top: drag.y + 14, background: '#172B4D', color: '#fff' }}>
+        <div className="fixed z-[100] pointer-events-none px-2 py-1 rounded-md bg-lira-text text-lira-bg text-[11px] font-semibold shadow-lg" style={{ left: drag.x + 14, top: drag.y + 14, background: '#172B4D', color: '#fff' }}>
           {tip}
         </div>
       )}

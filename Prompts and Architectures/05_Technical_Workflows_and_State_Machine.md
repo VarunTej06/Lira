@@ -56,7 +56,7 @@ if (destColumn.length === 0) {
 }
 ```
 
-This is the same fractional indexing approach used by Jira, Linear, and Notion.
+This is the same fractional indexing approach used by many collaborative tools.
 Ranks never need global rebalancing unless they collide after ~50 moves to the
 same gap (extremely rare in practice).
 
@@ -138,7 +138,7 @@ const progress   = total > 0 ? (completed / total) * 100 : 0;
 ```
 
 The progress bar colour transitions:
-- **0–99%** → Jira Blue `#0052CC`
+- **0–99%** → Brand blue `#0052CC`
 - **100%** → Done Green `#36B37E`
 
 ---
@@ -214,13 +214,13 @@ Lira supports dynamic upgrading or downgrading of any ticket's type (`Epic`, `Ta
 
 ```
                      ┌───────────────┐
-                     │   Epic (⚡)    │
+                     │   Epic       │
                      └───────┬───────┘
                              │ (contains)
                ┌─────────────┴─────────────┐
                ▼                           ▼
         ┌──────────────┐            ┌──────────────┐
-        │  Task (✅)   │            │   Bug (🐛)   │
+        │  Task       │            │   Bug       │
         └──────┬───────┘            └──────────────┘
                │ (contains)
                ▼

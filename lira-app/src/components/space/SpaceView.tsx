@@ -1,3 +1,5 @@
+import { EMPTY_SPACE_FILTERS, type SpaceFilters } from '../../utils/spaceFilters';
+import { Construction } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BoardActionBar } from '../board/BoardActionBar';
@@ -28,7 +30,6 @@ interface SpaceViewProps {
   onIssueClick: (issue: Issue) => void;
   onAddIssue: (status: string, opts?: { sprint?: string; spaceId?: number; chooseSpace?: boolean }) => void;
   onOpenAllTickets: () => void;
-  onMaximize: () => void;
   isHidden: boolean;
   isArchived: boolean;
   onToggleHide: () => void;
@@ -40,7 +41,7 @@ interface SpaceViewProps {
 export function SpaceView(p: SpaceViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterAssignee, setFilterAssignee] = useState(false);
-  const [activeFilters, setActiveFilters] = useState<{ priorities: string[]; labels: string[] }>({ priorities: [], labels: [] });
+  const [activeFilters, setActiveFilters] = useState<SpaceFilters>(EMPTY_SPACE_FILTERS);
   const [groupBy, setGroupBy] = useState<GroupBy>('status');
   const { space, tab, issues } = p;
 
@@ -65,9 +66,8 @@ export function SpaceView(p: SpaceViewProps) {
         onTabChange={p.onTabChange}
         onFilterChange={setActiveFilters}
         onGroupChange={setGroupBy}
-        onClearFilters={() => setActiveFilters({ priorities: [], labels: [] })}
+        onClearFilters={() => setActiveFilters(EMPTY_SPACE_FILTERS)}
         availableLabels={availableLabels}
-        onMaximize={p.onMaximize}
         isSpaceHidden={p.isHidden}
         isSpaceArchived={p.isArchived}
         onToggleHideSpace={p.onToggleHide}
@@ -133,11 +133,11 @@ export function SpaceView(p: SpaceViewProps) {
       )}
 
       {!known.includes(tab) && (
-        <div className="flex-1 flex items-center justify-center bg-jira-bg">
+        <div className="flex-1 flex items-center justify-center bg-lira-bg">
           <div className="text-center space-y-3">
-            <div className="text-5xl">🚧</div>
-            <p className="text-jira-muted text-sm font-medium">{tab} view — coming soon</p>
-            <Link to={spacePath(space.key, 'Board')} className="text-jira-blue text-sm hover:underline cursor-pointer">Back to Board</Link>
+            <Construction className="w-12 h-12 mx-auto text-lira-muted" />
+            <p className="text-lira-muted text-sm font-medium">{tab} view — coming soon</p>
+            <Link to={spacePath(space.key, 'Board')} className="text-lira-blue text-sm hover:underline cursor-pointer">Back to Board</Link>
           </div>
         </div>
       )}

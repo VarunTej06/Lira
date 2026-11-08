@@ -4,6 +4,7 @@ import { BoardColumn } from './BoardColumn';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { moveIssue, updateIssue } from '../../hooks/useIssues';
+import { matchesStatusFilter, type SpaceFilters } from '../../utils/spaceFilters';
 
 interface KanbanBoardProps {
   issues: Issue[];
@@ -12,7 +13,7 @@ interface KanbanBoardProps {
   filterAssignee: boolean;
   onIssueClick: (issue: Issue) => void;
   onAddIssue: (status: string) => void;
-  activeFilters?: { priorities: string[]; labels: string[] };
+  activeFilters?: SpaceFilters;
   groupBy?: 'status' | 'assignee' | 'priority' | 'epic';
 }
 
@@ -159,6 +160,8 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({
     if (activeFilters?.priorities && activeFilters.priorities.length > 0) {
       filtered = filtered.filter(i => activeFilters.priorities.includes(i.priority));
     }
+
+    filtered = filtered.filter(i => matchesStatusFilter(i, activeFilters?.statuses));
 
     // Apply label filters if any selected
     if (activeFilters?.labels && activeFilters.labels.length > 0) {

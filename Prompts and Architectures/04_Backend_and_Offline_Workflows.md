@@ -122,7 +122,7 @@ export async function importBackup(file: File): Promise<{ spaces: number; issues
   "version": "1.0.0",
   "exportedAt": "2026-10-28T06:00:00.000Z",
   "spaces": [
-    { "id": 3, "name": "Certifications", "key": "CERT", "icon": "🏆", "color": "#0052CC" }
+    { "id": 3, "name": "Certifications", "key": "CERT", "icon": "", "color": "#0052CC" }
   ],
   "issues": [
     {

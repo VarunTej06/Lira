@@ -10,7 +10,7 @@ Build order for the versions of Lira. Pick a phase number to start and it will b
 | 4 | Sprint planning, rollover, retros, reports | Agile | Large | **Done** |
 | 5 | Command palette, bulk edit, saved filters | Productivity | Medium | Not started |
 | 6 | Viva AI: confirm-and-undo, sprint-aware prompts | AI | Medium | **Done** |
-| 7 | Decide on multi-user | Architecture | Decision, then Very large | Deferred: single-user and multi-user will live on separate branches |
+| 7 | Decide on multi-user | Architecture | Decision, then Very large | Being planned: see [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (one repo with a shared core and two editions, hosted on Azure) |
 
 Phases 1 and 2 make every later phase cheaper, so they came first.
 
@@ -168,4 +168,4 @@ Decide before starting Phase 3's real invites, since it changes how they are bui
 
 ## Parking lot
 
-Ideas not yet scheduled: GitHub integration (branch or PR linked to ticket, auto-move on merge), Slack and Teams notifications, Jira CSV import, time tracking and worklogs, notifications inbox with @mentions, dependency graph, automation rules, follow-system theme and accent colours, first-run onboarding tour.
+Ideas not yet scheduled: GitHub integration (branch or PR linked to ticket, auto-move on merge), Slack and Teams notifications, CSV import from other trackers, time tracking and worklogs, notifications inbox with @mentions, dependency graph, automation rules, follow-system theme and accent colours, first-run onboarding tour.

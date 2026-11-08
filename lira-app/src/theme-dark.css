@@ -1,6 +1,6 @@
 /*
  * Dark theme overrides (applied when <html class="dark">).
- * The jira-* design tokens flip through CSS variables in index.css; this file remaps the
+ * The lira-* design tokens flip through CSS variables in index.css; this file remaps the
  * hard-coded light utilities (white / gray / slate) that components use directly.
  * Soft colour tints (bg-blue-50, text-emerald-700 …) are generated in tailwind.config.js.
  */
@@ -8,11 +8,11 @@
 /* Surfaces */
 .dark .bg-white,
 .dark .hover\:bg-white:hover,
-.dark .focus\:bg-white:focus { background-color: rgb(var(--jira-surface)); }
+.dark .focus\:bg-white:focus { background-color: rgb(var(--lira-surface)); }
 .dark .bg-white\/95,
 .dark .bg-white\/80,
 .dark .bg-white\/70,
-.dark .bg-white\/60 { background-color: rgb(var(--jira-surface) / 0.85); }
+.dark .bg-white\/60 { background-color: rgb(var(--lira-surface) / 0.85); }
 .dark .bg-\[\#F4F5F7\] { background-color: rgb(var(--surface-2)); }
 .dark .bg-\[\#091E4206\] { background-color: rgb(255 255 255 / 0.04); }
 .dark .hover\:bg-\[\#091E420A\]:hover { background-color: rgb(255 255 255 / 0.08); }
@@ -33,12 +33,12 @@
 
 /* Borders & dividers */
 .dark .border-gray-50, .dark .border-gray-100, .dark .border-gray-200, .dark .border-gray-300,
-.dark .border-slate-200, .dark .border-slate-300 { border-color: rgb(var(--jira-border)); }
+.dark .border-slate-200, .dark .border-slate-300 { border-color: rgb(var(--lira-border)); }
 .dark .border-gray-400,
 .dark .hover\:border-gray-400:hover,
-.dark .hover\:border-gray-300:hover { border-color: rgb(var(--jira-muted) / 0.6); }
+.dark .hover\:border-gray-300:hover { border-color: rgb(var(--lira-muted) / 0.6); }
 .dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
-.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: rgb(var(--jira-border)); }
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) { border-color: rgb(var(--lira-border)); }
 
 /* Text */
 .dark .text-gray-300 { color: #6e7681; }
@@ -52,11 +52,11 @@
 /* Form controls */
 .dark input, .dark textarea, .dark select {
   background-color: rgb(var(--surface-2));
-  color: rgb(var(--jira-text));
-  border-color: rgb(var(--jira-border));
+  color: rgb(var(--lira-text));
+  border-color: rgb(var(--lira-border));
 }
-.dark input::placeholder, .dark textarea::placeholder { color: rgb(var(--jira-muted) / 0.8); }
-.dark option { background-color: rgb(var(--jira-surface)); color: rgb(var(--jira-text)); }
+.dark input::placeholder, .dark textarea::placeholder { color: rgb(var(--lira-muted) / 0.8); }
+.dark option { background-color: rgb(var(--lira-surface)); color: rgb(var(--lira-text)); }
 .dark input[type='checkbox'], .dark input[type='radio'] { background-color: initial; }
 /* inputs that are deliberately transparent / sit on coloured bars keep their look */
 .dark input.bg-transparent, .dark select.bg-transparent, .dark textarea.bg-transparent { background-color: transparent; }
@@ -64,7 +64,7 @@
 
 /* Scrollbars */
 .dark ::-webkit-scrollbar-thumb { background: rgb(var(--surface-4)); }
-.dark ::-webkit-scrollbar-thumb:hover { background: rgb(var(--jira-muted) / 0.6); }
+.dark ::-webkit-scrollbar-thumb:hover { background: rgb(var(--lira-muted) / 0.6); }
 .dark .lira-board-scrollbar { scrollbar-color: #4a5463 rgba(255, 255, 255, 0.05); }
 .dark .lira-board-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
 .dark .lira-board-scrollbar::-webkit-scrollbar-thumb { background: #4a5463; background-clip: padding-box; }
@@ -79,7 +79,7 @@
 
 /*
  * Inline-styled chips (status / priority / type badges set their colours with style="…").
- * Re-tint the light Atlassian pastels into translucent dark equivalents and lift the dark text on them.
+ * Re-tint the light pastels into translucent dark equivalents and lift the dark text on them.
  */
 .dark [style*="background-color: rgb(222, 235, 255)"] { background-color: rgb(38 132 255 / 0.2) !important; }
 .dark [style*="background-color: rgb(223, 225, 230)"] { background-color: rgb(255 255 255 / 0.1) !important; }
@@ -99,87 +99,87 @@
 
 /* ── Safety net: theme colours that survive an outdated Tailwind config ── */
 /*
- * The jira-* colours normally come from Tailwind (tailwind.config.js reads the CSS variables from index.css). Tailwind
+ * The lira-* colours normally come from Tailwind (tailwind.config.js reads the CSS variables from index.css). Tailwind
  * loads its config once, when the dev server starts: after switching git branches the server can still hold an older
  * config with fixed light colours (#F4F5F7, #172B4D), which shows up as a light page and navy text on dark cards.
  * These plain-CSS rules are reloaded instantly, are more specific than that old output, and say the same thing, so dark
  * mode stays right either way. Restarting `npm run dev` is still the proper fix.
  */
-.dark .bg-jira-bg { background-color: rgb(var(--jira-bg)); }
-.dark .text-jira-bg { color: rgb(var(--jira-bg)); }
-.dark .border-jira-bg { border-color: rgb(var(--jira-bg)); }
-.dark .hover\:bg-jira-bg:hover { background-color: rgb(var(--jira-bg)); }
-.dark .hover\:text-jira-bg:hover { color: rgb(var(--jira-bg)); }
-.dark .hover\:border-jira-bg:hover { border-color: rgb(var(--jira-bg)); }
-.dark .bg-jira-surface { background-color: rgb(var(--jira-surface)); }
-.dark .text-jira-surface { color: rgb(var(--jira-surface)); }
-.dark .border-jira-surface { border-color: rgb(var(--jira-surface)); }
-.dark .hover\:bg-jira-surface:hover { background-color: rgb(var(--jira-surface)); }
-.dark .hover\:text-jira-surface:hover { color: rgb(var(--jira-surface)); }
-.dark .hover\:border-jira-surface:hover { border-color: rgb(var(--jira-surface)); }
-.dark .bg-jira-border { background-color: rgb(var(--jira-border)); }
-.dark .text-jira-border { color: rgb(var(--jira-border)); }
-.dark .border-jira-border { border-color: rgb(var(--jira-border)); }
-.dark .hover\:bg-jira-border:hover { background-color: rgb(var(--jira-border)); }
-.dark .hover\:text-jira-border:hover { color: rgb(var(--jira-border)); }
-.dark .hover\:border-jira-border:hover { border-color: rgb(var(--jira-border)); }
-.dark .bg-jira-text { background-color: rgb(var(--jira-text)); }
-.dark .text-jira-text { color: rgb(var(--jira-text)); }
-.dark .border-jira-text { border-color: rgb(var(--jira-text)); }
-.dark .hover\:bg-jira-text:hover { background-color: rgb(var(--jira-text)); }
-.dark .hover\:text-jira-text:hover { color: rgb(var(--jira-text)); }
-.dark .hover\:border-jira-text:hover { border-color: rgb(var(--jira-text)); }
-.dark .bg-jira-muted { background-color: rgb(var(--jira-muted)); }
-.dark .text-jira-muted { color: rgb(var(--jira-muted)); }
-.dark .border-jira-muted { border-color: rgb(var(--jira-muted)); }
-.dark .hover\:bg-jira-muted:hover { background-color: rgb(var(--jira-muted)); }
-.dark .hover\:text-jira-muted:hover { color: rgb(var(--jira-muted)); }
-.dark .hover\:border-jira-muted:hover { border-color: rgb(var(--jira-muted)); }
-.dark .bg-jira-blue { background-color: rgb(var(--jira-blue)); }
-.dark .text-jira-blue { color: rgb(var(--jira-blue)); }
-.dark .border-jira-blue { border-color: rgb(var(--jira-blue)); }
-.dark .hover\:bg-jira-blue:hover { background-color: rgb(var(--jira-blue)); }
-.dark .hover\:text-jira-blue:hover { color: rgb(var(--jira-blue)); }
-.dark .hover\:border-jira-blue:hover { border-color: rgb(var(--jira-blue)); }
-.dark .bg-jira-blue-hover { background-color: rgb(var(--jira-blue-hover)); }
-.dark .text-jira-blue-hover { color: rgb(var(--jira-blue-hover)); }
-.dark .border-jira-blue-hover { border-color: rgb(var(--jira-blue-hover)); }
-.dark .hover\:bg-jira-blue-hover:hover { background-color: rgb(var(--jira-blue-hover)); }
-.dark .hover\:text-jira-blue-hover:hover { color: rgb(var(--jira-blue-hover)); }
-.dark .hover\:border-jira-blue-hover:hover { border-color: rgb(var(--jira-blue-hover)); }
-.dark .bg-jira-blue-light { background-color: rgb(var(--jira-blue-light)); }
-.dark .text-jira-blue-light { color: rgb(var(--jira-blue-light)); }
-.dark .border-jira-blue-light { border-color: rgb(var(--jira-blue-light)); }
-.dark .hover\:bg-jira-blue-light:hover { background-color: rgb(var(--jira-blue-light)); }
-.dark .hover\:text-jira-blue-light:hover { color: rgb(var(--jira-blue-light)); }
-.dark .hover\:border-jira-blue-light:hover { border-color: rgb(var(--jira-blue-light)); }
-.dark .bg-jira-amber-light { background-color: rgb(var(--jira-amber-light)); }
-.dark .text-jira-amber-light { color: rgb(var(--jira-amber-light)); }
-.dark .border-jira-amber-light { border-color: rgb(var(--jira-amber-light)); }
-.dark .hover\:bg-jira-amber-light:hover { background-color: rgb(var(--jira-amber-light)); }
-.dark .hover\:text-jira-amber-light:hover { color: rgb(var(--jira-amber-light)); }
-.dark .hover\:border-jira-amber-light:hover { border-color: rgb(var(--jira-amber-light)); }
-.dark .bg-jira-green-light { background-color: rgb(var(--jira-green-light)); }
-.dark .text-jira-green-light { color: rgb(var(--jira-green-light)); }
-.dark .border-jira-green-light { border-color: rgb(var(--jira-green-light)); }
-.dark .hover\:bg-jira-green-light:hover { background-color: rgb(var(--jira-green-light)); }
-.dark .hover\:text-jira-green-light:hover { color: rgb(var(--jira-green-light)); }
-.dark .hover\:border-jira-green-light:hover { border-color: rgb(var(--jira-green-light)); }
-.dark .bg-jira-red-light { background-color: rgb(var(--jira-red-light)); }
-.dark .text-jira-red-light { color: rgb(var(--jira-red-light)); }
-.dark .border-jira-red-light { border-color: rgb(var(--jira-red-light)); }
-.dark .hover\:bg-jira-red-light:hover { background-color: rgb(var(--jira-red-light)); }
-.dark .hover\:text-jira-red-light:hover { color: rgb(var(--jira-red-light)); }
-.dark .hover\:border-jira-red-light:hover { border-color: rgb(var(--jira-red-light)); }
-.dark .bg-jira-purple-light { background-color: rgb(var(--jira-purple-light)); }
-.dark .text-jira-purple-light { color: rgb(var(--jira-purple-light)); }
-.dark .border-jira-purple-light { border-color: rgb(var(--jira-purple-light)); }
-.dark .hover\:bg-jira-purple-light:hover { background-color: rgb(var(--jira-purple-light)); }
-.dark .hover\:text-jira-purple-light:hover { color: rgb(var(--jira-purple-light)); }
-.dark .hover\:border-jira-purple-light:hover { border-color: rgb(var(--jira-purple-light)); }
-.dark .bg-jira-teal-light { background-color: rgb(var(--jira-teal-light)); }
-.dark .text-jira-teal-light { color: rgb(var(--jira-teal-light)); }
-.dark .border-jira-teal-light { border-color: rgb(var(--jira-teal-light)); }
-.dark .hover\:bg-jira-teal-light:hover { background-color: rgb(var(--jira-teal-light)); }
-.dark .hover\:text-jira-teal-light:hover { color: rgb(var(--jira-teal-light)); }
-.dark .hover\:border-jira-teal-light:hover { border-color: rgb(var(--jira-teal-light)); }
+.dark .bg-lira-bg { background-color: rgb(var(--lira-bg)); }
+.dark .text-lira-bg { color: rgb(var(--lira-bg)); }
+.dark .border-lira-bg { border-color: rgb(var(--lira-bg)); }
+.dark .hover\:bg-lira-bg:hover { background-color: rgb(var(--lira-bg)); }
+.dark .hover\:text-lira-bg:hover { color: rgb(var(--lira-bg)); }
+.dark .hover\:border-lira-bg:hover { border-color: rgb(var(--lira-bg)); }
+.dark .bg-lira-surface { background-color: rgb(var(--lira-surface)); }
+.dark .text-lira-surface { color: rgb(var(--lira-surface)); }
+.dark .border-lira-surface { border-color: rgb(var(--lira-surface)); }
+.dark .hover\:bg-lira-surface:hover { background-color: rgb(var(--lira-surface)); }
+.dark .hover\:text-lira-surface:hover { color: rgb(var(--lira-surface)); }
+.dark .hover\:border-lira-surface:hover { border-color: rgb(var(--lira-surface)); }
+.dark .bg-lira-border { background-color: rgb(var(--lira-border)); }
+.dark .text-lira-border { color: rgb(var(--lira-border)); }
+.dark .border-lira-border { border-color: rgb(var(--lira-border)); }
+.dark .hover\:bg-lira-border:hover { background-color: rgb(var(--lira-border)); }
+.dark .hover\:text-lira-border:hover { color: rgb(var(--lira-border)); }
+.dark .hover\:border-lira-border:hover { border-color: rgb(var(--lira-border)); }
+.dark .bg-lira-text { background-color: rgb(var(--lira-text)); }
+.dark .text-lira-text { color: rgb(var(--lira-text)); }
+.dark .border-lira-text { border-color: rgb(var(--lira-text)); }
+.dark .hover\:bg-lira-text:hover { background-color: rgb(var(--lira-text)); }
+.dark .hover\:text-lira-text:hover { color: rgb(var(--lira-text)); }
+.dark .hover\:border-lira-text:hover { border-color: rgb(var(--lira-text)); }
+.dark .bg-lira-muted { background-color: rgb(var(--lira-muted)); }
+.dark .text-lira-muted { color: rgb(var(--lira-muted)); }
+.dark .border-lira-muted { border-color: rgb(var(--lira-muted)); }
+.dark .hover\:bg-lira-muted:hover { background-color: rgb(var(--lira-muted)); }
+.dark .hover\:text-lira-muted:hover { color: rgb(var(--lira-muted)); }
+.dark .hover\:border-lira-muted:hover { border-color: rgb(var(--lira-muted)); }
+.dark .bg-lira-blue { background-color: rgb(var(--lira-blue)); }
+.dark .text-lira-blue { color: rgb(var(--lira-blue)); }
+.dark .border-lira-blue { border-color: rgb(var(--lira-blue)); }
+.dark .hover\:bg-lira-blue:hover { background-color: rgb(var(--lira-blue)); }
+.dark .hover\:text-lira-blue:hover { color: rgb(var(--lira-blue)); }
+.dark .hover\:border-lira-blue:hover { border-color: rgb(var(--lira-blue)); }
+.dark .bg-lira-blue-hover { background-color: rgb(var(--lira-blue-hover)); }
+.dark .text-lira-blue-hover { color: rgb(var(--lira-blue-hover)); }
+.dark .border-lira-blue-hover { border-color: rgb(var(--lira-blue-hover)); }
+.dark .hover\:bg-lira-blue-hover:hover { background-color: rgb(var(--lira-blue-hover)); }
+.dark .hover\:text-lira-blue-hover:hover { color: rgb(var(--lira-blue-hover)); }
+.dark .hover\:border-lira-blue-hover:hover { border-color: rgb(var(--lira-blue-hover)); }
+.dark .bg-lira-blue-light { background-color: rgb(var(--lira-blue-light)); }
+.dark .text-lira-blue-light { color: rgb(var(--lira-blue-light)); }
+.dark .border-lira-blue-light { border-color: rgb(var(--lira-blue-light)); }
+.dark .hover\:bg-lira-blue-light:hover { background-color: rgb(var(--lira-blue-light)); }
+.dark .hover\:text-lira-blue-light:hover { color: rgb(var(--lira-blue-light)); }
+.dark .hover\:border-lira-blue-light:hover { border-color: rgb(var(--lira-blue-light)); }
+.dark .bg-lira-amber-light { background-color: rgb(var(--lira-amber-light)); }
+.dark .text-lira-amber-light { color: rgb(var(--lira-amber-light)); }
+.dark .border-lira-amber-light { border-color: rgb(var(--lira-amber-light)); }
+.dark .hover\:bg-lira-amber-light:hover { background-color: rgb(var(--lira-amber-light)); }
+.dark .hover\:text-lira-amber-light:hover { color: rgb(var(--lira-amber-light)); }
+.dark .hover\:border-lira-amber-light:hover { border-color: rgb(var(--lira-amber-light)); }
+.dark .bg-lira-green-light { background-color: rgb(var(--lira-green-light)); }
+.dark .text-lira-green-light { color: rgb(var(--lira-green-light)); }
+.dark .border-lira-green-light { border-color: rgb(var(--lira-green-light)); }
+.dark .hover\:bg-lira-green-light:hover { background-color: rgb(var(--lira-green-light)); }
+.dark .hover\:text-lira-green-light:hover { color: rgb(var(--lira-green-light)); }
+.dark .hover\:border-lira-green-light:hover { border-color: rgb(var(--lira-green-light)); }
+.dark .bg-lira-red-light { background-color: rgb(var(--lira-red-light)); }
+.dark .text-lira-red-light { color: rgb(var(--lira-red-light)); }
+.dark .border-lira-red-light { border-color: rgb(var(--lira-red-light)); }
+.dark .hover\:bg-lira-red-light:hover { background-color: rgb(var(--lira-red-light)); }
+.dark .hover\:text-lira-red-light:hover { color: rgb(var(--lira-red-light)); }
+.dark .hover\:border-lira-red-light:hover { border-color: rgb(var(--lira-red-light)); }
+.dark .bg-lira-purple-light { background-color: rgb(var(--lira-purple-light)); }
+.dark .text-lira-purple-light { color: rgb(var(--lira-purple-light)); }
+.dark .border-lira-purple-light { border-color: rgb(var(--lira-purple-light)); }
+.dark .hover\:bg-lira-purple-light:hover { background-color: rgb(var(--lira-purple-light)); }
+.dark .hover\:text-lira-purple-light:hover { color: rgb(var(--lira-purple-light)); }
+.dark .hover\:border-lira-purple-light:hover { border-color: rgb(var(--lira-purple-light)); }
+.dark .bg-lira-teal-light { background-color: rgb(var(--lira-teal-light)); }
+.dark .text-lira-teal-light { color: rgb(var(--lira-teal-light)); }
+.dark .border-lira-teal-light { border-color: rgb(var(--lira-teal-light)); }
+.dark .hover\:bg-lira-teal-light:hover { background-color: rgb(var(--lira-teal-light)); }
+.dark .hover\:text-lira-teal-light:hover { color: rgb(var(--lira-teal-light)); }
+.dark .hover\:border-lira-teal-light:hover { border-color: rgb(var(--lira-teal-light)); }

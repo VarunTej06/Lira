@@ -1,10 +1,14 @@
+import { RichTextEditor } from '../common/richtext/RichTextEditor';
+import { DatePicker } from '../common/DatePicker';
+import { Zap } from 'lucide-react';
+import { TypeIcon } from '../common/Icons';
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { TicketSuggestions } from './TicketSuggestions';
 import type { Space } from '../../types/space';
 import { createIssue, getNextIssueKey, useIssuesBySpace } from '../../hooks/useIssues';
-import type { Issue, Priority, IssueType } from '../../types/issue';
+import type { Attachment, Issue, Priority, IssueType } from '../../types/issue';
 import { v4 as uuidv4 } from 'uuid';
 import { currentSprintKey, getSprintDefs, shiftSprint, sprintIncludesSpace, sprintName } from '../../utils/sprintUtils';
 
@@ -21,19 +25,19 @@ interface CreateIssueModalProps {
   defaultSprint?: string;
 }
 
-const ISSUE_TYPES: { value: IssueType; label: string; icon: string }[] = [
-  { value: 'task', label: 'Task', icon: '✅' },
-  { value: 'bug', label: 'Bug', icon: '🐛' },
-  { value: 'epic', label: 'Epic', icon: '⚡' },
-  { value: 'subtask', label: 'Subtask', icon: '↳' },
+const ISSUE_TYPES: { value: IssueType; label: string }[] = [
+  { value: 'task', label: 'Task' },
+  { value: 'bug', label: 'Bug' },
+  { value: 'epic', label: 'Epic' },
+  { value: 'subtask', label: 'Subtask' },
 ];
 
-const PRIORITIES: { value: Priority; label: string; icon: string }[] = [
-  { value: 'highest', label: 'Highest', icon: '⏫' },
-  { value: 'high', label: 'High', icon: '🔺' },
-  { value: 'medium', label: 'Medium', icon: '▬' },
-  { value: 'low', label: 'Low', icon: '🔻' },
-  { value: 'lowest', label: 'Lowest', icon: '⏬' },
+const PRIORITIES: { value: Priority; label: string }[] = [
+  { value: 'highest', label: 'Highest' },
+  { value: 'high', label: 'High' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'low', label: 'Low' },
+  { value: 'lowest', label: 'Lowest' },
 ];
 
 export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
@@ -51,6 +55,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   const space = spaces.length > 0 ? spaces.find(s => s.id === pickedSpaceId) : spaceProp;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [type, setType] = useState<IssueType>('task');
   const [status, setStatus] = useState(defaultStatus);
   const [parentId, setParentId] = useState<number | undefined>(undefined);
@@ -130,7 +135,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
           description: 'created this issue',
           createdAt: now,
         }],
-        attachments: [],
+        attachments,
         linkedIssues: [],
         sprint: type === 'epic' ? undefined : sprintValue,
         rank: Date.now(),
@@ -152,6 +157,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   const resetForm = () => {
     setTitle('');
     setDescription('');
+    setAttachments([]);
     setType('task');
     setParentId(undefined);
     setPriority('medium');
@@ -171,12 +177,12 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
       <form onSubmit={handleSubmit} className="p-6 space-y-5">
         {spaces.length > 0 && (
           <div>
-            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Space <span className="text-red-500">*</span></label>
+            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Space <span className="text-red-500">*</span></label>
             <select
               value={pickedSpaceId ?? ''}
               onChange={e => { setPickedSpaceId(e.target.value ? Number(e.target.value) : undefined); setParentId(undefined); setError(''); }}
               autoFocus={!pickedSpaceId}
-              className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white cursor-pointer"
+              className="w-full text-sm border border-lira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white cursor-pointer"
             >
               <option value="">Select a space…</option>
               {spaces.map(s => <option key={s.id} value={s.id}>{s.icon} {s.name} ({s.key})</option>)}
@@ -186,7 +192,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
 
         {/* Issue type */}
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-2 uppercase tracking-wide">Issue Type</label>
+          <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Issue Type</label>
           <div className="flex gap-2">
             {ISSUE_TYPES.map(t => (
               <button
@@ -198,11 +204,11 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
                 }}
                 className={`flex items-center gap-1.5 px-3 py-2 text-sm rounded-lg border transition-all ${
                   type === t.value
-                    ? 'border-jira-blue bg-jira-blue-light text-jira-blue font-semibold'
-                    : 'border-jira-border text-jira-muted hover:border-gray-300 hover:text-jira-text'
+                    ? 'border-lira-blue bg-lira-blue-light text-lira-blue font-semibold'
+                    : 'border-lira-border text-lira-muted hover:border-gray-300 hover:text-lira-text'
                 }`}
               >
-                <span>{t.icon}</span>
+                <TypeIcon type={t.value} className="w-4 h-4" />
                 {t.label}
               </button>
             ))}
@@ -211,12 +217,12 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
 
         {/* Parent selector (if applicable for issue type) */}
         {type === 'epic' ? (
-          <p className="text-xs text-jira-muted bg-gray-50 border border-jira-border rounded-xl px-3 py-2">
-            ⚡ Epics are top-level — they don't link to a parent. Choose the space above.
+          <p className="text-xs text-lira-muted bg-gray-50 border border-lira-border rounded-xl px-3 py-2">
+            <Zap className="inline w-3.5 h-3.5 -mt-0.5 mr-1 text-purple-600" /> Epics are top-level — they don't link to a parent. Choose the space above.
           </p>
         ) : (
           <div>
-            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">
+            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">
               {type === 'subtask' ? 'Parent task' : 'Epic'}{' '}
               {type === 'subtask' ? <span className="text-red-500">*</span> : <span className="normal-case font-normal">(optional)</span>}
             </label>
@@ -224,7 +230,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
               value={parentId || ''}
               disabled={!space}
               onChange={e => setParentId(e.target.value ? Number(e.target.value) : undefined)}
-              className="w-full text-sm border border-jira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full text-sm border border-lira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white disabled:opacity-60 disabled:cursor-not-allowed"
             >
               <option value="">
                 {!space
@@ -244,8 +250,8 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
 
         {/* Title */}
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">
-            Summary <span className="text-red-500">*</span>
+          <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">
+            Title <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -253,7 +259,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="What needs to be done?"
-            className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue transition-all"
+            className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue transition-all"
           />
           {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
         </div>
@@ -274,24 +280,25 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
 
         {/* Description */}
         <div>
-          <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Description</label>
-          <textarea
+          <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Description</label>
+          <RichTextEditor
             value={description}
-            onChange={e => setDescription(e.target.value)}
+            onChange={setDescription}
+            attachments={attachments}
+            onAttachmentsChange={setAttachments}
             placeholder="Add a description..."
-            rows={4}
-            className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue focus:ring-1 focus:ring-jira-blue resize-none transition-all"
+            minHeight={110}
           />
         </div>
 
         {/* Row: Status + Priority */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Status</label>
+            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Status</label>
             <select
               value={status}
               onChange={e => setStatus(e.target.value)}
-              className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
+              className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white"
             >
               <option value="backlog">Backlog</option>
               <option value="todo">To Do</option>
@@ -300,14 +307,14 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Priority</label>
+            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Priority</label>
             <select
               value={priority}
               onChange={e => setPriority(e.target.value as Priority)}
-              className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
+              className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white"
             >
               {PRIORITIES.map(p => (
-                <option key={p.value} value={p.value}>{p.icon} {p.label}</option>
+                <option key={p.value} value={p.value}>{p.label}</option>
               ))}
             </select>
           </div>
@@ -316,11 +323,11 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         {/* Sprint (epics live outside sprints) */}
         {type !== 'epic' && (
           <div>
-            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Sprint</label>
+            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Sprint</label>
             <select
               value={sprintValue}
               onChange={e => setSprint(e.target.value)}
-              className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white cursor-pointer"
+              className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white cursor-pointer"
             >
               {openSprints.map(k => (
                 <option key={k} value={k}>{sprintName(k)}{k === currentSprintKey() ? ' (current)' : ''}</option>
@@ -332,29 +339,24 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         {/* Row: Due Date + Labels */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Due Date</label>
-            <input
-              type="date"
-              value={dueDate}
-              onChange={e => setDueDate(e.target.value)}
-              className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue bg-white"
-            />
+            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Due Date</label>
+            <DatePicker value={dueDate} onChange={setDueDate} placeholder="No due date" aria-label="Due date" />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">Labels</label>
+            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Labels</label>
             <input
               type="text"
               value={labels}
               onChange={e => setLabels(e.target.value)}
               placeholder="e.g. certification, aws"
-              className="w-full text-sm border border-jira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-jira-blue transition-all"
+              className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue transition-all"
             />
-            <p className="text-[10px] text-jira-muted mt-1">Comma-separated</p>
+            <p className="text-[10px] text-lira-muted mt-1">Comma-separated</p>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 pt-2 border-t border-jira-border">
+        <div className="flex justify-end gap-3 pt-2 border-t border-lira-border">
           <Button type="button" variant="ghost" onClick={handleClose}>
             Cancel
           </Button>

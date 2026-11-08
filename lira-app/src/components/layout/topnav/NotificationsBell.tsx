@@ -214,7 +214,7 @@ export const NotificationsBell: React.FC<{
                   notif.category === 'closed'
                     ? '✓ Closed'
                     : notif.category === 'edited'
-                    ? '✏️ Edited'
+                    ? 'Edited'
                     : '+ Created';
 
                 return (

@@ -20,11 +20,12 @@ export function useProjectData(project: Project, issues: Issue[]) {
     const total = projectIssues.length;
     const done = projectIssues.filter(i => i.status.toLowerCase() === 'done').length;
     const inProgress = projectIssues.filter(i => i.status.toLowerCase() === 'inprogress').length;
+    const blocked = projectIssues.filter(i => i.blocked).length;
     const todo = projectIssues.filter(i => i.status.toLowerCase() === 'todo').length;
     const backlog = projectIssues.filter(i => i.status.toLowerCase() === 'backlog').length;
     const open = backlog + todo + inProgress;
     const percent = total > 0 ? Math.round((done / total) * 100) : 0;
-    return { total, done, inProgress, todo, backlog, open, percent };
+    return { total, done, inProgress, blocked, todo, backlog, open, percent };
   }, [projectIssues]);
 
   // Project initials for icon

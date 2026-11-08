@@ -30,7 +30,7 @@ export function buildPreview(c: AgentContext): ChatMessage | undefined {
     const type = (g.newIssueType || 'task').toLowerCase();
     body = `Create a **${type}** "${g.newIssueTitle}" in **${space?.name ?? 'the workspace'}**`;
     const s = suggestForTicket(g.newIssueTitle, '', type, c.allIssues, space?.id);
-    if (s.duplicates.length) body += `\n\n⚠️ **Possible duplicate${s.duplicates.length > 1 ? 's' : ''}:**\n${s.duplicates.map(d => `- **${d.issue.key}** ${d.issue.title} (${Math.round(d.score * 100)}% similar, ${d.issue.status})`).join('\n')}`;
+    if (s.duplicates.length) body += `\n\n**Possible duplicate${s.duplicates.length > 1 ? 's' : ''}:**\n${s.duplicates.map(d => `- **${d.issue.key}** ${d.issue.title} (${Math.round(d.score * 100)}% similar, ${d.issue.status})`).join('\n')}`;
     if (s.epic) body += `\n\nLikely epic: **${s.epic.key}** ${s.epic.title}`;
   } else if (g.intent === 'sprint_plan' && g.targetSprint) {
     const plan = planSprintFromBacklog(c.allIssues, g.targetSprint, g.targetSpace?.id);
@@ -42,7 +42,7 @@ export function buildPreview(c: AgentContext): ChatMessage | undefined {
   return {
     id: uuidv4(),
     sender: 'assistant',
-    text: `🔍 **Please confirm.** I have not changed anything yet.\n\n${body}`,
+    text: `**Please confirm.** I have not changed anything yet.\n\n${body}`,
     timestamp: c.now,
     refinedPrompt: c.refinedMetadata,
     pending: { prompt: c.userPrompt, state: 'waiting' },

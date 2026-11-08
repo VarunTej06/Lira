@@ -72,14 +72,14 @@ export const CloseSprintModal: React.FC<CloseSprintModalProps> = ({ isOpen, onCl
 
   const area = (id: string, label: string, value: string, set: (v: string) => void, placeholder: string) => (
     <div>
-      <label htmlFor={id} className="block text-xs font-semibold text-jira-muted mb-1.5 uppercase tracking-wide">{label}</label>
+      <label htmlFor={id} className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">{label}</label>
       <textarea
         id={id}
         value={value}
         onChange={e => set(e.target.value)}
         rows={3}
         placeholder={placeholder}
-        className="w-full text-sm border border-jira-border rounded-xl px-3 py-2 focus:outline-none focus:border-jira-blue bg-white resize-y"
+        className="w-full text-sm border border-lira-border rounded-xl px-3 py-2 focus:outline-none focus:border-lira-blue bg-white resize-y"
       />
     </div>
   );
@@ -88,7 +88,7 @@ export const CloseSprintModal: React.FC<CloseSprintModalProps> = ({ isOpen, onCl
     <Modal isOpen={isOpen} onClose={onClose} title={closed ? `Retrospective · ${sprintLabel(sprint)}` : `Close ${sprintName(sprint)}`} size="lg">
       <form onSubmit={save} className="p-6 space-y-5">
         {!closed && (
-          <div className="rounded-xl border border-jira-border bg-gray-50 px-4 py-3 text-sm text-jira-text space-y-2">
+          <div className="rounded-xl border border-lira-border bg-gray-50 px-4 py-3 text-sm text-lira-text space-y-2">
             <p>
               <strong>{list.length - unfinished.length}</strong> of {list.length} ticket{list.length === 1 ? '' : 's'} done.
               {unfinished.length > 0
@@ -96,12 +96,12 @@ export const CloseSprintModal: React.FC<CloseSprintModalProps> = ({ isOpen, onCl
                 : ' Nothing to carry over.'}
             </p>
             {unfinished.length > 0 && (
-              <label className="flex items-center gap-2 text-xs text-jira-muted">
+              <label className="flex items-center gap-2 text-xs text-lira-muted">
                 Carry over to
                 <select
                   value={target}
                   onChange={e => setTarget(e.target.value)}
-                  className="text-sm border border-jira-border rounded-lg px-2 py-1 bg-white text-jira-text cursor-pointer"
+                  className="text-sm border border-lira-border rounded-lg px-2 py-1 bg-white text-lira-text cursor-pointer"
                   aria-label="Carry unfinished tickets over to"
                 >
                   {Array.from(new Set([target, ...later])).map(k => <option key={k} value={k}>{sprintName(k)}</option>)}
@@ -111,7 +111,7 @@ export const CloseSprintModal: React.FC<CloseSprintModalProps> = ({ isOpen, onCl
           </div>
         )}
 
-        <p className="text-xs text-jira-muted">One point per line. The retrospective is saved with the sprint and is optional.</p>
+        <p className="text-xs text-lira-muted">One point per line. The retrospective is saved with the sprint and is optional.</p>
         {area('retro-well', 'What went well', well, setWell, 'Pairing on the hard tickets…')}
         {area('retro-didnt', "What didn't", didnt, setDidnt, 'Scope grew after day two…')}
         {area('retro-actions', 'Actions for next sprint', actions, setActions, 'Freeze scope after the first day')}

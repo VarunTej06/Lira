@@ -1,3 +1,4 @@
+import { issueLink } from '../../../utils/links';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { ChevronDown, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import type { Issue } from '../../../types/issue';
@@ -94,7 +95,7 @@ export const YourWorkDropdown: React.FC<{
               currentItems.map(issue => (
                 <button
                   key={issue.key}
-                  onClick={() => { onSelectIssue?.(issue); setOpen(false); }}
+                  onClick={() => { onSelectIssue?.(issue); setOpen(false); }} {...issueLink(issue)}
                   className="w-full flex items-center gap-2 px-3 py-2 hover:bg-white/10 transition-all duration-150 text-left cursor-pointer"
                 >
                   {statusIcon(issue.status)}

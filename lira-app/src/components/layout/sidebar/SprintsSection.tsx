@@ -1,3 +1,5 @@
+import { sprintLink } from '../../../utils/links';
+import { confirmDialog } from '../../common/dialogs';
 import { Trash2, CalendarClock } from 'lucide-react';
 import { RowMenuButton, ContextItem, SectionHeader, Collapsible } from './parts';
 import { canDeleteSprint, sprintLabel, sprintName, sprintPhase } from '../../../utils/sprintUtils';
@@ -27,7 +29,7 @@ export function SprintsSection(s: SidebarState) {
               return (
                 <div key={k} className="relative group" data-menu-root={`sprint:${k}`}>
                   <button
-                    onClick={() => { setRowMenu(null); onSelectSprint?.(k); }}
+                    onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} {...sprintLink(k)}
                     title={sprintName(k)}
                     data-active={active ? 'true' : undefined}
                     className={`w-full flex items-center gap-2.5 pl-2.5 pr-2.5 group-hover:pr-8 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${
@@ -61,7 +63,7 @@ export function SprintsSection(s: SidebarState) {
                           const msg = c.total > 0
                             ? `Delete the ${sprintName(k)}?\n\nIts ${c.total} ${c.total === 1 ? 'ticket moves' : 'tickets move'} to the current sprint (${c.done} done). Nothing else is deleted.`
                             : `Delete the ${sprintName(k)}? It has no tickets.`;
-                          if (window.confirm(msg)) onDeleteSprint?.(k);
+                          void confirmDialog({ title: 'Delete sprint', message: msg, confirmLabel: 'Delete sprint', tone: 'danger' }).then(ok => { if (ok) onDeleteSprint?.(k); });
                         }}
                       />
                     ) : (

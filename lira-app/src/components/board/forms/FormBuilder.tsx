@@ -17,11 +17,11 @@ export function FormBuilder(s: FormsState) {
               )}
 
               {/* Form Info */}
-              <div className="space-y-3 bg-gray-50/70 p-4 rounded-xl border border-jira-border">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-jira-muted">Form Details</h4>
+              <div className="space-y-3 bg-gray-50/70 p-4 rounded-xl border border-lira-border">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-lira-muted">Form Details</h4>
                 <div className="space-y-2">
                   <div>
-                    <label className="block text-xs font-semibold text-jira-text mb-1">
+                    <label className="block text-xs font-semibold text-lira-text mb-1">
                       Form Title <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -29,11 +29,11 @@ export function FormBuilder(s: FormsState) {
                       placeholder="e.g. User Feedback & Suggestions"
                       value={formTitle}
                       onChange={e => setFormTitle(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs border border-jira-border rounded-lg bg-white focus:outline-none focus:border-jira-blue"
+                      className="w-full px-3 py-1.5 text-xs border border-lira-border rounded-lg bg-white focus:outline-none focus:border-lira-blue"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-jira-text mb-1">
+                    <label className="block text-xs font-semibold text-lira-text mb-1">
                       Description (optional)
                     </label>
                     <input
@@ -41,7 +41,7 @@ export function FormBuilder(s: FormsState) {
                       placeholder="Instructions for submitter..."
                       value={formDesc}
                       onChange={e => setFormDesc(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs border border-jira-border rounded-lg bg-white focus:outline-none focus:border-jira-blue"
+                      className="w-full px-3 py-1.5 text-xs border border-lira-border rounded-lg bg-white focus:outline-none focus:border-lira-blue"
                     />
                   </div>
                 </div>
@@ -50,30 +50,30 @@ export function FormBuilder(s: FormsState) {
               {/* Add Field Box */}
               <div className="space-y-3 bg-blue-50/40 p-4 rounded-xl border border-blue-200">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-jira-blue flex items-center gap-1.5">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-lira-blue flex items-center gap-1.5">
                     <ListPlus className="w-4 h-4" /> Add Field
                   </h4>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-end">
                   <div className="sm:col-span-6 space-y-1">
-                    <label className="block text-[11px] font-semibold text-jira-text">Field Name</label>
+                    <label className="block text-[11px] font-semibold text-lira-text">Field Name</label>
                     <input
                       type="text"
                       placeholder="e.g. Account Number, Error Log"
                       value={fieldName}
                       onChange={e => setFieldName(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddField(); } }}
-                      className="w-full px-3 py-1.5 text-xs border border-jira-border rounded-lg bg-white focus:outline-none focus:border-jira-blue"
+                      className="w-full px-3 py-1.5 text-xs border border-lira-border rounded-lg bg-white focus:outline-none focus:border-lira-blue"
                     />
                   </div>
 
                   <div className="sm:col-span-4 space-y-1">
-                    <label className="block text-[11px] font-semibold text-jira-text">Field Type</label>
+                    <label className="block text-[11px] font-semibold text-lira-text">Field Type</label>
                     <select
                       value={fieldType}
                       onChange={e => setFieldType(e.target.value as FormFieldType)}
-                      className="w-full px-2.5 py-1.5 text-xs border border-jira-border rounded-lg bg-white focus:outline-none focus:border-jira-blue"
+                      className="w-full px-2.5 py-1.5 text-xs border border-lira-border rounded-lg bg-white focus:outline-none focus:border-lira-blue"
                     >
                       <option value="text">Single-line Text</option>
                       <option value="textarea">Multi-line Paragraph</option>
@@ -88,7 +88,7 @@ export function FormBuilder(s: FormsState) {
                     <button
                       type="button"
                       onClick={handleAddField}
-                      className="w-full py-1.5 px-3 bg-jira-blue text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center gap-1"
+                      className="w-full py-1.5 px-3 bg-lira-blue text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center gap-1"
                     >
                       <Plus className="w-3.5 h-3.5" /> Add Field
                     </button>
@@ -97,7 +97,7 @@ export function FormBuilder(s: FormsState) {
 
                 {fieldType === 'select' && (
                   <div className="space-y-1 pt-1">
-                    <label className="block text-[11px] font-semibold text-jira-text">
+                    <label className="block text-[11px] font-semibold text-lira-text">
                       Options (comma separated)
                     </label>
                     <input
@@ -105,18 +105,18 @@ export function FormBuilder(s: FormsState) {
                       placeholder="Option A, Option B, Option C"
                       value={fieldOptions}
                       onChange={e => setFieldOptions(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs border border-jira-border rounded-lg bg-white"
+                      className="w-full px-3 py-1.5 text-xs border border-lira-border rounded-lg bg-white"
                     />
                   </div>
                 )}
 
                 <div className="flex items-center gap-2 pt-1">
-                  <label className="flex items-center gap-1.5 text-xs text-jira-text cursor-pointer">
+                  <label className="flex items-center gap-1.5 text-xs text-lira-text cursor-pointer">
                     <input
                       type="checkbox"
                       checked={fieldRequired}
                       onChange={e => setFieldRequired(e.target.checked)}
-                      className="rounded border-gray-300 text-jira-blue"
+                      className="rounded border-gray-300 text-lira-blue"
                     />
                     Required field
                   </label>
@@ -126,16 +126,16 @@ export function FormBuilder(s: FormsState) {
               {/* Current Fields List */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-jira-muted">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-lira-muted">
                     Form Schema Fields ({fields.length})
                   </h4>
                   {fields.length > 0 && (
-                    <span className="text-[11px] text-jira-muted">Fields will appear in this order</span>
+                    <span className="text-[11px] text-lira-muted">Fields will appear in this order</span>
                   )}
                 </div>
 
                 {fields.length === 0 ? (
-                  <div className="text-center py-6 border border-dashed border-jira-border rounded-xl text-xs text-jira-muted">
+                  <div className="text-center py-6 border border-dashed border-lira-border rounded-xl text-xs text-lira-muted">
                     No fields added yet. Use the tool above to add intake form fields.
                   </div>
                 ) : (
@@ -143,15 +143,15 @@ export function FormBuilder(s: FormsState) {
                     {fields.map((f, i) => (
                       <div
                         key={f.id}
-                        className="flex items-center justify-between p-2.5 bg-gray-50 border border-jira-border rounded-lg text-xs"
+                        className="flex items-center justify-between p-2.5 bg-gray-50 border border-lira-border rounded-lg text-xs"
                       >
                         <div className="flex items-center gap-2.5">
-                          <span className="w-5 h-5 rounded-full bg-white border border-jira-border flex items-center justify-center font-bold text-[10px] text-jira-muted">
+                          <span className="w-5 h-5 rounded-full bg-white border border-lira-border flex items-center justify-center font-bold text-[10px] text-lira-muted">
                             {i + 1}
                           </span>
                           <div>
-                            <span className="font-semibold text-jira-text">{f.name}</span>
-                            <span className="ml-2 text-[10px] uppercase font-mono px-1.5 py-0.5 bg-gray-200/70 rounded text-jira-muted">
+                            <span className="font-semibold text-lira-text">{f.name}</span>
+                            <span className="ml-2 text-[10px] uppercase font-mono px-1.5 py-0.5 bg-gray-200/70 rounded text-lira-muted">
                               {f.type}
                             </span>
                             {f.required && (
@@ -163,7 +163,7 @@ export function FormBuilder(s: FormsState) {
                         <button
                           type="button"
                           onClick={() => handleRemoveField(f.id)}
-                          className="p-1 text-jira-muted hover:text-red-600 transition-colors cursor-pointer"
+                          className="p-1 text-lira-muted hover:text-red-600 transition-colors cursor-pointer"
                           title="Remove field"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -175,7 +175,7 @@ export function FormBuilder(s: FormsState) {
               </div>
 
               {/* Actions Footer */}
-              <div className="flex justify-end gap-2 pt-4 border-t border-jira-border">
+              <div className="flex justify-end gap-2 pt-4 border-t border-lira-border">
                 <Button
                   type="button"
                   variant="secondary"

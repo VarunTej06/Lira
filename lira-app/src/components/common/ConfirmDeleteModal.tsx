@@ -55,7 +55,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       }}
     >
       <div
-        className="bg-white rounded-xl shadow-2xl border border-jira-border w-full max-w-md overflow-hidden animate-scale-in"
+        className="bg-white rounded-xl shadow-2xl border border-lira-border w-full max-w-md overflow-hidden animate-scale-in"
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -76,7 +76,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
               <div className="flex items-center justify-between gap-2">
                 <h3
                   id="confirm-delete-title"
-                  className="text-base font-semibold text-jira-text leading-6"
+                  className="text-base font-semibold text-lira-text leading-6"
                 >
                   Delete {issueKey}?
                 </h3>
@@ -84,7 +84,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
                   type="button"
                   disabled={isDeleting}
                   onClick={onClose}
-                  className="text-jira-muted hover:text-jira-text rounded-md p-1 hover:bg-gray-100 transition-colors disabled:opacity-50"
+                  className="text-lira-muted hover:text-lira-text rounded-md p-1 hover:bg-gray-100 transition-colors disabled:opacity-50"
                   aria-label="Close dialog"
                 >
                   <X className="w-4 h-4" />
@@ -92,13 +92,13 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
               </div>
 
               {issueTitle && (
-                <p className="mt-1.5 text-xs text-jira-muted truncate font-medium bg-gray-50 px-2 py-1 rounded border border-gray-100">
-                  <span className="font-mono text-jira-text font-semibold mr-1.5">{issueKey}:</span>
+                <p className="mt-1.5 text-xs text-lira-muted truncate font-medium bg-gray-50 px-2 py-1 rounded border border-gray-100">
+                  <span className="font-mono text-lira-text font-semibold mr-1.5">{issueKey}:</span>
                   {issueTitle}
                 </p>
               )}
 
-              <p className="mt-3 text-sm text-jira-text leading-relaxed">
+              <p className="mt-3 text-sm text-lira-text leading-relaxed">
                 You are about to permanently delete this issue and all its activity, attachments, and subtasks.
               </p>
 
@@ -117,7 +117,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
                 </div>
               )}
 
-              <p className="mt-2 text-xs text-jira-muted">
+              <p className="mt-2 text-xs text-lira-muted">
                 This action <span className="font-semibold text-red-600">cannot be undone</span>.
               </p>
             </div>
@@ -125,12 +125,12 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
         </div>
 
         {/* Modal Actions Footer */}
-        <div className="px-6 py-3.5 bg-gray-50 border-t border-jira-border flex items-center justify-end gap-2.5">
+        <div className="px-6 py-3.5 bg-gray-50 border-t border-lira-border flex items-center justify-end gap-2.5">
           <button
             type="button"
             disabled={isDeleting}
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-jira-text bg-white border border-jira-border hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium text-lira-text bg-white border border-lira-border hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
           >
             Cancel
           </button>

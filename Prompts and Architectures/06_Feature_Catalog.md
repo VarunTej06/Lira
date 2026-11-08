@@ -22,8 +22,8 @@
 
 | Level | Type | Contains | Created from |
 |-------|------|---------|-------------|
-| 1 | Epic ⚡ | Tasks, Bugs | Create Issue modal or "+" in board |
-| 2 | Task ✅ | Subtasks (checklist) + child Subtask issues | Inside Epic's "Child work items" section or board |
+| 1 | Epic  | Tasks, Bugs | Create Issue modal or "+" in board |
+| 2 | Task  | Subtasks (checklist) + child Subtask issues | Inside Epic's "Child work items" section or board |
 | 3 | Subtask ↳ | Nothing (leaf) | Inside Task's children or checklist |
 
 ### 3. Kanban Board
@@ -53,7 +53,7 @@
 | Labels | Up to 3 shown inline; overflow as "+N more" |
 | Subtask progress | "2/5 tasks" + animated progress bar |
 | Due date | Colour-coded: red = overdue, amber = due within 7 days |
-| Priority icon | Emoji-based (⏫ Highest, 🔺 High, ▬ Medium, 🔻 Low, ⏬ Lowest) |
+| Priority icon | Emoji-based ( Highest,  High,  Medium,  Low,  Lowest) |
 | Assignee avatar | Coloured circle with initials |
 | Hover actions menu | ⋯ → Open, Set Status (4 options), Delete |
 | Drag handle | Entire card is draggable |
@@ -113,7 +113,7 @@
 | Feature | Detail |
 |---------|--------|
 | Issue type selector | Button grid: Task, Bug, Epic, Subtask |
-| Summary field | Auto-focused; required |
+| Title field | Auto-focused; required |
 | Description textarea | Optional |
 | Status dropdown | Select column |
 | Priority dropdown | 5 levels with emoji icons |
@@ -154,7 +154,7 @@
 | File Location | `data/lira-workspace.json` (canonical JSON file on user's machine) |
 | Vite Backend Middleware | Custom `localFileDbPlugin` intercepts `/api/data` (GET) and `/api/save` (POST) |
 | Automatic Two-Way Sync | Hydrates on startup from disk; debounced save on all mutations |
-| Live Status Indicator | Top navigation badge shows `🟢 PC Saved` or `💾 Saving to PC…` |
+| Live Status Indicator | Top navigation badge shows ` PC Saved` or ` Saving to PC…` |
 | Manual Sync Trigger | Click status badge in navbar to force immediate disk flush |
 ### 12. Lira AI Copilot & Autonomous AI Agent
 
@@ -164,7 +164,7 @@
 | Top Navbar Trigger | Secondary `Lira AI` launcher in navbar synced with bottom-right trigger |
 | Enhanced Brand Avatar | Scalable SVG (`LiraAIAvatar.tsx`) combining Lira's iconic "L", multidimensional gradients, cyber circuit arc, and AI star constellation |
 | Non-Blocking Interface | Detached floating card with curved edges on all 4 sides (`rounded-3xl`), keeping Kanban board columns visible |
-| Expand / Maximize Toggle | Switch between compact card (`w-[440px]`) and spacious view (`w-[680px]`) with a single click (`↗` / `Maximize2`) |
+| Expand / Maximize Toggle | Switch between compact card (`w-[440px]`) and spacious view (`w-[680px]`) with a single click (`Maximize2` icon) |
 | Cross-Space Omnipresence | 100% real-time read and write visibility across all spaces (present and future) |
 | Dynamic Entity Resolution | Resolves space names, keys (`AP`, `LIRA`, `IG`, `CERT`, etc.), and partial keywords dynamically without hardcoding |
 | Configurable System Instructions | In-drawer Settings view to inspect, customize, or reset the agent's governing prompt (`localStorage`) |
@@ -187,3 +187,5 @@
 | Look | Light and dark; accent colours; rounded panels; Framer Motion animations, count-up numbers, line drawing, confetti |
 | Devices | Phone and tablet layouts; `npm run dev:lan` with a private link and QR code |
 | Safety | Local API guard, safe links and file names, security headers, audit log |
+
+**Editing.** The ticket popup is a draft saved with **Save changes** (it closes after saving and asks before discarding). Descriptions use a rich text editor: headings, bold, italic, underline, strikethrough, bullet, numbered and checkbox lists, quotes, code, links, text colour, highlight, @mentions, and files and pictures. Dates are chosen in a themed date picker. Lira dialogs replace the browser confirm, prompt and alert. Ticket types and priorities use icons, not emojis.

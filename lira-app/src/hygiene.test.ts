@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
+import { PALETTE } from './theme/palette';
 
 /**
  * Rules for the code itself, checked by reading the source files (no browser, no extra tools).
@@ -155,5 +156,54 @@ describe('The documents match the code', () => {
     for (const m of text.matchAll(/`((?:src|server|tests)\/[A-Za-z0-9_./-]+\.test\.tsx?)`/g)) {
       expect(fs.existsSync(path.join(APP, m[1])), `TESTING.md mentions ${m[1]}, which does not exist`).toBe(true);
     }
+  });
+});
+
+describe('Quality ratchets: things that were cleaned up must stay clean', () => {
+  const REMAINING_REACT_HOOK_SUPPRESSIONS = 9; // roadmap drag/scroll code and the ticket popup; lower this when one is fixed, never raise it
+
+  it('saved settings are read and written through appStorage, not by touching localStorage directly', () => {
+    const allowed = ['services/kvMirror.ts', 'services/localDiskSync.ts', 'utils/appStorage.ts'];
+    const hits = offenders(src, t => /\blocalStorage\.(getItem|setItem|removeItem)\s*\(/.test(t)).filter(f => !allowed.some(a => f.endsWith(a)));
+    expect(hits).toEqual([]);
+  });
+
+  it('text sizes come from the type scale (text-xs, text-2xs ...), not one-off pixel sizes', () => {
+    const cssFiles = files(path.join(APP, 'src'), p => p.endsWith('.css'));
+    const hits = [...src, ...cssFiles].filter(p => /text-\[[0-9.]+(px|rem|em)\]/.test(read(p))).map(rel);
+    expect(hits).toEqual([]);
+  });
+
+  it('no "any" type: use unknown and narrow it, or write the real type', () => {
+    expect(offenders([...src, ...server], t => /:\s*any\b|\bas any\b|<any>|\bany\[\]/.test(t))).toEqual([]);
+  });
+
+  it('colours kept in the palette are not written out again as hex codes', () => {
+    const allowed = ['theme/palette.ts', 'utils/accent.ts']; // the palette itself, and the swatches offered for choosing an accent
+    const values = Object.values(PALETTE).map(v => v.toLowerCase());
+    const hits = offenders(src, t => values.some(v => new RegExp(`['"]${v}['"]`, 'i').test(t))).filter(f => !allowed.some(a => f.endsWith(a)));
+    expect(hits).toEqual([]);
+  });
+
+  it('the palette holds plain 6-digit hex colours, each name once', () => {
+    for (const [name, value] of Object.entries(PALETTE)) expect(value, name).toMatch(/^#[0-9A-Fa-f]{6}$/);
+    expect(new Set(Object.values(PALETTE).map(v => v.toLowerCase())).size).toBe(Object.values(PALETTE).length);
+  });
+
+  it('suppressions of the hooks rule do not grow', () => {
+    const count = src.reduce((n, p) => n + (read(p).match(/eslint-disable[^\n]*react-hooks/g)?.length ?? 0), 0);
+    expect(count).toBeLessThanOrEqual(REMAINING_REACT_HOOK_SUPPRESSIONS);
+  });
+
+  it('the documents agree on how many automated tests there are', () => {
+    const where: Record<string, RegExp> = {
+      'README.md': /(\d+) automated tests/,
+      'TESTING.md': /(\d+) automated tests/,
+      'SECURITY_REPORT.md': /(\d+) automated tests/,
+      'lira-app/README.md': /(\d+) tests in \d+ files/,
+    };
+    const found = Object.entries(where).map(([f, re]) => [f, read(path.join(ROOT, f)).match(re)?.[1]] as const);
+    expect(found.filter(([, n]) => !n).map(([f]) => f), 'a document no longer states the test count').toEqual([]);
+    expect(new Set(found.map(([, n]) => n)).size, `documents disagree: ${JSON.stringify(found)}`).toBe(1);
   });
 });

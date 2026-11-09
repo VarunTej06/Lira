@@ -4,8 +4,11 @@ import { Ban, Flame, Plus, Search, X } from 'lucide-react';
 import type { Issue, IssueType } from '../../../types/issue';
 import { useAllIssues } from '../../../hooks/useIssues';
 import { TypeIcon } from '../../common/Icons';
-import { AnimatePresence, motion, dialogBackdrop, dialogPanel } from '../../common/motion';
+import { AnimatePresence, motion } from '../../common/motionPresets';
+import { dialogBackdrop, dialogPanel } from '../../common/motionPresets';
 import { BLOCKED_META } from '../../../utils/status';
+import { useResetWhen } from '../../../hooks/useResetWhen';
+import { NO_ISSUES } from '../../../utils/emptyLists';
 
 /**
  * The Blocked switch of a ticket: a two-part pill ("Not blocked" | "Blocked").
@@ -100,7 +103,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
       {blocked && blockers.length > 0 && (
         <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-2.5 py-2 text-xs" data-testid="blocked-by">
           <div className="flex items-center justify-between mb-1.5">
-            <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-red-700"><Ban className="w-3.5 h-3.5" /> Blocked by</div>
+            <div className="flex items-center gap-1.5 text-3xs font-semibold uppercase tracking-wide text-red-700"><Ban className="w-3.5 h-3.5" /> Blocked by</div>
             <button type="button" onClick={() => setPicking(true)} data-testid="blocked-add" className="flex items-center gap-0.5 text-lira-blue font-semibold hover:underline cursor-pointer">
               <Plus className="w-3 h-3" /> {blockers.length === 1 ? 'Add or change' : 'Add'}
             </button>
@@ -132,7 +135,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
 
       {blocking.length > 0 && (
         <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-2 text-xs" data-testid="blocking-list">
-          <div className="text-[10px] font-semibold uppercase tracking-wide text-amber-800 mb-1">This ticket is blocking</div>
+          <div className="text-3xs font-semibold uppercase tracking-wide text-amber-800 mb-1">This ticket is blocking</div>
           <ul className="space-y-1">
             {blocking.map(b => (
               <li key={b.id}>
@@ -166,15 +169,16 @@ interface PickerProps { open: boolean; issue: Issue; alreadyIds: number[]; onClo
 
 /** Choose the ticket, or tickets, that block this one. */
 const BlockerPicker: React.FC<PickerProps> = ({ open, issue, alreadyIds, onClose, onPick }) => {
-  const all = useAllIssues() || [];
+  const all = useAllIssues() ?? NO_ISSUES;
   const [query, setQuery] = useState('');
   const [type, setType] = useState<IssueType | 'all'>('all');
   const [chosen, setChosen] = useState<number[]>([]);
   const adding = alreadyIds.length > 0;
 
+  useResetWhen([open], () => { if (open) { setQuery(''); setType('all'); setChosen([]); } });
+
   useEffect(() => {
     if (!open) return;
-    setQuery(''); setType('all'); setChosen([]);
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); onClose(); } };
     document.addEventListener('keydown', onKey, true);
     return () => document.removeEventListener('keydown', onKey, true);

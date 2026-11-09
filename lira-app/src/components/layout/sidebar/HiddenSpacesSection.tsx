@@ -13,12 +13,12 @@ export function HiddenSpacesSection(s: SidebarState) {
         <div className="flex items-center justify-between px-3 py-1">
           <button
             onClick={() => setHiddenSpacesExpanded(!hiddenSpacesExpanded)}
-            className="flex items-center gap-1.5 text-white/50 hover:text-white/80 text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer group"
+            className="flex items-center gap-1.5 text-white/50 hover:text-white/80 text-3xs font-semibold uppercase tracking-wider transition-colors cursor-pointer group"
           >
             <ChevronDown className={`w-3 h-3 transition-transform ${hiddenSpacesExpanded ? '' : '-rotate-90'}`} />
             <EyeOff className="w-3.5 h-3.5 text-amber-400" />
             <span>Hidden Spaces</span>
-            <span className="bg-white/10 text-white/70 text-[9px] px-1.5 py-0.2 rounded-full font-bold ml-0.5">
+            <span className="bg-white/10 text-white/70 text-4xs px-1.5 py-0.2 rounded-full font-bold ml-0.5">
               {hiddenSpaces.length}
             </span>
           </button>
@@ -66,7 +66,7 @@ export function HiddenSpacesSection(s: SidebarState) {
         {hiddenSpacesExpanded && (
           <div className="mt-0.5">
             {hiddenSpaces.length === 0 ? (
-              <div className="px-3 py-1.5 text-[11px] text-white/30 italic">
+              <div className="px-3 py-1.5 text-2xs text-white/30 italic">
                 No hidden spaces
               </div>
             ) : (

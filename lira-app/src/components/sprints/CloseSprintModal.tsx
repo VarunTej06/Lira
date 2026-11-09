@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { celebrate } from '../../utils/celebrate';
@@ -6,6 +6,7 @@ import type { Issue } from '../../types/issue';
 import {
   completeSprint, followingSprint, getSprintMeta, isDone, setSprintMeta, sprintLabel, sprintName, sprintStart, type Retro,
 } from '../../utils/sprintUtils';
+import { useResetWhen } from '../../hooks/useResetWhen';
 
 interface CloseSprintModalProps {
   isOpen: boolean;
@@ -37,7 +38,7 @@ export const CloseSprintModal: React.FC<CloseSprintModalProps> = ({ isOpen, onCl
   const [actions, setActions] = useState('');
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
+  useResetWhen([isOpen, sprint, scope, keys], () => {
     if (!isOpen) return;
     const r = getSprintMeta(scope, sprint).retro;
     setTarget(followingSprint(sprint, keys));
@@ -45,7 +46,7 @@ export const CloseSprintModal: React.FC<CloseSprintModalProps> = ({ isOpen, onCl
     setDidnt(toText(r?.didnt ?? []));
     setActions(toText((r?.actions ?? []).map(a => a.text)));
     setBusy(false);
-  }, [isOpen, sprint, scope, keys]);
+  });
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();

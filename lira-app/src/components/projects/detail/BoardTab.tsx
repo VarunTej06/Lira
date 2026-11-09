@@ -1,7 +1,7 @@
 import { Search } from 'lucide-react';
 import { KanbanBoard } from '../../board/KanbanBoard';
 import { SprintFilterBar } from '../../sprints/sprintParts';
-import type { DetailCtx } from './types';
+import type { DetailCtx } from './detailContext';
 
 export function BoardTab(ctx: DetailCtx) {
   const { project, space, onIssueClick, onAddIssue, stats, boardSearchQuery, setBoardSearchQuery, filterAssignee, setFilterAssignee, boardPriorityFilter, setBoardPriorityFilter, boardActiveFilters, boardSprint, setBoardSprint, boardIssues, sprintKeys, setActiveTab } = ctx;

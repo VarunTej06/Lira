@@ -16,21 +16,30 @@ import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { useIssuePopup } from './hooks/useIssuePopup';
 import { CreateSprintModal } from './components/sprints/CreateSprintModal';
 import { CreateProjectModal } from './components/projects/CreateProjectModal';
-import { syncPendingRoadmaps } from './services/roadmapEpics';
-import { allSprintKeys, deleteSprint, getIssueSprint, stampLegacySprints, issuesInSprint, sprintStats, SPRINTS_EVENT } from './utils/sprintUtils';
-import { useProjects, writeProjects } from './hooks/useProjects';
+import { allSprintKeys, deleteSprint, getIssueSprint } from './utils/sprintUtils';
+import { sprintCounts } from './utils/sprintCounts';
+import { spaceForCreate } from './utils/createIssueSpace';
+import { useProjects } from './hooks/useProjects';
+import { removeProjectData } from './hooks/projectCleanup';
+import { useAppStartup } from './hooks/useAppStartup';
+import { useAppNavigation } from './hooks/useAppNavigation';
+import { useCreateIssueDialog } from './hooks/useCreateIssueDialog';
+import { usePlannedSprints } from './hooks/usePlannedSprints';
+import { IssueCrashFallback, StartupScreen } from './AppParts';
 import { useSpaces } from './hooks/useSpaces';
 import { useActiveSpace, useSpacePrefs } from './hooks/useSpacePrefs';
 import { useIssuesBySpace, useAllIssues } from './hooks/useIssues';
-import { db, requestDurableStorage } from './db/db';
-import { initLocalDiskSync } from './services/localDiskSync';
-import { isGlobalRoute, parsePath, pathFor, routeForTab, spacePath, tabOf, titleOf  } from './routes';
+import { db } from './db/db';
+import { parsePath, spacePath, tabOf, titleOf } from './routes';
 import type { Project } from './types/project';
 import type { Space } from './types/space';
+import { useResetWhen } from './hooks/useResetWhen';
+import { NO_ISSUES } from './utils/emptyLists';
+import { appStorage } from './utils/appStorage';
 
 // Immediately apply stored theme to documentElement before render if in browser
 if (typeof window !== 'undefined') {
-  const initialTheme = localStorage.getItem('lira_theme');
+  const initialTheme = appStorage.get('lira_theme');
   if (initialTheme === 'light') {
     document.documentElement.classList.remove('dark');
   } else {
@@ -45,7 +54,7 @@ export default function App() {
   const activeTab = tabOf(route);
 
   const spaces = useSpaces();
-  const [initialized, setInitialized] = useState(false);
+  const initialized = useAppStartup();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // The space shown now comes from the URL (/space/<KEY>/...). On other pages the last space you used is remembered,
@@ -61,66 +70,30 @@ export default function App() {
   useEffect(() => { document.title = `${titleOf(route)} · Lira`; }, [route]);
 
   // Auto-collapse sidebar when on Filters page
-  useEffect(() => { if (route.kind === 'filters') setSidebarCollapsed(true); }, [route.kind]);
+  useResetWhen([route.kind], () => { if (route.kind === 'filters') setSidebarCollapsed(true); });
 
   const { hiddenSpaceIds, archivedSpaceIds, toggleHideSpace, toggleArchiveSpace, unhideAllSpaces } = useSpacePrefs();
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
 
-  // Going to a space: keep the tab you are on when already inside a space, otherwise open its board
-  const goToSpace = useCallback((space: Space) => {
-    const keepTab = route.kind === 'space' ? route.tab : 'Board';
-    if (isGlobalRoute(route)) setSidebarCollapsed(false);
-    navigate(spacePath(space.key, keepTab));
-  }, [route, navigate]);
-  const handleSelectSpace = useCallback((id: number) => {
-    const space = spaces?.find(s => s.id === id);
-    if (space) goToSpace(space);
-  }, [spaces, goToSpace]);
-  const openSpaceBoard = useCallback((id: number) => {
-    const space = spaces?.find(s => s.id === id);
-    if (space) { setSidebarCollapsed(false); navigate(spacePath(space.key, 'Board')); }
-  }, [spaces, navigate]);
+  const { handleSelectSpace, openSpaceBoard, goTab } = useAppNavigation({ route, navigate, spaces, activeSpace, setSidebarCollapsed });
 
-  // Page names (used by the board tabs and the sidebar) become routes
-  const goTab = useCallback((tab: string) => {
-    navigate(pathFor(routeForTab(tab, {
-      spaceKey: activeSpace?.key,
-      projectId: route.kind === 'projects' ? route.projectId : undefined,
-      sprintKey: route.kind === 'sprints' ? route.sprintKey : undefined,
-      roadmapId: route.kind === 'roadmaps' ? route.roadmapId : undefined,
-    })));
-  }, [navigate, activeSpace, route]);
-
-  const [showCreateIssue, setShowCreateIssue] = useState(false);
-  const [createIssueStatus, setCreateIssueStatus] = useState('todo');
+  const createIssue = useCreateIssueDialog();
   const [showCreateSpace, setShowCreateSpace] = useState(false);
   const [showAIChatbot, setShowAIChatbot] = useState(false);
   const [filterPreset, setFilterPreset] = useState<string | null>(null);
   const [sprintFilter, setSprintFilter] = useState<string>('all');
   const [showCreateSprint, setShowCreateSprint] = useState(false);
   const [showCreateProject, setShowCreateProject] = useState(false);
-  const [plannedTick, setPlannedTick] = useState(0);
-  useEffect(() => {
-    const bump = () => setPlannedTick(t => t + 1);
-    window.addEventListener(SPRINTS_EVENT, bump);
-    return () => window.removeEventListener(SPRINTS_EVENT, bump);
-  }, []);
 
   const projects = useProjects(spaces || []);
   const selectedProject: Project | undefined = route.kind === 'projects' && route.projectId ? projects.find(p => p.id === route.projectId) : undefined;
 
-  const spaceIssues = useIssuesBySpace(activeSpaceId) || [];
-  const allIssues = useAllIssues() || [];
-  const spaceSprintKeys = useMemo(() => allSprintKeys(spaceIssues), [spaceIssues, plannedTick]);
-  const globalSprintKeys = useMemo(() => allSprintKeys(allIssues), [allIssues, plannedTick]);
-  const globalSprintCounts = useMemo(() => {
-    const out: Record<string, { done: number; total: number }> = {};
-    globalSprintKeys.forEach(k => {
-      const s = sprintStats(issuesInSprint(allIssues, k));
-      out[k] = { done: s.done, total: s.total };
-    });
-    return out;
-  }, [globalSprintKeys, allIssues]);
+  const spaceIssues = useIssuesBySpace(activeSpaceId) ?? NO_ISSUES;
+  const allIssues = useAllIssues() ?? NO_ISSUES;
+  const plannedSprints = usePlannedSprints();
+  const spaceSprintKeys = useMemo(() => allSprintKeys(spaceIssues, plannedSprints), [spaceIssues, plannedSprints]);
+  const globalSprintKeys = useMemo(() => allSprintKeys(allIssues, plannedSprints), [allIssues, plannedSprints]);
+  const globalSprintCounts = useMemo(() => sprintCounts(allIssues, globalSprintKeys), [globalSprintKeys, allIssues]);
   // Board / List / Calendar / Summary see the chosen sprint (epics stay visible so grouping still works)
   const issues = useMemo(
     () => sprintFilter === 'all' ? spaceIssues : spaceIssues.filter(i => i.type === 'epic' || getIssueSprint(i) === sprintFilter),
@@ -128,58 +101,19 @@ export default function App() {
   );
   const everyIssue = allIssues.length > 0 ? allIssues : issues;
 
-  useEffect(() => {
-    const init = async () => {
-      await requestDurableStorage();
-      await initLocalDiskSync();
-      await stampLegacySprints();
-      await syncPendingRoadmaps(); // a changed roadmap schedule reaches its epics and tasks (and stops future sprints from piling up)
-      setInitialized(true);
-    };
-    init();
-  }, []);
-
   // The ticket popup lives in the URL (?issue=LIRA-12)
   const { selectedIssue, parentIssue, openIssue, navigateToIssue, closeModal } = useIssuePopup(allIssues);
 
   // Deleting a project removes it and its saved settings and team; its tickets stay in the space
   const handleDeleteProject = useCallback((projectId: string) => {
-    try {
-      const raw = localStorage.getItem('lira_projects');
-      if (raw) writeProjects((JSON.parse(raw) as Project[]).filter(p => p.id !== projectId));
-      localStorage.removeItem(`lira_project_settings_${projectId}`);
-      localStorage.removeItem(`lira_scope_team:project:${projectId}`);
-    } catch (e) {
-      console.error('Failed to remove project', e);
-    }
+    if (!removeProjectData(projectId)) console.error('Failed to remove project');
     if (route.kind === 'projects' && route.projectId === projectId) navigate('/projects');
   }, [route, navigate]);
-
-  // Ticket creation context: which sprint to preselect, and whether the user must pick a space
-  const [createIssueSprint, setCreateIssueSprint] = useState<string | undefined>(undefined);
-  const [createIssueSpaceId, setCreateIssueSpaceId] = useState<number | undefined>(undefined);
-  const [createIssueChooseSpace, setCreateIssueChooseSpace] = useState(false);
-  const handleAddIssue = useCallback((status: string, opts?: { sprint?: string; spaceId?: number; chooseSpace?: boolean }) => {
-    setCreateIssueStatus(status);
-    setCreateIssueSprint(opts?.sprint);
-    setCreateIssueSpaceId(opts?.spaceId);
-    setCreateIssueChooseSpace(!!opts?.chooseSpace);
-    setShowCreateIssue(true);
-  }, []);
 
   // Filter preset handler from TopNav: opens the Filters page with the preset applied
   const handleApplyFilter = useCallback((preset: string) => { setFilterPreset(preset); navigate('/filters'); }, [navigate]);
 
-  if (!initialized) {
-    return (
-      <div className="h-screen flex items-center justify-center bg-lira-bg">
-        <div className="text-center space-y-3">
-          <img src="/lira-logo.png" alt="Lira Logo" className="w-16 h-16 mx-auto animate-pulse object-contain" />
-          <p className="text-lira-muted text-sm font-medium">Initializing Lira v2.0…</p>
-        </div>
-      </div>
-    );
-  }
+  if (!initialized) return <StartupScreen />;
 
   const spaceList = spaces || [];
   const pageKey = route.kind === 'space' ? `space:${route.spaceKey}` : route.kind;
@@ -187,7 +121,7 @@ export default function App() {
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-app-frame font-sans">
       <TopNavigation
-        onCreateIssue={() => handleAddIssue('todo', { chooseSpace: true })}
+        onCreateIssue={() => createIssue.open('todo', { chooseSpace: true })}
         onToggleAI={() => setShowAIChatbot(v => !v)}
         issues={everyIssue}
         spaces={spaceList}
@@ -241,7 +175,7 @@ export default function App() {
             onEditSpace={space => { setEditingSpace(space); setShowCreateSpace(true); }}
             onCreateSpace={() => setShowCreateSpace(true)} onCreateSprint={() => setShowCreateSprint(true)}
             onExpandSidebar={() => setSidebarCollapsed(false)}
-            onOpenIssue={openIssue} onOpenSpaceBoard={openSpaceBoard} onAddIssue={handleAddIssue} onDeleteProject={handleDeleteProject} onTab={goTab}
+            onOpenIssue={openIssue} onOpenSpaceBoard={openSpaceBoard} onAddIssue={createIssue.open} onDeleteProject={handleDeleteProject} onTab={goTab}
           />
         </main>
       </div>
@@ -252,38 +186,20 @@ export default function App() {
       <DashboardScheduler issues={allIssues} spaces={spaceList} />
 
       {/* Issue detail modal */}
-      <ErrorBoundary
-        fallback={
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={closeModal}>
-            <div className="bg-white rounded-xl p-8 max-w-md text-center shadow-modal">
-              <p className="text-lg font-semibold text-lira-text mb-2">Failed to render this issue</p>
-              <p className="text-sm text-lira-muted mb-4">There was an error displaying the issue details.</p>
-              <button onClick={closeModal} className="px-4 py-2 bg-lira-blue text-white rounded-lg text-sm font-medium hover:bg-blue-700">
-                Close
-              </button>
-            </div>
-          </div>
-        }
-      >
+      <ErrorBoundary fallback={<IssueCrashFallback onClose={closeModal} />}>
         {selectedIssue && (
           <IssueDetailModal issue={selectedIssue} parentIssue={parentIssue} onClose={closeModal} onNavigateToIssue={navigateToIssue} />
         )}
       </ErrorBoundary>
 
       <CreateIssueModal
-        isOpen={showCreateIssue}
-        onClose={() => setShowCreateIssue(false)}
-        space={
-          createIssueSpaceId
-            ? (spaceList.find(s => s.id === createIssueSpaceId) || activeSpace)
-            : selectedProject
-              ? (spaceList.find(s => s.id === selectedProject.spaceId) || activeSpace)
-              : activeSpace
-        }
+        isOpen={createIssue.isOpen}
+        onClose={createIssue.close}
+        space={spaceForCreate(spaceList, activeSpace, createIssue.spaceId, selectedProject?.spaceId)}
         spaces={spaceList}
-        chooseSpace={createIssueChooseSpace}
-        defaultSprint={createIssueSprint}
-        defaultStatus={createIssueStatus}
+        chooseSpace={createIssue.chooseSpace}
+        defaultSprint={createIssue.sprint}
+        defaultStatus={createIssue.status}
       />
 
       <CreateSprintModal

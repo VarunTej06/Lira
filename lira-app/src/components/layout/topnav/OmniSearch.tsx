@@ -4,6 +4,7 @@ import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
 import { useClickOutside, fuzzyMatch } from './shared';
 import { useMediaQuery } from '../../../hooks/useMediaQuery';
+import { useResetWhen } from '../../../hooks/useResetWhen';
 
 export const OmniSearch: React.FC<{
   issues: Issue[];
@@ -56,9 +57,7 @@ export const OmniSearch: React.FC<{
     }).slice(0, 10);
   }, [issues, query]);
 
-  useEffect(() => {
-    setSelectedIdx(0);
-  }, [results]);
+  useResetWhen([results], () => setSelectedIdx(0));
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!open || results.length === 0) return;
@@ -127,7 +126,7 @@ export const OmniSearch: React.FC<{
             <X className="w-3 h-3" />
           </button>
         ) : (
-          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-white/30 font-mono">/</kbd>
+          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-3xs text-white/30 font-mono">/</kbd>
         )}
       </div>
 
@@ -136,7 +135,7 @@ export const OmniSearch: React.FC<{
           <div className="max-h-72 overflow-y-auto py-1">
             {Object.entries(grouped).map(([spaceName, spaceIssues]) => (
               <div key={spaceName}>
-                <div className="px-3 py-1.5 text-[10px] font-semibold text-white/40 uppercase tracking-wider">{spaceName}</div>
+                <div className="px-3 py-1.5 text-3xs font-semibold text-white/40 uppercase tracking-wider">{spaceName}</div>
                 {spaceIssues.map(issue => {
                   const idx = flatIdx++;
                   return (
@@ -147,16 +146,16 @@ export const OmniSearch: React.FC<{
                         selectedIdx === idx ? 'bg-white/15' : 'hover:bg-white/10'
                       }`}
                     >
-                      <span className="text-[10px] font-mono text-blue-400 font-bold flex-shrink-0">{issue.key}</span>
+                      <span className="text-3xs font-mono text-blue-400 font-bold flex-shrink-0">{issue.key}</span>
                       <span className="text-xs text-white/80 truncate flex-1">{issue.title}</span>
-                      <span className="text-[10px] text-white/30 flex-shrink-0 hidden sm:block">{spaceMap[issue.spaceId]?.name}</span>
+                      <span className="text-3xs text-white/30 flex-shrink-0 hidden sm:block">{spaceMap[issue.spaceId]?.name}</span>
                     </button>
                   );
                 })}
               </div>
             ))}
           </div>
-          <div className="border-t border-white/10 px-3 py-1.5 flex gap-3 text-[10px] text-white/30">
+          <div className="border-t border-white/10 px-3 py-1.5 flex gap-3 text-3xs text-white/30">
             <span><kbd className="font-mono">↑↓</kbd> navigate</span>
             <span><kbd className="font-mono">Enter</kbd> open</span>
             <span><kbd className="font-mono">Esc</kbd> close</span>

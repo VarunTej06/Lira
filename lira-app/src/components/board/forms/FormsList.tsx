@@ -74,7 +74,7 @@ export function FormsList(s: FormsState) {
                           </p>
                         )}
 
-                        <div className="flex items-center gap-2 mt-3 text-[11px] text-lira-muted">
+                        <div className="flex items-center gap-2 mt-3 text-2xs text-lira-muted">
                           <span className="font-semibold text-lira-text">{form.fields.length}</span> fields
                           <span>•</span>
                           <span>{new Date(form.createdAt).toLocaleDateString()}</span>

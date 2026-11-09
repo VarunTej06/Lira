@@ -51,7 +51,7 @@ const Card: React.FC<{
       <header className={`flex items-center gap-1.5 px-4 ${isStat ? 'pt-3' : 'pt-3 pb-1'}`}>
         {editing && <GripVertical className="w-4 h-4 text-lira-muted cursor-grab flex-shrink-0" aria-label="Drag to move" />}
         <h3 className="flex-1 min-w-0 text-xs font-semibold uppercase tracking-wide text-lira-muted truncate">{widget.title}</h3>
-        {widget.filters && <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-lira-blue flex-shrink-0" title="This widget has its own filters">own filters</span>}
+        {widget.filters && <span className="text-4xs font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-lira-blue flex-shrink-0" title="This widget has its own filters">own filters</span>}
       </header>
 
       {editing && (
@@ -61,7 +61,7 @@ const Card: React.FC<{
           <span className="w-px h-4 bg-lira-border mx-0.5" />
           {SIZE_ORDER.map(s => (
             <button key={s} type="button" aria-pressed={widget.size === s} title={SIZE_LABEL[s]} aria-label={`Width: ${SIZE_LABEL[s]}`} onClick={() => onSize(s)}
-              className={`px-1.5 py-0.5 text-[10px] font-semibold rounded cursor-pointer ${widget.size === s ? 'bg-lira-blue text-white' : 'text-lira-muted hover:bg-gray-100'}`}>{s}</button>
+              className={`px-1.5 py-0.5 text-3xs font-semibold rounded cursor-pointer ${widget.size === s ? 'bg-lira-blue text-white' : 'text-lira-muted hover:bg-gray-100'}`}>{s}</button>
           ))}
           <button type="button" title="Change height" aria-label="Change height" onClick={onHeight} className="p-1 rounded hover:bg-gray-100 text-lira-muted cursor-pointer"><ChevronsUpDown className="w-3.5 h-3.5" /></button>
           <span className="flex-1" />

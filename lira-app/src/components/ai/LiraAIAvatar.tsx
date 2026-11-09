@@ -1,4 +1,5 @@
 import React, { useId } from 'react';
+import { PALETTE } from '../../theme/palette';
 
 interface LiraAIAvatarProps {
   size?: number;
@@ -28,7 +29,7 @@ export const LiraAIAvatar: React.FC<LiraAIAvatarProps> = ({
         <linearGradient id={`${id}-bg`} x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#4F46E5" />
           <stop offset="45%" stopColor="#7C3AED" />
-          <stop offset="85%" stopColor="#0052CC" />
+          <stop offset="85%" stopColor={PALETTE.brand} />
           <stop offset="100%" stopColor="#0284C7" />
         </linearGradient>
 

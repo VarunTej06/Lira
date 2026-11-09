@@ -22,11 +22,11 @@ export function RoadmapSummary({ summary, conflicts }: { summary: Summary; confl
         {tiles.map(t => (
           <div key={t.label} className="rounded-2xl border border-lira-border bg-lira-surface p-4">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-lira-muted">{t.label}</span>
+              <span className="text-2xs font-semibold uppercase tracking-wider text-lira-muted">{t.label}</span>
               <span className={`w-7 h-7 rounded-lg flex items-center justify-center ${t.tone}`}>{t.icon}</span>
             </div>
             <div className="text-2xl font-semibold text-lira-text mt-1"><AnimatedValue value={t.value as string | number} /></div>
-            <div className="text-[11px] text-lira-muted truncate">{t.sub}</div>
+            <div className="text-2xs text-lira-muted truncate">{t.sub}</div>
           </div>
         ))}
       </div>
@@ -37,7 +37,7 @@ export function RoadmapSummary({ summary, conflicts }: { summary: Summary; confl
             <div key={s} style={{ width: `${(summary.byStatus[s] / total) * 100}%`, background: STATUS_META[s].color }} title={`${STATUS_META[s].label}: ${summary.byStatus[s]}`} />
           ))}
         </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[11px] text-lira-muted">
+        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-2xs text-lira-muted">
           {STATUSES.map(s => (
             <span key={s} className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background: STATUS_META[s].color }} />{STATUS_META[s].label} {summary.byStatus[s]}</span>
           ))}

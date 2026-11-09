@@ -1,5 +1,5 @@
 import { statusLabel } from '../../../utils/status';
-import { confirmDialog } from '../../common/dialogs';
+import { confirmDialog } from '../../common/dialogStore';
 import React, { useState } from 'react';
 import { Trash2, Check } from 'lucide-react';
 import { Modal } from '../../common/Modal';
@@ -19,7 +19,7 @@ function ApplyRow({ label, value, onChange, options, disabled, onApply }: {
 }) {
   return (
     <div className="space-y-1">
-      <label className="text-[10px] font-bold text-lira-muted uppercase">{label}</label>
+      <label className="text-3xs font-bold text-lira-muted uppercase">{label}</label>
       <div className="flex gap-1.5">
         <select value={value} onChange={e => onChange(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white">
           {options.map(([v, text]) => <option key={v} value={v}>{text}</option>)}
@@ -111,8 +111,8 @@ export const BulkActionsModal: React.FC<{ isOpen: boolean; onClose: () => void; 
                   <span className="truncate text-lira-text font-medium">{issue.title}</span>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">{statusLabel(issue.status)}</span>
-                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">{issue.priority}</span>
+                  <span className="text-3xs uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">{statusLabel(issue.status)}</span>
+                  <span className="text-3xs uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">{issue.priority}</span>
                 </div>
               </div>
             );

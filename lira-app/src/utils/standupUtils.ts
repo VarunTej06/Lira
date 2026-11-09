@@ -1,5 +1,6 @@
 import type { Issue } from '../types/issue';
 import { isDone, getIssueSprint } from './sprintUtils';
+import { appStorage } from './appStorage';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -45,14 +46,14 @@ const NOTES_KEY = 'lira_standup_notes';
 
 function read<T>(key: string, fallback: T): T {
   try {
-    const raw = localStorage.getItem(key);
+    const raw = appStorage.get(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
   } catch {
     return fallback;
   }
 }
 function write(key: string, value: unknown) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage unavailable */ }
+  try { appStorage.set(key, JSON.stringify(value)); } catch { /* storage unavailable */ }
 }
 
 export const loadDirectory = () => read<Record<string, TeamMember>>(DIR_KEY, {});

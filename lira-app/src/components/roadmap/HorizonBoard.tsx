@@ -5,6 +5,7 @@ import {
   STATUS_META, fmtShort, horizonOf, laneColor, resolveItem,
   type Horizon, type Roadmap, type RoadmapItem,
 } from '../../utils/roadmapUtils';
+import { currentTime } from '../../utils/clock';
 
 const COLUMNS: { key: Horizon; title: string; hint: string }[] = [
   { key: 'now', title: 'Now', hint: 'In progress or starting this week' },
@@ -17,7 +18,7 @@ interface Props { roadmap: Roadmap; items: RoadmapItem[]; issues: Issue[]; onOpe
 
 /** Now / Next / Later: the same items grouped by how soon they happen, for planning conversations. */
 export const HorizonBoard: React.FC<Props> = ({ roadmap, items, issues, onOpenItem }) => {
-  const today = new Date();
+  const today = currentTime();
   const decorated = items.map(i => {
     const { progress: p, status: s, epic } = resolveItem(i, issues, today);
     return { item: i, progress: p, status: s, epic, horizon: horizonOf(i, s, today) };
@@ -31,7 +32,7 @@ export const HorizonBoard: React.FC<Props> = ({ roadmap, items, issues, onOpenIt
             <div className="flex items-baseline justify-between px-1 mb-2">
               <div>
                 <h3 className="text-sm font-semibold text-lira-text">{col.title}</h3>
-                <p className="text-[11px] text-lira-muted">{col.hint}</p>
+                <p className="text-2xs text-lira-muted">{col.hint}</p>
               </div>
               <span className="text-xs font-semibold text-lira-muted bg-lira-surface border border-lira-border rounded-full px-2 py-0.5">{list.length}</span>
             </div>
@@ -44,9 +45,9 @@ export const HorizonBoard: React.FC<Props> = ({ roadmap, items, issues, onOpenIt
                   className="w-full text-left rounded-xl border border-lira-border bg-lira-surface p-3 hover:shadow-card-hover hover:-translate-y-0.5 transition-all cursor-pointer"
                   style={{ borderLeft: `4px solid ${laneColor(roadmap, item.lane)}` }}
                 >
-                  <div className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: laneColor(roadmap, item.lane) }}>{item.lane}</div>
+                  <div className="text-3xs font-semibold uppercase tracking-wide" style={{ color: laneColor(roadmap, item.lane) }}>{item.lane}</div>
                   <div className="text-sm font-medium text-lira-text mt-0.5 leading-snug">{item.title}</div>
-                  <div className="flex items-center gap-1.5 mt-2 text-[11px] text-lira-muted">
+                  <div className="flex items-center gap-1.5 mt-2 text-2xs text-lira-muted">
                     <CalendarRange className="w-3 h-3" /> {fmtShort(item.start)} → {fmtShort(item.end)}
                     {item.deps.length > 0 && <span className="ml-auto flex items-center gap-1"><GitBranch className="w-3 h-3" />{item.deps.length}</span>}
                   </div>
@@ -54,8 +55,8 @@ export const HorizonBoard: React.FC<Props> = ({ roadmap, items, issues, onOpenIt
                     <div className="h-full rounded-full" style={{ width: `${progress}%`, background: STATUS_META[status].color }} />
                   </div>
                   <div className="flex items-center justify-between mt-1.5">
-                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: STATUS_META[status].color + '22', color: STATUS_META[status].color }}>{STATUS_META[status].label}</span>
-                    <span className="text-[11px] text-lira-muted tabular-nums">{progress}%</span>
+                    <span className="text-3xs font-semibold px-1.5 py-0.5 rounded-full" style={{ background: STATUS_META[status].color + '22', color: STATUS_META[status].color }}>{STATUS_META[status].label}</span>
+                    <span className="text-2xs text-lira-muted tabular-nums">{progress}%</span>
                   </div>
                 </button>
               ))}

@@ -22,12 +22,24 @@ const PRIORITY_RANK: Record<string, number> = { highest: 5, high: 4, medium: 3, 
 const touched = (i: Issue) => new Date(i.updatedAt || i.createdAt).getTime();
 const any = <T,>(chosen: T[], test: (c: T[]) => boolean) => chosen.length === 0 || test(chosen);
 
+/** What each sort option compares (before the ascending or descending switch). */
+const SORTS: Record<SearchSort, (a: Issue, b: Issue) => number> = {
+  key: (a, b) => a.key.localeCompare(b.key, undefined, { numeric: true }),
+  title: (a, b) => a.title.localeCompare(b.title),
+  status: (a, b) => a.status.localeCompare(b.status),
+  priority: (a, b) => (PRIORITY_RANK[b.priority] || 0) - (PRIORITY_RANK[a.priority] || 0),
+  updatedAt: (a, b) => touched(b) - touched(a),
+};
+
+/** True when there is no search text, or it appears in the key, title, description or a label. */
+const matchesQuery = (i: Issue, q: string) => !q || i.key.toLowerCase().includes(q) || i.title.toLowerCase().includes(q) || descriptionToText(i.description).toLowerCase().includes(q) || !!i.labels?.some(l => l.toLowerCase().includes(q));
+
 /** The tickets matching every chosen filter (a filter with nothing chosen lets everything through), in the chosen order. Blocked matches the flag. */
 export function searchIssues(issues: Issue[], c: SearchCriteria, now = Date.now()): Issue[] {
   const q = c.query.trim().toLowerCase();
   return issues.filter(i =>
     (!c.recentOnly || touched(i) >= now - WEEK) &&
-    (!q || i.key.toLowerCase().includes(q) || i.title.toLowerCase().includes(q) || descriptionToText(i.description).toLowerCase().includes(q) || !!i.labels?.some(l => l.toLowerCase().includes(q))) &&
+    matchesQuery(i, q) &&
     any(c.spaces, s => s.includes(i.spaceId)) &&
     any(c.statuses, s => s.includes(i.status) || (!!i.blocked && s.includes('blocked'))) &&
     any(c.priorities, p => p.includes(i.priority)) &&
@@ -36,11 +48,7 @@ export function searchIssues(issues: Issue[], c: SearchCriteria, now = Date.now(
     (c.team === 'all' || i.team === c.team) &&
     any(c.labels, l => !!i.labels?.some(x => l.includes(x))),
   ).sort((a, b) => {
-    const by = c.sort === 'key' ? a.key.localeCompare(b.key, undefined, { numeric: true })
-      : c.sort === 'title' ? a.title.localeCompare(b.title)
-      : c.sort === 'status' ? a.status.localeCompare(b.status)
-      : c.sort === 'priority' ? (PRIORITY_RANK[b.priority] || 0) - (PRIORITY_RANK[a.priority] || 0)
-      : touched(b) - touched(a);
+    const by = SORTS[c.sort](a, b);
     return c.ascending ? -by : by;
   });
 }

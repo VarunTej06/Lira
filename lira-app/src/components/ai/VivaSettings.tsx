@@ -53,7 +53,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
         <div className="flex items-center gap-2 mb-2"><Database className="w-3.5 h-3.5 text-indigo-600" /><span className={HEADING}>Connected spaces ({spaces.length})</span></div>
         <div className="flex flex-wrap gap-1.5">
           {spaces.map(s => (
-            <span key={s.id} className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold border flex items-center gap-1 ${s.id === activeSpace?.id ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+            <span key={s.id} className={`px-2 py-0.5 rounded-lg text-3xs font-semibold border flex items-center gap-1 ${s.id === activeSpace?.id ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-gray-100 text-gray-700 border-gray-200'}`}>
               <span>{s.icon}</span><span>{s.name}</span><span className="font-mono text-gray-400">[{s.key}]</span>
             </span>
           ))}
@@ -63,7 +63,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
       <div className={CARD}>
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1.5"><FileText className="w-3.5 h-3.5 text-purple-600" /><label className={HEADING}>System instruction</label></div>
-          <button type="button" onClick={resetInstruction} className="text-[10px] text-lira-muted hover:text-purple-600 flex items-center gap-1 cursor-pointer"><RotateCcw className="w-3 h-3" /> Reset default</button>
+          <button type="button" onClick={resetInstruction} className="text-3xs text-lira-muted hover:text-purple-600 flex items-center gap-1 cursor-pointer"><RotateCcw className="w-3 h-3" /> Reset default</button>
         </div>
         <textarea rows={maximized ? 12 : 8} value={instruction} onChange={e => setInstruction(e.target.value)} className="w-full text-xs font-mono border border-gray-200 rounded-xl p-2.5 bg-gray-50/50 focus:outline-none focus:border-purple-500 leading-relaxed" />
       </div>
@@ -89,7 +89,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
             <input aria-label="API key" type="password" value={oai.apiKey} onChange={e => setOai({ ...oai, apiKey: e.target.value })} placeholder="API key (not needed for a local server)" className={FIELD} />
           </div>
         )}
-        <p className="text-[10px] text-lira-muted">Changes to tickets are always made by the built-in engine, so they can be previewed and undone. The model answers questions.</p>
+        <p className="text-3xs text-lira-muted">Changes to tickets are always made by the built-in engine, so they can be previewed and undone. The model answers questions.</p>
       </div>
 
       <div className={CARD}>
@@ -102,7 +102,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
             placeholder="AIzaSy… (leave empty to use the built-in local engine)"
             className="w-full text-xs border border-gray-300 rounded-xl pl-2.5 pr-14 py-2 focus:outline-none focus:ring-1 focus:ring-purple-500"
           />
-          <button type="button" onClick={() => setShowKey(v => !v)} className="absolute right-2 top-2 text-[10px] text-lira-muted hover:text-lira-text cursor-pointer">{showKey ? 'Hide' : 'Show'}</button>
+          <button type="button" onClick={() => setShowKey(v => !v)} className="absolute right-2 top-2 text-3xs text-lira-muted hover:text-lira-text cursor-pointer">{showKey ? 'Hide' : 'Show'}</button>
         </div>
       </div>
 

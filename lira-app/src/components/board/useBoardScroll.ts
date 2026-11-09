@@ -1,4 +1,4 @@
-import { useEffect, useRef, type MouseEvent as ReactMouseEvent, type WheelEvent as ReactWheelEvent } from 'react';
+import { useCallback, useEffect, useRef, type MouseEvent as ReactMouseEvent, type WheelEvent as ReactWheelEvent } from 'react';
 
 const EDGE_Y = 100;
 const EDGE_X = 80;
@@ -65,8 +65,11 @@ export function useBoardScroll() {
     if (e.altKey && boardRef.current) { boardRef.current.scrollLeft += e.deltaY; e.preventDefault(); }
   };
 
+  const startDrag = useCallback(() => { draggingCard.current = true; }, []);
+  const stopDrag = useCallback(() => { draggingCard.current = false; }, []);
+
   return {
-    boardRef, draggingCard,
+    boardRef, startDrag, stopDrag,
     boardProps: { onMouseDown, onMouseMove, onMouseUp: stopPanning, onMouseLeave: stopPanning, onWheel },
   };
 }

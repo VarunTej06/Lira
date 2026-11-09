@@ -4,58 +4,44 @@ export function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+const STOP_WORDS = new Set([
+  'app', 'space', 'project', 'projects', 'hub', 'board', 'team',
+  'the', 'and', 'for', 'with', 'task', 'tasks', 'ticket', 'tickets',
+  'issue', 'issues', 'item', 'items', 'all', 'show', 'list', 'what', 'give',
+]);
+
+/** Short names people use for the built-in spaces: space key -> phrases that mean it. */
+const ALIASES = new Map<string, string[]>([
+  ['ap', ['atmos', 'weather']],
+  ['ig', ['interview', 'guide']],
+  ['ai', ['ai project', 'ai-project', 'machine learning', 'ai space']],
+  ['cert', ['certification', 'certs', 'cert ']],
+  ['crs', ['course', 'courses', 'class']],
+  ['cre', ['creator', 'hub']],
+  ['gen', ['general', 'general tasks']],
+  ['lira', ['lira']],
+]);
+
+/** True when `needle` appears as a whole word: letters or digits right next to it do not count. */
+const hasWord = (text: string, needle: string) => new RegExp(`(^|[^a-z0-9])${escapeRegex(needle)}([^a-z0-9]|$)`, 'i').test(text);
+
+/** "in AP", "AP tasks", "tickets for FIN" */
+const byKey = (t: string, spaces: Space[]) => spaces.find(s => hasWord(t, s.key.toLowerCase()));
+
+/** "Atmos - Weather App", "Interview Guide", "Cloud Infrastructure" */
+const byFullName = (t: string, spaces: Space[]) => spaces.find(s => t.includes(s.name.toLowerCase()));
+
+/** Any significant word of a multi-word space name, for spaces present now or added later. */
+const byNameWord = (t: string, spaces: Space[]) => spaces.find(s =>
+  s.name.toLowerCase().split(/[\s\-_/]+/).filter(w => w.length >= 3 && !STOP_WORDS.has(w)).some(w => hasWord(t, w)));
+
+const byAlias = (t: string, spaces: Space[]) => spaces.find(s => ALIASES.get(s.key.toLowerCase())?.some(phrase => t.includes(phrase)));
+
 /**
- * Resolves a space from user text dynamically (by name, key, significant words, or common aliases).
+ * Resolves a space from user text dynamically (by key, full name, significant name words, or common aliases), in that order.
  * Works automatically for all existing and any future spaces created in Lira.
  */
 export function findTargetSpace(text: string, allSpaces: Space[]): Space | undefined {
   const t = text.toLowerCase();
-
-  // 1. Exact match on space key with word boundaries (e.g. "in AP", "AP tasks", "tickets for FIN")
-  for (const s of allSpaces) {
-    const keyLower = s.key.toLowerCase();
-    const keyRegex = new RegExp(`(^|[^a-z0-9])${escapeRegex(keyLower)}([^a-z0-9]|$)`, 'i');
-    if (keyRegex.test(t)) {
-      return s;
-    }
-  }
-
-  // 2. Exact match on full space name (e.g. "Atmos - Weather App", "Interview Guide", "Cloud Infrastructure")
-  for (const s of allSpaces) {
-    const nameLower = s.name.toLowerCase();
-    if (t.includes(nameLower)) {
-      return s;
-    }
-  }
-
-  // 3. Significant word token matching for any multi-word space name (present or future):
-  const stopWords = new Set([
-    'app', 'space', 'project', 'projects', 'hub', 'board', 'team',
-    'the', 'and', 'for', 'with', 'task', 'tasks', 'ticket', 'tickets',
-    'issue', 'issues', 'item', 'items', 'all', 'show', 'list', 'what', 'give'
-  ]);
-  for (const s of allSpaces) {
-    const words = s.name.toLowerCase().split(/[\s\-_/]+/).filter(w => w.length >= 3 && !stopWords.has(w));
-    for (const w of words) {
-      const wordRegex = new RegExp(`(^|[^a-z0-9])${escapeRegex(w)}([^a-z0-9]|$)`, 'i');
-      if (wordRegex.test(t)) {
-        return s;
-      }
-    }
-  }
-
-  // 4. Common shorthand aliases for existing spaces
-  for (const s of allSpaces) {
-    const keyLower = s.key.toLowerCase();
-    if (keyLower === 'ap' && (t.includes('atmos') || t.includes('weather'))) return s;
-    if (keyLower === 'ig' && (t.includes('interview') || t.includes('guide'))) return s;
-    if (keyLower === 'ai' && (t.includes('ai project') || t.includes('ai-project') || t.includes('machine learning') || t.includes('ai space'))) return s;
-    if (keyLower === 'cert' && (t.includes('certification') || t.includes('certs') || t.includes('cert '))) return s;
-    if (keyLower === 'crs' && (t.includes('course') || t.includes('courses') || t.includes('class'))) return s;
-    if (keyLower === 'cre' && (t.includes('creator') || t.includes('hub'))) return s;
-    if (keyLower === 'gen' && (t.includes('general') || t.includes('general tasks'))) return s;
-    if (keyLower === 'lira' && t.includes('lira')) return s;
-  }
-
-  return undefined;
+  return byKey(t, allSpaces) ?? byFullName(t, allSpaces) ?? byNameWord(t, allSpaces) ?? byAlias(t, allSpaces);
 }

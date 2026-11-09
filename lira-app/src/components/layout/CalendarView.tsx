@@ -1,12 +1,14 @@
-import { issueLink } from '../../utils/links';
-import { TypeIcon } from '../common/Icons';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, CheckCircle2, ChevronDown, ChevronUp, GripVertical, CalendarPlus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, ChevronDown, ChevronUp, CalendarPlus } from 'lucide-react';
 import { MonthYearGrid } from '../common/MonthYearGrid';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { formatDateKey, monthGrid } from '../../utils/calendarGrid';
 import { useCalendarDrag } from './useCalendarDrag';
+import { currentTime } from '../../utils/clock';
+import { PALETTE } from '../../theme/palette';
+import { dayNumberTone, dayTone } from './calendarTones';
+import { IssueChip, MoreToggle, UnscheduledChip } from './CalendarParts';
 
 interface CalendarViewProps {
   issues: Issue[];
@@ -14,44 +16,135 @@ interface CalendarViewProps {
   onSelectIssue: (issue: Issue) => void;
 }
 
+type Drag = ReturnType<typeof useCalendarDrag>;
+type Day = ReturnType<typeof monthGrid>[number];
+
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const MAX_VISIBLE = 3;
 
-/** Colour of a ticket chip: done, blocked, in progress, urgent, or the rest. */
-const chipTone = (issue: Issue) =>
-  issue.status === 'done' ? 'border-l-emerald-500 bg-emerald-500/10'
-    : issue.blocked ? 'border-l-red-600 bg-red-600/15'
-    : issue.status === 'inprogress' ? 'border-l-blue-500 bg-blue-500/10'
-    : issue.priority === 'highest' || issue.priority === 'high' ? 'border-l-red-500 bg-red-500/10'
-    : 'border-l-slate-400 bg-slate-500/10';
+/** The month and year as a button that opens a month chooser; it closes on an outside click or Escape. */
+function MonthYearPicker({ year, month, monthName, onPick }: { year: number; month: number; monthName: string; onPick: (year: number, month: number) => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const away = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('mousedown', away);
+    document.addEventListener('keydown', esc);
+    return () => { document.removeEventListener('mousedown', away); document.removeEventListener('keydown', esc); };
+  }, [open]);
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+        aria-label="Choose month and year"
+        data-testid="calendar-month-year"
+        className="flex items-center gap-1.5 -ml-2 px-2 py-0.5 rounded-lg text-lg font-bold text-lira-text hover:bg-gray-100 cursor-pointer"
+      >
+        {monthName} {year}
+        <ChevronDown className={`w-4 h-4 text-lira-muted transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-2 z-30 w-[272px] bg-white border border-lira-border rounded-2xl shadow-2xl p-3 animate-scale-in">
+          <MonthYearGrid year={year} month={month} onPick={(y, m) => { onPick(y, m); setOpen(false); }} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** One day: its number, a drop hint while dragging over it, and up to three tickets (all of them when expanded). */
+function DayCell({ day, idx, todayKey, monthName, drag, expanded, onToggle, onSelect }: {
+  day: Day; idx: number; todayKey: string; monthName: string; drag: Drag; expanded: boolean; onToggle: () => void; onSelect: (issue: Issue) => void;
+}) {
+  const { date, isCurrentMonth, key } = day;
+  const isToday = key === todayKey;
+  const isDragOver = drag.dragOverKey === key;
+  const dayIssues = drag.byDay.get(key) || [];
+  const shown = expanded ? dayIssues : dayIssues.slice(0, MAX_VISIBLE);
+  const hidden = dayIssues.length - shown.length;
+  return (
+    <div
+      {...drag.dayProps(key)}
+      data-date={key}
+      className={`min-h-[124px] p-2 flex flex-col gap-1 border-b border-r border-lira-border [&:nth-child(7n)]:border-r-0 transition-colors relative ${dayTone({ dragOver: isDragOver, today: isToday, inMonth: isCurrentMonth, weekend: idx % 7 >= 5 })}`}
+    >
+      <div className="flex items-center justify-between select-none pointer-events-none">
+        <span className={`text-xs w-7 h-7 flex items-center justify-center rounded-full ${dayNumberTone(isToday, isCurrentMonth)}`}>{date.getDate()}</span>
+        {dayIssues.length > 0 && <span className="text-3xs font-medium text-lira-muted">{dayIssues.length}</span>}
+      </div>
+      {isDragOver && (
+        <div className="absolute inset-x-2 bottom-2 bg-lira-blue text-white rounded-md py-1 text-center text-3xs font-semibold flex items-center justify-center gap-1 pointer-events-none">
+          <CalendarPlus className="w-3 h-3" /> Due {monthName.slice(0, 3)} {date.getDate()}
+        </div>
+      )}
+      <div className="flex-1 space-y-1 min-h-0">
+        {shown.map(issue => <IssueChip key={issue.id || issue.key} issue={issue} drag={drag} onSelect={onSelect} />)}
+        {(hidden > 0 || (expanded && dayIssues.length > MAX_VISIBLE)) && <MoreToggle expanded={expanded} hidden={hidden} onToggle={onToggle} />}
+      </div>
+    </div>
+  );
+}
+
+/** The folding tray of tickets without a due date. */
+function UnscheduledTray({ drag, onSelect }: { drag: Drag; onSelect: (issue: Issue) => void }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <div className="border-t border-lira-border bg-white flex-shrink-0">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full px-6 py-2.5 flex items-center justify-between text-xs font-semibold text-lira-muted hover:bg-gray-50 transition-colors cursor-pointer select-none"
+        aria-expanded={open}
+      >
+        <div className="flex items-center gap-2">
+          <Clock className="w-3.5 h-3.5 text-lira-blue" />
+          <span className="font-bold text-lira-text">Without a due date</span>
+          <span className="px-1.5 py-0.5 bg-gray-100 rounded-full text-3xs font-bold text-lira-text">{drag.unscheduled.length}</span>
+          <span className="text-2xs font-normal">Drag a ticket onto a day to schedule it</span>
+        </div>
+        {open ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+      </button>
+      {open && (
+        <div className="px-6 pb-3 max-h-40 overflow-y-auto">
+          {drag.unscheduled.length === 0 ? (
+            <p className="text-xs text-lira-muted italic py-1">Every ticket has a due date.</p>
+          ) : (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {drag.unscheduled.map(issue => <UnscheduledChip key={issue.id || issue.key} issue={issue} drag={drag} onSelect={onSelect} />)}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SpaceChip({ space }: { space: Space }) {
+  const color = space.color || PALETTE.brand;
+  return (
+    <span className="text-xs px-2 py-0.5 rounded-md font-medium flex items-center gap-1" style={{ backgroundColor: color + '22', color }}>
+      <span>{space.icon || '📁'}</span><span>{space.name}</span>
+    </span>
+  );
+}
 
 export const CalendarView: React.FC<CalendarViewProps> = ({ issues, space, onSelectIssue }) => {
   const [currentDate, setCurrentDate] = useState(() => new Date());
-  const [showUnscheduled, setShowUnscheduled] = useState(true);
   const [expanded, setExpanded] = useState<Set<string>>(new Set()); // days showing all their tickets
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const pickerRef = useRef<HTMLDivElement>(null);
   const drag = useCalendarDrag(issues);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const monthName = currentDate.toLocaleString('default', { month: 'long' });
   const days = useMemo(() => monthGrid(year, month), [year, month]);
-  const todayKey = formatDateKey(new Date());
+  const todayKey = formatDateKey(currentTime());
 
   const thisMonth = days.filter(d => d.isCurrentMonth).flatMap(d => drag.byDay.get(d.key) ?? []);
   const toggleExpanded = (key: string) => setExpanded(prev => { const n = new Set(prev); if (!n.delete(key)) n.add(key); return n; });
   const goToMonth = (offset: number) => setCurrentDate(new Date(year, month + offset, 1));
-
-  // Close the month and year chooser on an outside click or Escape
-  useEffect(() => {
-    if (!pickerOpen) return;
-    const away = (e: MouseEvent) => { if (!pickerRef.current?.contains(e.target as Node)) setPickerOpen(false); };
-    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setPickerOpen(false); };
-    document.addEventListener('mousedown', away);
-    document.addEventListener('keydown', esc);
-    return () => { document.removeEventListener('mousedown', away); document.removeEventListener('keydown', esc); };
-  }, [pickerOpen]);
 
   return (
     <div className="flex-1 flex flex-col h-full bg-lira-bg overflow-hidden" data-testid="calendar-view">
@@ -60,29 +153,8 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ issues, space, onSel
           <span className="w-10 h-10 rounded-xl bg-lira-blue-light text-lira-blue flex items-center justify-center flex-shrink-0"><CalendarIcon className="w-5 h-5" /></span>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <div className="relative" ref={pickerRef}>
-                <button
-                  type="button"
-                  onClick={() => setPickerOpen(o => !o)}
-                  aria-expanded={pickerOpen}
-                  aria-label="Choose month and year"
-                  data-testid="calendar-month-year"
-                  className="flex items-center gap-1.5 -ml-2 px-2 py-0.5 rounded-lg text-lg font-bold text-lira-text hover:bg-gray-100 cursor-pointer"
-                >
-                  {monthName} {year}
-                  <ChevronDown className={`w-4 h-4 text-lira-muted transition-transform ${pickerOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {pickerOpen && (
-                  <div className="absolute left-0 top-full mt-2 z-30 w-[272px] bg-white border border-lira-border rounded-2xl shadow-2xl p-3 animate-scale-in">
-                    <MonthYearGrid year={year} month={month} onPick={(y, m) => { setCurrentDate(new Date(y, m, 1)); setPickerOpen(false); }} />
-                  </div>
-                )}
-              </div>
-              {space && (
-                <span className="text-xs px-2 py-0.5 rounded-md font-medium flex items-center gap-1" style={{ backgroundColor: (space.color || '#0052CC') + '22', color: space.color || '#0052CC' }}>
-                  <span>{space.icon || '📁'}</span><span>{space.name}</span>
-                </span>
-              )}
+              <MonthYearPicker year={year} month={month} monthName={monthName} onPick={(y, m) => setCurrentDate(new Date(y, m, 1))} />
+              {space && <SpaceChip space={space} />}
             </div>
             <p className="text-xs text-lira-muted mt-0.5">
               {thisMonth.length} due this month · {thisMonth.filter(i => i.status === 'done').length} done · {drag.unscheduled.length} without a date
@@ -107,118 +179,21 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ issues, space, onSel
 
       <div className="flex-1 overflow-y-auto px-6 pb-4 min-h-0">
         <div className="rounded-2xl border border-lira-border bg-white overflow-hidden shadow-xs">
-          <div className="grid grid-cols-7 bg-gray-50 border-b border-lira-border text-[11px] font-semibold uppercase tracking-wider select-none">
-            {DAYS_OF_WEEK.map((name, idx) => <div key={name} className={`py-2.5 text-center ${idx >= 5 ? 'text-lira-muted' : 'text-lira-muted'}`}>{name}</div>)}
+          <div className="grid grid-cols-7 bg-gray-50 border-b border-lira-border text-2xs font-semibold uppercase tracking-wider select-none">
+            {DAYS_OF_WEEK.map(name => <div key={name} className="py-2.5 text-center text-lira-muted">{name}</div>)}
           </div>
-
           <div className="grid grid-cols-7">
-            {days.map(({ date, isCurrentMonth, key }, idx) => {
-              const isToday = key === todayKey;
-              const isDragOver = drag.dragOverKey === key;
-              const dayIssues = drag.byDay.get(key) || [];
-              const isExpanded = expanded.has(key);
-              const shown = isExpanded ? dayIssues : dayIssues.slice(0, MAX_VISIBLE);
-              const hidden = dayIssues.length - shown.length;
-              return (
-                <div
-                  key={key}
-                  {...drag.dayProps(key)}
-                  data-date={key}
-                  className={`min-h-[124px] p-2 flex flex-col gap-1 border-b border-r border-lira-border [&:nth-child(7n)]:border-r-0 transition-colors relative ${
-                    isDragOver ? 'bg-lira-blue-light ring-2 ring-lira-blue ring-inset z-10'
-                      : isToday ? 'bg-lira-blue-light/50'
-                      : !isCurrentMonth ? 'bg-gray-50/70'
-                      : idx % 7 >= 5 ? 'bg-gray-50/40' : 'bg-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-between select-none pointer-events-none">
-                    <span className={`text-xs w-7 h-7 flex items-center justify-center rounded-full ${isToday ? 'bg-lira-blue text-white font-bold shadow-xs' : isCurrentMonth ? 'text-lira-text font-semibold' : 'text-lira-muted'}`}>{date.getDate()}</span>
-                    {dayIssues.length > 0 && <span className="text-[10px] font-medium text-lira-muted">{dayIssues.length}</span>}
-                  </div>
-
-                  {isDragOver && (
-                    <div className="absolute inset-x-2 bottom-2 bg-lira-blue text-white rounded-md py-1 text-center text-[10px] font-semibold flex items-center justify-center gap-1 pointer-events-none">
-                      <CalendarPlus className="w-3 h-3" /> Due {monthName.slice(0, 3)} {date.getDate()}
-                    </div>
-                  )}
-
-                  <div className="flex-1 space-y-1 min-h-0">
-                    {shown.map(issue => {
-                      const isDone = issue.status === 'done';
-                      return (
-                        <div
-                          key={issue.id || issue.key}
-                          draggable
-                          onDragStart={e => drag.onDragStart(e, issue)}
-                          onDragEnd={drag.onDragEnd}
-                          onClick={() => onSelectIssue(issue)} {...issueLink(issue)}
-                          className={`text-[11px] px-1.5 py-1 rounded-md border-l-[3px] leading-tight cursor-grab active:cursor-grabbing transition-all hover:shadow-sm hover:-translate-y-px group select-none ${chipTone(issue)} ${drag.draggingId === issue.id ? 'opacity-40 scale-95' : ''} ${isDone ? 'opacity-70' : ''}`}
-                          title={`${issue.key} · ${issue.title}. Drag to change the due date.`}
-                        >
-                          <div className="flex items-center gap-1 min-w-0">
-                            <TypeIcon type={issue.type} className="w-3 h-3" />
-                            <span className={`font-mono text-[10px] font-semibold text-lira-text ${isDone ? 'line-through' : ''}`}>{issue.key}</span>
-                            {isDone && <CheckCircle2 className="w-3 h-3 text-emerald-500 ml-auto flex-shrink-0" />}
-                          </div>
-                          <div className="truncate text-[10px] text-lira-muted mt-0.5">{issue.title}</div>
-                        </div>
-                      );
-                    })}
-                    {(hidden > 0 || (isExpanded && dayIssues.length > MAX_VISIBLE)) && (
-                      <button onClick={() => toggleExpanded(key)} className="w-full text-left text-[10px] font-semibold text-lira-blue hover:underline px-1 cursor-pointer">
-                        {isExpanded ? 'Show less' : `+${hidden} more`}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+            {days.map((day, idx) => (
+              <DayCell
+                key={day.key} day={day} idx={idx} todayKey={todayKey} monthName={monthName} drag={drag}
+                expanded={expanded.has(day.key)} onToggle={() => toggleExpanded(day.key)} onSelect={onSelectIssue}
+              />
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="border-t border-lira-border bg-white flex-shrink-0">
-        <button
-          onClick={() => setShowUnscheduled(!showUnscheduled)}
-          className="w-full px-6 py-2.5 flex items-center justify-between text-xs font-semibold text-lira-muted hover:bg-gray-50 transition-colors cursor-pointer select-none"
-          aria-expanded={showUnscheduled}
-        >
-          <div className="flex items-center gap-2">
-            <Clock className="w-3.5 h-3.5 text-lira-blue" />
-            <span className="font-bold text-lira-text">Without a due date</span>
-            <span className="px-1.5 py-0.5 bg-gray-100 rounded-full text-[10px] font-bold text-lira-text">{drag.unscheduled.length}</span>
-            <span className="text-[11px] font-normal">Drag a ticket onto a day to schedule it</span>
-          </div>
-          {showUnscheduled ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
-        </button>
-
-        {showUnscheduled && (
-          <div className="px-6 pb-3 max-h-40 overflow-y-auto">
-            {drag.unscheduled.length === 0 ? (
-              <p className="text-xs text-lira-muted italic py-1">Every ticket has a due date.</p>
-            ) : (
-              <div className="flex flex-wrap gap-2 pt-1">
-                {drag.unscheduled.map(issue => (
-                  <div
-                    key={issue.id || issue.key}
-                    draggable
-                    onDragStart={e => drag.onDragStart(e, issue)}
-                    onDragEnd={drag.onDragEnd}
-                    onClick={() => onSelectIssue(issue)} {...issueLink(issue)}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border rounded-lg text-xs transition-all cursor-grab active:cursor-grabbing select-none group ${drag.draggingId === issue.id ? 'opacity-40 border-dashed border-lira-blue scale-95' : 'border-lira-border hover:border-lira-blue hover:shadow-xs'}`}
-                    title="Drag onto a day to set the due date, or click to open"
-                  >
-                    <GripVertical className="w-3 h-3 text-lira-muted group-hover:text-lira-blue" />
-                    <TypeIcon type={issue.type} className="w-3.5 h-3.5" />
-                    <span className="font-mono font-bold text-lira-blue">{issue.key}</span>
-                    <span className="truncate max-w-[180px] text-lira-text text-[11px] font-medium">{issue.title}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      <UnscheduledTray drag={drag} onSelect={onSelectIssue} />
     </div>
   );
 };

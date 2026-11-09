@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { AnimatePresence, motion, dialogBackdrop, dialogPanel } from './motion';
+import { AnimatePresence, motion } from './motionPresets';
+import { dialogBackdrop, dialogPanel } from './motionPresets';
 
 interface ModalProps {
   isOpen: boolean;

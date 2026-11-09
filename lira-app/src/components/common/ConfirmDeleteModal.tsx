@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AlertTriangle, Trash2, X, Loader2 } from 'lucide-react';
+import { useResetWhen } from '../../hooks/useResetWhen';
 
 interface ConfirmDeleteModalProps {
   isOpen: boolean;
@@ -22,11 +23,10 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
+  useResetWhen([isOpen], () => { if (!isOpen) setIsDeleting(false); });
+
   useEffect(() => {
-    if (!isOpen) {
-      setIsDeleting(false);
-      return;
-    }
+    if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !isDeleting) {
         onClose();

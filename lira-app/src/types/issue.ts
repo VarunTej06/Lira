@@ -1,12 +1,13 @@
+import { PALETTE } from '../theme/palette';
 export type Priority = 'highest' | 'high' | 'medium' | 'low' | 'lowest';
 export type IssueType = 'task' | 'bug' | 'epic' | 'subtask';
 export type IssueStatus = 'backlog' | 'todo' | 'inprogress' | 'done' | string;
 
 export const ISSUE_TYPE_CONFIG: Record<IssueType, { label: string; color: string; bg: string }> = {
-  epic:    { label: 'Epic',    color: '#6554C0', bg: '#EAE6FF' },
-  task:    { label: 'Task',    color: '#0052CC', bg: '#DEEBFF' },
-  bug:     { label: 'Bug',     color: '#DE350B', bg: '#FFEBE6' },
-  subtask: { label: 'Subtask', color: '#6B778C', bg: '#F4F5F7' },
+  epic:    { label: 'Epic',    color: PALETTE.purple, bg: '#EAE6FF' },
+  task:    { label: 'Task',    color: PALETTE.brand, bg: PALETTE.brandBg },
+  bug:     { label: 'Bug',     color: PALETTE.critical, bg: PALETTE.criticalBg },
+  subtask: { label: 'Subtask', color: PALETTE.textMuted, bg: PALETTE.surfaceMuted },
 };
 // The picture for each type is drawn by TypeIcon (components/common/Icons.tsx).
 

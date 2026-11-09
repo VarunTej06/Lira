@@ -5,7 +5,7 @@ import { MAX_EMBED_BYTES, SOURCE_LABEL, downloadAttachment, formatBytes, readAtt
 import { formatAbsoluteDate, formatDayDateTime, formatRelativeDate } from './dateUtils';
 import { PRIORITY_CONFIG } from './priorityUtils';
 import { STATUS_LIST, STATUS_META, BLOCKED_META, isBlocked, statusLabel } from './status';
-import { hasCommentContent, isOwnComment } from '../components/issue/IssueActivityFeed';
+import { hasCommentContent, isOwnComment } from '../components/issue/commentUtils';
 import { makeIssue } from '../test/factories';
 
 describe('links (what "Open in new tab" opens)', () => {

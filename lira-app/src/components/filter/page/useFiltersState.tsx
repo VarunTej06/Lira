@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
 import { useClickOutside } from '../../../hooks/useClickOutside';
+import { useResetWhen } from '../../../hooks/useResetWhen';
 
 export interface FiltersPageProps {
   issues: Issue[];
@@ -92,12 +93,8 @@ export function useFiltersState(props: FiltersPageProps) {
   };
 
   // Automatically apply preset when initialPreset prop changes
-  useEffect(() => {
-    if (initialPreset) {
-      applyPreset(initialPreset);
-      onClearPreset?.();
-    }
-  }, [initialPreset, onClearPreset]);
+  useResetWhen([initialPreset], () => { if (initialPreset) applyPreset(initialPreset); });
+  useEffect(() => { if (initialPreset) onClearPreset?.(); }, [initialPreset, onClearPreset]);
 
   // Space map for quick lookup
   const spaceMap = useMemo(() => {

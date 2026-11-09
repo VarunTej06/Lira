@@ -1,9 +1,11 @@
-import { confirmDialog } from '../common/dialogs';
+import { confirmDialog } from '../common/dialogStore';
 import React, { useState, useRef, useEffect } from 'react';
 import { UploadCloud, File, FileText, Image as ImageIcon, Trash2, Download, Paperclip, CheckCircle2 } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import type { Space } from '../../types/space';
+import { useResetWhen } from '../../hooks/useResetWhen';
+import { appStorage } from '../../utils/appStorage';
 
 interface AttachmentsModalProps {
   isOpen: boolean;
@@ -51,7 +53,7 @@ function AttachmentRow({ att, onDelete }: { att: AttachmentItem; onDelete: (id: 
         )}
         <div className="min-w-0 flex-1">
           <h5 className="text-xs font-bold text-lira-text truncate group-hover:text-lira-blue transition-colors" title={att.name}>{att.name}</h5>
-          <div className="flex items-center gap-2 mt-0.5 text-[11px] text-lira-muted">
+          <div className="flex items-center gap-2 mt-0.5 text-2xs text-lira-muted">
             <span>{formatBytes(att.size)}</span><span>•</span><span>{new Date(att.uploadedAt).toLocaleDateString()}</span>
           </div>
         </div>
@@ -66,6 +68,16 @@ function AttachmentRow({ att, onDelete }: { att: AttachmentItem; onDelete: (id: 
   );
 }
 
+/** The list saved for this space, or null when nothing usable is saved yet. */
+const savedAttachments = (key: string): AttachmentItem[] | null => {
+  try {
+    const saved = JSON.parse(appStorage.get(key) || 'null');
+    return Array.isArray(saved) && saved.length > 0 ? saved : null;
+  } catch {
+    return null;
+  }
+};
+
 export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({ isOpen, onClose, space }) => {
   const fileInput = useRef<HTMLInputElement>(null);
   const [attachments, setAttachments] = useState<AttachmentItem[]>([]);
@@ -75,16 +87,16 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({ isOpen, onCl
   const storageKey = `lira_attachments_${space?.id ?? 'global'}`;
 
   // Load this space's list when the window opens (the sample files the first time)
+  useResetWhen([isOpen, storageKey], () => {
+    if (isOpen) setAttachments(savedAttachments(storageKey) ?? SAMPLE_ATTACHMENTS);
+  });
+  // The sample files are written once, the first time the window opens
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || savedAttachments(storageKey)) return;
     try {
-      const saved = JSON.parse(localStorage.getItem(storageKey) || 'null');
-      if (Array.isArray(saved) && saved.length > 0) return setAttachments(saved);
-      setAttachments(SAMPLE_ATTACHMENTS);
-      localStorage.setItem(storageKey, JSON.stringify(SAMPLE_ATTACHMENTS));
-    } catch {
-      setAttachments(SAMPLE_ATTACHMENTS);
-    }
+      JSON.parse(appStorage.get(storageKey) || 'null'); // throws when the saved list is unreadable: then leave it
+      appStorage.set(storageKey, JSON.stringify(SAMPLE_ATTACHMENTS));
+    } catch { /* unreadable list or storage unavailable */ }
   }, [isOpen, storageKey]);
 
   const flashSaved = () => { setSavedToast(true); setTimeout(() => setSavedToast(false), 2000); };
@@ -93,7 +105,7 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({ isOpen, onCl
   const save = (items: AttachmentItem[]) => {
     setAttachments(items);
     try {
-      localStorage.setItem(storageKey, JSON.stringify(items.map(({ id, name, size, type, uploadedAt }) => ({ id, name, size, type, uploadedAt }))));
+      appStorage.set(storageKey, JSON.stringify(items.map(({ id, name, size, type, uploadedAt }) => ({ id, name, size, type, uploadedAt }))));
     } catch (e) {
       console.error('Failed to save attachments to localStorage', e);
     }
@@ -169,13 +181,13 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({ isOpen, onCl
             <div className="text-center py-12 text-lira-muted">
               <File className="w-8 h-8 mx-auto mb-2 opacity-40" />
               <p className="text-xs font-medium">No attachments uploaded yet</p>
-              <p className="text-[11px] text-lira-muted mt-0.5">Drop files into the zone above to attach to this space.</p>
+              <p className="text-2xs text-lira-muted mt-0.5">Drop files into the zone above to attach to this space.</p>
             </div>
           ) : attachments.map(att => <AttachmentRow key={att.id} att={att} onDelete={remove} />)}
         </div>
 
         <div className="px-6 py-3 border-t border-lira-border bg-gray-50 flex items-center justify-between text-xs flex-shrink-0">
-          <span className="text-lira-muted text-[11px]">Storage: <strong className="font-mono text-lira-text">{storageKey}</strong></span>
+          <span className="text-lira-muted text-2xs">Storage: <strong className="font-mono text-lira-text">{storageKey}</strong></span>
           <div className="flex items-center gap-2">
             <Button variant="primary" size="sm" onClick={() => { save(attachments); flashSaved(); }}>Save Attachments</Button>
             <Button variant="secondary" size="sm" onClick={onClose}>Done</Button>

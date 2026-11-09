@@ -46,32 +46,38 @@ function hostName(hostHeader: string | undefined): string | undefined {
 
 interface GuardVerdict { ok: boolean; status?: number; reason?: string }
 
+type Headers = Record<string, string | string[] | undefined>
+const refuse = (status: number, reason: string): GuardVerdict => ({ ok: false, status, reason })
+const headerOf = (headers: Headers, name: string) => { const v = headers[name]; return Array.isArray(v) ? v[0] : v }
+
+/** The Origin the browser sent must be this computer, and the same one as the Host. */
+function originVerdict(origin: string | undefined, host: string, lan: boolean): GuardVerdict | undefined {
+  if (origin === 'null') return refuse(403, 'Origin not allowed')
+  if (!origin) return undefined
+  let originHost: string | undefined
+  try { originHost = new URL(origin).hostname } catch { /* refused below */ }
+  if (!originHost || !isAllowedHost(originHost, lan) || originHost.toLowerCase() !== host.toLowerCase()) return refuse(403, 'Origin not allowed')
+  return undefined
+}
+
 /**
  * - The Host header must be this computer (stops DNS rebinding: a hostile site pointing its name at 127.0.0.1).
  * - If the browser sends an Origin, it must be this computer too (stops other sites posting to us).
  * - Writes must be JSON, which a plain HTML form or `no-cors` request cannot send.
  */
-export function checkApiRequest(req: { method?: string; headers: Record<string, string | string[] | undefined> }, opts: { lan?: boolean } = {}): GuardVerdict {
+export function checkApiRequest(req: { method?: string; headers: Headers }, opts: { lan?: boolean } = {}): GuardVerdict {
   const lan = !!opts.lan
-  const h = (n: string) => { const v = req.headers[n]; return Array.isArray(v) ? v[0] : v }
-  const host = hostName(h('host'))
-  if (!host || !isAllowedHost(host, lan)) return { ok: false, status: 403, reason: 'Host not allowed' }
+  const host = hostName(headerOf(req.headers, 'host'))
+  if (!host || !isAllowedHost(host, lan)) return refuse(403, 'Host not allowed')
 
-  const origin = h('origin')
-  if (origin && origin !== 'null') {
-    let originHost: string | undefined
-    try { originHost = new URL(origin).hostname } catch { /* handled below */ }
-    if (!originHost || !isAllowedHost(originHost, lan) || originHost.toLowerCase() !== host.toLowerCase()) return { ok: false, status: 403, reason: 'Origin not allowed' }
-  } else if (origin === 'null') {
-    return { ok: false, status: 403, reason: 'Origin not allowed' }
-  }
+  const originProblem = originVerdict(headerOf(req.headers, 'origin'), host, lan)
+  if (originProblem) return originProblem
 
-  const site = h('sec-fetch-site')
-  if (site && site !== 'same-origin' && site !== 'none') return { ok: false, status: 403, reason: 'Cross-site request' }
+  const site = headerOf(req.headers, 'sec-fetch-site')
+  if (site && site !== 'same-origin' && site !== 'none') return refuse(403, 'Cross-site request')
 
-  if (req.method && req.method !== 'GET' && req.method !== 'HEAD') {
-    if (!/^application\/json\b/i.test(h('content-type') || '')) return { ok: false, status: 415, reason: 'JSON required' }
-  }
+  const isWrite = !!req.method && req.method !== 'GET' && req.method !== 'HEAD'
+  if (isWrite && !/^application\/json\b/i.test(headerOf(req.headers, 'content-type') || '')) return refuse(415, 'JSON required')
   return { ok: true }
 }
 

@@ -22,49 +22,68 @@ export const xOf = (range: TimeRange, d: Date, ppd: number) => daysBetween(range
 
 interface HeaderCell { label: string; x: number; width: number }
 
-/** Two header rows: bigger periods on top (year / quarter), finer below (month / week). */
-export function buildHeader(range: TimeRange, zoom: Zoom): { top: HeaderCell[]; bottom: HeaderCell[] } {
-  const ppd = PX_PER_DAY[zoom];
+interface Header { top: HeaderCell[]; bottom: HeaderCell[] }
+interface HeaderTools { range: TimeRange; cell: (label: string, from: Date, to: Date) => HeaderCell; clampEnd: (d: Date) => Date }
+
+/** Months on top, weeks (starting on Mondays) below. */
+function weeksHeader({ range, cell, clampEnd }: HeaderTools): Header {
   const top: HeaderCell[] = [];
   const bottom: HeaderCell[] = [];
+  // top = months, bottom = weeks (Mondays)
+  for (let m = new Date(range.start); m <= range.end; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
+    top.push(cell(m.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }), m, clampEnd(new Date(m.getFullYear(), m.getMonth() + 1, 0))));
+  }
+  let w = new Date(range.start);
+  while (w.getDay() !== 1) w = addDays(w, 1);
+  for (; w <= range.end; w = addDays(w, 7)) bottom.push(cell(String(w.getDate()), w, clampEnd(addDays(w, 6))));
+  return { top, bottom };
+}
+
+/** Years on top, months below. */
+function monthsHeader({ range, cell, clampEnd }: HeaderTools): Header {
+  const top: HeaderCell[] = [];
+  const bottom: HeaderCell[] = [];
+  // top = years, bottom = months
+  for (let y = range.start.getFullYear(); y <= range.end.getFullYear(); y++) {
+    const from = y === range.start.getFullYear() ? range.start : new Date(y, 0, 1);
+    const to = clampEnd(new Date(y, 11, 31));
+    top.push(cell(String(y), from, to));
+  }
+  for (let m = new Date(range.start); m <= range.end; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
+    bottom.push(cell(m.toLocaleDateString('en-US', { month: 'short' }), m, clampEnd(new Date(m.getFullYear(), m.getMonth() + 1, 0))));
+  }
+  return { top, bottom };
+}
+
+/** Years on top, quarters below. */
+function quartersHeader({ range, cell, clampEnd }: HeaderTools): Header {
+  const top: HeaderCell[] = [];
+  const bottom: HeaderCell[] = [];
+  // top = years, bottom = quarters
+  for (let y = range.start.getFullYear(); y <= range.end.getFullYear(); y++) {
+    const from = y === range.start.getFullYear() ? range.start : new Date(y, 0, 1);
+    top.push(cell(String(y), from, clampEnd(new Date(y, 11, 31))));
+  }
+  for (let q = Math.floor(range.start.getMonth() / 3), y = range.start.getFullYear(); ; q++) {
+    if (q === 4) { q = 0; y++; }
+    const from = new Date(y, q * 3, 1);
+    if (from > range.end) break;
+    const clampedFrom = from < range.start ? range.start : from;
+    bottom.push(cell(`Q${q + 1}`, clampedFrom, clampEnd(new Date(y, q * 3 + 3, 0))));
+  }
+  return { top, bottom };
+}
+
+const HEADERS: Record<Zoom, (tools: HeaderTools) => Header> = { weeks: weeksHeader, months: monthsHeader, quarters: quartersHeader };
+
+/** Two header rows: bigger periods on top (year / quarter), finer below (month / week). */
+export function buildHeader(range: TimeRange, zoom: Zoom): Header {
+  const ppd = PX_PER_DAY[zoom];
   const cell = (label: string, from: Date, to: Date): HeaderCell => ({
     label, x: xOf(range, from, ppd), width: (daysBetween(from, to) + 1) * ppd,
   });
   const clampEnd = (d: Date) => (d > range.end ? range.end : d);
-
-  if (zoom === 'weeks') {
-    // top = months, bottom = weeks (Mondays)
-    for (let m = new Date(range.start); m <= range.end; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
-      top.push(cell(m.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }), m, clampEnd(new Date(m.getFullYear(), m.getMonth() + 1, 0))));
-    }
-    let w = new Date(range.start);
-    while (w.getDay() !== 1) w = addDays(w, 1);
-    for (; w <= range.end; w = addDays(w, 7)) bottom.push(cell(String(w.getDate()), w, clampEnd(addDays(w, 6))));
-  } else if (zoom === 'months') {
-    // top = years, bottom = months
-    for (let y = range.start.getFullYear(); y <= range.end.getFullYear(); y++) {
-      const from = y === range.start.getFullYear() ? range.start : new Date(y, 0, 1);
-      const to = clampEnd(new Date(y, 11, 31));
-      top.push(cell(String(y), from, to));
-    }
-    for (let m = new Date(range.start); m <= range.end; m = new Date(m.getFullYear(), m.getMonth() + 1, 1)) {
-      bottom.push(cell(m.toLocaleDateString('en-US', { month: 'short' }), m, clampEnd(new Date(m.getFullYear(), m.getMonth() + 1, 0))));
-    }
-  } else {
-    // top = years, bottom = quarters
-    for (let y = range.start.getFullYear(); y <= range.end.getFullYear(); y++) {
-      const from = y === range.start.getFullYear() ? range.start : new Date(y, 0, 1);
-      top.push(cell(String(y), from, clampEnd(new Date(y, 11, 31))));
-    }
-    for (let q = Math.floor(range.start.getMonth() / 3), y = range.start.getFullYear(); ; q++) {
-      if (q === 4) { q = 0; y++; }
-      const from = new Date(y, q * 3, 1);
-      if (from > range.end) break;
-      const clampedFrom = from < range.start ? range.start : from;
-      bottom.push(cell(`Q${q + 1}`, clampedFrom, clampEnd(new Date(y, q * 3 + 3, 0))));
-    }
-  }
-  return { top, bottom };
+  return HEADERS[zoom]({ range, cell, clampEnd });
 }
 
 const LANE_H = 34;

@@ -1,6 +1,8 @@
 import React from 'react';
 import { burndown, sprintLabel, sprintName } from '../../utils/sprintUtils';
-import { GrowColumn, motion } from '../common/motion';
+import { GrowColumn } from '../common/motion';
+import { motion } from '../common/motionPresets';
+import { PALETTE } from '../../theme/palette';
 
 interface Velocity {
   rows: { key: string; done: number; total: number }[];
@@ -24,17 +26,17 @@ export const BurndownChart: React.FC<{ data: ReturnType<typeof burndown>; total:
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-36" role="img" aria-label="Burndown chart">
         {[0, 0.5, 1].map(f => (
           <g key={f}>
-            <line x1={P.l} x2={W - P.r} y1={y(total * f)} y2={y(total * f)} stroke="#DFE1E6" strokeWidth="1" />
-            <text x={P.l - 4} y={y(total * f) + 3} fontSize="9" textAnchor="end" fill="#6B778C">{Math.round(total * f)}</text>
+            <line x1={P.l} x2={W - P.r} y1={y(total * f)} y2={y(total * f)} stroke={PALETTE.border} strokeWidth="1" />
+            <text x={P.l - 4} y={y(total * f) + 3} fontSize="9" textAnchor="end" fill={PALETTE.textMuted}>{Math.round(total * f)}</text>
           </g>
         ))}
         {[1, Math.ceil(n / 2), n].map(d => (
-          <text key={d} x={x(d)} y={H - 6} fontSize="9" textAnchor="middle" fill="#6B778C">{d}</text>
+          <text key={d} x={x(d)} y={H - 6} fontSize="9" textAnchor="middle" fill={PALETTE.textMuted}>{d}</text>
         ))}
-        <motion.polyline points={ideal} fill="none" stroke="#97A0AF" strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} />
-        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke="#0052CC" strokeWidth="2" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
+        <motion.polyline points={ideal} fill="none" stroke={PALETTE.textFaint} strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} />
+        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke={PALETTE.brand} strokeWidth="2" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
       </svg>
-      <div className="flex gap-3 text-[10px] text-lira-muted">
+      <div className="flex gap-3 text-3xs text-lira-muted">
         <span><span className="inline-block w-3 border-t-2 border-dashed border-gray-400 mr-1 align-middle" />Ideal</span>
         <span><span className="inline-block w-3 border-t-2 border-lira-blue mr-1 align-middle" />Remaining</span>
       </div>
@@ -47,7 +49,7 @@ export const VelocityChart: React.FC<{ velocity: Velocity; sprint: string; onPic
   <>
     <div className="flex items-baseline justify-between mb-2">
       <h3 className="text-sm font-semibold text-lira-text">Velocity (last sprints)</h3>
-      <span className="text-[11px] text-lira-muted">avg {velocity.avg} done / closed sprint</span>
+      <span className="text-2xs text-lira-muted">avg {velocity.avg} done / closed sprint</span>
     </div>
     <div className="flex items-end gap-3 h-32">
       {velocity.rows.map((r, n) => (
@@ -56,11 +58,11 @@ export const VelocityChart: React.FC<{ velocity: Velocity; sprint: string; onPic
             <GrowColumn className="w-1/2 bg-gray-300 rounded-t" delay={n * 0.08} heightPercent={(r.total / velocity.max) * 100} />
             <GrowColumn className="w-1/2 bg-green-500 rounded-t" delay={n * 0.08 + 0.1} heightPercent={(r.done / velocity.max) * 100} />
           </div>
-          <span className={`text-[10px] ${r.key === sprint ? 'font-bold text-lira-blue' : 'text-lira-muted'}`}>{sprintLabel(r.key, true)}</span>
+          <span className={`text-3xs ${r.key === sprint ? 'font-bold text-lira-blue' : 'text-lira-muted'}`}>{sprintLabel(r.key, true)}</span>
         </button>
       ))}
     </div>
-    <div className="flex gap-3 text-[10px] text-lira-muted mt-2">
+    <div className="flex gap-3 text-3xs text-lira-muted mt-2">
       <span><span className="inline-block w-2 h-2 bg-gray-300 mr-1" />Committed</span>
       <span><span className="inline-block w-2 h-2 bg-green-500 mr-1" />Done</span>
     </div>

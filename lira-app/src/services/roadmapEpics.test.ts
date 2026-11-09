@@ -103,3 +103,11 @@ describe('planner drag and drop updates the ticket', () => {
     expect(task.key).toBe('LIRA-81')
   })
 })
+
+describe('noSpaceMessage', () => {
+  it('names the missing space, or says there is none', async () => {
+    const { noSpaceMessage } = await import('./roadmapEpics');
+    expect(noSpaceMessage({ spaceKey: 'ZZZ' } as never)).toBe('Space ZZZ was not found, so epics could not be created.');
+    expect(noSpaceMessage({} as never)).toBe('This roadmap has no space, so epics could not be created.');
+  });
+});

@@ -18,24 +18,24 @@ const SCOPE_LABEL = { space: 'Space', project: 'Project', sprint: 'Sprint' };
 /** Standup hub: today's agenda from live tickets, plus scheduling a recurring call with calendar invites for the team. */
 export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, scope }) => {
   const s = useStandup(isOpen, scope, onClose);
-  const tabs: [Tab, string, React.ReactNode][] = [
-    ['agenda', 'Agenda', <ListChecks className="w-3.5 h-3.5" />],
-    ['schedule', 'Schedule & invite', <CalendarPlus className="w-3.5 h-3.5" />],
-    ['team', `Team (${s.members.length})`, <Users className="w-3.5 h-3.5" />],
+  const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
+    { id: 'agenda', label: 'Agenda', icon: <ListChecks className="w-3.5 h-3.5" /> },
+    { id: 'schedule', label: 'Schedule & invite', icon: <CalendarPlus className="w-3.5 h-3.5" /> },
+    { id: 'team', label: `Team (${s.members.length})`, icon: <Users className="w-3.5 h-3.5" /> },
   ];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={CALL_TITLE[scope.type]} size="xl">
       <div className="flex flex-col max-h-[78vh]">
         <div className="px-6 pt-4 pb-3 border-b border-lira-border flex flex-wrap items-center gap-3">
-          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-lg bg-blue-50 text-lira-blue">{SCOPE_LABEL[scope.type]}</span>
+          <span className="text-3xs font-bold uppercase tracking-wider px-2 py-1 rounded-lg bg-blue-50 text-lira-blue">{SCOPE_LABEL[scope.type]}</span>
           <h2 className="text-base font-semibold text-lira-text truncate">{scope.name}</h2>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Beta</span>
+          <span className="text-3xs font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Beta</span>
           <span className="text-xs text-lira-muted ml-auto">{s.scoped.length} tickets · {s.members.length} people</span>
         </div>
 
         <div className="px-6 flex gap-1 border-b border-lira-border">
-          {tabs.map(([id, label, icon]) => (
+          {tabs.map(({ id, label, icon }) => (
             <button
               key={id}
               onClick={() => s.setTab(id)}

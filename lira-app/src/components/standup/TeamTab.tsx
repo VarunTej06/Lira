@@ -41,7 +41,7 @@ export function TeamTab(s: StandupState) {
         <div className="flex-1"><label className={LABEL}>Email</label><input className={FIELD} value={newEmail} onChange={e => setNewEmail(e.target.value)} placeholder="name@company.com" onKeyDown={e => e.key === 'Enter' && s.addExtra()} /></div>
         <button onClick={s.addExtra} className="flex items-center gap-1 text-sm px-3 py-2 rounded-xl border border-lira-border bg-white hover:bg-gray-50 text-lira-text cursor-pointer"><Plus className="w-4 h-4" /> Add</button>
       </div>
-      <p className="text-[11px] text-lira-muted flex items-center gap-1"><UserRound className="w-3 h-3" /> Emails are stored only in this browser.</p>
+      <p className="text-2xs text-lira-muted flex items-center gap-1"><UserRound className="w-3 h-3" /> Emails are stored only in this browser.</p>
     </>
   );
 }

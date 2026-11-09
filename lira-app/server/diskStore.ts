@@ -30,9 +30,21 @@ export function sortKeys<T>(value: T): T {
   return value
 }
 
-function readJson(file: string): any | undefined {
+type JsonObject = Record<string, unknown>
+const isObject = (v: unknown): v is JsonObject => !!v && typeof v === 'object' && !Array.isArray(v)
+
+/** A space as stored on disk: only `id` and `key` are relied on, everything else is passed through untouched. */
+export interface SpaceRecord extends JsonObject { id: number; key: string; name?: string }
+/** A ticket as stored on disk: only `spaceId` is relied on here. */
+export interface IssueRecord extends JsonObject { spaceId?: number }
+/** What the dev server hands to the app: all spaces and all tickets. */
+export interface WorkspaceData extends JsonObject { spaces: SpaceRecord[]; issues: IssueRecord[]; exists?: boolean }
+
+/** The JSON object in a file, or undefined when the file is missing, unreadable or not an object. */
+function readJson(file: string): JsonObject | undefined {
   try {
-    return JSON.parse(fs.readFileSync(file, 'utf-8'))
+    const parsed: unknown = JSON.parse(fs.readFileSync(file, 'utf-8'))
+    return isObject(parsed) ? parsed : undefined
   } catch {
     return undefined
   }
@@ -63,32 +75,46 @@ function readRoadmaps(dataDir: string): unknown[] | undefined {
     return out
   }
   const legacy = readJson(path.join(dataDir, 'roadmaps.json'))
-  if (legacy && legacy.entries && Array.isArray(legacy.entries.lira_roadmaps)) return legacy.entries.lira_roadmaps
+  const legacyEntries = legacy?.entries
+  if (isObject(legacyEntries) && Array.isArray(legacyEntries.lira_roadmaps)) return legacyEntries.lira_roadmaps
   return undefined
+}
+
+type RoadmapRecord = { id?: unknown; name?: unknown; items?: unknown[]; starred?: boolean; archived?: boolean }
+type RoadmapIndexEntry = { id: string; name: string; file: string; items: number; starred?: boolean; archived?: boolean }
+
+/** The line in the index for one roadmap. */
+const indexEntry = (rm: RoadmapRecord, file: string): RoadmapIndexEntry => ({ id: String(rm.id), name: String(rm.name ?? ''), file, items: Array.isArray(rm.items) ? rm.items.length : 0, ...(rm.starred ? { starred: true } : {}), ...(rm.archived ? { archived: true } : {}) })
+
+/** Deletes the files of roadmaps that were removed. Returns true when any file was deleted. */
+function removeStaleRoadmapFiles(dir: string, keep: Set<string>): boolean {
+  let removed = false
+  try {
+    for (const f of fs.readdirSync(dir)) {
+      if (f.endsWith('.json') && !keep.has(f)) { fs.unlinkSync(path.join(dir, f)); removed = true }
+    }
+  } catch { /* nothing to clean */ }
+  return removed
 }
 
 /** Writes one JSON file per roadmap plus an index. Only changed files are touched; removed roadmaps lose their file. */
 function writeRoadmaps(dataDir: string, entries: Record<string, unknown>, now = new Date()): boolean {
   if (!Array.isArray(entries.lira_roadmaps)) return false // nothing to say about roadmaps: never delete files because a key is absent
-  const list = (Array.isArray(entries.lira_roadmaps) ? entries.lira_roadmaps : []) as { id?: unknown; name?: unknown; items?: unknown[]; starred?: boolean; archived?: boolean }[]
+  const list = entries.lira_roadmaps as RoadmapRecord[]
   const dir = roadmapsDir(dataDir)
   let changed = false
   const keep = new Set<string>(['index.json'])
   const ts = now.toISOString()
-  const index: { id: string; name: string; file: string; items: number; starred?: boolean; archived?: boolean }[] = []
+  const index: RoadmapIndexEntry[] = []
   for (const rm of list) {
     if (!rm || rm.id === undefined) continue
     const file = `${safeId(rm.id)}.json`
     keep.add(file)
-    index.push({ id: String(rm.id), name: String(rm.name ?? ''), file, items: Array.isArray(rm.items) ? rm.items.length : 0, ...(rm.starred ? { starred: true } : {}), ...(rm.archived ? { archived: true } : {}) })
+    index.push(indexEntry(rm, file))
     if (writeJsonIfChanged(path.join(dir, file), { version: 1, updatedAt: ts, roadmap: rm }, ['updatedAt'])) changed = true
   }
   if (writeJsonIfChanged(path.join(dir, 'index.json'), { version: 1, updatedAt: ts, roadmaps: index }, ['updatedAt'])) changed = true
-  try {
-    for (const f of fs.readdirSync(dir)) {
-      if (f.endsWith('.json') && !keep.has(f)) { fs.unlinkSync(path.join(dir, f)); changed = true }
-    }
-  } catch { /* nothing to clean */ }
+  if (removeStaleRoadmapFiles(dir, keep)) changed = true
   const legacy = path.join(dataDir, 'roadmaps.json')
   if (fs.existsSync(legacy)) { fs.unlinkSync(legacy); changed = true } // migrated into the folder
   return changed
@@ -104,7 +130,7 @@ export function readStore(dataDir: string): Record<string, StoreEntries> {
       continue
     }
     const parsed = readJson(storePath(dataDir, name))
-    if (parsed && typeof parsed.entries === 'object' && parsed.entries) out[name] = parsed.entries
+    if (parsed && isObject(parsed.entries)) out[name] = parsed.entries
   }
   return out
 }
@@ -151,6 +177,18 @@ export function writeJsonIfChanged(file: string, payload: Record<string, unknown
   return true
 }
 
+/** Splits tickets by space. Tickets whose space is gone are returned as orphans so nothing is lost. */
+function groupBySpace(spaces: SpaceRecord[], issues: IssueRecord[]) {
+  const bySpace = new Map<number, IssueRecord[]>(spaces.map(s => [s.id, []]))
+  const orphans: IssueRecord[] = []
+  for (const issue of issues) {
+    const list = issue.spaceId === undefined ? undefined : bySpace.get(issue.spaceId)
+    if (list) list.push(issue)
+    else orphans.push(issue)
+  }
+  return { bySpace, orphans }
+}
+
 /**
  * Tickets and spaces: data/spaces.json (manifest), data/spaces/<KEY>.json (one file per space) and the
  * consolidated data/lira-workspace.json. Every write goes through writeJsonIfChanged, so a save only
@@ -170,172 +208,124 @@ export function createSpaceStore(dataDir: string) {
     }
   }
 
-  function loadAllDataFromDisk(): any {
-    ensureDirs()
-
-    // 1. Primary: Load from spaces.json manifest and individual space files
-    if (fs.existsSync(spacesManifestFile) && fs.existsSync(spacesDir)) {
-      try {
-        const manifestRaw = fs.readFileSync(spacesManifestFile, 'utf-8')
-        const manifest = JSON.parse(manifestRaw)
-        const spaces: any[] = manifest.spaces || []
-        const allIssues: any[] = []
-
-        // Read each space's JSON file
-        for (const space of spaces) {
-          const key = safeSpaceKey(space.key, space.id)
-          const spaceFile = path.resolve(spacesDir, `${key}.json`)
-          if (fs.existsSync(spaceFile)) {
-            try {
-              const spaceRaw = fs.readFileSync(spaceFile, 'utf-8')
-              const parsed = JSON.parse(spaceRaw)
-              const issues = Array.isArray(parsed) ? parsed : (parsed.issues || [])
-              allIssues.push(...issues)
-            } catch (err) {
-              console.error(`[LocalFileDB] Error reading space file ${spaceFile}:`, err)
-            }
-          }
-        }
-
-        // Check for any orphan issues file
-        const orphanFile = path.resolve(spacesDir, '_orphans.json')
-        if (fs.existsSync(orphanFile)) {
-          try {
-            const orphanRaw = fs.readFileSync(orphanFile, 'utf-8')
-            const parsed = JSON.parse(orphanRaw)
-            const orphans = Array.isArray(parsed) ? parsed : (parsed.issues || [])
-            allIssues.push(...orphans)
-          } catch (err) {
-            console.error('[LocalFileDB] Error reading orphan issues file:', err)
-          }
-        }
-
-        return {
-          version: '2.0.0',
-          savedAt: manifest.savedAt || new Date().toISOString(),
-          filePath: 'data/spaces/*.json',
-          spaces,
-          issues: allIssues,
-        }
-      } catch (err) {
-        console.warn('[LocalFileDB] Error loading space files, checking legacy file:', err)
-      }
+  /** The tickets in one file. A file holds either a bare list or { issues: [...] }. */
+  function readIssueFile(file: string, errorLabel: string): IssueRecord[] {
+    try {
+      const parsed: unknown = JSON.parse(fs.readFileSync(file, 'utf-8'))
+      if (Array.isArray(parsed)) return parsed as IssueRecord[]
+      return isObject(parsed) && Array.isArray(parsed.issues) ? (parsed.issues as IssueRecord[]) : []
+    } catch (err) {
+      console.error(errorLabel, err)
+      return []
     }
-
-    // 2. Fallback: Load from legacy monolithic lira-workspace.json
-    if (fs.existsSync(legacyDataFile)) {
-      try {
-        const content = fs.readFileSync(legacyDataFile, 'utf-8')
-        const parsed = JSON.parse(content)
-        // Automatically migrate to space-segregated files
-        if (parsed.spaces && Array.isArray(parsed.spaces) && parsed.spaces.length > 0) {
-          saveAllDataToDisk(parsed.spaces, parsed.issues || [])
-        }
-        return parsed
-      } catch (err) {
-        console.error('[LocalFileDB] Error reading legacy data file:', err)
-      }
-    }
-
-    return { exists: false, spaces: [], issues: [] }
   }
 
-  function saveAllDataToDisk(spaces: any[], issues: any[]) {
-    ensureDirs()
-    const nowIso = new Date().toISOString()
-
-    // Map spaceId -> space
-    const spaceMap = new Map<number, any>()
-    spaces.forEach(s => spaceMap.set(s.id, s))
-
-    // Group issues by spaceId
-    const issuesBySpaceId = new Map<number, any[]>()
-    spaces.forEach(s => issuesBySpaceId.set(s.id, []))
-
-    const orphanIssues: any[] = []
-    issues.forEach(issue => {
-      if (issuesBySpaceId.has(issue.spaceId)) {
-        issuesBySpaceId.get(issue.spaceId)!.push(issue)
-      } else {
-        orphanIssues.push(issue)
+  /** The primary layout: the manifest plus one file per space (and the orphans file). */
+  function loadFromSpaceFiles(): WorkspaceData | undefined {
+    if (!fs.existsSync(spacesManifestFile) || !fs.existsSync(spacesDir)) return undefined
+    try {
+      const manifest = JSON.parse(fs.readFileSync(spacesManifestFile, 'utf-8')) as JsonObject
+      const spaces = (Array.isArray(manifest.spaces) ? manifest.spaces : []) as SpaceRecord[]
+      const issues: IssueRecord[] = []
+      for (const space of spaces) {
+        const spaceFile = path.resolve(spacesDir, `${safeSpaceKey(space.key, space.id)}.json`)
+        if (fs.existsSync(spaceFile)) issues.push(...readIssueFile(spaceFile, `[LocalFileDB] Error reading space file ${spaceFile}:`))
       }
-    })
+      const orphanFile = path.resolve(spacesDir, '_orphans.json')
+      if (fs.existsSync(orphanFile)) issues.push(...readIssueFile(orphanFile, '[LocalFileDB] Error reading orphan issues file:'))
+      return {
+        version: '2.0.0',
+        savedAt: typeof manifest.savedAt === 'string' ? manifest.savedAt : new Date().toISOString(),
+        filePath: 'data/spaces/*.json',
+        spaces,
+        issues,
+      }
+    } catch (err) {
+      console.warn('[LocalFileDB] Error loading space files, checking legacy file:', err)
+      return undefined
+    }
+  }
 
-    const activeFiles = new Set<string>()
-    const manifestSpaces: any[] = []
+  /** The old single file. It is read once and migrated into the per-space layout. */
+  function loadFromLegacyFile(): WorkspaceData | undefined {
+    if (!fs.existsSync(legacyDataFile)) return undefined
+    try {
+      const parsed = JSON.parse(fs.readFileSync(legacyDataFile, 'utf-8')) as WorkspaceData
+      if (Array.isArray(parsed.spaces) && parsed.spaces.length > 0) saveAllDataToDisk(parsed.spaces, parsed.issues || [])
+      return parsed
+    } catch (err) {
+      console.error('[LocalFileDB] Error reading legacy data file:', err)
+      return undefined
+    }
+  }
 
-    // 1. Write each space's dedicated JSON file
-    for (const space of spaces) {
-      const key = safeSpaceKey(space.key, space.id)
-      const fileName = `${key}.json`
-      const filePath = path.resolve(spacesDir, fileName)
+  function loadAllDataFromDisk(): WorkspaceData {
+    ensureDirs()
+    return loadFromSpaceFiles() ?? loadFromLegacyFile() ?? { exists: false, spaces: [], issues: [] }
+  }
+
+  /** Writes one file per space and returns the manifest entries. `activeFiles` collects the file names that must stay. */
+  function writeSpaceFiles(spaces: SpaceRecord[], bySpace: Map<number, IssueRecord[]>, nowIso: string, activeFiles: Set<string>) {
+    return spaces.map(space => {
+      const fileName = `${safeSpaceKey(space.key, space.id)}.json`
       activeFiles.add(fileName)
-
-      const spaceIssues = issuesBySpaceId.get(space.id) || []
-      const spacePayload = {
+      const spaceIssues = bySpace.get(space.id) || []
+      writeJsonIfChanged(path.resolve(spacesDir, fileName), {
         version: '2.0.0',
         spaceId: space.id,
         spaceKey: space.key,
         spaceName: space.name,
         updatedAt: nowIso,
         issueCount: spaceIssues.length,
-        space: space,
+        space,
         issues: spaceIssues,
+      }, ['updatedAt'])
+      return { ...space, issueCount: spaceIssues.length, file: `spaces/${fileName}` }
+    })
+  }
+
+  /** Deletes the files of spaces that no longer exist. */
+  function removeStaleSpaceFiles(activeFiles: Set<string>) {
+    try {
+      for (const file of fs.readdirSync(spacesDir)) {
+        if (file.endsWith('.json') && !activeFiles.has(file)) fs.unlinkSync(path.resolve(spacesDir, file))
       }
-
-      writeJsonIfChanged(filePath, spacePayload, ['updatedAt'])
-
-      manifestSpaces.push({
-        ...space,
-        issueCount: spaceIssues.length,
-        file: `spaces/${fileName}`,
-      })
+    } catch (err) {
+      console.warn('[LocalFileDB] Stale file cleanup warning:', err)
     }
+  }
 
-    // 2. Write orphan issues if any exist
-    if (orphanIssues.length > 0) {
-      const orphanFile = path.resolve(spacesDir, '_orphans.json')
+  function saveAllDataToDisk(spaces: SpaceRecord[], issues: IssueRecord[]) {
+    ensureDirs()
+    const nowIso = new Date().toISOString()
+    const { bySpace, orphans } = groupBySpace(spaces, issues)
+    const activeFiles = new Set<string>()
+
+    const manifestSpaces = writeSpaceFiles(spaces, bySpace, nowIso, activeFiles)
+
+    if (orphans.length > 0) {
       activeFiles.add('_orphans.json')
-      writeJsonIfChanged(orphanFile, {
+      writeJsonIfChanged(path.resolve(spacesDir, '_orphans.json'), {
         version: '2.0.0',
         updatedAt: nowIso,
-        count: orphanIssues.length,
-        issues: orphanIssues,
+        count: orphans.length,
+        issues: orphans,
       }, ['updatedAt'])
     }
 
-    // 3. Write spaces.json manifest
-    const manifestPayload = {
+    writeJsonIfChanged(spacesManifestFile, {
       version: '2.0.0',
       savedAt: nowIso,
       spaceCount: spaces.length,
       totalIssueCount: issues.length,
       spaces: manifestSpaces,
-    }
-    writeJsonIfChanged(spacesManifestFile, manifestPayload, ['savedAt'])
+    }, ['savedAt'])
 
-    // 4. Safely clean up removed space files
-    try {
-      const existingFiles = fs.readdirSync(spacesDir)
-      for (const file of existingFiles) {
-        if (file.endsWith('.json') && !activeFiles.has(file)) {
-          fs.unlinkSync(path.resolve(spacesDir, file))
-        }
-      }
-    } catch (err) {
-      console.warn('[LocalFileDB] Stale file cleanup warning:', err)
-    }
+    removeStaleSpaceFiles(activeFiles)
 
-    // 5. Also keep master consolidated lira-workspace.json in sync
+    // keep the master consolidated lira-workspace.json in step
     try {
-      const consolidatedPayload = {
-        version: '2.0.0',
-        savedAt: nowIso,
-        filePath: legacyDataFile,
-        spaces,
-        issues,
-      }
-      writeJsonIfChanged(legacyDataFile, consolidatedPayload, ['savedAt'])
+      writeJsonIfChanged(legacyDataFile, { version: '2.0.0', savedAt: nowIso, filePath: legacyDataFile, spaces, issues }, ['savedAt'])
     } catch (err) {
       console.warn('[LocalFileDB] Error updating master lira-workspace.json:', err)
     }
@@ -344,11 +334,7 @@ export function createSpaceStore(dataDir: string) {
       success: true,
       savedAt: nowIso,
       filePath: 'data/spaces/*.json',
-      counts: {
-        spaces: spaces.length,
-        issues: issues.length,
-        spaceFiles: manifestSpaces.length,
-      },
+      counts: { spaces: spaces.length, issues: issues.length, spaceFiles: manifestSpaces.length },
     }
   }
 

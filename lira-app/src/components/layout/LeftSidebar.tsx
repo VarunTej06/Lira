@@ -13,6 +13,7 @@ import { SprintsSection } from './sidebar/SprintsSection';
 import { HiddenSpacesSection } from './sidebar/HiddenSpacesSection';
 import { ArchivedSection } from './sidebar/ArchivedSection';
 import { SidebarFooter } from './sidebar/SidebarFooter';
+import { useResetWhen } from '../../hooks/useResetWhen';
 
 /** The floating left panel: navigation, spaces, projects, sprints (in the order set in "Customise sidebar"). */
 export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
@@ -20,7 +21,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
   const phone = useMediaQuery('(max-width: 1023px)');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const location = useLocation();
-  useEffect(() => { setDrawerOpen(false); }, [location.pathname, location.search]); // going somewhere closes it
+  useResetWhen([location.pathname, location.search], () => { setDrawerOpen(false); }); // going somewhere closes it
   useEffect(() => {
     if (!phone || !drawerOpen) return;
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setDrawerOpen(false); };

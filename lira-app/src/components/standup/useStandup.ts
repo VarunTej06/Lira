@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { notifySaved } from '../common/SavedToast';
+import { useMemo, useState } from 'react';
+import { notifySaved } from '../common/savedToastStore';
 import { useAllIssues } from '../../hooks/useIssues';
 import type { Issue } from '../../types/issue';
 import {
@@ -9,6 +9,8 @@ import {
   saveDirectory, saveNotes, saveStandups, teamFromIssues, teamsUrl, defaultName, startEnd,
   loadScopeExtras, addScopeExtra, removeScopeExtra,
 } from '../../utils/standupUtils';
+import { useResetWhen } from '../../hooks/useResetWhen';
+import { NO_ISSUES } from '../../utils/emptyLists';
 
 export type Tab = 'agenda' | 'schedule' | 'team';
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,7 +26,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? 's' : ''}`;
 
 /** All the state and actions of the standup window: the agenda, the saved calls, the team and the invites. */
 export function useStandup(isOpen: boolean, scope: StandupScope, onClose: () => void) {
-  const everything = useAllIssues() || [];
+  const everything = useAllIssues() ?? NO_ISSUES;
   const scoped = useMemo(() => issuesForScope(everything, scope), [everything, scope]);
   const agenda = useMemo(() => buildAgenda(scoped, everything), [scoped, everything]);
 
@@ -50,7 +52,7 @@ export function useStandup(isOpen: boolean, scope: StandupScope, onClose: () => 
   const [newEmail, setNewEmail] = useState('');
 
   // Load what was saved each time the window opens
-  useEffect(() => {
+  useResetWhen([isOpen, scope.id, scope.name], () => {
     if (!isOpen) return;
     setTab('agenda');
     setDir(loadDirectory());
@@ -59,7 +61,7 @@ export function useStandup(isOpen: boolean, scope: StandupScope, onClose: () => 
     setNotes(loadNotes(scope.id, todayStr()));
     setTitle(`${scope.name} · ${CALL_EVENT[scope.type]}`);
     setMsg(null);
-  }, [isOpen, scope.id, scope.name]);
+  });
 
   const members: TeamMember[] = useMemo(() => {
     const fromTickets = teamFromIssues(scoped, dir);
@@ -69,14 +71,14 @@ export function useStandup(isOpen: boolean, scope: StandupScope, onClose: () => 
   }, [scoped, dir, extras]);
 
   // Everyone is invited by default; the person can untick people
-  useEffect(() => {
+  useResetWhen([members], () => {
     setSelected(prev => {
       const next = new Set(prev);
       members.forEach(m => { if (!prev.has(m.key) && !(prev.size > 0 && prev.has('__init'))) next.add(m.key); });
       next.add('__init');
       return next;
     });
-  }, [members]);
+  });
 
   const invited = members.filter(m => selected.has(m.key));
   const invitedEmails = invited.map(m => m.email).filter(e => EMAIL_RE.test(e));

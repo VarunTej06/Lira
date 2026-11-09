@@ -7,6 +7,9 @@ import { Send, Pencil } from 'lucide-react';
 import { RichTextEditor } from '../common/richtext/RichTextEditor';
 import { CopyButton } from '../common/CopyButton';
 import { descriptionToText } from '../../utils/richText';
+import { isOwnComment, hasCommentContent } from './commentUtils';
+import { currentUser } from '../../utils/currentUser';
+import { PALETTE } from '../../theme/palette';
 
 interface IssueActivityFeedProps {
   comments: Comment[];
@@ -15,25 +18,6 @@ interface IssueActivityFeedProps {
   /** Changes a comment. Only the person who wrote it can do this. */
   onEditComment?: (id: string, content: string, attachments: Attachment[]) => void;
 }
-
-/** The person using Lira, as set in their profile. */
-function currentUser() {
-  try {
-    return {
-      name: localStorage.getItem('lira_user_name') || 'Varuntej Yadla',
-      initials: localStorage.getItem('lira_user_initials') || 'VY',
-    };
-  } catch { return { name: 'Varuntej Yadla', initials: 'VY' }; }
-}
-
-/** A comment can be edited by the person who wrote it. */
-export function isOwnComment(c: Comment): boolean {
-  const me = currentUser();
-  return [c.author, c.authorInitials].some(v => !!v && (v === me.initials || v === me.name));
-}
-
-/** A comment has something to post when it has text or a file. */
-export const hasCommentContent = (html: string, attachments: Attachment[]) => !!descriptionToText(html).trim() || attachments.length > 0;
 
 type ViewTab = 'all' | 'comments' | 'history';
 
@@ -95,7 +79,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
 
       {/* Comment box */}
       <div className="flex gap-3">
-        <Avatar initials={currentUser().initials} size="sm" color="#0052CC" className="flex-shrink-0 mt-1" />
+        <Avatar initials={currentUser().initials} size="sm" color={PALETTE.brand} className="flex-shrink-0 mt-1" />
         <div className="flex-1 min-w-0">
           {!focused ? (
             <>
@@ -134,8 +118,8 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
                 onSubmit={handleSubmit}
               />
               <div className="flex items-center justify-between pt-2">
-                <span className="text-[10px] text-lira-muted">
-                  Paste a screenshot anywhere in the text, or use the paperclip. <kbd className="px-1 py-0.5 bg-gray-100 rounded text-[10px] font-mono">Ctrl+Enter</kbd> to post
+                <span className="text-3xs text-lira-muted">
+                  Paste a screenshot anywhere in the text, or use the paperclip. <kbd className="px-1 py-0.5 bg-gray-100 rounded text-3xs font-mono">Ctrl+Enter</kbd> to post
                 </span>
                 <div className="flex gap-2">
                   <button onClick={reset} className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded cursor-pointer">Cancel</button>

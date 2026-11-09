@@ -5,7 +5,7 @@ function formatInline(str: string): ReactNode {
   return str.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
     if (part.startsWith('`') && part.endsWith('`')) {
-      return <code key={i} className="px-1 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200/60 font-mono text-[10px]">{part.slice(1, -1)}</code>;
+      return <code key={i} className="px-1 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200/60 font-mono text-3xs">{part.slice(1, -1)}</code>;
     }
     return part;
   });
@@ -19,7 +19,7 @@ function Table({ rows }: { rows: string[][] }) {
   const body = rest.filter(r => !r.every(c => /^:?-+:?$/.test(c))); // drop the |---|---| line
   return (
     <div className="overflow-x-auto my-2 rounded-xl border border-gray-200 bg-white">
-      <table className="min-w-full text-[11px] divide-y divide-gray-200">
+      <table className="min-w-full text-2xs divide-y divide-gray-200">
         <thead className="bg-gray-50/80 font-bold text-gray-700">
           <tr>{headers.map((h, i) => <th key={i} className="px-2 py-1 text-left font-semibold">{formatInline(h)}</th>)}</tr>
         </thead>

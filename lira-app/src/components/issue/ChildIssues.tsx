@@ -1,13 +1,14 @@
 import { issueLink } from '../../utils/links';
 import { STATUS_META } from '../../utils/status';
 import { TypeIcon, PriorityIcon } from '../common/Icons';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import type { Issue, IssueType } from '../../types/issue';
 import { ISSUE_TYPE_CONFIG } from '../../types/issue';
 import { PRIORITY_CONFIG } from '../../utils/priorityUtils';
 import { Avatar } from '../common/Avatar';
 import { updateIssue } from '../../hooks/useIssues';
+import { useResetWhen } from '../../hooks/useResetWhen';
 
 interface ChildIssuesProps {
   parentIssue: Issue;
@@ -38,9 +39,9 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({
   const [selectedChildType, setSelectedChildType] = useState<IssueType>(availableTypes[0]);
 
   // Keep child type in sync with parent type
-  useEffect(() => {
+  useResetWhen([parentIssue.type], () => {
     setSelectedChildType(getAvailableChildTypes(parentIssue.type)[0]);
-  }, [parentIssue.type]);
+  });
 
   const handleCreate = async () => {
     if (!addingTitle.trim()) return;
@@ -64,7 +65,7 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({
       {childIssues.length > 0 && (
         <div className="border border-lira-border rounded-lg overflow-hidden">
           {/* Table header */}
-          <div className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 px-3 py-1.5 bg-gray-50 border-b border-lira-border text-[11px] font-semibold text-lira-muted uppercase tracking-wide">
+          <div className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 px-3 py-1.5 bg-gray-50 border-b border-lira-border text-2xs font-semibold text-lira-muted uppercase tracking-wide">
             <span>Work</span>
             <span className="w-16 text-center">Priority</span>
             <span className="w-8 text-center">User</span>

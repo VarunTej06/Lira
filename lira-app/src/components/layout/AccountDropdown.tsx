@@ -1,5 +1,5 @@
-import { alertDialog } from '../common/dialogs';
-import { notifySaved } from '../common/SavedToast';
+import { alertDialog } from '../common/dialogStore';
+import { notifySaved } from '../common/savedToastStore';
 import React, { useState, useRef, useEffect } from 'react';
 import {
   User, Settings, Users, LogOut,
@@ -7,14 +7,16 @@ import {
 import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
 import { useClickOutside } from '../../hooks/useClickOutside';
+import { PALETTE } from '../../theme/palette';
+import { appStorage } from '../../utils/appStorage';
 
 export const AccountDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const [userName, setUserName] = useState(() => localStorage.getItem('lira_user_name') || 'Varuntej Yadla');
-  const [userEmail, setUserEmail] = useState(() => localStorage.getItem('lira_user_email') || 'yvaruntej0612@gmail.com');
-  const [userInitials, setUserInitials] = useState(() => localStorage.getItem('lira_user_initials') || 'VY');
+  const [userName, setUserName] = useState(() => appStorage.get('lira_user_name') || 'Varuntej Yadla');
+  const [userEmail, setUserEmail] = useState(() => appStorage.get('lira_user_email') || 'yvaruntej0612@gmail.com');
+  const [userInitials, setUserInitials] = useState(() => appStorage.get('lira_user_initials') || 'VY');
 
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
@@ -28,18 +30,18 @@ export const AccountDropdown: React.FC = () => {
 
 
   const saveProfile = () => {
-    const same = userName === (localStorage.getItem('lira_user_name') || 'Varuntej Yadla') && userEmail === (localStorage.getItem('lira_user_email') || 'yvaruntej0612@gmail.com') && userInitials === (localStorage.getItem('lira_user_initials') || 'VY');
+    const same = userName === (appStorage.get('lira_user_name') || 'Varuntej Yadla') && userEmail === (appStorage.get('lira_user_email') || 'yvaruntej0612@gmail.com') && userInitials === (appStorage.get('lira_user_initials') || 'VY');
     if (same) { setShowProfileModal(false); return; }
     const profile = {
       name: userName,
       email: userEmail,
       initials: userInitials,
-      role: localStorage.getItem('lira_user_role') || 'MLOps & Platform Engineer',
+      role: appStorage.get('lira_user_role') || 'MLOps & Platform Engineer',
     };
-    localStorage.setItem('lira_user_profile', JSON.stringify(profile));
-    localStorage.setItem('lira_user_name', userName);
-    localStorage.setItem('lira_user_email', userEmail);
-    localStorage.setItem('lira_user_initials', userInitials);
+    appStorage.set('lira_user_profile', JSON.stringify(profile));
+    appStorage.set('lira_user_name', userName);
+    appStorage.set('lira_user_email', userEmail);
+    appStorage.set('lira_user_initials', userInitials);
     notifySaved('Profile saved');
     setShowProfileModal(false);
   };
@@ -52,7 +54,7 @@ export const AccountDropdown: React.FC = () => {
         className="flex items-center justify-center p-0.5 rounded-full hover:ring-2 hover:ring-white/60 transition-all cursor-pointer ml-1"
         title="Your account"
       >
-        <Avatar initials={userInitials} size="sm" color="#00875A" />
+        <Avatar initials={userInitials} size="sm" color={PALETTE.successDeep} />
       </button>
 
       {/* Popover matching Account Opions screen.png */}
@@ -118,7 +120,7 @@ export const AccountDropdown: React.FC = () => {
             <div>
               <h4 className="font-bold text-lira-text text-base">{userName}</h4>
               <p className="text-xs text-lira-muted">{userEmail}</p>
-              <span className="inline-block mt-1 text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+              <span className="inline-block mt-1 text-3xs font-semibold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
                 Local Workspace Owner
               </span>
             </div>

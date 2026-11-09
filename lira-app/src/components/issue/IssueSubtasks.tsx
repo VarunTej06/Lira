@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Trash2, Check } from 'lucide-react';
 import type { Subtask } from '../../types/issue';
 import { v4 as uuidv4 } from 'uuid';
+import { PALETTE } from '../../theme/palette';
 
 interface IssueSubtasksProps {
   subtasks: Subtask[];
@@ -60,11 +61,11 @@ export const IssueSubtasks: React.FC<IssueSubtasksProps> = ({ subtasks, onUpdate
               className="h-full rounded-full transition-all duration-500"
               style={{
                 width: `${progress}%`,
-                backgroundColor: progress === 100 ? '#36B37E' : '#0052CC',
+                backgroundColor: progress === 100 ? PALETTE.success : PALETTE.brand,
               }}
             />
           </div>
-          <p className="text-[10px] text-lira-muted">{Math.round(progress)}% complete</p>
+          <p className="text-3xs text-lira-muted">{Math.round(progress)}% complete</p>
         </div>
       )}
 

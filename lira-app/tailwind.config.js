@@ -84,6 +84,14 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
+      // The small end of the type scale (pixel sizes the default scale does not have)
+      fontSize: {
+        '4xs': '9px',
+        '3xs': '10px',
+        '3xs-plus': '10.5px',
+        '2xs': '11px',
+        ui: '13px',
+      },
       borderRadius: {
         // Softer corners app-wide: bump the whole scale one notch
         DEFAULT: '0.5rem',

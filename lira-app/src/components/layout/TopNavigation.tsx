@@ -21,6 +21,7 @@ import { FiltersDropdown } from './topnav/FiltersDropdown';
 import { OmniSearch } from './topnav/OmniSearch';
 import { NotificationsBell } from './topnav/NotificationsBell';
 import { SystemSettingsModal } from './topnav/SystemSettingsModal';
+import { appStorage } from '../../utils/appStorage';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -172,17 +173,17 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         {syncState.status === 'saving' ? (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-            <span className="text-amber-300 text-[11px] font-medium">Saving to PC…</span>
+            <span className="text-amber-300 text-2xs font-medium">Saving to PC…</span>
           </>
         ) : syncState.status === 'error' ? (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
-            <span className="text-red-300 text-[11px] font-medium">Save error</span>
+            <span className="text-red-300 text-2xs font-medium">Save error</span>
           </>
         ) : (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span className="text-emerald-300 text-[11px] font-medium">PC Saved</span>
+            <span className="text-emerald-300 text-2xs font-medium">PC Saved</span>
           </>
         )}
       </button>
@@ -253,7 +254,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         onClose={() => setShowSpacesModal(false)}
         spaces={spaces}
         onSelectSpace={(id) => {
-          localStorage.setItem('lira_active_space_id', String(id));
+          appStorage.set('lira_active_space_id', String(id));
           window.location.reload();
         }}
       />

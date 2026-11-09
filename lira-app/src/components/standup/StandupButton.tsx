@@ -29,7 +29,7 @@ export const StandupButton: React.FC<StandupButtonProps> = ({ scope, className =
       >
         <Video className={prominent ? 'w-4 h-4' : 'w-3.5 h-3.5 text-lira-blue'} />
         {!compact && (prominent ? `Schedule ${CALL_SHORT[scope.type].toLowerCase()}` : CALL_SHORT[scope.type])}
-        <span className={`text-[9px] font-bold uppercase px-1 py-px rounded ${prominent ? 'bg-white/25 text-white' : 'bg-purple-100 text-purple-700'}`}>Beta</span>
+        <span className={`text-4xs font-bold uppercase px-1 py-px rounded ${prominent ? 'bg-white/25 text-white' : 'bg-purple-100 text-purple-700'}`}>Beta</span>
       </button>
       {open && <StandupModal isOpen={open} onClose={() => setOpen(false)} scope={scope} />}
     </>

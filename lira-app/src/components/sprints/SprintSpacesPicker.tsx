@@ -29,7 +29,7 @@ export const SprintSpacesPicker: React.FC<SprintSpacesPickerProps> = ({ spaces, 
           ))}
         </div>
       )}
-      <p className="text-[11px] text-lira-muted">
+      <p className="text-2xs text-lira-muted">
         {all ? 'Every space can add tickets to this sprint.' : value.length === 0 ? '' : `${value.length} of ${spaces.length} spaces. The others stay out until you add them.`}
       </p>
     </fieldset>

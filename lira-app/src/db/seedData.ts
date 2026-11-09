@@ -2,6 +2,7 @@ import { db } from './db';
 import type { Space } from '../types/space';
 import type { Issue } from '../types/issue';
 import { v4 as uuidv4 } from 'uuid';
+import { PALETTE } from '../theme/palette';
 
 const now = new Date();
 const daysAgo = (n: number) => new Date(now.getTime() - n * 24 * 60 * 60 * 1000);
@@ -43,7 +44,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
       name: 'General Tasks',
       key: 'GEN',
       icon: '📋',
-      color: '#6554C0',
+      color: PALETTE.purple,
       description: 'General day-to-day tasks and miscellaneous work items',
       createdAt: daysAgo(60),
       updatedAt: daysAgo(1),
@@ -52,7 +53,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
       name: 'Creator Hub',
       key: 'CRE',
       icon: '✨',
-      color: '#00B8D9',
+      color: PALETTE.info,
       description: 'Content creation, writing, and creative projects',
       createdAt: daysAgo(45),
       updatedAt: daysAgo(3),
@@ -61,7 +62,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
       name: 'Certifications',
       key: 'CERT',
       icon: '🏆',
-      color: '#0052CC',
+      color: PALETTE.brand,
       description: 'Technical certification study plans and exam preparation',
       createdAt: daysAgo(30),
       updatedAt: now,
@@ -70,7 +71,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
       name: 'Courses',
       key: 'CRS',
       icon: '📚',
-      color: '#36B37E',
+      color: PALETTE.success,
       description: 'Online course tracking and learning milestones',
       createdAt: daysAgo(20),
       updatedAt: daysAgo(2),
@@ -79,7 +80,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
       name: 'ATMOS - Weather App',
       key: 'ATMOS',
       icon: '🌤️',
-      color: '#FF5630',
+      color: PALETTE.danger,
       description: 'Side project: Full-stack weather application',
       createdAt: daysAgo(15),
       updatedAt: daysAgo(5),
@@ -88,7 +89,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
       name: 'Lira',
       key: 'LIRA',
       icon: '🎯',
-      color: '#0052CC',
+      color: PALETTE.brand,
       description: 'Lira product roadmap, feature development, and issue tracking',
       createdAt: daysAgo(10),
       updatedAt: now,
@@ -660,7 +661,7 @@ async function ensureLiraSpace(): Promise<void> {
       name: 'Lira',
       key: 'LIRA',
       icon: '🎯',
-      color: '#0052CC',
+      color: PALETTE.brand,
       description: 'Lira product roadmap, feature development, and issue tracking',
       createdAt: daysAgo(10),
       updatedAt: now,

@@ -88,8 +88,8 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
               <span className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${t.tone}`}>{t.icon}</span>
               <div className="min-w-0">
                 <div className="text-2xl font-semibold text-lira-text leading-none"><AnimatedValue value={t.value} /></div>
-                <div className="text-[11px] text-lira-muted mt-1">{t.label}</div>
-                <div className="text-[10px] text-lira-muted truncate">{t.sub}</div>
+                <div className="text-2xs text-lira-muted mt-1">{t.label}</div>
+                <div className="text-3xs text-lira-muted truncate">{t.sub}</div>
               </div>
             </div>
           ))}
@@ -99,7 +99,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
         <section className="bg-white border border-lira-border rounded-2xl p-4">
           <div className="flex items-baseline justify-between mb-3">
             <h2 className="text-sm font-semibold text-lira-text">Velocity — last sprints</h2>
-            <div className="flex gap-3 text-[10px] text-lira-muted">
+            <div className="flex gap-3 text-3xs text-lira-muted">
               <span><span className="inline-block w-2 h-2 bg-gray-300 mr-1 rounded-sm" />Committed</span>
               <span><span className="inline-block w-2 h-2 bg-green-500 mr-1 rounded-sm" />Done</span>
             </div>
@@ -112,7 +112,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                   <GrowColumn className="w-1/3 bg-gray-300 rounded-t-md" delay={n * 0.08} heightPercent={(r.stats.total / maxTotal) * 100} />
                   <GrowColumn className="w-1/3 bg-green-500 rounded-t-md" delay={n * 0.08 + 0.1} heightPercent={(r.stats.done / maxTotal) * 100} />
                 </div>
-                <span className={`text-[10px] ${r.key === cur ? 'font-bold text-lira-blue' : 'text-lira-muted'}`}>{sprintLabel(r.key, true)}</span>
+                <span className={`text-3xs ${r.key === cur ? 'font-bold text-lira-blue' : 'text-lira-muted'}`}>{sprintLabel(r.key, true)}</span>
               </button>
             ))}
           </div>
@@ -138,7 +138,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                   <tr key={r.key} onClick={() => onOpenSprint(r.key)} {...sprintLink(r.key)} className="hover:bg-gray-50 cursor-pointer transition-colors group">
                     <td className="px-3 py-2.5">
                       <div className="font-semibold text-lira-text whitespace-nowrap">{sprintName(r.key)}</div>
-                      {r.goal && <div className="text-[10px] text-lira-muted truncate max-w-[200px]"><Target className="inline w-3 h-3 mr-1 -mt-0.5" />{r.goal}</div>}
+                      {r.goal && <div className="text-3xs text-lira-muted truncate max-w-[200px]"><Target className="inline w-3 h-3 mr-1 -mt-0.5" />{r.goal}</div>}
                     </td>
                     <td className="px-3 py-2.5"><PhaseBadge sprint={r.key} /></td>
                     <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap">{fmt(sprintStart(r.key))} – {fmt(sprintEnd(r.key))} <span>({sprintKindLabel(r.key)}, {sprintDays(r.key)}d)</span></td>

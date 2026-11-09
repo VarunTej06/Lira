@@ -1,9 +1,11 @@
-import { notifySaved } from '../common/SavedToast';
+import { notifySaved } from '../common/savedToastStore';
 import { Bot, HardDrive, Zap, Brain } from 'lucide-react';
 import { TypeIcon } from '../common/Icons';
 import React, { useState } from 'react';
 import { Modal } from '../common/Modal';
 import type { Space } from '../../types/space';
+import { PALETTE } from '../../theme/palette';
+import { appStorage } from '../../utils/appStorage';
 
 // ─── 1. General Settings Modal ────────────────────────────────────────────────
 export const GeneralSettingsModal: React.FC<{
@@ -13,9 +15,9 @@ export const GeneralSettingsModal: React.FC<{
   const [language, setLanguage] = useState('en-US');
   const [timeZone, setTimeZone] = useState('Asia/Kolkata');
   const handleSave = () => {
-    localStorage.setItem('lira_locale_prefs', JSON.stringify({ language, timeZone }));
-    localStorage.setItem('lira_pref_lang', language);
-    localStorage.setItem('lira_pref_tz', timeZone);
+    appStorage.set('lira_locale_prefs', JSON.stringify({ language, timeZone }));
+    appStorage.set('lira_pref_lang', language);
+    appStorage.set('lira_pref_tz', timeZone);
     notifySaved('General settings saved');
     onClose();
   };
@@ -81,8 +83,8 @@ export const NotificationSettingsModal: React.FC<{
   const [mentionsOnly, setMentionsOnly] = useState(false);
   const handleSave = () => {
     const prefs = { inApp, sounds, mentionsOnly };
-    localStorage.setItem('lira_notification_prefs', JSON.stringify(prefs));
-    localStorage.setItem('lira_notif_config', JSON.stringify(prefs));
+    appStorage.set('lira_notification_prefs', JSON.stringify(prefs));
+    appStorage.set('lira_notif_config', JSON.stringify(prefs));
     notifySaved('Notification settings saved');
     onClose();
   };
@@ -148,7 +150,7 @@ export const ManageSpacesModal: React.FC<{
               <div className="flex items-center gap-3">
                 <div
                   className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-2xs"
-                  style={{ backgroundColor: (s.color || '#0052CC') + '22', color: s.color || '#0052CC' }}
+                  style={{ backgroundColor: (s.color || PALETTE.brand) + '22', color: s.color || PALETTE.brand }}
                 >
                   {s.icon || '📁'}
                 </div>
@@ -240,7 +242,7 @@ export const MarketplaceModal: React.FC<{
                   <p className="text-xs text-lira-muted mt-0.5">{app.desc}</p>
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full whitespace-nowrap">
+              <span className="text-3xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full whitespace-nowrap">
                 {app.status}
               </span>
             </div>
@@ -287,7 +289,7 @@ export const UserManagementModal: React.FC<{
                   <p className="text-xs text-lira-muted">{u.email} · <span className="font-medium text-lira-text">{u.role}</span></p>
                 </div>
               </div>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+              <span className="text-2xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
                 {u.status}
               </span>
             </div>

@@ -3,9 +3,8 @@ import { createPortal } from 'react-dom';
 import { ChevronDown, Link2 } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import { updateIssue } from '../../hooks/useIssues';
+import { parentFields } from './parentFields';
 
-/** The parent a ticket could be moved to: the parent's id, the epic it belongs to, and its name. */
-export const parentFields = (p: Issue) => ({ parentId: p.id, epicId: p.type === 'epic' ? p.id : (p.epicId || undefined) });
 
 interface Props {
   issue: Issue;
@@ -71,9 +70,9 @@ export function ParentPill({ issue, parent, eligibleParents, onOpen }: Props) {
           onClick={e => e.stopPropagation()}
           className="bg-white border border-lira-border rounded-xl shadow-2xl py-1 max-h-60 overflow-y-auto animate-scale-in"
         >
-          <div className="px-3 py-1.5 text-[10px] font-semibold text-lira-muted uppercase tracking-wider border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+          <div className="px-3 py-1.5 text-3xs font-semibold text-lira-muted uppercase tracking-wider border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
             <span>Linked Parent</span>
-            <span className="font-mono text-[9px] bg-gray-200/80 px-1.5 py-0.5 rounded text-lira-text font-semibold">{parent.key}</span>
+            <span className="font-mono text-4xs bg-gray-200/80 px-1.5 py-0.5 rounded text-lira-text font-semibold">{parent.key}</span>
           </div>
 
           <button type="button" onClick={() => { setOpen(false); onOpen(parent); }} className="w-full text-left px-3 py-2 text-xs text-lira-blue hover:bg-blue-50 font-medium flex items-center gap-2 border-b border-gray-100 transition-colors">
@@ -83,7 +82,7 @@ export function ParentPill({ issue, parent, eligibleParents, onOpen }: Props) {
 
           {eligibleParents.length > 0 && (
             <>
-              <div className="px-3 pt-2 pb-1 text-[10px] text-lira-muted font-medium bg-gray-50/80">Change parent to:</div>
+              <div className="px-3 pt-2 pb-1 text-3xs text-lira-muted font-medium bg-gray-50/80">Change parent to:</div>
               {eligibleParents.map(p => (
                 <button
                   key={p.id}
@@ -91,7 +90,7 @@ export function ParentPill({ issue, parent, eligibleParents, onOpen }: Props) {
                   onClick={() => p.id && change({ ...parentFields(p), epicLink: p.title })}
                   className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 truncate transition-colors ${p.id === parent.id ? 'bg-blue-50 text-lira-blue font-semibold' : 'text-lira-text'}`}
                 >
-                  <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{p.key}</span>
+                  <span className="text-3xs font-mono text-lira-muted flex-shrink-0">{p.key}</span>
                   <span className="truncate">{p.title}</span>
                 </button>
               ))}

@@ -10,6 +10,7 @@ import { DEFAULT_FILTERS } from '../../utils/dashboards/types';
 import type { DataCtx } from '../../utils/dashboards/metrics';
 import { cleanup, click, mount, q, qa, settle, typeInto, byText } from '../../test/render';
 import { makeIssue, makeSpace } from '../../test/factories';
+import { useEffect } from 'react';
 
 const NOW = new Date();
 const day = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
@@ -135,8 +136,12 @@ describe('Dashboard grid', () => {
 });
 
 const home = (initial = '/dashboards') => {
-  let where = '';
-  const Spy = () => { where = useLocation().pathname + useLocation().search; return null; };
+  const seen = { where: '' };
+  const Spy = () => {
+    const loc = useLocation();
+    useEffect(() => { seen.where = loc.pathname + loc.search; });
+    return null;
+  };
   mount(
     <MemoryRouter initialEntries={[initial]}>
       <Spy />
@@ -147,7 +152,7 @@ const home = (initial = '/dashboards') => {
       </Routes>
     </MemoryRouter>,
   );
-  return () => where;
+  return () => seen.where;
 };
 
 describe('Dashboards page', () => {

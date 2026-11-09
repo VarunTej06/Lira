@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Dashboard, DashboardFilters, ScenarioId } from './types';
 import { DEFAULT_FILTERS } from './types';
 import { newId, widgetFromEntry } from './catalog';
+import { appStorage } from '../appStorage';
 
 /**
  * Saved dashboards. They live in localStorage under `lira_dashboards` and are mirrored to data/dashboards.json by the
@@ -31,7 +32,7 @@ export function normalizeDashboard(raw: Partial<Dashboard>): Dashboard {
 
 export function readDashboards(): Dashboard[] {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = appStorage.get(KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) return parsed.map(normalizeDashboard);
@@ -43,7 +44,7 @@ export function readDashboards(): Dashboard[] {
 }
 
 function writeDashboards(list: Dashboard[]): void {
-  try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) { console.error('Failed to save lira_dashboards', e); }
+  try { appStorage.set(KEY, JSON.stringify(list)); } catch (e) { console.error('Failed to save lira_dashboards', e); }
   window.dispatchEvent(new Event(DASHBOARDS_EVENT));
 }
 

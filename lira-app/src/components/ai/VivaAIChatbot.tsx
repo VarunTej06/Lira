@@ -8,7 +8,7 @@ import { LiraAIAvatar } from './LiraAIAvatar';
 import { ChatBubble } from './ChatBubble';
 import { VivaSettings } from './VivaSettings';
 import { useVivaChat } from './useVivaChat';
-import { AnimatePresence, motion } from '../common/motion';
+import { AnimatePresence, motion } from '../common/motionPresets';
 
 interface VivaAIChatbotProps {
   isOpen: boolean;
@@ -124,9 +124,9 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="font-bold text-sm tracking-tight whitespace-nowrap">Viva AI</span>
-                    <span className="px-1.5 py-0.5 text-[9px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 rounded-full">Read &amp; Write</span>
+                    <span className="px-1.5 py-0.5 text-4xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 rounded-full">Read &amp; Write</span>
                   </div>
-                  <p className="text-[11px] text-indigo-200/75 font-medium truncate mt-0.5">{MODEL_LABEL(provider, oai.model)} · {spaces.length} spaces connected</p>
+                  <p className="text-2xs text-indigo-200/75 font-medium truncate mt-0.5">{MODEL_LABEL(provider, oai.model)} · {spaces.length} spaces connected</p>
                 </div>
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
@@ -163,7 +163,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                             <span className="w-2 h-2 rounded-full bg-purple-400 animate-typing-dot-2" />
                             <span className="w-2 h-2 rounded-full bg-purple-400 animate-typing-dot-3" />
                           </div>
-                          <span className="text-[11px] font-medium text-purple-200/90 tracking-wide">Viva AI is thinking…</span>
+                          <span className="text-2xs font-medium text-purple-200/90 tracking-wide">Viva AI is thinking…</span>
                         </div>
                       </motion.div>
                     )}

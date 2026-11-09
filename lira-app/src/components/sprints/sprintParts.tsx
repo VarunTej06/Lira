@@ -1,5 +1,5 @@
 import { issueLink } from '../../utils/links';
-import { STATUS_META, BLOCKED_META } from '../../utils/status';
+import { BLOCKED_META } from '../../utils/status';
 import { TypeIcon, PriorityIcon } from '../common/Icons';
 import React from 'react';
 import type { Issue } from '../../types/issue';
@@ -10,11 +10,8 @@ import { Avatar } from '../common/Avatar';
 import {
   getIssueSprint, sprintLabel, sprintPhase, sprintName, moveIssuesToSprint, currentSprintKey, nextSprint,
 } from '../../utils/sprintUtils';
+import { statusMeta } from './statusMeta';
 
-export { STATUS_META };
-
-export const statusMeta = (s: string) =>
-  (STATUS_META as Record<string, { label: string; color: string; bg: string }>)[s?.toLowerCase()] || { label: s, color: '#6B778C', bg: '#F4F5F7' };
 
 export const PhaseBadge: React.FC<{ sprint: string }> = ({ sprint }) => {
   const phase = sprintPhase(sprint);
@@ -23,13 +20,13 @@ export const PhaseBadge: React.FC<{ sprint: string }> = ({ sprint }) => {
     past: { label: 'Completed period', cls: 'bg-gray-100 text-gray-600' },
     upcoming: { label: 'Upcoming', cls: 'bg-blue-100 text-blue-700' },
   }[phase];
-  return <span className={`text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${cfg.cls}`}>{cfg.label}</span>;
+  return <span className={`text-3xs font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${cfg.cls}`}>{cfg.label}</span>;
 };
 
 export const SprintChip: React.FC<{ sprint: string; carried?: boolean }> = ({ sprint, carried }) => (
   <span
     title={sprintName(sprint)}
-    className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 whitespace-nowrap"
+    className="inline-flex items-center gap-1 text-3xs font-medium px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 whitespace-nowrap"
   >
     {sprintLabel(sprint, true)}
     {carried && <span title="Carried over from an earlier sprint">↻</span>}
@@ -104,10 +101,10 @@ export const TicketRow: React.FC<TicketRowProps> = ({
       <span title={type.label} className="flex-shrink-0"><TypeIcon type={issue.type} className="w-4 h-4" /></span>
       <span className="text-xs font-medium text-lira-muted w-20 flex-shrink-0">{issue.key}</span>
       <span className="flex-1 min-w-0 text-sm text-lira-text truncate">{issue.title}</span>
-      {issue.blocked && <span className="flex-shrink-0 px-1.5 py-0.5 text-[10px] font-bold uppercase rounded" style={{ color: BLOCKED_META.color, backgroundColor: BLOCKED_META.bg }}>Blocked</span>}
+      {issue.blocked && <span className="flex-shrink-0 px-1.5 py-0.5 text-3xs font-bold uppercase rounded" style={{ color: BLOCKED_META.color, backgroundColor: BLOCKED_META.bg }}>Blocked</span>}
       {showSpace && space && (
         <span
-          className="text-[10px] font-semibold px-1.5 py-0.5 rounded flex-shrink-0 text-white"
+          className="text-3xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0 text-white"
           style={{ backgroundColor: space.color }}
           title={space.name}
         >
@@ -117,19 +114,19 @@ export const TicketRow: React.FC<TicketRowProps> = ({
       {showSprint && <SprintChip sprint={sprint} carried={carried} />}
       {!showSprint && carried && (
         <span title={`Carried over from ${(issue.sprintHistory || []).map(k => sprintLabel(k, true)).join(', ')}`}
-          className="text-[10px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 flex-shrink-0">
+          className="text-3xs px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 flex-shrink-0">
           ↻ carried
         </span>
       )}
       <span title={pri.label} className="flex-shrink-0"><PriorityIcon priority={issue.priority} /></span>
       <span
-        className="text-[10px] font-semibold px-2 py-0.5 rounded flex-shrink-0 w-[78px] text-center"
+        className="text-3xs font-semibold px-2 py-0.5 rounded flex-shrink-0 w-[78px] text-center"
         style={{ color: st.color, backgroundColor: st.bg }}
       >
         {st.label}
       </span>
       {typeof issue.storyPoints === 'number' && (
-        <span className="text-[10px] bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5 flex-shrink-0" title="Story points">
+        <span className="text-3xs bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5 flex-shrink-0" title="Story points">
           {issue.storyPoints}
         </span>
       )}

@@ -36,7 +36,7 @@ export function GroupByStatus(s: CapacityState) {
                     style={{ width: `${stage.pct}%`, backgroundColor: stage.dot }}
                   />
                 </div>
-                <p className="text-[11px] text-lira-muted pt-1">{stage.desc}</p>
+                <p className="text-2xs text-lira-muted pt-1">{stage.desc}</p>
               </div>
 
               {/* Item Cards */}
@@ -48,7 +48,7 @@ export function GroupByStatus(s: CapacityState) {
                 ) : (
                   stage.items.map(issue => (
                     <WorkItemCard key={issue.id} issue={issue} onOpen={onIssueClick}
-                      tag={<span className="text-[10px] uppercase font-semibold text-gray-500">{issue.priority}</span>} />
+                      tag={<span className="text-3xs uppercase font-semibold text-gray-500">{issue.priority}</span>} />
                   ))
                 )}
               </div>

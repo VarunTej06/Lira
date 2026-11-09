@@ -86,28 +86,37 @@ export function burnup(list: Issue[], key: string): BurnupPoint[] {
 
 export interface ScopeChange { issue: Issue; kind: 'added' | 'removed' | 'carried'; at: Date }
 
+/** The ticket joined the sprint after its first days: it was added. */
+function addedChange(issue: Issue, key: string, grace: Date): ScopeChange | null {
+  if ((issue.sprint || '') !== key) return null;
+  const at = joinedSprintAt(issue, key);
+  return at > grace && at <= sprintEnd(key) ? { issue, kind: 'added', at } : null;
+}
+
+/** The ticket's history says it left the sprint after its first days: it was removed, or carried over when the sprint closed. */
+function leftChanges(issue: Issue, key: string, grace: Date, closed: Date | undefined): ScopeChange[] {
+  const name = sprintName(key);
+  const out: ScopeChange[] = [];
+  for (const a of issue.activity || []) {
+    if (a.type !== 'field_change' || a.oldValue !== name) continue;
+    const at = toDate(a.createdAt);
+    if (!at || at <= grace) continue;
+    const carried = (!!closed && Math.abs(at.getTime() - closed.getTime()) < 60_000) || at > sprintEnd(key);
+    out.push({ issue, kind: carried ? 'carried' : 'removed', at });
+  }
+  return out;
+}
+
 /** Tickets added after the first day of the sprint, and tickets taken out of it (or carried over when it closed). */
 export function scopeChanges(all: Issue[], key: string, completedAt?: string): ScopeChange[] {
-  const name = sprintName(key);
-  const grace = endOfDay(new Date(sprintStart(key).getFullYear(), sprintStart(key).getMonth(), sprintStart(key).getDate() + GRACE_DAYS - 1));
+  const start = sprintStart(key);
+  const grace = endOfDay(new Date(start.getFullYear(), start.getMonth(), start.getDate() + GRACE_DAYS - 1));
   const closed = toDate(completedAt);
-  const out: ScopeChange[] = [];
-  for (const i of all) {
-    if (i.type === 'epic') continue;
-    const inSprint = (i.sprint || '') === key;
-    if (inSprint) {
-      const at = joinedSprintAt(i, key);
-      if (at > grace && at <= sprintEnd(key)) out.push({ issue: i, kind: 'added', at });
-    }
-    for (const a of i.activity || []) {
-      if (a.type !== 'field_change' || a.oldValue !== name) continue;
-      const at = toDate(a.createdAt);
-      if (!at || at <= grace) continue;
-      const carried = (!!closed && Math.abs(at.getTime() - closed.getTime()) < 60_000) || at > sprintEnd(key);
-      out.push({ issue: i, kind: carried ? 'carried' : 'removed', at });
-    }
-  }
-  return out.sort((a, b) => a.at.getTime() - b.at.getTime());
+  return all
+    .filter(i => i.type !== 'epic')
+    .flatMap(i => [addedChange(i, key, grace), ...leftChanges(i, key, grace, closed)])
+    .filter((c): c is ScopeChange => c !== null)
+    .sort((a, b) => a.at.getTime() - b.at.getTime());
 }
 
 interface TimeStat { n: number; avg: number; median: number; max: number }

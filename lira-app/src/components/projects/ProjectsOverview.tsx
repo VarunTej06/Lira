@@ -1,5 +1,5 @@
 import { filterProjects, type ProjectSort } from '../../utils/projectFilter';
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   FolderKanban, Plus, Search, Layers, SlidersHorizontal
 } from 'lucide-react';
@@ -11,6 +11,7 @@ import { ProjectDetailView } from './ProjectDetailView';
 import type { Space } from '../../types/space';
 import type { Issue } from '../../types/issue';
 import type { Project } from '../../types/project';
+import { appStorage } from '../../utils/appStorage';
 
 interface ProjectsOverviewProps {
   spaces: Space[];
@@ -36,7 +37,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
   // Load projects from localStorage `lira_projects`
   const [projects, setProjects] = useState<Project[]>(() => {
     try {
-      const raw = localStorage.getItem('lira_projects');
+      const raw = appStorage.get('lira_projects');
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -45,24 +46,9 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
       console.error('Failed to parse lira_projects from localStorage', e);
     }
     const def = DEFAULT_PROJECTS(spaces);
-    try { localStorage.setItem('lira_projects', JSON.stringify(def)); } catch { /* storage unavailable */ }
+    try { appStorage.set('lira_projects', JSON.stringify(def)); } catch { /* storage unavailable */ }
     return def;
   });
-
-  // Re-read latest projects from localStorage on mount
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('lira_projects');
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setProjects(parsed);
-        }
-      }
-    } catch (e) {
-      console.error('Failed to reload lira_projects', e);
-    }
-  }, []);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

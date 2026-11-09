@@ -1,9 +1,10 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { SavedToastHost, notifySaved } from './SavedToast';
+import { SavedToastHost } from './SavedToast';
+import { notifySaved } from './savedToastStore';
 import { MonthYearGrid } from './MonthYearGrid';
-import { isOwnComment } from '../issue/IssueActivityFeed';
+import { isOwnComment } from '../issue/commentUtils';
 import { formatBytes } from '../../utils/attachments';
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { confirmDialog } from '../../common/dialogs';
+import { confirmDialog } from '../../common/dialogStore';
 import { saveToDiskNow, initLocalDiskSync, subscribeToSyncStatus } from '../../../services/localDiskSync';
 import { exportBackup, importBackup } from '../../../db/storageService';
 

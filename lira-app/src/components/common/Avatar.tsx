@@ -1,4 +1,5 @@
 import React from 'react';
+import { PALETTE } from '../../theme/palette';
 
 interface AvatarProps {
   initials?: string;
@@ -9,14 +10,14 @@ interface AvatarProps {
 }
 
 const SIZE_CLASSES = {
-  xs: 'w-5 h-5 text-[9px]',
-  sm: 'w-6 h-6 text-[10px]',
+  xs: 'w-5 h-5 text-4xs',
+  sm: 'w-6 h-6 text-3xs',
   md: 'w-8 h-8 text-xs',
   lg: 'w-10 h-10 text-sm',
 };
 
 const AVATAR_COLORS = [
-  '#0052CC', '#00B8D9', '#6554C0', '#36B37E', '#FF5630', '#FF991F',
+  PALETTE.brand, PALETTE.info, PALETTE.purple, PALETTE.success, PALETTE.danger, PALETTE.orange,
 ];
 
 function getColorForInitials(initials: string): string {

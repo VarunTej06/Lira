@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Download, Upload, HardDrive, Moon, Sun } from 'lucide-react';
 import { Modal } from '../../common/Modal';
 import { applyTheme, getTheme, type Theme } from '../../../utils/theme';
+import { useResetWhen } from '../../../hooks/useResetWhen';
 
 export const SystemSettingsModal: React.FC<{
   isOpen: boolean;
@@ -13,7 +14,7 @@ export const SystemSettingsModal: React.FC<{
 }> = ({ isOpen, onClose, importing, importStatus, onExport, onImportClick }) => {
   // The choice is a draft until Apply; closing the dialog drops it
   const [theme, setTheme] = useState<Theme>(getTheme);
-  useEffect(() => { if (isOpen) setTheme(getTheme()); }, [isOpen]);
+  useResetWhen([isOpen], () => { if (isOpen) setTheme(getTheme()); });
   const changed = theme !== getTheme();
   const handleApply = () => { applyTheme(theme); };
 
@@ -41,7 +42,7 @@ export const SystemSettingsModal: React.FC<{
               <Download className="w-4 h-4" />
               Export Unified JSON Backup
             </span>
-            <span className="text-[11px] bg-lira-blue text-white px-2 py-0.5 rounded-full font-medium">
+            <span className="text-2xs bg-lira-blue text-white px-2 py-0.5 rounded-full font-medium">
               Download + Disk Sync
             </span>
           </button>
@@ -55,7 +56,7 @@ export const SystemSettingsModal: React.FC<{
               <Upload className="w-4 h-4 text-gray-600" />
               {importing ? 'Importing dataset...' : 'Import JSON Backup'}
             </span>
-            <span className="text-[11px] text-lira-muted">Restore &amp; Overwrite</span>
+            <span className="text-2xs text-lira-muted">Restore &amp; Overwrite</span>
           </button>
         </div>
 

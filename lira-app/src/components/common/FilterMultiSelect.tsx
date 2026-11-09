@@ -1,8 +1,12 @@
-import { isKeepingPlace } from '../../utils/keepPlace';
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Check, ChevronDown, Search } from 'lucide-react';
-import { AnimatePresence, motion, menuPop } from './motion';
+import { AnimatePresence, motion, menuPop } from './motionPresets';
+import { useResetWhen } from '../../hooks/useResetWhen';
+import { placePanel } from './filterPlacement';
+import { narrowOptions, panelStyle, type PanelPosition } from './filterOptions';
+import { useDismiss } from '../../hooks/useDismiss';
 
 interface FilterOption { value: string; label: string; color?: string }
 
@@ -25,6 +29,67 @@ interface Props {
   valueLabel?: string;
 }
 
+/** The text box that narrows the list. */
+function SearchBox({ query, onChange, placeholder }: { query: string; onChange: (q: string) => void; placeholder: string }) {
+  return (
+          <div className="p-2 border-b border-lira-border">
+            <div className="relative">
+              <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-lira-muted" />
+              <input
+                autoFocus
+                value={query}
+                onChange={e => onChange(e.target.value)}
+                placeholder={placeholder}
+                aria-label={placeholder}
+                className="w-full text-sm border border-lira-border rounded-lg pl-8 pr-2 py-1.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue bg-white"
+              />
+            </div>
+          </div>
+  );
+}
+
+/** One value: a checkbox (or radio button), its colour dot and its name. */
+function OptionRow({ option, on, single, onPick }: { option: FilterOption; on: boolean; single: boolean; onPick: () => void }) {
+  return (
+      <li role="option" aria-selected={on}>
+        <label className="flex items-center gap-2.5 px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50">
+          <input type={single ? 'radio' : 'checkbox'} className="sr-only peer" checked={on} onChange={onPick} />
+          <span className={`w-4 h-4 ${single ? 'rounded-full' : 'rounded'} border flex items-center justify-center flex-shrink-0 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-white' : 'border-gray-300 bg-white'}`}>
+            {on && <Check className="w-3 h-3" strokeWidth={3} />}
+          </span>
+          {option.color && <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: option.color }} />}
+          <span className="truncate">{option.label}</span>
+        </label>
+      </li>
+  );
+}
+
+/** The button that opens the list: its label, how many values are chosen (or the chosen one), and an arrow. */
+function FilterButton({ buttonRef, label, icon, open, highlighted, count, valueLabel, onClick }: {
+  buttonRef: React.RefObject<HTMLButtonElement>; label: string; icon?: React.ReactNode; open: boolean; highlighted: boolean;
+  /** How many values are chosen; 0 hides the number (single choice shows its value instead). */
+  count: number; valueLabel?: string; onClick: () => void;
+}) {
+  return (
+  <button
+    ref={buttonRef}
+    type="button"
+    onClick={onClick}
+    aria-haspopup="listbox"
+    aria-expanded={open}
+    data-testid={`filter-${label.toLowerCase()}`}
+    className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded transition-colors cursor-pointer ${
+      highlighted ? 'border-lira-blue text-lira-blue bg-blue-50 hover:bg-blue-100' : 'text-lira-muted border-lira-border hover:bg-gray-50'
+    }`}
+  >
+    {icon}
+    <span>{label}{valueLabel ? <span className="font-semibold">{`: ${valueLabel}`}</span> : null}</span>
+    {count > 0 && <span className="bg-blue-100 text-blue-700 text-xs rounded-full px-1.5 font-semibold">{count}</span>}
+    <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
+  </button>
+  );
+}
+
 /**
  * A small filter dropdown with a checkbox for every value, so one or several can be chosen.
  * The list scrolls inside the dropdown and is drawn above everything else, so it is never clipped.
@@ -34,68 +99,34 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
   const [query, setQuery] = useState('');
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top?: number; bottom?: number; left: number; maxHeight: number } | null>(null);
+  const [pos, setPos] = useState<PanelPosition | null>(null);
 
-  useEffect(() => { if (!open) setQuery(''); }, [open]);
+  useResetWhen([open], () => { if (!open) setQuery(''); });
 
   useLayoutEffect(() => {
     if (!open || !trigger.current) return;
     const a = trigger.current.getBoundingClientRect();
-    const w = panel.current?.offsetWidth ?? 240;
-    const margin = 8;
-    const left = Math.min(Math.max(margin, a.left), window.innerWidth - w - margin);
-    // Open downwards if the whole list fits there; otherwise on whichever side has more room, and never taller than that room,
-    // so every value can be reached by scrolling the list itself.
-    const below = window.innerHeight - a.bottom - 6 - margin;
-    const above = a.top - 6 - margin;
-    const wanted = Math.min(panel.current?.scrollHeight ?? 320, 360);
-    const down = wanted <= below || below >= above;
-    setPos(down
-      ? { top: a.bottom + 6, left, maxHeight: Math.max(120, Math.min(360, below)) }
-      : { bottom: window.innerHeight - a.top + 6, left, maxHeight: Math.max(120, Math.min(360, above)) });
+    setPos(placePanel(a, panel.current?.offsetWidth ?? 240, panel.current?.scrollHeight ?? 320, { width: window.innerWidth, height: window.innerHeight }));
   }, [open, query, options.length]);
 
-  useEffect(() => {
-    if (!open) return;
-    const away = (e: MouseEvent) => {
-      if (!panel.current?.contains(e.target as Node) && !trigger.current?.contains(e.target as Node)) setOpen(false);
-    };
-    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); setOpen(false); trigger.current?.focus(); } };
-    const close = () => setOpen(false);
-    // scrolling the page closes it (it would otherwise stay on the screen while the button moves away); scrolling its own list does not
-    const onScroll = (e: Event) => { if (isKeepingPlace()) return; if (!panel.current?.contains(e.target as Node)) setOpen(false); };
-    document.addEventListener('mousedown', away, true);
-    document.addEventListener('keydown', esc, true);
-    window.addEventListener('resize', close);
-    window.addEventListener('scroll', onScroll, true);
-    return () => { document.removeEventListener('mousedown', away, true); document.removeEventListener('keydown', esc, true); window.removeEventListener('resize', close); window.removeEventListener('scroll', onScroll, true); };
-  }, [open]);
+  useDismiss(open, setOpen, panel, trigger);
 
-  const shown = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return q ? options.filter(o => o.label.toLowerCase().includes(q)) : options;
-  }, [options, query]);
+  const shown = useMemo(() => narrowOptions(options, query), [options, query]);
 
   const count = selected.length;
 
   return (
     <div className="relative">
-      <button
-        ref={trigger}
-        type="button"
+      <FilterButton
+        buttonRef={trigger}
+        label={label}
+        icon={icon}
+        open={open}
+        highlighted={active ?? count > 0}
+        count={single ? 0 : count}
+        valueLabel={single ? valueLabel : undefined}
         onClick={() => setOpen(o => !o)}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        data-testid={`filter-${label.toLowerCase()}`}
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded transition-colors cursor-pointer ${
-          (active ?? count > 0) ? 'border-lira-blue text-lira-blue bg-blue-50 hover:bg-blue-100' : 'text-lira-muted border-lira-border hover:bg-gray-50'
-        }`}
-      >
-        {icon}
-        <span>{label}{single && valueLabel ? <span className="font-semibold">{`: ${valueLabel}`}</span> : null}</span>
-        {!single && count > 0 && <span className="bg-blue-100 text-blue-700 text-xs rounded-full px-1.5 font-semibold">{count}</span>}
-        <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
+      />
 
       {createPortal(
         <AnimatePresence>
@@ -105,41 +136,15 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
               {...menuPop}
               role="dialog"
               aria-label={`${label} filter`}
-              style={{ position: 'fixed', top: pos?.top, bottom: pos?.bottom, left: pos?.left ?? 0, maxHeight: pos?.maxHeight, zIndex: 300, visibility: pos ? 'visible' : 'hidden', transformOrigin: pos?.bottom !== undefined ? 'bottom left' : 'top left' }}
+              style={panelStyle(pos)}
               className="w-60 bg-white border border-lira-border rounded-xl shadow-2xl flex flex-col text-lira-text"
             >
-              {searchable && (
-                <div className="p-2 border-b border-lira-border">
-                  <div className="relative">
-                    <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-lira-muted" />
-                    <input
-                      autoFocus
-                      value={query}
-                      onChange={e => setQuery(e.target.value)}
-                      placeholder={searchPlaceholder}
-                      aria-label={searchPlaceholder}
-                      className="w-full text-sm border border-lira-border rounded-lg pl-8 pr-2 py-1.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue bg-white"
-                    />
-                  </div>
-                </div>
-              )}
+              {searchable && <SearchBox query={query} onChange={setQuery} placeholder={searchPlaceholder} />}
               <ul className="overflow-y-auto overscroll-contain py-1 flex-1 min-h-0" role="listbox" aria-multiselectable="true">
                 {shown.length === 0 && <li className="px-3 py-3 text-xs text-lira-muted text-center">{options.length === 0 ? emptyText : 'No match'}</li>}
-                {shown.map(o => {
-                  const on = selected.includes(o.value);
-                  return (
-                    <li key={o.value} role="option" aria-selected={on}>
-                      <label className="flex items-center gap-2.5 px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50">
-                        <input type={single ? 'radio' : 'checkbox'} className="sr-only peer" checked={on} onChange={() => { onToggle(o.value); if (single) setOpen(false); }} />
-                        <span className={`w-4 h-4 ${single ? 'rounded-full' : 'rounded'} border flex items-center justify-center flex-shrink-0 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-white' : 'border-gray-300 bg-white'}`}>
-                          {on && <Check className="w-3 h-3" strokeWidth={3} />}
-                        </span>
-                        {o.color && <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: o.color }} />}
-                        <span className="truncate">{o.label}</span>
-                      </label>
-                    </li>
-                  );
-                })}
+                {shown.map(o => (
+                  <OptionRow key={o.value} option={o} on={selected.includes(o.value)} single={!!single} onPick={() => { onToggle(o.value); if (single) setOpen(false); }} />
+                ))}
               </ul>
               {count > 0 && onClear && (
                 <div className="border-t border-lira-border px-3 py-2">

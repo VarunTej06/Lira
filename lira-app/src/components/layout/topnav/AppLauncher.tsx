@@ -84,9 +84,9 @@ export const AppLauncher: React.FC<{
 
       {open && (
         <div className="absolute top-full left-0 mt-2 w-60 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 p-2 origin-top-left animate-scale-in">
-          <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider px-2.5 pb-2 border-b border-white/10 mb-1 flex items-center justify-between">
+          <p className="text-3xs font-semibold text-white/40 uppercase tracking-wider px-2.5 pb-2 border-b border-white/10 mb-1 flex items-center justify-between">
             <span>Switch sites or apps</span>
-            <span className="text-[9px] bg-white/10 px-1.5 py-0.2 rounded font-normal text-white/50">Lira v2.0</span>
+            <span className="text-4xs bg-white/10 px-1.5 py-0.2 rounded font-normal text-white/50">Lira v2.0</span>
           </p>
           <div className="space-y-0.5">
             {links.map(({ label, icon, action }) => (

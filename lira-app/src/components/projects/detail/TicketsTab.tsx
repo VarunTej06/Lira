@@ -7,7 +7,7 @@ import { formatRelativeDate, formatAbsoluteDate } from '../../../utils/dateUtils
 import { SprintSelect, SprintChip } from '../../sprints/sprintParts';
 import { getStatusBadgeClass, getPriorityBadge } from './badges';
 import { getIssueSprint } from '../../../utils/sprintUtils';
-import type { DetailCtx } from './types';
+import type { DetailCtx } from './detailContext';
 
 export function TicketsTab(ctx: DetailCtx) {
   const { onIssueClick, ticketSubTab, setTicketSubTab, ticketSearch, setTicketSearch, ticketSprint, setTicketSprint, sprintKeys, ticketCounts, ticketsToDisplay } = ctx;
@@ -26,7 +26,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   }`}
                 >
                   <span>All</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'all' ? 'bg-blue-800 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'all' ? 'bg-blue-800 text-white' : 'bg-gray-100 text-gray-700'}`}>
                     {ticketCounts.all}
                   </span>
                 </button>
@@ -40,7 +40,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   }`}
                 >
                   <span>Open</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'open' ? 'bg-blue-800 text-white' : 'bg-amber-100 text-amber-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'open' ? 'bg-blue-800 text-white' : 'bg-amber-100 text-amber-800'}`}>
                     {ticketCounts.open}
                   </span>
                 </button>
@@ -54,7 +54,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   }`}
                 >
                   <span>Completed</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'completed' ? 'bg-blue-800 text-white' : 'bg-emerald-100 text-emerald-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'completed' ? 'bg-blue-800 text-white' : 'bg-emerald-100 text-emerald-800'}`}>
                     {ticketCounts.completed}
                   </span>
                 </button>
@@ -68,7 +68,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   }`}
                 >
                   <span>High Priority</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'high_priority' ? 'bg-blue-800 text-white' : 'bg-red-100 text-red-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'high_priority' ? 'bg-blue-800 text-white' : 'bg-red-100 text-red-800'}`}>
                     {ticketCounts.high_priority}
                   </span>
                 </button>
@@ -82,7 +82,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   }`}
                 >
                   <span>My Tasks</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'my_tasks' ? 'bg-blue-800 text-white' : 'bg-purple-100 text-purple-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'my_tasks' ? 'bg-blue-800 text-white' : 'bg-purple-100 text-purple-800'}`}>
                     {ticketCounts.my_tasks}
                   </span>
                 </button>
@@ -165,7 +165,7 @@ export function TicketsTab(ctx: DetailCtx) {
 
                         {/* Status Badge */}
                         <td className="py-2.5 px-3 whitespace-nowrap">
-                          <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>
+                          <span className={`inline-block px-2 py-0.5 rounded text-2xs font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>
                             {statusLabel(issue.status)}
                           </span>
                         </td>

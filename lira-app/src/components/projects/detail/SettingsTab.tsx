@@ -1,6 +1,6 @@
 import { Plus, Check, Trash2, Save, Workflow, Sliders } from 'lucide-react';
 import { Button } from '../../common/Button';
-import type { DetailCtx } from './types';
+import type { DetailCtx } from './detailContext';
 
 export function SettingsTab(ctx: DetailCtx) {
   const { project, space, workflowStates, customFields, settingsSavedToast, showAddFieldModal, setShowAddFieldModal, newFieldName, setNewFieldName, newFieldType, setNewFieldType, newFieldDesc, setNewFieldDesc, handleRenameState, handleAddCustomField, handleRemoveCustomField, handleSaveSettings, handleDeleteProject } = ctx;
@@ -40,12 +40,12 @@ export function SettingsTab(ctx: DetailCtx) {
                         <span className={`w-2.5 h-2.5 rounded-full ${state.color}`} />
                         <span className="font-mono text-xs font-semibold text-lira-muted uppercase">{state.key}</span>
                       </div>
-                      <span className="text-[10px] font-semibold bg-gray-200 text-gray-700 px-2 py-0.5 rounded">
+                      <span className="text-3xs font-semibold bg-gray-200 text-gray-700 px-2 py-0.5 rounded">
                         Category: {state.category}
                       </span>
                     </div>
                     <div>
-                      <label className="block text-[11px] font-medium text-lira-muted mb-1">State Display Label</label>
+                      <label className="block text-2xs font-medium text-lira-muted mb-1">State Display Label</label>
                       <input
                         type="text"
                         value={state.label}
@@ -87,11 +87,11 @@ export function SettingsTab(ctx: DetailCtx) {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold text-lira-text">{f.name}</span>
-                        <span className="text-[10px] font-mono bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-200">
+                        <span className="text-3xs font-mono bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-200">
                           {f.type}
                         </span>
                       </div>
-                      <p className="text-[11px] text-lira-muted mt-0.5">{f.description}</p>
+                      <p className="text-2xs text-lira-muted mt-0.5">{f.description}</p>
                     </div>
 
                     <button

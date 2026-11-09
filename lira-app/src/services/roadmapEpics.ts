@@ -106,6 +106,22 @@ async function createTaskForItem(item: RoadmapItem, epic: Issue, roadmapName: st
 
 interface EnsureResult { items: RoadmapItem[]; created: string[]; tasks: string[]; error?: string }
 
+/** An item with a checklist needs one task, unless its task still exists. */
+const needsTask = (item: RoadmapItem, existingTasks: Set<string>): boolean => item.children.length > 0 && (!item.taskKey || !existingTasks.has(item.taskKey));
+
+/** What to tell the person when epics cannot be created because the roadmap's space is missing. */
+export const noSpaceMessage = (rm: Roadmap): string =>
+  rm.spaceKey ? `Space ${rm.spaceKey} was not found, so epics could not be created.` : 'This roadmap has no space, so epics could not be created.';
+
+/** A recreated epic adopts the checklist task that belonged to the deleted one. */
+async function adoptOrphanTask(item: RoadmapItem): Promise<void> {
+  const [epic, task] = await Promise.all([
+    db.issues.where('key').equals(item.epicKey!).first(),
+    db.issues.where('key').equals(item.taskKey!).first(),
+  ]);
+  if (epic?.id && task?.id) await db.issues.update(task.id, { parentId: epic.id, epicId: epic.id, epicLink: epic.title });
+}
+
 /**
  * Gives every item an epic, and every item that has a checklist its single checklist task. Safe to call repeatedly:
  * things that already exist are left alone, things that were deleted are recreated.
@@ -116,28 +132,19 @@ export async function ensureEpics(rm: Roadmap, spaces: Space[]): Promise<EnsureR
   const existing = new Set(all.filter(i => i.type === 'epic').map(i => i.key));
   const existingTasks = new Set(all.filter(i => i.type !== 'epic').map(i => i.key));
   const missingEpic = rm.items.filter(i => !i.epicKey || !existing.has(i.epicKey));
-  const missingTask = rm.items.filter(i => i.children.length > 0 && (!i.taskKey || !existingTasks.has(i.taskKey)));
-  if (missingEpic.length === 0 && missingTask.length === 0) return { items: rm.items, created: [], tasks: [] };
-  if (!space) {
-    return { items: rm.items, created: [], tasks: [], error: rm.spaceKey ? `Space ${rm.spaceKey} was not found, so epics could not be created.` : 'This roadmap has no space, so epics could not be created.' };
-  }
+  if (missingEpic.length === 0 && !rm.items.some(i => needsTask(i, existingTasks))) return { items: rm.items, created: [], tasks: [] };
+  if (!space) return { items: rm.items, created: [], tasks: [], error: noSpaceMessage(rm) };
 
   const epicKeys = new Map<string, string>();
   for (const item of missingEpic) epicKeys.set(item.id, await createEpicForItem(item, space, rm.name));
   let items = rm.items.map(i => (epicKeys.has(i.id) ? { ...i, epicKey: epicKeys.get(i.id) } : i));
 
-  // A recreated epic adopts the checklist task that belonged to the deleted one
   for (const item of items) {
-    if (!epicKeys.has(item.id) || !item.taskKey || !existingTasks.has(item.taskKey)) continue;
-    const [epic, task] = await Promise.all([
-      db.issues.where('key').equals(item.epicKey!).first(),
-      db.issues.where('key').equals(item.taskKey).first(),
-    ]);
-    if (epic?.id && task?.id) await db.issues.update(task.id, { parentId: epic.id, epicId: epic.id, epicLink: epic.title });
+    if (epicKeys.has(item.id) && item.taskKey && existingTasks.has(item.taskKey)) await adoptOrphanTask(item);
   }
 
   const taskKeys = new Map<string, string>();
-  for (const item of items.filter(i => i.children.length > 0 && (!i.taskKey || !existingTasks.has(i.taskKey)))) {
+  for (const item of items.filter(i => needsTask(i, existingTasks))) {
     const epic = await db.issues.where('key').equals(item.epicKey!).first();
     if (epic) taskKeys.set(item.id, await createTaskForItem(item, epic, rm.name));
   }

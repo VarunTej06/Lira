@@ -84,7 +84,7 @@ export function AppearanceSection(s: SettingsState) {
                 <div className="flex items-center justify-between mb-1">
                   <h4 className="text-xs font-bold text-lira-muted uppercase tracking-wider">Accent Branding</h4>
                   {accent.toUpperCase() !== DEFAULT_ACCENT && (
-                    <button onClick={() => chooseAccent(DEFAULT_ACCENT)} className="text-[11px] text-lira-blue hover:underline cursor-pointer">Reset to default</button>
+                    <button onClick={() => chooseAccent(DEFAULT_ACCENT)} className="text-2xs text-lira-blue hover:underline cursor-pointer">Reset to default</button>
                   )}
                 </div>
                 <p className="text-xs text-lira-muted mb-3">Used for buttons, active tabs, links and highlights, in both themes. Saved with your other preferences.</p>
@@ -119,13 +119,13 @@ export function AppearanceSection(s: SettingsState) {
                 <div className="mt-4 flex items-center gap-3 p-3 rounded-xl border border-lira-border">
                   <button className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white" style={{ backgroundColor: parseHex(accent) ? accent : DEFAULT_ACCENT }}>Primary button</button>
                   <span className="text-xs font-semibold" style={{ color: parseHex(accent) ? accent : DEFAULT_ACCENT }}>Link</span>
-                  <span className="text-[11px] px-2 py-0.5 rounded-full font-semibold" style={{ color: parseHex(accent) ? accent : DEFAULT_ACCENT, backgroundColor: `${parseHex(accent) ? accent : DEFAULT_ACCENT}22` }}>Badge</span>
-                  <span className="text-[11px] text-lira-muted ml-auto">Preview of your choice</span>
+                  <span className="text-2xs px-2 py-0.5 rounded-full font-semibold" style={{ color: parseHex(accent) ? accent : DEFAULT_ACCENT, backgroundColor: `${parseHex(accent) ? accent : DEFAULT_ACCENT}22` }}>Badge</span>
+                  <span className="text-2xs text-lira-muted ml-auto">Preview of your choice</span>
                 </div>
               </div>
 
               <div className="flex items-center justify-end gap-2 border-t border-lira-border pt-4">
-                {appearanceChanged && <span className="text-[11px] text-lira-muted mr-auto">Not saved yet</span>}
+                {appearanceChanged && <span className="text-2xs text-lira-muted mr-auto">Not saved yet</span>}
                 <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer">Cancel</button>
                 <button
                   onClick={handleSaveAppearance}

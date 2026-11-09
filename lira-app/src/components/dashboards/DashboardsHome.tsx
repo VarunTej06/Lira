@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AlertTriangle, ArrowRight, Copy, LayoutDashboard, Plus, Sparkles, Star, Trash2, Upload, Wand2 } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
-import { confirmDialog, alertDialog } from '../common/dialogs';
-import { notifySaved } from '../common/SavedToast';
+import { confirmDialog, alertDialog } from '../common/dialogStore';
+import { notifySaved } from '../common/savedToastStore';
 import { addDashboard, buildDashboard, duplicateDashboard, normalizeDashboard, removeDashboard, updateDashboard, useDashboards } from '../../utils/dashboards/store';
 import { SCENARIOS, entryById, scenarioById } from '../../utils/dashboards/catalog';
 import { evaluateGoal, scopeIssues } from '../../utils/dashboards/metrics';
@@ -113,7 +113,7 @@ export const DashboardsHome: React.FC<{ issues: Issue[]; spaces: Space[] }> = ({
                         <div className="min-w-0 flex-1">
                           <h3 className="text-sm font-bold text-lira-text truncate">{d.name}</h3>
                           <p className="text-xs text-lira-muted truncate">{sc.name} · {d.widgets.length} widget{d.widgets.length === 1 ? '' : 's'}</p>
-                          <p className="text-[11px] text-lira-muted mt-1">Updated {new Date(d.updatedAt).toLocaleDateString()}</p>
+                          <p className="text-2xs text-lira-muted mt-1">Updated {new Date(d.updatedAt).toLocaleDateString()}</p>
                         </div>
                       </div>
                       {alerts > 0 && <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-50 border border-red-200 rounded-full px-2 py-0.5"><AlertTriangle className="w-3 h-3" />{alerts} alert{alerts === 1 ? '' : 's'}</span>}
@@ -143,7 +143,7 @@ export const DashboardsHome: React.FC<{ issues: Issue[]; spaces: Space[] }> = ({
                   <div className="min-w-0 flex-1">
                     <h3 className="text-sm font-bold text-lira-text">{s.name}</h3>
                     <p className="text-xs text-lira-muted mt-0.5">{s.tagline}</p>
-                    <p className="text-[11px] text-lira-muted mt-1.5">For: {s.audience}</p>
+                    <p className="text-2xs text-lira-muted mt-1.5">For: {s.audience}</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-lira-muted group-hover:text-lira-blue flex-shrink-0 mt-1" />
                 </div>

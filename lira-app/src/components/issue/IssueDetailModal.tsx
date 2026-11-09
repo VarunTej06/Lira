@@ -5,7 +5,8 @@ import { useIssueDetail, type IssueDetailModalProps } from './detail/useIssueDet
 import { IssueHeader } from './detail/IssueHeader';
 import { IssueMain } from './detail/IssueMain';
 import { IssueSidebar } from './detail/IssueSidebar';
-import { motion, dialogBackdrop, dialogPanel } from '../common/motion';
+import { motion } from '../common/motionPresets';
+import { dialogBackdrop, dialogPanel } from '../common/motionPresets';
 
 /** The ticket popup: header, description / child work / activity on the left, details on the right. */
 export const IssueDetailModal: React.FC<IssueDetailModalProps> = (props) => {

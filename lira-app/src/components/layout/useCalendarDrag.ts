@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState, type DragEvent } from 'react';
+import { useMemo, useState, type DragEvent } from 'react';
 import type { Issue } from '../../types/issue';
 import { updateIssue } from '../../hooks/useIssues';
 import { parseDueDateKey } from '../../utils/calendarGrid';
+import { useResetWhen } from '../../hooks/useResetWhen';
 
 /**
  * The calendar's tickets by day, and dragging a ticket onto a day to set its due date.
@@ -24,7 +25,7 @@ export function useCalendarDrag(issues: Issue[]) {
   }, [issues, dropped]);
 
   // Forget a drop once the saved ticket shows the same day
-  useEffect(() => {
+  useResetWhen([issues], () => {
     setDropped(prev => {
       const settled = Object.keys(prev).map(Number).filter(id => {
         const match = issues.find(i => i.id === id);
@@ -35,7 +36,7 @@ export function useCalendarDrag(issues: Issue[]) {
       settled.forEach(id => delete next[id]);
       return next;
     });
-  }, [issues]);
+  });
 
   const onDragStart = (e: DragEvent, issue: Issue) => {
     if (!issue.id) return;

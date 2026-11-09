@@ -21,7 +21,7 @@ function NotificationRow({ notif, hasUnread, onOpen }: { notif: Notification; ha
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="font-semibold text-white text-xs">{notif.author}</span>
-          <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded border ${badge.color}`}>{badge.label}</span>
+          <span className={`text-3xs font-bold px-1.5 py-0.2 rounded border ${badge.color}`}>{badge.label}</span>
           <span className="text-white/70 text-xs">{notif.actionText}</span>
         </div>
         <div className="mt-1 flex items-center gap-1.5">
@@ -33,10 +33,10 @@ function NotificationRow({ notif, hasUnread, onOpen }: { notif: Notification; ha
           >
             {notif.issue.key}<ExternalLink className="w-2.5 h-2.5 opacity-60 inline" />
           </a>
-          <span className="text-white/30 text-[11px]">·</span>
-          <span className="text-[11px] text-white/60 truncate max-w-[200px] group-hover:text-white/90">{notif.issue.title}</span>
+          <span className="text-white/30 text-2xs">·</span>
+          <span className="text-2xs text-white/60 truncate max-w-[200px] group-hover:text-white/90">{notif.issue.title}</span>
         </div>
-        <p className="text-[10px] text-white/30 mt-1">{relativeTime(notif.createdAt)}</p>
+        <p className="text-3xs text-white/30 mt-1">{relativeTime(notif.createdAt)}</p>
       </div>
       {hasUnread && <span className="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0 mt-1.5" />}
     </div>
@@ -90,12 +90,12 @@ export const NotificationsBell: React.FC<{
           <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-white/10 bg-white/5">
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-white">Notifications</span>
-              <span className="text-[10px] bg-white/10 text-white/60 px-1.5 py-0.2 rounded font-mono">
+              <span className="text-3xs bg-white/10 text-white/60 px-1.5 py-0.2 rounded font-mono">
                 {filteredNotifications.length}
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <label className="flex items-center gap-1.5 text-[11px] text-white/60 cursor-pointer select-none">
+              <label className="flex items-center gap-1.5 text-2xs text-white/60 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={onlyUnread}
@@ -107,7 +107,7 @@ export const NotificationsBell: React.FC<{
               {hasUnread && (
                 <button
                   onClick={() => setHasUnread(false)}
-                  className="text-[11px] text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+                  className="text-2xs text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
                 >
                   Mark all as read
                 </button>
@@ -138,7 +138,7 @@ export const NotificationsBell: React.FC<{
               <div className="flex flex-col items-center justify-center py-12 gap-2 text-center px-4">
                 <Bell className="w-6 h-6 text-white/20" />
                 <p className="text-xs text-white/50">No notifications in this view</p>
-                <p className="text-[11px] text-white/30">Action updates will appear as tickets are created, edited, or closed.</p>
+                <p className="text-2xs text-white/30">Action updates will appear as tickets are created, edited, or closed.</p>
               </div>
             ) : (
               filteredNotifications.map(notif => <NotificationRow key={notif.id} notif={notif} hasUnread={hasUnread} onOpen={issue => { onSelectIssue?.(issue); setOpen(false); }} />)

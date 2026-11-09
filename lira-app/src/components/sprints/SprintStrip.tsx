@@ -43,7 +43,7 @@ export function SprintStrip({ sprint, keys, scoped, onPick }: Props) {
                 {sprintLabel(k, true)}
                 {k === current && <span className={`w-1.5 h-1.5 rounded-full ${active ? 'bg-white' : 'bg-green-500'}`} />}
               </div>
-              <div className={`text-[10px] ${active ? 'text-white' : 'text-lira-muted'}`}>{s.done}/{s.total} done</div>
+              <div className={`text-3xs ${active ? 'text-white' : 'text-lira-muted'}`}>{s.done}/{s.total} done</div>
             </button>
           );
         })}

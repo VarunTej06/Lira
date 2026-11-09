@@ -1,4 +1,6 @@
-import { BoardSettingsModal, WIPLimitsModal, BulkActionsModal } from '../BoardModals';
+import { BoardSettingsModal } from '../modals/BoardSettingsModal';
+import { WIPLimitsModal } from '../modals/WIPLimitsModal';
+import { BulkActionsModal } from '../modals/BulkActionsModal';
 import { FormsModal } from '../FormsModal';
 import { DocumentsModal } from '../DocumentsModal';
 import { AttachmentsModal } from '../AttachmentsModal';

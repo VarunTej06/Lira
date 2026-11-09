@@ -39,7 +39,7 @@ export function GroupByPriority(s: CapacityState) {
                 ) : (
                   group.items.map(issue => (
                     <WorkItemCard key={issue.id} issue={issue} compact onOpen={onIssueClick}
-                      tag={<span className="text-[9px] uppercase px-1.5 py-0.2 rounded bg-gray-100 font-semibold text-gray-600">{statusLabel(issue.status)}</span>} />
+                      tag={<span className="text-4xs uppercase px-1.5 py-0.2 rounded bg-gray-100 font-semibold text-gray-600">{statusLabel(issue.status)}</span>} />
                   ))
                 )}
               </div>

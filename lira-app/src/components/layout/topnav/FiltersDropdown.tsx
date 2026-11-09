@@ -37,7 +37,7 @@ export const FiltersDropdown: React.FC<{
     <div ref={ref} className="relative" {...hover}>
       <button
         onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all duration-200 cursor-pointer ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-ui font-medium transition-all duration-200 cursor-pointer ${
           open ? 'bg-white/15 text-white shadow-inner' : 'text-white/80 hover:text-white hover:bg-white/10'
         } ${active && active !== 'all' ? 'text-blue-300' : ''}`}
       >
@@ -58,7 +58,7 @@ export const FiltersDropdown: React.FC<{
             <ArrowRight className="w-3.5 h-3.5 text-blue-300" />
           </button>
 
-          <p className="text-[10px] font-semibold text-white/40 uppercase tracking-wider px-2 py-1">Preset filters</p>
+          <p className="text-3xs font-semibold text-white/40 uppercase tracking-wider px-2 py-1">Preset filters</p>
           {presets.map(({ id, label, desc, icon }) => (
             <button
               key={id}
@@ -70,7 +70,7 @@ export const FiltersDropdown: React.FC<{
               <span className="mt-0.5">{icon}</span>
               <div>
                 <div className="text-xs font-medium">{label}</div>
-                <div className="text-[10px] text-white/40">{desc}</div>
+                <div className="text-3xs text-white/40">{desc}</div>
               </div>
             </button>
           ))}

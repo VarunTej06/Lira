@@ -31,6 +31,46 @@ const HANDLERS: AgentHandler[] = [
   handleKeywordSearch,
 ];
 
+type Goal = ReturnType<typeof refineUserPrompt>;
+
+/** Intents that change data, or that need exact numbers: the built-in engine answers them, a model cannot write to Lira. */
+const ACTION_INTENTS = [...WRITE_INTENTS, 'sprint_summary', 'standup_digest', 'risk_radar', 'dashboard_build'];
+
+/**
+ * Everything else can go to the configured model (Gemini or an OpenAI-compatible server) in agent mode.
+ * Returns nothing when no model is set up, the request is an action, or the model call fails (the built-in engine then answers).
+ */
+async function tryConfiguredModel(args: Parameters<typeof askConfiguredModel>[0], mode: 'info' | 'agent', intent: string): Promise<ChatMessage | undefined> {
+  if (mode !== 'agent' || getAiProvider() === 'local' || ACTION_INTENTS.includes(intent)) return undefined;
+  try {
+    return (await askConfiguredModel(args)) || undefined;
+  } catch (err) {
+    console.warn('[Viva AI Agent] The model call failed, falling back to the built-in engine:', err);
+    return undefined;
+  }
+}
+
+/** What the lightweight information chat says when asked to change something. */
+function readOnlyReply(userPrompt: string, now: Date, refinedMetadata: ChatMessage['refinedPrompt'], refinedGoal: Goal): ChatMessage {
+  return {
+    id: uuidv4(),
+    sender: 'assistant',
+    text: `**Viva AI (Read-Only Mode)**\n\nI am the lightweight search & information assistant. I have full read access across all spaces to answer questions, search tickets, and generate status reports, but I cannot modify tickets or database records.\n\nTo execute **"${refinedGoal.optimizedGoal}"**, please use the **Lira Autonomous Agent**!`,
+    timestamp: now,
+    refinedPrompt: refinedMetadata,
+    actionTaken: {
+      type: 'switch_to_agent',
+      details: userPrompt,
+    },
+    suggestedActions: [
+      'Show all spaces with number of tickets in each To do, Backlog, In Progress and Done',
+      'What is in progress across all spaces?',
+      'Show all Epics across spaces',
+      'Workspace overview',
+    ],
+  };
+}
+
 export async function processUserMessage(
   userPrompt: string,
   activeSpace: Space | undefined,
@@ -59,42 +99,15 @@ export async function processUserMessage(
     targetTicketKey: refinedGoal.targetTicketKey,
   };
 
-  // Requests that change data or need exact numbers are answered by the built-in engine (a model cannot write to Lira);
-  // everything else can go to the configured model (Gemini or an OpenAI-compatible server) in agent mode.
-  const ACTIONS = [...WRITE_INTENTS, 'sprint_summary', 'standup_digest', 'risk_radar', 'dashboard_build'];
-  if (mode === 'agent' && getAiProvider() !== 'local' && !ACTIONS.includes(refinedGoal.intent)) {
-    try {
-      const modelResponse = await askConfiguredModel({ userPrompt, activeSpace, allSpaces, allIssues, refinedGoal });
-      if (modelResponse) return modelResponse;
-    } catch (err) {
-      console.warn('[Viva AI Agent] The model call failed, falling back to the built-in engine:', err);
-    }
-  }
+  const modelReply = await tryConfiguredModel({ userPrompt, activeSpace, allSpaces, allIssues, refinedGoal }, mode, refinedGoal.intent);
+  if (modelReply) return modelReply;
 
   // ─────────────────────────────────────────────────────────────
   // 2. READ-ONLY RESTRICTION FOR AVATAR INFO CHATBOT (mode === 'info')
   // ─────────────────────────────────────────────────────────────
   const isWriteIntent = WRITE_INTENTS.includes(refinedGoal.intent);
 
-  if (mode === 'info' && isWriteIntent) {
-    return {
-      id: uuidv4(),
-      sender: 'assistant',
-      text: `**Viva AI (Read-Only Mode)**\n\nI am the lightweight search & information assistant. I have full read access across all spaces to answer questions, search tickets, and generate status reports, but I cannot modify tickets or database records.\n\nTo execute **"${refinedGoal.optimizedGoal}"**, please use the **Lira Autonomous Agent**!`,
-      timestamp: now,
-      refinedPrompt: refinedMetadata,
-      actionTaken: {
-        type: 'switch_to_agent',
-        details: userPrompt,
-      },
-      suggestedActions: [
-        'Show all spaces with number of tickets in each To do, Backlog, In Progress and Done',
-        'What is in progress across all spaces?',
-        'Show all Epics across spaces',
-        'Workspace overview',
-      ],
-    };
-  }
+  if (mode === 'info' && isWriteIntent) return readOnlyReply(userPrompt, now, refinedMetadata, refinedGoal);
 
   // ─────────────────────────────────────────────────────────────
   // 3. AUTONOMOUS TASK EXECUTION BASED ON REFINED GOAL

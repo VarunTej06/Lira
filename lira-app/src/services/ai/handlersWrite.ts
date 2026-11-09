@@ -6,6 +6,7 @@ import type { ChatMessage } from './types';
 import { generateDomainSubtasks } from './subtasks';
 import type { AgentContext } from './context';
 import { currentUser } from '../../utils/currentUser';
+import type { Space } from '../../types/space';
 
 // Handlers that change data or inspect one ticket: status moves, subtask breakdowns, ticket details and creating tickets.
 
@@ -96,6 +97,38 @@ export async function handleSubtaskBreakdown(c: AgentContext): Promise<ChatMessa
   return undefined;
 }
 
+/** "- **Space**: 📁 **Alpha** (`AAA`)", with fallbacks for a space that is missing. */
+const spaceLine = (space: Space | undefined): string => `- **Space**: ${space?.icon || '📁'} **${space?.name || 'Unknown'}** (\`${space?.key || '?'}\`)`;
+
+/** "- **Subtasks**: 1/4 completed (25%)", or nothing when there are none. */
+function subtaskLine(subtasks: { completed?: boolean }[]): string | undefined {
+  if (subtasks.length === 0) return undefined;
+  const done = subtasks.filter(s => s.completed).length;
+  return `- **Subtasks**: ${done}/${subtasks.length} completed (${Math.round((done / subtasks.length) * 100)}%)`;
+}
+
+/** The first four lines of the description as a quote, or nothing when there is no description. */
+function descriptionBlock(description: string | undefined): string {
+  if (!description) return '';
+  const preview = descriptionToText(description).split('\n').slice(0, 4).join('\n').trim();
+  return `\n**Description Preview:**\n> ${preview.replace(/\n/g, '\n> ')}\n`;
+}
+
+/** The Markdown answer for "show me this ticket". */
+function ticketDetailText(t: Issue, space: Space | undefined): string {
+  const lines = [
+    `- **Title**: ${t.title}`,
+    spaceLine(space),
+    `- **Type**: \`${t.type.toUpperCase()}\` | **Priority**: \`${t.priority.toUpperCase()}\``,
+    `- **Status**: **${t.status.toUpperCase()}**`,
+    `- **Assignee**: ${t.assignee || 'Unassigned'} | **Reporter**: ${t.reporter || 'VY'}`,
+    t.dueDate ? `- **Due Date**: ${new Date(t.dueDate).toLocaleDateString()}` : undefined,
+    t.epicLink ? `- **Parent Epic**: **${t.epicLink}**` : undefined,
+    subtaskLine(t.subtasks || []),
+  ].filter((l): l is string => !!l);
+  return `### Ticket Details: **${t.key}**\n\n${lines.map(l => `${l}\n`).join('')}${descriptionBlock(t.description)}`;
+}
+
 /**
  * C. TICKET DETAIL INSPECTION
  */
@@ -105,22 +138,7 @@ export async function handleTicketDetail(c: AgentContext): Promise<ChatMessage |
   if (refinedGoal.intent === 'ticket_detail' && refinedGoal.targetTicket) {
     const targetIssue = refinedGoal.targetTicket;
     const space = spacesMap.get(targetIssue.spaceId) || refinedGoal.targetSpace;
-    const sub = targetIssue.subtasks || [];
-    const completedSub = sub.filter(s => s.completed).length;
-
-    let responseText = `### Ticket Details: **${targetIssue.key}**\n\n`;
-    responseText += `- **Title**: ${targetIssue.title}\n`;
-    responseText += `- **Space**: ${space?.icon || '📁'} **${space?.name || 'Unknown'}** (\`${space?.key || '?'}\`)\n`;
-    responseText += `- **Type**: \`${targetIssue.type.toUpperCase()}\` | **Priority**: \`${targetIssue.priority.toUpperCase()}\`\n`;
-    responseText += `- **Status**: **${targetIssue.status.toUpperCase()}**\n`;
-    responseText += `- **Assignee**: ${targetIssue.assignee || 'Unassigned'} | **Reporter**: ${targetIssue.reporter || 'VY'}\n`;
-    if (targetIssue.dueDate) responseText += `- **Due Date**: ${new Date(targetIssue.dueDate).toLocaleDateString()}\n`;
-    if (targetIssue.epicLink) responseText += `- **Parent Epic**: **${targetIssue.epicLink}**\n`;
-    if (sub.length > 0) responseText += `- **Subtasks**: ${completedSub}/${sub.length} completed (${Math.round((completedSub / sub.length) * 100)}%)\n`;
-    if (targetIssue.description) {
-      const descPreview = descriptionToText(targetIssue.description).split('\n').slice(0, 4).join('\n').trim();
-      responseText += `\n**Description Preview:**\n> ${descPreview.replace(/\n/g, '\n> ')}\n`;
-    }
+    const responseText = ticketDetailText(targetIssue, space);
 
     return {
       id: uuidv4(),
@@ -144,6 +162,24 @@ export async function handleTicketDetail(c: AgentContext): Promise<ChatMessage |
   return undefined;
 }
 
+const mentions = (q: string, words: string[]) => words.some(w => q.includes(w));
+
+/** The priority the person asked for ("urgent", "low priority"), medium when they said nothing. */
+function priorityFromText(q: string): Priority {
+  if (mentions(q, ['highest priority', 'critical', 'urgent'])) return 'highest';
+  if (mentions(q, ['high priority', 'important'])) return 'high';
+  if (mentions(q, ['low priority'])) return 'low';
+  return 'medium';
+}
+
+/** The column the person asked for ("in progress", "backlog"), to do when they said nothing. */
+function statusFromText(q: string): string {
+  if (mentions(q, ['in progress', 'inprogress'])) return 'inprogress';
+  if (mentions(q, ['backlog'])) return 'backlog';
+  if (mentions(q, ['done'])) return 'done';
+  return 'todo';
+}
+
 /**
  * D. CREATE NEW ISSUE WITH TARGET SPACE AWARENESS
  */
@@ -157,15 +193,8 @@ export async function handleCreateIssue(c: AgentContext): Promise<ChatMessage | 
 
     if (spaceToUse && spaceToUse.id) {
       const key = await getNextIssueKey(spaceToUse.key);
-      let priority: Priority = 'medium';
-      if (q.includes('highest priority') || q.includes('critical') || q.includes('urgent')) priority = 'highest';
-      else if (q.includes('high priority') || q.includes('important')) priority = 'high';
-      else if (q.includes('low priority')) priority = 'low';
-
-      let status = 'todo';
-      if (q.includes('in progress') || q.includes('inprogress')) status = 'inprogress';
-      else if (q.includes('in backlog') || q.includes('backlog')) status = 'backlog';
-      else if (q.includes('done')) status = 'done';
+      const priority = priorityFromText(q);
+      const status = statusFromText(q);
 
       const newIssue: Omit<Issue, 'id'> = {
         spaceId: spaceToUse.id,

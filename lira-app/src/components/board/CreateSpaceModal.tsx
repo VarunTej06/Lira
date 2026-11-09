@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { createSpace, updateSpace } from '../../hooks/useSpaces';
 import type { Space } from '../../types/space';
+import { useResetWhen } from '../../hooks/useResetWhen';
+import { PALETTE } from '../../theme/palette';
 
 interface CreateSpaceModalProps {
   isOpen: boolean;
@@ -13,7 +15,7 @@ interface CreateSpaceModalProps {
 }
 
 const SPACE_ICONS = ['📋', '✨', '🏆', '📚', '🌤️', '🚀', '💡', '🎯', '🔧', '🌐', '🧠', '⚡'];
-const SPACE_COLORS = ['#0052CC', '#00B8D9', '#6554C0', '#36B37E', '#FF5630', '#FFAB00', '#FF991F', '#172B4D'];
+const SPACE_COLORS = [PALETTE.brand, PALETTE.info, PALETTE.purple, PALETTE.success, PALETTE.danger, PALETTE.amber, PALETTE.orange, PALETTE.textStrong];
 
 export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
   isOpen,
@@ -25,23 +27,27 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
   const [name, setName] = useState('');
   const [key, setKey] = useState('');
   const [icon, setIcon] = useState('📋');
-  const [color, setColor] = useState('#0052CC');
+  const [color, setColor] = useState(PALETTE.brand);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  const resetForm = () => {
+    setName(''); setKey(''); setIcon('📋'); setColor(PALETTE.brand); setDescription(''); setError('');
+  };
+
+  useResetWhen([isOpen, editingSpace], () => {
     if (editingSpace) {
       setName(editingSpace.name || '');
       setKey(editingSpace.key || '');
       setIcon(editingSpace.icon || '📋');
-      setColor(editingSpace.color || '#0052CC');
+      setColor(editingSpace.color || PALETTE.brand);
       setDescription(editingSpace.description || '');
       setError('');
     } else {
       resetForm();
     }
-  }, [isOpen, editingSpace]);
+  });
 
   const handleNameChange = (v: string) => {
     setName(v);
@@ -97,15 +103,11 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
         onClose();
         resetForm();
       }
-    } catch (err) {
+    } catch {
       setError(editingSpace ? 'Failed to update space.' : 'Failed to create space.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const resetForm = () => {
-    setName(''); setKey(''); setIcon('📋'); setColor('#0052CC'); setDescription(''); setError('');
   };
 
   const modalTitle = editingSpace ? 'Space Settings & Edit' : 'Create Space';
@@ -171,7 +173,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
             placeholder="e.g. PY"
             className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue font-mono uppercase transition-all"
           />
-          <p className="text-[10px] text-lira-muted mt-1">Used as ticket prefix (e.g. {key || 'KEY'}-1)</p>
+          <p className="text-3xs text-lira-muted mt-1">Used as ticket prefix (e.g. {key || 'KEY'}-1)</p>
         </div>
 
         <div>

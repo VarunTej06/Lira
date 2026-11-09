@@ -1,7 +1,7 @@
 import { safeHttpUrl } from '../../../utils/safeUrl';
 import { GitBranch, Plus, ExternalLink, Check, Save, Server, X, Code } from 'lucide-react';
 import { Button } from '../../common/Button';
-import type { DetailCtx } from './types';
+import type { DetailCtx } from './detailContext';
 
 export function TechnicalTab(ctx: DetailCtx) {
   const { repoUrl, setRepoUrl, description, setDescription, lead, setLead, environments, newEnvInput, setNewEnvInput, techSavedToast, handleAddEnv, handleRemoveEnv, handleSaveTechnicalDetails } = ctx;
@@ -55,7 +55,7 @@ export function TechnicalTab(ctx: DetailCtx) {
                       </a>
                     )}
                   </div>
-                  <p className="text-[11px] text-lira-muted mt-1">
+                  <p className="text-2xs text-lira-muted mt-1">
                     Direct VCS endpoint for branch associations, commit tracking, and PR automation.
                   </p>
                 </div>

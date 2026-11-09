@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { migrateLiraSchedule, seedLiraRoadmap, type Roadmap } from '../utils/roadmapUtils';
+import { appStorage } from '../utils/appStorage';
 
 const KEY = 'lira_roadmaps';
 const ROADMAPS_EVENT = 'lira-roadmaps-changed';
@@ -20,7 +21,7 @@ function normalizeRoadmap(input: Roadmap): Roadmap {
 /** Reads roadmaps. The first time (no saved value) the Lira product roadmap is created from ROADMAP.md. */
 export function readRoadmaps(): Roadmap[] {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = appStorage.get(KEY);
     if (raw !== null) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) return parsed.map(normalizeRoadmap);
@@ -35,7 +36,7 @@ export function readRoadmaps(): Roadmap[] {
 
 export function writeRoadmaps(list: Roadmap[]): void {
   try {
-    localStorage.setItem(KEY, JSON.stringify(list));
+    appStorage.set(KEY, JSON.stringify(list));
   } catch (e) {
     console.error('Failed to save lira_roadmaps', e);
   }

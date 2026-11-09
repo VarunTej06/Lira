@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CELEBRATE_EVENT, type CelebrateKind } from '../../utils/celebrate';
+import { PALETTE } from '../../theme/palette';
 
 interface Piece { id: number; dx: number; rise: number; fall: number; spin: number; size: number; color: string; round: boolean; delay: number }
 interface Burst { id: number; x: number; y: number; pieces: Piece[] }
 
-const COLORS = ['#4C9AFF', '#36B37E', '#FFAB00', '#FF5630', '#6554C0', '#00B8D9'];
+const COLORS = ['#4C9AFF', PALETTE.success, PALETTE.amber, PALETTE.danger, PALETTE.purple, PALETTE.info];
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
 function makeBurst(id: number, x: number, y: number, kind: CelebrateKind): Burst {

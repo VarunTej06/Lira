@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Upload, X, FileText, Download, Plus, ExternalLink, HardDrive, Cloud, Package, Link2 } from 'lucide-react';
 import type { Attachment, AttachmentSource } from '../../types/issue';
 import { readAttachment, formatBytes, SOURCE_LABEL } from '../../utils/attachments';
-import { alertDialog } from '../common/dialogs';
+import { alertDialog } from '../common/dialogStore';
 import { AttachPicker } from './AttachPicker';
 import { formatDayDateTime } from '../../utils/dateUtils';
 
@@ -99,7 +99,7 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium text-lira-text truncate">{att.name}</p>
-                <p className="text-[10px] text-lira-muted">{att.url ? SOURCE_LABEL[att.source ?? 'link'] : formatBytes(att.size)}</p>
+                <p className="text-3xs text-lira-muted">{att.url ? SOURCE_LABEL[att.source ?? 'link'] : formatBytes(att.size)}</p>
               </div>
               <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 {att.url && (
@@ -138,7 +138,7 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
 
       {fromComments.length > 0 && (
         <div data-testid="comment-attachments">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-lira-muted mb-1.5">Added in comments</p>
+          <p className="text-2xs font-semibold uppercase tracking-wide text-lira-muted mb-1.5">Added in comments</p>
           <div className="grid grid-cols-2 gap-2">
             {fromComments.map(({ attachment: att, author, at }) => (
               <div key={`${att.id}`} className="flex items-center gap-2 p-2 border border-lira-border rounded-lg bg-gray-50/50">
@@ -149,7 +149,7 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-lira-text truncate">{att.name}</p>
-                  <p className="text-[10px] text-lira-muted truncate">{att.url ? SOURCE_LABEL[att.source ?? 'link'] : formatBytes(att.size)} · {author}, {formatDayDateTime(at)}</p>
+                  <p className="text-3xs text-lira-muted truncate">{att.url ? SOURCE_LABEL[att.source ?? 'link'] : formatBytes(att.size)} · {author}, {formatDayDateTime(at)}</p>
                 </div>
                 {att.dataUrl && (
                   <a href={att.dataUrl} download={att.name} className="p-1 rounded hover:bg-gray-200 text-lira-muted" aria-label={`Download ${att.name}`}><Download className="w-3 h-3" /></a>

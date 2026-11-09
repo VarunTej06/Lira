@@ -1,4 +1,4 @@
-import React, { useState, useEffect, type ReactNode } from 'react';
+import React, { useState, type ReactNode } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { FolderKanban, Layers, PlusCircle, Check } from 'lucide-react';
@@ -7,6 +7,9 @@ import type { Project } from '../../types/project';
 import { writeProjects } from '../../hooks/useProjects';
 import { createSpace } from '../../hooks/useSpaces';
 import { cleanProjectKey, suggestProjectKey } from '../../utils/projectKey';
+import { useResetWhen } from '../../hooks/useResetWhen';
+import { PALETTE } from '../../theme/palette';
+import { appStorage } from '../../utils/appStorage';
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -16,7 +19,7 @@ interface CreateProjectModalProps {
 }
 
 const SPACE_ICONS = ['🚀', '🎯', '⚡', '💡', '🏆', '🔧', '🌐', '🧠', '📋', '✨', '📚', '🌤️'];
-const SPACE_COLORS = ['#0052CC', '#00B8D9', '#6554C0', '#36B37E', '#FF5630', '#FFAB00', '#FF991F', '#172B4D'];
+const SPACE_COLORS = [PALETTE.brand, PALETTE.info, PALETTE.purple, PALETTE.success, PALETTE.danger, PALETTE.amber, PALETTE.orange, PALETTE.textStrong];
 const DEFAULT_LEAD = 'Varun Tej';
 
 const LABEL = 'block text-xs font-semibold text-lira-muted uppercase tracking-wider mb-1.5';
@@ -45,7 +48,7 @@ function ChoiceCard({ selected, onSelect, icon, title, text }: { selected: boole
 
 /** Reads the saved projects (an unreadable list counts as empty). */
 function savedProjects(): Project[] {
-  try { return JSON.parse(localStorage.getItem('lira_projects') || '[]'); } catch { return []; }
+  try { return JSON.parse(appStorage.get('lira_projects') || '[]'); } catch { return []; }
 }
 
 export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose, spaces, onProjectCreated }) => {
@@ -57,15 +60,15 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   const [associationType, setAssociationType] = useState<'existing' | 'new'>('existing');
   const [selectedSpaceId, setSelectedSpaceId] = useState<number>(() => spaces[0]?.id || 1);
   const [newSpaceIcon, setNewSpaceIcon] = useState('🚀');
-  const [newSpaceColor, setNewSpaceColor] = useState('#0052CC');
+  const [newSpaceColor, setNewSpaceColor] = useState(PALETTE.brand);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [savedToast, setSavedToast] = useState(false);
 
   // Keep the chosen space valid when the list of spaces changes
-  useEffect(() => {
+  useResetWhen([spaces, selectedSpaceId], () => {
     if (spaces.length > 0 && !spaces.some(s => s.id === selectedSpaceId)) setSelectedSpaceId(spaces[0].id || 1);
-  }, [spaces, selectedSpaceId]);
+  });
 
   const changeName = (value: string) => {
     setName(value);
@@ -76,7 +79,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   const resetForm = () => {
     setName(''); setKey(''); setKeyEdited(false); setDescription(''); setLead(DEFAULT_LEAD);
     setAssociationType('existing'); setSelectedSpaceId(spaces[0]?.id || 1);
-    setNewSpaceIcon('🚀'); setNewSpaceColor('#0052CC'); setError('');
+    setNewSpaceIcon('🚀'); setNewSpaceColor(PALETTE.brand); setError('');
   };
   const close = () => { resetForm(); onClose(); };
 
@@ -136,7 +139,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
           </div>
           <Field label="Key / Prefix" required>
             <input type="text" required value={key} onChange={e => changeKey(e.target.value)} placeholder="e.g. MLOP" maxLength={6} className={`${INPUT} font-mono uppercase`} />
-            <p className="text-[10px] text-lira-muted mt-1 font-mono">Issues: {key || 'KEY'}-1</p>
+            <p className="text-3xs text-lira-muted mt-1 font-mono">Issues: {key || 'KEY'}-1</p>
           </Field>
         </div>
 
@@ -173,7 +176,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
             <div className="p-3.5 bg-gray-50 border border-lira-border rounded-xl space-y-3 animate-fade-in">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-lira-text uppercase tracking-wider">New Space Customization</span>
-                <span className="text-[11px] text-lira-muted font-mono">{key || 'KEY'}.json on disk</span>
+                <span className="text-2xs text-lira-muted font-mono">{key || 'KEY'}.json on disk</span>
               </div>
               <div>
                 <label className="block text-xs text-lira-muted mb-1.5">Space Icon</label>

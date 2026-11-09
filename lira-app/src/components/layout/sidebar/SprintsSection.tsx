@@ -1,5 +1,5 @@
 import { sprintLink } from '../../../utils/links';
-import { confirmDialog } from '../../common/dialogs';
+import { confirmDialog } from '../../common/dialogStore';
 import { Trash2, CalendarClock } from 'lucide-react';
 import { RowMenuButton, ContextItem, SectionHeader, Collapsible } from './parts';
 import { canDeleteSprint, sprintLabel, sprintName, sprintPhase } from '../../../utils/sprintUtils';
@@ -42,8 +42,8 @@ export function SprintsSection(s: SidebarState) {
                       }`}
                     />
                     <span className="truncate flex-1">{sprintLabel(k)}</span>
-                    {phase === 'active' && <span className="text-[9px] font-bold text-green-300">ACTIVE</span>}
-                    <span className="text-[10px] text-white/40 tabular-nums">{c.done}/{c.total}</span>
+                    {phase === 'active' && <span className="text-4xs font-bold text-green-300">ACTIVE</span>}
+                    <span className="text-3xs text-white/40 tabular-nums">{c.done}/{c.total}</span>
                   </button>
                   <RowMenuButton
                     open={rowMenu === `sprint:${k}`}
@@ -67,7 +67,7 @@ export function SprintsSection(s: SidebarState) {
                         }}
                       />
                     ) : (
-                      <div className="px-3 py-2 text-[11px] text-white/40 leading-snug max-w-[200px]">The current and next sprints always exist, so they cannot be deleted.</div>
+                      <div className="px-3 py-2 text-2xs text-white/40 leading-snug max-w-[200px]">The current and next sprints always exist, so they cannot be deleted.</div>
                     )}
                   </RowMenuButton>
                 </div>
@@ -76,7 +76,7 @@ export function SprintsSection(s: SidebarState) {
             {sprintKeys.length > visibleSprintKeys.length || showAllSprints ? (
               <button
                 onClick={() => setShowAllSprints(v => !v)}
-                className="w-full text-left px-2.5 py-1 text-[11px] text-white/40 hover:text-white/70 cursor-pointer"
+                className="w-full text-left px-2.5 py-1 text-2xs text-white/40 hover:text-white/70 cursor-pointer"
               >
                 {showAllSprints ? 'Show fewer' : `Show all ${sprintKeys.length} sprints`}
               </button>

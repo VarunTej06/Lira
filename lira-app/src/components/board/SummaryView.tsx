@@ -1,4 +1,5 @@
-import { CountUp, GrowBar, motion } from '../common/motion';
+import { CountUp, GrowBar } from '../common/motion';
+import { motion } from '../common/motionPresets';
 import { issueLink } from '../../utils/links';
 import { statusLabel } from '../../utils/status';
 import { summaryStats } from '../../utils/summaryStats';
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
+import { PALETTE } from '../../theme/palette';
 
 interface SummaryViewProps {
   issues: Issue[];
@@ -50,7 +52,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
           {space && (
             <div
               className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold shadow-xs"
-              style={{ backgroundColor: (space.color || '#0052CC') + '22', color: space.color || '#0052CC' }}
+              style={{ backgroundColor: (space.color || PALETTE.brand) + '22', color: space.color || PALETTE.brand }}
             >
               {space.icon || '🚀'}
             </div>
@@ -71,7 +73,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
         {/* Global Progress Dial */}
         <div className="flex items-center gap-4 bg-gray-50 px-4 py-2.5 rounded-lg border border-lira-border">
           <div className="text-right">
-            <div className="text-[11px] font-semibold uppercase text-lira-muted tracking-wider">Completion Rate</div>
+            <div className="text-2xs font-semibold uppercase text-lira-muted tracking-wider">Completion Rate</div>
             <div className="text-2xl font-extrabold text-lira-text"><CountUp value={stats.completionRate} suffix="%" /></div>
           </div>
           <div className="relative w-12 h-12 rounded-full flex items-center justify-center font-bold text-xs text-emerald-700 bg-emerald-50" data-testid="completion-ring">
@@ -191,7 +193,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                 <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden mb-1.5">
                   <GrowBar className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full" percent={progress} />
                 </div>
-                <div className="text-[11px] text-lira-muted flex justify-between">
+                <div className="text-2xs text-lira-muted flex justify-between">
                   <span><CountUp value={completedChildren} /> of {totalChildren} work items done</span>
                   <span className="capitalize text-gray-500">{epic.status}</span>
                 </div>
@@ -227,7 +229,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                       {issue.title}
                     </span>
                   </div>
-                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
+                  <span className="text-3xs uppercase font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
                     {statusLabel(issue.status)}
                   </span>
                 </div>
@@ -252,7 +254,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                   className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-lg text-xs font-semibold"
                 >
                   <span>#{label}</span>
-                  <span className="bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded-full text-[10px]">
+                  <span className="bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded-full text-3xs">
                     {count}
                   </span>
                 </div>

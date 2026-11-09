@@ -1,14 +1,15 @@
-import { confirmDialog } from '../../common/dialogs';
+import { confirmDialog } from '../../common/dialogStore';
 import React, { useState, useRef, useEffect } from 'react';
 import type { Space } from '../../../types/space';
 import type { Project } from '../../../types/project';
 import { currentSprintKey } from '../../../utils/sprintUtils';
 import { deleteSpace } from '../../../hooks/useSpaces';
 import { isGlobalTab } from '../../../routes';
-import { loadSidebarConfig, type SidebarConfig } from '../CustomiseSidebarModal';
-import { prevOf, useSectionState } from './parts';
+import { loadSidebarConfig, type SidebarConfig } from '../sidebarConfig';
+import { prevOf, useSectionState } from './sectionState';
 import { useActiveIndicator } from './useActiveIndicator';
 import { User, FolderKanban, CalendarClock, Ticket, Map, LayoutDashboard } from 'lucide-react';
+import { appStorage } from '../../../utils/appStorage';
 
 export interface LeftSidebarProps {
   spaces: Space[];
@@ -76,7 +77,7 @@ export function useSidebarState(props: LeftSidebarProps) {
     
   } = props;
   const [internalCollapsed, setInternalCollapsed] = useState<boolean>(
-    () => localStorage.getItem('lira_sidebar_collapsed') === 'true'
+    () => appStorage.get('lira_sidebar_collapsed') === 'true'
   );
   const isCollapsed = setSidebarCollapsed !== undefined ? sidebarCollapsed : internalCollapsed;
   const [isRotating, setIsRotating] = useState(false);
@@ -128,7 +129,7 @@ export function useSidebarState(props: LeftSidebarProps) {
   /** Collapses or expands the sidebar, remembers it, and spins the toggle icon briefly. */
   const setCollapsedTo = (collapsed: boolean) => {
     setIsRotating(true);
-    localStorage.setItem('lira_sidebar_collapsed', String(collapsed));
+    appStorage.set('lira_sidebar_collapsed', String(collapsed));
     if (setSidebarCollapsed) setSidebarCollapsed(collapsed); else setInternalCollapsed(collapsed);
     setTimeout(() => setIsRotating(false), 300);
   };
@@ -151,7 +152,8 @@ export function useSidebarState(props: LeftSidebarProps) {
     e.stopPropagation();
     setStarredIds(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
     setOpenMenuId(null);

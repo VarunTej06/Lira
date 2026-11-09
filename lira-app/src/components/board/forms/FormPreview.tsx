@@ -1,4 +1,4 @@
-import { alertDialog } from '../../common/dialogs';
+import { alertDialog } from '../../common/dialogStore';
 import { FileText } from 'lucide-react';
 import { Button } from '../../common/Button';
 import type { FormsState } from './useFormsState';

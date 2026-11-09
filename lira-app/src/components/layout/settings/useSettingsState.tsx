@@ -1,10 +1,10 @@
-import { notifySaved } from '../../common/SavedToast';
-import {  } from '../../common/dialogs';
-import React, { useState, useEffect, useRef } from 'react';
+import { notifySaved } from '../../common/savedToastStore';
+import React, { useState, useRef } from 'react';
 import { loadAccent, saveAccent } from '../../../utils/accent';
 import { applyTheme, getTheme } from '../../../utils/theme';
 import { useBackupState } from './useBackupState';
 import { cleanProfile, loadLocale, loadNotificationPrefs, loadProfile, saveLocale, saveNotificationPrefs, saveProfile } from '../../../utils/userPrefs';
+import { useResetWhen } from '../../../hooks/useResetWhen';
 
 export type SettingsSection = 'appearance' | 'backup' | 'profile' | 'general' | 'notifications' | 'devices';
 
@@ -30,17 +30,17 @@ export function useSettingsState(props: SettingsModalProps) {
     setAccent(hex.toUpperCase());
   };
 
-  // Sync section and theme when modal opens
-  useEffect(() => {
+  // ── Appearance State ────────────────────────────────────────────────────────
+  const [theme, setTheme] = useState<'light' | 'dark'>(getTheme);
+
+  // Sync section and theme when the dialog opens
+  useResetWhen([isOpen, initialSection], () => {
     if (isOpen) {
       setActiveSection(initialSection);
       setTheme(getTheme()); // an unsaved choice from last time is dropped
       setAccent(loadAccent());
     }
-  }, [isOpen, initialSection]);
-
-  // ── Appearance State ────────────────────────────────────────────────────────
-  const [theme, setTheme] = useState<'light' | 'dark'>(getTheme);
+  });
 
   // Choosing only changes the draft; nothing is applied until Save
   const handleSelectTheme = (t: 'light' | 'dark') => setTheme(t);

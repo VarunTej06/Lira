@@ -9,7 +9,8 @@ import { TechnicalTab } from './detail/TechnicalTab';
 import { SettingsTab } from './detail/SettingsTab';
 import { useProjectData } from './detail/useProjectData';
 import { useProjectForms } from './detail/useProjectForms';
-import type { DetailCtx, ProjectDetailViewProps, TabType } from './detail/types';
+import type { ProjectDetailViewProps, TabType } from './detail/types';
+import type { DetailCtx } from './detail/detailContext';
 
 /** One project: header with tabs, and the chosen tab (overview, board, tickets, sprints, technical details, settings). */
 export const ProjectDetailView: React.FC<ProjectDetailViewProps> = (props) => {

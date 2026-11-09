@@ -4,7 +4,7 @@ import type { Issue } from '../../types/issue';
 import { STATUS_LIST, statusLabel } from '../../utils/status';
 import { deleteIssue, updateIssue } from '../../hooks/useIssues';
 import { ConfirmDeleteModal } from '../common/ConfirmDeleteModal';
-import { parentFields } from './ParentPill';
+import { parentFields } from './parentFields';
 
 interface Props {
   issue: Issue;
@@ -56,7 +56,7 @@ export function CardActions({ issue, hasParent, eligibleParents, onOpen }: Props
               <LinkIcon className="w-3.5 h-3.5 text-lira-muted" /> Link to parent...
             </button>
           )}
-          <div className="px-3 pt-1.5 pb-0.5 text-[10px] font-semibold text-lira-muted uppercase tracking-wide">Set status</div>
+          <div className="px-3 pt-1.5 pb-0.5 text-3xs font-semibold text-lira-muted uppercase tracking-wide">Set status</div>
           {STATUS_LIST.map(m => m.id as string).map(s => (
             <button key={s} onClick={e => setStatus(e, s)} className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 text-lira-text ${issue.status === s ? 'font-semibold text-lira-blue' : ''}`}>
               {statusLabel(s)}
@@ -71,14 +71,14 @@ export function CardActions({ issue, hasParent, eligibleParents, onOpen }: Props
 
       {linkOpen && (
         <div ref={link} className="absolute right-0 bottom-6 z-40 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 min-w-[200px] max-w-[260px] max-h-56 overflow-y-auto animate-scale-in">
-          <div className="px-3 py-1 text-[10px] font-semibold text-lira-muted uppercase tracking-wide border-b border-gray-100">Select Parent</div>
+          <div className="px-3 py-1 text-3xs font-semibold text-lira-muted uppercase tracking-wide border-b border-gray-100">Select Parent</div>
           {eligibleParents.map(p => (
             <button
               key={p.id}
               onClick={async () => { setLinkOpen(false); if (issue.id && p.id) await updateIssue(issue.id, parentFields(p)); }}
               className="w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 truncate text-lira-text"
             >
-              <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{p.key}</span>
+              <span className="text-3xs font-mono text-lira-muted flex-shrink-0">{p.key}</span>
               <span className="truncate">{p.title}</span>
             </button>
           ))}

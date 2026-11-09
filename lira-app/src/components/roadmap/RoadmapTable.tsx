@@ -39,7 +39,7 @@ export const RoadmapTable: React.FC<Props> = ({ roadmap, items, issues, onOpenIt
     <div className="rounded-2xl border border-lira-border bg-lira-surface overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-xs">
-          <thead className="bg-lira-bg/70 text-lira-muted uppercase tracking-wider text-[10px] border-b border-lira-border">
+          <thead className="bg-lira-bg/70 text-lira-muted uppercase tracking-wider text-3xs border-b border-lira-border">
             <tr>
               {th('title', 'Epic', 'min-w-[260px]')}{th('lane', 'Lane')}{th('status', 'Status')}{th('start', 'Start')}{th('end', 'End')}{th('progress', 'Progress', 'min-w-[130px]')}{th('owner', 'Owner')}
               <th className="px-3 py-2.5 text-left font-semibold">Depends on</th>
@@ -51,9 +51,9 @@ export const RoadmapTable: React.FC<Props> = ({ roadmap, items, issues, onOpenIt
               const conflict = problems.some(p => p.to === item.id && p.kind === 'conflict');
               return (
                 <tr key={item.id} onClick={() => onOpenItem(item.id)} className="border-b border-lira-border/60 hover:bg-lira-bg/60 cursor-pointer">
-                  <td className="px-3 py-2.5 text-lira-text font-medium"><span className="font-mono text-[10px] text-lira-muted mr-2">{epic?.key || item.epicKey || '—'}</span>{item.title}</td>
+                  <td className="px-3 py-2.5 text-lira-text font-medium"><span className="font-mono text-3xs text-lira-muted mr-2">{epic?.key || item.epicKey || '—'}</span>{item.title}</td>
                   <td className="px-3 py-2.5"><span className="inline-flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm" style={{ background: laneColor(roadmap, item.lane) }} />{item.lane}</span></td>
-                  <td className="px-3 py-2.5"><span className="px-2 py-0.5 rounded-full font-semibold text-[10px]" style={{ background: STATUS_META[status].color + '22', color: STATUS_META[status].color }}>{STATUS_META[status].label}</span></td>
+                  <td className="px-3 py-2.5"><span className="px-2 py-0.5 rounded-full font-semibold text-3xs" style={{ background: STATUS_META[status].color + '22', color: STATUS_META[status].color }}>{STATUS_META[status].label}</span></td>
                   <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap">{fmtShort(item.start)}</td>
                   <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap">{fmtShort(item.end)}</td>
                   <td className="px-3 py-2.5">

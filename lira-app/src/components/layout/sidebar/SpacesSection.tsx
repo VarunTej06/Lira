@@ -23,7 +23,7 @@ export function SpacesSection(s: SidebarState) {
             <Collapsible open={spacesExpanded}>
               <div className="mt-0.5">
                 {visibleSpaces.length === 0 ? (
-                  <div className="px-3 py-1.5 text-[11px] text-white/30 italic">
+                  <div className="px-3 py-1.5 text-2xs text-white/30 italic">
                     No active spaces
                   </div>
                 ) : (

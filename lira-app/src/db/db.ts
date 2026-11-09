@@ -1,7 +1,7 @@
 import Dexie, { type Table } from 'dexie';
 import type { Issue } from '../types/issue';
 import type { Space, Column } from '../types/space';
-import type { ProjectRow, SprintRow, TeamRow, StandupRow } from '../services/structuredStore';
+import type { ProjectRow, SprintRow, TeamRow, StandupRow } from '../types/structured';
 import { celebrate } from '../utils/celebrate';
 
 let restoringIssues = false;

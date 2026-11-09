@@ -8,7 +8,7 @@ export function SettingsNav(s: SettingsState) {
     <>
         {/* Left Sidebar Navigation */}
         <div className="w-full md:w-56 bg-gray-50 border-b md:border-b-0 md:border-r border-lira-border p-3 flex flex-row md:flex-col gap-1 overflow-x-auto flex-shrink-0">
-          <div className="hidden md:block px-3 py-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+          <div className="hidden md:block px-3 py-1.5 text-3xs font-bold text-gray-400 uppercase tracking-wider">
             Workspace Settings
           </div>
 
@@ -61,7 +61,7 @@ export function SettingsNav(s: SettingsState) {
           </button>
 
           <div className="hidden md:block my-2 border-t border-lira-border" />
-          <div className="hidden md:block px-3 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+          <div className="hidden md:block px-3 py-1 text-3xs font-bold text-gray-400 uppercase tracking-wider">
             System
           </div>
 

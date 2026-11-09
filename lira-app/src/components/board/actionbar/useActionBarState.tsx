@@ -6,6 +6,8 @@ import { useClickOutside } from '../../../hooks/useClickOutside';
 import { downloadFile } from '../../../utils/download';
 import type { GroupBy } from '../boardColumns';
 import { useBoardFilters } from './useBoardFilters';
+import { PALETTE } from '../../../theme/palette';
+import { appStorage } from '../../../utils/appStorage';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -39,10 +41,10 @@ export const MORE_TABS = ['Forms', 'Documents', 'Attachments', 'Reports'];
 
 export const PRIORITIES: { label: string; value: string; color: string }[] = [
   { label: 'Highest', value: 'highest', color: '#FF0000' },
-  { label: 'High',    value: 'high',    color: '#FF5630' },
-  { label: 'Medium',  value: 'medium',  color: '#FF8B00' },
-  { label: 'Low',     value: 'low',     color: '#36B37E' },
-  { label: 'Lowest',  value: 'lowest',  color: '#00B8D9' },
+  { label: 'High',    value: 'high',    color: PALETTE.danger },
+  { label: 'Medium',  value: 'medium',  color: PALETTE.orangeDeep },
+  { label: 'Low',     value: 'low',     color: PALETTE.success },
+  { label: 'Lowest',  value: 'lowest',  color: PALETTE.info },
 ];
 
 export const GROUP_OPTIONS: { label: string; value: GroupBy }[] = [
@@ -116,12 +118,12 @@ export function useActionBarState(props: BoardActionBarProps) {
   useClickOutside(overflowRef, () => setShowOverflow(false));
   const [wipEnabled, setWipEnabled] = useState<boolean>(() => {
     try {
-      const raw = localStorage.getItem('lira_wip_limits');
+      const raw = appStorage.get('lira_wip_limits');
       if (!raw) return false;
       if (raw === 'true') return true;
       if (raw.startsWith('{')) {
         const obj = JSON.parse(raw);
-        return Object.values(obj).some((v: any) => typeof v === 'number' && v > 0);
+        return Object.values(obj).some((v: unknown) => typeof v === 'number' && v > 0);
       }
       return false;
     } catch { return false; }
@@ -188,12 +190,12 @@ export function useActionBarState(props: BoardActionBarProps) {
     setWipEnabled(next);
     try {
       if (next) {
-        const raw = localStorage.getItem('lira_wip_config');
+        const raw = appStorage.get('lira_wip_config');
         const parsed = raw ? JSON.parse(raw) : null;
         const limits = parsed?.limits || { todo: 5, inprogress: 3 };
-        localStorage.setItem('lira_wip_limits', JSON.stringify(limits));
+        appStorage.set('lira_wip_limits', JSON.stringify(limits));
       } else {
-        localStorage.setItem('lira_wip_limits', JSON.stringify({}));
+        appStorage.set('lira_wip_limits', JSON.stringify({}));
       }
       window.dispatchEvent(new Event('lira_wip_limits_changed'));
     } catch { /* ignore */ }

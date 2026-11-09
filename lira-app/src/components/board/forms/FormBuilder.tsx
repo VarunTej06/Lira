@@ -57,7 +57,7 @@ export function FormBuilder(s: FormsState) {
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-end">
                   <div className="sm:col-span-6 space-y-1">
-                    <label className="block text-[11px] font-semibold text-lira-text">Field Name</label>
+                    <label className="block text-2xs font-semibold text-lira-text">Field Name</label>
                     <input
                       type="text"
                       placeholder="e.g. Account Number, Error Log"
@@ -69,7 +69,7 @@ export function FormBuilder(s: FormsState) {
                   </div>
 
                   <div className="sm:col-span-4 space-y-1">
-                    <label className="block text-[11px] font-semibold text-lira-text">Field Type</label>
+                    <label className="block text-2xs font-semibold text-lira-text">Field Type</label>
                     <select
                       value={fieldType}
                       onChange={e => setFieldType(e.target.value as FormFieldType)}
@@ -97,7 +97,7 @@ export function FormBuilder(s: FormsState) {
 
                 {fieldType === 'select' && (
                   <div className="space-y-1 pt-1">
-                    <label className="block text-[11px] font-semibold text-lira-text">
+                    <label className="block text-2xs font-semibold text-lira-text">
                       Options (comma separated)
                     </label>
                     <input
@@ -130,7 +130,7 @@ export function FormBuilder(s: FormsState) {
                     Form Schema Fields ({fields.length})
                   </h4>
                   {fields.length > 0 && (
-                    <span className="text-[11px] text-lira-muted">Fields will appear in this order</span>
+                    <span className="text-2xs text-lira-muted">Fields will appear in this order</span>
                   )}
                 </div>
 
@@ -146,16 +146,16 @@ export function FormBuilder(s: FormsState) {
                         className="flex items-center justify-between p-2.5 bg-gray-50 border border-lira-border rounded-lg text-xs"
                       >
                         <div className="flex items-center gap-2.5">
-                          <span className="w-5 h-5 rounded-full bg-white border border-lira-border flex items-center justify-center font-bold text-[10px] text-lira-muted">
+                          <span className="w-5 h-5 rounded-full bg-white border border-lira-border flex items-center justify-center font-bold text-3xs text-lira-muted">
                             {i + 1}
                           </span>
                           <div>
                             <span className="font-semibold text-lira-text">{f.name}</span>
-                            <span className="ml-2 text-[10px] uppercase font-mono px-1.5 py-0.5 bg-gray-200/70 rounded text-lira-muted">
+                            <span className="ml-2 text-3xs uppercase font-mono px-1.5 py-0.5 bg-gray-200/70 rounded text-lira-muted">
                               {f.type}
                             </span>
                             {f.required && (
-                              <span className="ml-1.5 text-[10px] text-red-600 font-bold">Required</span>
+                              <span className="ml-1.5 text-3xs text-red-600 font-bold">Required</span>
                             )}
                           </div>
                         </div>

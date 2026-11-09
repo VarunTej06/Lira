@@ -60,7 +60,7 @@ export const EpicTimeline: React.FC<EpicTimelineProps> = ({ issues, keys, scope,
                 <button onClick={() => onPickSprint(k)} className={`text-xs font-semibold cursor-pointer ${k === sprint ? 'text-lira-blue' : 'text-lira-muted hover:text-lira-text'}`}>
                   {sprintLabel(k, true)}
                 </button>
-                <div className="text-[9px] text-lira-muted font-normal">{sprintPhase(k) === 'active' ? 'now' : sprintPhase(k)}</div>
+                <div className="text-4xs text-lira-muted font-normal">{sprintPhase(k) === 'active' ? 'now' : sprintPhase(k)}</div>
               </th>
             ))}
           </tr>
@@ -77,7 +77,7 @@ export const EpicTimeline: React.FC<EpicTimelineProps> = ({ issues, keys, scope,
                   </button>
                   <div className="flex items-center gap-2 mt-1">
                     <div className="h-1 flex-1 rounded-full bg-gray-100 overflow-hidden"><div className="h-full bg-green-500" style={{ width: `${pct}%` }} /></div>
-                    <span className="text-[10px] text-lira-muted">{r.done}/{r.total}</span>
+                    <span className="text-3xs text-lira-muted">{r.done}/{r.total}</span>
                   </div>
                 </td>
                 {cols.map(k => {

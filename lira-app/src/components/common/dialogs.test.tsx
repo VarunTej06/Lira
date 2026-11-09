@@ -1,8 +1,9 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DialogHost, alertDialog, confirmDialog, promptDialog } from './dialogs';
-import { toKey, fromKey, monthGrid, formatPretty } from './DatePicker';
+import { DialogHost } from './dialogs';
+import { alertDialog, confirmDialog, promptDialog } from './dialogStore';
+import { toKey, fromKey, monthGrid, formatPretty } from './dateKeys';
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 

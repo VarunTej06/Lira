@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { CountUp, motion } from '../../common/motion';
+import { CountUp } from '../../common/motion';
+import { motion } from '../../common/motionPresets';
 import { statusLabel } from '../../../utils/status';
 import { PriorityIcon, TypeIcon } from '../../common/Icons';
 import { KanbanSquare, Settings, Plus, Layers, AlertCircle, CheckCircle2, TrendingUp } from 'lucide-react';
@@ -7,7 +8,7 @@ import { Button } from '../../common/Button';
 import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
 import { formatRelativeDate } from '../../../utils/dateUtils';
 import { getStatusBadgeClass } from './badges';
-import type { DetailCtx } from './types';
+import type { DetailCtx } from './detailContext';
 
 type Stats = DetailCtx['stats'];
 
@@ -92,7 +93,7 @@ export function OverviewTab(ctx: DetailCtx) {
             <div>
               <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">{title}</p>
               <h4 className={`text-2xl font-black mt-1 ${valueClass}`}><CountUp value={value(stats)} suffix={'suffix' in rest ? rest.suffix : undefined} /></h4>
-              <p className="text-[11px] text-lira-muted mt-0.5">{note ?? <><CountUp value={stats.done} /> of {stats.total} resolved</>}</p>
+              <p className="text-2xs text-lira-muted mt-0.5">{note ?? <><CountUp value={stats.done} /> of {stats.total} resolved</>}</p>
             </div>
             <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${iconBox}`}><Icon className="w-5 h-5" /></div>
           </div>
@@ -119,7 +120,7 @@ export function OverviewTab(ctx: DetailCtx) {
                     initial={{ width: 0 }}
                     animate={{ width: `${share * 100}%` }}
                     transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: BAR_SEGMENTS.findIndex(s => s.key === seg.key) * 0.2 }}
-                    className={`${seg.color} flex items-center justify-center text-white text-[11px] font-bold px-1 relative group cursor-pointer`}
+                    className={`${seg.color} flex items-center justify-center text-white text-2xs font-bold px-1 relative group cursor-pointer`}
                     title={`${seg.label}: ${counts[seg.key]} (${pct}%)`}
                   >
                     {share >= 0.1 && <span>{pct}%</span>}
@@ -135,7 +136,7 @@ export function OverviewTab(ctx: DetailCtx) {
                   <div className="text-xs">
                     <span className="text-lira-muted font-medium">{item.label}: </span>
                     <span className={`font-bold ${item.value}`}><CountUp value={counts[item.key]} /></span>
-                    <span className="text-[10px] text-lira-muted ml-1">(<CountUp value={percentOf(counts[item.key], stats.total)} suffix="%" />)</span>
+                    <span className="text-3xs text-lira-muted ml-1">(<CountUp value={percentOf(counts[item.key], stats.total)} suffix="%" />)</span>
                   </div>
                 </div>
               ))}
@@ -152,7 +153,7 @@ export function OverviewTab(ctx: DetailCtx) {
               <span className={`text-xs font-semibold flex items-center gap-1 ${p.title}`}><PriorityIcon priority={p.key} /> {p.label}</span>
               <div className="mt-2 flex items-baseline justify-between">
                 <span className={`text-xl font-bold ${p.count}`}><CountUp value={priorities[p.key]} /></span>
-                <span className={`text-[10px] font-medium ${p.pct}`}><CountUp value={percentOf(priorities[p.key], stats.total)} suffix="%" /></span>
+                <span className={`text-3xs font-medium ${p.pct}`}><CountUp value={percentOf(priorities[p.key], stats.total)} suffix="%" /></span>
               </div>
             </div>
           ))}
@@ -177,7 +178,7 @@ export function OverviewTab(ctx: DetailCtx) {
                   <span className="text-xs text-lira-text font-medium truncate group-hover:text-lira-blue transition-colors">{issue.title}</span>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className={`px-2 py-0.5 rounded text-[11px] font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>{statusLabel(issue.status)}</span>
+                  <span className={`px-2 py-0.5 rounded text-2xs font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>{statusLabel(issue.status)}</span>
                   <span className="text-xs text-lira-muted whitespace-nowrap">{formatRelativeDate(issue.updatedAt || issue.createdAt) || 'Recently'}</span>
                 </div>
               </div>

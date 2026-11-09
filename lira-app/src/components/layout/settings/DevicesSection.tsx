@@ -64,7 +64,7 @@ export function DevicesSection(s: SettingsState) {
                   </div>
                 </div>
               ))}
-              <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+              <p className="text-2xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                 This link is a password: anyone with it on your Wi-Fi can read and change your tickets. Do not share it or use it on public Wi-Fi.
                 To cancel every device, delete <code>data/private/lan-token</code> and restart Lira.
               </p>

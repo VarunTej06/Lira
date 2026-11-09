@@ -13,13 +13,13 @@
 | **Bundler & Server** | [Vite 8.x](https://vitejs.dev/) | HMR development server (also hosts the disk-saving API) + ESM build |
 | **Routing** | [React Router 7](https://reactrouter.com/) | A real URL for every page (`src/routes.ts`) |
 | **Styling** | [Tailwind CSS 3.4](https://tailwindcss.com/) | Design tokens, dark mode (class strategy), responsive utilities |
-| **Motion** | [Framer Motion](https://www.framer.com/motion/) | Dialog, menu, tab and number animations (`components/common/motion.tsx`) |
+| **Motion** | [Framer Motion](https://www.framer.com/motion/) | Dialog, menu, tab and number animations (`components/common/motion.tsx`, presets in `motionPresets.ts`) |
 | **Icons / Fonts** | Lucide React, Inter (`@fontsource/inter`, served locally) | Iconography; no request to Google |
 | **Local DB** | [Dexie.js 4.x](https://dexie.org/) | Reactive IndexedDB cache with `useLiveQuery` |
 | **Local PC Storage** | JSON files under `../data/` | Source of truth for everything (tickets, projects, sprints, roadmaps, teams, standups, settings) |
 | **Drag & Drop** | [@hello-pangea/dnd](https://github.com/hello-pangea/dnd) | Kanban board |
 | **Dates / QR** | date-fns, qrcode | Due dates; the QR code for opening Lira on a phone |
-| **Tests** | Vitest, jsdom, fake-indexeddb | 294 tests (`npm test`) |
+| **Tests** | Vitest, jsdom, fake-indexeddb | 1585 tests in 138 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
 
 ---
 
@@ -115,7 +115,7 @@ src/
 ├── components/
 │   ├── ai/                        # Viva AI chat card and avatar
 │   ├── board/                     # Kanban board, summary, capacity, reports; actionbar/, modals/, forms/, capacity/ parts
-│   ├── common/                    # Modal, Button, motion.tsx (animations), Confetti, PageBoundary / ErrorBoundary
+│   ├── common/                    # Modal, Button, motion.tsx + motionPresets.ts (animations), dialogs (dialogStore.ts holds the calls), Confetti, PageBoundary / ErrorBoundary
 │   ├── filter/ foryou/            # Filters page, For you
 │   ├── issue/                     # Ticket popup (detail/), create form with suggestions
 │   ├── layout/                    # TopNavigation (topnav/), LeftSidebar (sidebar/), settings/ (incl. Other devices)
@@ -123,7 +123,9 @@ src/
 │   ├── sprints/                   # SprintsOverview, SprintsPage, SprintPlanning, SprintReports, CloseSprintModal, RetroCard, EpicTimeline, SprintFilter, CreateSprintModal
 │   └── standup/ space/            # Standup and sprint calls, space dialogs
 ├── db/                            # Dexie database (stamps resolvedAt and a status log), seed data, backup
-├── hooks/                         # useIssues, useProjects, useRoadmaps, useIssuePopup, useMediaQuery
+├── theme/palette.ts               # The fixed colours used as data (chart series, badges, avatars)
+├── types/                         # Issue, Space, Project and the structured rows
+├── hooks/                         # useIssues, useProjects, useRoadmaps, useIssuePopup, useSpacePrefs, useMediaQuery; useResetWhen and useLatest
 ├── services/
 │   ├── ai/                        # Viva: intent, handlers, preview, undo, provider, suggest, sprintInsights
 │   ├── kvMirror.ts                # Mirrors every lira_* browser setting to data/*.json
@@ -134,5 +136,6 @@ src/
     ├── sprintUtils.ts, sprintReports.ts   # Sprint dates (monthly and custom), stats, burndown, burnup, flow
     ├── roadmap/                           # Roadmap dates, timeline, progress, planner
     ├── accent.ts, safeUrl.ts, celebrate.ts
+    ├── appStorage.ts, clock.ts, emptyLists.ts   # The one door to browser storage, the clock, a shared empty ticket list
     └── standupUtils.ts, dateUtils.ts, priorityUtils.ts
 ```

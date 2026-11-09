@@ -58,7 +58,7 @@ export const YourWorkDropdown: React.FC<{
     <div ref={ref} className="relative" {...hover}>
       <button
         onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-medium transition-all duration-200 cursor-pointer ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-ui font-medium transition-all duration-200 cursor-pointer ${
           open ? 'bg-white/15 text-white shadow-inner' : 'text-white/80 hover:text-white hover:bg-white/10'
         }`}
       >
@@ -102,10 +102,10 @@ export const YourWorkDropdown: React.FC<{
                   {statusIcon(issue.status)}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-1.5 mb-0.5">
-                      <span className="text-[10px] font-mono text-white/40 flex-shrink-0">{issue.key}</span>
+                      <span className="text-3xs font-mono text-white/40 flex-shrink-0">{issue.key}</span>
                       <span className="text-xs text-white/80 truncate">{issue.title}</span>
                     </div>
-                    <div className="text-[10px] text-white/30">
+                    <div className="text-3xs text-white/30">
                       {spaceMap[issue.spaceId]?.name ?? 'Space'} · {relativeTime(issue.updatedAt)}
                     </div>
                   </div>

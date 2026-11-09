@@ -25,20 +25,22 @@ type FileMap = Record<string, FileEntries>
 
 export const isMirroredKey = (key: string) => key.startsWith(MIRROR_PREFIX) && !key.startsWith(INTERNAL_PREFIX)
 
+/** The keys that belong in each file, by exact name or by prefix. The first matching rule wins; anything else is a setting. */
+const FILE_RULES: { file: StoreFileName; exact?: string[]; prefix?: string[] }[] = [
+  { file: 'projects', exact: ['lira_projects'], prefix: ['lira_project_settings_'] },
+  { file: 'roadmaps', exact: ['lira_roadmaps'] },
+  { file: 'dashboards', exact: ['lira_dashboards'] },
+  { file: 'sprints', exact: ['lira_sprint_meta', 'lira_planned_sprints', 'lira_deleted_sprints', 'lira_sprint_defs'] },
+  { file: 'teams', exact: ['lira_team_directory'], prefix: ['lira_scope_team:'] },
+  { file: 'standups', exact: ['lira_standups', 'lira_standup_notes'] },
+  { file: 'board-config', prefix: ['lira_wip_', 'lira_board_settings', 'lira_attachments_', 'lira_docs_', 'lira_forms_'] },
+  { file: 'secrets', exact: ['lira_gemini_api_key', 'lira_ai_api_key'] },
+];
+
 /** Which JSON file a localStorage key lives in. */
 export function fileForKey(key: string): StoreFileName {
-  if (key === 'lira_projects' || key.startsWith('lira_project_settings_')) return 'projects'
-  if (key === 'lira_roadmaps') return 'roadmaps'
-  if (key === 'lira_dashboards') return 'dashboards'
-  if (key === 'lira_sprint_meta' || key === 'lira_planned_sprints' || key === 'lira_deleted_sprints' || key === 'lira_sprint_defs') return 'sprints'
-  if (key === 'lira_team_directory' || key.startsWith('lira_scope_team:')) return 'teams'
-  if (key === 'lira_standups' || key === 'lira_standup_notes') return 'standups'
-  if (
-    key.startsWith('lira_wip_') || key.startsWith('lira_board_settings') || key.startsWith('lira_attachments_') ||
-    key.startsWith('lira_docs_') || key.startsWith('lira_forms_')
-  ) return 'board-config'
-  if (key === 'lira_gemini_api_key' || key === 'lira_ai_api_key') return 'secrets'
-  return 'settings'
+  const rule = FILE_RULES.find(r => r.exact?.includes(key) || r.prefix?.some(p => key.startsWith(p)));
+  return rule?.file ?? 'settings';
 }
 
 /** Objects/arrays are stored as real JSON (readable, diff-friendly); everything else stays a string. */

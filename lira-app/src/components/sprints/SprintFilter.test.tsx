@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SprintFilter, EMPTY_FILTER } from './SprintFilter';
+import { SprintFilter } from './SprintFilter';
+import { EMPTY_FILTER } from './sprintFilterDefaults';
 import { cleanup, click, mount, q, qa, settle, typeInto } from '../../test/render';
 import { makeSpace } from '../../test/factories';
 

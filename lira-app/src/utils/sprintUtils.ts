@@ -3,6 +3,7 @@ import { triggerDiskSync } from '../services/localDiskSync';
 import type { Issue } from '../types/issue';
 import { v4 as uuidv4 } from 'uuid';
 import { currentUser } from './currentUser';
+import { appStorage } from './appStorage';
 
 /**
  * Sprints are calendar months. A sprint is identified by a "YYYY-MM" key.
@@ -74,7 +75,7 @@ const diffDays = (a: Date, b: Date) =>
 
 export function getSprintDefs(): Record<string, SprintDef> {
   try {
-    const parsed = JSON.parse(localStorage.getItem(DEFS_KEY) || '{}');
+    const parsed = JSON.parse(appStorage.get(DEFS_KEY) || '{}');
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
     const out: Record<string, SprintDef> = {};
     for (const [k, v] of Object.entries(parsed as Record<string, SprintDef>)) {
@@ -87,7 +88,7 @@ export function getSprintDefs(): Record<string, SprintDef> {
 }
 
 function setSprintDefs(defs: Record<string, SprintDef>) {
-  try { localStorage.setItem(DEFS_KEY, JSON.stringify(defs)); } catch { /* storage unavailable */ }
+  try { appStorage.set(DEFS_KEY, JSON.stringify(defs)); } catch { /* storage unavailable */ }
 }
 
 /** How many days a kind lasts. `days` is only used by the "days" kind. */
@@ -219,7 +220,7 @@ export const SPRINTS_EVENT = 'lira-sprints-changed';
 /** Sprints the user created ahead of time (months that may not have tickets yet). */
 export function getPlannedSprints(): string[] {
   try {
-    const parsed = JSON.parse(localStorage.getItem(PLANNED_KEY) || '[]');
+    const parsed = JSON.parse(appStorage.get(PLANNED_KEY) || '[]');
     return Array.isArray(parsed) ? parsed.filter((k): k is string => /^\d{4}-\d{2}$/.test(k)) : [];
   } catch {
     return [];
@@ -229,7 +230,7 @@ export function getPlannedSprints(): string[] {
 export function addPlannedSprint(key: string) {
   const next = Array.from(new Set([...getPlannedSprints(), key])).sort();
   try {
-    localStorage.setItem(PLANNED_KEY, JSON.stringify(next));
+    appStorage.set(PLANNED_KEY, JSON.stringify(next));
   } catch { /* storage unavailable */ }
   setDeletedSprints(getDeletedSprints().filter(k => k !== key)); // creating a sprint again brings it back
   window.dispatchEvent(new Event(SPRINTS_EVENT));
@@ -240,7 +241,7 @@ const DELETED_KEY = 'lira_deleted_sprints';
 /** Sprints the user deleted. Months are listed contiguously, so a deleted month in the middle must be remembered to stay hidden. */
 export function getDeletedSprints(): string[] {
   try {
-    const parsed = JSON.parse(localStorage.getItem(DELETED_KEY) || '[]');
+    const parsed = JSON.parse(appStorage.get(DELETED_KEY) || '[]');
     return Array.isArray(parsed) ? parsed.filter((k): k is string => /^\d{4}-\d{2}$/.test(k)) : [];
   } catch {
     return [];
@@ -249,16 +250,16 @@ export function getDeletedSprints(): string[] {
 
 function setDeletedSprints(list: string[]) {
   try {
-    localStorage.setItem(DELETED_KEY, JSON.stringify(Array.from(new Set(list)).sort()));
+    appStorage.set(DELETED_KEY, JSON.stringify(Array.from(new Set(list)).sort()));
   } catch { /* storage unavailable */ }
 }
 
 /** All sprint keys that exist: every month with tickets, planned months, plus current and next — contiguous. */
-export function allSprintKeys(issues: Issue[]): string[] {
+export function allSprintKeys(issues: Issue[], planned: string[] = getPlannedSprints()): string[] {
   const cur = currentSprintKey();
   let min = cur;
   let max = nextSprint(cur);
-  getPlannedSprints().forEach(k => {
+  planned.forEach(k => {
     if (k < min) min = k;
     if (k > max) max = k;
   });
@@ -343,7 +344,7 @@ type MetaStore = Record<string, SprintMeta>; // key: `${spaceId|all}:${YYYY-MM}`
 
 function readMeta(): MetaStore {
   try {
-    return JSON.parse(localStorage.getItem(META_KEY) || '{}');
+    return JSON.parse(appStorage.get(META_KEY) || '{}');
   } catch {
     return {};
   }
@@ -357,7 +358,7 @@ export function setSprintMeta(spaceId: number | 'all', key: string, patch: Sprin
   const store = readMeta();
   store[`${spaceId}:${key}`] = { ...store[`${spaceId}:${key}`], ...patch };
   try {
-    localStorage.setItem(META_KEY, JSON.stringify(store));
+    appStorage.set(META_KEY, JSON.stringify(store));
   } catch { /* storage unavailable */ }
 }
 
@@ -455,10 +456,10 @@ export async function deleteSprint(key: string, issues: Issue[]): Promise<number
   }
   try {
     const planned = getPlannedSprints().filter(k => k !== key);
-    localStorage.setItem(PLANNED_KEY, JSON.stringify(planned));
+    appStorage.set(PLANNED_KEY, JSON.stringify(planned));
     const meta = readMeta();
     for (const k of Object.keys(meta)) if (k.endsWith(`:${key}`)) delete meta[k];
-    localStorage.setItem(META_KEY, JSON.stringify(meta));
+    appStorage.set(META_KEY, JSON.stringify(meta));
   } catch { /* storage unavailable */ }
   window.dispatchEvent(new Event(SPRINTS_EVENT));
   return moved;

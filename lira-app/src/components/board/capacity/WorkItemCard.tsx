@@ -14,7 +14,7 @@ export function WorkItemCard({ issue, tag, compact, onOpen }: { issue: Issue; ta
         {tag}
       </div>
       <div className="font-medium text-lira-text line-clamp-2 leading-snug">{issue.title}</div>
-      <div className="flex items-center justify-between pt-1 text-[10px] text-lira-muted border-t border-gray-100">
+      <div className="flex items-center justify-between pt-1 text-3xs text-lira-muted border-t border-gray-100">
         <span>{issue.assignee || 'Unassigned'}</span>
         <span className="font-bold text-lira-text">{issue.storyPoints || 1} pts</span>
       </div>

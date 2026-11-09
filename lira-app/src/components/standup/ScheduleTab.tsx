@@ -25,7 +25,7 @@ export function ScheduleTab(s: StandupState) {
               <Video className="w-4 h-4 text-lira-blue flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium text-lira-text truncate">{c.title}</div>
-                <div className="text-[11px] text-lira-muted">{REPEAT_LABEL[c.repeat]} · {c.time} · {c.duration} min · {PLATFORM_LABEL[c.platform]} · {c.memberKeys.length} people</div>
+                <div className="text-2xs text-lira-muted">{REPEAT_LABEL[c.repeat]} · {c.time} · {c.duration} min · {PLATFORM_LABEL[c.platform]} · {c.memberKeys.length} people</div>
               </div>
               {safeHttpUrl(c.link) && (
                 <a href={safeHttpUrl(c.link)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-lira-blue text-white hover:bg-lira-blue-hover">
@@ -87,7 +87,7 @@ export function ScheduleTab(s: StandupState) {
         {actions.map(({ label, hint, Icon, tint, run }) => (
           <button key={label} onClick={run} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-lira-border bg-white hover:border-lira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
             <span className={`w-9 h-9 rounded-xl flex items-center justify-center ${tint}`}><Icon className="w-4 h-4" /></span>
-            <span><span className="block text-sm font-semibold text-lira-text">{label}</span><span className="block text-[11px] text-lira-muted">{hint}</span></span>
+            <span><span className="block text-sm font-semibold text-lira-text">{label}</span><span className="block text-2xs text-lira-muted">{hint}</span></span>
           </button>
         ))}
       </div>

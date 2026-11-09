@@ -1,3 +1,4 @@
+import { appStorage } from './appStorage';
 /**
  * Accent branding. The accent replaces Lira's blue (the --lira-blue colour variables behind every `lira-blue` utility:
  * primary buttons, active tabs, focus rings, links, the sidebar highlight). Light and dark themes get matching shades.
@@ -111,10 +112,10 @@ export function applyAccent(hex: string | null | undefined): void {
 }
 
 export function loadAccent(): string {
-  try { return localStorage.getItem(ACCENT_KEY) || DEFAULT_ACCENT; } catch { return DEFAULT_ACCENT; }
+  try { return appStorage.get(ACCENT_KEY) || DEFAULT_ACCENT; } catch { return DEFAULT_ACCENT; }
 }
 
 export function saveAccent(hex: string): void {
-  try { localStorage.setItem(ACCENT_KEY, normalize(hex)); } catch { /* storage unavailable */ }
+  try { appStorage.set(ACCENT_KEY, normalize(hex)); } catch { /* storage unavailable */ }
   applyAccent(hex);
 }

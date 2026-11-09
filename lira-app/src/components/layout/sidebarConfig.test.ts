@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import {
-  DEFAULT_NAV_ORDER, DEFAULT_SECTION_ORDER, DEFAULT_SIDEBAR_CONFIG, loadSidebarConfig, normalizeSidebarConfig,
-} from './CustomiseSidebarModal'
+import { DEFAULT_NAV_ORDER, DEFAULT_SECTION_ORDER, DEFAULT_SIDEBAR_CONFIG, loadSidebarConfig, normalizeSidebarConfig } from './sidebarConfig';
 
 describe('sidebar layout config', () => {
   beforeEach(() => localStorage.clear())

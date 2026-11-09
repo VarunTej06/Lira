@@ -8,21 +8,45 @@ import { StatusBadge } from '../common/Badge';
 import { issueLink } from '../../utils/links';
 import { CATALOG, CATEGORY_ORDER } from '../../utils/dashboards/catalog';
 import { METRICS, METRIC_IDS, LIST_META } from '../../utils/dashboards/metrics';
+import { clampNumber, LIMITED_TYPES, withListKind, withMetric } from './widgetSettingsRules';
 import type { DashboardFilters, DashboardGoal, DashboardWidget, GroupBy, ListKind, Measure, ProgressBy, SnapshotSchedule, StatMetric } from '../../utils/dashboards/types';
 import { DAY_NAMES, DEFAULT_SCHEDULE, listSnapshotFiles, nextScheduledMoment } from '../../utils/dashboards/snapshot';
 import { newId } from '../../utils/dashboards/catalog';
 import { FilterControls } from './FilterControls';
+import { currentTime } from '../../utils/clock';
+import { useResetWhen } from '../../hooks/useResetWhen';
 
 const input = 'w-full text-sm border border-lira-border rounded-lg px-3 py-2 bg-white text-lira-text focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue';
 const label = 'block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide';
 
 // ── Add widget ───────────────────────────────────────────────────────────────
 
+type CatalogEntry = (typeof CATALOG)[number];
+
+/** One widget of the gallery: its name, a short description, and a + (a tick once it was added). */
+function GalleryCard({ entry, done, onAdd }: { entry: CatalogEntry; done: boolean; onAdd: () => void }) {
+  return (
+    <button type="button" data-testid={`add-${entry.id}`} onClick={onAdd}
+      className="text-left rounded-lg border border-lira-border p-3 hover:border-lira-blue hover:bg-blue-50/40 transition-colors cursor-pointer">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-sm font-semibold text-lira-text">{entry.title}</span>
+        {done ? <Check className="w-4 h-4 text-emerald-600" /> : <Plus className="w-4 h-4 text-lira-muted" />}
+      </div>
+      <p className="text-xs text-lira-muted mt-0.5">{entry.description}</p>
+    </button>
+  );
+}
+
+const matchesGallerySearch = (c: CatalogEntry, query: string): boolean => {
+  const q = query.trim().toLowerCase();
+  return !q || `${c.title} ${c.description} ${c.category}`.toLowerCase().includes(q);
+};
+
 export const WidgetGallery: React.FC<{ open: boolean; onClose: () => void; onAdd: (entryId: string) => void }> = ({ open, onClose, onAdd }) => {
   const [q, setQ] = useState('');
   const [added, setAdded] = useState<string[]>([]);
-  useEffect(() => { if (open) { setQ(''); setAdded([]); } }, [open]);
-  const entries = useMemo(() => CATALOG.filter(c => !q.trim() || `${c.title} ${c.description} ${c.category}`.toLowerCase().includes(q.trim().toLowerCase())), [q]);
+  useResetWhen([open], () => { if (open) { setQ(''); setAdded([]); } });
+  const entries = useMemo(() => CATALOG.filter(c => matchesGallerySearch(c, q)), [q]);
   return (
     <Modal isOpen={open} onClose={onClose} title="Add a widget" size="xl">
       <div className="p-5 space-y-4" data-testid="widget-gallery">
@@ -38,19 +62,7 @@ export const WidgetGallery: React.FC<{ open: boolean; onClose: () => void; onAdd
               <section key={cat}>
                 <h3 className="text-xs font-bold uppercase tracking-wider text-lira-muted mb-2">{cat}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                  {list.map(c => {
-                    const done = added.includes(c.id);
-                    return (
-                      <button key={c.id} type="button" data-testid={`add-${c.id}`} onClick={() => { onAdd(c.id); setAdded(a => [...a, c.id]); }}
-                        className="text-left rounded-lg border border-lira-border p-3 hover:border-lira-blue hover:bg-blue-50/40 transition-colors cursor-pointer">
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-sm font-semibold text-lira-text">{c.title}</span>
-                          {done ? <Check className="w-4 h-4 text-emerald-600" /> : <Plus className="w-4 h-4 text-lira-muted" />}
-                        </div>
-                        <p className="text-xs text-lira-muted mt-0.5">{c.description}</p>
-                      </button>
-                    );
-                  })}
+                  {list.map(c => <GalleryCard key={c.id} entry={c} done={added.includes(c.id)} onAdd={() => { onAdd(c.id); setAdded(a => [...a, c.id]); }} />)}
                 </div>
               </section>
             );
@@ -67,12 +79,71 @@ export const WidgetGallery: React.FC<{ open: boolean; onClose: () => void; onAdd
 
 const GROUPS: { v: GroupBy; l: string }[] = [{ v: 'status', l: 'Status' }, { v: 'priority', l: 'Priority' }, { v: 'type', l: 'Type' }, { v: 'assignee', l: 'Person' }, { v: 'label', l: 'Label' }, { v: 'epic', l: 'Epic' }, { v: 'sprint', l: 'Sprint' }, { v: 'space', l: 'Space' }];
 
+type SettingsFieldProps = { w: DashboardWidget; setW: (w: DashboardWidget) => void; cfg: (patch: Partial<DashboardWidget['config']>) => void };
+
+/** A labelled number box that keeps its value between min and max (blank gives 8). */
+function NumberField({ id, text, min, max, value, onChange }: { id: string; text: string; min: number; max: number; value: number; onChange: (value: number) => void }) {
+  return (
+    <div>
+      <label htmlFor={id} className={label}>{text}</label>
+      <input id={id} type="number" min={min} max={max} value={value} onChange={e => onChange(clampNumber(e.target.value, min, max, 8))} className={`${input} w-28`} />
+    </div>
+  );
+}
+
+function StatField({ w, setW }: Pick<SettingsFieldProps, 'w' | 'setW'>) {
+  return (
+    <div><label htmlFor="ws-metric" className={label}>What to count</label>
+      <select id="ws-metric" value={w.config.metric ?? 'open'} onChange={e => setW(withMetric(w, e.target.value as StatMetric))} className={input}>
+        {METRIC_IDS.map(m => <option key={m} value={m}>{METRICS[m].label}: {METRICS[m].description}</option>)}
+      </select></div>
+  );
+}
+
+function GroupFields({ w, cfg }: Pick<SettingsFieldProps, 'w' | 'cfg'>) {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <div><label htmlFor="ws-group" className={label}>Group by</label><select id="ws-group" value={w.config.groupBy ?? 'status'} onChange={e => cfg({ groupBy: e.target.value as GroupBy })} className={input}>{GROUPS.map(g => <option key={g.v} value={g.v}>{g.l}</option>)}</select></div>
+      <div><label htmlFor="ws-measure" className={label}>Measure</label><select id="ws-measure" value={w.config.measure ?? 'count'} onChange={e => cfg({ measure: e.target.value as Measure })} className={input}><option value="count">Number of tickets</option><option value="points">Story points</option></select></div>
+    </div>
+  );
+}
+
+function ListField({ w, setW }: Pick<SettingsFieldProps, 'w' | 'setW'>) {
+  return (
+    <div><label htmlFor="ws-list" className={label}>Which tickets</label>
+      <select id="ws-list" value={w.config.list ?? 'attention'} onChange={e => setW(withListKind(w, e.target.value as ListKind))} className={input}>
+        {(Object.keys(LIST_META) as ListKind[]).map(k => <option key={k} value={k}>{LIST_META[k].label}: {LIST_META[k].description}</option>)}</select></div>
+  );
+}
+
+function ProgressField({ w, cfg }: Pick<SettingsFieldProps, 'w' | 'cfg'>) {
+  return (
+    <div><label htmlFor="ws-prog" className={label}>Progress by</label><select id="ws-prog" value={w.config.progressBy ?? 'epic'} onChange={e => cfg({ progressBy: e.target.value as ProgressBy })} className={input}><option value="epic">Epic</option><option value="project">Project</option><option value="sprint">Sprint</option></select></div>
+  );
+}
+
+/** The settings that belong to one kind of widget: what to count, how to group, which list, progress by, how many to show. */
+function TypeFields({ w, setW, cfg }: SettingsFieldProps) {
+  const { type } = w;
+  return (
+    <>
+      {type === 'stat' && <StatField w={w} setW={setW} />}
+      {(type === 'bar' || type === 'donut') && <GroupFields w={w} cfg={cfg} />}
+      {type === 'list' && <ListField w={w} setW={setW} />}
+      {type === 'progress' && <ProgressField w={w} cfg={cfg} />}
+      {LIMITED_TYPES.includes(type) && <NumberField id="ws-limit" text="Show at most" min={3} max={30} value={w.config.limit ?? 8} onChange={limit => cfg({ limit })} />}
+      {(type === 'trend' || type === 'throughput') && <NumberField id="ws-weeks" text="Weeks shown" min={4} max={26} value={w.config.weeks ?? 8} onChange={weeks => cfg({ weeks })} />}
+    </>
+  );
+}
+
 export const WidgetSettings: React.FC<{
   widget: DashboardWidget | null; dashboardFilters: DashboardFilters; issues: Issue[]; spaces: Space[];
   onClose: () => void; onSave: (w: DashboardWidget) => void;
 }> = ({ widget, dashboardFilters, issues, spaces, onClose, onSave }) => {
   const [w, setW] = useState<DashboardWidget | null>(widget);
-  useEffect(() => setW(widget), [widget]);
+  useResetWhen([widget], () => setW(widget));
   if (!w) return null;
   const cfg = (patch: Partial<DashboardWidget['config']>) => setW({ ...w, config: { ...w.config, ...patch } });
   const own = !!w.filters;
@@ -80,32 +151,7 @@ export const WidgetSettings: React.FC<{
     <Modal isOpen={!!widget} onClose={onClose} title="Widget settings" size="lg">
       <div className="p-5 space-y-4" data-testid="widget-settings-dialog">
         <div><label htmlFor="ws-title" className={label}>Title</label><input id="ws-title" value={w.title} onChange={e => setW({ ...w, title: e.target.value })} className={input} /></div>
-
-        {w.type === 'stat' && (
-          <div><label htmlFor="ws-metric" className={label}>What to count</label>
-            <select id="ws-metric" value={w.config.metric ?? 'open'} onChange={e => { const m = e.target.value as StatMetric; setW({ ...w, title: w.title === METRICS[w.config.metric ?? 'open'].label ? METRICS[m].label : w.title, config: { ...w.config, metric: m } }); }} className={input}>
-              {METRIC_IDS.map(m => <option key={m} value={m}>{METRICS[m].label}: {METRICS[m].description}</option>)}
-            </select></div>
-        )}
-        {(w.type === 'bar' || w.type === 'donut') && (
-          <div className="grid grid-cols-2 gap-3">
-            <div><label htmlFor="ws-group" className={label}>Group by</label><select id="ws-group" value={w.config.groupBy ?? 'status'} onChange={e => cfg({ groupBy: e.target.value as GroupBy })} className={input}>{GROUPS.map(g => <option key={g.v} value={g.v}>{g.l}</option>)}</select></div>
-            <div><label htmlFor="ws-measure" className={label}>Measure</label><select id="ws-measure" value={w.config.measure ?? 'count'} onChange={e => cfg({ measure: e.target.value as Measure })} className={input}><option value="count">Number of tickets</option><option value="points">Story points</option></select></div>
-          </div>
-        )}
-        {w.type === 'list' && (
-          <div><label htmlFor="ws-list" className={label}>Which tickets</label><select id="ws-list" value={w.config.list ?? 'attention'} onChange={e => { const k = e.target.value as ListKind; setW({ ...w, title: Object.values(LIST_META).some(m => m.label === w.title) ? LIST_META[k].label : w.title, config: { ...w.config, list: k } }); }} className={input}>
-            {(Object.keys(LIST_META) as ListKind[]).map(k => <option key={k} value={k}>{LIST_META[k].label}: {LIST_META[k].description}</option>)}</select></div>
-        )}
-        {w.type === 'progress' && (
-          <div><label htmlFor="ws-prog" className={label}>Progress by</label><select id="ws-prog" value={w.config.progressBy ?? 'epic'} onChange={e => cfg({ progressBy: e.target.value as ProgressBy })} className={input}><option value="epic">Epic</option><option value="project">Project</option><option value="sprint">Sprint</option></select></div>
-        )}
-        {(['list', 'bar', 'progress', 'blocked', 'roadmap'] as const).includes(w.type as 'list') && (
-          <div><label htmlFor="ws-limit" className={label}>Show at most</label><input id="ws-limit" type="number" min={3} max={30} value={w.config.limit ?? 8} onChange={e => cfg({ limit: Math.max(3, Math.min(30, Number(e.target.value) || 8)) })} className={`${input} w-28`} /></div>
-        )}
-        {(w.type === 'trend' || w.type === 'throughput') && (
-          <div><label htmlFor="ws-weeks" className={label}>Weeks shown</label><input id="ws-weeks" type="number" min={4} max={26} value={w.config.weeks ?? 8} onChange={e => cfg({ weeks: Math.max(4, Math.min(26, Number(e.target.value) || 8)) })} className={`${input} w-28`} /></div>
-        )}
+        <TypeFields w={w} setW={setW} cfg={cfg} />
 
         <div className="rounded-lg border border-lira-border p-3 space-y-3">
           <label className="flex items-center gap-2 text-sm font-medium text-lira-text cursor-pointer">
@@ -127,25 +173,30 @@ export const WidgetSettings: React.FC<{
 
 // ── Alerts ───────────────────────────────────────────────────────────────────
 
+/** One alert: "Warn when <number> is <more than / fewer than> <limit>". */
+function GoalRow({ goal: g, onChange, onRemove }: { goal: DashboardGoal; onChange: (patch: Partial<DashboardGoal>) => void; onRemove: () => void }) {
+  return (
+    <li className="flex flex-wrap items-center gap-2" data-testid="goal-row">
+      <span className="text-sm text-lira-muted">Warn when</span>
+      <select aria-label="Number" value={g.metric} onChange={e => onChange({ metric: e.target.value as StatMetric })} className={`${input} w-auto`}>{METRIC_IDS.map(m => <option key={m} value={m}>{METRICS[m].label}</option>)}</select>
+      <span className="text-sm text-lira-muted">is</span>
+      <select aria-label="More or fewer" value={g.op} onChange={e => onChange({ op: e.target.value as 'above' | 'below' })} className={`${input} w-auto`}><option value="above">more than</option><option value="below">fewer than</option></select>
+      <input aria-label="Limit" type="number" min={0} value={g.value} onChange={e => onChange({ value: Math.max(0, Number(e.target.value) || 0) })} className={`${input} w-24`} />
+      <button type="button" aria-label="Remove alert" onClick={onRemove} className="p-2 rounded-lg hover:bg-red-50 text-lira-muted hover:text-red-600 cursor-pointer"><Trash2 className="w-4 h-4" /></button>
+    </li>
+  );
+}
+
 export const GoalsModal: React.FC<{ open: boolean; goals: DashboardGoal[]; onClose: () => void; onSave: (g: DashboardGoal[]) => void }> = ({ open, goals, onClose, onSave }) => {
   const [list, setList] = useState<DashboardGoal[]>(goals);
-  useEffect(() => { if (open) setList(goals); }, [open, goals]);
+  useResetWhen([open, goals], () => { if (open) setList(goals); });
   const upd = (id: string, patch: Partial<DashboardGoal>) => setList(l => l.map(g => (g.id === id ? { ...g, ...patch } : g)));
   return (
     <Modal isOpen={open} onClose={onClose} title="Alerts" size="lg">
       <div className="p-5 space-y-4" data-testid="goals-dialog">
         <p className="text-sm text-lira-muted">Get a red warning on this dashboard when a number goes past the limit you set. For example: warn when Blocked is more than 3.</p>
         <ul className="space-y-2">
-          {list.map(g => (
-            <li key={g.id} className="flex flex-wrap items-center gap-2" data-testid="goal-row">
-              <span className="text-sm text-lira-muted">Warn when</span>
-              <select aria-label="Number" value={g.metric} onChange={e => upd(g.id, { metric: e.target.value as StatMetric })} className={`${input} w-auto`}>{METRIC_IDS.map(m => <option key={m} value={m}>{METRICS[m].label}</option>)}</select>
-              <span className="text-sm text-lira-muted">is</span>
-              <select aria-label="More or fewer" value={g.op} onChange={e => upd(g.id, { op: e.target.value as 'above' | 'below' })} className={`${input} w-auto`}><option value="above">more than</option><option value="below">fewer than</option></select>
-              <input aria-label="Limit" type="number" min={0} value={g.value} onChange={e => upd(g.id, { value: Math.max(0, Number(e.target.value) || 0) })} className={`${input} w-24`} />
-              <button type="button" aria-label="Remove alert" onClick={() => setList(l => l.filter(x => x.id !== g.id))} className="p-2 rounded-lg hover:bg-red-50 text-lira-muted hover:text-red-600 cursor-pointer"><Trash2 className="w-4 h-4" /></button>
-            </li>
-          ))}
+          {list.map(g => <GoalRow key={g.id} goal={g} onChange={patch => upd(g.id, patch)} onRemove={() => setList(l => l.filter(x => x.id !== g.id))} />)}
           {list.length === 0 && <li className="text-sm text-lira-muted">No alerts yet.</li>}
         </ul>
         <button type="button" onClick={() => setList(l => [...l, { id: newId('goal'), metric: 'blocked', op: 'above', value: 3 }])} data-testid="add-goal" className="flex items-center gap-1.5 text-sm font-semibold text-lira-blue hover:underline cursor-pointer"><Plus className="w-4 h-4" /> Add an alert</button>
@@ -160,16 +211,55 @@ export const GoalsModal: React.FC<{ open: boolean; goals: DashboardGoal[]; onClo
 
 // ── Snapshots ────────────────────────────────────────────────────────────────
 
+type SnapshotFile = { file: string; size: number; modified: string };
+
+/** "Every <day> at <hour>:00", dimmed and unclickable while the weekly snapshot is off. */
+function SchedulePicker({ s, onSchedule }: { s: SnapshotSchedule; onSchedule: (s: SnapshotSchedule) => void }) {
+  return (
+    <div className={`flex flex-wrap items-center gap-2 ${s.enabled ? '' : 'opacity-50 pointer-events-none'}`}>
+      <span className="text-sm text-lira-muted">Every</span>
+      <select aria-label="Day" value={s.day} onChange={e => onSchedule({ ...s, day: Number(e.target.value) })} className={`${input} w-auto`}>{DAY_NAMES.map((d, i) => <option key={d} value={i}>{d}</option>)}</select>
+      <span className="text-sm text-lira-muted">at</span>
+      <select aria-label="Hour" value={s.hour} onChange={e => onSchedule({ ...s, hour: Number(e.target.value) })} className={`${input} w-auto`}>{Array.from({ length: 24 }, (_, h) => <option key={h} value={h}>{String(h).padStart(2, '0')}:00</option>)}</select>
+    </div>
+  );
+}
+
+/** The snapshot files already saved, each a link that opens it. */
+function SavedSnapshots({ files }: { files: SnapshotFile[] }) {
+  return (
+    <div>
+      <h3 className={label}>Saved snapshots</h3>
+      {files.length === 0 ? <p className="text-sm text-lira-muted">None yet.</p> : (
+        <ul className="divide-y divide-lira-border border border-lira-border rounded-lg max-h-48 overflow-y-auto" data-testid="snapshot-files">
+          {files.map(f => (
+            <li key={f.file}><a href={`/api/snapshot?file=${encodeURIComponent(f.file)}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 text-lira-text">
+              <FileText className="w-4 h-4 text-lira-muted" /><span className="flex-1 truncate">{f.file}</span><span className="text-xs text-lira-muted">{new Date(f.modified).toLocaleString()}</span></a></li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export const SnapshotModal: React.FC<{
   open: boolean; schedule?: SnapshotSchedule; onClose: () => void; onSchedule: (s: SnapshotSchedule) => void;
   onTakeNow: () => Promise<string | undefined>; onDownload: () => void;
 }> = ({ open, schedule, onClose, onSchedule, onTakeNow, onDownload }) => {
   const s = schedule ?? DEFAULT_SCHEDULE;
-  const [files, setFiles] = useState<{ file: string; size: number; modified: string }[]>([]);
+  const [files, setFiles] = useState<SnapshotFile[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState('');
-  useEffect(() => { if (open) { setMsg(''); void listSnapshotFiles().then(setFiles); } }, [open]);
-  const next = nextScheduledMoment(s, new Date());
+  useResetWhen([open], () => { if (open) setMsg(''); });
+  useEffect(() => { if (open) void listSnapshotFiles().then(setFiles); }, [open]);
+  const next = nextScheduledMoment(s, currentTime());
+  const takeNow = async () => {
+    setBusy(true);
+    const f = await onTakeNow();
+    setBusy(false);
+    setMsg(f ? `Saved ${f}` : 'Could not save the file. Use Download instead.');
+    void listSnapshotFiles().then(setFiles);
+  };
   return (
     <Modal isOpen={open} onClose={onClose} title="Weekly snapshot" size="lg">
       <div className="p-5 space-y-5" data-testid="snapshot-dialog">
@@ -177,30 +267,15 @@ export const SnapshotModal: React.FC<{
         <label className="flex items-center gap-2 text-sm font-medium text-lira-text cursor-pointer">
           <input type="checkbox" checked={s.enabled} onChange={e => onSchedule({ ...s, enabled: e.target.checked })} data-testid="snapshot-enabled" /> Take a snapshot every week
         </label>
-        <div className={`flex flex-wrap items-center gap-2 ${s.enabled ? '' : 'opacity-50 pointer-events-none'}`}>
-          <span className="text-sm text-lira-muted">Every</span>
-          <select aria-label="Day" value={s.day} onChange={e => onSchedule({ ...s, day: Number(e.target.value) })} className={`${input} w-auto`}>{DAY_NAMES.map((d, i) => <option key={d} value={i}>{d}</option>)}</select>
-          <span className="text-sm text-lira-muted">at</span>
-          <select aria-label="Hour" value={s.hour} onChange={e => onSchedule({ ...s, hour: Number(e.target.value) })} className={`${input} w-auto`}>{Array.from({ length: 24 }, (_, h) => <option key={h} value={h}>{String(h).padStart(2, '0')}:00</option>)}</select>
-        </div>
+        <SchedulePicker s={s} onSchedule={onSchedule} />
         {s.enabled && <p className="text-xs text-lira-muted">Next snapshot: {next.toLocaleString()}{s.lastRun ? ` · last taken ${new Date(s.lastRun).toLocaleString()}` : ''}</p>}
         <div className="flex flex-wrap gap-2">
-          <button type="button" disabled={busy} data-testid="snapshot-now" onClick={async () => { setBusy(true); const f = await onTakeNow(); setBusy(false); setMsg(f ? `Saved ${f}` : 'Could not save the file. Use Download instead.'); void listSnapshotFiles().then(setFiles); }}
+          <button type="button" disabled={busy} data-testid="snapshot-now" onClick={takeNow}
             className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer disabled:opacity-60">Take a snapshot now</button>
           <button type="button" onClick={onDownload} className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium border border-lira-border rounded-lg hover:bg-gray-50 cursor-pointer"><Download className="w-4 h-4" /> Download Markdown</button>
         </div>
         {msg && <p className="text-sm text-emerald-700" role="status" data-testid="snapshot-msg">{msg}</p>}
-        <div>
-          <h3 className={label}>Saved snapshots</h3>
-          {files.length === 0 ? <p className="text-sm text-lira-muted">None yet.</p> : (
-            <ul className="divide-y divide-lira-border border border-lira-border rounded-lg max-h-48 overflow-y-auto" data-testid="snapshot-files">
-              {files.map(f => (
-                <li key={f.file}><a href={`/api/snapshot?file=${encodeURIComponent(f.file)}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 text-lira-text">
-                  <FileText className="w-4 h-4 text-lira-muted" /><span className="flex-1 truncate">{f.file}</span><span className="text-xs text-lira-muted">{new Date(f.modified).toLocaleString()}</span></a></li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <SavedSnapshots files={files} />
         <div className="flex justify-end"><button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Close</button></div>
       </div>
     </Modal>
@@ -220,7 +295,7 @@ export const DrillModal: React.FC<{ drill: { title: string; issues: Issue[] } | 
               <TypeIcon type={i.type} className="w-4 h-4 flex-shrink-0" />
               <span className="font-mono text-xs font-semibold text-lira-muted w-20 flex-shrink-0">{i.key}</span>
               <span className="flex-1 min-w-0 text-sm text-lira-text truncate">{i.title}</span>
-              {i.blocked && <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-red-100 text-red-700">Blocked</span>}
+              {i.blocked && <span className="text-3xs font-bold uppercase px-1.5 py-0.5 rounded bg-red-100 text-red-700">Blocked</span>}
               <StatusBadge status={i.status} />
             </button>
           </li>

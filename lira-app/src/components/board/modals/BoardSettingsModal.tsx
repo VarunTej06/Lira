@@ -1,8 +1,9 @@
-import { notifySaved } from '../../common/SavedToast';
+import { notifySaved } from '../../common/savedToastStore';
 import React, { useState } from 'react';
 import { Layers, User, Tag, Calendar, Eye } from 'lucide-react';
 import { Modal } from '../../common/Modal';
 import type { Space } from '../../../types/space';
+import { appStorage } from '../../../utils/appStorage';
 
 /** Board Settings Modal */
 
@@ -36,7 +37,7 @@ export const BoardSettingsModal: React.FC<{
 
   const [config, setConfig] = useState<BoardSettingsConfig>(() => {
     try {
-      const saved = localStorage.getItem(storageKey) || localStorage.getItem('lira_board_settings');
+      const saved = appStorage.get(storageKey) || appStorage.get('lira_board_settings');
       return saved ? { ...DEFAULT_BOARD_SETTINGS, ...JSON.parse(saved) } : DEFAULT_BOARD_SETTINGS;
     } catch {
       return DEFAULT_BOARD_SETTINGS;
@@ -44,8 +45,8 @@ export const BoardSettingsModal: React.FC<{
   });
 
   const handleSave = () => {
-    localStorage.setItem(storageKey, JSON.stringify(config));
-    localStorage.setItem('lira_board_settings', JSON.stringify(config));
+    appStorage.set(storageKey, JSON.stringify(config));
+    appStorage.set('lira_board_settings', JSON.stringify(config));
     window.dispatchEvent(new Event('lira_board_settings_changed'));
     notifySaved('Board settings saved');
     onClose();
@@ -74,7 +75,7 @@ export const BoardSettingsModal: React.FC<{
               }`}
             >
               <div className="text-sm font-semibold text-lira-text">Comfortable</div>
-              <div className="text-[11px] text-lira-muted mt-0.5">Spacious cards with full metadata &amp; labels</div>
+              <div className="text-2xs text-lira-muted mt-0.5">Spacious cards with full metadata &amp; labels</div>
             </button>
             <button
               type="button"
@@ -86,7 +87,7 @@ export const BoardSettingsModal: React.FC<{
               }`}
             >
               <div className="text-sm font-semibold text-lira-text">Compact</div>
-              <div className="text-[11px] text-lira-muted mt-0.5">Dense card view with slim padding</div>
+              <div className="text-2xs text-lira-muted mt-0.5">Dense card view with slim padding</div>
             </button>
           </div>
         </div>
@@ -113,7 +114,7 @@ export const BoardSettingsModal: React.FC<{
                   {item.icon}
                   <div>
                     <div className="text-xs font-semibold text-lira-text">{item.label}</div>
-                    <div className="text-[11px] text-lira-muted">{item.desc}</div>
+                    <div className="text-2xs text-lira-muted">{item.desc}</div>
                   </div>
                 </div>
                 <input

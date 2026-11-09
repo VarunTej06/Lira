@@ -24,7 +24,7 @@ export function ProfileSection(s: SettingsState) {
                 <div>
                   <h4 className="text-sm font-bold text-lira-text">{name}</h4>
                   <p className="text-xs text-lira-muted">{email}</p>
-                  <span className="inline-block mt-1 text-[10px] font-semibold text-lira-blue bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
+                  <span className="inline-block mt-1 text-3xs font-semibold text-lira-blue bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
                     {role}
                   </span>
                 </div>

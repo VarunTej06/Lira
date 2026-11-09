@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ExternalLink, Link2 } from 'lucide-react';
-import { AnimatePresence, motion, menuPop } from './motion';
-import { copyText } from './CopyButton';
-import { notifySaved } from './SavedToast';
+import { AnimatePresence, motion } from './motionPresets';
+import { menuPop } from './motionPresets';
+import { copyText } from './copyText';
+import { notifySaved } from './savedToastStore';
 import { flushDiskSync } from '../../services/localDiskSync';
 
 /**

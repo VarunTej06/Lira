@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Star } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
-import { notifySaved } from '../common/SavedToast';
+import { notifySaved } from '../common/savedToastStore';
 import { FilterMultiSelect } from '../common/FilterMultiSelect';
 import { addDashboard, buildDashboard } from '../../utils/dashboards/store';
 import { CATALOG, CATEGORY_ORDER, SCENARIOS, scenarioById, scenarioFilters, widgetFromEntry } from '../../utils/dashboards/catalog';
@@ -104,7 +104,7 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
                     <button key={s.id} type="button" onClick={() => pick(s.id)} aria-pressed={scenarioId === s.id} data-testid={`goal-${s.id}`}
                       className={`text-left rounded-xl border p-3.5 flex items-start gap-3 transition-all cursor-pointer ${scenarioId === s.id ? 'border-lira-blue ring-1 ring-lira-blue bg-blue-50/40' : 'border-lira-border hover:border-lira-blue'}`}>
                       <ScenarioIcon icon={s.icon} className="w-9 h-9" />
-                      <span className="min-w-0"><span className="block text-sm font-bold text-lira-text">{s.name}</span><span className="block text-xs text-lira-muted">{s.tagline}</span><span className="block text-[11px] text-lira-muted mt-1">For: {s.audience}</span></span>
+                      <span className="min-w-0"><span className="block text-sm font-bold text-lira-text">{s.name}</span><span className="block text-xs text-lira-muted">{s.tagline}</span><span className="block text-2xs text-lira-muted mt-1">For: {s.audience}</span></span>
                     </button>
                   ))}
                 </div>
@@ -154,14 +154,14 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
                   <div className="space-y-4 max-h-[48vh] overflow-y-auto pr-1" data-testid="wizard-widgets">
                     {CATEGORY_ORDER.map(cat => (
                       <div key={cat}>
-                        <h4 className="text-[11px] font-bold uppercase tracking-wider text-lira-muted mb-1.5">{cat}</h4>
+                        <h4 className="text-2xs font-bold uppercase tracking-wider text-lira-muted mb-1.5">{cat}</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                           {CATALOG.filter(c => c.category === cat).map(c => {
                             const on = entries.includes(c.id);
                             return (
                               <label key={c.id} className={`flex items-start gap-2.5 rounded-lg border px-2.5 py-2 cursor-pointer transition-colors ${on ? 'border-lira-blue bg-blue-50/40' : 'border-lira-border hover:bg-gray-50'}`}>
                                 <input type="checkbox" className="mt-0.5" checked={on} onChange={() => setEntries(e => toggle(e, c.id))} data-testid={`pick-${c.id}`} />
-                                <span className="min-w-0"><span className="flex items-center gap-1.5 text-sm font-medium text-lira-text">{c.title}{recommended.has(c.id) && <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase px-1 py-0.5 rounded bg-emerald-100 text-emerald-700"><Star className="w-2.5 h-2.5" />recommended</span>}</span><span className="block text-xs text-lira-muted">{c.description}</span></span>
+                                <span className="min-w-0"><span className="flex items-center gap-1.5 text-sm font-medium text-lira-text">{c.title}{recommended.has(c.id) && <span className="inline-flex items-center gap-0.5 text-4xs font-bold uppercase px-1 py-0.5 rounded bg-emerald-100 text-emerald-700"><Star className="w-2.5 h-2.5" />recommended</span>}</span><span className="block text-xs text-lira-muted">{c.description}</span></span>
                               </label>
                             );
                           })}

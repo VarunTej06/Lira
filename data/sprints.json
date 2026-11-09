@@ -1,7 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06T14:36:19.110Z",
+  "updatedAt": "2026-11-09T16:40:24.452Z",
   "entries": {
+    "lira_deleted_sprints": [
+      "2026-11-09"
+    ],
+    "lira_planned_sprints": [],
+    "lira_sprint_defs": {},
     "lira_sprint_meta": {
       "all:2026-11": {
         "goal": ""

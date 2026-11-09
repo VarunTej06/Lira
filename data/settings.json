@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-09T14:06:48.112Z",
+  "updatedAt": "2026-11-09T17:09:30.598Z",
   "entries": {
-    "lira_accent": "#FF1100",
-    "lira_active_space_id": "3",
+    "lira_accent": "#0C66E4",
+    "lira_active_space_id": "6",
     "lira_notif_config": {
       "inAppFeed": true,
       "mentionsOnly": true,
@@ -59,6 +59,6 @@
       "filters",
       "dashboards"
     ],
-    "lira_theme": "light"
+    "lira_theme": "dark"
   }
 }

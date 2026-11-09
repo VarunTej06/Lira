@@ -8,7 +8,9 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
 [![Dexie.js](https://img.shields.io/badge/Dexie.js-IndexedDB-orange.svg)](https://dexie.org/)
 [![Storage](https://img.shields.io/badge/Storage-JSON_files_in_data/-emerald.svg)](./data/)
-[![Tests](https://img.shields.io/badge/tests-655_passing-brightgreen.svg)](#-tests)
+[![Tests](https://img.shields.io/badge/tests-1585_passing-brightgreen.svg)](#-tests)
+
+**Next stage (decided 9 Nov 2026):** multi-user with SSO. Design, decisions, security standard, SOPs and a stakeholder deck are in [docs/](docs/README.md); rules for contributors and AI assistants are in [CLAUDE.md](CLAUDE.md). Everything below describes today's single-user app.
 
 **Documents:** [SETUP.md](SETUP.md) (install, run, data, URLs, tablet and phone) · [ROADMAP.md](ROADMAP.md) (what is done and what is next) · [SECURITY_REPORT.md](SECURITY_REPORT.md) (20-point security check) · [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (plan for a hosted, multi-user edition on Azure) · [Prompts and Architectures/](Prompts%20and%20Architectures/) (design documents)
 
@@ -37,7 +39,7 @@
 | **Attachments** | **Add attachment** opens a window to choose the source: this computer (drag and drop or browse), a Google Drive, OneDrive or Dropbox share link, or any web link. |
 | **Dates** | A themed date picker everywhere a date is chosen. Click the month and year to jump to any month of any year. The month calendar has the same chooser and "+N more" days. |
 | **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
-| **Code health** | Large files split into small parts (no component over about 500 lines), 655 automated tests and a data health check. |
+| **Code health** | Large files split into small parts (no component over about 350 lines), 1585 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
 
 ## Key Highlights
 
@@ -61,7 +63,7 @@
 * **Delete Confirmation Modal**: Custom `ConfirmDeleteModal` with backdrop blur replaces browser `window.confirm()`, alerting users with explicit warnings when deleting parent tasks or epics with child issues.
 
 ### 3. Lira v2.0 Scope Refactor & Enterprise UX Engine
-* **Strict Pruning & Zero Bloat**: Purged all dead menus (`Projects`, `Dashboards`, `Teams` in top nav, old `SPACES` header row and bottom utility list in left sidebar, `Timeline`/`Approvals` in board tabs).
+* **Strict Pruning & Zero Bloat**: Purged dead menus in v2.0 (`Teams` in the top nav, the old `SPACES` header row and bottom utility list in the left sidebar, `Timeline`/`Approvals` in board tabs). Projects and Dashboards later returned as full pages in the sidebar.
 * **Multi-Dimensional Filters Explorer**: Full-page interactive JQL query table filtering across Spaces, Status, Priority, Tags/Labels, Assignees, and Teams with instant CSV & JSON exports.
 * **Action-Detail Notifications Center**: Bell popover displaying concrete audit action details (created, status transitioned, comments, edits) with clickable direct ticket hyperlinks.
 * **Settings Popover Menu & 8 Dedicated Modals**: Searchable admin panel with working popups for General Settings, Notification Settings, System & Disk Backup, Apps, Manage Spaces, Work Items Hierarchy, Marketplace Apps, User Management, and Billing.
@@ -108,11 +110,11 @@ Other commands:
 | Command | What it does |
 |---|---|
 | `npm run dev:lan` | Same, and also opens Lira to your own Wi-Fi for a tablet or phone (private link and QR code in **Settings, Other devices**) |
-| `npm test` | 655 automated tests (Vitest) |
+| `npm test` | 1585 automated tests (Vitest) |
 | `npm run test:health` | Read-only check of your `data/` folder (15 checks) |
 | `npm run test:all` | Type check, lint, all tests, data health |
 | `npm run build` | Type-check, then production build |
-| `npm run lint` | Oxlint |
+| `npm run lint` | Oxlint (reports 0 warnings; keep it that way) |
 
 Full instructions, where data is stored, URLs, and the tablet and phone steps are in [SETUP.md](SETUP.md).
 

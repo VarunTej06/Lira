@@ -2,7 +2,9 @@
 
 How Lira is tested automatically, what each test protects, how to run them and how to add more.
 
-**Right now:** 655 automated tests in 63 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
+**Right now:** 1585 automated tests in 138 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
+
+**Done by hand:** [`docs/04-quality/manual-test-checklist.md`](docs/04-quality/manual-test-checklist.md) lists every screen to click through after the refactor.
 
 **Not yet automated:** clicking through the real app in a real browser (end-to-end tests). That is planned for the DevOps phase, with a full checklist in [section 7](#7-end-to-end-browser-tests-planned-for-the-devops-phase).
 
@@ -14,11 +16,11 @@ Run every command from the `lira-app` folder.
 
 | Command | What it does | Time |
 |---|---|---|
-| `npm test` | All 655 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 25 s |
+| `npm test` | All 1585 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
 | `npm run test:watch` | Re-runs the tests that matter each time you save a file | |
 | `npm run test:health` | **Data health check**: reads your real `data/` folder and checks it holds together. Changes nothing | about 3 s |
 | `npm run test:all` | Everything in one go: type check, lint, `npm test`, then the data health check | about 1 min |
-| `npm run lint` | Style and mistake checker (oxlint) | |
+| `npm run lint` | Style and mistake checker (oxlint). It must report **0 warnings** | |
 | `npm run build` | Type check and the production build | |
 | `npm audit` | Looks for known security problems in packages | |
 
@@ -63,7 +65,26 @@ Run one file: `npx vitest run src/utils/helpers.test.ts`. Run tests whose name c
 | **Viva AI** | `src/services/aiAgent.test.ts`, `src/services/aiIntent.test.ts`, `src/services/aiPhase6.test.ts`, `src/services/aiSecurity.test.ts` reading, writing, preview and undo, sprint prompts, model choice, prompt-injection |
 | **Navigation and URLs** | `src/routes.test.ts`, `src/routesDashboards.test.ts` every page address, the ticket popup parameter. `src/components/layout/sidebarConfig.test.ts` sidebar settings. `src/components/common/PageBoundary.test.tsx` one page crashing does not take down the rest |
 | **Saving your data** | `src/services/kvMirror.test.ts`, `src/services/kvMirror.integration.test.ts`, `src/services/localDiskSync.test.ts`, `src/services/structuredStore.test.ts`, `server/diskStore.test.ts`, `server/spaceStore.test.ts` which copy wins on startup, only changed files rewritten, one file per roadmap and space |
-| **Security of the local API** | `server/guard.test.ts` who may call it, headers, file names, request size, the tablet and phone link rules |
+| **Security of the local API** | `server/guard.test.ts` who may call it, one rule at a time (Host first, Origin must match Host, every changing method needs JSON), headers, file names, request size, the tablet and phone link rules. `server/spaceStore.test.ts` orphan tickets, the manifest, bare-list and unreadable space files, migration of the old single file |
+| **Reset-on-change and latest-value hooks** | `src/hooks/useResetWhen.test.tsx` runs on the first render, keeps what was typed while its inputs stay the same, starts again when one changes, counts as a dependency list. `src/hooks/useLatest.test.tsx` always the newest value, one stable ref |
+| **Active space, hidden and archived spaces** | `src/hooks/useSpacePrefs.test.tsx` follows the address, remembers the space, falls back to CERT or the first space, hide / archive / un-hide, unreadable saved lists |
+| **Browser storage and the clock** | `src/utils/appStorage.test.ts` passes reads, writes and errors through. `src/utils/clock.test.ts` follows a faked clock |
+| **Date keys** | `src/components/common/dateKeys.test.ts` write and read `YYYY-MM-DD`, bad input, pretty format, the Monday-first month grid |
+| **Which space Viva means** | `src/services/ai/spaceMatch.test.ts` key, full name, name words, aliases, in that order; spaces added later |
+| **Dashboard numbers behind the cards** | `src/utils/dashboards/metricsTables.test.ts` every stat card's number equals the tickets behind it, hand-checked counts, grouping order and folding, each filter on its own |
+| **Ticket popup (the draft)** | `src/components/issue/detail/useIssueDetail.test.tsx` draft vs saved ticket, what counts as unsaved, save, empty title, close and Escape with and without changes, type change (epic, subtask with children), parent, blocked, comments saved at once, child tickets, delete. `src/components/issue/detail/ticketDraft.test.ts` the same rules as plain functions |
+| **Create ticket dialog** | `src/components/issue/CreateIssueModal.test.tsx` space picker, type rules, parent lists, required fields, save, failure, reset. `src/components/issue/createIssueForm.test.ts` parent candidates, sprint choices, what is missing |
+| **Rich text editor** | `src/components/common/richtext/RichTextEditor.test.tsx` full and compact toolbar, read-only, content and Markdown, menus, Ctrl+Enter. `src/components/common/richtext/editorAttachments.test.ts` links, pictures, too-big files, screenshot names |
+| **Roadmap item dialog** | `src/components/roadmap/ItemModal.test.tsx` epic banner, validity rules, what is saved, checklist, dependencies, remove. `src/components/roadmap/itemDraft.test.ts` the same rules as plain functions |
+| **Roadmap planner** | `src/components/roadmap/PlannerView.test.tsx` bars and chips, dashed unscheduled tickets, click versus drag, edge drags, tip. `src/components/roadmap/plannerDrag.test.ts` what a drag and a drop mean |
+| **Sprints page** | `src/components/sprints/SprintsPage.test.tsx` the four views, rollover and stranded prompts, space shortcuts, locked to one space |
+| **Viva chat messages** | `src/components/ai/ChatBubble.test.tsx` text, refined goal (assistant only), Confirm and Cancel and what was decided, Undo (singular and plural) and "Undone", dashboard link, ticket link, follow-up suggestions |
+| **Filters page results table** | `src/components/filter/page/ResultsTable.test.tsx` count, empty state and reset, row contents, label chips (three and "+N"), status colours, Blocked badge, assignee fallbacks, space button does not open the ticket, which headings sort |
+| **Create sprint dialog** | `src/components/sprints/CreateSprintModal.test.tsx` monthly, weekly and number-of-days forms, preview text, overlap warning, "Open sprint" for a planned month, goal saved, starts again each time it opens. `src/components/sprints/sprintDraft.test.ts` the validity and overlap rules and what is saved |
+| **Filter dropdown placement** | `src/components/common/filterPlacement.test.ts` opens below or above, stays inside the window, never shorter than 120 or taller than the room |
+| **Subtask suggestions** | `src/services/ai/subtasks.test.ts` each keyword group, the default breakdown, first match wins, always four open subtasks |
+| **Older Markdown descriptions** | `src/utils/markdownBlocks.test.ts` paragraphs, headings, both list kinds, checklists, quotes, code blocks (also an unclosed one), where a block ends |
+| **Which data file a setting lives in** | `src/services/kvMirrorFiles.test.ts` every rule of the table, exact keys against prefixes, API keys always in secrets |
 | **Theme and colours** | `src/utils/theme.test.ts`, `src/utils/accent.test.ts` themes, and that every accent colour stays readable in dark mode |
 
 ---
@@ -82,6 +103,7 @@ These read the code files and fail if someone breaks a promise. Each is cheap an
 - Every page in the route table is handled in `App.tsx`; every data file is known to the disk store and the settings mirror.
 - No secrets (keys, tokens, private keys) written in the code.
 - The production build does not publish source maps.
+- **Quality ratchets** (things that were cleaned up must stay clean): saved settings go through `appStorage`; no one-off pixel text sizes; no `any`; palette colours are not written out as hex again; the palette holds valid, unique colours; suppressions of the hooks rule do not grow (the cap is in the test; lower it when one is fixed); the documents agree on the test count.
 - **Documents:** every `npm run ...` command they mention exists, every link to another file works, and every test file this document names exists.
 
 If one of these fails, the message names the file. Fix the file, or, if the new code is a deliberate exception, add it to the allowed list in the test and say why in a comment.

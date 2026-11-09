@@ -169,4 +169,4 @@ The AI subsystem operates as an omnipresent assistant across all spaces without 
 - **Roadmaps** with one file each; every item is a real epic.
 - **Viva AI** (renamed from Lira AI) previews, confirms and can undo its changes; it is sprint-aware and can use Gemini or any OpenAI-compatible model.
 - **Reach:** `npm run dev:lan` opens Lira to your own Wi-Fi for a tablet or phone, behind a private link.
-- **Multi-user** is deliberately not part of this branch. Single-user and multi-user will live on separate branches (ROADMAP Phase 7).
+- **Multi-user with SSO is the next stage** (decided 9 November 2026; work starts within days). It is not in this code yet: today's app is still single-user with a fixed user. The plan is in [PUBLIC_EDITION_PLAN.md](../PUBLIC_EDITION_PLAN.md) and ROADMAP Phase 7. The recommended layout is one repository with two editions, not separate long-lived branches.

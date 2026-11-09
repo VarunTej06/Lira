@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-09T12:42:12.742Z",
+  "savedAt": "2026-11-09T14:53:21.343Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -10483,6 +10483,15 @@
           "content": "<p>Comment box size is big for small comments also.</p>",
           "attachments": [],
           "createdAt": "2026-11-09T12:41:53.449Z"
+        },
+        {
+          "id": "c9b91b70-deca-4929-bd6a-700521ad1515",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "<p><strong><em><u>Claude.md:</u></em></strong></p><ul><li><p>Update the Readme files, LLDs, HLD and SOPs, Architecture diagrams, technical documents, every file that describes about LIRA app to the readers when ever a change happened in codebase.</p></li><li><p>Add Units tests every time something new is implemented.</p></li><li><p>Decide on UI first and have some sample references first.</p></li><li><p>Security standards -</p></li><li><p>Don't halluzinate an dont write lengthy codes for even for small functions which can be completed in 10 to 20 lines. Whenever you are fixing something don't wrapper around the code, fix the actual logic</p></li><li><p>Decide on colors that are not used by AI Assistant directly without mentioning by the user. Use unique colors.</p></li><li><p>Check the sample screens form Pinterest or other sources first.</p></li><li><p>Have schemas for at layer that requires.</p></li><li><p>Auditing the app and its audit logs storage</p></li><li><p>Instrumentation of custom metrics, logs</p></li><li><p>Health endpoints</p></li></ul><p></p>",
+          "attachments": [],
+          "createdAt": "2026-11-09T14:50:51.582Z",
+          "updatedAt": "2026-11-09T14:53:20.254Z"
         }
       ],
       "activity": [
@@ -10500,7 +10509,7 @@
       "sprint": "2026-11",
       "rank": 800,
       "createdAt": "2026-11-07T17:24:29.304Z",
-      "updatedAt": "2026-11-09T12:42:11.967Z",
+      "updatedAt": "2026-11-09T14:53:20.255Z",
       "watchers": [
         "VY"
       ],

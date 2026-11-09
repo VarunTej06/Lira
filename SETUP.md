@@ -231,7 +231,7 @@ npm run build     # must succeed
 npm run lint
 ```
 
-Tests (655, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
+Tests (1585, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
 
 ---
 
@@ -239,9 +239,10 @@ Tests (655, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, st
 
 - **The ticket popup is a draft.** Edit anything, then press **Save changes**: the ticket is saved and the popup closes. Closing (X, outside click, Escape) with unsaved changes asks "Discard changes?". Comments and new child tickets have their own buttons and are saved at once.
 - **Settings pages** (Appearance, Profile, General, Notifications) save with their **Save** button and close. The theme and the accent colour only change when you press Save, in all three places they can be set.
-- **Dialogs:** confirm, prompt and alert boxes are Lira's own (`components/common/dialogs.tsx`: `confirmDialog`, `promptDialog`, `alertDialog`). Do not use `window.confirm`, `window.prompt` or `alert`.
+- **Dialogs:** confirm, prompt and alert boxes are Lira's own (call `confirmDialog`, `promptDialog` or `alertDialog` from `components/common/dialogStore.ts`; `dialogs.tsx` only draws them). Do not use `window.confirm`, `window.prompt` or `alert`.
 - **Dates:** use `components/common/DatePicker.tsx`, not `<input type="date">`.
 - **Descriptions** use the rich text editor (`components/common/richtext/`). They are stored as HTML written by the editor; Markdown from older tickets is converted when opened. Code that needs the text (search, Viva, suggestions) uses `descriptionToText` from `utils/richText.ts`.
+- **Shared building blocks (use these, do not repeat them).** Browser settings are read and written through `utils/appStorage.ts`, never `localStorage` directly. The time comes from `utils/clock.ts` (`currentTime()`), so a screen does not read the clock while drawing. A dialog or draft that must start again when something changes uses `hooks/useResetWhen.ts`, not an effect that only sets state. A handler that outlives a render reads the newest value through `hooks/useLatest.ts`. Fixed colours come from `theme/palette.ts`; small text sizes are the `text-4xs`, `text-3xs`, `text-2xs` and `text-ui` classes. `utils/emptyLists.ts` holds the shared empty ticket list. `src/hygiene.test.ts` fails when these rules are broken.
 - **Icons, not emojis:** ticket types and priorities use `TypeIcon` and `PriorityIcon` (`components/common/Icons.tsx`). The only emojis in Lira are the icons chosen for spaces.
 
 ---
@@ -260,7 +261,7 @@ Tests (655, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, st
 
 Numbers, percentages and bars that show a value use the shared pieces in `src/components/common/motion.tsx`, so every screen behaves the same: `CountUp` (a number rises from 0), `AnimatedValue` (the same for values like `44%` or `5d`), `GrowBar` (a bar fills from the left; give it `delay` so a second bar starts when the first has finished, as on For you), `GrowColumn` (a column grows from its base). `utils/keepPlace.ts` keeps the page where it is when a section is opened or closed. Use these instead of plain numbers and `style={{ width }}` when you add a figure to a page.
 
-Motion uses `framer-motion`, set up in one file: `src/components/common/motion.tsx` (springs, dialog / menu / toast animations, count-up numbers, growing bars). Confetti is in `components/common/Confetti.tsx`; call `celebrate()` from `utils/celebrate.ts` to trigger it (it fires when a ticket reaches Done and when a sprint is closed). Use those pieces for anything new so it feels the same everywhere. People who ask their system for reduced motion get no movement, no count-up and no confetti.
+Motion uses `framer-motion`, set up in two files: `src/components/common/motionPresets.ts` (the springs, the dialog and menu animations, and the `motion` and `AnimatePresence` exports every screen imports) and `src/components/common/motion.tsx` (toast, count-up numbers, growing bars). Confetti is in `components/common/Confetti.tsx`; call `celebrate()` from `utils/celebrate.ts` to trigger it (it fires when a ticket reaches Done and when a sprint is closed). Use those pieces for anything new so it feels the same everywhere. People who ask their system for reduced motion get no movement, no count-up and no confetti.
 
 ---
 

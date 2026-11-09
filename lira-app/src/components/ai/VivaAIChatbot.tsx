@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Send, Trash2, ArrowRight, Sparkles, User, Maximize2, Minimize2, Settings, Shield, Key, FileText, RotateCcw, Check, Database, Target, Undo2, Zap } from 'lucide-react';
 import type { Space } from '../../types/space';
 import type { Issue } from '../../types/issue';
@@ -42,6 +43,7 @@ const welcomeMessage = (spaceCount: number): ChatMessage => ({
 export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
   isOpen, onClose, onToggle, activeSpace, spaces, onSelectIssue, initialPrompt, onClearInitialPrompt,
 }) => {
+  const navigate = useNavigate();
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>(() => [welcomeMessage(spaces.length)]);
   const [loading, setLoading] = useState(false);
@@ -399,6 +401,20 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                                   <RotateCcw className="w-3 h-3" /> Undo ({msg.undo.changed} ticket{msg.undo.changed === 1 ? '' : 's'})
                                 </button>
                               ) : <span className="inline-flex items-center gap-1 text-[11px] text-lira-muted"><Undo2 className="w-3 h-3" /> Undone</span>}
+                            </div>
+                          )}
+
+                          {msg.actionTaken?.type === 'dashboard' && msg.actionTaken.dashboardId && (
+                            <div className="mt-2.5 p-2 bg-purple-50/70 rounded-xl border border-purple-200/60 flex items-center justify-between gap-2" data-testid="viva-dashboard">
+                              <span className="text-[11px] font-semibold text-lira-text truncate">{msg.actionTaken.details}</span>
+                              <button
+                                type="button"
+                                onClick={() => { navigate(`/dashboards/${msg.actionTaken!.dashboardId}`); }}
+                                data-testid="viva-open-dashboard"
+                                className="px-2 py-0.5 bg-white hover:bg-purple-600 hover:text-white text-purple-700 border border-purple-300 rounded-lg text-[10.5px] font-semibold flex items-center gap-1 transition-all flex-shrink-0 cursor-pointer"
+                              >
+                                Open dashboard <ArrowRight className="w-3 h-3" />
+                              </button>
                             </div>
                           )}
 

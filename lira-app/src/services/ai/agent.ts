@@ -10,9 +10,11 @@ import { handleSprintPlan, handleSprintSummary, handleStandupDigest, handleRiskR
 import { handleStatusTransition, handleSubtaskBreakdown, handleTicketDetail, handleCreateIssue } from './handlersWrite';
 import { handleStatusMatrix, handlePriorityBreakdown, handleSpaceQuery, handleEpicsList, handleStatusQuery, handleKeywordSearch } from './handlersRead';
 import type { AgentContext, AgentHandler } from './context';
+import { handleDashboardBuild } from './handlersDashboard';
 
 /** In the order they are tried. */
 const HANDLERS: AgentHandler[] = [
+  handleDashboardBuild,
   handleSprintPlan,
   handleSprintSummary,
   handleStandupDigest,
@@ -59,7 +61,7 @@ export async function processUserMessage(
 
   // Requests that change data or need exact numbers are answered by the built-in engine (a model cannot write to Lira);
   // everything else can go to the configured model (Gemini or an OpenAI-compatible server) in agent mode.
-  const ACTIONS = [...WRITE_INTENTS, 'sprint_summary', 'standup_digest', 'risk_radar'];
+  const ACTIONS = [...WRITE_INTENTS, 'sprint_summary', 'standup_digest', 'risk_radar', 'dashboard_build'];
   if (mode === 'agent' && getAiProvider() !== 'local' && !ACTIONS.includes(refinedGoal.intent)) {
     try {
       const modelResponse = await askConfiguredModel(userPrompt, activeSpace, allSpaces, allIssues, refinedGoal);

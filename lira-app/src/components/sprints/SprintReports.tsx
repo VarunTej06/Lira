@@ -2,7 +2,7 @@ import { issueLink } from '../../utils/links';
 import React, { useMemo } from 'react';
 import { Download, Printer } from 'lucide-react';
 import type { Issue } from '../../types/issue';
-import { motion } from '../common/motion';
+import { CountUp, motion } from '../common/motion';
 import { getSprintMeta, isSprintWork, issuesInSprint, sprintName } from '../../utils/sprintUtils';
 import {
   buildReport, reportHtml, reportMarkdown, type BurnupPoint, type FlowPoint, type SprintReport as Report,
@@ -73,7 +73,7 @@ const FlowChart: React.FC<{ data: FlowPoint[]; days: number }> = ({ data, days }
   );
 };
 
-const Tile: React.FC<{ label: string; value: string; sub?: string }> = ({ label, value, sub }) => (
+const Tile: React.FC<{ label: string; value: React.ReactNode; sub?: React.ReactNode }> = ({ label, value, sub }) => (
   <div className="border border-lira-border rounded-xl px-3 py-2 bg-white">
     <div className="text-xl font-semibold text-lira-text">{value}</div>
     <div className="text-[11px] text-lira-muted">{label}</div>
@@ -139,8 +139,8 @@ export const SprintReports: React.FC<SprintReportsProps> = ({ issues, sprint, sc
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Tile label="Done" value={`${stats.done}/${stats.total}`} sub={`${stats.percent}%`} />
-        <Tile label="Points done" value={`${stats.donePoints}/${stats.points}`} sub={meta.capacity !== undefined ? `capacity ${meta.capacity}` : undefined} />
+        <Tile label="Done" value={<><CountUp value={stats.done} />/{stats.total}</>} sub={<CountUp value={stats.percent} suffix="%" />} />
+        <Tile label="Points done" value={<><CountUp value={stats.donePoints} />/{stats.points}</>} sub={meta.capacity !== undefined ? `capacity ${meta.capacity}` : undefined} />
         <Tile label="Lead time (average)" value={times.lead.n ? days(times.lead.avg) : '—'} sub={times.lead.n ? `median ${times.lead.median} · ${times.lead.n} done` : 'no finished tickets'} />
         <Tile label="Cycle time (average)" value={times.cycle.n ? days(times.cycle.avg) : '—'} sub={times.cycle.n ? `median ${times.cycle.median} · ${times.cycle.n} tracked` : 'starts when a ticket enters In Progress'} />
       </div>

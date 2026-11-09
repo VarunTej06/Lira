@@ -277,3 +277,11 @@
   .lira-fire { animation: none; box-shadow: 0 0 8px 2px rgba(255, 120, 0, 0.7); }
   .lira-flame { animation: none; opacity: 0.8; }
 }
+
+/* ── Printing a dashboard: only the dashboard itself ── */
+@media print {
+  body * { visibility: hidden !important; }
+  .lira-print-area, .lira-print-area * { visibility: visible !important; }
+  .lira-print-area { position: absolute !important; left: 0; top: 0; width: 100% !important; background: #fff !important; }
+  .no-print { display: none !important; }
+}

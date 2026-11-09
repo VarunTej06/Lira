@@ -10,6 +10,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:health": "vitest run --config vitest.health.config.ts",
+    "test:all": "tsc -b && oxlint && vitest run && vitest run --config vitest.health.config.ts",
     "test:watch": "vitest"
   },
   "dependencies": {
@@ -29,6 +31,7 @@
     "dexie": "^4.4.7",
     "dexie-react-hooks": "^4.4.0",
     "framer-motion": "^14.10.1",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^1.62.0",
     "qrcode": "^1.5.4",
     "react": "18.3.1",

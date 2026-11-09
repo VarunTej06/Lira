@@ -1,3 +1,4 @@
+import { AnimatedValue } from '../common/motion';
 import { notifySaved } from '../common/SavedToast';
 import { confirmDialog, promptDialog } from '../common/dialogs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -263,7 +264,7 @@ export const RoadmapDetail: React.FC<Props> = ({ roadmapId, issues, spaces, onBa
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-lira-muted">{t.label}</span>
                 <span className={`w-7 h-7 rounded-lg flex items-center justify-center ${t.tone}`}>{t.icon}</span>
               </div>
-              <div className="text-2xl font-semibold text-lira-text mt-1">{t.value}</div>
+              <div className="text-2xl font-semibold text-lira-text mt-1"><AnimatedValue value={t.value} /></div>
               <div className="text-[11px] text-lira-muted truncate">{t.sub}</div>
             </div>
           ))}

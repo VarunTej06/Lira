@@ -48,7 +48,7 @@ Lira/                      <- repo root
 │   ├── spaces.json        <- manifest of all spaces
 │   ├── spaces/<KEY>.json  <- one file per space, holding its tickets
 │   ├── lira-workspace.json<- consolidated snapshot
-│   ├── projects.json, sprints.json, teams.json, standups.json, settings.json, board-config.json
+│   ├── projects.json, sprints.json, teams.json, standups.json, dashboards.json, settings.json, board-config.json
 │   ├── roadmaps/          <- one file per roadmap
 │   └── private/           <- git-ignored: API key, tablet link secret, audit log
 ├── lira-app/              <- the web app (run every command from HERE)
@@ -112,6 +112,8 @@ All commands run from `lira-app/`.
 | `npx tsc -b` | Type-check only (fast, good before a commit) |
 | `npm test` | Runs the unit and integration tests (Vitest) |
 | `npm run test:watch` | Tests in watch mode |
+| `npm run test:health` | Read-only check of the `data/` folder |
+| `npm run test:all` | Type check, lint, tests and data health |
 
 > **Disk sync only works with `npm run dev`.** The `/api/data` and `/api/save` endpoints are a Vite dev-server plugin. `npm run preview` and a deployed `dist/` serve the app but cannot write to `data/`. They use browser storage only.
 
@@ -129,6 +131,8 @@ Everything you create or change is saved to JSON files in `data/`, so clearing b
 | Sprint goals, capacity, retrospectives, closed sprints, planned sprints, weekly / bi-weekly / N-day sprint definitions | `data/sprints.json` |
 | Teams and added team members | `data/teams.json` |
 | Standups and standup notes | `data/standups.json` |
+| Dashboards (widgets, filters, alerts, snapshot schedule) | `data/dashboards.json` |
+| Weekly dashboard snapshots | `data/snapshots/<name>-<date>.md` |
 | WIP limits, board settings, attachments, documents, forms | `data/board-config.json` |
 | Theme, profile, sidebar, notification and Viva AI settings | `data/settings.json` |
 | Which spaces work in each sprint, sprint capacity and retrospectives | `data/sprints.json` (with the other sprint data above) |
@@ -161,6 +165,7 @@ Every page has its own address, so refresh, Back/Forward and shared links work.
 | `/sprints`, `/sprints/2026-11`, `/sprints/2026-11-09` | Sprints overview, one monthly sprint, one weekly / bi-weekly / N-day sprint (named by its start date) |
 | `/tickets` | All tickets |
 | `/roadmaps`, `/roadmaps/<id>` | Roadmaps, one roadmap |
+| `/dashboards`, `/dashboards/new`, `/dashboards/<id>` | Dashboards, the new-dashboard wizard (`?scenario=sprint-health` starts from a template), one dashboard |
 | `/filters` | Filters |
 | `?issue=LIRA-12` | Added to any page: opens that ticket's popup, for example `/roadmaps/rm-lira?issue=LIRA-61` |
 
@@ -226,7 +231,7 @@ npm run build     # must succeed
 npm run lint
 ```
 
-Tests (294) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
+Tests (521, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
 
 ---
 
@@ -241,7 +246,19 @@ Tests (294) cover the sprint logic and reports, standup and invite builders, AI 
 
 ---
 
+## 11c. Dashboards (for developers)
+
+- `src/utils/dashboards/`: `types.ts` (what is saved), `metrics.ts` (all the numbers: pure functions), `catalog.ts` (widget gallery and scenarios), `data.ts` (widget -> data), `promptBuilder.ts` (build from a sentence, also used by Viva), `snapshot.ts` (weekly Markdown), `store.ts` (saved in `localStorage` key `lira_dashboards`, mirrored to `data/dashboards.json`).
+- `src/components/dashboards/`: the pages (`DashboardsHome`, `DashboardWizard`, `DashboardView`), the grid, the widgets and charts (plain SVG, no chart library), the modals, and `DashboardScheduler` (takes the weekly snapshots while Lira is open).
+- To add a widget: add a type to `WidgetType`, a case in `widgetData` (data.ts) and in `WidgetBody` (Widgets.tsx), and an entry in `CATALOG`. `dashboards.test.ts` checks that every catalog entry computes with and without tickets.
+- Snapshots are written by `server/snapshots.ts` (`POST /api/snapshot`); file names are reduced to letters, digits and dashes, and only `.md` files in `data/snapshots` can be read.
+- The picture export uses the `html-to-image` package (MIT), loaded only when you press Export.
+
+---
+
 ## 12. Animations
+
+Numbers, percentages and bars that show a value use the shared pieces in `src/components/common/motion.tsx`, so every screen behaves the same: `CountUp` (a number rises from 0), `AnimatedValue` (the same for values like `44%` or `5d`), `GrowBar` (a bar fills from the left; give it `delay` so a second bar starts when the first has finished, as on For you), `GrowColumn` (a column grows from its base). `utils/keepPlace.ts` keeps the page where it is when a section is opened or closed. Use these instead of plain numbers and `style={{ width }}` when you add a figure to a page.
 
 Motion uses `framer-motion`, set up in one file: `src/components/common/motion.tsx` (springs, dialog / menu / toast animations, count-up numbers, growing bars). Confetti is in `components/common/Confetti.tsx`; call `celebrate()` from `utils/celebrate.ts` to trigger it (it fires when a ticket reaches Done and when a sprint is closed). Use those pieces for anything new so it feels the same everywhere. People who ask their system for reduced motion get no movement, no count-up and no confetti.
 

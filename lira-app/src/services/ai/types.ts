@@ -7,8 +7,10 @@ export interface ChatMessage {
   text: string;
   timestamp: Date;
   actionTaken?: {
-    type: 'created_issue' | 'updated_status' | 'added_subtasks' | 'summary' | 'switch_to_agent' | 'sprint_plan' | 'preview';
+    type: 'created_issue' | 'updated_status' | 'added_subtasks' | 'summary' | 'switch_to_agent' | 'sprint_plan' | 'preview' | 'dashboard';
     issue?: Issue;
+    /** Set when Viva built a dashboard: the chat offers to open it. */
+    dashboardId?: string;
     details?: string;
   };
   suggestedActions?: string[];
@@ -42,7 +44,8 @@ export interface RefinedPromptGoal {
     | 'sprint_plan'
     | 'sprint_summary'
     | 'standup_digest'
-    | 'risk_radar';
+    | 'risk_radar'
+    | 'dashboard_build';
   optimizedGoal: string;
   targetSpace?: Space;
   targetTicket?: Issue;

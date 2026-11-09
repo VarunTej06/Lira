@@ -229,7 +229,7 @@ this.version(3).stores({ ... }).upgrade(tx => {
 
 ## Update (November 2026)
 
-- **Source of truth is `data/`.** Tickets: `data/spaces/<KEY>.json`. Everything else: `data/projects.json`, `sprints.json`, `teams.json`, `standups.json`, `settings.json`, `board-config.json`, `roadmaps/<id>.json`. Secrets and the tablet link secret: `data/private/` (git-ignored).
+- **Source of truth is `data/`.** Tickets: `data/spaces/<KEY>.json`. Everything else: `data/projects.json`, `sprints.json`, `teams.json`, `standups.json`, `dashboards.json`, `settings.json`, `board-config.json`, `roadmaps/<id>.json`; weekly dashboard snapshots are Markdown files in `data/snapshots/`. Secrets and the tablet link secret: `data/private/` (git-ignored).
 - **`kvMirror.ts`** mirrors every `lira_*` localStorage key to the right file (`fileForKey`) and loads them back before the app renders. **Disk wins on load, unless the browser has unsaved changes** (`lira__kv_dirty`, `lira__issues_dirty`).
 - **Dexie version 3** adds `projects`, `sprints`, `teams` and `standups` tables, filled from the files by `structuredStore.ts` as a read-only, queryable copy.
 - **New ticket fields:** `sprint` (a month key `YYYY-MM`, or a start date `YYYY-MM-DD` for a weekly, bi-weekly or N-day sprint), `sprintHistory`, `resolvedAt` and `statusLog` (every status change). Database hooks in `db.ts` stamp `resolvedAt` when a ticket reaches Done and clear it when reopened.

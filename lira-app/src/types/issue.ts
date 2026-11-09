@@ -73,6 +73,8 @@ export interface Issue {
   blocked?: boolean;
   /** The tickets it is waiting on (their ids). Each link is also kept in linkedIssues as 'blocked_by'. */
   blockedByIds?: number[];
+  /** When it was switched to Blocked (ISO time). Dashboards show how long it has been blocked. */
+  blockedAt?: string;
   priority: Priority;
   assignee?: string;
   assigneeInitials?: string;

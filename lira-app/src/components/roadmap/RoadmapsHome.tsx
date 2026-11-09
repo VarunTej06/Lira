@@ -1,3 +1,4 @@
+import { AnimatedValue, CountUp, GrowBar } from '../common/motion';
 import { roadmapLink } from '../../utils/links';
 import { confirmDialog, promptDialog } from '../common/dialogs';
 import React, { useMemo, useState } from 'react';
@@ -73,7 +74,7 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
                 <span className="text-[11px] font-semibold uppercase tracking-wider text-lira-muted">{t.label}</span>
                 <span className={`w-7 h-7 rounded-lg flex items-center justify-center ${t.tone}`}>{t.icon}</span>
               </div>
-              <div className="text-2xl font-semibold text-lira-text mt-1">{t.value}</div>
+              <div className="text-2xl font-semibold text-lira-text mt-1"><AnimatedValue value={t.value} /></div>
               <div className="text-[11px] text-lira-muted">{t.sub}</div>
             </div>
           ))}
@@ -142,13 +143,13 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
                   <p className="text-xs text-lira-muted mt-2 line-clamp-2 min-h-[32px]">{rm.description || 'No description'}</p>
 
                   <div className="mt-3">
-                    <div className="flex items-center justify-between text-[11px] mb-1"><span className="text-lira-muted">{summary.byStatus.done} of {summary.total} epics done</span><span className="font-semibold text-lira-text">{summary.percent}%</span></div>
-                    <div className="h-1.5 rounded-full bg-lira-border/60 overflow-hidden"><div className="h-full rounded-full bg-lira-blue" style={{ width: `${summary.percent}%` }} /></div>
+                    <div className="flex items-center justify-between text-[11px] mb-1"><span className="text-lira-muted"><CountUp value={summary.byStatus.done} /> of <CountUp value={summary.total} /> epics done</span><span className="font-semibold text-lira-text"><CountUp value={summary.percent} suffix="%" /></span></div>
+                    <div className="h-1.5 rounded-full bg-lira-border/60 overflow-hidden"><GrowBar className="h-full rounded-full bg-lira-blue" percent={summary.percent} /></div>
                   </div>
 
                   <div className="flex flex-wrap gap-1.5 mt-3">
                     {(Object.keys(STATUS_META) as RoadmapStatus[]).filter(s => summary.byStatus[s] > 0).map(s => (
-                      <span key={s} className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: STATUS_META[s].color + '22', color: STATUS_META[s].color }}>{summary.byStatus[s]} {STATUS_META[s].label.toLowerCase()}</span>
+                      <span key={s} className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: STATUS_META[s].color + '22', color: STATUS_META[s].color }}><CountUp value={summary.byStatus[s]} suffix={` ${STATUS_META[s].label.toLowerCase()}`} /></span>
                     ))}
                     {summary.total === 0 && <span className="text-[10px] text-lira-muted">Empty roadmap</span>}
                   </div>

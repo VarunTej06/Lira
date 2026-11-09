@@ -1,5 +1,7 @@
+import { keepPlace } from '../../utils/keepPlace';
 import { notifySaved } from '../common/SavedToast';
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { matchesStatusFilter } from '../../utils/spaceFilters';
 import { ChevronLeft, ChevronRight, CheckCircle2, ArrowRightCircle, CalendarClock, Target, AlertTriangle, Plus } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
@@ -19,7 +21,7 @@ import { RetroCard } from './RetroCard';
 import { EMPTY_FILTER, SprintFilter, type SprintFilterValue } from './SprintFilter';
 import { SprintSpacesPicker } from './SprintSpacesPicker';
 import { Modal } from '../common/Modal';
-import { CountUp, GrowBar, motion, slide, staggerChild, staggerParent, Toast } from '../common/motion';
+import { CountUp, GrowBar, GrowColumn, motion, slide, Toast } from '../common/motion';
 
 type View = 'sprint' | 'planning' | 'reports' | 'epics';
 const VIEWS: { id: View; label: string }[] = [
@@ -46,7 +48,6 @@ interface SprintsPageProps {
   onBack?: () => void;
 }
 
-const GROUPS = ['inprogress', 'todo', 'backlog', 'done'] as const;
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
 export const SprintsPage: React.FC<SprintsPageProps> = ({
@@ -57,6 +58,13 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
   const [sprint, setSprint] = useState(currentSprintKey());
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [goalDraft, setGoalDraft] = useState('');
+  // The strip of sprint chips scrolls sideways to show the sprint you are on. It moves only the strip: never the page.
+  const stripRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const strip = stripRef.current;
+    const chip = strip?.querySelector<HTMLElement>('[data-active-sprint="true"]');
+    if (strip && chip) strip.scrollLeft = chip.offsetLeft - strip.clientWidth / 2 + chip.clientWidth / 2;
+  }, [sprint]);
   const [toast, setToast] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [view, setView] = useState<View>('sprint');
@@ -119,12 +127,29 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
 
   // the status / space filter only narrows the ticket list below; the numbers above stay for the whole sprint
   const visible = useMemo(
-    () => list.filter(i => (!filter.statuses.length || filter.statuses.includes(i.status?.toLowerCase())) && (!filter.spaceIds.length || filter.spaceIds.includes(i.spaceId))),
+    () => list.filter(i => matchesStatusFilter(i, filter.statuses.map(s => s.toLowerCase())) && (!filter.spaceIds.length || filter.spaceIds.includes(i.spaceId))),
     [list, filter],
   );
   const involved = getSprintSpaces(sprint);
   const involvedNames = involved ? spaces.filter(s => involved.includes(s.id!)).map(s => s.name) : [];
   const selectedIssues = list.filter(i => selected.has(i.id!));
+
+  // The one ticket box: its title follows the Status filter, and the checkbox selects or clears every ticket shown.
+  const boxCollapsed = collapsed.has('box');
+  const statusOrder = ['inprogress', 'todo', 'backlog', 'done'];
+  const shown = useMemo(() => [...visible].sort((x, y) => statusOrder.indexOf(x.status?.toLowerCase()) - statusOrder.indexOf(y.status?.toLowerCase())), [visible]);
+  const boxTitle = filter.statuses.length === 0 ? 'All tickets' : filter.statuses.map(s => (s === 'blocked' ? BLOCKED_META.label : (STATUS_META as Record<string, { label: string; color: string }>)[s]?.label ?? s)).join(' + ');
+  const boxColor = filter.statuses.length === 1 ? (filter.statuses[0] === 'blocked' ? BLOCKED_META.color : (STATUS_META as Record<string, { label: string; color: string }>)[filter.statuses[0]]?.color) : undefined;
+  const shownSelected = shown.filter(i => selected.has(i.id!)).length;
+  const allVisibleSelected = shown.length > 0 && shownSelected === shown.length;
+  const selectAllRef = useRef<HTMLInputElement>(null);
+  const boxHeadRef = useRef<HTMLDivElement>(null); // the heading row stays where it is on the screen when the filter changes the list
+  useEffect(() => { if (selectAllRef.current) selectAllRef.current.indeterminate = shownSelected > 0 && shownSelected < shown.length; }, [shownSelected, shown.length]);
+  const toggleAllVisible = () => setSelected(prev => {
+    const next = new Set(prev);
+    if (allVisibleSelected) shown.forEach(i => next.delete(i.id!)); else shown.forEach(i => next.add(i.id!));
+    return next;
+  });
   const unfinished = list.filter(i => !isDone(i));
 
   const handleComplete = () => setCloseOpen(true);
@@ -199,7 +224,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
           <button onClick={() => setSprint(neighbourSprint(sprint, keys, -1))} className="p-1.5 rounded border border-lira-border bg-white hover:bg-gray-50 cursor-pointer" aria-label="Previous sprint">
             <ChevronLeft className="w-4 h-4" />
           </button>
-          <div className="flex-1 flex gap-1.5 overflow-x-auto py-1">
+          <div ref={stripRef} className="relative flex-1 flex gap-1.5 overflow-x-auto py-1">
             {keys.map(k => {
               const s = sprintStats(issuesInSprint(scoped, k));
               const active = k === sprint;
@@ -207,7 +232,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
                 <button
                   key={k}
                   onClick={() => setSprint(k)}
-                  ref={el => { if (el && active) el.scrollIntoView({ inline: 'center', block: 'nearest' }); }}
+                  data-active-sprint={active ? 'true' : undefined}
                   className={`flex-shrink-0 px-3 py-1.5 rounded-md border text-left cursor-pointer transition-colors ${
                     active ? 'bg-lira-blue border-lira-blue text-white' : 'bg-white border-lira-border text-lira-text hover:bg-gray-50'
                   }`}
@@ -334,7 +359,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
             {[
               { label: 'Backlog', v: stats.backlog, c: STATUS_META.backlog.color },
               { label: 'To Do', v: stats.todo, c: STATUS_META.todo.color },
@@ -343,9 +368,9 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               { label: 'Done', v: stats.done, c: STATUS_META.done.color },
               { label: 'Carried over in', v: stats.carriedIn, c: '#B45309' },
             ].map(t => (
-              <div key={t.label} className="border border-lira-border rounded-md px-3 py-2">
-                <div className="text-xl font-semibold" style={{ color: t.c }}><CountUp value={t.v} /></div>
-                <div className="text-[11px] text-lira-muted">{t.label}</div>
+              <div key={t.label} className="border border-lira-border rounded-md px-2.5 py-1.5 min-w-0">
+                <div className="text-lg font-semibold leading-tight" style={{ color: t.c }}><CountUp value={t.v} /></div>
+                <div className="text-[11px] text-lira-muted truncate">{t.label}</div>
               </div>
             ))}
           </div>
@@ -368,17 +393,8 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         </div>
 
         <motion.div key={view} initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={slide} className="space-y-5">
-        {view === 'sprint' && (
-          <div className="flex items-center gap-2 -mt-2">
-            <SprintFilter spaces={involved ? spaces.filter(s => involved.includes(s.id!)) || spaces : spaces} value={filter} onChange={setFilter} />
-            {(filter.statuses.length > 0 || filter.spaceIds.length > 0) && (
-              <span className="text-xs text-lira-muted" data-testid="filter-count">Showing {visible.length} of {list.length} tickets</span>
-            )}
-          </div>
-        )}
-
         {view === 'planning' && <SprintPlanning issues={issues} spaces={spaces} sprint={sprint} keys={keys} scope={scope} onIssueClick={onIssueClick} flash={flash} />}
-        {view === 'reports' && <SprintReports issues={issues} sprint={sprint} scope={scope} onIssueClick={onIssueClick} />}
+        {view === 'reports' && <SprintReports key={`${sprint}-${scope}`} issues={issues} sprint={sprint} scope={scope} onIssueClick={onIssueClick} />}
         {view === 'epics' && <EpicTimeline issues={issues} keys={keys} scope={scope} sprint={sprint} onIssueClick={onIssueClick} onPickSprint={k => { setSprint(k); setView('sprint'); }} />}
 
         {view === 'sprint' && (<>
@@ -388,19 +404,19 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         <div className="grid md:grid-cols-2 gap-4">
           <div className="bg-white border border-lira-border rounded-lg p-4">
             <h3 className="text-sm font-semibold text-lira-text mb-2">Burndown</h3>
-            <BurndownChart data={burn} total={list.length} />
+            <BurndownChart key={`${sprint}-${scope}`} data={burn} total={list.length} />
           </div>
           <div className="bg-white border border-lira-border rounded-lg p-4">
             <div className="flex items-baseline justify-between mb-2">
               <h3 className="text-sm font-semibold text-lira-text">Velocity (last sprints)</h3>
               <span className="text-[11px] text-lira-muted">avg {velocity.avg} done / closed sprint</span>
             </div>
-            <div className="flex items-end gap-3 h-32">
-              {velocity.rows.map(r => (
+            <div key={`${sprint}-${scope}`} className="flex items-end gap-3 h-32">
+              {velocity.rows.map((r, n) => (
                 <button key={r.key} onClick={() => setSprint(r.key)} className="flex-1 flex flex-col items-center justify-end h-full gap-1 cursor-pointer group" title={`${sprintName(r.key)}: ${r.done}/${r.total} done`}>
                   <div className="w-full flex items-end justify-center gap-0.5 flex-1">
-                    <div className="w-1/2 bg-gray-300 rounded-t" style={{ height: `${(r.total / velocity.max) * 100}%` }} />
-                    <div className="w-1/2 bg-green-500 rounded-t" style={{ height: `${(r.done / velocity.max) * 100}%` }} />
+                    <GrowColumn className="w-1/2 bg-gray-300 rounded-t" delay={n * 0.08} heightPercent={(r.total / velocity.max) * 100} />
+                    <GrowColumn className="w-1/2 bg-green-500 rounded-t" delay={n * 0.08 + 0.1} heightPercent={(r.done / velocity.max) * 100} />
                   </div>
                   <span className={`text-[10px] ${r.key === sprint ? 'font-bold text-lira-blue' : 'text-lira-muted'}`}>{sprintLabel(r.key, true)}</span>
                 </button>
@@ -426,46 +442,60 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
           </div>
         )}
 
-        {/* Tickets grouped by status */}
-        <motion.div className="space-y-3" variants={staggerParent} initial="hidden" animate="show" key={`${sprint}-${scope}-${filter.statuses.join()}-${filter.spaceIds.join()}`}>
-          {list.length === 0 && (
-            <div className="bg-white border border-dashed border-lira-border rounded-lg py-12 text-center text-sm text-lira-muted">
-              No tickets in {sprintName(sprint)}{scope !== 'all' ? ' for this space' : ''}.
-              {phase !== 'past' && ' Create one, or move tickets here from another sprint.'}
+        {/* All the tickets in one box. The heading row has the select-all checkbox, the title and the filters. */}
+        {list.length === 0 ? (
+          <div className="bg-white border border-dashed border-lira-border rounded-lg py-12 text-center text-sm text-lira-muted">
+            No tickets in {sprintName(sprint)}{scope !== 'all' ? ' for this space' : ''}.
+            {phase !== 'past' && ' Create one, or move tickets here from another sprint.'}
+          </div>
+        ) : (
+          <div className="bg-white border border-lira-border rounded-lg overflow-hidden" data-testid="ticket-box">
+            <div ref={boxHeadRef} className="flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
+              <button
+                type="button"
+                aria-label={boxCollapsed ? 'Show the tickets' : 'Hide the tickets'}
+                aria-expanded={!boxCollapsed}
+                onClick={e => keepPlace(e.currentTarget, () => setCollapsed(prev => { const n = new Set(prev); n.has('box') ? n.delete('box') : n.add('box'); return n; }))}
+                className="p-0.5 rounded hover:bg-gray-200 cursor-pointer"
+              >
+                <ChevronRight className={`w-4 h-4 transition-transform ${boxCollapsed ? '' : 'rotate-90'}`} />
+              </button>
+              <input
+                ref={selectAllRef}
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={toggleAllVisible}
+                disabled={visible.length === 0}
+                aria-label={allVisibleSelected ? 'Deselect all tickets' : 'Select all tickets'}
+                title={allVisibleSelected ? 'Deselect all' : 'Select all'}
+                data-testid="select-all"
+                className="cursor-pointer"
+              />
+              <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: boxColor }} data-testid="ticket-box-title">{boxTitle}</h3>
+              <span className="text-xs text-lira-muted" data-testid="filter-count">
+                {visible.length}{(filter.statuses.length > 0 || filter.spaceIds.length > 0) ? ` of ${list.length}` : ''}
+              </span>
+              {filter.statuses.length === 1 && filter.statuses[0] === 'done' && <span className="text-[10px] text-lira-muted">stays in this sprint when it closes</span>}
+              <div className="ml-auto">
+                <SprintFilter spaces={involved ? spaces.filter(s => involved.includes(s.id!)) || spaces : spaces} value={filter} onChange={v => (boxHeadRef.current ? keepPlace(boxHeadRef.current, () => setFilter(v)) : setFilter(v))} />
+              </div>
             </div>
-          )}
-          {GROUPS.map(status => {
-            const rows = visible.filter(i => i.status?.toLowerCase() === status);
-            if (rows.length === 0) return null;
-            const sm = STATUS_META[status];
-            const isCollapsed = collapsed.has(status);
-            return (
-              <motion.div key={status} variants={staggerChild} className="bg-white border border-lira-border rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setCollapsed(prev => { const n = new Set(prev); n.has(status) ? n.delete(status) : n.add(status); return n; })}
-                  className="w-full flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border text-left cursor-pointer"
-                >
-                  <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isCollapsed ? '' : 'rotate-90'}`} />
-                  <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: sm.color }}>{sm.label}</span>
-                  <span className="text-xs text-lira-muted">{rows.length}</span>
-                  {status === 'done' && <span className="text-[10px] text-lira-muted ml-auto">stays in this sprint when it closes</span>}
-                </button>
-                {!isCollapsed && rows.map(i => (
-                  <TicketRow
-                    key={i.id}
-                    issue={i}
-                    space={spaceById.get(i.spaceId)}
-                    showSpace={scope === 'all'}
-                    sprintOptions={keys}
-                    selected={selected.has(i.id!)}
-                    onToggleSelect={toggle}
-                    onClick={onIssueClick}
-                  />
-                ))}
-              </motion.div>
-            );
-          })}
-        </motion.div>
+            {!boxCollapsed && (visible.length === 0
+              ? <p className="px-4 py-8 text-center text-sm text-lira-muted">No tickets match this filter.</p>
+              : shown.map(i => (
+                <TicketRow
+                  key={i.id}
+                  issue={i}
+                  space={spaceById.get(i.spaceId)}
+                  showSpace={scope === 'all'}
+                  sprintOptions={keys}
+                  selected={selected.has(i.id!)}
+                  onToggleSelect={toggle}
+                  onClick={onIssueClick}
+                />
+              )))}
+          </div>
+        )}
 
         {scope === 'all' && onOpenSpace && list.length > 0 && (
           <div className="flex flex-wrap gap-2 text-xs text-lira-muted items-center">
@@ -534,8 +564,8 @@ const BurndownChart: React.FC<{ data: ReturnType<typeof burndown>; total: number
         {[1, Math.ceil(n / 2), n].map(d => (
           <text key={d} x={x(d)} y={H - 6} fontSize="9" textAnchor="middle" fill="#6B778C">{d}</text>
         ))}
-        <motion.polyline points={ideal} fill="none" stroke="#97A0AF" strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} />
-        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke="#0052CC" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
+        <motion.polyline points={ideal} fill="none" stroke="#97A0AF" strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} />
+        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke="#0052CC" strokeWidth="2" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
       </svg>
       <div className="flex gap-3 text-[10px] text-lira-muted">
         <span><span className="inline-block w-3 border-t-2 border-dashed border-gray-400 mr-1 align-middle" />Ideal</span>

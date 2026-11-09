@@ -17,7 +17,7 @@ const DIRTY_KEY = 'lira__kv_dirty'
 const FLUSH_DELAY_MS = 500
 const BOOT_TIMEOUT_MS = 3000
 
-export type StoreFileName = 'projects' | 'roadmaps' | 'sprints' | 'teams' | 'standups' | 'board-config' | 'settings' | 'secrets'
+export type StoreFileName = 'projects' | 'roadmaps' | 'sprints' | 'teams' | 'standups' | 'board-config' | 'dashboards' | 'settings' | 'secrets'
 export type FileEntries = Record<string, unknown>
 export type FileMap = Record<string, FileEntries>
 
@@ -29,6 +29,7 @@ export const isMirroredKey = (key: string) => key.startsWith(MIRROR_PREFIX) && !
 export function fileForKey(key: string): StoreFileName {
   if (key === 'lira_projects' || key.startsWith('lira_project_settings_')) return 'projects'
   if (key === 'lira_roadmaps') return 'roadmaps'
+  if (key === 'lira_dashboards') return 'dashboards'
   if (key === 'lira_sprint_meta' || key === 'lira_planned_sprints' || key === 'lira_deleted_sprints' || key === 'lira_sprint_defs') return 'sprints'
   if (key === 'lira_team_directory' || key.startsWith('lira_scope_team:')) return 'teams'
   if (key === 'lira_standups' || key === 'lira_standup_notes') return 'standups'
@@ -56,7 +57,7 @@ export const decodeValue = (v: unknown): string => (typeof v === 'string' ? v : 
 
 /** Groups every mirrored key of a Storage-like object into its file. Every known file is present (maybe empty). */
 export function buildFiles(storage: Pick<Storage, 'length' | 'key' | 'getItem'>): FileMap {
-  const files: FileMap = { projects: {}, roadmaps: {}, sprints: {}, teams: {}, standups: {}, 'board-config': {}, settings: {}, secrets: {} }
+  const files: FileMap = { projects: {}, roadmaps: {}, sprints: {}, teams: {}, standups: {}, 'board-config': {}, dashboards: {}, settings: {}, secrets: {} }
   for (let i = 0; i < storage.length; i++) {
     const k = storage.key(i)
     if (!k || !isMirroredKey(k)) continue

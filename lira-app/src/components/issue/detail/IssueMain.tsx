@@ -1,3 +1,4 @@
+import { keepPlace } from '../../../utils/keepPlace';
 import { CopyButton } from '../../common/CopyButton';
 import { descriptionToText, isHtmlDescription } from '../../../utils/richText';
 import { RichTextEditor } from '../../common/richtext/RichTextEditor';
@@ -82,7 +83,7 @@ export function IssueMain(s: IssueDetailState) {
             <section>
               <div className="flex items-center mb-2">
                 <button
-                  onClick={() => setDescCollapsed(c => !c)}
+                  onClick={e => keepPlace(e.currentTarget, () => setDescCollapsed(c => !c))}
                   className="flex items-center gap-1.5 flex-1 text-left text-sm font-semibold text-lira-text hover:text-lira-blue transition-colors group"
                 >
                   <ChevronDown className={`w-4 h-4 transition-transform ${descCollapsed ? '-rotate-90' : ''}`} />
@@ -107,7 +108,7 @@ export function IssueMain(s: IssueDetailState) {
             {/* ── Attachments ── */}
             <section>
               <button
-                onClick={() => setAttCollapsed(c => !c)}
+                onClick={e => keepPlace(e.currentTarget, () => setAttCollapsed(c => !c))}
                 className="flex items-center gap-1.5 w-full text-sm font-semibold text-lira-text mb-2 hover:text-lira-blue transition-colors"
               >
                 <ChevronDown className={`w-4 h-4 transition-transform ${attCollapsed ? '-rotate-90' : ''}`} />
@@ -129,7 +130,7 @@ export function IssueMain(s: IssueDetailState) {
             {(local.type === 'epic' || local.type === 'task') && (
               <section>
                 <button
-                  onClick={() => setChildCollapsed(c => !c)}
+                  onClick={e => keepPlace(e.currentTarget, () => setChildCollapsed(c => !c))}
                   className="flex items-center gap-1.5 w-full text-sm font-semibold text-lira-text mb-2 hover:text-lira-blue transition-colors"
                 >
                   <ChevronDown className={`w-4 h-4 transition-transform ${childCollapsed ? '-rotate-90' : ''}`} />

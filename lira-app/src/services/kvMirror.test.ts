@@ -23,6 +23,7 @@ describe('fileForKey', () => {
     expect(fileForKey('lira_scope_team:space:1')).toBe('teams')
     expect(fileForKey('lira_standups')).toBe('standups')
     expect(fileForKey('lira_standup_notes')).toBe('standups')
+    expect(fileForKey('lira_dashboards')).toBe('dashboards')
     expect(fileForKey('lira_wip_limits')).toBe('board-config')
     expect(fileForKey('lira_docs_3')).toBe('board-config')
     expect(fileForKey('lira_gemini_api_key')).toBe('secrets')
@@ -76,7 +77,7 @@ describe('buildFiles / flattenFiles', () => {
 
   it('always includes every file, even when empty', () => {
     expect(Object.keys(buildFiles(fakeStorage({}))).sort()).toEqual(
-      ['board-config', 'projects', 'roadmaps', 'secrets', 'settings', 'sprints', 'standups', 'teams'],
+      ['board-config', 'dashboards', 'projects', 'roadmaps', 'secrets', 'settings', 'sprints', 'standups', 'teams'],
     )
   })
 

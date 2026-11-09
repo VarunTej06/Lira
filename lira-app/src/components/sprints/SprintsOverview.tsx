@@ -8,7 +8,7 @@ import {
   sprintDays, sprintEnd, sprintKindLabel, sprintLabel, sprintName, sprintPhase, sprintStart, sprintStats,
 } from '../../utils/sprintUtils';
 import { PhaseBadge } from './sprintParts';
-import { AnimatedValue, CountUp, GrowBar } from '../common/motion';
+import { AnimatedValue, CountUp, GrowBar, GrowColumn } from '../common/motion';
 
 interface SprintsOverviewProps {
   spaces: Space[];
@@ -105,12 +105,12 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
             </div>
           </div>
           <div className="flex items-end gap-4 h-32">
-            {lastSix.map(r => (
+            {lastSix.map((r, n) => (
               <button key={r.key} onClick={() => onOpenSprint(r.key)} {...sprintLink(r.key)} title={`${sprintName(r.key)}: ${r.stats.done}/${r.stats.total}`}
                 className="flex-1 flex flex-col items-center justify-end h-full gap-1 cursor-pointer">
                 <div className="w-full flex items-end justify-center gap-1 flex-1">
-                  <div className="w-1/3 bg-gray-300 rounded-t-md" style={{ height: `${(r.stats.total / maxTotal) * 100}%` }} />
-                  <div className="w-1/3 bg-green-500 rounded-t-md" style={{ height: `${(r.stats.done / maxTotal) * 100}%` }} />
+                  <GrowColumn className="w-1/3 bg-gray-300 rounded-t-md" delay={n * 0.08} heightPercent={(r.stats.total / maxTotal) * 100} />
+                  <GrowColumn className="w-1/3 bg-green-500 rounded-t-md" delay={n * 0.08 + 0.1} heightPercent={(r.stats.done / maxTotal) * 100} />
                 </div>
                 <span className={`text-[10px] ${r.key === cur ? 'font-bold text-lira-blue' : 'text-lira-muted'}`}>{sprintLabel(r.key, true)}</span>
               </button>
@@ -142,19 +142,19 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                     </td>
                     <td className="px-3 py-2.5"><PhaseBadge sprint={r.key} /></td>
                     <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap">{fmt(sprintStart(r.key))} – {fmt(sprintEnd(r.key))} <span className="opacity-60">({sprintKindLabel(r.key)}, {sprintDays(r.key)}d)</span></td>
-                    <td className="px-3 py-2.5 font-semibold text-lira-text">{r.stats.total}</td>
-                    <td className="px-3 py-2.5 text-lira-muted">{r.stats.todo + r.stats.backlog}</td>
-                    <td className="px-3 py-2.5 text-lira-blue">{r.stats.inprogress}</td>
-                    <td className="px-3 py-2.5 text-red-600">{r.stats.blocked || '—'}</td>
-                    <td className="px-3 py-2.5 text-emerald-600 font-medium">{r.stats.done}</td>
+                    <td className="px-3 py-2.5 font-semibold text-lira-text"><CountUp value={r.stats.total} /></td>
+                    <td className="px-3 py-2.5 text-lira-muted"><CountUp value={r.stats.todo + r.stats.backlog} /></td>
+                    <td className="px-3 py-2.5 text-lira-blue"><CountUp value={r.stats.inprogress} /></td>
+                    <td className="px-3 py-2.5 text-red-600">{r.stats.blocked ? <CountUp value={r.stats.blocked} /> : '—'}</td>
+                    <td className="px-3 py-2.5 text-emerald-600 font-medium"><CountUp value={r.stats.done} /></td>
                     <td className="px-3 py-2.5 w-36">
                       <div className="flex items-center gap-2">
                         <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden"><GrowBar className="h-full bg-green-500" percent={r.stats.percent} /></div>
                         <span className="w-8 text-right text-lira-text"><CountUp value={r.stats.percent} suffix="%" /></span>
                       </div>
                     </td>
-                    <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap">{r.stats.donePoints}/{r.stats.points}</td>
-                    <td className="px-3 py-2.5 text-amber-600">{r.stats.carriedIn || '—'}</td>
+                    <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap"><CountUp value={r.stats.donePoints} />/<CountUp value={r.stats.points} /></td>
+                    <td className="px-3 py-2.5 text-amber-600">{r.stats.carriedIn ? <CountUp value={r.stats.carriedIn} /> : '—'}</td>
                     <td className="px-3 py-2.5 text-lira-blue opacity-0 group-hover:opacity-100 transition-opacity"><ArrowRight className="w-3.5 h-3.5" /></td>
                   </tr>
                 ))}

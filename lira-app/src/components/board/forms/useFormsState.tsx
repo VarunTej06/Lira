@@ -5,7 +5,7 @@ import type { Space } from '../../../types/space';
 
 export type FormFieldType = 'text' | 'textarea' | 'number' | 'date' | 'select' | 'checkbox';
 
-export interface FormField {
+interface FormField {
   id: string;
   name: string;
   type: FormFieldType;
@@ -13,7 +13,7 @@ export interface FormField {
   options?: string[];
 }
 
-export interface IntakeForm {
+interface IntakeForm {
   id: string;
   spaceId?: number;
   title: string;
@@ -28,7 +28,7 @@ export interface FormsModalProps {
   space: Space | undefined;
 }
 
-export const DEFAULT_SAMPLE_FORMS: IntakeForm[] = [
+const DEFAULT_SAMPLE_FORMS: IntakeForm[] = [
   {
     id: 'sample-bug-form',
     title: 'Customer Bug Report',

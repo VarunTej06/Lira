@@ -1,10 +1,10 @@
 import { Search, ChevronDown, MoreHorizontal, Users, SlidersHorizontal, X, Tag, FileJson, Settings, ToggleLeft, ToggleRight, CheckSquare, Eye, EyeOff, Archive, ArchiveRestore, Edit3 } from 'lucide-react';
-import type {  } from '../../../types/space';
 import { Avatar } from '../../common/Avatar';
 import { PRIORITIES, GROUP_OPTIONS } from './useActionBarState';
 import { FilterMultiSelect } from '../../common/FilterMultiSelect';
 import { STATUS_LIST, BLOCKED_META } from '../../../utils/status';
 import type { ActionBarState } from './useActionBarState';
+import { currentUser } from '../../../utils/currentUser';
 
 /** Search, assignee filter, filters, grouping and the ... menu. */
 export function SearchAndFilterBar(s: ActionBarState) {
@@ -39,7 +39,7 @@ export function SearchAndFilterBar(s: ActionBarState) {
           className={`flex items-center gap-1 transition-all rounded-full p-0.5 ${filterAssignee ? 'ring-2 ring-lira-blue ring-offset-1' : 'opacity-70 hover:opacity-100'}`}
           title={filterAssignee ? 'Show all assignees' : 'Filter by me (VY)'}
         >
-          <Avatar initials="VY" size="sm" color="#0052CC" />
+          <Avatar initials={currentUser().initials} size="sm" color="#0052CC" />
         </button>
 
         {/* ── Filters: one small dropdown each, with a checkbox per value ── */}

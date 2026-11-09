@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { Check, ChevronDown, Search } from 'lucide-react';
 import { AnimatePresence, motion, menuPop } from './motion';
 
-export interface FilterOption { value: string; label: string; color?: string }
+interface FilterOption { value: string; label: string; color?: string }
 
 interface Props {
   label: string;

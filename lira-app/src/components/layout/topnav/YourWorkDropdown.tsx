@@ -4,6 +4,7 @@ import { ChevronDown, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
 import { useClickOutside, relativeTime, useHoverMenu, canHoverDevice } from './shared';
+import { isMine } from '../../../utils/currentUser';
 
 type YourWorkTab = 'worked' | 'assigned' | 'starred';
 
@@ -38,7 +39,7 @@ export const YourWorkDropdown: React.FC<{
   }, [issues]);
 
   const assignedToMe = useMemo(() => {
-    return issues.filter(i => i.assigneeInitials === 'VY' || i.assignee === 'Varun Tej').slice(0, 8);
+    return issues.filter(i => isMine(i)).slice(0, 8);
   }, [issues]);
 
   const starred = useMemo(() => {

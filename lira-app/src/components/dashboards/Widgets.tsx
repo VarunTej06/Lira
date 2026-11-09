@@ -211,7 +211,7 @@ export const WidgetBody: React.FC<{ widget: DashboardWidget; data: WidgetData; a
                 <span className="text-[10px] font-semibold text-lira-text">{d.count || ''}</span>
                 <span className="w-full rounded-t bg-lira-blue/80" style={{ height: `${d.count ? 14 + (d.count / max) * 46 : 3}px`, opacity: d.count ? 1 : 0.25 }} />
               </button>
-              <span className={`text-[9px] mt-1 ${d.date.getDay() === 0 || d.date.getDay() === 6 ? 'text-lira-muted/60' : 'text-lira-muted'}`}>{d.date.getDate()}</span>
+              <span className={`text-[9px] mt-1 ${d.date.getDay() === 0 || d.date.getDay() === 6 ? 'text-lira-muted' : 'text-lira-muted'}`}>{d.date.getDate()}</span>
             </li>
           ))}
         </ol>

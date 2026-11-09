@@ -9,7 +9,7 @@ import path from 'path'
  */
 
 /** Largest request body accepted, in bytes. Ticket data with attachments can be big, but not unlimited. */
-export const MAX_BODY_BYTES = 50 * 1024 * 1024
+const MAX_BODY_BYTES = 50 * 1024 * 1024
 
 const LOCAL_HOST = /^(localhost|127\.0\.0\.1|\[::1\])$/i
 
@@ -44,7 +44,7 @@ function hostName(hostHeader: string | undefined): string | undefined {
   return hostHeader.replace(/:\d+$/, '')
 }
 
-export interface GuardVerdict { ok: boolean; status?: number; reason?: string }
+interface GuardVerdict { ok: boolean; status?: number; reason?: string }
 
 /**
  * - The Host header must be this computer (stops DNS rebinding: a hostile site pointing its name at 127.0.0.1).
@@ -75,7 +75,7 @@ export function checkApiRequest(req: { method?: string; headers: Record<string, 
   return { ok: true }
 }
 
-export const ACCESS_COOKIE = 'lira_access'
+const ACCESS_COOKIE = 'lira_access'
 
 /** The secret in the link you open on a tablet or phone. Kept in data/private/ (git-ignored) so the link keeps working after a restart. */
 export function loadLanToken(dataDir: string): string {
@@ -92,7 +92,7 @@ export function loadLanToken(dataDir: string): string {
 
 const same = (a: string, b: string) => a.length === b.length && crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b))
 
-export type GateResult =
+type GateResult =
   | { action: 'allow' }
   | { action: 'login'; cookie: string; redirect: string }
   | { action: 'deny' }

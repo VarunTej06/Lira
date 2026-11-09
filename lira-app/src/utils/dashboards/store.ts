@@ -9,7 +9,7 @@ import { newId, widgetFromEntry } from './catalog';
  */
 
 const KEY = 'lira_dashboards';
-export const DASHBOARDS_EVENT = 'lira-dashboards-changed';
+const DASHBOARDS_EVENT = 'lira-dashboards-changed';
 
 /** Fills in anything an older or hand-edited file does not have. */
 export function normalizeDashboard(raw: Partial<Dashboard>): Dashboard {
@@ -42,12 +42,12 @@ export function readDashboards(): Dashboard[] {
   return [];
 }
 
-export function writeDashboards(list: Dashboard[]): void {
+function writeDashboards(list: Dashboard[]): void {
   try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) { console.error('Failed to save lira_dashboards', e); }
   window.dispatchEvent(new Event(DASHBOARDS_EVENT));
 }
 
-export interface NewDashboardInput {
+interface NewDashboardInput {
   name: string;
   description?: string;
   scenario: ScenarioId;

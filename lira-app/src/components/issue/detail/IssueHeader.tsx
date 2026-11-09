@@ -1,7 +1,7 @@
 import { TypeIcon } from '../../common/Icons';
 import { X, Share2, MoreHorizontal, Eye, ChevronDown, ChevronRight, Trash2, ExternalLink, Link } from 'lucide-react';
 import type {  IssueType } from '../../../types/issue';
-import { ISSUE_TYPE_OPTIONS, safeArr } from './useIssueDetail';
+import { ISSUE_TYPE_OPTIONS, safeArr } from './issueOptions';
 import type { IssueDetailState } from './useIssueDetail';
 
 /** Breadcrumb, type selector and the action buttons. */

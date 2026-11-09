@@ -5,6 +5,7 @@ import type { Issue, Priority, IssueType } from '../../types/issue';
 import type { ChatMessage } from './types';
 import { generateDomainSubtasks } from './subtasks';
 import type { AgentContext } from './context';
+import { currentUser } from '../../utils/currentUser';
 
 // Handlers that change data or inspect one ticket: status moves, subtask breakdowns, ticket details and creating tickets.
 
@@ -174,8 +175,8 @@ export async function handleCreateIssue(c: AgentContext): Promise<ChatMessage | 
         type: rawType,
         status,
         priority,
-        assignee: 'VY',
-        assigneeInitials: 'VY',
+        assignee: currentUser().initials,
+        assigneeInitials: currentUser().initials,
         reporter: 'AI Agent',
         reporterInitials: 'AI',
         labels: ['ai-created', spaceToUse.key.toLowerCase()],
@@ -197,7 +198,7 @@ export async function handleCreateIssue(c: AgentContext): Promise<ChatMessage | 
         linkedIssues: [],
         rank: Date.now(),
         storyPoints: rawType === 'epic' ? 13 : rawType === 'bug' ? 2 : 5,
-        watchers: ['VY'],
+        watchers: [currentUser().initials],
         createdAt: now,
         updatedAt: now,
       };

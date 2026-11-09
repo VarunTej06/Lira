@@ -1,5 +1,4 @@
 import { Download, FileJson, FileText } from 'lucide-react';
-import type {  } from '../../../types/space';
 import { Modal } from '../../common/Modal';
 import { Button } from '../../common/Button';
 import type { ActionBarState } from './useActionBarState';

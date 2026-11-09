@@ -10,9 +10,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-export const STORE_FILES = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'dashboards', 'settings', 'secrets'] as const
-export type StoreFile = (typeof STORE_FILES)[number]
-export type StoreEntries = Record<string, unknown>
+const STORE_FILES = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'dashboards', 'settings', 'secrets'] as const
+type StoreFile = (typeof STORE_FILES)[number]
+type StoreEntries = Record<string, unknown>
 
 export const isStoreFile = (name: string): name is StoreFile => (STORE_FILES as readonly string[]).includes(name)
 
@@ -41,10 +41,10 @@ function readJson(file: string): any | undefined {
 import { safeSpaceKey, hasPrototypePollution } from './guard.ts'
 
 const safeId = (id: unknown) => String(id).replace(/[^a-zA-Z0-9_-]/g, '_')
-export const roadmapsDir = (dataDir: string) => path.join(dataDir, 'roadmaps')
+const roadmapsDir = (dataDir: string) => path.join(dataDir, 'roadmaps')
 
 /** Roadmaps live in data/roadmaps/<id>.json (one file each) with an index; the old single data/roadmaps.json is still read. */
-export function readRoadmaps(dataDir: string): unknown[] | undefined {
+function readRoadmaps(dataDir: string): unknown[] | undefined {
   const dir = roadmapsDir(dataDir)
   const index = readJson(path.join(dir, 'index.json'))
   if (index && Array.isArray(index.roadmaps)) {
@@ -68,7 +68,7 @@ export function readRoadmaps(dataDir: string): unknown[] | undefined {
 }
 
 /** Writes one JSON file per roadmap plus an index. Only changed files are touched; removed roadmaps lose their file. */
-export function writeRoadmaps(dataDir: string, entries: Record<string, unknown>, now = new Date()): boolean {
+function writeRoadmaps(dataDir: string, entries: Record<string, unknown>, now = new Date()): boolean {
   if (!Array.isArray(entries.lira_roadmaps)) return false // nothing to say about roadmaps: never delete files because a key is absent
   const list = (Array.isArray(entries.lira_roadmaps) ? entries.lira_roadmaps : []) as { id?: unknown; name?: unknown; items?: unknown[]; starred?: boolean; archived?: boolean }[]
   const dir = roadmapsDir(dataDir)

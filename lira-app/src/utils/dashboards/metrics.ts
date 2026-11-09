@@ -4,7 +4,7 @@ import type { Project } from '../../types/project';
 import type { Roadmap } from '../roadmap/types';
 import { ISSUE_TYPE_CONFIG } from '../../types/issue';
 import { PRIORITY_CONFIG } from '../priorityUtils';
-import { STATUS_LIST, BLOCKED_META } from '../status';
+import { STATUS_LIST } from '../status';
 import { currentSprintKey, getIssueSprint, sprintName } from '../sprintUtils';
 import { startedAt } from '../sprintReports';
 import { resolveItem } from '../roadmap/progress';
@@ -27,7 +27,7 @@ export interface DataCtx {
   me: string[];
 }
 
-export const PALETTE = ['#0C66E4', '#22A06B', '#E2740B', '#8F7EE7', '#00B8D9', '#C9372C', '#B38600', '#6B778C', '#E774BB', '#2E7D6B'];
+const PALETTE = ['#0C66E4', '#22A06B', '#E2740B', '#8F7EE7', '#00B8D9', '#C9372C', '#B38600', '#6B778C', '#E774BB', '#2E7D6B'];
 
 const toDate = (v: unknown): Date | undefined => {
   if (!v) return undefined;
@@ -36,11 +36,11 @@ const toDate = (v: unknown): Date | undefined => {
 };
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
-export const isDone = (i: Issue) => i.status?.toLowerCase() === 'done';
-export const isOpen = (i: Issue) => !isDone(i);
-export const workItems = (list: Issue[]) => list.filter(i => i.type !== 'epic');
+const isDone = (i: Issue) => i.status?.toLowerCase() === 'done';
+const isOpen = (i: Issue) => !isDone(i);
+const workItems = (list: Issue[]) => list.filter(i => i.type !== 'epic');
 /** When a finished ticket was finished. */
-export const doneAt = (i: Issue): Date | undefined => (isDone(i) ? toDate(i.resolvedAt) ?? toDate(i.updatedAt) : undefined);
+const doneAt = (i: Issue): Date | undefined => (isDone(i) ? toDate(i.resolvedAt) ?? toDate(i.updatedAt) : undefined);
 const points = (i: Issue) => i.storyPoints || 0;
 const priorityRank = (i: Issue) => ['highest', 'high', 'medium', 'low', 'lowest'].indexOf(i.priority);
 
@@ -54,7 +54,7 @@ export function myNames(): string[] {
   return [...out];
 }
 
-export const isMine = (i: Issue, me: string[]) =>
+const isMine = (i: Issue, me: string[]) =>
   me.includes((i.assigneeInitials || '').toLowerCase()) || me.includes((i.assignee || '').toLowerCase());
 
 export function mergeFilters(base: DashboardFilters, over?: Partial<DashboardFilters>): DashboardFilters {
@@ -62,7 +62,7 @@ export function mergeFilters(base: DashboardFilters, over?: Partial<DashboardFil
 }
 
 const RANGE_DAYS: Record<string, number | null> = { all: null, '7d': 7, '30d': 30, '90d': 90 };
-export const rangeDays = (r: DashboardFilters['range']) => RANGE_DAYS[r] ?? null;
+const rangeDays = (r: DashboardFilters['range']) => RANGE_DAYS[r] ?? null;
 
 /** The tickets a dashboard (or one widget) looks at, after its filters. */
 export function scopeIssues(all: Issue[], f: DashboardFilters, ctx: Pick<DataCtx, 'now' | 'me'>): Issue[] {
@@ -168,7 +168,7 @@ export function metricValue(metric: StatMetric, scoped: Issue[], now: Date): Met
 
 // ── Goals ──────────────────────────────────────────────────────────────────────
 
-export interface GoalStatus { goal: { metric: StatMetric; op: 'above' | 'below'; value: number }; value: number; breached: boolean; text: string }
+interface GoalStatus { goal: { metric: StatMetric; op: 'above' | 'below'; value: number }; value: number; breached: boolean; text: string }
 
 export function evaluateGoal(goal: GoalStatus['goal'], scoped: Issue[], now: Date): GoalStatus {
   const { value, meta } = (() => { const r = metricValue(goal.metric, scoped, now); return { value: r.value, meta: r.meta }; })();
@@ -379,7 +379,7 @@ export function progressRows(by: ProgressBy, scoped: Issue[], ctx: Pick<DataCtx,
   return rows.sort((a, b) => (by === 'sprint' ? a.key.localeCompare(b.key) : b.total - a.total)).slice(0, limit);
 }
 
-export const AGING_BUCKETS = [{ label: '0-2 days', max: 2, color: '#22A06B' }, { label: '3-5 days', max: 5, color: '#B38600' }, { label: '6-10 days', max: 10, color: '#E2740B' }, { label: 'Over 10 days', max: Infinity, color: '#C9372C' }];
+const AGING_BUCKETS = [{ label: '0-2 days', max: 2, color: '#22A06B' }, { label: '3-5 days', max: 5, color: '#B38600' }, { label: '6-10 days', max: 10, color: '#E2740B' }, { label: 'Over 10 days', max: Infinity, color: '#C9372C' }];
 
 /** Tickets in progress, grouped by how long they have been in progress. */
 export function agingGroups(scoped: Issue[], now: Date): Group[] {
@@ -434,7 +434,6 @@ export function summaryLines(scoped: Issue[], ctx: Pick<DataCtx, 'now' | 'me' | 
   return lines;
 }
 
-export { BLOCKED_META };
 
 /** The tickets behind a number, so a stat card can open them. */
 export function metricIssues(metric: StatMetric, scoped: Issue[], now: Date): Issue[] {

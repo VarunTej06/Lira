@@ -1,6 +1,6 @@
-import { issueLink } from '../../../utils/links';
 import { statusLabel } from '../../../utils/status';
 import { ColorDot } from '../../common/Icons';
+import { WorkItemCard } from './WorkItemCard';
 import type { CapacityState } from './useCapacityState';
 
 /** Workload grouped by priority. */
@@ -38,25 +38,8 @@ export function GroupByPriority(s: CapacityState) {
                   </p>
                 ) : (
                   group.items.map(issue => (
-                    <div
-                      key={issue.id}
-                      onClick={() => onIssueClick?.(issue)} {...issueLink(issue)}
-                      className="p-2.5 rounded-lg border border-lira-border hover:border-lira-blue hover:bg-blue-50/30 transition-all cursor-pointer text-xs space-y-1 bg-white group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono font-bold text-lira-blue group-hover:underline">{issue.key}</span>
-                        <span className="text-[9px] uppercase px-1.5 py-0.2 rounded bg-gray-100 font-semibold text-gray-600">
-                          {statusLabel(issue.status)}
-                        </span>
-                      </div>
-                      <div className="font-medium text-lira-text line-clamp-2 leading-snug">
-                        {issue.title}
-                      </div>
-                      <div className="flex items-center justify-between pt-1 text-[10px] text-lira-muted border-t border-gray-100">
-                        <span>{issue.assignee || 'Unassigned'}</span>
-                        <span className="font-bold text-lira-text">{issue.storyPoints || 1} pts</span>
-                      </div>
-                    </div>
+                    <WorkItemCard key={issue.id} issue={issue} compact onOpen={onIssueClick}
+                      tag={<span className="text-[9px] uppercase px-1.5 py-0.2 rounded bg-gray-100 font-semibold text-gray-600">{statusLabel(issue.status)}</span>} />
                   ))
                 )}
               </div>

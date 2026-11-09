@@ -39,10 +39,10 @@ export function setGeminiApiKey(key: string): void {
 // 'openai' any OpenAI-compatible server: Ollama, LM Studio, vLLM or a hosted one (set the base URL)
 export type AiProvider = 'local' | 'gemini' | 'openai';
 
-export interface OpenAiConfig { baseUrl: string; model: string; apiKey: string }
+interface OpenAiConfig { baseUrl: string; model: string; apiKey: string }
 
-export const DEFAULT_OPENAI_URL = 'http://localhost:11434/v1'; // Ollama
-export const DEFAULT_OPENAI_MODEL = 'llama3.1';
+const DEFAULT_OPENAI_URL = 'http://localhost:11434/v1'; // Ollama
+const DEFAULT_OPENAI_MODEL = 'llama3.1';
 
 export function getAiProvider(): AiProvider {
   const v = localStorage.getItem('lira_ai_provider');

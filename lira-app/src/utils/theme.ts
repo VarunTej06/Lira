@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 /**
  * The light / dark theme. It is changed in several dialogs (Settings, the account menu, System settings). Each of them
  * keeps its own draft while it is open and calls `applyTheme` only when the person presses Save, so closing a dialog
@@ -7,7 +5,7 @@ import { useEffect, useState } from 'react';
  */
 export type Theme = 'light' | 'dark';
 
-export const THEME_KEY = 'lira_theme';
+const THEME_KEY = 'lira_theme';
 export const THEME_EVENT = 'lira-theme-changed';
 
 export function getTheme(): Theme {
@@ -25,13 +23,3 @@ export function applyTheme(theme: Theme): void {
   window.dispatchEvent(new CustomEvent(THEME_EVENT, { detail: theme }));
 }
 
-/** The theme that is currently applied; updates when any dialog applies a new one. */
-export function useSavedTheme(): Theme {
-  const [theme, setTheme] = useState<Theme>(getTheme);
-  useEffect(() => {
-    const on = () => setTheme(getTheme());
-    window.addEventListener(THEME_EVENT, on);
-    return () => window.removeEventListener(THEME_EVENT, on);
-  }, []);
-  return theme;
-}

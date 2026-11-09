@@ -11,7 +11,7 @@ export async function restoringIssuesExactly<T>(fn: () => Promise<T>): Promise<T
   try { return await fn(); } finally { restoringIssues = false; }
 }
 
-export class LiraDatabase extends Dexie {
+class LiraDatabase extends Dexie {
   spaces!: Table<Space, number>;
   issues!: Table<Issue, number>;
   columns!: Table<Column, string>;

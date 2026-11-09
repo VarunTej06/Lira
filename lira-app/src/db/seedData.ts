@@ -15,8 +15,30 @@ export async function seedDatabase(): Promise<void> {
     return;
   }
 
-  // Create spaces
-  const spaces: Omit<Space, 'id'>[] = [
+  const spaces = sampleSpaces();
+
+  const spaceIds = await db.spaces.bulkAdd(spaces, { allKeys: true }) as number[];
+  const genSpaceId = spaceIds[0];
+  const certSpaceId = spaceIds[2];
+  const coursesSpaceId = spaceIds[3];
+  const atmosSpaceId = spaceIds[4];
+  const liraSpaceId = spaceIds[5];
+
+  await db.issues.bulkAdd(certIssues(certSpaceId));
+
+  await db.issues.bulkAdd(courseIssues(coursesSpaceId));
+
+  await db.issues.bulkAdd(atmosIssues(atmosSpaceId));
+
+  await db.issues.bulkAdd(genIssues(genSpaceId));
+
+  // Seed Lira project issues
+  await seedLiraIssues(liraSpaceId);
+}
+
+/** The sample spaces. */
+function sampleSpaces(): Omit<Space, 'id'>[] {
+  return [
     {
       name: 'General Tasks',
       key: 'GEN',
@@ -72,16 +94,11 @@ export async function seedDatabase(): Promise<void> {
       updatedAt: now,
     },
   ];
+}
 
-  const spaceIds = await db.spaces.bulkAdd(spaces, { allKeys: true }) as number[];
-  const genSpaceId = spaceIds[0];
-  const certSpaceId = spaceIds[2];
-  const coursesSpaceId = spaceIds[3];
-  const atmosSpaceId = spaceIds[4];
-  const liraSpaceId = spaceIds[5];
-
-  // Seed Certification issues
-  const certIssues: Omit<Issue, 'id'>[] = [
+/** The sample Certification tickets. */
+function certIssues(certSpaceId: number): Omit<Issue, 'id'>[] {
+  return [
     {
       spaceId: certSpaceId,
       key: 'CERT-1',
@@ -429,11 +446,11 @@ export async function seedDatabase(): Promise<void> {
       watchers: ['VY'],
     },
   ];
+}
 
-  await db.issues.bulkAdd(certIssues);
-
-  // Seed Courses issues
-  const courseIssues: Omit<Issue, 'id'>[] = [
+/** The sample Courses tickets. */
+function courseIssues(coursesSpaceId: number): Omit<Issue, 'id'>[] {
+  return [
     {
       spaceId: coursesSpaceId,
       key: 'CRS-1',
@@ -476,11 +493,11 @@ export async function seedDatabase(): Promise<void> {
       watchers: ['VY'],
     },
   ];
+}
 
-  await db.issues.bulkAdd(courseIssues);
-
-  // Seed ATMOS project issues
-  const atmosIssues: Omit<Issue, 'id'>[] = [
+/** The sample ATMOS project tickets. */
+function atmosIssues(atmosSpaceId: number): Omit<Issue, 'id'>[] {
+  return [
     {
       spaceId: atmosSpaceId,
       key: 'ATMOS-1',
@@ -593,11 +610,11 @@ export async function seedDatabase(): Promise<void> {
       watchers: ['VY'],
     },
   ];
+}
 
-  await db.issues.bulkAdd(atmosIssues);
-
-  // Seed General issues
-  const genIssues: Omit<Issue, 'id'>[] = [
+/** The sample General tickets. */
+function genIssues(genSpaceId: number): Omit<Issue, 'id'>[] {
+  return [
     {
       spaceId: genSpaceId,
       key: 'GEN-1',
@@ -632,11 +649,6 @@ export async function seedDatabase(): Promise<void> {
       watchers: ['VY'],
     },
   ];
-
-  await db.issues.bulkAdd(genIssues);
-
-  // Seed Lira project issues
-  await seedLiraIssues(liraSpaceId);
 }
 
 async function ensureLiraSpace(): Promise<void> {
@@ -663,7 +675,7 @@ async function ensureLiraSpace(): Promise<void> {
   }
 }
 
-export async function seedLiraIssues(liraSpaceId: number): Promise<void> {
+async function seedLiraIssues(liraSpaceId: number): Promise<void> {
   const issues: Omit<Issue, 'id'>[] = [
     {
       spaceId: liraSpaceId,

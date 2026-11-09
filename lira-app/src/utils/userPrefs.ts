@@ -1,0 +1,52 @@
+/** The person's own settings (profile, language and time zone, notifications), kept in the browser and mirrored to data/settings.json. */
+
+interface Profile { name: string; email: string; initials: string; role: string }
+interface LocalePrefs { language: string; timeZone: string }
+interface NotificationPrefs { inAppFeed: boolean; soundFeedback: boolean; mentionsOnly: boolean }
+
+const read = <T,>(key: string): T | undefined => {
+  try { const raw = localStorage.getItem(key); return raw ? (JSON.parse(raw) as T) : undefined; } catch { return undefined; }
+};
+
+export function loadProfile(): Profile {
+  return read<Profile>('lira_user_profile') ?? {
+    name: localStorage.getItem('lira_user_name') || 'Varuntej Yadla',
+    email: localStorage.getItem('lira_user_email') || 'yvaruntej0612@gmail.com',
+    initials: localStorage.getItem('lira_user_initials') || 'VY',
+    role: localStorage.getItem('lira_user_role') || 'MLOps & Platform Engineer',
+  };
+}
+
+/** Cleans what was typed (initials default to the first two letters of the name; role to Software Engineer). */
+export function cleanProfile(p: Profile): Profile {
+  return { name: p.name.trim(), email: p.email.trim(), initials: (p.initials.trim() || p.name.trim().slice(0, 2)).toUpperCase(), role: p.role.trim() || 'Software Engineer' };
+}
+
+export function saveProfile(p: Profile) {
+  localStorage.setItem('lira_user_profile', JSON.stringify(p));
+  localStorage.setItem('lira_user_name', p.name);
+  localStorage.setItem('lira_user_email', p.email);
+  localStorage.setItem('lira_user_initials', p.initials);
+  localStorage.setItem('lira_user_role', p.role);
+}
+
+export function loadLocale(): LocalePrefs {
+  const saved = read<Partial<LocalePrefs>>('lira_locale_prefs');
+  return {
+    language: saved?.language || localStorage.getItem('lira_pref_lang') || 'en-US',
+    timeZone: saved?.timeZone || localStorage.getItem('lira_pref_tz') || 'Asia/Kolkata',
+  };
+}
+
+export function saveLocale(p: LocalePrefs) {
+  localStorage.setItem('lira_locale_prefs', JSON.stringify(p));
+  localStorage.setItem('lira_pref_lang', p.language);
+  localStorage.setItem('lira_pref_tz', p.timeZone);
+}
+
+export const loadNotificationPrefs = (): NotificationPrefs => read<NotificationPrefs>('lira_notification_prefs') ?? { inAppFeed: true, soundFeedback: false, mentionsOnly: true };
+
+export function saveNotificationPrefs(p: NotificationPrefs) {
+  localStorage.setItem('lira_notification_prefs', JSON.stringify(p));
+  localStorage.setItem('lira_notif_config', JSON.stringify(p));
+}

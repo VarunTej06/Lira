@@ -3,7 +3,7 @@ import type { Project } from '../types/project';
 import type { Space } from '../types/space';
 
 const STORAGE_KEY = 'lira_projects';
-export const PROJECTS_EVENT = 'lira-projects-changed';
+const PROJECTS_EVENT = 'lira-projects-changed';
 
 export const DEFAULT_PROJECTS = (spaces: Space[]): Project[] => {
   const liraSpace = spaces.find(s => s.key === 'LIRA') || spaces[0];

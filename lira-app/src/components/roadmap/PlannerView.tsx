@@ -1,9 +1,11 @@
-import { issueLink } from '../../utils/links';
+import {  } from '../../utils/links';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { CalendarDays, ChevronDown, ChevronRight, GripHorizontal, Plus, Zap } from 'lucide-react';
+import { TimelineHeader } from './TimelineHeader';
+import { PlannerLabels } from './PlannerLabels';
+import { CalendarDays, GripHorizontal } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import {
-  PX_PER_DAY, STATUS_META, buildHeader, buildPlannerRows, computeRange, daysBetween, fmtDay, fmtShort, laneColor, movedDate,
+  PX_PER_DAY, STATUS_META, buildHeader, buildPlannerRows, computeRange, daysBetween, fmtDay, fmtShort, movedDate,
   parseDay, resizeItem, resolveItem, shiftItem, ticketDate, xOf,
   type Roadmap, type RoadmapItem,
 } from '../../utils/roadmapUtils';
@@ -151,77 +153,15 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
 
       <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 360px)', minHeight: 320 }}>
         <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + height }}>
-          {/* header */}
-          <div className="sticky top-0 z-30 flex" style={{ height: HEADER_H }}>
-            <div className="sticky left-0 z-40 bg-lira-surface border-b border-r border-lira-border flex items-end px-4 pb-2 text-[11px] font-semibold uppercase tracking-wider text-lira-muted" style={{ width: LABEL_W }}>
-              Lane · Epic · Ticket
-            </div>
-            <div className="relative bg-lira-surface border-b border-lira-border" style={{ width }}>
-              {header.top.map((c, i) => <div key={i} className="absolute top-0 h-6 flex items-center px-2 text-[11px] font-semibold text-lira-text border-r border-lira-border/70" style={{ left: c.x, width: c.width }}>{c.label}</div>)}
-              {header.bottom.map((c, i) => <div key={i} className="absolute top-6 h-[26px] flex items-center px-2 text-[11px] text-lira-muted border-r border-t border-lira-border/60" style={{ left: c.x, width: c.width }}>{c.label}</div>)}
-              <div className="absolute top-[28px] -translate-x-1/2 px-1.5 rounded bg-red-500 text-white text-[9px] font-bold z-10 leading-[14px]" style={{ left: todayX }}>TODAY</div>
-            </div>
-          </div>
+          <TimelineHeader header={header} width={width} labelWidth={LABEL_W} height={HEADER_H} todayX={todayX} corner="Lane · Epic · Ticket" />
 
           {/* body */}
           <div className="flex" style={{ height }}>
-            {/* labels */}
-            <div className="sticky left-0 z-20 bg-lira-surface border-r border-lira-border" style={{ width: LABEL_W }}>
-              {rows.map(r => {
-                if (r.kind === 'lane') return (
-                  <button key={`l-${r.lane}`} onClick={() => onToggleLane(r.lane)} className="w-full flex items-center gap-2 px-3 text-left bg-lira-bg/70 border-b border-lira-border/70 cursor-pointer hover:bg-lira-bg" style={{ height: r.h }}>
-                    <ChevronDown className={`w-3.5 h-3.5 text-lira-muted transition-transform ${collapsedLanes.includes(r.lane) ? '-rotate-90' : ''}`} />
-                    <span className="w-2.5 h-2.5 rounded-sm" style={{ background: laneColor(roadmap, r.lane) }} />
-                    <span className="text-xs font-semibold text-lira-text truncate">{r.lane}</span>
-                    <span className="ml-auto text-[10px] text-lira-muted bg-lira-surface border border-lira-border rounded-full px-1.5">{r.count}</span>
-                  </button>
-                );
-                if (r.kind === 'epic') {
-                  const { status } = resolveItem(r.item, issues, today);
-                  const isAdding = adding?.id === r.item.id;
-                  return (
-                    <div key={`e-${r.item.id}`} className="group flex items-center gap-1.5 pl-5 pr-2 border-b border-lira-border/50 hover:bg-lira-bg/50" style={{ height: r.h }}>
-                      <button onClick={() => toggleEpic(r.item.id)} disabled={r.tickets.length === 0} className="p-0.5 text-lira-muted disabled:opacity-30 cursor-pointer" aria-label={r.expanded ? 'Collapse epic' : 'Expand epic'}>
-                        {r.expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                      </button>
-                      <span className="w-4 h-4 rounded flex items-center justify-center text-[9px] bg-violet-500/20 text-violet-500 flex-shrink-0" title="Epic"><Zap className="w-3 h-3" /></span>
-                      {isAdding ? (
-                        <input
-                          autoFocus
-                          value={adding!.text}
-                          onChange={e => setAdding({ id: r.item.id, text: e.target.value })}
-                          onKeyDown={e => { if (e.key === 'Enter') submitAdd(); if (e.key === 'Escape') setAdding(null); }}
-                          onBlur={() => setAdding(null)}
-                          placeholder={`New task in ${r.epic?.key}…  Enter to add`}
-                          className="flex-1 min-w-0 border border-lira-blue rounded px-2 py-1 text-xs bg-lira-surface text-lira-text focus:outline-none"
-                        />
-                      ) : (
-                        <button onClick={() => onOpenItem(r.item.id)} className="flex-1 min-w-0 flex items-center gap-2 text-left cursor-pointer" title={r.item.title}>
-                          <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{r.epic?.key || r.item.epicKey || 'no epic'}</span>
-                          <span className="text-xs font-medium text-lira-text truncate">{r.item.title}</span>
-                        </button>
-                      )}
-                      {!isAdding && (
-                        <>
-                          <span className="text-[10px] px-1.5 py-0.5 rounded-full font-semibold flex-shrink-0" style={{ background: STATUS_META[status].color + '22', color: STATUS_META[status].color }}>{STATUS_META[status].label}</span>
-                          {r.tickets.length > 0 && <span className="text-[10px] text-lira-muted flex-shrink-0">{r.tickets.length}</span>}
-                          {r.epic && <button onClick={() => setAdding({ id: r.item.id, text: '' })} className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-lira-muted hover:text-lira-blue hover:bg-lira-bg cursor-pointer flex-shrink-0" title="Add a task to this epic" aria-label="Add a task to this epic"><Plus className="w-3.5 h-3.5" /></button>}
-                        </>
-                      )}
-                    </div>
-                  );
-                }
-                const t = r.issue;
-                return (
-                  <button key={`t-${t.id}`} onClick={() => onOpenIssue(t)} {...issueLink(t)} className="w-full flex items-center gap-2 pl-14 pr-3 text-left border-b border-lira-border/40 hover:bg-lira-bg/50 cursor-pointer" style={{ height: r.h }} title={t.title}>
-                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: ticketColor(t.status) }} />
-                    <span className="text-[10px] font-mono text-lira-muted flex-shrink-0">{t.key}</span>
-                    <span className="text-xs text-lira-text truncate">{t.title}</span>
-                    {t.assigneeInitials && <span className="ml-auto text-[9px] font-bold text-white bg-lira-blue/70 rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0">{t.assigneeInitials.slice(0, 2)}</span>}
-                  </button>
-                );
-              })}
-            </div>
+            <PlannerLabels
+              roadmap={roadmap} rows={rows} issues={issues} today={today} width={LABEL_W} collapsedLanes={collapsedLanes}
+              adding={adding} setAdding={setAdding} submitAdd={submitAdd} onToggleLane={onToggleLane} toggleEpic={toggleEpic}
+              onOpenItem={onOpenItem} onOpenIssue={onOpenIssue}
+            />
 
             {/* canvas */}
             <div className="relative" style={{ width, height }}>

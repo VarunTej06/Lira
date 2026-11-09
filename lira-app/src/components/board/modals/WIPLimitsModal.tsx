@@ -5,7 +5,7 @@ import type { Space } from '../../../types/space';
 
 /** WIP Limits Modal */
 
-export interface WipLimitsConfig {
+interface WipLimitsConfig {
   enabled: boolean;
   limits: {
     backlog: number;
@@ -15,7 +15,7 @@ export interface WipLimitsConfig {
   };
 }
 
-export const DEFAULT_WIP_CONFIG: WipLimitsConfig = {
+const DEFAULT_WIP_CONFIG: WipLimitsConfig = {
   enabled: false,
   limits: {
     backlog: 0, // 0 = unlimited

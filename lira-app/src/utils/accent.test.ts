@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { ACCENTS, DEFAULT_ACCENT, accentCss, accentVars, applyAccent, isDefaultAccent, loadAccent, parseHex, saveAccent } from './accent'
+import { ACCENTS, DEFAULT_ACCENT, accentCss, contrast, accentVars, applyAccent, isDefaultAccent, loadAccent, parseHex, saveAccent } from './accent'
 
 describe('accent colours', () => {
   beforeEach(() => { localStorage.clear(); document.head.innerHTML = '' })
@@ -34,6 +34,32 @@ describe('accent colours', () => {
     expect(sum(accentVars('#DB2777', true)!.light)).toBeLessThan(250)
   })
 
+  it('measures contrast the way WCAG does', () => {
+    expect(contrast([0, 0, 0], [255, 255, 255])).toBeCloseTo(21, 0)
+    expect(contrast([255, 255, 255], [255, 255, 255])).toBeCloseTo(1, 5)
+  })
+
+  it('never reads worse in dark mode than the old fixed lightening, for every colour on offer', () => {
+    const dark: [number, number, number] = [13, 17, 23]
+    const white: [number, number, number] = [255, 255, 255]
+    const score = (c: [number, number, number]) => Math.min(contrast(white, c), contrast(c, dark))
+    for (const a of ACCENTS) {
+      const base = parseHex(a.hex)!
+      const old = base.map(v => Math.round(v + (255 - v) * 0.28)) as [number, number, number]
+      const now = accentVars(a.hex, true)!.blue.split(' ').map(Number) as [number, number, number]
+      expect(score(now), a.name).toBeGreaterThanOrEqual(score(old) - 1e-9)
+    }
+  })
+
+  it('in light mode every accent reads at 4.5 or better on its own soft tint, and colours that already did are unchanged', () => {
+    const tintOf = (hex: string) => accentVars(hex, false)!.light.split(' ').map(Number) as [number, number, number]
+    for (const a of ACCENTS) {
+      const blue = accentVars(a.hex, false)!.blue.split(' ').map(Number) as [number, number, number]
+      expect(contrast(blue, tintOf(a.hex)), a.name).toBeGreaterThanOrEqual(4.5)
+    }
+    expect(accentVars('#0052CC', false)!.blue).toBe('0 82 204') // the default blue was already readable
+  })
+
   it('writes no CSS for the default blue, so nothing changes', () => {
     expect(isDefaultAccent('#0052cc')).toBe(true)
     expect(accentCss('#0052CC')).toBe('')
@@ -42,7 +68,7 @@ describe('accent colours', () => {
 
   it('writes overrides for both themes', () => {
     const css = accentCss('#059669')
-    expect(css).toContain(':root{--lira-blue:5 150 105;')
+    expect(css).toContain(':root{--lira-blue:')
     expect(css).toContain('.dark{--lira-blue:')
     expect(css).toContain('--lira-blue-hover')
     expect(css).toContain('--lira-blue-light')
@@ -50,10 +76,10 @@ describe('accent colours', () => {
 
   it('applies, replaces and removes the page style', () => {
     applyAccent('#059669')
-    expect(document.getElementById('lira-accent')!.textContent).toContain('5 150 105')
+    expect(document.getElementById('lira-accent')!.textContent).toContain(':root{--lira-blue:')
     applyAccent('#DB2777')
     expect(document.querySelectorAll('#lira-accent')).toHaveLength(1)
-    expect(document.getElementById('lira-accent')!.textContent).toContain('219 39 119')
+    expect(document.getElementById('lira-accent')!.textContent).toContain('.dark{')
     applyAccent(DEFAULT_ACCENT)
     expect(document.getElementById('lira-accent')).toBeNull()
   })

@@ -41,7 +41,7 @@ const HIGHLIGHTS = [
   { name: 'Pink', value: '#FFBDAD' }, { name: 'Purple', value: '#C0B6F2' },
 ];
 
-export interface RichTextEditorProps {
+interface RichTextEditorProps {
   /** The stored description (HTML from this editor, or older Markdown). */
   value: string;
   onChange: (stored: string) => void;
@@ -211,7 +211,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     editable: !readOnly,
     autofocus: autoFocus ? 'end' : false,
     editorProps: {
-      attributes: { class: 'lira-rich-body', style: `min-height:${minHeight}px`, 'aria-label': ariaLabel, role: 'textbox', 'aria-multiline': 'true' },
+      attributes: { class: 'lira-rich-body', style: `min-height:${readOnly ? 0 : minHeight}px`, 'aria-label': ariaLabel, role: 'textbox', 'aria-multiline': 'true' },
       handleKeyDown: (_view, event) => {
         if (event.key === 'Enter' && (event.ctrlKey || event.metaKey) && onSubmitRef.current) { event.preventDefault(); onSubmitRef.current(); return true; }
         return false;

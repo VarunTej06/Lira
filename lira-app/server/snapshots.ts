@@ -7,7 +7,7 @@ import path from 'node:path'
 
 export const SNAPSHOT_MAX_BYTES = 1024 * 1024
 
-export const snapshotsDir = (dataDir: string) => path.join(dataDir, 'snapshots')
+const snapshotsDir = (dataDir: string) => path.join(dataDir, 'snapshots')
 
 /** A safe file name from whatever was asked for. */
 export function safeSnapshotName(name: unknown): string | undefined {

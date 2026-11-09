@@ -1,5 +1,5 @@
-import { evaluateGoal, METRICS, scopeIssues, type DataCtx } from './metrics';
-import { widgetData, widgetFilters, widgetScope, type WidgetData } from './data';
+import { evaluateGoal, scopeIssues, type DataCtx } from './metrics';
+import { widgetData, type WidgetData } from './data';
 import type { Dashboard, SnapshotSchedule } from './types';
 import { sprintName } from '../sprintUtils';
 
@@ -76,7 +76,7 @@ function dataMarkdown(w: { title: string }, data: WidgetData): string[] {
   return out;
 }
 
-export function describeFilters(d: Pick<Dashboard, 'filters'>, ctx: Pick<DataCtx, 'spaces'>): string {
+function describeFilters(d: Pick<Dashboard, 'filters'>, ctx: Pick<DataCtx, 'spaces'>): string {
   const f = d.filters;
   const parts: string[] = [];
   parts.push(f.spaceIds.length ? `spaces: ${f.spaceIds.map(id => ctx.spaces.find(s => s.id === id)?.name ?? id).join(', ')}` : 'all spaces');
@@ -128,4 +128,3 @@ export function downloadText(name: string, text: string, type = 'text/markdown')
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
-export { widgetFilters, widgetScope, METRICS };

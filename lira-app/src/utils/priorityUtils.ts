@@ -1,7 +1,7 @@
 import type { Priority } from '../types/issue';
 
 // The picture for each priority is drawn by PriorityIcon (components/common/Icons.tsx).
-export interface PriorityConfig {
+interface PriorityConfig {
   label: string;
   color: string;
   bgColor: string;

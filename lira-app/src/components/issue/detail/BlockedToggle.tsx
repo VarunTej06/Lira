@@ -165,7 +165,7 @@ const TYPES: { id: IssueType | 'all'; label: string }[] = [
 interface PickerProps { open: boolean; issue: Issue; alreadyIds: number[]; onClose: () => void; onPick: (issues: Issue[]) => void }
 
 /** Choose the ticket, or tickets, that block this one. */
-export const BlockerPicker: React.FC<PickerProps> = ({ open, issue, alreadyIds, onClose, onPick }) => {
+const BlockerPicker: React.FC<PickerProps> = ({ open, issue, alreadyIds, onClose, onPick }) => {
   const all = useAllIssues() || [];
   const [query, setQuery] = useState('');
   const [type, setType] = useState<IssueType | 'all'>('all');

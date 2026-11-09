@@ -8,8 +8,8 @@ import { Button } from '../common/Button';
 import { TicketSuggestions } from './TicketSuggestions';
 import type { Space } from '../../types/space';
 import { createIssue, getNextIssueKey, useIssuesBySpace } from '../../hooks/useIssues';
-import type { Attachment, Issue, Priority, IssueType } from '../../types/issue';
-import { v4 as uuidv4 } from 'uuid';
+import type { Attachment, Priority, IssueType } from '../../types/issue';
+import { buildNewIssue } from '../../utils/newIssue';
 import { currentSprintKey, getSprintDefs, shiftSprint, sprintIncludesSpace, sprintName } from '../../utils/sprintUtils';
 
 interface CreateIssueModalProps {
@@ -39,6 +39,16 @@ const PRIORITIES: { value: Priority; label: string }[] = [
   { value: 'low', label: 'Low' },
   { value: 'lowest', label: 'Lowest' },
 ];
+
+const INPUT = 'w-full text-sm border border-lira-border rounded-lg px-3 focus:outline-none focus:border-lira-blue transition-all';
+const STATUSES = [['backlog', 'Backlog'], ['todo', 'To Do'], ['inprogress', 'In Progress'], ['done', 'Done']];
+
+const Field = ({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) => (
+  <div>
+    <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">{label}{required && <> <span className="text-red-500">*</span></>}</label>
+    {children}
+  </div>
+);
 
 export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   isOpen,
@@ -104,46 +114,10 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     setError('');
 
     try {
-      const key = await getNextIssueKey(space.key);
-      const labelArray = labels.split(',').map(l => l.trim()).filter(Boolean);
-      const now = new Date();
-
-      const newIssue: Omit<Issue, 'id'> = {
-        spaceId: space.id,
-        key,
-        parentId: parentId || undefined,
-        epicId: parentId ? (spaceIssues.find(i => i.id === parentId)?.type === 'epic' ? parentId : spaceIssues.find(i => i.id === parentId)?.epicId) : undefined,
-        epicLink: parentId ? spaceIssues.find(i => i.id === parentId)?.title : undefined,
-        title: title.trim(),
-        description: description.trim(),
-        type,
-        status,
-        priority,
-        assignee: 'VY',
-        assigneeInitials: 'VY',
-        reporter: 'VY',
-        reporterInitials: 'VY',
-        dueDate: dueDate ? new Date(dueDate) : undefined,
-        labels: labelArray,
-        subtasks: [],
-        comments: [],
-        activity: [{
-          id: uuidv4(),
-          type: 'created',
-          author: 'VY',
-          authorInitials: 'VY',
-          description: 'created this issue',
-          createdAt: now,
-        }],
-        attachments,
-        linkedIssues: [],
-        sprint: type === 'epic' ? undefined : sprintValue,
-        rank: Date.now(),
-        createdAt: now,
-        updatedAt: now,
-        watchers: ['VY'],
-      };
-
+      const newIssue = buildNewIssue({
+        spaceId: space.id, key: await getNextIssueKey(space.key), title, description, type, status, priority, dueDate, labels,
+        sprint: sprintValue, parentId, attachments, spaceIssues,
+      });
       await createIssue(newIssue);
       onClose();
       resetForm();
@@ -248,121 +222,56 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
           </div>
         )}
 
-        {/* Title */}
-        <div>
-          <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">
-            Title <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            autoFocus
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="What needs to be done?"
-            className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue transition-all"
-          />
+        <Field label="Title" required>
+          <input type="text" autoFocus value={title} onChange={e => setTitle(e.target.value)} placeholder="What needs to be done?" className={`${INPUT} py-2.5`} />
           {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
-        </div>
+        </Field>
 
         <TicketSuggestions
-          title={title}
-          description={description}
-          type={type}
-          spaceId={space?.id}
-          existing={spaceIssues}
-          labels={labels}
-          priority={priority}
-          parentId={parentId}
+          title={title} description={description} type={type} spaceId={space?.id} existing={spaceIssues}
+          labels={labels} priority={priority} parentId={parentId}
           onAddLabel={l => setLabels(prev => (prev.trim() ? `${prev.replace(/[,\s]+$/, '')}, ${l}` : l))}
           onPriority={setPriority}
           onEpic={setParentId}
         />
 
-        {/* Description */}
-        <div>
-          <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Description</label>
-          <RichTextEditor
-            value={description}
-            onChange={setDescription}
-            attachments={attachments}
-            onAttachmentsChange={setAttachments}
-            placeholder="Add a description..."
-            minHeight={110}
-          />
-        </div>
+        <Field label="Description">
+          <RichTextEditor value={description} onChange={setDescription} attachments={attachments} onAttachmentsChange={setAttachments} placeholder="Add a description..." minHeight={110} />
+        </Field>
 
-        {/* Row: Status + Priority */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Status</label>
-            <select
-              value={status}
-              onChange={e => setStatus(e.target.value)}
-              className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white"
-            >
-              <option value="backlog">Backlog</option>
-              <option value="todo">To Do</option>
-              <option value="inprogress">In Progress</option>
-              <option value="done">Done</option>
+          <Field label="Status">
+            <select value={status} onChange={e => setStatus(e.target.value)} className={`${INPUT} py-2.5 bg-white`}>
+              {STATUSES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
             </select>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Priority</label>
-            <select
-              value={priority}
-              onChange={e => setPriority(e.target.value as Priority)}
-              className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white"
-            >
-              {PRIORITIES.map(p => (
-                <option key={p.value} value={p.value}>{p.label}</option>
-              ))}
+          </Field>
+          <Field label="Priority">
+            <select value={priority} onChange={e => setPriority(e.target.value as Priority)} className={`${INPUT} py-2.5 bg-white`}>
+              {PRIORITIES.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
             </select>
-          </div>
+          </Field>
         </div>
 
-        {/* Sprint (epics live outside sprints) */}
+        {/* Epics live outside sprints */}
         {type !== 'epic' && (
-          <div>
-            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Sprint</label>
-            <select
-              value={sprintValue}
-              onChange={e => setSprint(e.target.value)}
-              className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white cursor-pointer"
-            >
-              {openSprints.map(k => (
-                <option key={k} value={k}>{sprintName(k)}{k === currentSprintKey() ? ' (current)' : ''}</option>
-              ))}
+          <Field label="Sprint">
+            <select value={sprintValue} onChange={e => setSprint(e.target.value)} className={`${INPUT} py-2.5 bg-white cursor-pointer`}>
+              {openSprints.map(k => <option key={k} value={k}>{sprintName(k)}{k === currentSprintKey() ? ' (current)' : ''}</option>)}
             </select>
-          </div>
+          </Field>
         )}
 
-        {/* Row: Due Date + Labels */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Due Date</label>
-            <DatePicker value={dueDate} onChange={setDueDate} placeholder="No due date" aria-label="Due date" />
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Labels</label>
-            <input
-              type="text"
-              value={labels}
-              onChange={e => setLabels(e.target.value)}
-              placeholder="e.g. certification, aws"
-              className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue transition-all"
-            />
+          <Field label="Due Date"><DatePicker value={dueDate} onChange={setDueDate} placeholder="No due date" aria-label="Due date" /></Field>
+          <Field label="Labels">
+            <input type="text" value={labels} onChange={e => setLabels(e.target.value)} placeholder="e.g. certification, aws" className={`${INPUT} py-2.5`} />
             <p className="text-[10px] text-lira-muted mt-1">Comma-separated</p>
-          </div>
+          </Field>
         </div>
 
-        {/* Footer */}
         <div className="flex justify-end gap-3 pt-2 border-t border-lira-border">
-          <Button type="button" variant="ghost" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary" loading={loading}>
-            Create Issue
-          </Button>
+          <Button type="button" variant="ghost" onClick={handleClose}>Cancel</Button>
+          <Button type="submit" variant="primary" loading={loading}>Create Issue</Button>
         </div>
       </form>
     </Modal>

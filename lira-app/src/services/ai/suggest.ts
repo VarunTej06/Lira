@@ -4,14 +4,14 @@ import type { Issue, Priority } from '../../types/issue';
 
 const STOP = new Set(['the', 'and', 'for', 'with', 'from', 'into', 'this', 'that', 'add', 'create', 'update', 'fix', 'new', 'make', 'set', 'get', 'use', 'when', 'not', 'are', 'can', 'all', 'our', 'your', 'need', 'needs', 'task', 'bug']);
 
-export function tokens(text: string): string[] {
+function tokens(text: string): string[] {
   return Array.from(new Set(
     (text.toLowerCase().match(/[a-z0-9][a-z0-9+#.\-/]*/g) || []).filter(w => w.length >= 3 && !STOP.has(w)),
   ));
 }
 
 /** Share of words two titles have in common (0 to 1). */
-export function similarity(a: string, b: string): number {
+function similarity(a: string, b: string): number {
   const x = tokens(a), y = tokens(b);
   if (!x.length || !y.length) return 0;
   const sy = new Set(y);
@@ -19,7 +19,7 @@ export function similarity(a: string, b: string): number {
   return shared / (x.length + y.length - shared);
 }
 
-export interface TicketSuggestions {
+interface TicketSuggestions {
   labels: string[];
   priority?: Priority;
   /** why the priority was suggested */

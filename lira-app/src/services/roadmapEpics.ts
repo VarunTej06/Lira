@@ -14,11 +14,15 @@ import { moveIssuesToSprint, getIssueSprint, sprintKey } from '../utils/sprintUt
 import { epicStatusFor, parseDay, type Roadmap, type RoadmapChild, type RoadmapItem } from '../utils/roadmapUtils';
 import type { Issue, Subtask } from '../types/issue';
 import type { Space } from '../types/space';
+import { currentUser } from '../utils/currentUser';
+
+/** Initials of the person using Lira: the author, reporter and watcher of what is created here. */
+const ME = () => currentUser().initials;
 
 export const spaceForRoadmap = (rm: Roadmap, spaces: Space[]) => spaces.find(s => s.key === rm.spaceKey);
 
 const created = (text: string) => ({
-  id: uuidv4(), type: 'created' as const, author: 'VY', authorInitials: 'VY', description: text, createdAt: new Date(),
+  id: uuidv4(), type: 'created' as const, author: ME(), authorInitials: ME(), description: text, createdAt: new Date(),
 });
 
 /** Creates the epic for a roadmap item (Backlog, unless the item is already running or done). Returns the epic key. */
@@ -33,10 +37,10 @@ export async function createEpicForItem(item: RoadmapItem, space: Space, roadmap
     type: 'epic',
     status: epicStatusFor(item.status),
     priority: 'medium',
-    assignee: item.owner || 'VY',
-    assigneeInitials: (item.owner || 'VY').slice(0, 2).toUpperCase(),
-    reporter: 'VY',
-    reporterInitials: 'VY',
+    assignee: item.owner || ME(),
+    assigneeInitials: (item.owner || ME()).slice(0, 2).toUpperCase(),
+    reporter: ME(),
+    reporterInitials: ME(),
     startDate: parseDay(item.start),
     dueDate: parseDay(item.end),
     labels: ['roadmap'],
@@ -48,7 +52,7 @@ export async function createEpicForItem(item: RoadmapItem, space: Space, roadmap
     rank: Date.now(),
     createdAt: now,
     updatedAt: now,
-    watchers: ['VY'],
+    watchers: [ME()],
   } as Omit<Issue, 'id'>);
   triggerDiskSync();
   return key;
@@ -61,7 +65,7 @@ const toSubtasks = (list: RoadmapChild[], existing: Subtask[] = []): Subtask[] =
  * Creates the single task that carries an item's checklist, under the item's epic. Its subtasks are the checklist entries.
  * Like the epic, it starts in the Backlog (unless the item is already running or done). Returns the task key.
  */
-export async function createTaskForItem(item: RoadmapItem, epic: Issue, roadmapName: string): Promise<string> {
+async function createTaskForItem(item: RoadmapItem, epic: Issue, roadmapName: string): Promise<string> {
   const space = await db.spaces.get(epic.spaceId);
   if (!space) throw new Error('The epic’s space no longer exists.');
   const key = await getNextIssueKey(space.key);
@@ -77,10 +81,10 @@ export async function createTaskForItem(item: RoadmapItem, epic: Issue, roadmapN
     type: 'task',
     status: epicStatusFor(item.status),
     priority: 'medium',
-    assignee: item.owner || 'VY',
-    assigneeInitials: (item.owner || 'VY').slice(0, 2).toUpperCase(),
-    reporter: 'VY',
-    reporterInitials: 'VY',
+    assignee: item.owner || ME(),
+    assigneeInitials: (item.owner || ME()).slice(0, 2).toUpperCase(),
+    reporter: ME(),
+    reporterInitials: ME(),
     startDate: parseDay(item.start),
     dueDate: parseDay(item.end),
     labels: ['roadmap'],
@@ -94,13 +98,13 @@ export async function createTaskForItem(item: RoadmapItem, epic: Issue, roadmapN
     rank: Date.now(),
     createdAt: now,
     updatedAt: now,
-    watchers: ['VY'],
+    watchers: [ME()],
   } as Omit<Issue, 'id'>);
   triggerDiskSync();
   return key;
 }
 
-export interface EnsureResult { items: RoadmapItem[]; created: string[]; tasks: string[]; error?: string }
+interface EnsureResult { items: RoadmapItem[]; created: string[]; tasks: string[]; error?: string }
 
 /**
  * Gives every item an epic, and every item that has a checklist its single checklist task. Safe to call repeatedly:
@@ -188,7 +192,7 @@ export async function setTicketDate(issue: Issue, date: Date): Promise<void> {
     dueDate: date,
     updatedAt: new Date(),
     activity: [...(fresh.activity || []), {
-      id: uuidv4(), type: 'field_change', author: 'VY', authorInitials: 'VY',
+      id: uuidv4(), type: 'field_change', author: ME(), authorInitials: ME(),
       description: 'changed the due date from the roadmap planner', oldValue: from, newValue: date.toLocaleDateString('en-GB'), createdAt: new Date(),
     }],
   });
@@ -206,11 +210,11 @@ export async function addTicketToEpic(epic: Issue, title: string, date?: Date): 
   await db.issues.add({
     spaceId: epic.spaceId, key, parentId: epic.id, epicId: epic.id, epicLink: epic.title,
     title: title.trim(), description: '', type: 'task', status: 'todo', priority: 'medium',
-    assignee: 'VY', assigneeInitials: 'VY', reporter: 'VY', reporterInitials: 'VY',
+    assignee: ME(), assigneeInitials: ME(), reporter: ME(), reporterInitials: ME(),
     dueDate: date, labels: [], subtasks: [], comments: [],
     activity: [created('created this issue from the roadmap planner')],
     attachments: [], linkedIssues: [], sprint: date ? sprintKey(date) : sprintKey(now),
-    rank: Date.now(), createdAt: now, updatedAt: now, watchers: ['VY'],
+    rank: Date.now(), createdAt: now, updatedAt: now, watchers: [ME()],
   } as Omit<Issue, 'id'>);
   triggerDiskSync();
 }

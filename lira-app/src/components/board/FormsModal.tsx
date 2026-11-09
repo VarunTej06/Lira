@@ -6,7 +6,6 @@ import { FormsList } from './forms/FormsList';
 import { FormBuilder } from './forms/FormBuilder';
 import { Check } from 'lucide-react';
 import { Modal } from '../common/Modal';
-export type { FormFieldType, FormField, IntakeForm } from './forms/useFormsState';
 
 /** Intake forms: preview, list of saved forms and the form builder. */
 export const FormsModal: React.FC<FormsModalProps> = (props) => {

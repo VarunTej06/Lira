@@ -2,7 +2,6 @@ import { issueLink } from '../../../utils/links';
 import { statusLabel } from '../../../utils/status';
 import { TypeIcon, PriorityLabel } from '../../common/Icons';
 import { Filter, ArrowUpDown } from 'lucide-react';
-import type {  } from '../../../types/space';
 import { Avatar } from '../../common/Avatar';
 import type { FiltersState } from './useFiltersState';
 

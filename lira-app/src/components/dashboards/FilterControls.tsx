@@ -12,7 +12,7 @@ const RANGES: { value: DateRange; label: string }[] = [
 const PRIORITIES = ['highest', 'high', 'medium', 'low', 'lowest'].map(p => ({ value: p, label: p.charAt(0).toUpperCase() + p.slice(1) }));
 const TYPES = [{ value: 'task', label: 'Tasks' }, { value: 'bug', label: 'Bugs' }, { value: 'subtask', label: 'Subtasks' }, { value: 'epic', label: 'Epics' }];
 
-export const countFilters = (f: DashboardFilters) =>
+const countFilters = (f: DashboardFilters) =>
   (f.spaceIds.length ? 1 : 0) + (f.sprint !== 'all' ? 1 : 0) + (f.range !== 'all' ? 1 : 0) + (f.assignee !== 'all' ? 1 : 0) + (f.priorities.length ? 1 : 0) + (f.labels.length ? 1 : 0) + (f.types.length ? 1 : 0);
 
 interface Props {

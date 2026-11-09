@@ -9,269 +9,110 @@ import { updateIssue } from '../../../hooks/useIssues';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
 
-/** Bulk Actions Modal */
+const STATUSES = [['backlog', 'Backlog'], ['todo', 'To Do'], ['inprogress', 'In Progress'], ['done', 'Done']];
+const PRIORITIES = [['highest', 'Highest'], ['high', 'High'], ['medium', 'Medium'], ['low', 'Low'], ['lowest', 'Lowest']];
+const ASSIGNEES = [['Varun Tej', 'Varun Tej (VY)'], ['Unassigned', 'Unassigned']];
 
-export const BulkActionsModal: React.FC<{
-  isOpen: boolean;
-  onClose: () => void;
-  space: Space | undefined;
-  issues: Issue[];
-}> = ({ isOpen, onClose, space, issues }) => {
+/** A labelled choice and its Apply button. */
+function ApplyRow({ label, value, onChange, options, disabled, onApply }: {
+  label: string; value: string; onChange: (v: string) => void; options: string[][]; disabled: boolean; onApply: () => void;
+}) {
+  return (
+    <div className="space-y-1">
+      <label className="text-[10px] font-bold text-lira-muted uppercase">{label}</label>
+      <div className="flex gap-1.5">
+        <select value={value} onChange={e => onChange(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white">
+          {options.map(([v, text]) => <option key={v} value={v}>{text}</option>)}
+        </select>
+        <button type="button" onClick={onApply} disabled={disabled} className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap">Apply</button>
+      </div>
+    </div>
+  );
+}
+
+/** Change the status, priority or assignee of, or delete, many tickets of a space at once. */
+export const BulkActionsModal: React.FC<{ isOpen: boolean; onClose: () => void; space: Space | undefined; issues: Issue[] }> = ({ isOpen, onClose, space, issues }) => {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const [batchStatus, setBatchStatus] = useState<string>('inprogress');
-  const [batchPriority, setBatchPriority] = useState<string>('high');
-  const [batchAssignee, setBatchAssignee] = useState<string>('Varun Tej');
+  const [batchStatus, setBatchStatus] = useState('inprogress');
+  const [batchPriority, setBatchPriority] = useState('high');
+  const [batchAssignee, setBatchAssignee] = useState('Varun Tej');
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [savedToast, setSavedToast] = useState(false);
 
-  // Toggle select all
-  const allSelected = issues.length > 0 && selectedIds.size === issues.length;
-  const toggleSelectAll = () => {
-    if (allSelected) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(issues.map(i => i.id!).filter(Boolean)));
-    }
-  };
+  const count = selectedIds.size;
+  const allSelected = issues.length > 0 && count === issues.length;
+  const toggleSelectAll = () => setSelectedIds(allSelected ? new Set() : new Set(issues.map(i => i.id!).filter(Boolean)));
+  const toggleSelect = (id: number) => setSelectedIds(prev => { const next = new Set(prev); if (!next.delete(id)) next.add(id); return next; });
 
-  const toggleSelect = (id: number) => {
-    setSelectedIds(prev => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  };
-
-  // Perform bulk status update
-  const handleBulkStatus = async () => {
-    if (selectedIds.size === 0) return;
+  /** Runs one change for every selected ticket, shows the result (or the error), and closes after a moment. */
+  const run = async (apply: (id: number) => Promise<unknown>, success: string, opts: { toast: boolean; closeAfter: number }) => {
+    if (count === 0) return;
     setIsProcessing(true);
     try {
-      for (const id of selectedIds) {
-        await updateIssue(id, { status: batchStatus as Issue['status'] });
-      }
-      setFeedback(`✓ Moved ${selectedIds.size} issues to "${batchStatus}".`);
-      setSavedToast(true);
-      setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
+      for (const id of selectedIds) await apply(id);
+      setFeedback(`✓ ${success}`);
+      if (opts.toast) setSavedToast(true);
+      setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, opts.closeAfter);
+      return true;
     } catch (err) {
       setFeedback(`Error: ${err instanceof Error ? err.message : 'Failed'}`);
     } finally {
       setIsProcessing(false);
     }
   };
+  const apply = (change: Partial<Issue>, success: string) => run(id => updateIssue(id, change), success, { toast: true, closeAfter: 2000 });
 
-  // Perform bulk priority update
-  const handleBulkPriority = async () => {
-    if (selectedIds.size === 0) return;
-    setIsProcessing(true);
-    try {
-      for (const id of selectedIds) {
-        await updateIssue(id, { priority: batchPriority as Issue['priority'] });
-      }
-      setFeedback(`✓ Updated priority of ${selectedIds.size} issues to "${batchPriority}".`);
-      setSavedToast(true);
-      setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
-    } catch (err) {
-      setFeedback(`Error: ${err instanceof Error ? err.message : 'Failed'}`);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  // Perform bulk assignee update
-  const handleBulkAssignee = async () => {
-    if (selectedIds.size === 0) return;
-    setIsProcessing(true);
-    try {
-      const initials = batchAssignee === 'Varun Tej' ? 'VY' : 'UN';
-      for (const id of selectedIds) {
-        await updateIssue(id, {
-          assignee: batchAssignee,
-          assigneeInitials: initials,
-        });
-      }
-      setFeedback(`✓ Assigned ${selectedIds.size} issues to "${batchAssignee}".`);
-      setSavedToast(true);
-      setTimeout(() => { setSavedToast(false); setFeedback(null); onClose(); }, 2000);
-    } catch (err) {
-      setFeedback(`Error: ${err instanceof Error ? err.message : 'Failed'}`);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  // Perform bulk delete
   const handleBulkDelete = async () => {
-    if (selectedIds.size === 0) return;
-    if (!(await confirmDialog({ title: 'Delete work items', message: `Permanently delete ${selectedIds.size} selected work item${selectedIds.size === 1 ? '' : 's'}? This cannot be undone.`, confirmLabel: 'Delete', tone: 'danger' }))) {
-      return;
-    }
-    setIsProcessing(true);
-    try {
-      for (const id of selectedIds) {
-        await db.issues.delete(id);
-      }
-      await saveToDiskNow();
-      setFeedback(`✓ Deleted ${selectedIds.size} issues.`);
-      setSelectedIds(new Set());
-      setTimeout(() => { setFeedback(null); onClose(); }, 1200);
-    } catch (err) {
-      setFeedback(`Error: ${err instanceof Error ? err.message : 'Failed'}`);
-    } finally {
-      setIsProcessing(false);
-    }
+    if (count === 0) return;
+    if (!(await confirmDialog({ title: 'Delete work items', message: `Permanently delete ${count} selected work item${count === 1 ? '' : 's'}? This cannot be undone.`, confirmLabel: 'Delete', tone: 'danger' }))) return;
+    const done = await run(async id => { await db.issues.delete(id); }, `Deleted ${count} issues.`, { toast: false, closeAfter: 1200 });
+    if (done) { await saveToDiskNow(); setSelectedIds(new Set()); }
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Bulk Actions · ${space?.name || 'Workspace'}`} size="lg">
       <div className="p-6 space-y-4 text-lira-text">
-        <p className="text-xs text-lira-muted">
-          Select multiple work items to update statuses, reassign owners, or batch update priorities in bulk.
-        </p>
+        <p className="text-xs text-lira-muted">Select multiple work items to update statuses, reassign owners, or batch update priorities in bulk.</p>
 
-        {/* Action Controls Header */}
         <div className="bg-gray-50 border border-lira-border rounded-xl p-3.5 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-lira-border pb-2.5">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-lira-text">
-                Selected: <span className="text-lira-blue">{selectedIds.size}</span> of {issues.length}
-              </span>
-              <button
-                type="button"
-                onClick={toggleSelectAll}
-                className="text-xs text-lira-blue font-semibold hover:underline cursor-pointer ml-2"
-              >
-                {allSelected ? 'Deselect all' : 'Select all'}
-              </button>
+              <span className="text-xs font-bold text-lira-text">Selected: <span className="text-lira-blue">{count}</span> of {issues.length}</span>
+              <button type="button" onClick={toggleSelectAll} className="text-xs text-lira-blue font-semibold hover:underline cursor-pointer ml-2">{allSelected ? 'Deselect all' : 'Select all'}</button>
             </div>
-
-            {selectedIds.size > 0 && (
-              <button
-                type="button"
-                onClick={handleBulkDelete}
-                disabled={isProcessing}
-                className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors cursor-pointer"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                Delete Selected ({selectedIds.size})
+            {count > 0 && (
+              <button type="button" onClick={handleBulkDelete} disabled={isProcessing} className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 rounded-lg transition-colors cursor-pointer">
+                <Trash2 className="w-3.5 h-3.5" />Delete Selected ({count})
               </button>
             )}
           </div>
 
-          {/* Quick Action Rows */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {/* 1. Status */}
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-lira-muted uppercase">Change Status</label>
-              <div className="flex gap-1.5">
-                <select
-                  value={batchStatus}
-                  onChange={e => setBatchStatus(e.target.value)}
-                  className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white"
-                >
-                  <option value="backlog">Backlog</option>
-                  <option value="todo">To Do</option>
-                  <option value="inprogress">In Progress</option>
-                  <option value="done">Done</option>
-                </select>
-                <button
-                  type="button"
-                  onClick={handleBulkStatus}
-                  disabled={selectedIds.size === 0 || isProcessing}
-                  className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-
-            {/* 2. Priority */}
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-lira-muted uppercase">Set Priority</label>
-              <div className="flex gap-1.5">
-                <select
-                  value={batchPriority}
-                  onChange={e => setBatchPriority(e.target.value)}
-                  className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white"
-                >
-                  <option value="highest">Highest</option>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
-                  <option value="lowest">Lowest</option>
-                </select>
-                <button
-                  type="button"
-                  onClick={handleBulkPriority}
-                  disabled={selectedIds.size === 0 || isProcessing}
-                  className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-
-            {/* 3. Assignee */}
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold text-lira-muted uppercase">Reassign To</label>
-              <div className="flex gap-1.5">
-                <select
-                  value={batchAssignee}
-                  onChange={e => setBatchAssignee(e.target.value)}
-                  className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white"
-                >
-                  <option value="Varun Tej">Varun Tej (VY)</option>
-                  <option value="Unassigned">Unassigned</option>
-                </select>
-                <button
-                  type="button"
-                  onClick={handleBulkAssignee}
-                  disabled={selectedIds.size === 0 || isProcessing}
-                  className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap"
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
+            <ApplyRow label="Change Status" value={batchStatus} onChange={setBatchStatus} options={STATUSES} disabled={count === 0 || isProcessing}
+              onApply={() => apply({ status: batchStatus as Issue['status'] }, `Moved ${count} issues to "${batchStatus}".`)} />
+            <ApplyRow label="Set Priority" value={batchPriority} onChange={setBatchPriority} options={PRIORITIES} disabled={count === 0 || isProcessing}
+              onApply={() => apply({ priority: batchPriority as Issue['priority'] }, `Updated priority of ${count} issues to "${batchPriority}".`)} />
+            <ApplyRow label="Reassign To" value={batchAssignee} onChange={setBatchAssignee} options={ASSIGNEES} disabled={count === 0 || isProcessing}
+              onApply={() => apply({ assignee: batchAssignee, assigneeInitials: batchAssignee === 'Varun Tej' ? 'VY' : 'UN' }, `Assigned ${count} issues to "${batchAssignee}".`)} />
           </div>
         </div>
 
-        {feedback && (
-          <div className="p-2.5 bg-blue-50 text-blue-800 text-xs rounded-lg border border-blue-200 font-semibold">
-            {feedback}
-          </div>
-        )}
+        {feedback && <div className="p-2.5 bg-blue-50 text-blue-800 text-xs rounded-lg border border-blue-200 font-semibold">{feedback}</div>}
 
-        {/* Scrollable Issues List */}
         <div className="max-h-64 overflow-y-auto border border-lira-border rounded-xl divide-y divide-lira-border">
           {issues.map(issue => {
-            const isChecked = selectedIds.has(issue.id!);
+            const checked = selectedIds.has(issue.id!);
             return (
-              <div
-                key={issue.id}
-                onClick={() => toggleSelect(issue.id!)}
-                className={`p-2.5 flex items-center justify-between text-xs cursor-pointer transition-colors ${
-                  isChecked ? 'bg-blue-50/70' : 'hover:bg-gray-50'
-                }`}
-              >
+              <div key={issue.id} onClick={() => toggleSelect(issue.id!)} className={`p-2.5 flex items-center justify-between text-xs cursor-pointer transition-colors ${checked ? 'bg-blue-50/70' : 'hover:bg-gray-50'}`}>
                 <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={() => {}}
-                    className="w-4 h-4 text-lira-blue rounded border-gray-300 pointer-events-none"
-                  />
+                  <input type="checkbox" checked={checked} onChange={() => {}} className="w-4 h-4 text-lira-blue rounded border-gray-300 pointer-events-none" />
                   <span className="font-mono font-bold text-lira-blue flex-shrink-0">{issue.key}</span>
                   <span className="truncate text-lira-text font-medium">{issue.title}</span>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">
-                    {statusLabel(issue.status)}
-                  </span>
-                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">
-                    {issue.priority}
-                  </span>
+                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">{statusLabel(issue.status)}</span>
+                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded bg-gray-100 text-lira-muted">{issue.priority}</span>
                 </div>
               </div>
             );
@@ -279,21 +120,13 @@ export const BulkActionsModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs"
-          >
-            Done
-          </button>
+          <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs">Done</button>
         </div>
       </div>
 
-      {/* 2-second green toast */}
       {savedToast && (
         <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
-          <Check className="w-4 h-4 text-white" />
-          <span>✓ Saved</span>
+          <Check className="w-4 h-4 text-white" /><span>✓ Saved</span>
         </div>
       )}
     </Modal>

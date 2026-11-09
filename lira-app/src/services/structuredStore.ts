@@ -30,7 +30,7 @@ export interface TeamRow {
 }
 export interface StandupRow { id: string; scopeId: string; [field: string]: unknown }
 
-export interface Structured {
+interface Structured {
   projects: ProjectRow[]
   sprints: SprintRow[]
   teams: TeamRow[]

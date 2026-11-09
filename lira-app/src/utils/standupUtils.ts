@@ -144,9 +144,9 @@ export function teamFromIssues(issues: Issue[], dir: Record<string, TeamMember>)
 // ─── Agenda ──────────────────────────────────────────────────────────────────
 
 const DAY = 86_400_000;
-export interface AgendaItem { issue: Issue; reason: string; severity: 'high' | 'medium' | 'low' }
+interface AgendaItem { issue: Issue; reason: string; severity: 'high' | 'medium' | 'low' }
 
-export interface Agenda {
+interface Agenda {
   needsUpdate: AgendaItem[];
   inProgress: Issue[];
   blocked: { issue: Issue; blockedBy: Issue[] }[];

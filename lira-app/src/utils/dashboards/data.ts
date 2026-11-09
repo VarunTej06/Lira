@@ -24,14 +24,14 @@ export type WidgetData =
   | { kind: 'summary'; lines: string[] };
 
 /** The filters that apply to one widget: the dashboard's, with the widget's own settings on top. */
-export const widgetFilters = (d: Pick<Dashboard, 'filters'>, w: DashboardWidget): DashboardFilters => mergeFilters(d.filters, w.filters);
+const widgetFilters = (d: Pick<Dashboard, 'filters'>, w: DashboardWidget): DashboardFilters => mergeFilters(d.filters, w.filters);
 
 export function widgetScope(d: Pick<Dashboard, 'filters'>, w: DashboardWidget, ctx: DataCtx, ignoreRange = false): Issue[] {
   const f = widgetFilters(d, w);
   return scopeIssues(ctx.issues, ignoreRange ? { ...f, range: 'all' } : f, ctx);
 }
 
-export function weeksFor(d: Pick<Dashboard, 'filters'>, w: DashboardWidget): number {
+function weeksFor(d: Pick<Dashboard, 'filters'>, w: DashboardWidget): number {
   if (w.config.weeks) return w.config.weeks;
   const r = widgetFilters(d, w).range;
   return r === '7d' ? 4 : r === '30d' ? 5 : r === '90d' ? 13 : 8;

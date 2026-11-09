@@ -4,7 +4,7 @@ import type { Space } from '../types/space';
 import { saveToDiskNow } from '../services/localDiskSync';
 import { flushKv, restoreFromBackup, snapshotForBackup } from '../services/kvMirror';
 
-export interface BackupData {
+interface BackupData {
   version: string;
   exportedAt: string;
   spaces: Space[];

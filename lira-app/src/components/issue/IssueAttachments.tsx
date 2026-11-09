@@ -14,7 +14,7 @@ const LINK_ICON: Record<AttachmentSource, React.ReactNode> = {
   link: <Link2 className="w-5 h-5 text-amber-600" />,
 };
 
-export interface CommentFile { attachment: Attachment; author: string; at: Date | string }
+interface CommentFile { attachment: Attachment; author: string; at: Date | string }
 
 interface IssueAttachmentsProps {
   attachments: Attachment[];

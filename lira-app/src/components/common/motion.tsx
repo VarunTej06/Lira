@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   AnimatePresence, MotionConfig, animate, motion, useMotionValue, useReducedMotion, useTransform,
-  type MotionValue, type Transition, type Variants,
+  type MotionValue, type Transition,
 } from 'framer-motion';
 
 /**
@@ -11,7 +11,7 @@ import {
  */
 
 /** A quick, slightly bouncy spring for things that pop: menus, dialogs. */
-export const pop: Transition = { type: 'spring', stiffness: 520, damping: 34, mass: 0.8 };
+const pop: Transition = { type: 'spring', stiffness: 520, damping: 34, mass: 0.8 };
 /** A calmer spring for things that slide: panels, tab underlines. */
 export const slide: Transition = { type: 'spring', stiffness: 280, damping: 32, mass: 0.9 };
 
@@ -42,15 +42,6 @@ export const menuPop = {
   transition: { type: 'spring' as const, stiffness: 600, damping: 32 },
 };
 
-/** A group of items that arrive one after the other. Use `staggerParent` on the container and `staggerChild` on each item. */
-export const staggerParent: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.045, delayChildren: 0.02 } },
-};
-export const staggerChild: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: slide },
-};
 
 /** A message that slides up from the bottom of the screen and leaves the same way. */
 export const Toast: React.FC<{ message: string | null; className?: string }> = ({ message, className = '' }) => (
@@ -77,7 +68,7 @@ export const Toast: React.FC<{ message: string | null; className?: string }> = (
  * `watchParent` watches the element's parent instead: a bar that starts at zero width has nothing of its own to see.
  * Where the browser cannot tell (old browsers, tests) it counts as seen at once.
  */
-export function useSeen<T extends HTMLElement>(watchParent = false): [React.RefObject<T>, boolean] {
+function useSeen<T extends HTMLElement>(watchParent = false): [React.RefObject<T>, boolean] {
   const ref = useRef<T>(null);
   const [seen, setSeen] = useState(() => typeof IntersectionObserver === 'undefined');
   useEffect(() => {
@@ -169,8 +160,6 @@ const SequenceSegment: React.FC<{ progress: MotionValue<number>; from: number; s
   return <motion.div className={`${className} flex-shrink-0`} style={{ width }} />;
 };
 
-/** How long a GrowBar takes, for bars that start one after the other. */
-export const GROW_SECONDS = 0.8;
 
 /** A bar that grows upward from its base (for column charts). `heightPercent` is 0 to 100 of the box it sits in. */
 export const GrowColumn: React.FC<{ heightPercent: number; className?: string; style?: React.CSSProperties; delay?: number; title?: string }> = ({ heightPercent, className = '', style, delay = 0, title }) => {

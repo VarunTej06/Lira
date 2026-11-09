@@ -88,7 +88,7 @@ export const Donut: React.FC<{ groups: Group[]; total: number; measure?: 'count'
   );
 };
 
-export interface Series { name: string; color: string; values: number[]; dashed?: boolean }
+interface Series { name: string; color: string; values: number[]; dashed?: boolean }
 
 const W = 480, H = 200, PAD = { l: 34, r: 12, t: 12, b: 26 };
 

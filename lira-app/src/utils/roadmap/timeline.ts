@@ -4,7 +4,7 @@ import { parseDay, addDays, daysBetween } from './dates';
 /** Timeline scale, header cells and swimlane layout. */
 export const PX_PER_DAY: Record<Zoom, number> = { weeks: 22, months: 9, quarters: 3 };
 
-export interface TimeRange { start: Date; end: Date; days: number }
+interface TimeRange { start: Date; end: Date; days: number }
 
 /** Visible range: covers every item and milestone, padded, snapped to whole months. */
 export function computeRange(rm: Roadmap, today = new Date(), extra: Date[] = []): TimeRange {
@@ -20,7 +20,7 @@ export function computeRange(rm: Roadmap, today = new Date(), extra: Date[] = []
 
 export const xOf = (range: TimeRange, d: Date, ppd: number) => daysBetween(range.start, d) * ppd;
 
-export interface HeaderCell { label: string; x: number; width: number }
+interface HeaderCell { label: string; x: number; width: number }
 
 /** Two header rows: bigger periods on top (year / quarter), finer below (month / week). */
 export function buildHeader(range: TimeRange, zoom: Zoom): { top: HeaderCell[]; bottom: HeaderCell[] } {
@@ -67,11 +67,11 @@ export function buildHeader(range: TimeRange, zoom: Zoom): { top: HeaderCell[]; 
   return { top, bottom };
 }
 
-export const LANE_H = 34;
+const LANE_H = 34;
 
-export const ROW_H = 40;
+const ROW_H = 40;
 
-export type LayoutRow =
+type LayoutRow =
   | { kind: 'lane'; lane: string; y: number; h: number; count: number }
   | { kind: 'item'; item: RoadmapItem; y: number; h: number };
 

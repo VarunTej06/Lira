@@ -2,7 +2,7 @@
 
 How Lira is tested automatically, what each test protects, how to run them and how to add more.
 
-**Right now:** 521 automated tests in 48 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
+**Right now:** 655 automated tests in 63 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
 
 **Not yet automated:** clicking through the real app in a real browser (end-to-end tests). That is planned for the DevOps phase, with a full checklist in [section 7](#7-end-to-end-browser-tests-planned-for-the-devops-phase).
 
@@ -14,7 +14,7 @@ Run every command from the `lira-app` folder.
 
 | Command | What it does | Time |
 |---|---|---|
-| `npm test` | All 521 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 25 s |
+| `npm test` | All 655 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 25 s |
 | `npm run test:watch` | Re-runs the tests that matter each time you save a file | |
 | `npm run test:health` | **Data health check**: reads your real `data/` folder and checks it holds together. Changes nothing | about 3 s |
 | `npm run test:all` | Everything in one go: type check, lint, `npm test`, then the data health check | about 1 min |
@@ -56,6 +56,7 @@ Run one file: `npx vitest run src/utils/helpers.test.ts`. Run tests whose name c
 | **Saved card and dialogs** | `src/components/common/savedAndMonths.test.tsx`, `src/components/common/dialogs.test.tsx` the animated "saved" card, Lira's own confirm, prompt and alert |
 | **Animations** | `src/components/common/motion.test.tsx` counting up, bars, confetti, when to celebrate |
 | **Dashboards** | `src/utils/dashboards/dashboards.test.ts` all numbers, filters, charts data, lists, alerts, build from a sentence, weekly schedule, saving. `src/components/dashboards/dashboards.ui.test.tsx` **every one of the 51 widgets draws** (with and without tickets), the grid (move, resize, remove, settings, own filters, drill-down), the dashboards page, the wizard end to end. `server/dashboardsStore.test.ts` `data/dashboards.json`. `server/snapshots.test.ts` weekly snapshot files |
+| **Space summary, list sorting, board columns** | `src/utils/summaryStats.test.ts` the numbers on a space's Summary page (status counts, overdue, epic progress, top labels). `src/utils/issueSort.test.ts` list sorting (keys in number order, priority, dates). `src/components/board/boardColumns.test.ts` columns for each grouping, filters, ranking a dropped card, WIP limits. `src/utils/calendarGrid.test.ts` the calendar's weeks (Monday first, padding, year changes). `src/utils/projectKey.test.ts` project keys. `src/utils/projectFilter.test.ts` the Projects list search, filter and sort. `src/utils/roadmapFilter.test.ts` the roadmap's search, lane, owner, status and period filters. `src/utils/issueSearch.test.ts` the Filters page (every filter together, Blocked, recent only, sorting, CSV). `src/utils/newIssue.test.ts` the ticket the Create form saves. `src/utils/hierarchy.test.ts` which ticket may sit under which. `src/utils/notifications.test.ts` what the bell lists. `src/utils/userPrefs.test.ts` profile, language and notification settings. `src/utils/currentUser.test.ts` who "me" is and which tickets are mine. `src/db/seed.test.ts` the sample workspace. `src/services/ai/intentGolden.test.ts` how Viva understands sixty typical requests (recorded from the original parser) |
 | **Sprints** | `src/utils/sprintUtils.test.ts`, `src/utils/sprintDurations.test.ts`, `src/utils/sprintDelete.test.ts`, `src/utils/sprintReports.test.ts` keys, lengths, overlap, deleting, burndown, burnup, cumulative flow, lead and cycle time, exports |
 | **Roadmaps** | `src/utils/roadmapUtils.test.ts`, `src/utils/roadmapSchedule.test.ts`, `src/utils/roadmapChecklist.test.ts`, `src/services/roadmapEpics.test.ts`, `src/services/roadmapChecklist.test.ts`, `src/hooks/useRoadmaps.test.ts` timeline, progress, dependencies, planner drag and drop, checklists, upgrades |
 | **Standups** | `src/utils/standupUtils.test.ts` agenda, teams, invites |
@@ -63,7 +64,7 @@ Run one file: `npx vitest run src/utils/helpers.test.ts`. Run tests whose name c
 | **Navigation and URLs** | `src/routes.test.ts`, `src/routesDashboards.test.ts` every page address, the ticket popup parameter. `src/components/layout/sidebarConfig.test.ts` sidebar settings. `src/components/common/PageBoundary.test.tsx` one page crashing does not take down the rest |
 | **Saving your data** | `src/services/kvMirror.test.ts`, `src/services/kvMirror.integration.test.ts`, `src/services/localDiskSync.test.ts`, `src/services/structuredStore.test.ts`, `server/diskStore.test.ts`, `server/spaceStore.test.ts` which copy wins on startup, only changed files rewritten, one file per roadmap and space |
 | **Security of the local API** | `server/guard.test.ts` who may call it, headers, file names, request size, the tablet and phone link rules |
-| **Theme and colours** | `src/utils/theme.test.ts`, `src/utils/accent.test.ts` |
+| **Theme and colours** | `src/utils/theme.test.ts`, `src/utils/accent.test.ts` themes, and that every accent colour stays readable in dark mode |
 
 ---
 

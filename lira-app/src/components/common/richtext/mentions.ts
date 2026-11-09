@@ -1,7 +1,7 @@
 import type { SuggestionOptions } from '@tiptap/suggestion';
 import { loadDirectory } from '../../../utils/standupUtils';
 
-export interface MentionPerson { id: string; label: string }
+interface MentionPerson { id: string; label: string }
 
 const BASE_PEOPLE: MentionPerson[] = [
   { id: 'varuntej', label: 'Varuntej Yadla' },
@@ -11,7 +11,7 @@ const BASE_PEOPLE: MentionPerson[] = [
 ];
 
 /** People that can be mentioned: the built-in team plus anyone added to a team directory. */
-export function mentionCandidates(): MentionPerson[] {
+function mentionCandidates(): MentionPerson[] {
   const extra = Object.values(loadDirectory()).map(m => ({ id: m.key, label: m.name || m.email }));
   const seen = new Set<string>();
   return [...BASE_PEOPLE, ...extra].filter(p => !seen.has(p.label.toLowerCase()) && !!seen.add(p.label.toLowerCase()));

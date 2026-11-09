@@ -6,8 +6,8 @@ import { daysElapsed, getSprintMeta, isDone, issuesInSprint, sprintDays, sprintE
  * Everything here is pure: tickets in, numbers out.
  */
 
-export type FlowStatus = 'backlog' | 'todo' | 'inprogress' | 'done';
-export const FLOW_STATUSES: FlowStatus[] = ['backlog', 'todo', 'inprogress', 'done'];
+type FlowStatus = 'backlog' | 'todo' | 'inprogress' | 'done';
+const FLOW_STATUSES: FlowStatus[] = ['backlog', 'todo', 'inprogress', 'done'];
 /** A change made in the first day of a sprint is planning, not scope creep. */
 const GRACE_DAYS = 1;
 
@@ -110,7 +110,7 @@ export function scopeChanges(all: Issue[], key: string, completedAt?: string): S
   return out.sort((a, b) => a.at.getTime() - b.at.getTime());
 }
 
-export interface TimeStat { n: number; avg: number; median: number; max: number }
+interface TimeStat { n: number; avg: number; median: number; max: number }
 const stat = (xs: number[]): TimeStat => {
   if (!xs.length) return { n: 0, avg: 0, median: 0, max: 0 };
   const s = [...xs].sort((a, b) => a - b);

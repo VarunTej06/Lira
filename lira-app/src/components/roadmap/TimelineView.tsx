@@ -1,4 +1,5 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { TimelineHeader } from './TimelineHeader';
 import { ChevronDown, Flag, Diamond } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import {
@@ -138,21 +139,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   return (
     <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 330px)', minHeight: 320 }}>
       <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + MILESTONE_H + height }}>
-        {/* ── Sticky header (corner + period cells) ── */}
-        <div className="sticky top-0 z-30 flex" style={{ height: HEADER_H }}>
-          <div className="sticky left-0 z-40 bg-lira-surface border-b border-r border-lira-border flex items-end px-4 pb-2 text-[11px] font-semibold uppercase tracking-wider text-lira-muted" style={{ width: LABEL_W }}>
-            Work item
-          </div>
-          <div className="relative bg-lira-surface border-b border-lira-border" style={{ width }}>
-            {header.top.map((c, i) => (
-              <div key={i} className="absolute top-0 h-6 flex items-center px-2 text-[11px] font-semibold text-lira-text border-r border-lira-border/70 overflow-hidden whitespace-nowrap" style={{ left: c.x, width: c.width }}>{c.label}</div>
-            ))}
-            {header.bottom.map((c, i) => (
-              <div key={i} className="absolute top-6 h-[26px] flex items-center px-2 text-[11px] text-lira-muted border-r border-t border-lira-border/60 overflow-hidden whitespace-nowrap" style={{ left: c.x, width: c.width }}>{c.label}</div>
-            ))}
-            <div className="absolute top-[28px] -translate-x-1/2 px-1.5 rounded bg-red-500 text-white text-[9px] font-bold z-10 leading-[14px]" style={{ left: todayX }}>TODAY</div>
-          </div>
-        </div>
+        <TimelineHeader header={header} width={width} labelWidth={LABEL_W} height={HEADER_H} todayX={todayX} corner="Work item" />
 
         {/* ── Milestones row ── */}
         <div className="flex" style={{ height: MILESTONE_H }}>

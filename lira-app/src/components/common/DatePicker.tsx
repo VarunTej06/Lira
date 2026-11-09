@@ -172,7 +172,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
                       className={`h-8 text-xs rounded-lg transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${
                         isSel ? 'bg-lira-blue text-white font-semibold'
                           : isToday ? 'ring-1 ring-lira-blue text-lira-blue font-semibold hover:bg-lira-blue-light'
-                          : inMonth ? 'hover:bg-gray-100' : 'text-lira-muted/60 hover:bg-gray-50'
+                          : inMonth ? 'hover:bg-gray-100' : 'text-lira-muted hover:bg-gray-50'
                       }`}
                     >
                       {date.getDate()}

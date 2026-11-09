@@ -1,40 +1,30 @@
 import { DialogHost } from './components/common/dialogs';
-import { DashboardsPage } from './components/dashboards/DashboardsPage';
 import { DashboardScheduler } from './components/dashboards/DashboardScheduler';
 import { SavedToastHost } from './components/common/SavedToast';
 import { LinkMenuHost } from './components/common/LinkMenu';
 import { getTheme } from './utils/theme';
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AppRoutes } from './AppRoutes';
 import { TopNavigation } from './components/layout/TopNavigation';
 import { LeftSidebar } from './components/layout/LeftSidebar';
-import { FiltersPage } from './components/filter/FiltersPage';
 import { IssueDetailModal } from './components/issue/IssueDetailModal';
 import { CreateIssueModal } from './components/issue/CreateIssueModal';
 import { CreateSpaceModal } from './components/board/CreateSpaceModal';
-import { ProjectsOverview } from './components/projects/ProjectsOverview';
-import { ProjectDetailView } from './components/projects/ProjectDetailView';
 import { VivaAIChatbot } from './components/ai/VivaAIChatbot';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
-import { NotFound, PageBoundary } from './components/common/PageBoundary';
-import { SprintsPage } from './components/sprints/SprintsPage';
-import { SprintsOverview } from './components/sprints/SprintsOverview';
-import { ForYouPage } from './components/foryou/ForYouPage';
-import { NoSpaces, RoadmapsRoute } from './components/common/AppPages';
 import { useIssuePopup } from './hooks/useIssuePopup';
-import { AllTicketsPage } from './components/sprints/AllTicketsPage';
-import { SpaceView } from './components/space/SpaceView';
 import { CreateSprintModal } from './components/sprints/CreateSprintModal';
 import { CreateProjectModal } from './components/projects/CreateProjectModal';
 import { syncPendingRoadmaps } from './services/roadmapEpics';
 import { allSprintKeys, deleteSprint, getIssueSprint, stampLegacySprints, issuesInSprint, sprintStats, SPRINTS_EVENT } from './utils/sprintUtils';
 import { useProjects, writeProjects } from './hooks/useProjects';
 import { useSpaces } from './hooks/useSpaces';
+import { useActiveSpace, useSpacePrefs } from './hooks/useSpacePrefs';
 import { useIssuesBySpace, useAllIssues } from './hooks/useIssues';
 import { db, requestDurableStorage } from './db/db';
 import { initLocalDiskSync } from './services/localDiskSync';
 import { isGlobalRoute, parsePath, pathFor, routeForTab, spacePath, tabOf, titleOf  } from './routes';
-import type {  } from './types/issue';
 import type { Project } from './types/project';
 import type { Space } from './types/space';
 
@@ -58,26 +48,9 @@ export default function App() {
   const [initialized, setInitialized] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // The space shown now comes from the URL (/space/<KEY>/...). When you are on another page, the last space you used
-  // is remembered, so "Create" and the sidebar still know where you were.
-  const routeSpace = route.kind === 'space' ? spaces?.find(s => s.key.toUpperCase() === route.spaceKey) : undefined;
-  const [lastSpaceId, setLastSpaceId] = useState<number | undefined>(() => {
-    const saved = localStorage.getItem('lira_active_space_id');
-    return saved ? Number(saved) : undefined;
-  });
-  useEffect(() => {
-    if (routeSpace?.id && routeSpace.id !== lastSpaceId) {
-      setLastSpaceId(routeSpace.id);
-      localStorage.setItem('lira_active_space_id', String(routeSpace.id));
-    }
-  }, [routeSpace, lastSpaceId]);
-  useEffect(() => {
-    if (!spaces || spaces.length === 0 || (lastSpaceId && spaces.some(s => s.id === lastSpaceId))) return;
-    const fallback = spaces.find(s => s.key === 'CERT') || spaces[0];
-    setLastSpaceId(fallback.id);
-    localStorage.setItem('lira_active_space_id', String(fallback.id));
-  }, [spaces, lastSpaceId]);
-  const activeSpace: Space | undefined = routeSpace ?? spaces?.find(s => s.id === lastSpaceId);
+  // The space shown now comes from the URL (/space/<KEY>/...). On other pages the last space you used is remembered,
+  // so "Create" and the sidebar still know where you were.
+  const { routeSpace, activeSpace } = useActiveSpace(route, spaces);
   const activeSpaceId = activeSpace?.id;
 
   // Apply lira_theme on app mount immediately
@@ -90,33 +63,8 @@ export default function App() {
   // Auto-collapse sidebar when on Filters page
   useEffect(() => { if (route.kind === 'filters') setSidebarCollapsed(true); }, [route.kind]);
 
-  // Hidden and Archived spaces states persisted to localStorage
-  const [hiddenSpaceIds, setHiddenSpaceIds] = useState<number[]>(() => {
-    try { const saved = localStorage.getItem('lira_hidden_spaces'); return saved ? JSON.parse(saved) : []; } catch { return []; }
-  });
-  const [archivedSpaceIds, setArchivedSpaceIds] = useState<number[]>(() => {
-    try { const saved = localStorage.getItem('lira_archived_spaces'); return saved ? JSON.parse(saved) : []; } catch { return []; }
-  });
+  const { hiddenSpaceIds, archivedSpaceIds, toggleHideSpace, toggleArchiveSpace, unhideAllSpaces } = useSpacePrefs();
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
-
-  const toggleHideSpace = useCallback((id: number) => {
-    setHiddenSpaceIds(prev => {
-      const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
-      localStorage.setItem('lira_hidden_spaces', JSON.stringify(next));
-      return next;
-    });
-  }, []);
-  const toggleArchiveSpace = useCallback((id: number) => {
-    setArchivedSpaceIds(prev => {
-      const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
-      localStorage.setItem('lira_archived_spaces', JSON.stringify(next));
-      return next;
-    });
-  }, []);
-  const unhideAllSpaces = useCallback(() => {
-    setHiddenSpaceIds([]);
-    localStorage.setItem('lira_hidden_spaces', JSON.stringify([]));
-  }, []);
 
   // Going to a space: keep the tab you are on when already inside a space, otherwise open its board
   const goToSpace = useCallback((space: Space) => {
@@ -284,117 +232,17 @@ export default function App() {
         />
 
         <main className="flex-1 min-w-0 flex flex-col overflow-hidden my-2 mr-2 ml-2 rounded-2xl border border-lira-border bg-lira-bg shadow-[0_4px_20px_rgba(9,30,66,0.10)]">
-          <PageBoundary pageKey={pageKey}>
-            <Routes>
-              <Route path="/" element={activeSpace
-                ? <Navigate to={spacePath(activeSpace.key, 'Board')} replace />
-                : <NoSpaces onCreate={() => setShowCreateSpace(true)} />} />
-
-              <Route path="/filters" element={
-                <FiltersPage
-                  issues={everyIssue}
-                  spaces={spaceList}
-                  onSelectIssue={openIssue}
-                  onSelectSpace={openSpaceBoard}
-                  onBackToBoard={() => { setSidebarCollapsed(false); if (activeSpace) navigate(spacePath(activeSpace.key, 'Board')); else navigate('/'); }}
-                  initialPreset={filterPreset}
-                  onClearPreset={() => setFilterPreset(null)}
-                />} />
-
-              <Route path="/for-you" element={
-                <ForYouPage
-                  spaces={spaceList}
-                  issues={allIssues}
-                  projects={projects}
-                  onIssueClick={openIssue}
-                  onOpenSpace={openSpaceBoard}
-                  onOpenProject={(project) => navigate(`/projects/${encodeURIComponent(project.id)}`)}
-                  onOpenSprint={(key) => navigate(`/sprints/${key}`)}
-                  onCreateIssue={() => handleAddIssue('todo', { chooseSpace: true })}
-                />} />
-
-              <Route path="/dashboards" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={openIssue} />} />
-              <Route path="/dashboards/:dashboardId" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={openIssue} />} />
-
-              <Route path="/roadmaps" element={<RoadmapsRoute issues={allIssues} spaces={spaceList} />} />
-              <Route path="/roadmaps/:roadmapId" element={<RoadmapsRoute issues={allIssues} spaces={spaceList} />} />
-
-              <Route path="/sprints" element={
-                <SprintsOverview
-                  spaces={spaceList}
-                  issues={allIssues}
-                  onOpenSprint={(key) => navigate(`/sprints/${key}`)}
-                  onCreateSprint={() => setShowCreateSprint(true)}
-                  onOpenAllTickets={() => navigate('/tickets')}
-                />} />
-              <Route path="/sprints/:sprintKey" element={
-                route.kind === 'sprints' && route.sprintKey ? (
-                  <SprintsPage
-                    spaces={spaceList}
-                    issues={allIssues}
-                    onIssueClick={openIssue}
-                    onAddIssue={(status, opts) => handleAddIssue(status, { ...opts, chooseSpace: !opts?.spaceId })}
-                    onOpenAllTickets={() => navigate('/tickets')}
-                    focusSprint={route.sprintKey}
-                    onBack={() => navigate('/sprints')}
-                    onCreateSprint={() => setShowCreateSprint(true)}
-                    onOpenSpace={openSpaceBoard}
-                  />
-                ) : <Navigate to="/sprints" replace />} />
-
-              <Route path="/tickets" element={
-                <AllTicketsPage spaces={spaceList} issues={allIssues} onIssueClick={openIssue} onOpenSprints={() => navigate('/sprints')} />} />
-
-              <Route path="/projects" element={
-                <ProjectsOverview
-                  spaces={spaceList}
-                  issues={everyIssue}
-                  onSelectProject={(project) => navigate(`/projects/${encodeURIComponent(project.id)}`)}
-                  onSelectSpace={openSpaceBoard}
-                  onIssueClick={openIssue}
-                  onAddIssue={handleAddIssue}
-                />} />
-              <Route path="/projects/:projectId" element={
-                selectedProject ? (
-                  <ProjectDetailView
-                    project={selectedProject}
-                    space={spaceList.find(s => s.id === selectedProject.spaceId) || spaceList.find(s => s.key === selectedProject.key)}
-                    issues={everyIssue}
-                    onBack={() => navigate('/projects')}
-                    onUpdateProject={() => { /* projects are saved by the detail view; the list below re-reads them */ }}
-                    onDeleteProject={handleDeleteProject}
-                    onIssueClick={openIssue}
-                    onAddIssue={handleAddIssue}
-                    onSwitchToSpace={openSpaceBoard}
-                  />
-                ) : <NotFound what="This project" backTo="/projects" backLabel="All projects" />} />
-
-              <Route path="/space/:spaceKey/*" element={
-                activeSpace && routeSpace && route.kind === 'space' ? (
-                  <SpaceView
-                    space={routeSpace}
-                    spaces={spaceList}
-                    tab={route.tab}
-                    onTabChange={goTab}
-                    issues={issues}
-                    allIssues={allIssues}
-                    sprintKeys={spaceSprintKeys}
-                    sprintFilter={sprintFilter}
-                    onSprintFilterChange={setSprintFilter}
-                    onIssueClick={openIssue}
-                    onAddIssue={handleAddIssue}
-                    onOpenAllTickets={() => navigate('/tickets')}
-                    isHidden={hiddenSpaceIds.includes(routeSpace.id!)}
-                    isArchived={archivedSpaceIds.includes(routeSpace.id!)}
-                    onToggleHide={() => toggleHideSpace(routeSpace.id!)}
-                    onToggleArchive={() => toggleArchiveSpace(routeSpace.id!)}
-                    onEditSpace={() => { setEditingSpace(routeSpace); setShowCreateSpace(true); }}
-                  />
-                ) : <NotFound what={`The space ${route.kind === 'space' ? route.spaceKey : ''}`} backTo="/" backLabel="Go to your last space" />} />
-
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </PageBoundary>
+          <AppRoutes
+            route={route} pageKey={pageKey} spaceList={spaceList} activeSpace={activeSpace} routeSpace={routeSpace}
+            projects={projects} selectedProject={selectedProject} allIssues={allIssues} everyIssue={everyIssue} issues={issues}
+            spaceSprintKeys={spaceSprintKeys} sprintFilter={sprintFilter} onSprintFilterChange={setSprintFilter}
+            filterPreset={filterPreset} onClearPreset={() => setFilterPreset(null)}
+            hiddenSpaceIds={hiddenSpaceIds} archivedSpaceIds={archivedSpaceIds} onToggleHide={toggleHideSpace} onToggleArchive={toggleArchiveSpace}
+            onEditSpace={space => { setEditingSpace(space); setShowCreateSpace(true); }}
+            onCreateSpace={() => setShowCreateSpace(true)} onCreateSprint={() => setShowCreateSprint(true)}
+            onExpandSidebar={() => setSidebarCollapsed(false)}
+            onOpenIssue={openIssue} onOpenSpaceBoard={openSpaceBoard} onAddIssue={handleAddIssue} onDeleteProject={handleDeleteProject} onTab={goTab}
+          />
         </main>
       </div>
 

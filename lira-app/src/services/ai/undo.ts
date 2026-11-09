@@ -6,7 +6,7 @@ import type { Issue } from '../../types/issue';
  * Undo for Viva's writes. Before an action runs, every ticket is copied; afterwards the differences are kept.
  * Undoing puts changed tickets back, removes tickets the action created and restores tickets it deleted.
  */
-export interface UndoRecord {
+interface UndoRecord {
   id: string;
   label: string;
   restore: Issue[];
@@ -55,4 +55,3 @@ export async function undoAction(undoId: string): Promise<number | null> {
   return rec.restore.length + rec.remove.length;
 }
 
-export const canUndo = (undoId: string) => journal.has(undoId);

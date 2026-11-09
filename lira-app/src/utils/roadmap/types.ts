@@ -50,13 +50,13 @@ export interface Roadmap {
 }
 
 export const STATUS_META: Record<RoadmapStatus, { label: string; color: string }> = {
-  planned:    { label: 'Planned',     color: '#6B778C' },
+  planned:    { label: 'Planned',     color: '#5A6882' },
   inprogress: { label: 'In progress', color: '#0C66E4' },
-  done:       { label: 'Done',        color: '#22A06B' },
+  done:       { label: 'Done',        color: '#187A4E' },
   atrisk:     { label: 'At risk',     color: '#E2740B' },
   blocked:    { label: 'Blocked',     color: '#C9372C' },
 };
 
-export const LANE_COLORS = ['#0C66E4', '#6554C0', '#22A06B', '#E2740B', '#00B8D9', '#C9372C', '#8F7EE7', '#B38600'];
+const LANE_COLORS = ['#0C66E4', '#6554C0', '#22A06B', '#E2740B', '#00B8D9', '#C9372C', '#8F7EE7', '#B38600'];
 
 export const laneColor = (rm: Roadmap, lane: string) => LANE_COLORS[Math.max(0, rm.lanes.indexOf(lane)) % LANE_COLORS.length];

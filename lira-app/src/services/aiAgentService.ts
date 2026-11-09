@@ -10,7 +10,8 @@
  */
 export * from './ai/types';
 export * from './ai/settings';
-export { findTargetSpace, refineUserPrompt } from './ai/intent';
+export { refineUserPrompt } from './ai/intent';
+export { findTargetSpace } from './ai/spaceMatch';
 export { processUserMessage } from './ai/agent';
 export { confirmAndRun, undoAction } from './ai/confirm';
 export { suggestForTicket } from './ai/suggest';

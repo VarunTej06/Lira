@@ -141,7 +141,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                       {r.goal && <div className="text-[10px] text-lira-muted truncate max-w-[200px]"><Target className="inline w-3 h-3 mr-1 -mt-0.5" />{r.goal}</div>}
                     </td>
                     <td className="px-3 py-2.5"><PhaseBadge sprint={r.key} /></td>
-                    <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap">{fmt(sprintStart(r.key))} – {fmt(sprintEnd(r.key))} <span className="opacity-60">({sprintKindLabel(r.key)}, {sprintDays(r.key)}d)</span></td>
+                    <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap">{fmt(sprintStart(r.key))} – {fmt(sprintEnd(r.key))} <span>({sprintKindLabel(r.key)}, {sprintDays(r.key)}d)</span></td>
                     <td className="px-3 py-2.5 font-semibold text-lira-text"><CountUp value={r.stats.total} /></td>
                     <td className="px-3 py-2.5 text-lira-muted"><CountUp value={r.stats.todo + r.stats.backlog} /></td>
                     <td className="px-3 py-2.5 text-lira-blue"><CountUp value={r.stats.inprogress} /></td>

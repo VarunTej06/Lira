@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { migrateLiraSchedule, seedLiraRoadmap, type Roadmap } from '../utils/roadmapUtils';
 
 const KEY = 'lira_roadmaps';
-export const ROADMAPS_EVENT = 'lira-roadmaps-changed';
+const ROADMAPS_EVENT = 'lira-roadmaps-changed';
 
 /** Upgrades roadmaps saved by earlier versions: the space comes from the old project key, and one linked epic replaces the old list. */
-export function normalizeRoadmap(input: Roadmap): Roadmap {
+function normalizeRoadmap(input: Roadmap): Roadmap {
   const rm = migrateLiraSchedule(input);
   return {
     ...rm,

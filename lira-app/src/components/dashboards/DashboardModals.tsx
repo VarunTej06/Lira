@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Bell, Check, Download, FileText, Plus, Search, Trash2 } from 'lucide-react';
+import { Check, Download, FileText, Plus, Search, Trash2 } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { Modal } from '../common/Modal';
@@ -230,4 +230,3 @@ export const DrillModal: React.FC<{ drill: { title: string; issues: Issue[] } | 
   </Modal>
 );
 
-export const AlertsIcon = Bell;

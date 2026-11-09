@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-08T21:39:52.086Z",
+  "updatedAt": "2026-11-09T13:01:50.420Z",
   "entries": {
     "lira_accent": "#DB2777",
     "lira_active_space_id": "1",
@@ -19,7 +19,7 @@
       "roadmapId": "rm-lira",
       "showDeps": true,
       "view": "timeline",
-      "zoom": "weeks"
+      "zoom": "months"
     },
     "lira_sidebar_collapsed": "false",
     "lira_sidebar_customization": {
@@ -59,6 +59,6 @@
       "filters",
       "dashboards"
     ],
-    "lira_theme": "light"
+    "lira_theme": "dark"
   }
 }

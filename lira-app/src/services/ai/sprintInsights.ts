@@ -1,7 +1,7 @@
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import {
-  currentSprintKey, daysElapsed, getIssueSprint, getSprintMeta, isDone, isSprintWork, issuesInSprint, nextSprint,
+  daysElapsed, getIssueSprint, getSprintMeta, isDone, isSprintWork, issuesInSprint,
   sprintDays, sprintIncludesSpace, sprintName, sprintPhase, sprintStats,
 } from '../../utils/sprintUtils';
 import { startedAt, suggestedCapacity } from '../../utils/sprintReports';
@@ -48,8 +48,8 @@ export function planSprintFromBacklog(issues: Issue[], target: string, spaceId?:
   return { target, picked, skipped, capacity, capacitySource, alreadyPoints, pickedPoints: used - alreadyPoints };
 }
 
-export type RiskLevel = 'ok' | 'watch' | 'atrisk';
-export interface SprintRisk {
+type RiskLevel = 'ok' | 'watch' | 'atrisk';
+interface SprintRisk {
   key: string;
   level: RiskLevel;
   elapsedPct: number;
@@ -173,4 +173,3 @@ export function standupDigestText(issues: Issue[], spaces: Space[], now: Date, a
   return out.join('\n');
 }
 
-export const currentAndNext = () => ({ current: currentSprintKey(), next: nextSprint(currentSprintKey()) });

@@ -94,7 +94,7 @@ describe('The source is in the shape we agreed', () => {
 describe('The pieces fit together', () => {
   it('every page route in the table has a title, and every route kind is handled in App', () => {
     const routes = read(path.join(APP, 'src/routes.ts'));
-    const app = read(path.join(APP, 'src/App.tsx'));
+    const app = read(path.join(APP, 'src/App.tsx')) + read(path.join(APP, 'src/AppRoutes.tsx')); // the pages are listed in AppRoutes
     for (const kind of [...routes.matchAll(/kind: '([a-zA-Z]+)'; /g)].map(m => m[1])) {
       expect(routes.includes(`case '${kind}'`), `${kind} has no case in routes.ts`).toBe(true);
     }

@@ -64,7 +64,7 @@ export async function processUserMessage(
   const ACTIONS = [...WRITE_INTENTS, 'sprint_summary', 'standup_digest', 'risk_radar', 'dashboard_build'];
   if (mode === 'agent' && getAiProvider() !== 'local' && !ACTIONS.includes(refinedGoal.intent)) {
     try {
-      const modelResponse = await askConfiguredModel(userPrompt, activeSpace, allSpaces, allIssues, refinedGoal);
+      const modelResponse = await askConfiguredModel({ userPrompt, activeSpace, allSpaces, allIssues, refinedGoal });
       if (modelResponse) return modelResponse;
     } catch (err) {
       console.warn('[Viva AI Agent] The model call failed, falling back to the built-in engine:', err);

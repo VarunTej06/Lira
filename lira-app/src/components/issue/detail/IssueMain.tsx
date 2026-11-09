@@ -10,7 +10,7 @@ import { IssueSubtasks } from '../IssueSubtasks';
 import { IssueAttachments } from '../IssueAttachments';
 import { IssueActivityFeed } from '../IssueActivityFeed';
 import { ChildIssues } from '../ChildIssues';
-import { safeArr } from './useIssueDetail';
+import { safeArr } from './issueOptions';
 import type { IssueDetailState } from './useIssueDetail';
 
 /** Title, description, attachments, child work items, subtasks and activity. */

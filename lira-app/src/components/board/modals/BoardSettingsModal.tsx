@@ -6,7 +6,7 @@ import type { Space } from '../../../types/space';
 
 /** Board Settings Modal */
 
-export interface BoardSettingsConfig {
+interface BoardSettingsConfig {
   density: 'comfortable' | 'compact';
   showStoryPoints: boolean;
   showEpicBadge: boolean;
@@ -16,7 +16,7 @@ export interface BoardSettingsConfig {
   estimationType: 'points' | 'count';
 }
 
-export const DEFAULT_BOARD_SETTINGS: BoardSettingsConfig = {
+const DEFAULT_BOARD_SETTINGS: BoardSettingsConfig = {
   density: 'comfortable',
   showStoryPoints: true,
   showEpicBadge: true,

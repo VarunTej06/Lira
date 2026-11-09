@@ -6,17 +6,7 @@ import {
 } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
-
-function useClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () => void) {
-  useEffect(() => {
-    const listener = (e: MouseEvent) => {
-      if (!ref.current || ref.current.contains(e.target as Node)) return;
-      handler();
-    };
-    document.addEventListener('mousedown', listener);
-    return () => document.removeEventListener('mousedown', listener);
-  }, [ref, handler]);
-}
+import { useClickOutside } from '../../hooks/useClickOutside';
 
 export const AccountDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);

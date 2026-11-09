@@ -2,13 +2,14 @@ import { db } from '../db/db';
 import { triggerDiskSync } from '../services/localDiskSync';
 import type { Issue } from '../types/issue';
 import { v4 as uuidv4 } from 'uuid';
+import { currentUser } from './currentUser';
 
 /**
  * Sprints are calendar months. A sprint is identified by a "YYYY-MM" key.
  * Every space shares the same calendar, but each space only sees its own tickets
  * in a sprint (sprint membership lives on the ticket: Issue.sprint).
  */
-export type SprintPhase = 'past' | 'active' | 'upcoming';
+type SprintPhase = 'past' | 'active' | 'upcoming';
 
 /** What the team learned when the sprint closed. */
 export interface Retro {
@@ -53,11 +54,10 @@ export const prevSprint = (key: string) => shiftSprint(key, -1);
 // weekly (7 days), bi-weekly (14 days) or a number of days; its end date is kept in lira_sprint_defs.
 
 export type SprintKind = 'monthly' | 'weekly' | 'biweekly' | 'days';
-export interface SprintDef { start: string; end: string; kind: Exclude<SprintKind, 'monthly'>; name?: string }
+interface SprintDef { start: string; end: string; kind: Exclude<SprintKind, 'monthly'>; name?: string }
 
-export const CUSTOM_SPRINT_KEY = /^\d{4}-\d{2}-\d{2}$/;
-export const SPRINT_KEY_PATTERN = /^\d{4}-\d{2}(-\d{2})?$/;
-export const isCustomSprint = (key: string) => CUSTOM_SPRINT_KEY.test(key);
+const CUSTOM_SPRINT_KEY = /^\d{4}-\d{2}-\d{2}$/;
+const isCustomSprint = (key: string) => CUSTOM_SPRINT_KEY.test(key);
 
 const DEFS_KEY = 'lira_sprint_defs';
 export const MAX_SPRINT_DAYS = 90;
@@ -69,7 +69,7 @@ export function parseDay(s: string): Date {
 }
 const startOfToday = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
 /** Whole days from a to b (b later = positive), ignoring time of day and daylight-saving shifts. */
-export const diffDays = (a: Date, b: Date) =>
+const diffDays = (a: Date, b: Date) =>
   Math.round((Date.UTC(b.getFullYear(), b.getMonth(), b.getDate()) - Date.UTC(a.getFullYear(), a.getMonth(), a.getDate())) / 86400000);
 
 export function getSprintDefs(): Record<string, SprintDef> {
@@ -282,7 +282,7 @@ export function allSprintKeys(issues: Issue[]): string[] {
   return keys.sort((a, b) => sprintStart(a).getTime() - sprintStart(b).getTime() || a.length - b.length);
 }
 
-export interface SprintStats {
+interface SprintStats {
   total: number;
   done: number;
   inprogress: number;
@@ -402,8 +402,8 @@ export async function moveIssuesToSprint(issues: Issue[], target: string): Promi
           {
             id: uuidv4(),
             type: 'field_change',
-            author: 'VY',
-            authorInitials: 'VY',
+            author: currentUser().initials,
+            authorInitials: currentUser().initials,
             description: `moved from ${sprintName(from)} to ${sprintName(target)}`,
             oldValue: sprintName(from),
             newValue: sprintName(target),

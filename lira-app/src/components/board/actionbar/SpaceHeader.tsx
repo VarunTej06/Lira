@@ -1,5 +1,4 @@
 import { Share2, EyeOff, Archive } from 'lucide-react';
-import type {  } from '../../../types/space';
 import { StandupButton } from '../../standup/StandupButton';
 import type { ActionBarState } from './useActionBarState';
 

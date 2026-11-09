@@ -8,7 +8,7 @@
     --lira-surface: 255 255 255;
     --lira-border: 223 225 230;
     --lira-text: 23 43 77;
-    --lira-muted: 107 119 140;
+    --lira-muted: 90 104 130; /* #5A6882: 4.5 or better on the light greys */
     --lira-blue: 0 82 204;
     --lira-blue-hover: 0 101 255;
     --lira-blue-light: 222 235 255;

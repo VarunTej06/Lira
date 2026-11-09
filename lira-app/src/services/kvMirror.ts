@@ -11,15 +11,15 @@
  *   - key on both, values differ  -> disk wins, UNLESS the browser has unsaved changes (dirty flag), then browser wins
  */
 
-export const MIRROR_PREFIX = 'lira_'
+const MIRROR_PREFIX = 'lira_'
 const INTERNAL_PREFIX = 'lira__'
 const DIRTY_KEY = 'lira__kv_dirty'
 const FLUSH_DELAY_MS = 500
 const BOOT_TIMEOUT_MS = 3000
 
-export type StoreFileName = 'projects' | 'roadmaps' | 'sprints' | 'teams' | 'standups' | 'board-config' | 'dashboards' | 'settings' | 'secrets'
-export type FileEntries = Record<string, unknown>
-export type FileMap = Record<string, FileEntries>
+type StoreFileName = 'projects' | 'roadmaps' | 'sprints' | 'teams' | 'standups' | 'board-config' | 'dashboards' | 'settings' | 'secrets'
+type FileEntries = Record<string, unknown>
+type FileMap = Record<string, FileEntries>
 
 // ─── Pure helpers (unit tested) ──────────────────────────────────────────────
 
@@ -85,7 +85,7 @@ function sameValue(a: string, b: string) {
   try { return JSON.stringify(JSON.parse(a)) === JSON.stringify(JSON.parse(b)) } catch { return false }
 }
 
-export interface Reconciliation {
+interface Reconciliation {
   /** keys to write into localStorage */
   apply: Record<string, string>
   /** true when the browser holds something the disk does not, so the disk must be updated */

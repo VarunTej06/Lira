@@ -10,6 +10,7 @@ import {
 import { formatRelativeDate } from '../../utils/dateUtils';
 import { TicketRow } from '../sprints/sprintParts';
 import { CountUp, SequenceBar } from '../common/motion';
+import { isMine } from '../../utils/currentUser';
 
 interface ForYouPageProps {
   spaces: Space[];
@@ -23,7 +24,6 @@ interface ForYouPageProps {
 }
 
 const PRIORITY_RANK: Record<string, number> = { highest: 0, high: 1, medium: 2, low: 3, lowest: 4 };
-const isMine = (i: Issue) => i.assigneeInitials === 'VY' || i.assignee === 'VY' || i.assignee === 'Varun Tej';
 const DAY = 86_400_000;
 
 const Card: React.FC<{ title: string; icon?: React.ReactNode; action?: React.ReactNode; children: React.ReactNode }> = ({ title, icon, action, children }) => (

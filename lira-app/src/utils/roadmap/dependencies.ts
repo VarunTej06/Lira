@@ -2,7 +2,7 @@ import { type RoadmapItem } from './types';
 import { parseDay, fmtDay, addDays } from './dates';
 
 /** Dependencies between items, and moving or resizing an item. */
-export interface DepIssue { from: string; to: string; kind: 'conflict' | 'cycle' | 'missing' }
+interface DepIssue { from: string; to: string; kind: 'conflict' | 'cycle' | 'missing' }
 
 /** Problems in the dependency graph: a dependency that finishes after its dependant starts, cycles, dangling ids. */
 export function dependencyIssues(items: RoadmapItem[]): DepIssue[] {

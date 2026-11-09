@@ -8,7 +8,7 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
 [![Dexie.js](https://img.shields.io/badge/Dexie.js-IndexedDB-orange.svg)](https://dexie.org/)
 [![Storage](https://img.shields.io/badge/Storage-JSON_files_in_data/-emerald.svg)](./data/)
-[![Tests](https://img.shields.io/badge/tests-521_passing-brightgreen.svg)](#-tests)
+[![Tests](https://img.shields.io/badge/tests-655_passing-brightgreen.svg)](#-tests)
 
 **Documents:** [SETUP.md](SETUP.md) (install, run, data, URLs, tablet and phone) · [ROADMAP.md](ROADMAP.md) (what is done and what is next) · [SECURITY_REPORT.md](SECURITY_REPORT.md) (20-point security check) · [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (plan for a hosted, multi-user edition on Azure) · [Prompts and Architectures/](Prompts%20and%20Architectures/) (design documents)
 
@@ -37,7 +37,7 @@
 | **Attachments** | **Add attachment** opens a window to choose the source: this computer (drag and drop or browse), a Google Drive, OneDrive or Dropbox share link, or any web link. |
 | **Dates** | A themed date picker everywhere a date is chosen. Click the month and year to jump to any month of any year. The month calendar has the same chooser and "+N more" days. |
 | **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
-| **Code health** | Large files split into small parts (no component over about 500 lines), 521 automated tests and a data health check. |
+| **Code health** | Large files split into small parts (no component over about 500 lines), 655 automated tests and a data health check. |
 
 ## Key Highlights
 
@@ -108,7 +108,7 @@ Other commands:
 | Command | What it does |
 |---|---|
 | `npm run dev:lan` | Same, and also opens Lira to your own Wi-Fi for a tablet or phone (private link and QR code in **Settings, Other devices**) |
-| `npm test` | 521 automated tests (Vitest) |
+| `npm test` | 655 automated tests (Vitest) |
 | `npm run test:health` | Read-only check of your `data/` folder (15 checks) |
 | `npm run test:all` | Type check, lint, all tests, data health |
 | `npm run build` | Type-check, then production build |

@@ -12,7 +12,7 @@ const readAsDataUrl = (file: File): Promise<string> =>
     reader.readAsDataURL(file);
   });
 
-export interface ReadAttachment { attachment: Attachment; embedded: boolean }
+interface ReadAttachment { attachment: Attachment; embedded: boolean }
 
 /** Turns a file the person picked, dropped or pasted into an attachment of the ticket. */
 export async function readAttachment(file: File): Promise<ReadAttachment> {

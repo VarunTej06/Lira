@@ -1,4 +1,3 @@
-import type {  } from '../../../types/space';
 import { BoardSettingsModal, WIPLimitsModal, BulkActionsModal } from '../BoardModals';
 import { FormsModal } from '../FormsModal';
 import { DocumentsModal } from '../DocumentsModal';

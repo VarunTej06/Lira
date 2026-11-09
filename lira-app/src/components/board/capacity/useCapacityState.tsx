@@ -2,6 +2,7 @@ import { matchesStatusFilter, type SpaceFilters } from '../../../utils/spaceFilt
 import { useMemo, useState } from 'react';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
+import { isMine } from '../../../utils/currentUser';
 
 export interface CapacityViewProps {
   issues: Issue[];
@@ -13,7 +14,7 @@ export interface CapacityViewProps {
   groupBy?: 'status' | 'assignee' | 'priority' | 'epic';
 }
 
-export interface MemberWorkload {
+interface MemberWorkload {
   name: string;
   initials: string;
   avatarColor: string;
@@ -58,7 +59,7 @@ export function useCapacityState(props: CapacityViewProps) {
 
     // Top-bar Assignee toggle
     if (filterAssignee) {
-      list = list.filter(i => i.assigneeInitials === 'VY' || i.assignee === 'Varun Tej');
+      list = list.filter(i => isMine(i));
     }
 
     // Priority filter from popover
@@ -79,7 +80,7 @@ export function useCapacityState(props: CapacityViewProps) {
 
     // Quick filter chips inside Capacity view
     if (localQuickFilter === 'vy') {
-      list = list.filter(i => i.assigneeInitials === 'VY' || i.assignee === 'Varun Tej');
+      list = list.filter(i => isMine(i));
     } else if (localQuickFilter === 'blocked') {
       list = list.filter(i => i.blocked);
     } else if (localQuickFilter === 'inprogress') {

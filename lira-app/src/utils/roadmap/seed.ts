@@ -1,11 +1,10 @@
-import type {  } from '../../types/issue';
 import { type RoadmapChild, type RoadmapItem, type Roadmap } from './types';
 import { newId } from './dependencies';
 
 /** The built-in Lira roadmap, its one-time schedule upgrade, and creating or copying roadmaps. */
 export const LIRA_SCHEDULE_VERSION = 2;
 
-export const child = (id: string, title: string, done = false): RoadmapChild => ({ id, title, done });
+const child = (id: string, title: string, done = false): RoadmapChild => ({ id, title, done });
 
 export function seedLiraRoadmap(): Roadmap {
   const item = (o: Partial<RoadmapItem> & Pick<RoadmapItem, 'id' | 'title' | 'lane' | 'start' | 'end'>): RoadmapItem => ({

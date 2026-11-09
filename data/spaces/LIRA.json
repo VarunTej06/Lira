@@ -3,7 +3,7 @@
   "spaceId": 6,
   "spaceKey": "LIRA",
   "spaceName": "Lira",
-  "updatedAt": "2026-11-08T12:27:15.253Z",
+  "updatedAt": "2026-11-09T12:42:12.742Z",
   "issueCount": 66,
   "space": {
     "id": 6,
@@ -3958,7 +3958,7 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": "2026-12-31T00:00:00.000Z",
+      "dueDate": "2026-12-30T06:30:00.000Z",
       "labels": [
         "ui",
         "bug"
@@ -4015,6 +4015,14 @@
           "content": "Lets rework on Blocked status - Want toggle button like this for blocked status to any ticket. Remove form status dropdown. And ask for ticket due to which it is blocked. (Epic, Subtask, Bug / Task) and link it. \nNow rework whatever changes you did for blocked. and with this new requirement align all the previous work accordingly and make it functional.\n\n\nif i take screenshot then i should be able to add that snip in the chat or description directly by ctrl+v or paste option as an jpg or image or png at whatever place i am pressing that paste button\n\nI should be  able to open any item (Tickets, Roadmaps, Sprints, projects, Dashboards page, filter page, anything, etc (Think form your end as well)) in new tab by right clicking it and selecting open in new tab. \n\nFilter dropdown in spaces UI is having issue like not able to scroll the dropdown - Instead of directly showing values use small dropdowns for each priority, Status and labels. And also also text input  for labels and in the dropdown for each give a checkbox so that user can select one or multiple\n\nAlso, in the network tab i am able to see most of the code in the response section. Is that fine or secured way? Is it best security practice for an enterprise application?\n\nAllow adding attachments for comments section as well. Also attachments added should be shown inside the text field right after text like wherever we want to add within the text say like next a word or in new line or anywhere it should show there. Because we might add pictures for reference then it should be placed as per the users choice to have text and explain. Same should apply to attachments in the ticket description\nas well. \nWhatever attachments are added in the ticket description and comments should be shown in the tickets Attachments section. Also it should show attachments attached directly with attachments section.\n\nGive a copy button for each comment and description as well",
           "createdAt": "2026-11-08T08:15:58.383Z",
           "updatedAt": "2026-11-08T08:23:15.244Z"
+        },
+        {
+          "id": "b6526660-8c1b-40ff-8b2b-ab3e9a317fdd",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "<p>Comment box size is big for small comments also.</p>",
+          "attachments": [],
+          "createdAt": "2026-11-09T12:41:53.449Z"
         }
       ],
       "activity": [
@@ -4032,7 +4040,7 @@
       "sprint": "2026-11",
       "rank": 800,
       "createdAt": "2026-11-07T17:24:29.304Z",
-      "updatedAt": "2026-11-08T12:27:14.520Z",
+      "updatedAt": "2026-11-09T12:42:11.967Z",
       "watchers": [
         "VY"
       ],

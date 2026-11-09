@@ -17,5 +17,3 @@ export interface Column {
   wipLimit?: number;
   color?: string; // status accent color
 }
-
-export type ColumnStatus = 'backlog' | 'todo' | 'inprogress' | 'done' | string;

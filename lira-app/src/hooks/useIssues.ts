@@ -24,18 +24,6 @@ export function useAllIssues() {
   );
 }
 
-// Top-level issues only (no parentId) — for the Kanban board
-export function useRootIssuesBySpace(spaceId: number | undefined) {
-  return useLiveQuery<Issue[], Issue[]>(
-    async () => {
-      if (!spaceId) return [];
-      const all = await db.issues.where('spaceId').equals(spaceId).sortBy('rank');
-      return all.filter(i => !i.parentId);
-    },
-    [spaceId],
-    []
-  );
-}
 
 export function useIssue(id: number | undefined) {
   return useLiveQuery<Issue | undefined>(
@@ -56,17 +44,6 @@ export function useChildIssues(parentId: number | undefined) {
   );
 }
 
-// Get all issues in an epic (by epicId)
-export function useEpicIssues(epicId: number | undefined) {
-  return useLiveQuery<Issue[], Issue[]>(
-    async () => {
-      if (epicId === undefined) return [];
-      return await db.issues.where('epicId').equals(epicId).toArray();
-    },
-    [epicId],
-    []
-  );
-}
 
 import { triggerDiskSync } from '../services/localDiskSync';
 

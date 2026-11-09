@@ -47,10 +47,3 @@ export const ColorDot: React.FC<{ color: string; className?: string }> = ({ colo
   <span className={`inline-block rounded-full flex-shrink-0 ${className}`} style={{ backgroundColor: color }} aria-hidden />
 );
 
-/** Type picture and its name. */
-export const TypeLabel: React.FC<{ type: IssueType | string; className?: string }> = ({ type, className = '' }) => (
-  <span className={`inline-flex items-center gap-1 ${className}`}>
-    <TypeIcon type={type} />
-    {ISSUE_TYPE_CONFIG[type as IssueType]?.label ?? type}
-  </span>
-);

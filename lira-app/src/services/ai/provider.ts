@@ -5,15 +5,17 @@ import type { ChatMessage, RefinedPromptGoal } from './types';
 import { getAiProvider, getGeminiApiKey, getOpenAiConfig, getSystemInstruction } from './settings';
 import { buildPromptText, callGeminiAPI } from './gemini';
 
+/** Everything a model needs to answer one chat message. */
+interface ModelRequest {
+  userPrompt: string;
+  activeSpace: Space | undefined;
+  allSpaces: Space[];
+  allIssues: Issue[];
+  refinedGoal?: RefinedPromptGoal;
+}
+
 /** Asks an OpenAI-compatible server (Ollama, LM Studio, vLLM, OpenAI ...) using /chat/completions. */
-export async function callOpenAiCompatible(
-  userPrompt: string,
-  activeSpace: Space | undefined,
-  allSpaces: Space[],
-  allIssues: Issue[],
-  refinedGoal?: RefinedPromptGoal,
-  signal?: AbortSignal,
-): Promise<ChatMessage | null> {
+async function callOpenAiCompatible({ userPrompt, activeSpace, allSpaces, allIssues, refinedGoal }: ModelRequest, signal?: AbortSignal): Promise<ChatMessage | null> {
   const cfg = getOpenAiConfig();
   const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
     method: 'POST',
@@ -45,14 +47,13 @@ export async function callOpenAiCompatible(
 }
 
 /** Uses the chosen provider. Returns null for the built-in engine, or when the model gave no answer (the caller then falls back). */
-export async function askConfiguredModel(
-  userPrompt: string, activeSpace: Space | undefined, allSpaces: Space[], allIssues: Issue[], refinedGoal?: RefinedPromptGoal,
-): Promise<ChatMessage | null> {
+export async function askConfiguredModel(req: ModelRequest): Promise<ChatMessage | null> {
+  const { userPrompt, activeSpace, allSpaces, allIssues, refinedGoal } = req;
   const provider = getAiProvider();
   if (provider === 'gemini') {
     const key = getGeminiApiKey();
     return key ? callGeminiAPI(userPrompt, key, activeSpace, allSpaces, allIssues, refinedGoal) : null;
   }
-  if (provider === 'openai') return callOpenAiCompatible(userPrompt, activeSpace, allSpaces, allIssues, refinedGoal);
+  if (provider === 'openai') return callOpenAiCompatible(req);
   return null;
 }

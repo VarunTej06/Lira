@@ -110,7 +110,7 @@ export function withIssue(search: string, key: string | null): string {
   return s ? `?${s}` : '';
 }
 
-export interface TabContext { spaceKey?: string; projectId?: string; sprintKey?: string; roadmapId?: string }
+interface TabContext { spaceKey?: string; projectId?: string; sprintKey?: string; roadmapId?: string }
 
 /**
  * The route for a page name. Components that still talk in page names (the board tabs, the sidebar) call this through

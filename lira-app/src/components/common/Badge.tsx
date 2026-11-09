@@ -9,7 +9,7 @@ interface BadgeProps {
   className?: string;
 }
 
-export const Badge: React.FC<BadgeProps> = ({
+const Badge: React.FC<BadgeProps> = ({
   label,
   color = '#172B4D',
   bgColor = '#DFE1E6',

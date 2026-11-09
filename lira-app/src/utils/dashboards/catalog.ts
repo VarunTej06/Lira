@@ -6,10 +6,10 @@ import { DEFAULT_FILTERS } from './types';
  * it starts; a scenario is a goal ("sprint health") with the filters and widgets that answer it.
  */
 
-export type WidgetCategory = 'Numbers' | 'Charts' | 'Over time' | 'Sprint' | 'Lists' | 'People' | 'Progress' | 'Summary';
+type WidgetCategory = 'Numbers' | 'Charts' | 'Over time' | 'Sprint' | 'Lists' | 'People' | 'Progress' | 'Summary';
 export const CATEGORY_ORDER: WidgetCategory[] = ['Numbers', 'Charts', 'Over time', 'Sprint', 'Lists', 'People', 'Progress', 'Summary'];
 
-export interface CatalogEntry {
+interface CatalogEntry {
   id: string;
   type: WidgetType;
   title: string;
@@ -87,8 +87,6 @@ export const CATALOG: CatalogEntry[] = [
 
 export const entryById = (id: string) => CATALOG.find(c => c.id === id);
 
-/** The widgets that need a sprint: they follow the dashboard's sprint, or the current one. */
-export const SPRINT_TYPES: WidgetType[] = ['burndown', 'burnup', 'cfd'];
 
 export interface Scenario {
   id: ScenarioId;

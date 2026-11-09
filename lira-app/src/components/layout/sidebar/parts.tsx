@@ -8,7 +8,7 @@ import type { Space } from '../../../types/space';
 /** Building blocks of the sidebar: space rows, floating "..." menus, collapsible section headers. */
 
 // ── Space row with context menu ──
-export interface SpaceRowProps {
+interface SpaceRowProps {
   space: Space;
   active: boolean;
   starred: boolean;

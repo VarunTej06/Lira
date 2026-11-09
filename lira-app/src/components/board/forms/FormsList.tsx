@@ -1,6 +1,5 @@
 import { FileText, Plus, Trash2, Eye, ChevronRight } from 'lucide-react';
 import { Button } from '../../common/Button';
-import type {  } from '../../../types/space';
 import type { FormsState } from './useFormsState';
 
 /** The saved forms. */

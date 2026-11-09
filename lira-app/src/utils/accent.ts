@@ -4,9 +4,9 @@
  * The chosen colour is saved as `lira_accent`, so it is written to data/settings.json like the other preferences.
  */
 
-export interface AccentColor { name: string; hex: string }
+interface AccentColor { name: string; hex: string }
 
-export const ACCENT_KEY = 'lira_accent';
+const ACCENT_KEY = 'lira_accent';
 export const DEFAULT_ACCENT = '#0052CC';
 
 export const ACCENTS: AccentColor[] = [
@@ -43,13 +43,49 @@ const triplet = (c: RGB) => c.join(' ');
 const WHITE: RGB = [255, 255, 255];
 const DARK_BG: RGB = [13, 17, 23];
 
+/** WCAG contrast ratio between two colours (1 to 21; 4.5 is the usual minimum for small text). */
+export function contrast(a: RGB, b: RGB): number {
+  const lum = (c: RGB) => {
+    const [r, g, bl] = c.map(v => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+/** Darkens a colour, only as much as needed, until it reads at 4.5 or better on the background it sits on. A colour that already does is returned as it is. */
+function readableOn(color: RGB, background: RGB): RGB {
+  let c = color;
+  for (let t = 0; t <= 0.6 && contrast(c, background) < 4.5; t += 0.04) c = mix(color, [0, 0, 0], t);
+  return c;
+}
+
+/**
+ * In dark mode the accent is lightened so it shows up on the dark page, but a lighter accent makes the white text on a
+ * button harder to read. Pick the shade that is readable both ways as far as the colour allows (never darker than a little lift).
+ */
+function darkShade(base: RGB): RGB {
+  let best = mix(base, WHITE, 0.08);
+  let bestScore = 0;
+  for (let t = 0.08; t <= 0.28; t += 0.04) {
+    const c = mix(base, WHITE, t);
+    const score = Math.min(contrast(WHITE, c), contrast(c, DARK_BG));
+    if (score > bestScore) { best = c; bestScore = score; }
+  }
+  return best;
+}
+
 /** The three variables for a theme: the accent, its hover shade, and a soft tint for backgrounds. */
 export function accentVars(hex: string, dark: boolean): { blue: string; hover: string; light: string } | undefined {
   const base = parseHex(hex);
   if (!base) return undefined;
-  return dark
-    ? { blue: triplet(mix(base, WHITE, 0.28)), hover: triplet(mix(base, WHITE, 0.48)), light: triplet(mix(base, DARK_BG, 0.78)) }
-    : { blue: triplet(base), hover: triplet(mix(base, WHITE, 0.2)), light: triplet(mix(base, WHITE, 0.88)) };
+  if (!dark) {
+    const tint = mix(base, WHITE, 0.95);
+    const blue = readableOn(base, tint);
+    return { blue: triplet(blue), hover: triplet(mix(blue, WHITE, 0.2)), light: triplet(tint) };
+  }
+  const blue = darkShade(base);
+  return { blue: triplet(blue), hover: triplet(mix(blue, WHITE, 0.18)), light: triplet(mix(base, DARK_BG, 0.78)) };
 }
 
 const normalize = (hex: string) => (hex.startsWith('#') ? hex : `#${hex}`).toUpperCase();

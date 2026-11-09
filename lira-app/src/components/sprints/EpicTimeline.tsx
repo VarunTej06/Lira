@@ -12,10 +12,10 @@ interface EpicTimelineProps {
   onPickSprint: (key: string) => void;
 }
 
-export interface EpicRow { epic: Issue; cells: Map<string, { total: number; done: number }>; first: number; last: number; total: number; done: number }
+interface EpicRow { epic: Issue; cells: Map<string, { total: number; done: number }>; first: number; last: number; total: number; done: number }
 
 /** For each epic, how many of its tickets sit in each sprint. Epics with no tickets are left out. */
-export function epicRows(issues: Issue[], keys: string[], scope: 'all' | number): EpicRow[] {
+function epicRows(issues: Issue[], keys: string[], scope: 'all' | number): EpicRow[] {
   const inScope = issues.filter(i => scope === 'all' || i.spaceId === scope);
   const order = new Map(keys.map((k, i) => [k, i]));
   const rows: EpicRow[] = [];

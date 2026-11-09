@@ -35,7 +35,7 @@ export function notifySaved(text = 'Changes saved') {
 }
 
 /** Closes the card now. */
-export function dismissSaved() {
+function dismissSaved() {
   window.clearTimeout(timer);
   current = null;
   emit();

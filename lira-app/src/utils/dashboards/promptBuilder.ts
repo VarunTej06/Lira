@@ -1,7 +1,7 @@
 import type { Space } from '../../types/space';
 import type { DashboardFilters, DateRange, ScenarioId } from './types';
 import { DEFAULT_FILTERS } from './types';
-import { findTargetSpace } from '../../services/ai/intent';
+import { findTargetSpace } from '../../services/ai/spaceMatch';
 
 /**
  * Builds a dashboard from a sentence: "show me what is blocked in the sprint and who is overloaded".

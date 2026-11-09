@@ -1,3 +1,4 @@
+import { isKeepingPlace } from '../../utils/keepPlace';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Check, ChevronDown, Search } from 'lucide-react';
@@ -33,7 +34,7 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
   const [query, setQuery] = useState('');
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number; maxHeight: number } | null>(null);
+  const [pos, setPos] = useState<{ top?: number; bottom?: number; left: number; maxHeight: number } | null>(null);
 
   useEffect(() => { if (!open) setQuery(''); }, [open]);
 
@@ -43,7 +44,15 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
     const w = panel.current?.offsetWidth ?? 240;
     const margin = 8;
     const left = Math.min(Math.max(margin, a.left), window.innerWidth - w - margin);
-    setPos({ top: a.bottom + 6, left, maxHeight: Math.max(160, window.innerHeight - a.bottom - 6 - margin) });
+    // Open downwards if the whole list fits there; otherwise on whichever side has more room, and never taller than that room,
+    // so every value can be reached by scrolling the list itself.
+    const below = window.innerHeight - a.bottom - 6 - margin;
+    const above = a.top - 6 - margin;
+    const wanted = Math.min(panel.current?.scrollHeight ?? 320, 360);
+    const down = wanted <= below || below >= above;
+    setPos(down
+      ? { top: a.bottom + 6, left, maxHeight: Math.max(120, Math.min(360, below)) }
+      : { bottom: window.innerHeight - a.top + 6, left, maxHeight: Math.max(120, Math.min(360, above)) });
   }, [open, query, options.length]);
 
   useEffect(() => {
@@ -53,10 +62,13 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
     };
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); setOpen(false); trigger.current?.focus(); } };
     const close = () => setOpen(false);
+    // scrolling the page closes it (it would otherwise stay on the screen while the button moves away); scrolling its own list does not
+    const onScroll = (e: Event) => { if (isKeepingPlace()) return; if (!panel.current?.contains(e.target as Node)) setOpen(false); };
     document.addEventListener('mousedown', away, true);
     document.addEventListener('keydown', esc, true);
     window.addEventListener('resize', close);
-    return () => { document.removeEventListener('mousedown', away, true); document.removeEventListener('keydown', esc, true); window.removeEventListener('resize', close); };
+    window.addEventListener('scroll', onScroll, true);
+    return () => { document.removeEventListener('mousedown', away, true); document.removeEventListener('keydown', esc, true); window.removeEventListener('resize', close); window.removeEventListener('scroll', onScroll, true); };
   }, [open]);
 
   const shown = useMemo(() => {
@@ -93,7 +105,7 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
               {...menuPop}
               role="dialog"
               aria-label={`${label} filter`}
-              style={{ position: 'fixed', top: pos?.top ?? 0, left: pos?.left ?? 0, zIndex: 300, visibility: pos ? 'visible' : 'hidden', transformOrigin: 'top left' }}
+              style={{ position: 'fixed', top: pos?.top, bottom: pos?.bottom, left: pos?.left ?? 0, maxHeight: pos?.maxHeight, zIndex: 300, visibility: pos ? 'visible' : 'hidden', transformOrigin: pos?.bottom !== undefined ? 'bottom left' : 'top left' }}
               className="w-60 bg-white border border-lira-border rounded-xl shadow-2xl flex flex-col text-lira-text"
             >
               {searchable && (
@@ -111,7 +123,7 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
                   </div>
                 </div>
               )}
-              <ul className="overflow-y-auto py-1" style={{ maxHeight: Math.min(pos?.maxHeight ?? 280, 280) }} role="listbox" aria-multiselectable="true">
+              <ul className="overflow-y-auto overscroll-contain py-1 flex-1 min-h-0" role="listbox" aria-multiselectable="true">
                 {shown.length === 0 && <li className="px-3 py-3 text-xs text-lira-muted text-center">{options.length === 0 ? emptyText : 'No match'}</li>}
                 {shown.map(o => {
                   const on = selected.includes(o.value);

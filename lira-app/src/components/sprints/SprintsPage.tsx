@@ -21,7 +21,7 @@ import { RetroCard } from './RetroCard';
 import { EMPTY_FILTER, SprintFilter, type SprintFilterValue } from './SprintFilter';
 import { SprintSpacesPicker } from './SprintSpacesPicker';
 import { Modal } from '../common/Modal';
-import { CountUp, GrowBar, GrowColumn, motion, slide, staggerChild, staggerParent, Toast } from '../common/motion';
+import { CountUp, GrowBar, GrowColumn, motion, slide, Toast } from '../common/motion';
 
 type View = 'sprint' | 'planning' | 'reports' | 'epics';
 const VIEWS: { id: View; label: string }[] = [
@@ -48,7 +48,6 @@ interface SprintsPageProps {
   onBack?: () => void;
 }
 
-const GROUPS = ['inprogress', 'todo', 'backlog', 'done'] as const;
 const fmt = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
 export const SprintsPage: React.FC<SprintsPageProps> = ({
@@ -134,6 +133,23 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
   const involved = getSprintSpaces(sprint);
   const involvedNames = involved ? spaces.filter(s => involved.includes(s.id!)).map(s => s.name) : [];
   const selectedIssues = list.filter(i => selected.has(i.id!));
+
+  // The one ticket box: its title follows the Status filter, and the checkbox selects or clears every ticket shown.
+  const boxCollapsed = collapsed.has('box');
+  const statusOrder = ['inprogress', 'todo', 'backlog', 'done'];
+  const shown = useMemo(() => [...visible].sort((x, y) => statusOrder.indexOf(x.status?.toLowerCase()) - statusOrder.indexOf(y.status?.toLowerCase())), [visible]);
+  const boxTitle = filter.statuses.length === 0 ? 'All tickets' : filter.statuses.map(s => (s === 'blocked' ? BLOCKED_META.label : (STATUS_META as Record<string, { label: string; color: string }>)[s]?.label ?? s)).join(' + ');
+  const boxColor = filter.statuses.length === 1 ? (filter.statuses[0] === 'blocked' ? BLOCKED_META.color : (STATUS_META as Record<string, { label: string; color: string }>)[filter.statuses[0]]?.color) : undefined;
+  const shownSelected = shown.filter(i => selected.has(i.id!)).length;
+  const allVisibleSelected = shown.length > 0 && shownSelected === shown.length;
+  const selectAllRef = useRef<HTMLInputElement>(null);
+  const boxHeadRef = useRef<HTMLDivElement>(null); // the heading row stays where it is on the screen when the filter changes the list
+  useEffect(() => { if (selectAllRef.current) selectAllRef.current.indeterminate = shownSelected > 0 && shownSelected < shown.length; }, [shownSelected, shown.length]);
+  const toggleAllVisible = () => setSelected(prev => {
+    const next = new Set(prev);
+    if (allVisibleSelected) shown.forEach(i => next.delete(i.id!)); else shown.forEach(i => next.add(i.id!));
+    return next;
+  });
   const unfinished = list.filter(i => !isDone(i));
 
   const handleComplete = () => setCloseOpen(true);
@@ -377,15 +393,6 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
         </div>
 
         <motion.div key={view} initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={slide} className="space-y-5">
-        {view === 'sprint' && (
-          <div className="flex items-center gap-2 -mt-2">
-            <SprintFilter spaces={involved ? spaces.filter(s => involved.includes(s.id!)) || spaces : spaces} value={filter} onChange={setFilter} />
-            {(filter.statuses.length > 0 || filter.spaceIds.length > 0) && (
-              <span className="text-xs text-lira-muted" data-testid="filter-count">Showing {visible.length} of {list.length} tickets</span>
-            )}
-          </div>
-        )}
-
         {view === 'planning' && <SprintPlanning issues={issues} spaces={spaces} sprint={sprint} keys={keys} scope={scope} onIssueClick={onIssueClick} flash={flash} />}
         {view === 'reports' && <SprintReports key={`${sprint}-${scope}`} issues={issues} sprint={sprint} scope={scope} onIssueClick={onIssueClick} />}
         {view === 'epics' && <EpicTimeline issues={issues} keys={keys} scope={scope} sprint={sprint} onIssueClick={onIssueClick} onPickSprint={k => { setSprint(k); setView('sprint'); }} />}
@@ -404,7 +411,7 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
               <h3 className="text-sm font-semibold text-lira-text">Velocity (last sprints)</h3>
               <span className="text-[11px] text-lira-muted">avg {velocity.avg} done / closed sprint</span>
             </div>
-            <div className="flex items-end gap-3 h-32">
+            <div key={`${sprint}-${scope}`} className="flex items-end gap-3 h-32">
               {velocity.rows.map((r, n) => (
                 <button key={r.key} onClick={() => setSprint(r.key)} className="flex-1 flex flex-col items-center justify-end h-full gap-1 cursor-pointer group" title={`${sprintName(r.key)}: ${r.done}/${r.total} done`}>
                   <div className="w-full flex items-end justify-center gap-0.5 flex-1">
@@ -435,46 +442,60 @@ export const SprintsPage: React.FC<SprintsPageProps> = ({
           </div>
         )}
 
-        {/* Tickets grouped by status */}
-        <motion.div className="space-y-3" variants={staggerParent} initial="hidden" animate="show" key={`${sprint}-${scope}-${filter.statuses.join()}-${filter.spaceIds.join()}`}>
-          {list.length === 0 && (
-            <div className="bg-white border border-dashed border-lira-border rounded-lg py-12 text-center text-sm text-lira-muted">
-              No tickets in {sprintName(sprint)}{scope !== 'all' ? ' for this space' : ''}.
-              {phase !== 'past' && ' Create one, or move tickets here from another sprint.'}
+        {/* All the tickets in one box. The heading row has the select-all checkbox, the title and the filters. */}
+        {list.length === 0 ? (
+          <div className="bg-white border border-dashed border-lira-border rounded-lg py-12 text-center text-sm text-lira-muted">
+            No tickets in {sprintName(sprint)}{scope !== 'all' ? ' for this space' : ''}.
+            {phase !== 'past' && ' Create one, or move tickets here from another sprint.'}
+          </div>
+        ) : (
+          <div className="bg-white border border-lira-border rounded-lg overflow-hidden" data-testid="ticket-box">
+            <div ref={boxHeadRef} className="flex flex-wrap items-center gap-x-3 gap-y-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
+              <button
+                type="button"
+                aria-label={boxCollapsed ? 'Show the tickets' : 'Hide the tickets'}
+                aria-expanded={!boxCollapsed}
+                onClick={e => keepPlace(e.currentTarget, () => setCollapsed(prev => { const n = new Set(prev); n.has('box') ? n.delete('box') : n.add('box'); return n; }))}
+                className="p-0.5 rounded hover:bg-gray-200 cursor-pointer"
+              >
+                <ChevronRight className={`w-4 h-4 transition-transform ${boxCollapsed ? '' : 'rotate-90'}`} />
+              </button>
+              <input
+                ref={selectAllRef}
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={toggleAllVisible}
+                disabled={visible.length === 0}
+                aria-label={allVisibleSelected ? 'Deselect all tickets' : 'Select all tickets'}
+                title={allVisibleSelected ? 'Deselect all' : 'Select all'}
+                data-testid="select-all"
+                className="cursor-pointer"
+              />
+              <h3 className="text-xs font-semibold uppercase tracking-wide" style={{ color: boxColor }} data-testid="ticket-box-title">{boxTitle}</h3>
+              <span className="text-xs text-lira-muted" data-testid="filter-count">
+                {visible.length}{(filter.statuses.length > 0 || filter.spaceIds.length > 0) ? ` of ${list.length}` : ''}
+              </span>
+              {filter.statuses.length === 1 && filter.statuses[0] === 'done' && <span className="text-[10px] text-lira-muted">stays in this sprint when it closes</span>}
+              <div className="ml-auto">
+                <SprintFilter spaces={involved ? spaces.filter(s => involved.includes(s.id!)) || spaces : spaces} value={filter} onChange={v => (boxHeadRef.current ? keepPlace(boxHeadRef.current, () => setFilter(v)) : setFilter(v))} />
+              </div>
             </div>
-          )}
-          {GROUPS.map(status => {
-            const rows = visible.filter(i => i.status?.toLowerCase() === status);
-            if (rows.length === 0) return null;
-            const sm = STATUS_META[status];
-            const isCollapsed = collapsed.has(status);
-            return (
-              <motion.div key={status} variants={staggerChild} className="bg-white border border-lira-border rounded-lg overflow-hidden">
-                <button
-                  onClick={e => keepPlace(e.currentTarget, () => setCollapsed(prev => { const n = new Set(prev); n.has(status) ? n.delete(status) : n.add(status); return n; }))}
-                  className="w-full flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border text-left cursor-pointer"
-                >
-                  <ChevronRight className={`w-3.5 h-3.5 transition-transform ${isCollapsed ? '' : 'rotate-90'}`} />
-                  <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: sm.color }}>{sm.label}</span>
-                  <span className="text-xs text-lira-muted">{rows.length}</span>
-                  {status === 'done' && <span className="text-[10px] text-lira-muted ml-auto">stays in this sprint when it closes</span>}
-                </button>
-                {!isCollapsed && rows.map(i => (
-                  <TicketRow
-                    key={i.id}
-                    issue={i}
-                    space={spaceById.get(i.spaceId)}
-                    showSpace={scope === 'all'}
-                    sprintOptions={keys}
-                    selected={selected.has(i.id!)}
-                    onToggleSelect={toggle}
-                    onClick={onIssueClick}
-                  />
-                ))}
-              </motion.div>
-            );
-          })}
-        </motion.div>
+            {!boxCollapsed && (visible.length === 0
+              ? <p className="px-4 py-8 text-center text-sm text-lira-muted">No tickets match this filter.</p>
+              : shown.map(i => (
+                <TicketRow
+                  key={i.id}
+                  issue={i}
+                  space={spaceById.get(i.spaceId)}
+                  showSpace={scope === 'all'}
+                  sprintOptions={keys}
+                  selected={selected.has(i.id!)}
+                  onToggleSelect={toggle}
+                  onClick={onIssueClick}
+                />
+              )))}
+          </div>
+        )}
 
         {scope === 'all' && onOpenSpace && list.length > 0 && (
           <div className="flex flex-wrap gap-2 text-xs text-lira-muted items-center">

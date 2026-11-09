@@ -112,6 +112,8 @@ All commands run from `lira-app/`.
 | `npx tsc -b` | Type-check only (fast, good before a commit) |
 | `npm test` | Runs the unit and integration tests (Vitest) |
 | `npm run test:watch` | Tests in watch mode |
+| `npm run test:health` | Read-only check of the `data/` folder |
+| `npm run test:all` | Type check, lint, tests and data health |
 
 > **Disk sync only works with `npm run dev`.** The `/api/data` and `/api/save` endpoints are a Vite dev-server plugin. `npm run preview` and a deployed `dist/` serve the app but cannot write to `data/`. They use browser storage only.
 
@@ -229,7 +231,7 @@ npm run build     # must succeed
 npm run lint
 ```
 
-Tests (294) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
+Tests (521, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
 
 ---
 

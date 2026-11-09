@@ -1,3 +1,4 @@
+import { isKeepingPlace } from '../../utils/keepPlace';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, X } from 'lucide-react';
@@ -79,10 +80,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     };
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); setOpen(false); trigger.current?.focus(); } };
     const close = () => setOpen(false);
+    const onScroll = (e: Event) => { if (isKeepingPlace()) return; if (!panel.current?.contains(e.target as Node)) setOpen(false); }; // scrolling the page closes it
     document.addEventListener('mousedown', away, true);
     document.addEventListener('keydown', esc, true);
     window.addEventListener('resize', close);
-    return () => { document.removeEventListener('mousedown', away, true); document.removeEventListener('keydown', esc, true); window.removeEventListener('resize', close); };
+    window.addEventListener('scroll', onScroll, true);
+    return () => { document.removeEventListener('mousedown', away, true); document.removeEventListener('keydown', esc, true); window.removeEventListener('resize', close); window.removeEventListener('scroll', onScroll, true); };
   }, [open]);
 
   const grid = useMemo(() => monthGrid(view.getFullYear(), view.getMonth()), [view]);

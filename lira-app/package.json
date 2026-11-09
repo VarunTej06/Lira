@@ -10,6 +10,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:health": "vitest run --config vitest.health.config.ts",
+    "test:all": "tsc -b && oxlint && vitest run && vitest run --config vitest.health.config.ts",
     "test:watch": "vitest"
   },
   "dependencies": {

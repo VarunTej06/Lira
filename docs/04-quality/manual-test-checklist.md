@@ -11,7 +11,7 @@ How to run it
 
 ---
 
-## A. The screens that were reworked (A1–A19)
+## A. The screens that were reworked (A1–A20)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -205,6 +205,13 @@ The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest ch
 - [ ] **Projects** grid cards: name, key, category, description (or default text), space tag (or "Unlinked Space"), lead initials, "N issues (M done)" with the bar; clicking opens the project, the standup button does not.
 - [ ] **Create ticket** hints under the title: possible duplicates (clickable), label chips (hidden once typed), a priority chip only when it differs, an epic chip only for tasks and bugs; clicking a label adds it to the comma-separated list.
 - [ ] Notifications bell, "show me <ticket>" in Viva (title, space, type and priority, status, people, due date, parent epic, subtask progress, description preview), and board tab/page links (browser Back and Forward, refresh on a shared link) still work.
+
+### A20. Capacity tab of a space
+- [ ] Open a space, then **Capacity**. Expect: one row per person, busiest first, with total, To Do, In Progress, Blocked, Done, overdue and story points (a ticket with no points counts as 1); unassigned work shows as "Unassigned".
+- [ ] Team totals at the top (tickets, done, in progress, points, overdue) match the sum of the rows.
+- [ ] Quick chips (**Mine, In progress, Blocked, High priority, Overdue**) each narrow the list correctly; picking a person narrows to them; "Clear" shows only while a filter is on.
+- [ ] The board bar filters (search, "me", Priority, Status, Labels) also narrow this view; an overdue ticket is one that is not done with a due date in the past.
+- [ ] Group by **Status** (five columns, Blocked is the flag), **Priority** (low and lowest together), **Assignee** and **Epic / Parent** (progress per epic, an epic with no children shows 100 % when done, else 0 %); points and shares add up.
 
 ---
 

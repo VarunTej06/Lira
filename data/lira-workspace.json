@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-09T14:53:21.343Z",
+  "savedAt": "2026-11-11T18:04:50.045Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -1004,8 +1004,6 @@
       "id": 26,
       "spaceId": 6,
       "key": "LIRA-11",
-      "parentId": 16,
-      "epicId": 16,
       "title": "Automated Code Quality & SonarQube / ESLint Pipeline",
       "description": "## Task\nIntegrate static code analysis and linting into the development workflow and CI.\n\n## Goals\n- Zero lint errors with strict TypeScript rules\n- SonarCloud/SonarQube gate for code smells, bugs, and security hotspots",
       "type": "task",
@@ -1040,6 +1038,46 @@
       "comments": [],
       "activity": [
         {
+          "id": "b549af0a-bca4-4d97-90ed-398e6e5e438b",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Epic to Task",
+          "oldValue": "Epic",
+          "newValue": "Task",
+          "createdAt": "2026-11-10T20:46:38.308Z"
+        },
+        {
+          "id": "2848f238-013c-46c9-9feb-21ee05f9fd8c",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Task to Epic",
+          "oldValue": "Task",
+          "newValue": "Epic",
+          "createdAt": "2026-11-10T20:46:29.480Z"
+        },
+        {
+          "id": "844ea798-ef4f-4d97-ad3d-6a538f7b107a",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Epic to Task",
+          "oldValue": "Epic",
+          "newValue": "Task",
+          "createdAt": "2026-11-10T20:46:10.643Z"
+        },
+        {
+          "id": "ec009dcc-52ce-47cd-977c-5e84c78a7c34",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Task to Epic",
+          "oldValue": "Task",
+          "newValue": "Epic",
+          "createdAt": "2026-11-10T20:45:44.873Z"
+        },
+        {
           "id": "0a779948-ffb6-4ed2-b1aa-851114cf455c",
           "type": "created",
           "author": "VY",
@@ -1066,11 +1104,14 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-11-08T09:23:17.488Z",
+      "updatedAt": "2026-11-10T20:46:44.390Z",
       "sprint": "2026-11",
       "sprintHistory": [
         "2026-10"
-      ]
+      ],
+      "parentId": 16,
+      "epicId": 16,
+      "epicLink": "DevOps & Cloud-Native Delivery"
     },
     {
       "id": 27,
@@ -8506,7 +8547,7 @@
       "title": "Lira v2.0 Scope Refactor & Enterprise UX Implementation",
       "description": "## Lira v2.0 Scope Refactor\nComplete architectural overhaul with aggressive UI pruning of decommissioned elements and enterprise functional implementations.",
       "type": "epic",
-      "status": "inprogress",
+      "status": "done",
       "priority": "highest",
       "assignee": "Varun Tej",
       "assigneeInitials": "VY",
@@ -8537,8 +8578,16 @@
         "VY"
       ],
       "createdAt": "2026-11-04T07:45:34.994Z",
-      "updatedAt": "2026-11-04T07:55:52.796Z",
-      "sprint": "2026-11"
+      "updatedAt": "2026-11-11T09:45:02.865Z",
+      "sprint": "2026-11",
+      "statusLog": [
+        {
+          "from": "inprogress",
+          "to": "done",
+          "at": "2026-11-11T09:45:02.994Z"
+        }
+      ],
+      "resolvedAt": "2026-11-11T09:45:02.994Z"
     },
     {
       "id": 134,
@@ -10406,22 +10455,23 @@
     {
       "spaceId": 6,
       "key": "LIRA-79",
-      "parentId": 15,
-      "epicId": 15,
-      "epicLink": "Core Lira Frontend & Board Architecture",
+      "parentId": 183,
+      "epicId": 183,
+      "epicLink": "LIRA v3.x.x - Fixes and New enhancements",
       "title": "UI and Dropdown bugs",
       "description": "<ol><li><p>Dropdown box when clicked on three dots for each item in Side Bar settings is not closing when clicked on outside. Have to click on three dots only to minimise it. It hsould not work like that. Should be close if clicked anywhere on screen.</p></li><li><p>Dark mode is being applied right after selecting the theme, but should be applied only if clicked Done / Save whatever button we have. We can change dark mode form two places i think it should apply at both places. if popup is closed then dark mode should not be applied.</p></li><li><p>Any ticket or anything i am updating in Lira it should be updated only after i click save button.</p></li><li><p>Remove all the instances or placeholders wherever the old product name is mentioned in our entire codebase and readme and architectures. There should be no traces of it.</p></li><li><p>Whenever we are creating issues - It is asking for summary. But it should be named as Title.</p></li><li><p>Update all the placeholders of calender we are using in LIRA. Current Calender is not looking good.</p></li><li><p>Delete for Projects/ Roadmaps is still showing chrome popup for confirmation. It should be like delete space popup only.</p></li><li><p>Remove all the emojis in the codebase files. Except the emojios or icon we used for spaces. You can have icons for all that will be visible in the UI like we used under the navigation for \"for you, projects, roadmaps, projects, tickets\" in the side bar</p></li><li><p>Once clicked on Save changes the popup should close for any screen - Ticket screen, etc.</p></li><li><p>I should be able to add attachments insdie the description as well. And give the Edit text related features as well like Bold Itlaic, Bullet points, checkboxes, Underline, Strikethrough, Headings, Add files, Tag users using @, Colors to text, highlight text, etc..</p></li><li><p>See the comments section for more bugs</p></li></ol><p></p>",
       "type": "bug",
       "status": "inprogress",
-      "priority": "highest",
+      "priority": "high",
       "assignee": "VY",
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": "2026-12-30T06:30:00.000Z",
+      "dueDate": "2026-11-30T06:30:00.000Z",
       "labels": [
         "ui",
-        "bug"
+        "bug",
+        "LIRA Bugs"
       ],
       "subtasks": [],
       "comments": [
@@ -10492,9 +10542,47 @@
           "attachments": [],
           "createdAt": "2026-11-09T14:50:51.582Z",
           "updatedAt": "2026-11-09T14:53:20.254Z"
+        },
+        {
+          "id": "a8c63b56-9b1c-4bbe-8fb0-8ef4a50a9c3d",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "<ul><li><p>Paste a screenshot anywhere in the text, or use the paperclip. Ctrl+Enter to post - this line is not required below the comment box.</p></li><li><p>Child Issue and Link issue in ticket popup is not working. For child issue you should be able to link the one type below ticket using a dropdown and also able to create a new ticket as well but it should only ask the name of the new child item and it should create the ticket with one type down directly and link that child item to this ticket. Example, if i am creating a child issue in Epic it should show any existing tasks only and create new child issue as task only. Once the child issue is created I can do the necessary ticket updates and in that also i should be able to create child issues. And in the child issue ticket this parent ticket should be updated as Parent. Linked child items should be shown below the attachments. Because i cant see them. they should be shown under child issues. If we have a placeholder already then use it. But even if no child issues are created it should show child issues with no tickets linked.</p></li></ul><ul><li><p>Link issue also should show dropdown to select tickets. multiple tickets can be selected. Tickets from any status can be selected,</p></li><li><p>Comment is written not clicked on save button and directly clicked Save Changes button of the ticket and my is lost. In this case it should ask save the comment or discard the changes to comment popup based on user confirmation. if save is choosen comment should be saved and Ticket also saved and ticket popup closes. if discard, then comment should be discarded and ticket should be saved.</p></li><li><p>No restriction on comment length.</p></li><li><p>In switch apps it is still showing v2.0 only</p></li><li><p>In roadmap we are showing roadmap at the bottom of the page right. That is not looking good. When I am seeing the timeline with Weeks all the items are close to each other. and if i change to months and quarter it is even worst. if there aren't any events for coming monts or quarters then their size should be very small and at the right side space of the area. Lot of empty space is left. If i switch form timeline to planner and there is lot more space left on the right side and all are sitting very tight to each other.</p></li></ul><p></p>",
+          "attachments": [],
+          "createdAt": "2026-11-10T20:28:00.285Z",
+          "updatedAt": "2026-11-11T09:50:53.565Z"
+        },
+        {
+          "id": "5fbf9ff5-0454-4519-ba4a-fa438a34a730",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "<ul><li><p>Link issues - Should be able to link single or multiple tickets and of any type. And for each ticket selected it should ask in a dropdown like {relates to, blocks, is blocked by, duplicates }</p></li></ul><p>- relates to means general connection. No order or dependency implied.</p><p>- Blocks or is blocked by means directional dependency. if selected blocks for a ticket then current ticket A is blocking ticket you are trying to link. And that ticket should be updating the current ticket A as is blocked by under the link issues. Same if selected is blocked by means Current ticket A is blocked due to this ticket and in that ticket it should updated as blocks ticket A.</p><ul><li><p>After typing slash in comments the control is going out of comments.</p></li><li><p>Complete Test cases, fix all bugs, Mention claude to follow vibe check, Test all UI components and animations, Then share the previous vibe check report and Then merge to main and do vibe check and copy the detail reports to local for rework after v4 with latest insta post in claude playlist</p></li></ul><p></p>",
+          "attachments": [],
+          "createdAt": "2026-11-10T20:33:48.936Z",
+          "updatedAt": "2026-11-11T09:43:53.877Z"
         }
       ],
       "activity": [
+        {
+          "id": "c05febf6-341b-430b-a2ac-53694805017e",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Task to Bug",
+          "oldValue": "Task",
+          "newValue": "Bug",
+          "createdAt": "2026-11-10T20:44:05.636Z"
+        },
+        {
+          "id": "e6276149-388e-4e1c-b96b-8de9acb7dd69",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "changed issue type from Bug to Task",
+          "oldValue": "Bug",
+          "newValue": "Task",
+          "createdAt": "2026-11-10T20:43:31.223Z"
+        },
         {
           "id": "c4697a5b-f938-40aa-8031-e25696aa54ae",
           "type": "created",
@@ -10509,7 +10597,7 @@
       "sprint": "2026-11",
       "rank": 800,
       "createdAt": "2026-11-07T17:24:29.304Z",
-      "updatedAt": "2026-11-09T14:53:20.255Z",
+      "updatedAt": "2026-11-11T09:54:08.383Z",
       "watchers": [
         "VY"
       ],
@@ -10535,6 +10623,100 @@
       "storyPoints": 6,
       "blocked": false,
       "blockedByIds": []
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-80",
+      "title": "LIRA v3.x.x - Fixes and New enhancements",
+      "description": "",
+      "type": "epic",
+      "status": "inprogress",
+      "priority": "highest",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "dueDate": "2026-11-30T00:00:00.000Z",
+      "labels": [
+        "UI",
+        "Bugs",
+        "v3.x.x"
+      ],
+      "subtasks": [],
+      "comments": [
+        {
+          "id": "fe6d4e72-6413-428d-8f34-c357881f5964",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "<p>Status for newly created tickets should only Backlog or To Do. Or based on the roles we can have like only Admins or Managers can create tickets at any place usual team members should have progress one by one level only. {Needs revision and improvement on feature}</p><p>When entering lables - hitting comma or Enter button should add the label and keep the control within the label input field only to add other lables as well. </p><p>Need Automatic labels propagation on tickets based on type. </p>",
+          "attachments": [],
+          "createdAt": "2026-11-11T09:58:52.612Z"
+        }
+      ],
+      "activity": [
+        {
+          "id": "70beb190-5de9-4f4e-816d-19fefeae132a",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this issue",
+          "createdAt": "2026-11-11T09:52:44.437Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 700,
+      "createdAt": "2026-11-11T09:52:44.437Z",
+      "updatedAt": "2026-11-11T09:58:52.613Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 183
+    },
+    {
+      "spaceId": 14,
+      "key": "AI-19",
+      "parentId": 71,
+      "epicId": 71,
+      "epicLink": "Creating Claude Skills & Autonomous Workflows",
+      "title": "Migrate ATS Resume Skill to Github",
+      "description": "",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "claude-skill",
+        "ats-resume",
+        "resume-optimization",
+        "career"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d3aa64b6-3444-4ae5-8ed5-77ce82b23657",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this issue",
+          "createdAt": "2026-11-11T18:04:27.728Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 900,
+      "createdAt": "2026-11-11T18:04:27.728Z",
+      "updatedAt": "2026-11-11T18:04:49.475Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 184
     }
   ]
 }

@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-09T17:09:30.598Z",
+  "updatedAt": "2026-11-11T18:03:24.673Z",
   "entries": {
     "lira_accent": "#0C66E4",
-    "lira_active_space_id": "6",
+    "lira_active_space_id": "14",
     "lira_notif_config": {
       "inAppFeed": true,
       "mentionsOnly": true,
@@ -18,8 +18,8 @@
       "collapsed": [],
       "roadmapId": "rm-lira",
       "showDeps": true,
-      "view": "timeline",
-      "zoom": "weeks"
+      "view": "planner",
+      "zoom": "quarters"
     },
     "lira_sidebar_collapsed": "true",
     "lira_sidebar_customization": {
@@ -59,6 +59,6 @@
       "filters",
       "dashboards"
     ],
-    "lira_theme": "dark"
+    "lira_theme": "light"
   }
 }

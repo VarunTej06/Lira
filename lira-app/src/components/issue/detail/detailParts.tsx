@@ -11,19 +11,21 @@ export const DetailRow: React.FC<{ icon: React.ReactNode; label: string; childre
   </div>
 );
 
-// Inline label adder
+/** Adds labels one after another: Enter or a comma adds what was typed and the box stays open; Escape or clicking away closes it. */
 export const LabelAdder: React.FC<{ onAdd: (l: string) => void }> = ({ onAdd }) => {
   const [adding, setAdding] = useState(false);
   const [val, setVal] = useState('');
+  const commit = () => { if (val.trim()) onAdd(val); setVal(''); };
   if (adding) {
     return (
       <input
         autoFocus value={val} onChange={e => setVal(e.target.value)}
         onKeyDown={e => {
-          if (e.key === 'Enter' && val.trim()) { onAdd(val.trim()); setVal(''); setAdding(false); }
-          if (e.key === 'Escape') setAdding(false);
+          if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); commit(); }
+          if (e.key === 'Escape') { e.stopPropagation(); setVal(''); setAdding(false); }
         }}
-        onBlur={() => setAdding(false)}
+        onBlur={() => { commit(); setAdding(false); }}
+        aria-label="Add a label"
         className="text-xs border border-lira-blue rounded-full px-2 py-0.5 outline-none w-20"
         placeholder="label"
       />

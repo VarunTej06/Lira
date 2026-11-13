@@ -8,10 +8,11 @@ How to run it
 - Start with `npm run dev` in `lira-app/`. Test in **all three themes** (Dark, and the light palettes Sorrel and Fawn: Settings, Appearance) for sections marked ◐.
 - Open the browser console once (F12): there should be **no red errors** while you work through the list.
 - Tick each box. "Expect" says what you should see.
+- The same cases are in `Lira-manual-test-cases.xlsx`. After adding a section here, copy it into the workbook with `python docs/04-quality/sync-manual-cases.py A25` (workbook closed in Excel).
 
 ---
 
-## A. The screens that were reworked (A1–A22)
+## A. The screens that were reworked (A1–A24)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -237,6 +238,43 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Logo (top bar, start-up screen, browser tab). Expect: a block L with an arrow; the arrow grows out of the corner on load and when the logo is hovered, and keeps growing while Lira starts. With "reduce motion" on in the system it stands still.
 - [ ] Avatars (top right, board cards, ticket popup, filters, capacity). Expect: all in the button colour of the theme, with a readable label.
 - [ ] Collapse and expand the sidebar several times on a full board. Expect: it slides quickly, without stutter, and the rows do not jump or re-wrap while it moves.
+
+### A23. Ticket popup: child issues, links, comments, labels (13 Nov 2026)  ◐
+- [ ] Open an epic. Expect: a "Child issues" section right below Attachments, saying "No tickets linked." when it has none; a "Linked issues" section below it.
+- [ ] Epic, **Child issue**. Expect: a dialog listing only the other tasks of the space (not bugs, subtasks or tasks already under it), with a box to name a new task.
+- [ ] Type a name and press Enter. Expect: the dialog closes and the new task is listed under Child issues, in To Do.
+- [ ] Open that new task. Expect: its Parent is the epic; it has its own Child issue button, which offers and creates subtasks.
+- [ ] Epic, Child issue, tick two existing tasks, **Add as child issues**. Expect: both appear under Child issues; each shows the epic as Parent.
+- [ ] Open a subtask. Expect: no Child issue button and no Child issues section; Link issue is there.
+- [ ] **Link issue**. Expect: every other ticket is offered, of any type, status (also Done) and space; search and the type chips narrow the list.
+- [ ] Tick three tickets. Expect: each gets a dropdown with relates to, blocks, is blocked by, duplicates. Choose a different one for each, **Link tickets**. Expect: all three are listed under Linked issues with their relation; "You have unsaved changes" shows.
+- [ ] **Save changes**, then open each linked ticket. Expect: "relates to" shows on both; the ticket this one blocks is switched to Blocked and shows "is blocked by" this one; the ticket this one is blocked by shows "blocks"; the duplicated ticket shows "is duplicated by".
+- [ ] Choose "is blocked by" for a ticket. Expect: the Blocked switch of this ticket turns on with that ticket listed.
+- [ ] Remove a link with its X, Save changes. Expect: the link is gone from the other ticket too; a ticket that was blocked only by this one is unblocked.
+- [ ] Link a ticket, then close the popup and choose Discard changes. Expect: no link on either ticket.
+- [ ] Write a comment, do not press its Save, press **Save changes**. Expect: a dialog with Save comment, Discard comment and Keep editing.
+- [ ] Choose **Save comment**. Expect: the comment and the ticket are saved and the popup closes. Reopen: the comment is there.
+- [ ] Repeat and choose **Discard comment**. Expect: the ticket is saved, the comment is not, the popup closes.
+- [ ] Repeat and choose **Keep editing** (or press Escape). Expect: nothing is saved, the popup stays open with the comment still in the box.
+- [ ] Write a comment and close the popup with X. Expect: "Discard changes?" is asked.
+- [ ] Paste a very long text (several pages) as a comment and save it. Expect: all of it is saved.
+- [ ] In the comment box and in the description, type a slash. Expect: "/" is typed; the cursor stays in the box and the search box does not take over. Outside any text box, "/" still jumps to search.
+- [ ] Below the comment box. Expect: only Cancel and Save; the line about pasting screenshots and Ctrl+Enter is gone.
+- [ ] Labels in the ticket popup: press + Add, type a label, press Enter; type another, press comma. Expect: each is added and the cursor stays in the box; Escape closes the box; the same label is not added twice.
+- [ ] Create ticket dialog: type a label and press Enter in the Labels box. Expect: the ticket is not created; a comma is added so the next label can be typed.
+- [ ] Add a label to an epic, Save changes. Expect: its tasks, their subtasks and the bugs under any of them show the label, with a dashed outline and no X.
+- [ ] Add a label to a task (not its epic), save. Expect: its subtasks and bugs get it; the epic and the other tasks do not.
+- [ ] Remove the label from the epic, save. Expect: it is gone from everything below, except where it was also typed on the ticket itself.
+- [ ] Create a ticket with a parent chosen, and a child with Child issue. Expect: both have the labels of the parent straight away.
+- [ ] Change a ticket's Parent to another epic, save. Expect: it loses the old epic's labels and gets the new one's.
+
+### A24. New-ticket status and space colours (13 Nov 2026)  ◐
+- [ ] Create ticket dialog. Expect: Status offers only Backlog and To Do.
+- [ ] Board, "+ Add" in the In Progress or Done column. Expect: the dialog starts on To Do. "+ Add" in Backlog starts on Backlog.
+- [ ] Ask Viva to create a ticket "in progress". Expect: the ticket is created in To Do.
+- [ ] Create space, and Create project with a new space. Expect: no colour swatches; an icon grid only.
+- [ ] Sidebar, board header, summary, filters, calendar, projects, For you, sprint planning. Expect: every space tile and chip uses the colours of the theme; no space has a colour of its own.
+- [ ] Edit an existing space and save. Expect: nothing about its look changes.
 
 ---
 

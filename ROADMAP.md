@@ -159,6 +159,9 @@ Phase 3's real invites are designed on top of this foundation, not before it.
 
 ---
 
+### Decided 13 November 2026, to build with the roles of Phase 7
+- Today every new ticket starts in Backlog or To Do. With roles: admins and managers may create a ticket in any status; other members move a ticket one status at a time. Needs a short design first (which roles, whether moving backwards is allowed).
+
 ## Cross-cutting, any phase
 
 - Accessibility: focus rings, aria labels on icon buttons, dark-mode contrast. (Reduced motion is respected by every animation.)

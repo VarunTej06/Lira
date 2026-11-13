@@ -1,4 +1,5 @@
-import type { ActivityEntry, Issue, IssueType } from '../../../types/issue';
+import type { ActivityEntry, Issue, IssueType, LinkedIssue } from '../../../types/issue';
+import { withLink, withoutLink, type LinkType } from '../../../utils/ticketLinks';
 import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
 import { v4 as uuidv4 } from 'uuid';
 import { currentUser } from '../../../utils/currentUser';
@@ -27,6 +28,21 @@ export function withBlockers(prev: Issue, ids: number[]): Issue {
   const others = safeArr(prev.linkedIssues).filter(l => l.linkType !== 'blocked_by');
   if (unique.length === 0) return { ...prev, blocked: false, blockedByIds: [], blockedAt: undefined, linkedIssues: others };
   return { ...prev, blocked: true, blockedByIds: unique, blockedAt: prev.blocked && prev.blockedAt ? prev.blockedAt : new Date().toISOString(), linkedIssues: [...others, ...unique.map(id => ({ id: uuidv4(), issueId: id, linkType: 'blocked_by' as const }))] };
+}
+
+const blockerIds = (t: Issue) => (t.blocked ? t.blockedByIds ?? [] : []);
+
+/** The draft with these links added. "Is blocked by" is the Blocked switch, so it goes through the same door. */
+export function withLinks(prev: Issue, picks: { issueId: number; linkType: LinkType }[]): Issue {
+  return picks.reduce<Issue>((t, p) => (p.issueId === t.id ? t
+    : p.linkType === 'blocked_by' ? withBlockers(t, [...blockerIds(t), p.issueId])
+    : { ...t, linkedIssues: withLink(t.linkedIssues, p.issueId, p.linkType) }), prev);
+}
+
+/** The draft without one link. Removing an "is blocked by" link unblocks the ticket from that one. */
+export function withoutLinkTo(prev: Issue, link: Pick<LinkedIssue, 'issueId' | 'linkType'>): Issue {
+  if (link.linkType === 'blocked_by') return withBlockers(prev, blockerIds(prev).filter(id => id !== link.issueId));
+  return { ...prev, linkedIssues: withoutLink(prev.linkedIssues, link.issueId, link.linkType) };
 }
 
 /** The fields changed by switching the type, including the history entry. (Whether to detach children is decided by the caller.) */

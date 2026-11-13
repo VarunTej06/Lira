@@ -1,3 +1,4 @@
+import { newTicketStatus } from '../../utils/newIssue';
 import { descriptionToText } from '../../utils/richText';
 import { createIssue, updateIssue, getNextIssueKey } from '../../hooks/useIssues';
 import { v4 as uuidv4 } from 'uuid';
@@ -194,7 +195,7 @@ export async function handleCreateIssue(c: AgentContext): Promise<ChatMessage | 
     if (spaceToUse && spaceToUse.id) {
       const key = await getNextIssueKey(spaceToUse.key);
       const priority = priorityFromText(q);
-      const status = statusFromText(q);
+      const status = newTicketStatus(statusFromText(q)); // a new ticket starts in Backlog or To Do, whoever creates it
 
       const newIssue: Omit<Issue, 'id'> = {
         spaceId: spaceToUse.id,

@@ -1,3 +1,5 @@
+import { PALETTE } from '../theme/palette';
+
 /**
  * The icon of a space. It is saved as a short name ('rocket') and drawn by components/common/SpaceIcon.
  * Spaces made before 13 Nov 2026 saved an emoji instead: those are shown as the matching icon, and nothing that is
@@ -27,3 +29,9 @@ export function spaceIconKey(saved: string | null | undefined): SpaceIconKey {
   if (KEYS.has(value)) return value as SpaceIconKey;
   return LEGACY_EMOJI.get(value) ?? DEFAULT_SPACE_ICON;
 }
+
+/**
+ * Spaces no longer have a colour of their own: their tiles use the colours of the theme. A space still saves a colour,
+ * so that backups and older versions keep working; a new space gets this neutral one.
+ */
+export const SPACE_COLOR = PALETTE.textMuted;

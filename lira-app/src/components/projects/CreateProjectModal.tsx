@@ -1,3 +1,4 @@
+import { SPACE_COLOR } from '../../utils/spaceIcon';
 import { SpaceIconPicker } from '../common/SpaceIcon';
 import React, { useState, type ReactNode } from 'react';
 import { Modal } from '../common/Modal';
@@ -9,7 +10,6 @@ import { writeProjects } from '../../hooks/useProjects';
 import { createSpace } from '../../hooks/useSpaces';
 import { cleanProjectKey, suggestProjectKey } from '../../utils/projectKey';
 import { useResetWhen } from '../../hooks/useResetWhen';
-import { PALETTE } from '../../theme/palette';
 import { appStorage } from '../../utils/appStorage';
 
 interface CreateProjectModalProps {
@@ -19,7 +19,6 @@ interface CreateProjectModalProps {
   onProjectCreated: (project: Project) => void;
 }
 
-const SPACE_COLORS = [PALETTE.brand, PALETTE.info, PALETTE.purple, PALETTE.success, PALETTE.danger, PALETTE.amber, PALETTE.orange, PALETTE.textStrong];
 const DEFAULT_LEAD = 'Varun Tej';
 
 const LABEL = 'block text-xs font-semibold text-lira-muted uppercase tracking-wider mb-1.5';
@@ -60,7 +59,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   const [associationType, setAssociationType] = useState<'existing' | 'new'>('existing');
   const [selectedSpaceId, setSelectedSpaceId] = useState<number>(() => spaces[0]?.id || 1);
   const [newSpaceIcon, setNewSpaceIcon] = useState<string>('rocket');
-  const [newSpaceColor, setNewSpaceColor] = useState(PALETTE.brand);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [savedToast, setSavedToast] = useState(false);
@@ -79,7 +77,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   const resetForm = () => {
     setName(''); setKey(''); setKeyEdited(false); setDescription(''); setLead(DEFAULT_LEAD);
     setAssociationType('existing'); setSelectedSpaceId(spaces[0]?.id || 1);
-    setNewSpaceIcon('rocket'); setNewSpaceColor(PALETTE.brand); setError('');
+    setNewSpaceIcon('rocket'); setError('');
   };
   const close = () => { resetForm(); onClose(); };
 
@@ -94,7 +92,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
       const projectKey = key.trim().toUpperCase();
       const spaceId = associationType === 'new'
         ? await createSpace({
-            name: name.trim(), key: projectKey, icon: newSpaceIcon, color: newSpaceColor,
+            name: name.trim(), key: projectKey, icon: newSpaceIcon, color: SPACE_COLOR,
             description: description.trim() || `Dedicated space for project ${name.trim()}`,
             createdAt: new Date(), updatedAt: new Date(),
           })
@@ -181,16 +179,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
               <div>
                 <label className="block text-xs text-lira-muted mb-1.5">Space Icon</label>
                 <SpaceIconPicker value={newSpaceIcon} onChange={setNewSpaceIcon} />
-              </div>
-              <div>
-                <label className="block text-xs text-lira-muted mb-1.5">Space Color Accent</label>
-                <div className="flex gap-2 flex-wrap items-center">
-                  {SPACE_COLORS.map(c => (
-                    <button key={c} type="button" onClick={() => setNewSpaceColor(c)} style={{ backgroundColor: c }} className={`w-6 h-6 rounded-full transition-all cursor-pointer flex items-center justify-center ${newSpaceColor === c ? 'ring-2 ring-offset-2 ring-lira-blue scale-110 shadow-xs' : 'hover:scale-105'}`}>
-                      {newSpaceColor === c && <Check className="w-3.5 h-3.5 text-white" />}
-                    </button>
-                  ))}
-                </div>
               </div>
             </div>
           )}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildNewIssue, type NewIssueInput } from './newIssue';
+import { NEW_TICKET_STATUSES, buildNewIssue, newTicketStatus, type NewIssueInput } from './newIssue';
 import { makeIssue } from '../test/factories';
 
 const base: NewIssueInput = {
@@ -33,5 +33,20 @@ describe('New ticket from the Create form', () => {
   it('reads the due date, or leaves it empty', () => {
     expect(buildNewIssue(base).dueDate).toBeUndefined();
     expect(buildNewIssue({ ...base, dueDate: '2026-12-01' }).dueDate).toEqual(new Date('2026-12-01'));
+  });
+});
+
+describe('Where a new ticket starts', () => {
+  it('offers Backlog and To Do only', () => {
+    expect(NEW_TICKET_STATUSES.map(s => s[0])).toEqual(['backlog', 'todo']);
+  });
+  it('is Backlog when asked for, and To Do for anything else', () => {
+    expect(newTicketStatus('backlog')).toBe('backlog');
+    for (const wanted of ['todo', 'inprogress', 'done', 'review', '', undefined]) expect(newTicketStatus(wanted)).toBe('todo');
+  });
+  it('holds for every ticket that is built, whatever status the caller passes', () => {
+    expect(buildNewIssue({ ...base, status: 'done' }).status).toBe('todo');
+    expect(buildNewIssue({ ...base, status: 'inprogress' }).status).toBe('todo');
+    expect(buildNewIssue({ ...base, status: 'backlog' }).status).toBe('backlog');
   });
 });

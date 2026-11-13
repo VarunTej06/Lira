@@ -46,13 +46,13 @@ describe('Viva AI agent: writing', () => {
     expect((await db.issues.where('key').equals('AP-10').first())!.subtasks.length).toBeGreaterThan(before)
   })
 
-  it('creates a ticket in the space named in the prompt, with the priority and status asked for', async () => {
+  it('creates a ticket in the space named in the prompt, with the priority asked for; a new ticket starts in To Do even when another status is asked for', async () => {
     const r = await ask('create a bug login crashes in Certifications with high priority in progress')
     expect(r.actionTaken?.type).toBe('created_issue')
     const created = (await db.issues.toArray()).find(i => i.key.startsWith('CERT-') && i.type === 'bug')!
     expect(created.title.toLowerCase()).toContain('login crashes')
     expect(created.priority).toBe('high')
-    expect(created.status).toBe('inprogress')
+    expect(created.status).toBe('todo')
     expect(created.spaceId).toBe(1)
     expect(created.key).toBe('CERT-3')
   })

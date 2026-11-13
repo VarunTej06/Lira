@@ -41,7 +41,7 @@ function SpaceButton({ space, active, starred, isHidden, isArchived, onSelect }:
         active ? 'text-white font-medium' : 'text-white/60 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
       }`}
     >
-      <div className="w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0" style={{ backgroundColor: space.color + '55' }}>
+      <div className="w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0 bg-white/10">
         <SpaceIcon icon={space.icon} className="w-3.5 h-3.5 text-white" />
       </div>
       <span className={`truncate font-medium flex-1 text-left ${nameClass(isHidden, isArchived)}`}>{space.name}</span>

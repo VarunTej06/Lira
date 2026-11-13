@@ -1,3 +1,5 @@
+import { propagateLabels } from '../../services/labelPropagation';
+import { endLabel } from '../../utils/labels';
 import { RichTextEditor } from '../common/richtext/RichTextEditor';
 import { DatePicker } from '../common/DatePicker';
 import { Zap } from 'lucide-react';
@@ -9,7 +11,7 @@ import { TicketSuggestions } from './TicketSuggestions';
 import type { Space } from '../../types/space';
 import { createIssue, getNextIssueKey, useIssuesBySpace } from '../../hooks/useIssues';
 import type { Priority, IssueType, Issue } from '../../types/issue';
-import { buildNewIssue } from '../../utils/newIssue';
+import { buildNewIssue, NEW_TICKET_STATUSES, newTicketStatus } from '../../utils/newIssue';
 import { currentSprintKey, sprintName } from '../../utils/sprintUtils';
 import { NO_ISSUES } from '../../utils/emptyLists';
 import { useResetWhen } from '../../hooks/useResetWhen';
@@ -47,7 +49,6 @@ const PRIORITIES: { value: Priority; label: string }[] = [
 const INPUT = 'w-full text-sm border border-lira-border rounded-lg px-3 focus:outline-none focus:border-lira-blue transition-all';
 const SELECT = 'w-full text-sm border border-lira-border rounded-xl px-3 py-2.5 focus:outline-none focus:border-lira-blue bg-white';
 const LABEL = 'block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide';
-const STATUSES = [['backlog', 'Backlog'], ['todo', 'To Do'], ['inprogress', 'In Progress'], ['done', 'Done']];
 
 const Field = ({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) => (
   <div>
@@ -142,7 +143,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   // The space is always chosen explicitly; it is pre-selected when the caller already has a space in context.
   const space = spaces.length > 0 ? spaces.find(s => s.id === pickedSpaceId) : spaceProp;
   const { title, setTitle, description, setDescription, attachments, setAttachments, type, setType, status, setStatus, parentId, setParentId,
-    priority, setPriority, dueDate, setDueDate, labels, setLabels, sprint, setSprint, error, setError, clearFields } = useCreateIssueFields(defaultStatus);
+    priority, setPriority, dueDate, setDueDate, labels, setLabels, sprint, setSprint, error, setError, clearFields } = useCreateIssueFields(newTicketStatus(defaultStatus));
   const openSprints = sprintsOpenTo(sprintChoices(defaultSprint), space?.id);
   const sprintValue = effectiveSprint(sprint, openSprints);
   const [loading, setLoading] = useState(false);
@@ -152,7 +153,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
   // Sync status when defaultStatus changes
   useResetWhen([isOpen, defaultStatus, defaultSprint, chooseSpace, spaceProp?.id], () => {
     if (isOpen) {
-      setStatus(defaultStatus);
+      setStatus(newTicketStatus(defaultStatus));
       setSprint(defaultSprint || currentSprintKey());
       setPickedSpaceId(chooseSpace ? undefined : spaceProp?.id);
       setParentId(undefined);
@@ -173,6 +174,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         sprint: sprintValue, parentId, attachments, spaceIssues,
       });
       await createIssue(newIssue);
+      if (parentId) await propagateLabels(parentId);
       onClose();
       resetForm();
     } catch {
@@ -220,7 +222,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <Field label="Status">
             <select value={status} onChange={e => setStatus(e.target.value)} className={`${INPUT} py-2.5 bg-white`}>
-              {STATUSES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+              {NEW_TICKET_STATUSES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
             </select>
           </Field>
           <Field label="Priority">
@@ -242,7 +244,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <Field label="Due Date"><DatePicker value={dueDate} onChange={setDueDate} placeholder="No due date" aria-label="Due date" /></Field>
           <Field label="Labels">
-            <input type="text" value={labels} onChange={e => setLabels(e.target.value)} placeholder="e.g. certification, aws" className={`${INPUT} py-2.5`} />
+            <input type="text" value={labels} onChange={e => setLabels(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); setLabels(endLabel(labels)); } }} placeholder="e.g. certification, aws" aria-label="Labels" className={`${INPUT} py-2.5`} />
             <p className="text-3xs text-lira-muted mt-1">Comma-separated</p>
           </Field>
         </div>

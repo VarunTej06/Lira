@@ -40,7 +40,7 @@ export function PlanningCard({ issue: i, side, space, showSpace, closed, outSpri
       <span className="text-2xs font-medium text-lira-muted flex-shrink-0">{i.key}</span>
       <span className="flex-1 min-w-0 text-sm text-lira-text truncate">{i.title}</span>
       {showSpace && space && (
-        <span className="text-3xs font-semibold px-1.5 py-0.5 rounded text-white flex-shrink-0" style={{ backgroundColor: space.color }}>{space.key}</span>
+        <span className="text-3xs font-semibold px-1.5 py-0.5 rounded bg-gray-200 text-gray-800 flex-shrink-0">{space.key}</span>
       )}
       {side === 'backlog' && i.status !== 'backlog' && <SprintChip sprint={getIssueSprint(i)} />}
       <span className="text-3xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0" style={{ color: st.color, backgroundColor: st.bg }}>{st.label}</span>

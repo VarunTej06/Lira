@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canBeParent } from './hierarchy';
+import { canBeParent, childTypeOf } from './hierarchy';
 
 const t = (id: number, type: 'epic' | 'task' | 'bug' | 'subtask') => ({ id, type });
 
@@ -21,5 +21,17 @@ describe('Ticket hierarchy', () => {
   it('an epic has no parent, and nothing is its own parent', () => {
     expect(canBeParent(t(1, 'epic'), t(2, 'epic'))).toBe(false);
     expect(canBeParent(t(1, 'task'), t(1, 'epic'))).toBe(false);
+  });
+});
+
+describe('The type one level down', () => {
+  it('is a task under an epic, a subtask under a task or a bug, and nothing under a subtask', () => {
+    expect(childTypeOf('epic')).toBe('task');
+    expect(childTypeOf('task')).toBe('subtask');
+    expect(childTypeOf('bug')).toBe('subtask');
+    expect(childTypeOf('subtask')).toBeUndefined();
+  });
+  it('always names a type that may sit under the parent', () => {
+    for (const type of ['epic', 'task', 'bug'] as const) expect(canBeParent({ id: 2, type: childTypeOf(type)! }, { id: 1, type })).toBe(true);
   });
 });

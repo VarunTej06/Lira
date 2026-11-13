@@ -8,13 +8,12 @@ import { StandupButton } from '../standup/StandupButton';
 import type { Space } from '../../types/space';
 import type { Issue } from '../../types/issue';
 import type { Project } from '../../types/project';
-import { PALETTE } from '../../theme/palette';
 
 /** The space the project belongs to as a coloured tag, or a note that it is not linked. */
 function SpaceTag({ space }: { space: Space | undefined }) {
   if (!space) return <span className="text-xs text-gray-400">Unlinked Space</span>;
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-2xs font-medium border" style={{ backgroundColor: space.color + '15', borderColor: space.color + '40', color: space.color }}>
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-2xs font-medium border border-lira-border bg-lira-blue-light text-lira-text">
       <SpaceIcon icon={space.icon} className="w-3 h-3" /><span>{space.name}</span>
     </span>
   );
@@ -47,7 +46,6 @@ function ProgressFooter({ total, done, percent }: ReturnType<typeof projectProgr
 export function ProjectCard({ project, spaces, issues, onOpen }: { project: Project; spaces: Space[]; issues: Issue[]; onOpen: (project: Project) => void }) {
   const space = spaces.find(s => s.id === project.spaceId) || spaces.find(s => s.key === project.key);
   const progress = projectProgress(projectIssues(project, issues));
-  const color = space?.color || PALETTE.brand;
 
   return (
     <div
@@ -57,7 +55,7 @@ export function ProjectCard({ project, spaces, issues, onOpen }: { project: Proj
       <div>
         <div className="flex items-start justify-between gap-3 mb-2.5">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-xs flex-shrink-0" style={{ backgroundColor: color + '20', color }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-xs flex-shrink-0 bg-lira-blue-light text-lira-blue">
               <SpaceIcon icon={space?.icon} className="w-5 h-5" />
             </div>
             <div>

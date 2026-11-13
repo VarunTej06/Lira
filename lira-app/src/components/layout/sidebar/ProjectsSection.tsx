@@ -3,7 +3,6 @@ import { confirmDialog } from '../../common/dialogStore';
 import { Trash2, FolderKanban } from 'lucide-react';
 import { RowMenuButton, ContextItem, SectionHeader, Collapsible } from './parts';
 import type { SidebarState } from './useSidebarState';
-import { PALETTE } from '../../../theme/palette';
 
 /** The Projects list. */
 export function ProjectsSection(s: SidebarState) {
@@ -39,9 +38,7 @@ export function ProjectsSection(s: SidebarState) {
                       }`}
                     >
                       <span
-                        className="w-5 h-5 rounded-md flex items-center justify-center text-4xs font-bold text-white flex-shrink-0"
-                        style={{ backgroundColor: space?.color || PALETTE.brand }}
-                      >
+                        className="w-5 h-5 rounded-md flex items-center justify-center text-4xs font-bold text-white bg-white/15 flex-shrink-0"                      >
                         {p.key.slice(0, 2)}
                       </span>
                       <span className="truncate flex-1">{p.name}</span>

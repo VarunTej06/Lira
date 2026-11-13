@@ -4,9 +4,8 @@ import { Button } from '../common/Button';
 import { createSpace, updateSpace } from '../../hooks/useSpaces';
 import type { Space } from '../../types/space';
 import { useResetWhen } from '../../hooks/useResetWhen';
-import { PALETTE } from '../../theme/palette';
 import { SpaceIcon, SpaceIconPicker } from '../common/SpaceIcon';
-import { DEFAULT_SPACE_ICON, spaceIconKey } from '../../utils/spaceIcon';
+import { DEFAULT_SPACE_ICON, SPACE_COLOR, spaceIconKey } from '../../utils/spaceIcon';
 
 interface CreateSpaceModalProps {
   isOpen: boolean;
@@ -16,7 +15,6 @@ interface CreateSpaceModalProps {
   onUpdated?: (space: Space) => void;
 }
 
-const SPACE_COLORS = [PALETTE.brand, PALETTE.info, PALETTE.purple, PALETTE.success, PALETTE.danger, PALETTE.amber, PALETTE.orange, PALETTE.textStrong];
 
 export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
   isOpen,
@@ -28,13 +26,12 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
   const [name, setName] = useState('');
   const [key, setKey] = useState('');
   const [icon, setIcon] = useState<string>(DEFAULT_SPACE_ICON);
-  const [color, setColor] = useState(PALETTE.brand);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const resetForm = () => {
-    setName(''); setKey(''); setIcon(DEFAULT_SPACE_ICON); setColor(PALETTE.brand); setDescription(''); setError('');
+    setName(''); setKey(''); setIcon(DEFAULT_SPACE_ICON); setDescription(''); setError('');
   };
 
   useResetWhen([isOpen, editingSpace], () => {
@@ -42,7 +39,6 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
       setName(editingSpace.name || '');
       setKey(editingSpace.key || '');
       setIcon(spaceIconKey(editingSpace.icon)); // an older emoji becomes its icon name on the next save
-      setColor(editingSpace.color || PALETTE.brand);
       setDescription(editingSpace.description || '');
       setError('');
     } else {
@@ -76,7 +72,6 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
           name: name.trim(),
           key: key.toUpperCase().trim(),
           icon,
-          color,
           description: description.trim(),
           updatedAt: now,
         });
@@ -85,7 +80,6 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
           name: name.trim(),
           key: key.toUpperCase().trim(),
           icon,
-          color,
           description: description.trim(),
           updatedAt: now,
         });
@@ -95,7 +89,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
           name: name.trim(),
           key: key.toUpperCase().trim(),
           icon,
-          color,
+          color: SPACE_COLOR,
           description: description.trim(),
           createdAt: now,
           updatedAt: now,
@@ -117,25 +111,9 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={() => { resetForm(); onClose(); }} title={modalTitle} size="md">
       <form onSubmit={handleSubmit} className="p-6 space-y-5">
-        {/* Icon & Color */}
         <div>
           <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Icon</label>
           <SpaceIconPicker value={icon} onChange={setIcon} />
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Color</label>
-          <div className="flex gap-2 flex-wrap">
-            {SPACE_COLORS.map(c => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setColor(c)}
-                className={`w-7 h-7 rounded-full transition-all ${color === c ? 'ring-2 ring-offset-2 ring-lira-blue scale-110' : 'hover:scale-105'}`}
-                style={{ backgroundColor: c }}
-              />
-            ))}
-          </div>
         </div>
 
         <div>
@@ -179,7 +157,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
 
         {/* Preview */}
         <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-lira-border">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: color + '22', color }}>
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl bg-lira-blue-light text-lira-blue">
             <SpaceIcon icon={icon} className="w-5 h-5" />
           </div>
           <div>

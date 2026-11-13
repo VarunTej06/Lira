@@ -13,9 +13,8 @@ export function SpaceHeader(s: ActionBarState) {
         <div className="flex items-center gap-3">
           {space && (
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-              style={{ backgroundColor: space.color + '22', color: space.color }}
-            >
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 bg-lira-blue-light text-lira-blue"
+                >
               <SpaceIcon icon={space.icon} className="w-5 h-5" />
             </div>
           )}

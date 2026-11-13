@@ -57,7 +57,7 @@ export interface Attachment {
 export interface LinkedIssue {
   id: string;
   issueId: number;
-  linkType: 'relates_to' | 'blocks' | 'blocked_by' | 'duplicates' | 'cloned_by';
+  linkType: 'relates_to' | 'blocks' | 'blocked_by' | 'duplicates' | 'duplicated_by' | 'cloned_by';
 }
 
 export interface Issue {
@@ -84,6 +84,8 @@ export interface Issue {
   dueDate?: Date;
   startDate?: Date;
   labels: string[];
+  /** Which of the labels came from the parent ticket (see utils/labels.ts). They follow the parent: removed there, removed here. */
+  inheritedLabels?: string[];
   subtasks: Subtask[];
   comments: Comment[];
   activity: ActivityEntry[];

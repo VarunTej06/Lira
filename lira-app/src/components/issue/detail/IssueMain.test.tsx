@@ -1,35 +1,53 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act } from 'react';
 import { byText, cleanup, click, mount, q, typeInto, wait } from '../../../test/render';
+import type { TicketPickerProps } from '../../common/TicketPicker';
 
-const dialog = vi.hoisted(() => vi.fn());
-vi.mock('../../common/dialogStore', () => ({ promptDialog: dialog }));
 vi.mock('../../common/CopyButton', () => ({ CopyButton: ({ getText }: { getText: () => string }) => <button data-testid="copy" onClick={() => document.body.setAttribute('data-copied', getText())}>copy</button> }));
 vi.mock('../../common/richtext/RichTextEditor', () => ({ RichTextEditor: ({ value }: { value: string }) => <div data-testid="editor">{value}</div> }));
 vi.mock('../IssueSubtasks', () => ({ IssueSubtasks: () => <div data-testid="subtasks" /> }));
 vi.mock('../IssueAttachments', () => ({ IssueAttachments: ({ fromComments }: { fromComments: unknown[] }) => <div data-testid="attachments">{fromComments.length}</div> }));
-vi.mock('../IssueActivityFeed', () => ({ IssueActivityFeed: () => <div data-testid="feed" /> }));
-vi.mock('../ChildIssues', () => ({ ChildIssues: ({ onCreateChild }: { onCreateChild: (t: string, ty: string) => void }) => <button data-testid="children" onClick={() => onCreateChild('x', 'task')}>children</button> }));
+vi.mock('../IssueActivityFeed', () => ({ IssueActivityFeed: ({ draft }: { draft: { html: string } }) => <div data-testid="feed">{draft.html}</div> }));
+vi.mock('../ChildIssues', () => ({ ChildIssues: ({ childIssues }: { childIssues: unknown[] }) => <div data-testid="children">{childIssues.length}</div> }));
+vi.mock('../LinkedIssues', () => ({ LinkedIssues: ({ links, onRemove }: { links: unknown[]; onRemove: (l: unknown) => void }) => <button data-testid="links" onClick={() => onRemove(links[0])}>{links.length}</button> }));
+// The picker itself is tested in TicketPicker.test.tsx; here it only shows what it was given and passes choices back
+vi.mock('../../common/TicketPicker', () => ({
+  TicketPicker: (p: TicketPickerProps) => (p.open ? (
+    <div data-testid={`${p.testId}-picker`} data-candidates={p.candidates.map(c => c.key).join(',')} data-relations={(p.relations ?? []).map(r => r.value).join(',')}>
+      <span data-testid="picker-title">{p.title}</span>
+      {p.create && <button data-testid="create" onClick={() => p.create!.onCreate('New one')}>{p.create.label}</button>}
+      <button data-testid="pick" onClick={() => p.onPick(p.candidates.slice(0, 2).map(issue => ({ issue, relation: p.relations?.[1]?.value })))}>pick</button>
+      <button data-testid="close" onClick={p.onClose}>close</button>
+    </div>
+  ) : null),
+}));
 
 import { IssueMain } from './IssueMain';
 import type { IssueDetailState } from './useIssueDetail';
 
 afterEach(cleanup);
 
+const ticket = (id: number, type: string, over: Record<string, unknown> = {}) => ({ id, key: `AAA-${id}`, title: `T${id}`, type, status: 'todo', spaceId: 1, ...over });
+const SPACE = [ticket(1, 'epic'), ticket(2, 'task'), ticket(3, 'task', { parentId: 1 }), ticket(4, 'subtask'), ticket(5, 'bug'), ticket(6, 'task', { status: 'done' })];
+const EVERY = [...SPACE, ticket(20, 'task', { spaceId: 2 })];
+
 function show(over: Record<string, unknown> = {}, local: Record<string, unknown> = {}) {
   const h = {
     setEditingTitle: vi.fn(), setTitleVal: vi.fn(), setDescVal: vi.fn(), setDescCollapsed: vi.fn(), setAttCollapsed: vi.fn(), setChildCollapsed: vi.fn(),
     patch: vi.fn(), handleTitleSave: vi.fn(), handleAddComment: vi.fn(), handleEditComment: vi.fn(), handleCreateChildIssue: vi.fn(), onNavigateToIssue: vi.fn(),
+    handleAdoptChildren: vi.fn(), handleAddLinks: vi.fn(), handleRemoveLink: vi.fn(), setCommentDraft: vi.fn(),
   };
   const state = {
-    local: { type: 'task', title: 'Fix login', comments: [], attachments: [], subtasks: [], activity: [], ...local }, issue: { title: 'Fix login' },
+    local: { id: 1, key: 'AAA-1', spaceId: 1, type: 'task', title: 'Fix login', comments: [], attachments: [], subtasks: [], activity: [], linkedIssues: [], ...local }, issue: { title: 'Fix login' },
     editingTitle: false, titleVal: 'Fix login', descVal: 'hello', descCollapsed: false, attCollapsed: false, childCollapsed: false,
-    childIssues: [], resolvedParent: null, childCount: 0, doneChildCount: 0, childProgress: 0, ...h, ...over,
+    childIssues: [], resolvedParent: null, childCount: 0, doneChildCount: 0, childProgress: 0, spaceIssues: SPACE, everyIssue: EVERY,
+    commentDraft: { html: '', files: [] }, ...h, ...over,
   } as unknown as IssueDetailState;
   mount(<IssueMain {...state} />);
   return h;
 }
 const btn = (t: string | RegExp) => byText('button', t)!;
+const candidates = (id: string) => q(`[data-testid="${id}-picker"]`)!.getAttribute('data-candidates');
 
 describe('IssueMain', () => {
   describe('title', () => {
@@ -52,30 +70,69 @@ describe('IssueMain', () => {
     });
   });
 
-  describe('quick actions', () => {
-    it('adds a child task to an epic and a subtask to a task, after asking for a title', async () => {
-      dialog.mockResolvedValueOnce('Do it');
-      const h = show({}, { type: 'epic' });
-      await click(btn(/Child issue/));
-      expect(dialog).toHaveBeenLastCalledWith(expect.objectContaining({ title: 'New task' }));
-      expect(h.handleCreateChildIssue).toHaveBeenCalledWith('Do it', 'task');
-      cleanup();
-      dialog.mockResolvedValueOnce('Step');
-      const h2 = show({}, { type: 'task' });
-      await click(btn(/Child issue/));
-      expect(dialog).toHaveBeenLastCalledWith(expect.objectContaining({ title: 'New subtask' }));
-      expect(h2.handleCreateChildIssue).toHaveBeenCalledWith('Step', 'subtask');
+  describe('Child issue', () => {
+    it('opens a picker; on an epic it offers the other tasks of the space, not ones already under it, itself or other types', async () => {
+      show({}, { type: 'epic' });
+      expect(q('[data-testid="child-picker"]')).toBeNull();
+      await click(btn('Child issue'));
+      expect(candidates('child')).toBe('AAA-2,AAA-6'); // AAA-3 is already its child; tickets of any status are offered
     });
-    it('creates nothing when the title is cancelled', async () => {
-      dialog.mockResolvedValueOnce(null);
-      const h = show();
-      await click(btn(/Child issue/));
-      expect(h.handleCreateChildIssue).not.toHaveBeenCalled();
+    it('on a task or a bug it offers subtasks', async () => {
+      show({}, { id: 2, type: 'task' });
+      await click(btn('Child issue'));
+      expect(candidates('child')).toBe('AAA-4');
+      cleanup();
+      show({}, { id: 5, type: 'bug' });
+      await click(btn('Child issue'));
+      expect(candidates('child')).toBe('AAA-4');
+    });
+    it('creates a new child one level down from only a name: a task under an epic, a subtask under a task', async () => {
+      const h = show({}, { type: 'epic' });
+      await click(btn('Child issue'));
+      expect(q('[data-testid="create"]')!.textContent).toBe('Create task');
+      await click(q('[data-testid="create"]'));
+      expect(h.handleCreateChildIssue).toHaveBeenCalledWith('New one', 'task');
+      expect(q('[data-testid="child-picker"]')).toBeNull(); // it closes
+      cleanup();
+      const h2 = show({}, { id: 2, type: 'task' });
+      await click(btn('Child issue'));
+      await click(q('[data-testid="create"]'));
+      expect(h2.handleCreateChildIssue).toHaveBeenCalledWith('New one', 'subtask');
+    });
+    it('puts the chosen existing tickets under this one and closes', async () => {
+      const h = show({}, { type: 'epic' });
+      await click(btn('Child issue'));
+      await click(q('[data-testid="pick"]'));
+      expect(h.handleAdoptChildren).toHaveBeenCalledWith([SPACE[1], SPACE[5]]);
+      expect(q('[data-testid="child-picker"]')).toBeNull();
     });
     it('has no child button on a subtask, but still has Link issue', () => {
       show({}, { type: 'subtask' });
-      expect(byText('button', /Child issue/)).toBeUndefined();
-      expect(btn(/Link issue/)).toBeDefined();
+      expect(byText('button', 'Child issue')).toBeUndefined();
+      expect(btn('Link issue')).toBeDefined();
+    });
+  });
+
+  describe('Link issue', () => {
+    it('opens a picker with every other ticket (any type, status or space) and the four relations', async () => {
+      show();
+      await click(btn('Link issue'));
+      expect(candidates('link')).toBe('AAA-2,AAA-3,AAA-4,AAA-5,AAA-6,AAA-20');
+      expect(q('[data-testid="link-picker"]')!.getAttribute('data-relations')).toBe('relates_to,blocks,blocked_by,duplicates');
+    });
+    it('adds each chosen ticket with its relation to the draft and closes', async () => {
+      const h = show();
+      await click(btn('Link issue'));
+      await click(q('[data-testid="pick"]'));
+      expect(h.handleAddLinks).toHaveBeenCalledWith([{ issueId: 2, linkType: 'blocks' }, { issueId: 3, linkType: 'blocks' }]);
+      expect(q('[data-testid="link-picker"]')).toBeNull();
+    });
+    it('closes without linking anything', async () => {
+      const h = show();
+      await click(btn('Link issue'));
+      await click(q('[data-testid="close"]'));
+      expect(q('[data-testid="link-picker"]')).toBeNull();
+      expect(h.handleAddLinks).not.toHaveBeenCalled();
     });
   });
 
@@ -132,29 +189,32 @@ describe('IssueMain', () => {
     });
   });
 
-  describe('child work items', () => {
-    it('shows for epics and tasks only', () => {
-      show({}, { type: 'epic' });
-      expect(btn(/Child work items/)).toBeDefined();
-      cleanup();
-      show({}, { type: 'task' });
-      expect(btn(/Child work items/)).toBeDefined();
-      cleanup();
-      show({}, { type: 'bug' });
-      expect(byText('button', /Child work items/)).toBeUndefined();
+  describe('child issues section', () => {
+    it('sits right below the attachments, for every type that can have children, also with no children yet', () => {
+      for (const type of ['epic', 'task', 'bug']) {
+        show({}, { type });
+        const section = q('[data-testid="child-section"]')!;
+        expect(section, type).not.toBeNull();
+        expect(section.previousElementSibling!.textContent).toContain('Attachments');
+        expect(q('[data-testid="children"]')!.textContent).toBe('0');
+        cleanup();
+      }
+      show({}, { type: 'subtask' });
+      expect(q('[data-testid="child-section"]')).toBeNull();
     });
     it('shows done of total and a progress bar when there are children', () => {
-      show({ childCount: 4, doneChildCount: 1, childProgress: 25 });
-      expect(btn(/Child work items/).textContent).toContain('(1/4 done)');
+      show({ childCount: 4, doneChildCount: 1, childProgress: 25, childIssues: [{}, {}, {}, {}] });
+      expect(btn(/Child issues/).textContent).toContain('(1/4 done)');
       expect(document.body.textContent).toContain('25% Done');
       expect(q('.bg-lira-green')!.getAttribute('style')).toContain('width: 25%');
+      expect(q('[data-testid="children"]')!.textContent).toBe('4');
     });
-    it('shows no progress without children, collapses, and passes child creation on', async () => {
+    it('shows no progress without children, collapses, and its Add button opens the child picker', async () => {
       const h = show();
       expect(document.body.textContent).not.toContain('% Done');
-      await click(q('[data-testid="children"]'));
-      expect(h.handleCreateChildIssue).toHaveBeenCalledWith('x', 'task');
-      await click(btn(/Child work items/));
+      await click(btn('Add child issue'));
+      expect(q('[data-testid="child-picker"]')).not.toBeNull();
+      await click(btn(/^Child issues/));
       expect(h.setChildCollapsed).toHaveBeenCalled();
       cleanup();
       show({ childCollapsed: true });
@@ -162,10 +222,29 @@ describe('IssueMain', () => {
     });
   });
 
-  it('shows the checklist for tasks only, and always the activity feed', () => {
-    show({}, { type: 'task' });
+  describe('linked issues section', () => {
+    it('is always shown, with the number of links', () => {
+      show({}, { type: 'subtask' });
+      expect(q('[data-testid="linked-section"]')!.textContent).toContain('Linked issues');
+      expect(q('[data-testid="links"]')!.textContent).toBe('0');
+      cleanup();
+      show({}, { linkedIssues: [{ id: 'a', issueId: 2, linkType: 'blocks' }, { id: 'b', issueId: 3, linkType: 'relates_to' }] });
+      expect(q('[data-testid="linked-section"] h3')!.textContent).toContain('(2)');
+    });
+    it('removes a link from the draft, and its button opens the link picker', async () => {
+      const link = { id: 'a', issueId: 2, linkType: 'blocks' };
+      const h = show({}, { linkedIssues: [link] });
+      await click(q('[data-testid="links"]'));
+      expect(h.handleRemoveLink).toHaveBeenCalledWith(link);
+      await click(q('[data-testid="linked-section"] button:last-of-type'));
+      expect(q('[data-testid="link-picker"]')).not.toBeNull();
+    });
+  });
+
+  it('shows the checklist for tasks only, and always the activity feed with the comment being written', () => {
+    show({ commentDraft: { html: 'half a thought', files: [] } }, { type: 'task' });
     expect(q('[data-testid="subtasks"]')).not.toBeNull();
-    expect(q('[data-testid="feed"]')).not.toBeNull();
+    expect(q('[data-testid="feed"]')!.textContent).toBe('half a thought');
     cleanup();
     show({}, { type: 'epic' });
     expect(q('[data-testid="subtasks"]')).toBeNull();

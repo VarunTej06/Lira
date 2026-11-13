@@ -7,7 +7,6 @@ import type { Space } from '../../types/space';
 import { formatDateKey, monthGrid } from '../../utils/calendarGrid';
 import { useCalendarDrag } from './useCalendarDrag';
 import { currentTime } from '../../utils/clock';
-import { PALETTE } from '../../theme/palette';
 import { dayNumberTone, dayTone } from './calendarTones';
 import { IssueChip, MoreToggle, UnscheduledChip } from './CalendarParts';
 
@@ -124,9 +123,8 @@ function UnscheduledTray({ drag, onSelect }: { drag: Drag; onSelect: (issue: Iss
 }
 
 function SpaceChip({ space }: { space: Space }) {
-  const color = space.color || PALETTE.brand;
   return (
-    <span className="text-xs px-2 py-0.5 rounded-md font-medium flex items-center gap-1" style={{ backgroundColor: color + '22', color }}>
+    <span className="text-xs px-2 py-0.5 rounded-md font-medium flex items-center gap-1 bg-lira-blue-light text-lira-blue">
       <SpaceIcon icon={space.icon} className="w-3 h-3" /><span>{space.name}</span>
     </span>
   );

@@ -90,21 +90,26 @@ export const DialogHost: React.FC = () => {
 
               {req.kind === 'prompt' && <PromptField req={req} text={text} onChange={setText} inputRef={inputRef} />}
 
-              <div className="flex justify-end gap-2 pt-1">
+              <div className="flex flex-wrap justify-end gap-2 pt-1">
                 {req.kind !== 'alert' && (
                   <button
                     type="button"
                     onClick={() => finish(req, dismissAnswer(req))}
-                    className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer"
+                    className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer whitespace-nowrap"
                   >
                     {req.cancelLabel ?? 'Cancel'}
+                  </button>
+                )}
+                {req.kind === 'choose' && (
+                  <button type="button" onClick={() => finish(req, 'alt')} data-testid="dialog-alt" className="px-4 py-2 text-sm font-semibold rounded-lg border border-lira-border text-lira-text hover:bg-gray-50 cursor-pointer whitespace-nowrap">
+                    {req.altLabel}
                   </button>
                 )}
                 <button
                   ref={confirmRef}
                   type="submit"
                   disabled={blocked}
-                  className={`px-4 py-2 text-sm font-semibold rounded-lg shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg shadow-xs whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                     tone === 'danger' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue'
                   }`}
                 >

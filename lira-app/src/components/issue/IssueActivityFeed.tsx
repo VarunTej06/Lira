@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { Avatar } from '../common/Avatar';
 import { formatRelativeDate, formatDayDateTime } from '../../utils/dateUtils';
 import type { Comment, ActivityEntry, Attachment } from '../../types/issue';
-import { v4 as uuidv4 } from 'uuid';
 import { Send, Pencil } from 'lucide-react';
 import { RichTextEditor } from '../common/richtext/RichTextEditor';
 import { CopyButton } from '../common/CopyButton';
 import { descriptionToText } from '../../utils/richText';
-import { isOwnComment, hasCommentContent } from './commentUtils';
+import { isOwnComment, hasCommentContent, newComment, NO_COMMENT_DRAFT, type CommentDraft } from './commentUtils';
 import { currentUser } from '../../utils/currentUser';
 
 interface IssueActivityFeedProps {
@@ -16,14 +15,18 @@ interface IssueActivityFeedProps {
   onAddComment: (comment: Comment) => void;
   /** Changes a comment. Only the person who wrote it can do this. */
   onEditComment?: (id: string, content: string, attachments: Attachment[]) => void;
+  /** The comment being written. It is kept by the ticket popup so that Save changes can ask about it. */
+  draft: CommentDraft;
+  onDraftChange: (draft: CommentDraft) => void;
 }
 
 type ViewTab = 'all' | 'comments' | 'history';
 
-export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, activity, onAddComment, onEditComment }) => {
+export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, activity, onAddComment, onEditComment, draft: commentDraft, onDraftChange }) => {
   const [activeTab, setActiveTab] = useState<ViewTab>('all');
-  const [draft, setDraft] = useState('');
-  const [draftFiles, setDraftFiles] = useState<Attachment[]>([]);
+  const { html: draft, files: draftFiles } = commentDraft;
+  const setDraft = (html: string) => onDraftChange({ html, files: draftFiles });
+  const setDraftFiles = (files: Attachment[]) => onDraftChange({ html: draft, files });
   const [focused, setFocused] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
@@ -31,12 +34,11 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
 
   const QUICK_CHIPS = ['Status update...', 'Thanks!', 'Agree!', 'Will fix ASAP'];
 
-  const reset = () => { setDraft(''); setDraftFiles([]); setFocused(false); };
+  const reset = () => { onDraftChange(NO_COMMENT_DRAFT); setFocused(false); };
 
   const handleSubmit = () => {
     if (!hasCommentContent(draft, draftFiles)) return;
-    const me = currentUser();
-    onAddComment({ id: uuidv4(), author: me.initials, authorInitials: me.initials, content: draft, attachments: draftFiles, createdAt: new Date() });
+    onAddComment(newComment(commentDraft));
     reset();
   };
 
@@ -116,10 +118,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
                 ariaLabel="Add a comment"
                 onSubmit={handleSubmit}
               />
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-3xs text-lira-muted">
-                  Paste a screenshot anywhere in the text, or use the paperclip. <kbd className="px-1 py-0.5 bg-gray-100 rounded text-3xs font-mono">Ctrl+Enter</kbd> to post
-                </span>
+              <div className="flex items-center justify-end pt-2">
                 <div className="flex gap-2">
                   <button onClick={reset} className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded cursor-pointer">Cancel</button>
                   <button

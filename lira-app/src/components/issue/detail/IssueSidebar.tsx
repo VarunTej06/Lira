@@ -1,3 +1,4 @@
+import { addLabels } from '../../../utils/labels';
 import { DatePicker } from '../../common/DatePicker';
 import { AlertTriangle, Settings, Clock, Tag, Calendar, CheckSquare, Layers, Save, Users } from 'lucide-react';
 import type { Priority, IssueType } from '../../../types/issue';
@@ -37,13 +38,15 @@ export function IssueSidebar(s: IssueDetailState) {
           </DetailRow>
           <DetailRow icon={icon(Tag)} label="Labels">
             <div className="flex flex-wrap gap-1">
-              {safeArr(local.labels).map(label => (
+              {safeArr(local.labels).map(label => (safeArr(local.inheritedLabels).includes(label) ? (
+                <span key={label} title="From the parent ticket: remove it there" data-inherited className="px-1.5 py-0.5 text-xs border border-dashed border-lira-border text-lira-muted rounded-full font-medium">{label}</span>
+              ) : (
                 <span key={label} className="flex items-center gap-1 px-1.5 py-0.5 text-xs bg-lira-blue-light text-lira-text rounded-full font-medium">
                   {label}
-                  <button onClick={() => patch({ labels: local.labels!.filter(l => l !== label) })} className="hover:text-red-500">×</button>
+                  <button onClick={() => patch({ labels: local.labels!.filter(l => l !== label) })} aria-label={`Remove ${label}`} className="hover:text-red-500">×</button>
                 </span>
-              ))}
-              <LabelAdder onAdd={l => patch({ labels: [...safeArr(local.labels), l] })} />
+              )))}
+              <LabelAdder onAdd={typed => patch({ labels: addLabels(local.labels, typed) })} />
             </div>
           </DetailRow>
           {(local.timeEstimate || local.timeLogged) && (

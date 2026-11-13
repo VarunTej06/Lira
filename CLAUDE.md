@@ -32,7 +32,7 @@ These are the owner's own standing requirements; they apply to every change.
 
 | Check | Command |
 |---|---|
-| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 1622 tests, data health) |
+| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 1722 tests, data health) |
 | Types | `npx tsc -b` |
 | Lint | `npm run lint` (must report 0 warnings) |
 | Tests | `npm test` (single file: `npx vitest run path/to/file.test.ts`) |
@@ -90,7 +90,7 @@ These are the habits that took the slop score from 36 to 26. Follow them for eve
 
 - **Characterise, then change.** Before restructuring a component or function, write tests that pin what it does today and run them on the original. Refactor. Run the *same* tests again. Never change a test to make a refactor pass.
 - **Split by meaning, not by size.** Replace repeated blocks with a table (`TABS`, `COMPARERS`, `HEADERS`) and long `if/else` chains with a lookup or a small pure function in `utils/`. Move JSX into named subcomponents without changing it.
-- **One home per idea.** Before adding a hook or helper, search `hooks/`, `utils/` and `components/common/`. Shared seams: `useResetWhen`, `useLatest`, `useDismiss`, `appStorage`, `clock`, `NO_ISSUES`, `palette`, `filterPlacement`, `dialogStore`, `SpaceIcon` (with `utils/spaceIcon.ts`), `appVersion`.
+- **One home per idea.** Before adding a hook or helper, search `hooks/`, `utils/` and `components/common/`. Shared seams: `useResetWhen`, `useLatest`, `useDismiss`, `appStorage`, `clock`, `NO_ISSUES`, `palette`, `filterPlacement`, `dialogStore`, `SpaceIcon` (with `utils/spaceIcon.ts`), `appVersion`, `TicketPicker`, `isEditable`, `labels`, `ticketLinks`.
 - **No padding.** No wrapper that only forwards, no option nobody asked for, no comment that repeats the code, no commented-out code. If it fits in 10 to 20 lines, write it in 10 to 20 lines.
 - **Ratchets only go down.** Complexity, suppression count (`hygiene.test.ts`), `any`, hard-coded hex/sizes and warning count may fall, never rise. If you remove a suppression, lower the cap in the same change.
 - **Fix the cause.** A lint warning is fixed in the logic (derive state, reset on key, use the hook), not silenced.

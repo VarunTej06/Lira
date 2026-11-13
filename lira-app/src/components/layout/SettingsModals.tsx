@@ -5,7 +5,6 @@ import { TypeIcon } from '../common/Icons';
 import React, { useState } from 'react';
 import { Modal } from '../common/Modal';
 import type { Space } from '../../types/space';
-import { PALETTE } from '../../theme/palette';
 import { appStorage } from '../../utils/appStorage';
 import { APP_VERSION } from '../../utils/appVersion';
 
@@ -151,9 +150,7 @@ export const ManageSpacesModal: React.FC<{
             <div key={s.id} className="p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-3">
                 <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-2xs"
-                  style={{ backgroundColor: (s.color || PALETTE.brand) + '22', color: s.color || PALETTE.brand }}
-                >
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-2xs bg-lira-blue-light text-lira-blue"                >
                   <SpaceIcon icon={s.icon} className="w-5 h-5" />
                 </div>
                 <div>

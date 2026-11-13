@@ -1,10 +1,13 @@
-import { useCallback } from 'react';
-import type { Issue, IssueType } from '../../../types/issue';
+import { useCallback, useState } from 'react';
+import type { Issue, IssueType, LinkedIssue } from '../../../types/issue';
+import type { LinkType } from '../../../utils/ticketLinks';
+import { hasCommentContent, newComment, NO_COMMENT_DRAFT, type CommentDraft } from '../commentUtils';
+import { useResetWhen } from '../../../hooks/useResetWhen';
 import { notifySaved } from '../../common/savedToastStore';
 
 import { deleteIssue, useChildIssues, useIssue, useIssuesBySpace, useAllIssues } from '../../../hooks/useIssues';
-import { confirmDialog, alertDialog } from '../../common/dialogStore';
-import { commitTicket, createChildOf } from './ticketWrites';
+import { confirmDialog, alertDialog, chooseDialog } from '../../common/dialogStore';
+import { adoptChildren, commitTicket, createChildOf } from './ticketWrites';
 import { useDetailMenus } from './useDetailMenus';
 import { useIssueDraft } from './useIssueDraft';
 
@@ -12,7 +15,7 @@ import { NO_ISSUES } from '../../../utils/emptyLists';
 
 import { useCloseGuard } from './useCloseGuard';
 import { useCommentActions } from './useCommentActions';
-import { childStats, lookFor, relatedTickets, isDirty, parentFields, typeChangeFields, withBlockers } from './ticketDraft';
+import { childStats, lookFor, relatedTickets, isDirty, parentFields, typeChangeFields, withBlockers, withLinks, withoutLinkTo } from './ticketDraft';
 
 export interface IssueDetailModalProps {
   issue: Issue | null;
@@ -42,8 +45,13 @@ export function useIssueDetail(props: IssueDetailModalProps) {
   // what blocks this ticket, what waits on it, and which tickets could be its parent (by the hierarchy)
   const { blockers, blocking, eligibleParents } = relatedTickets(local, everyIssue, spaceIssues);
 
-  // Has anything been changed since the ticket was opened?
-  const dirty = isDirty(issue, local, titleVal, descVal, detachChildren);
+  // A comment that is being written and not saved yet; another ticket starts with an empty box
+  const [commentDraft, setCommentDraft] = useState<CommentDraft>(NO_COMMENT_DRAFT);
+  useResetWhen([issue?.id], () => setCommentDraft(NO_COMMENT_DRAFT));
+  const unsentComment = hasCommentContent(commentDraft.html, commentDraft.files);
+
+  // Has anything been changed since the ticket was opened? An unsaved comment counts.
+  const dirty = isDirty(issue, local, titleVal, descVal, detachChildren) || unsentComment;
 
   // Closing (X, outside click, Escape) asks first when there are unsaved changes
   const { requestClose, dirtyRef } = useCloseGuard(dirty, onClose);
@@ -90,6 +98,8 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     setEditingTitle(false);
   }, [setEditingTitle]);
 
+  const { handleAddComment, handleEditComment } = useCommentActions(local, setLocal);
+
   const handleSaveChanges = useCallback(async () => {
     if (!local?.id) return;
     // nothing was changed: just close, and do not claim that something was saved
@@ -98,16 +108,36 @@ export function useIssueDetail(props: IssueDetailModalProps) {
       await alertDialog({ title: 'Title needed', message: 'The title cannot be empty.' });
       return;
     }
+    if (unsentComment) {
+      // The comment has its own Save button; do not lose it because the ticket's button was pressed instead
+      const answer = await chooseDialog({ title: 'Save your comment?', message: 'You wrote a comment and have not saved it. Save it with the ticket, or discard it?', confirmLabel: 'Save comment', altLabel: 'Discard comment', cancelLabel: 'Keep editing' });
+      if (answer === null) return;
+      if (answer === 'confirm') await handleAddComment(newComment(commentDraft));
+      setCommentDraft(NO_COMMENT_DRAFT);
+    }
     await commitTicket({ local, original: issue, title: titleVal, description: descVal, detachChildren, children: childIssues });
     notifySaved('Changes saved');
     onClose(); // saving closes the ticket
-  }, [local, issue, titleVal, descVal, detachChildren, childIssues, onClose, dirtyRef]);
+  }, [local, issue, titleVal, descVal, detachChildren, childIssues, onClose, dirtyRef, unsentComment, commentDraft, handleAddComment]);
 
-  const { handleAddComment, handleEditComment } = useCommentActions(local, setLocal);
 
   const handleCreateChildIssue = useCallback(async (title: string, type: IssueType) => {
     if (local) await createChildOf(local, title, type);
   }, [local]);
+
+  /** Puts existing tickets under this one. Like creating a child, this is saved at once. */
+  const handleAdoptChildren = useCallback(async (children: Issue[]) => {
+    if (local) await adoptChildren(local, children);
+  }, [local]);
+
+  /** Links are part of the draft: Save changes writes them and the other end of each. */
+  const handleAddLinks = useCallback((picks: { issueId: number; linkType: LinkType }[]) => {
+    setLocal(prev => (prev ? withLinks(prev, picks) : prev));
+  }, [setLocal]);
+
+  const handleRemoveLink = useCallback((link: LinkedIssue) => {
+    setLocal(prev => (prev ? withoutLinkTo(prev, link) : prev));
+  }, [setLocal]);
 
   const handleConfirmDelete = useCallback(async () => {
     if (!local?.id) return;
@@ -141,7 +171,13 @@ export function useIssueDetail(props: IssueDetailModalProps) {
     parentFromDb,
     resolvedParent,
     spaceIssues,
+    everyIssue,
     eligibleParents,
+    commentDraft,
+    setCommentDraft,
+    handleAdoptChildren,
+    handleAddLinks,
+    handleRemoveLink,
     patch,
     handleTypeChange,
     handleParentChange,

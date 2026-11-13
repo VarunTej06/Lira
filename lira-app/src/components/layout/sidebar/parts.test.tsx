@@ -22,11 +22,11 @@ describe('SpaceRow', () => {
     await click(q('button[data-menu-trigger]')!.previousElementSibling);
     expect(h.onSelect).toHaveBeenCalledWith(3);
   });
-  it('draws the space icon on a tile tinted with the space colour', () => {
+  it('draws the space icon on a plain tile: spaces have no colour of their own', () => {
     row();
-    const icon = qa('div').find(d => d.querySelector(':scope > svg[data-space-icon]') && d.getAttribute('style'))!;
-    expect(icon.getAttribute('style')).toContain('background-color');
-    expect(icon.getAttribute('style')).toContain('170, 85, 0');
+    const tile = qa('div').find(d => d.querySelector(':scope > svg[data-space-icon]'))!;
+    expect(tile).toBeDefined();
+    expect(tile.getAttribute('style')).toBeNull();
   });
   it('marks the open space', () => {
     row({ active: true });

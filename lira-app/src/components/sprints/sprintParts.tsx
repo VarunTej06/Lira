@@ -104,9 +104,7 @@ export const TicketRow: React.FC<TicketRowProps> = ({
       {issue.blocked && <span className="flex-shrink-0 px-1.5 py-0.5 text-3xs font-bold uppercase rounded" style={{ color: BLOCKED_META.color, backgroundColor: BLOCKED_META.bg }}>Blocked</span>}
       {showSpace && space && (
         <span
-          className="text-3xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0 text-white"
-          style={{ backgroundColor: space.color }}
-          title={space.name}
+          className="text-3xs font-semibold px-1.5 py-0.5 rounded flex-shrink-0 bg-gray-200 text-gray-800"          title={space.name}
         >
           {space.key}
         </span>

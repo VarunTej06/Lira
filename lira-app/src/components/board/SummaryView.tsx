@@ -12,7 +12,6 @@ import {
 } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
-import { PALETTE } from '../../theme/palette';
 
 interface SummaryViewProps {
   issues: Issue[];
@@ -52,9 +51,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
         <div className="flex items-center gap-4">
           {space && (
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold shadow-xs"
-              style={{ backgroundColor: (space.color || PALETTE.brand) + '22', color: space.color || PALETTE.brand }}
-            >
+              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold shadow-xs bg-lira-blue-light text-lira-blue"            >
               <SpaceIcon icon={space.icon} className="w-6 h-6" />
             </div>
           )}

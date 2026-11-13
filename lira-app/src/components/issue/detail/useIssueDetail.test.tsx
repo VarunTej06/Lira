@@ -8,6 +8,9 @@ const mocks = vi.hoisted(() => ({
   deleteIssue: vi.fn<(id: number) => Promise<void>>(async () => {}),
   createIssue: vi.fn<(issue: unknown) => Promise<number>>(async () => 1),
   syncBlockLinks: vi.fn<(...args: unknown[]) => Promise<void>>(async () => {}),
+  syncLinks: vi.fn<(...args: unknown[]) => Promise<void>>(async () => {}),
+  propagateLabels: vi.fn<(id: number) => Promise<void>>(async () => {}),
+  chooseDialog: vi.fn<(o: unknown) => Promise<'confirm' | 'alt' | null>>(async () => 'confirm'),
   confirmDialog: vi.fn<(o: unknown) => Promise<boolean>>(async () => true),
   alertDialog: vi.fn<(o: unknown) => Promise<void>>(async () => {}),
   notifySaved: vi.fn<(text?: string) => void>(),
@@ -22,8 +25,9 @@ vi.mock('../../../hooks/useIssues', () => ({
   useChildIssues: () => mocks.children, useIssue: () => undefined, useIssuesBySpace: () => mocks.spaceIssues, useAllIssues: () => mocks.all,
 }));
 vi.mock('../../../db/db', () => ({ db: { spaces: { get: async () => ({ id: 1, key: 'LIRA' }) } } }));
-vi.mock('./blockLinks', () => ({ syncBlockLinks: mocks.syncBlockLinks }));
-vi.mock('../../common/dialogStore', () => ({ confirmDialog: mocks.confirmDialog, alertDialog: mocks.alertDialog }));
+vi.mock('./blockLinks', () => ({ syncBlockLinks: mocks.syncBlockLinks, syncLinks: mocks.syncLinks }));
+vi.mock('../../../services/labelPropagation', () => ({ labelsUnder: async (t: { labels?: string[] }) => ({ labels: t.labels ?? [], inheritedLabels: [] }), propagateLabels: mocks.propagateLabels }));
+vi.mock('../../common/dialogStore', () => ({ confirmDialog: mocks.confirmDialog, alertDialog: mocks.alertDialog, chooseDialog: mocks.chooseDialog }));
 vi.mock('../../common/savedToastStore', () => ({ notifySaved: mocks.notifySaved }));
 
 import { useIssueDetail, type IssueDetailState } from './useIssueDetail';
@@ -312,7 +316,110 @@ describe('useIssueDetail', () => {
     });
   });
 
+  describe('a comment written but not saved', () => {
+    const write = () => run(() => state().setCommentDraft({ html: '<p>Half a thought</p>', files: [] }));
+    const savedComments = () => mocks.updateIssue.mock.calls.filter(c => 'comments' in (c[1] as object));
+
+    it('counts as an unsaved change, so closing asks first', async () => {
+      await open();
+      expect(state().dirty).toBe(false);
+      await write();
+      expect(state().dirty).toBe(true);
+    });
+
+    it('Save changes asks about it; "Save comment" saves the comment and the ticket, and closes', async () => {
+      const { onClose } = await open();
+      await write();
+      mocks.chooseDialog.mockResolvedValueOnce('confirm');
+      await run(() => state().handleSaveChanges());
+      expect(mocks.chooseDialog).toHaveBeenCalledWith(expect.objectContaining({ confirmLabel: 'Save comment', altLabel: 'Discard comment' }));
+      expect(savedComments()).toHaveLength(1);
+      expect((savedComments()[0][1] as { comments: Comment[] }).comments[0].content).toBe('<p>Half a thought</p>');
+      expect(mocks.notifySaved).toHaveBeenCalled();
+      expect(onClose).toHaveBeenCalled();
+    });
+
+    it('"Discard comment" saves the ticket without the comment, and closes', async () => {
+      const { onClose } = await open();
+      await run(() => state().patch({ priority: 'high' }));
+      await write();
+      mocks.chooseDialog.mockResolvedValueOnce('alt');
+      await run(() => state().handleSaveChanges());
+      expect(savedComments()).toHaveLength(0);
+      expect(mocks.updateIssue).toHaveBeenCalledWith(10, expect.objectContaining({ priority: 'high' }));
+      expect(onClose).toHaveBeenCalled();
+    });
+
+    it('dismissing the question saves nothing and keeps the ticket and the comment open', async () => {
+      const { onClose } = await open();
+      await write();
+      mocks.chooseDialog.mockResolvedValueOnce(null);
+      await run(() => state().handleSaveChanges());
+      expect(mocks.updateIssue).not.toHaveBeenCalled();
+      expect(onClose).not.toHaveBeenCalled();
+      expect(state().commentDraft.html).toBe('<p>Half a thought</p>');
+    });
+
+    it('is not asked about when there is no comment being written, or only an empty one', async () => {
+      await open();
+      await run(() => state().patch({ priority: 'high' }));
+      await run(() => state().setCommentDraft({ html: '<p>  </p>', files: [] }));
+      await run(() => state().handleSaveChanges());
+      expect(mocks.chooseDialog).not.toHaveBeenCalled();
+    });
+
+    it('starts empty again when another ticket is opened', async () => {
+      const { rerender } = await open();
+      await write();
+      await rerender(ticket({ id: 11, key: 'LIRA-11' }));
+      expect(state().commentDraft).toEqual({ html: '', files: [] });
+    });
+  });
+
+  describe('links (part of the draft)', () => {
+    it('adds links with their relation, once each, and never to itself', async () => {
+      await open();
+      await run(() => state().handleAddLinks([{ issueId: 2, linkType: 'relates_to' }, { issueId: 3, linkType: 'duplicates' }, { issueId: 2, linkType: 'relates_to' }, { issueId: 10, linkType: 'blocks' }]));
+      expect(state().local!.linkedIssues.map(l => [l.issueId, l.linkType])).toEqual([[2, 'relates_to'], [3, 'duplicates']]);
+      expect(state().dirty).toBe(true);
+      expect(mocks.updateIssue).not.toHaveBeenCalled(); // nothing is written until Save changes
+    });
+
+    it('"is blocked by" turns the Blocked switch on, exactly as the switch does', async () => {
+      await open();
+      await run(() => state().handleAddLinks([{ issueId: 4, linkType: 'blocked_by' }]));
+      expect(state().local).toMatchObject({ blocked: true, blockedByIds: [4] });
+      expect(state().local!.linkedIssues.map(l => [l.issueId, l.linkType])).toEqual([[4, 'blocked_by']]);
+    });
+
+    it('removes one link; removing "is blocked by" unblocks the ticket', async () => {
+      await open();
+      await run(() => state().handleAddLinks([{ issueId: 2, linkType: 'relates_to' }, { issueId: 4, linkType: 'blocked_by' }]));
+      await run(() => state().handleRemoveLink({ id: 'x', issueId: 4, linkType: 'blocked_by' }));
+      expect(state().local).toMatchObject({ blocked: false, blockedByIds: [] });
+      await run(() => state().handleRemoveLink({ id: 'y', issueId: 2, linkType: 'relates_to' }));
+      expect(state().local!.linkedIssues).toEqual([]);
+    });
+
+    it('Save changes passes the links before and after to the link sync', async () => {
+      await open();
+      await run(() => state().handleAddLinks([{ issueId: 2, linkType: 'blocks' }]));
+      await run(() => state().handleSaveChanges());
+      const [id, before, after] = mocks.syncLinks.mock.calls[0] as [number, unknown[], { issueId: number; linkType: string }[]];
+      expect([id, before]).toEqual([10, []]);
+      expect(after.map(l => [l.issueId, l.linkType])).toEqual([[2, 'blocks']]);
+    });
+  });
+
   describe('children and deleting', () => {
+    it('puts existing tickets under this one at once, with its labels', async () => {
+      await open(ticket({ type: 'epic' }));
+      await run(() => state().handleAdoptChildren([ticket({ id: 20 }), ticket({ id: 21 })]));
+      expect(mocks.updateIssue).toHaveBeenCalledWith(20, expect.objectContaining({ parentId: 10, epicId: 10 }));
+      expect(mocks.updateIssue).toHaveBeenCalledWith(21, expect.objectContaining({ parentId: 10 }));
+      expect(mocks.propagateLabels).toHaveBeenCalledWith(10);
+    });
+
     it('counts the children and how many are done', async () => {
       mocks.children = [{ id: 20, status: 'done' }, { id: 21, status: 'todo' }, { id: 22, status: 'done' }, { id: 23, status: 'todo' }];
       await open();

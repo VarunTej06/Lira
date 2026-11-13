@@ -27,7 +27,7 @@ flowchart LR
 | Area | Today |
 |---|---|
 | Language / build | TypeScript 7, React 18.3.1, Vite 8, Tailwind 3.4, React Router 7 |
-| Size | ~360 source files; about 33.4k lines of non-test code; 1622 automated tests in 144 files plus a 15-check data health run |
+| Size | ~360 source files; about 33.4k lines of non-test code; 1722 automated tests in 152 files plus a 15-check data health run |
 | Users | None. UI assumes one user ("VY"). No login. |
 | Source of truth | JSON files under `data/`. Browser storage is a cache. |
 | Tickets | Dexie tables `spaces`, `issues`, `columns` (3 schema versions); saved to `data/spaces/<KEY>.json` by `localDiskSync.ts` |
@@ -43,7 +43,7 @@ flowchart LR
 ## Domain model (from `src/types/`)
 
 - **Space** `{id, name, key, icon, color, description}` (`icon` is an icon name such as `rocket`; an emoji saved by an older version is still read and shown as the matching icon, see `utils/spaceIcon.ts`) with **Columns** `{id, spaceId, name, order, wipLimit}`.
-- **Issue** `{id, spaceId, key, type: epic|task|bug|subtask, status, priority, parentId, epicId, assignee, reporter, labels, dueDate, storyPoints, sprint, rank, blocked, blockedByIds}` with embedded arrays `subtasks`, `comments` (HTML), `activity`, `attachments` (base64 or link), `linkedIssues`, `statusLog`, `watchers`.
+- **Issue** `{id, spaceId, key, type: epic|task|bug|subtask, status, priority, parentId, epicId, assignee, reporter, labels, inheritedLabels, dueDate, storyPoints, sprint, rank, blocked, blockedByIds, linkedIssues}` with embedded arrays `subtasks`, `comments` (HTML), `activity`, `attachments` (base64 or link), `linkedIssues`, `statusLog`, `watchers`.
 - **Project** `{id, name, key, lead, spaceId, repoUrl, environments}`. **Sprint**, **Team**, **Standup**, **Roadmap**, **Dashboard** are held as JSON structures (see `structuredStore.ts` for the row shapes).
 
 ## What this means for multi-user
@@ -57,3 +57,10 @@ flowchart LR
 7. The AI provider base URL and keys are configured in the browser; a server-side AI call with a user-supplied URL would be a request-forgery risk.
 
 Each point maps to a decision record in [`../00-decisions/`](../00-decisions/README.md).
+
+### Ticket relations (13 Nov 2026)
+- **Parent and children:** `parentId` (and `epicId`). The type one level down is fixed by `utils/hierarchy.ts`: task under epic, subtask under task or bug.
+- **Links:** `linkedIssues` holds `{issueId, linkType}` with `relates_to`, `blocks`, `blocked_by`, `duplicates`, `duplicated_by` (and the older `cloned_by`). Both tickets carry their end; `components/issue/detail/blockLinks.ts` writes the other end on save. `blocked_by` is the Blocked switch (`blocked`, `blockedByIds`).
+- **Labels:** `labels` is everything shown on a ticket; `inheritedLabels` lists which of them came from its parent. `services/labelPropagation.ts` passes labels down the parent chain when a ticket is saved, created under a parent, or adopted as a child. Labels changed in other ways (bulk edit, Viva) are not passed down until the parent is next saved.
+- **New tickets** start in Backlog or To Do (`utils/newIssue.ts`), whoever creates them.
+- **Spaces** have no colour of their own on screen; the saved `color` is kept for backups and for the "by space" chart series.

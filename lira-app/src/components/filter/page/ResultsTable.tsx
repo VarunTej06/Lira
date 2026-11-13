@@ -6,7 +6,6 @@ import { Filter, ArrowUpDown } from 'lucide-react';
 import { Avatar } from '../../common/Avatar';
 import type { Issue } from '../../../types/issue';
 import type { FiltersState } from './useFiltersState';
-import { PALETTE } from '../../../theme/palette';
 
 type SortField = Parameters<FiltersState['toggleSort']>[0];
 type SpaceInfo = FiltersState['spaceMap'][number] | undefined;
@@ -75,11 +74,7 @@ function SpaceButton({ space, spaceId, onSelectSpace }: { space: SpaceInfo; spac
         e.stopPropagation();
         if (spaceId && onSelectSpace) onSelectSpace(spaceId);
       }}
-      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-2xs font-medium hover:opacity-80 hover:ring-1 hover:ring-lira-blue transition-all cursor-pointer text-left"
-      style={{
-        backgroundColor: (space?.color || PALETTE.brand) + '15',
-        color: space?.color || PALETTE.brand,
-      }}
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-2xs font-medium hover:opacity-80 hover:ring-1 hover:ring-lira-blue transition-all cursor-pointer text-left bg-lira-blue-light text-lira-blue"
       title={`Open ${space?.name || 'Space'} board`}
     >
       <SpaceIcon icon={space?.icon} className="w-3 h-3" />

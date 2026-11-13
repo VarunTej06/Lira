@@ -27,6 +27,12 @@ export interface NewIssueInput {
   now?: Date;
 }
 
+/** The statuses a new ticket may start in. Moving it further is done on the ticket itself, once it exists. */
+export const NEW_TICKET_STATUSES = [['backlog', 'Backlog'], ['todo', 'To Do']] as const;
+
+/** Where a new ticket starts: Backlog when that was asked for, To Do for anything else (for example "+ Add" in the Done column). */
+export const newTicketStatus = (wanted: string | undefined): 'backlog' | 'todo' => (wanted === 'backlog' ? 'backlog' : 'todo');
+
 /** The ticket to save for the Create form: parent and epic links, labels, a "created" activity entry, and the creator as assignee and watcher. */
 export function buildNewIssue(i: NewIssueInput): Omit<Issue, 'id'> {
   const me = i.me ?? currentUser().initials;
@@ -41,7 +47,7 @@ export function buildNewIssue(i: NewIssueInput): Omit<Issue, 'id'> {
     title: i.title.trim(),
     description: i.description.trim(),
     type: i.type,
-    status: i.status,
+    status: newTicketStatus(i.status),
     priority: i.priority,
     assignee: i.assignee ? i.assignee.name : me,
     assigneeInitials: i.assignee ? i.assignee.initials : me,

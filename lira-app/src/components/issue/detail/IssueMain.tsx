@@ -2,10 +2,15 @@ import { keepPlace } from '../../../utils/keepPlace';
 import { CopyButton } from '../../common/CopyButton';
 import { descriptionToText, isHtmlDescription } from '../../../utils/richText';
 import { RichTextEditor } from '../../common/richtext/RichTextEditor';
-import { promptDialog } from '../../common/dialogStore';
 import { TypeIcon } from '../../common/Icons';
-import { Plus, ChevronDown, Link } from 'lucide-react';
-import type { IssueType } from '../../../types/issue';
+import { useState } from 'react';
+import { Plus, ChevronDown, Link, ListTree } from 'lucide-react';
+import type { IssueType, LinkedIssue } from '../../../types/issue';
+import { TicketPicker } from '../../common/TicketPicker';
+import { LinkedIssues } from '../LinkedIssues';
+import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
+import { childTypeOf } from '../../../utils/hierarchy';
+import { LINK_CHOICES, linkCandidates, type LinkType } from '../../../utils/ticketLinks';
 import { IssueSubtasks } from '../IssueSubtasks';
 import { IssueAttachments } from '../IssueAttachments';
 import { IssueActivityFeed } from '../IssueActivityFeed';
@@ -13,7 +18,9 @@ import { ChildIssues } from '../ChildIssues';
 import { safeArr } from './issueOptions';
 import type { IssueDetailState } from './useIssueDetail';
 
-type ChildProps = Pick<IssueDetailState, 'local' | 'childCollapsed' | 'setChildCollapsed' | 'childIssues' | 'childCount' | 'doneChildCount' | 'childProgress' | 'handleCreateChildIssue' | 'onNavigateToIssue'>;
+type ChildProps = Pick<IssueDetailState, 'childCollapsed' | 'setChildCollapsed' | 'childIssues' | 'childCount' | 'doneChildCount' | 'childProgress' | 'onNavigateToIssue'> & { onAdd: () => void };
+type Picker = 'child' | 'link' | null;
+const ADD = 'flex items-center gap-1.5 text-xs text-lira-muted hover:text-lira-blue mt-2 py-1 transition-colors cursor-pointer';
 
 /** A section heading that folds its content: a chevron, the title and an optional count. */
 function SectionToggle({ title, collapsed, onToggle, count }: { title: string; collapsed: boolean; onToggle: (el: HTMLElement) => void; count?: string }) {
@@ -29,21 +36,17 @@ function SectionToggle({ title, collapsed, onToggle, count }: { title: string; c
   );
 }
 
-/** "Child issue" (asks for a title first) and "Link issue". Subtasks cannot have children. */
-function QuickActions({ type, onCreateChild }: { type: IssueType; onCreateChild: (title: string, type: IssueType) => void }) {
-  const addChild = async () => {
-    const childType: IssueType = type === 'epic' ? 'task' : 'subtask';
-    const title = await promptDialog({ title: `New ${childType}`, label: 'Title', placeholder: 'What needs to be done?', confirmLabel: 'Create' });
-    if (title) onCreateChild(title, childType);
-  };
+/** "Child issue" and "Link issue": each opens its picker. A subtask has no level below it, so it has no Child issue button. */
+function QuickActions({ type, onPick }: { type: IssueType; onPick: (which: Picker) => void }) {
+  const button = 'flex items-center gap-1.5 px-3 py-1.5 text-sm text-lira-muted border border-lira-border rounded-md hover:bg-gray-50 hover:text-lira-blue transition-all cursor-pointer';
   return (
     <div className="flex items-center gap-2">
-      {type !== 'subtask' && (
-        <button onClick={addChild} className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-lira-muted border border-lira-border rounded-md hover:bg-gray-50 hover:text-lira-blue transition-all" title="Add child issue">
+      {childTypeOf(type) && (
+        <button type="button" onClick={() => onPick('child')} className={button} title="Add or create a child issue">
           <Plus className="w-3.5 h-3.5" /> Child issue
         </button>
       )}
-      <button className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-lira-muted border border-lira-border rounded-md hover:bg-gray-50 transition-all">
+      <button type="button" onClick={() => onPick('link')} className={button} title="Link this ticket to others">
         <Link className="w-3.5 h-3.5" /> Link issue
       </button>
     </div>
@@ -134,11 +137,11 @@ function AttachmentsSection({ s }: { s: IssueDetailState }) {
   );
 }
 
-/** Epic to Tasks, Task to Subtasks: a progress bar and the list of children. */
-function ChildWorkItems({ local, childCollapsed, setChildCollapsed, childIssues, childCount, doneChildCount, childProgress, handleCreateChildIssue, onNavigateToIssue }: ChildProps) {
+/** The tickets one level down (tasks of an epic, subtasks of a task or bug): a progress bar and the list. Always shown, also when empty. */
+function ChildSection({ childCollapsed, setChildCollapsed, childIssues, childCount, doneChildCount, childProgress, onNavigateToIssue, onAdd }: ChildProps) {
   return (
-    <section>
-      <SectionToggle title="Child work items" collapsed={childCollapsed} count={childCount > 0 ? `(${doneChildCount}/${childCount} done)` : undefined} onToggle={el => keepPlace(el, () => setChildCollapsed(c => !c))} />
+    <section data-testid="child-section">
+      <SectionToggle title="Child issues" collapsed={childCollapsed} count={childCount > 0 ? `(${doneChildCount}/${childCount} done)` : undefined} onToggle={el => keepPlace(el, () => setChildCollapsed(c => !c))} />
       {!childCollapsed && (
         <>
           {childCount > 0 && (
@@ -150,28 +153,78 @@ function ChildWorkItems({ local, childCollapsed, setChildCollapsed, childIssues,
               <p className="text-3xs text-lira-muted mt-1">{childProgress}% Done</p>
             </div>
           )}
-          <ChildIssues parentIssue={local} childIssues={childIssues} onIssueClick={issue => onNavigateToIssue?.(issue)} onCreateChild={handleCreateChildIssue} />
+          <ChildIssues childIssues={childIssues} onIssueClick={issue => onNavigateToIssue?.(issue)} />
+          <button type="button" onClick={onAdd} className={ADD}><Plus className="w-3.5 h-3.5" /> Add child issue</button>
         </>
       )}
     </section>
   );
 }
 
-/** Title, description, attachments, child work items, subtasks and activity. */
+/** The tickets this one is linked to, and how. Always shown, also when empty. */
+function LinkedSection({ s, onAdd }: { s: IssueDetailState; onAdd: () => void }) {
+  const links = safeArr(s.local.linkedIssues);
+  return (
+    <section data-testid="linked-section">
+      <h3 className="text-sm font-semibold text-lira-text mb-2">Linked issues{links.length > 0 && <span className="ml-1 text-xs text-lira-muted font-normal">({links.length})</span>}</h3>
+      <LinkedIssues links={links} tickets={s.everyIssue} onOpen={issue => s.onNavigateToIssue?.(issue)} onRemove={(link: LinkedIssue) => s.handleRemoveLink(link)} />
+      <button type="button" onClick={onAdd} className={ADD}><Plus className="w-3.5 h-3.5" /> Link issue</button>
+    </section>
+  );
+}
+
+/** The two dialogs behind "Child issue" and "Link issue". */
+function Pickers({ s, picker, onClose }: { s: IssueDetailState; picker: Picker; onClose: () => void }) {
+  const { local } = s;
+  const childType = childTypeOf(local.type);
+  const childLabel = childType ? ISSUE_TYPE_CONFIG[childType].label.toLowerCase() : '';
+  return (
+    <>
+      {childType && (
+        <TicketPicker
+          open={picker === 'child'} onClose={onClose} testId="child" icon={<ListTree className="w-5 h-5" />}
+          title={`Child issues of ${local.key}`}
+          hint={`Name a new ${childLabel}, or tick existing ${childLabel}s of this space to put them under this ticket.`}
+          candidates={s.spaceIssues.filter(i => i.type === childType && i.id !== local.id && i.parentId !== local.id)}
+          homeSpaceId={local.spaceId}
+          create={{ label: `Create ${childLabel}`, placeholder: `Name of the new ${childLabel}`, onCreate: name => { void s.handleCreateChildIssue(name, childType); onClose(); } }}
+          emptyText={`No other ${childLabel}s in this space.`}
+          confirmLabel="Add as child issues"
+          onPick={picked => { void s.handleAdoptChildren(picked.map(p => p.issue)); onClose(); }}
+        />
+      )}
+      <TicketPicker
+        open={picker === 'link'} onClose={onClose} testId="link" typeFilter icon={<Link className="w-5 h-5" />}
+        title={`Link ${local.key} to other tickets`}
+        hint="Tick one or more tickets of any type or status, and say how each relates to this one. Links are saved with Save changes."
+        candidates={linkCandidates(local, s.everyIssue)} homeSpaceId={local.spaceId}
+        relations={LINK_CHOICES}
+        emptyText="No tickets match."
+        confirmLabel="Link tickets"
+        onPick={picked => { s.handleAddLinks(picked.map(p => ({ issueId: p.issue.id!, linkType: p.relation as LinkType }))); onClose(); }}
+      />
+    </>
+  );
+}
+
+/** Title, description, attachments, child issues, linked issues, subtasks and activity. */
 export function IssueMain(s: IssueDetailState) {
   const { local, resolvedParent, onNavigateToIssue } = s;
+  const [picker, setPicker] = useState<Picker>(null);
   return (
     <div className="md:flex-1 md:overflow-y-auto min-w-0 px-4 md:px-6 pt-4 pb-10 space-y-5">
-      <QuickActions type={local.type} onCreateChild={s.handleCreateChildIssue} />
+      <QuickActions type={local.type} onPick={setPicker} />
       {resolvedParent && <ParentPill parent={resolvedParent} onOpen={() => onNavigateToIssue?.(resolvedParent)} />}
       <TitleField s={s} />
       <DescriptionSection s={s} />
       <AttachmentsSection s={s} />
-      {(local.type === 'epic' || local.type === 'task') && <ChildWorkItems {...s} />}
+      {childTypeOf(local.type) && <ChildSection {...s} onAdd={() => setPicker('child')} />}
+      <LinkedSection s={s} onAdd={() => setPicker('link')} />
       {local.type === 'task' && <IssueSubtasks subtasks={safeArr(local.subtasks)} onUpdate={subtasks => s.patch({ subtasks })} />}
       <div className="border-t border-lira-border pt-5">
-        <IssueActivityFeed comments={safeArr(local.comments)} activity={safeArr(local.activity)} onAddComment={s.handleAddComment} onEditComment={s.handleEditComment} />
+        <IssueActivityFeed comments={safeArr(local.comments)} activity={safeArr(local.activity)} onAddComment={s.handleAddComment} onEditComment={s.handleEditComment} draft={s.commentDraft} onDraftChange={s.setCommentDraft} />
       </div>
+      <Pickers s={s} picker={picker} onClose={() => setPicker(null)} />
     </div>
   );
 }

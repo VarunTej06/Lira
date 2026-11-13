@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Issue } from '../../../types/issue';
-import { DRAFT_FIELDS, childStats, isDirty, lookFor, parentFields, relatedTickets, savedFields, typeChangeFields, withBlockers } from './ticketDraft';
+import { DRAFT_FIELDS, childStats, isDirty, lookFor, parentFields, relatedTickets, savedFields, typeChangeFields, withBlockers, withLinks, withoutLinkTo } from './ticketDraft';
 
 const ticket = (over: Partial<Issue> = {}): Issue => ({
   id: 10, spaceId: 1, key: 'LIRA-10', title: 'Board', description: 'Text', type: 'task', status: 'todo', priority: 'medium',
@@ -140,5 +140,33 @@ describe('lookFor', () => {
     const r = lookFor(ticket({ status: 'weird', type: 'odd' as never }));
     expect(r.bannerColor).toBeTruthy();
     expect(r.typeConfig.label).toBe('Task');
+  });
+});
+
+describe('withLinks / withoutLinkTo', () => {
+  const base = { id: 1, linkedIssues: [], blocked: false } as unknown as Issue;
+  const pairs = (t: Issue) => (t.linkedIssues ?? []).map(l => [l.issueId, l.linkType]);
+
+  it('adds each link once and never links a ticket to itself', () => {
+    const t = withLinks(base, [{ issueId: 2, linkType: 'relates_to' }, { issueId: 2, linkType: 'relates_to' }, { issueId: 1, linkType: 'blocks' }, { issueId: 3, linkType: 'duplicates' }]);
+    expect(pairs(t)).toEqual([[2, 'relates_to'], [3, 'duplicates']]);
+    expect(base.linkedIssues).toEqual([]); // the ticket it was given is not changed
+  });
+  it('"is blocked by" goes through the Blocked switch: several blockers add up', () => {
+    const t = withLinks(base, [{ issueId: 2, linkType: 'blocked_by' }, { issueId: 3, linkType: 'blocked_by' }]);
+    expect(t).toMatchObject({ blocked: true, blockedByIds: [2, 3] });
+    expect(pairs(t)).toEqual([[2, 'blocked_by'], [3, 'blocked_by']]);
+  });
+  it('removing one blocker keeps the ticket blocked by the other; removing the last unblocks it', () => {
+    const two = withLinks(base, [{ issueId: 2, linkType: 'blocked_by' }, { issueId: 3, linkType: 'blocked_by' }, { issueId: 4, linkType: 'relates_to' }]);
+    const one = withoutLinkTo(two, { issueId: 2, linkType: 'blocked_by' });
+    expect(one).toMatchObject({ blocked: true, blockedByIds: [3] });
+    const none = withoutLinkTo(one, { issueId: 3, linkType: 'blocked_by' });
+    expect(none).toMatchObject({ blocked: false, blockedByIds: [] });
+    expect(pairs(none)).toEqual([[4, 'relates_to']]); // other links are kept
+  });
+  it('removes an ordinary link without touching the Blocked switch', () => {
+    const t = withLinks(base, [{ issueId: 2, linkType: 'blocked_by' }, { issueId: 4, linkType: 'relates_to' }]);
+    expect(withoutLinkTo(t, { issueId: 4, linkType: 'relates_to' })).toMatchObject({ blocked: true, blockedByIds: [2] });
   });
 });

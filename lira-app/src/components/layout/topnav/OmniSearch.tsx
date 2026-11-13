@@ -1,3 +1,4 @@
+import { isEditable } from '../../../utils/isEditable';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
 import type { Issue } from '../../../types/issue';
@@ -30,8 +31,7 @@ export const OmniSearch: React.FC<{
   // Global hotkey: Ctrl+K or /
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      const activeTag = (document.activeElement as HTMLElement)?.tagName?.toLowerCase();
-      const inInput = activeTag === 'input' || activeTag === 'textarea';
+      const inInput = isEditable(document.activeElement); // also the comment and description editors, which are not <input>s
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         inputRef.current?.focus();

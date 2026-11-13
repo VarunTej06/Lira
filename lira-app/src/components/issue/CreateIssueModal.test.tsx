@@ -20,6 +20,8 @@ vi.mock('../common/richtext/RichTextEditor', () => ({
   ),
 }));
 vi.mock('./TicketSuggestions', () => ({ TicketSuggestions: () => <div data-testid="suggestions" /> }));
+const propagateLabels = vi.hoisted(() => vi.fn(async (..._a: unknown[]) => {}));
+vi.mock('../../services/labelPropagation', () => ({ propagateLabels }));
 
 import { CreateIssueModal } from './CreateIssueModal';
 
@@ -143,6 +145,7 @@ describe('CreateIssueModal', () => {
       expect(created()).toMatchObject({ spaceId: 1, key: 'LIRA-99', title: 'Build the thing', status: 'backlog', priority: 'high', type: 'task', parentId: 10 });
       expect(onClose).toHaveBeenCalled();
       expect(title().value).toBe('');
+      expect(propagateLabels).toHaveBeenCalledWith(10); // it takes the labels of its parent
     });
 
     it('shows a message when saving fails, and stays open', async () => {
@@ -160,10 +163,21 @@ describe('CreateIssueModal', () => {
     expect(selects().map(s => s.textContent).join('|')).toContain('(current)');
   });
 
-  it('starts on the status it was opened with', () => {
-    open({ defaultStatus: 'inprogress' });
+  it('offers only Backlog and To Do for a new ticket', () => {
+    open();
     const status = selects().find(s => s.textContent?.includes('Backlog'))!;
-    expect(status.value).toBe('inprogress');
+    expect(Array.from(status.options).map(o => o.textContent)).toEqual(['Backlog', 'To Do']);
+  });
+
+  it('starts in Backlog when opened from the Backlog column, and in To Do from any other column', () => {
+    open({ defaultStatus: 'backlog' });
+    expect(selects().find(s => s.textContent?.includes('Backlog'))!.value).toBe('backlog');
+    cleanup();
+    open({ defaultStatus: 'inprogress' });
+    expect(selects().find(s => s.textContent?.includes('Backlog'))!.value).toBe('todo');
+    cleanup();
+    open({ defaultStatus: 'done' });
+    expect(selects().find(s => s.textContent?.includes('Backlog'))!.value).toBe('todo');
   });
 
   it('cancelling closes and clears what was typed', async () => {

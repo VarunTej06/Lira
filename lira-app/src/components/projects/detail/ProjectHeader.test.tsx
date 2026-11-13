@@ -52,10 +52,11 @@ describe('ProjectHeader', () => {
       expect(document.body.textContent).toContain('The core platform');
     });
 
-    it('uses the colour of the linked space for the icon', () => {
+    it('draws the project icon in the button colour of the theme, not in a colour of its own', () => {
       show();
-      const icon = qa('div').find(d => d.textContent === 'LC' && d.getAttribute('style'))!;
-      expect(icon.getAttribute('style')).toContain('rgb(51, 102, 153)');
+      const icon = qa('div').find(d => d.textContent === 'LC')!;
+      expect(icon.className).toContain('bg-lira-blue text-lira-on-blue');
+      expect(icon.getAttribute('style')).toBeNull();
     });
 
     it('shows the category only when there is one', () => {

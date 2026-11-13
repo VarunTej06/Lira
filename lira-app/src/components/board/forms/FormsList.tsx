@@ -52,7 +52,7 @@ export function FormsList(s: FormsState) {
                       <div>
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2">
-                            <span className="p-1.5 bg-blue-50 text-lira-blue rounded-lg">
+                            <span className="p-1.5 bg-lira-blue-light text-lira-blue rounded-lg">
                               <FileText className="w-4 h-4" />
                             </span>
                             <h4 className="text-sm font-bold text-lira-text group-hover:text-lira-blue transition-colors">

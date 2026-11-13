@@ -139,8 +139,8 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             className={`
               flex flex-col gap-2.5 p-2 rounded-xl transition-colors duration-150 flex-1 w-full
               ${snapshot.isDraggingOver
-                ? 'bg-blue-50/95 border-2 border-dashed border-lira-blue/70 shadow-xs ring-2 ring-lira-blue/20'
-                : 'bg-[#091E4206] hover:bg-[#091E420A] border-2 border-transparent'
+                ? 'bg-lira-blue-light/95 border-2 border-dashed border-lira-blue/70 shadow-xs ring-2 ring-lira-blue/20'
+                : 'bg-gray-100/50 hover:bg-gray-100 border-2 border-transparent'
               }
             `}
           >
@@ -160,7 +160,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             {issues.length === 0 && !snapshot.isDraggingOver && (
               <div
                 onClick={() => onAddIssue(id)}
-                className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-gray-200 hover:border-lira-blue/50 hover:bg-blue-50/20 rounded-xl text-center cursor-pointer transition-all group my-1 select-none flex-1 min-h-[140px]"
+                className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-gray-200 hover:border-lira-blue/50 hover:bg-lira-blue-light/20 rounded-xl text-center cursor-pointer transition-all group my-1 select-none flex-1 min-h-[140px]"
                 role="button"
                 tabIndex={0}
               >

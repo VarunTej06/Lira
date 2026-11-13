@@ -68,7 +68,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
           else if (blocked) onChange([]);
         }}
         className={`relative z-10 flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors duration-200 whitespace-nowrap ${
-          selected ? 'text-[var(--blocked-track)] cursor-default' : 'text-white cursor-pointer'
+          selected ? 'text-[var(--blocked-track)] cursor-default' : `${blocked ? 'text-white' : 'text-lira-on-blue'} cursor-pointer`
         }`}
       >
         {label}
@@ -83,7 +83,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
         role="radiogroup"
         aria-labelledby="issue-blocked-label"
         data-testid="blocked-toggle"
-        style={{ ['--blocked-track' as string]: blocked ? BLOCKED_META.color : 'rgb(var(--lira-blue))', backgroundColor: blocked ? BLOCKED_META.color : 'rgb(var(--lira-blue))' }}
+        style={{ ['--blocked-track' as string]: blocked ? BLOCKED_META.color : 'rgb(var(--lira-blue-text))',backgroundColor: blocked ? BLOCKED_META.color : 'rgb(var(--lira-blue))' }}
         className="relative flex p-1 rounded-full transition-colors duration-300"
       >
         <motion.span
@@ -233,7 +233,7 @@ const BlockerPicker: React.FC<PickerProps> = ({ open, issue, alreadyIds, onClose
               <div className="flex flex-wrap gap-1.5" role="group" aria-label="Ticket type">
                 {TYPES.map(t => (
                   <button key={t.id} type="button" aria-pressed={type === t.id} onClick={() => setType(t.id)}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-full border cursor-pointer transition-colors ${type === t.id ? 'bg-lira-blue text-white border-lira-blue' : 'border-lira-border text-lira-muted hover:bg-gray-50'}`}>
+                    className={`px-2.5 py-1 text-xs font-medium rounded-full border cursor-pointer transition-colors ${type === t.id ? 'bg-lira-blue text-lira-on-blue border-lira-blue' : 'border-lira-border text-lira-muted hover:bg-gray-50'}`}>
                     {t.label}
                   </button>
                 ))}
@@ -251,7 +251,7 @@ const BlockerPicker: React.FC<PickerProps> = ({ open, issue, alreadyIds, onClose
                       className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer transition-colors ${on ? 'bg-lira-blue-light ring-1 ring-lira-blue' : 'hover:bg-gray-50'}`}
                     >
                       <input type="checkbox" className="sr-only peer" checked={on} onChange={() => toggle(i.id!)} />
-                      <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-white' : 'border-gray-300 bg-white'}`}>
+                      <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-lira-on-blue' : 'border-gray-300 bg-white'}`}>
                         {on && <svg viewBox="0 0 12 12" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 6.5l2.2 2.2L9.5 3.5" /></svg>}
                       </span>
                       <TypeIcon type={i.type} className="w-4 h-4 flex-shrink-0" />

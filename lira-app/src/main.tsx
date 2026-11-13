@@ -16,12 +16,12 @@ import { MotionProvider } from './components/common/motion'
 import { Confetti } from './components/common/Confetti'
 import { initKvMirror, onKvChange } from './services/kvMirror'
 import { syncStructured } from './services/structuredStore'
-import { applyAccent, loadAccent } from './utils/accent'
+import { getLightPalette, getTheme, paintTheme } from './utils/theme'
 
 // Restore projects, sprints, teams, standups and preferences from data/*.json before anything reads them.
 onKvChange(() => { void syncStructured() })
 initKvMirror().finally(() => {
-  applyAccent(loadAccent()) // the saved accent colour, before the first paint of the app
+  paintTheme(getTheme(), getLightPalette()) // the theme saved on disk, now that it has been restored (a new browser has none of its own)
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <MotionProvider>

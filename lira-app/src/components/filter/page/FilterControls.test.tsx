@@ -109,7 +109,7 @@ describe('FilterControls', () => {
     it('status: five statuses, a tick on the chosen ones', async () => {
       const h = show({ openDropdown: 'status', selectedStatuses: ['todo'] });
       for (const l of ['Backlog', 'To Do', 'In Progress', 'Blocked (flag)', 'Done']) expect(byText('button', new RegExp(l.replace('(', '\\(').replace(')', '\\)')))).toBeDefined();
-      expect(byText('button', /To Do/)!.className).toContain('bg-blue-50 text-lira-blue');
+      expect(byText('button', /To Do/)!.className).toContain('bg-lira-blue-light text-lira-blue');
       await click(byText('button', /Done/));
       expect(h.lists.statuses).toEqual(['todo', 'done']);
     });

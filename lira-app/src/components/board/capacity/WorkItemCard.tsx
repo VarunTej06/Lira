@@ -7,7 +7,7 @@ export function WorkItemCard({ issue, tag, compact, onOpen }: { issue: Issue; ta
   return (
     <div
       onClick={() => onOpen?.(issue)} {...issueLink(issue)}
-      className={`${compact ? 'p-2.5 hover:bg-blue-50/30 space-y-1' : 'p-3 hover:bg-blue-50/20 space-y-1.5'} rounded-lg border border-lira-border hover:border-lira-blue transition-all cursor-pointer text-xs bg-white group`}
+      className={`${compact ? 'p-2.5 hover:bg-lira-blue-light/30 space-y-1' : 'p-3 hover:bg-lira-blue-light/20 space-y-1.5'} rounded-lg border border-lira-border hover:border-lira-blue transition-all cursor-pointer text-xs bg-white group`}
     >
       <div className="flex items-center justify-between">
         <span className="font-mono font-bold text-lira-blue group-hover:underline">{issue.key}</span>

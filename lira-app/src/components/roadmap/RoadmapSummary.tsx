@@ -10,7 +10,7 @@ const STATUSES = Object.keys(STATUS_META) as RoadmapStatus[];
 export function RoadmapSummary({ summary, conflicts }: { summary: Summary; conflicts: number }) {
   const total = Math.max(1, summary.total);
   const tiles: { label: string; value: ReactNode; sub: string; icon: ReactNode; tone: string }[] = [
-    { label: 'Overall progress', value: `${summary.percent}%`, sub: `${summary.byStatus.done} of ${summary.total} epics done`, icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-blue-50' },
+    { label: 'Overall progress', value: `${summary.percent}%`, sub: `${summary.byStatus.done} of ${summary.total} epics done`, icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Next milestone', value: summary.nextMilestone ? (summary.daysToNextMilestone === 0 ? 'Today' : `${summary.daysToNextMilestone}d`) : '—', sub: summary.nextMilestone?.title || 'None scheduled', icon: <Flag className="w-4 h-4" />, tone: 'text-violet-600 bg-violet-50' },
     { label: 'In progress', value: summary.byStatus.inprogress, sub: `${summary.byStatus.planned} planned`, icon: <CalendarClock className="w-4 h-4" />, tone: 'text-teal-600 bg-teal-50' },
     { label: 'Needs attention', value: summary.overdue + summary.byStatus.blocked + conflicts, sub: `${summary.overdue} late · ${summary.byStatus.blocked} blocked · ${conflicts} dependency`, icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },

@@ -53,7 +53,7 @@ export function IssueHeader(s: IssueDetailState) {
                         handleTypeChange(opt.value as IssueType);
                       }}
                       className={`w-full text-left px-3 py-1.5 text-xs flex items-center gap-2 hover:bg-gray-50 transition-colors ${
-                        opt.value === local.type ? 'bg-blue-50/70 font-semibold text-lira-blue' : 'text-lira-text'
+                        opt.value === local.type ? 'bg-lira-blue-light/70 font-semibold text-lira-blue' : 'text-lira-text'
                       }`}
                     >
                       <span>{opt.icon}</span>

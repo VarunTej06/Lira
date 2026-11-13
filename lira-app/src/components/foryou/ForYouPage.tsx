@@ -84,7 +84,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
   const stats = [
-    { label: 'Assigned to me', value: myOpen.length, icon: <ListTodo className="w-4 h-4" />, tone: 'text-lira-blue bg-blue-50' },
+    { label: 'Assigned to me', value: myOpen.length, icon: <ListTodo className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Overdue', value: overdue.length, icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-red-600 bg-red-50' },
     { label: 'Due in 7 days', value: dueSoon.length, icon: <Clock className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
     { label: 'Done this sprint', value: doneThisSprint, icon: <CheckCircle2 className="w-4 h-4" />, tone: 'text-emerald-600 bg-emerald-50' },
@@ -105,7 +105,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
               {currentTime().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {sprintName(cur)} · {daysLeft(cur)} days left
             </p>
           </div>
-          <button onClick={onCreateIssue} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-lira-blue text-white text-sm font-semibold hover:bg-lira-blue-hover transition-colors cursor-pointer">
+          <button onClick={onCreateIssue} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-lira-blue text-lira-on-blue text-sm font-semibold hover:bg-lira-blue-hover transition-colors cursor-pointer">
             + Create ticket
           </button>
         </div>
@@ -198,7 +198,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                 {projects.length === 0 ? empty('No projects yet') : projects.map(p => (
                   <button key={p.id} onClick={() => onOpenProject(p)} {...projectLink(p.id)}
                     className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors text-left cursor-pointer">
-                    <span className="w-8 h-8 rounded-lg bg-lira-blue text-white text-3xs font-bold flex items-center justify-center">{p.key.slice(0, 2)}</span>
+                    <span className="w-8 h-8 rounded-lg bg-lira-blue text-lira-on-blue text-3xs font-bold flex items-center justify-center">{p.key.slice(0, 2)}</span>
                     <span className="flex-1 min-w-0 text-sm font-medium text-lira-text truncate">{p.name}</span>
                   </button>
                 ))}

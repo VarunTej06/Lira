@@ -29,7 +29,7 @@ export function GroupByEpic(s: CapacityState) {
               {/* Progress bar */}
               <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full transition-all duration-300"
+                  className="h-full bg-purple-500 rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>

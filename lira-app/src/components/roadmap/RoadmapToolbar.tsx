@@ -32,7 +32,7 @@ export function RoadmapToolbar({ roadmap, owners, prefs, setPrefs, filter, setFi
     <div className="flex flex-wrap items-center gap-2">
       <div className="flex rounded-lg border border-lira-border overflow-hidden bg-lira-surface">
         {VIEWS.map(v => (
-          <button key={v.key} onClick={() => setPrefs({ view: v.key })} className={`px-3 py-1.5 text-xs flex items-center gap-1.5 cursor-pointer transition-colors ${prefs.view === v.key ? 'bg-lira-blue text-white' : 'text-lira-text hover:bg-lira-bg'}`}>{v.icon}{v.label}</button>
+          <button key={v.key} onClick={() => setPrefs({ view: v.key })} className={`px-3 py-1.5 text-xs flex items-center gap-1.5 cursor-pointer transition-colors ${prefs.view === v.key ? 'bg-lira-blue text-lira-on-blue' : 'text-lira-text hover:bg-lira-bg'}`}>{v.icon}{v.label}</button>
         ))}
       </div>
       <div className="relative">
@@ -60,10 +60,10 @@ export function RoadmapToolbar({ roadmap, owners, prefs, setPrefs, filter, setFi
             <>
               <div className="flex rounded-lg border border-lira-border overflow-hidden bg-lira-surface">
                 {(['weeks', 'months', 'quarters'] as Zoom[]).map(z => (
-                  <button key={z} onClick={() => setPrefs({ zoom: z })} className={`px-2.5 py-1.5 text-xs capitalize cursor-pointer ${prefs.zoom === z ? 'bg-lira-blue text-white' : 'text-lira-text hover:bg-lira-bg'}`}>{z}</button>
+                  <button key={z} onClick={() => setPrefs({ zoom: z })} className={`px-2.5 py-1.5 text-xs capitalize cursor-pointer ${prefs.zoom === z ? 'bg-lira-blue text-lira-on-blue' : 'text-lira-text hover:bg-lira-bg'}`}>{z}</button>
                 ))}
               </div>
-              <button onClick={() => setPrefs({ showDeps: !prefs.showDeps })} className={`px-2.5 py-1.5 text-xs rounded-lg border cursor-pointer flex items-center gap-1.5 ${prefs.showDeps ? 'border-lira-blue text-lira-blue bg-blue-50' : 'border-lira-border text-lira-text bg-lira-surface'}`}><GitBranch className="w-3.5 h-3.5" /> Dependencies</button>
+              <button onClick={() => setPrefs({ showDeps: !prefs.showDeps })} className={`px-2.5 py-1.5 text-xs rounded-lg border cursor-pointer flex items-center gap-1.5 ${prefs.showDeps ? 'border-lira-blue text-lira-blue bg-lira-blue-light' : 'border-lira-border text-lira-text bg-lira-surface'}`}><GitBranch className="w-3.5 h-3.5" /> Dependencies</button>
             </>
           )}
           <button onClick={() => setPrefs({ collapsed: allCollapsed ? [] : [...roadmap.lanes] })} className={`${GHOST} flex items-center gap-1.5`}>

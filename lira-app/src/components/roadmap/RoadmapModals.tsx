@@ -14,7 +14,7 @@ import { buildItemSave, checkItemDraft, type ItemSaveOptions } from './itemDraft
 
 const input = 'w-full border border-lira-border rounded-lg px-3 py-2 text-sm bg-lira-surface text-lira-text focus:outline-none focus:ring-2 focus:ring-lira-blue/40';
 const label = 'block text-xs font-semibold text-lira-muted mb-1';
-const primary = 'px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+const primary = 'px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
 const ghost = 'px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg hover:bg-lira-bg transition-colors cursor-pointer';
 
 // ─── Item (= epic) ───────────────────────────────────────────────────────────
@@ -289,7 +289,7 @@ export const NewRoadmapModal: React.FC<{ spaces: Space[]; onCreate: (rm: Roadmap
           <label className={label}>Start from</label>
           <div className="grid grid-cols-2 gap-2">
             {([['blank', 'Blank roadmap', 'Your own lanes, no items'], ['lira', 'Lira product roadmap', 'Phases 1–7 from ROADMAP.md']] as const).map(([k, t, d]) => (
-              <button key={k} type="button" onClick={() => setTemplate(k)} className={`text-left rounded-xl border px-3 py-2 cursor-pointer transition-colors ${template === k ? 'border-lira-blue bg-blue-500/10' : 'border-lira-border hover:bg-lira-bg'}`}>
+              <button key={k} type="button" onClick={() => setTemplate(k)} className={`text-left rounded-xl border px-3 py-2 cursor-pointer transition-colors ${template === k ? 'border-lira-blue bg-lira-blue-light' : 'border-lira-border hover:bg-lira-bg'}`}>
                 <div className="text-sm font-semibold">{t}</div><div className="text-2xs text-lira-muted">{d}</div>
               </button>
             ))}

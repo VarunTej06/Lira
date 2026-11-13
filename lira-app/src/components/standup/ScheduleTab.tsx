@@ -28,7 +28,7 @@ export function ScheduleTab(s: StandupState) {
                 <div className="text-2xs text-lira-muted">{REPEAT_LABEL[c.repeat]} · {c.time} · {c.duration} min · {PLATFORM_LABEL[c.platform]} · {c.memberKeys.length} people</div>
               </div>
               {safeHttpUrl(c.link) && (
-                <a href={safeHttpUrl(c.link)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-lira-blue text-white hover:bg-lira-blue-hover">
+                <a href={safeHttpUrl(c.link)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs px-2.5 py-1 rounded-lg bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover">
                   Join <ExternalLink className="w-3 h-3" />
                 </a>
               )}
@@ -85,7 +85,7 @@ export function ScheduleTab(s: StandupState) {
 
       <div className="grid sm:grid-cols-2 gap-2">
         {actions.map(({ label, hint, Icon, tint, run }) => (
-          <button key={label} onClick={run} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-lira-border bg-white hover:border-lira-blue hover:bg-blue-50/40 transition-colors text-left cursor-pointer">
+          <button key={label} onClick={run} className="flex items-center gap-2 px-4 py-3 rounded-2xl border border-lira-border bg-white hover:border-lira-blue hover:bg-lira-blue-light/40 transition-colors text-left cursor-pointer">
             <span className={`w-9 h-9 rounded-xl flex items-center justify-center ${tint}`}><Icon className="w-4 h-4" /></span>
             <span><span className="block text-sm font-semibold text-lira-text">{label}</span><span className="block text-2xs text-lira-muted">{hint}</span></span>
           </button>
@@ -96,7 +96,7 @@ export function ScheduleTab(s: StandupState) {
         <button onClick={() => window.open('https://meet.google.com/new', '_blank', 'noopener')} className="text-xs text-lira-blue hover:underline cursor-pointer flex items-center gap-1">
           <Video className="w-3.5 h-3.5" /> Start an instant Google Meet now
         </button>
-        <button onClick={s.saveOnly} className="text-sm px-4 py-2 rounded-xl bg-lira-blue text-white hover:bg-lira-blue-hover cursor-pointer flex items-center gap-1.5">
+        <button onClick={s.saveOnly} className="text-sm px-4 py-2 rounded-xl bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer flex items-center gap-1.5">
           <Calendar className="w-4 h-4" /> Save call
         </button>
       </div>

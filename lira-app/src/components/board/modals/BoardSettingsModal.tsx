@@ -70,7 +70,7 @@ export const BoardSettingsModal: React.FC<{
               onClick={() => setConfig(prev => ({ ...prev, density: 'comfortable' }))}
               className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
                 config.density === 'comfortable'
-                  ? 'border-lira-blue bg-blue-50/50 ring-1 ring-lira-blue'
+                  ? 'border-lira-blue bg-lira-blue-light/50 ring-1 ring-lira-blue'
                   : 'border-lira-border hover:bg-gray-50'
               }`}
             >
@@ -82,7 +82,7 @@ export const BoardSettingsModal: React.FC<{
               onClick={() => setConfig(prev => ({ ...prev, density: 'compact' }))}
               className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
                 config.density === 'compact'
-                  ? 'border-lira-blue bg-blue-50/50 ring-1 ring-lira-blue'
+                  ? 'border-lira-blue bg-lira-blue-light/50 ring-1 ring-lira-blue'
                   : 'border-lira-border hover:bg-gray-50'
               }`}
             >
@@ -102,7 +102,7 @@ export const BoardSettingsModal: React.FC<{
               { key: 'showStoryPoints' as const, label: 'Story points badge', desc: 'Display estimated points on card footer', icon: <Tag className="w-4 h-4 text-purple-500" /> },
               { key: 'showEpicBadge' as const, label: 'Epic badge', desc: 'Show parent epic pill at top of card', icon: <Layers className="w-4 h-4 text-indigo-500" /> },
               { key: 'showDueDate' as const, label: 'Due dates & overdue indicators', desc: 'Alert on approaching or past-due dates', icon: <Calendar className="w-4 h-4 text-amber-500" /> },
-              { key: 'showAssignee' as const, label: 'Assignee avatar', desc: 'Show user initials avatar on card', icon: <User className="w-4 h-4 text-blue-500" /> },
+              { key: 'showAssignee' as const, label: 'Assignee avatar', desc: 'Show user initials avatar on card', icon: <User className="w-4 h-4 text-lira-blue" /> },
               { key: 'showPriority' as const, label: 'Priority badge & chevron', desc: 'Show high / medium / low indicator', icon: <Eye className="w-4 h-4 text-emerald-500" /> },
             ].map(item => (
               <div
@@ -139,7 +139,7 @@ export const BoardSettingsModal: React.FC<{
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs"
+            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer shadow-xs"
           >
             Save Changes
           </button>

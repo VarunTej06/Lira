@@ -3,6 +3,9 @@ import colors from 'tailwindcss/colors'
 
 const rgbVar = (name) => `rgb(var(--${name}) / <alpha-value>)`
 
+// Greys follow the theme (cream-brown in Fawn, sage in Sorrel, neutral in dark): the shades are variables in index.css
+const greys = Object.fromEntries([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950].map((shade) => [shade, rgbVar(`gray-${shade}`)]))
+
 const hexToRgb = (hex) => {
   const h = hex.replace('#', '')
   return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)).join(' ')
@@ -65,6 +68,11 @@ export default {
         'lira-blue': rgbVar('lira-blue'),
         'lira-blue-light': rgbVar('lira-blue-light'),
         'lira-blue-hover': rgbVar('lira-blue-hover'),
+        'lira-on-blue': rgbVar('lira-on-blue'),
+        'lira-nav': rgbVar('lira-nav'),
+        'lira-nav-accent': rgbVar('lira-nav-accent'),
+        gray: greys,
+        slate: greys,
         'lira-amber': '#FFAB00',
         'lira-amber-light': rgbVar('lira-amber-light'),
         'lira-green': '#36B37E',
@@ -75,12 +83,11 @@ export default {
         'lira-purple-light': rgbVar('lira-purple-light'),
         'lira-teal': '#00B8D9',
         'lira-teal-light': rgbVar('lira-teal-light'),
-        // Nav colors
-        'nav-bg': '#0747A6',
-        'nav-sidebar': '#1A2332',
-        'nav-sidebar-hover': '#253148',
-        'nav-sidebar-active': '#0052CC',
       },
+      // As text the accent must be readable on the page: yellow is, tomato red and baby blue need a deeper shade
+      textColor: { 'lira-blue': rgbVar('lira-blue-text') },
+      // Cards are the surface of the theme (cream in Fawn), never a hard white
+      backgroundColor: { white: rgbVar('lira-surface') },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
@@ -102,10 +109,10 @@ export default {
         '2xl': '1.5rem',
       },
       boxShadow: {
-        'card': '0 1px 3px rgba(9, 30, 66, 0.18), 0 1px 2px rgba(9, 30, 66, 0.1)',
-        'card-hover': '0 6px 16px rgba(9, 30, 66, 0.18)',
-        'modal': '0 12px 40px rgba(9, 30, 66, 0.35)',
-        'dropdown': '0 8px 20px -4px rgba(9, 30, 66, 0.28)',
+        'card': '0 1px 3px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.08)',
+        'card-hover': '0 6px 16px rgba(0, 0, 0, 0.14)',
+        'modal': '0 12px 40px rgba(0, 0, 0, 0.28)',
+        'dropdown': '0 8px 20px -4px rgba(0, 0, 0, 0.22)',
       },
       animation: {
         'slide-in': 'slideIn 0.2s ease-out',

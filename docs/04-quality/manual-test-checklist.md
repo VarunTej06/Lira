@@ -5,13 +5,13 @@ No behaviour was meant to change anywhere. **If anything looks or acts different
 
 How to run it
 - Use a **copy** of your workspace if you can (`LIRA_DATA_DIR`), or accept that testing edits `data/`.
-- Start with `npm run dev` in `lira-app/`. Test in **light and dark** theme (Settings, Appearance) for sections marked ◐.
+- Start with `npm run dev` in `lira-app/`. Test in **all three themes** (Dark, and the light palettes Sorrel and Fawn: Settings, Appearance) for sections marked ◐.
 - Open the browser console once (F12): there should be **no red errors** while you work through the list.
 - Tick each box. "Expect" says what you should see.
 
 ---
 
-## A. The screens that were reworked (A1–A20)
+## A. The screens that were reworked (A1–A21)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -213,6 +213,18 @@ The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest ch
 - [ ] The board bar filters (search, "me", Priority, Status, Labels) also narrow this view; an overdue ticket is one that is not done with a due date in the past.
 - [ ] Group by **Status** (five columns, Blocked is the flag), **Priority** (low and lowest together), **Assignee** and **Epic / Parent** (progress per epic, an epic with no children shows 100 % when done, else 0 %); points and shares add up.
 
+### A21. Themes and light palettes (13 Nov 2026)  ◐
+Reference screens: `docs/04-quality/ui-references/`.
+- [ ] Settings, Appearance. Expect: a Dark and a Light card, each showing its three colours; Dark is selected in a new workspace; there is no accent colour picker.
+- [ ] Choose **Light**. Expect: "Choose a light palette" appears with **Sorrel** (selected) and **Fawn**; the page behind does not change; "Not saved yet" shows.
+- [ ] Pick **Fawn**, **Save**. Expect: cream page, brown navigation and text, baby blue buttons with brown labels; the dialog closes.
+- [ ] Reopen, pick **Sorrel**, **Save**. Expect: off-white page, sage frame and navigation, tomato red buttons with white labels.
+- [ ] Choose **Dark**, **Save**. Expect: black page, silver text, yellow buttons with black labels.
+- [ ] Choose another theme or palette, then **Cancel**. Expect: nothing changes; reopening shows the saved choice.
+- [ ] Gear menu, System settings. Expect: choosing Light shows Sorrel and Fawn; Save applies the choice.
+- [ ] Reload the page, and open Lira in a browser that has never opened it (dev server running). Expect: the saved theme and palette are shown from the first moment.
+- [ ] In each theme walk the board, list, calendar, summary, sprints, roadmaps, dashboards, filters, projects, For you, a ticket popup and the Viva chat. Expect: no white label on a yellow or baby blue button, no leftover navy bars or purple gradients, every text readable.
+
 ---
 
 ## B. Things that changed everywhere (quick sweeps)
@@ -221,19 +233,19 @@ The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest ch
 For each: open, type something, close, reopen. Expect: empty / reset, not the old text.
 - [ ] Create space, Create project, Create sprint, Create ticket, Widget gallery, Dashboard alerts, Weekly snapshot, Standup (Agenda/Schedule/Team), Attach picker, Blocker picker, Customise sidebar, Settings, Close sprint, Documents, Attachments, Forms.
 - [ ] **Customise sidebar**: Cancel discards edits; reopening shows the saved layout.
-- [ ] **Settings**: an unsaved theme/accent choice is dropped on reopen.
+- [ ] **Settings**: an unsaved theme or light-palette choice is dropped on reopen.
 - [ ] **Documents / Attachments / Forms** (space actions): first open shows the sample content, later opens show your saved content.
 
 ### B2. Saved settings (now go through one storage door)
-- [ ] Change theme, accent colour, sidebar layout, hidden/archived spaces, starred spaces, profile name, language, notifications. Reload the page. Expect: all remembered.
+- [ ] Change theme, light palette, sidebar layout, hidden/archived spaces, starred spaces, profile name, language, notifications. Reload the page. Expect: all remembered.
 - [ ] Hide a space, archive another, **Unhide all**. Expect: lists update and survive reload.
 - [ ] Open a space, go to **For you**, reload. Expect: you land on the same space; if that space was deleted you land on CERT or the first space.
 - [ ] Clear browser data and reload (dev server running). Expect: everything comes back from `data/`.
 
 ### B3. Colours and text sizes (look only)  ◐
-- [ ] Ticket type icons, priority colours, status badges, avatars, charts, donuts: same colours as before.
+- [ ] Ticket type icons, priority colours, status badges, avatars, charts, donuts: each keeps its own colour (green done, amber in progress, red blocked, purple epic) in all three themes.
 - [ ] Small text (badges, captions, dashboard labels, table headers) looks the same size as before; no text suddenly bigger or smaller.
-- [ ] Dark mode: nothing unreadable.
+- [ ] All three themes: nothing unreadable. Button labels are black on yellow (Dark), white on tomato red (Sorrel), brown on baby blue (Fawn).
 
 ### B4. Dates and "today"
 - [ ] **For you**: greeting and date line show today; "days left" correct.

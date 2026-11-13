@@ -74,7 +74,7 @@ function ParentPill({ parent, onOpen }: { parent: NonNullable<IssueDetailState['
 function TitleField({ s }: { s: IssueDetailState }) {
   if (!s.editingTitle) {
     return (
-      <h1 className="text-2xl font-bold text-lira-text cursor-text hover:bg-blue-50/50 rounded px-1 -mx-1 py-0.5 transition-colors leading-tight" onClick={() => s.setEditingTitle(true)}>
+      <h1 className="text-2xl font-bold text-lira-text cursor-text hover:bg-lira-blue-light/50 rounded px-1 -mx-1 py-0.5 transition-colors leading-tight" onClick={() => s.setEditingTitle(true)}>
         {s.local.title}
       </h1>
     );

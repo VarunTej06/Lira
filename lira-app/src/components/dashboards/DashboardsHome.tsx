@@ -60,35 +60,35 @@ export const DashboardsHome: React.FC<{ issues: Issue[]; spaces: Space[] }> = ({
     <div className="flex-1 min-w-0 overflow-y-auto bg-lira-bg" data-testid="dashboards-home">
       <div className="max-w-[1300px] mx-auto px-4 sm:px-6 py-6 space-y-8">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="w-11 h-11 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center"><LayoutDashboard className="w-6 h-6" /></span>
+          <span className="w-11 h-11 rounded-xl bg-lira-blue-light text-lira-blue flex items-center justify-center"><LayoutDashboard className="w-6 h-6" /></span>
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl font-bold text-lira-text">Dashboards</h1>
             <p className="text-sm text-lira-muted">See your work the way you need it: pick a goal, choose what to show, and save it.</p>
           </div>
           <input ref={fileRef} type="file" accept=".json,application/json" className="hidden" aria-label="Import a dashboard file" data-testid="import-input" onChange={e => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void importFile(f); }} />
           <button type="button" onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium border border-lira-border bg-white rounded-lg hover:bg-gray-50 cursor-pointer"><Upload className="w-4 h-4" /> Import</button>
-          <button type="button" onClick={() => navigate('/dashboards/new')} data-testid="new-dashboard" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer"><Plus className="w-4 h-4" /> New dashboard</button>
+          <button type="button" onClick={() => navigate('/dashboards/new')} data-testid="new-dashboard" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer"><Plus className="w-4 h-4" /> New dashboard</button>
         </div>
 
         {/* Describe it */}
         <section className="rounded-2xl border border-lira-border bg-white p-5 shadow-xs" aria-labelledby="describe-h">
-          <h2 id="describe-h" className="flex items-center gap-2 text-sm font-bold text-lira-text"><Sparkles className="w-4 h-4 text-purple-600" /> Build one from a description</h2>
+          <h2 id="describe-h" className="flex items-center gap-2 text-sm font-bold text-lira-text"><Sparkles className="w-4 h-4 text-lira-blue" /> Build one from a description</h2>
           <p className="text-xs text-lira-muted mt-0.5">Say what you want to see. Lira picks the widgets and filters, and shows you what it understood before it creates anything.</p>
           <form className="mt-3 flex gap-2" onSubmit={e => { e.preventDefault(); if (text.trim()) setPlan(planFromPrompt(text, spaces)); }}>
             <input value={text} onChange={e => { setText(e.target.value); setPlan(null); }} placeholder="For example: what is blocked in this sprint and who is overloaded" aria-label="Describe the dashboard" data-testid="describe-input"
               className="flex-1 min-w-0 text-sm border border-lira-border rounded-lg px-3 py-2.5 bg-white text-lira-text focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue" />
-            <button type="submit" disabled={!text.trim()} data-testid="describe-go" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-lg cursor-pointer disabled:opacity-50"><Wand2 className="w-4 h-4" /> Plan it</button>
+            <button type="submit" disabled={!text.trim()} data-testid="describe-go" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer disabled:opacity-50"><Wand2 className="w-4 h-4" /> Plan it</button>
           </form>
           <div className="flex flex-wrap gap-2 mt-3">
             {EXAMPLES.map(x => <button key={x} type="button" onClick={() => { setText(x); setPlan(planFromPrompt(x, spaces)); }} className="px-2.5 py-1 text-xs rounded-full border border-lira-border text-lira-muted hover:text-lira-blue hover:border-lira-blue cursor-pointer">{x}</button>)}
           </div>
           {plan && (
-            <div className="mt-4 rounded-xl border border-purple-200 bg-purple-50/50 p-4" data-testid="plan-card">
+            <div className="mt-4 rounded-xl border border-lira-border bg-lira-blue-light/50 p-4" data-testid="plan-card">
               <h3 className="text-sm font-bold text-lira-text">{plan.name}</h3>
               <ul className="mt-1 text-xs text-lira-muted space-y-0.5">{plan.understood.map((u, i) => <li key={i}>{u}</li>)}</ul>
               <p className="mt-2 text-xs text-lira-text"><span className="font-semibold">Widgets:</span> {plan.entries.map(id => entryById(id)?.title).filter(Boolean).join(', ')}</p>
               <div className="flex gap-2 mt-3">
-                <button type="button" onClick={() => make(plan)} data-testid="plan-create" className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Create dashboard</button>
+                <button type="button" onClick={() => make(plan)} data-testid="plan-create" className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Create dashboard</button>
                 <button type="button" onClick={() => navigate('/dashboards/new', { state: { plan } })} className="px-4 py-2 text-sm font-medium border border-lira-border bg-white rounded-lg hover:bg-gray-50 cursor-pointer">Adjust in the wizard</button>
               </div>
             </div>

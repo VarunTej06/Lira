@@ -203,7 +203,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
       <div className="p-8 max-w-7xl mx-auto w-full flex-1">
         {filteredProjects.length === 0 ? (
           <div className="bg-white rounded-2xl border border-lira-border p-12 text-center max-w-md mx-auto shadow-xs my-8 space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-blue-50 text-lira-blue mx-auto flex items-center justify-center text-2xl shadow-inner">
+            <div className="w-14 h-14 rounded-2xl bg-lira-blue-light text-lira-blue mx-auto flex items-center justify-center text-2xl shadow-inner">
               <FolderKanban className="w-7 h-7" />
             </div>
             <div>

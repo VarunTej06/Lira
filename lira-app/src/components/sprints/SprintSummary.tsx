@@ -71,7 +71,7 @@ function SprintHeading({ sprint, scope, list, meta, phase, involvedNames, involv
         <button
           onClick={onComplete}
           disabled={list.length === 0 && !completed}
-          className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-md bg-lira-blue text-white hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-md bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
           title={completed ? 'Edit the retrospective' : `Close the sprint. Done tickets stay; unfinished tickets move to ${sprintName(followingSprint(sprint, keys))}`}
         >
           <CheckCircle2 className="w-4 h-4" /> {completed ? 'Retrospective' : 'Complete sprint'}
@@ -106,7 +106,7 @@ function GoalField({ sprint, scope, savedGoal, onGoalSaved }: { sprint: string; 
       {goalDraft.trim() !== savedGoal && (
         <>
           <button onClick={() => setGoalDraft(savedGoal)} className="px-2.5 py-1.5 text-xs text-lira-muted hover:text-lira-text cursor-pointer">Cancel</button>
-          <button onClick={saveGoal} className="px-3 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-lira-blue-hover cursor-pointer">Save goal</button>
+          <button onClick={saveGoal} className="px-3 py-1.5 text-xs font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer">Save goal</button>
         </>
       )}
     </div>

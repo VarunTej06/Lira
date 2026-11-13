@@ -88,7 +88,7 @@ function ChartTab({ active, onClick, icon, children }: { active: boolean; onClic
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${active ? 'bg-lira-blue text-white shadow-xs' : 'text-lira-muted hover:text-lira-text hover:bg-gray-100'}`}
+      className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${active ? 'bg-lira-blue text-lira-on-blue shadow-xs' : 'text-lira-muted hover:text-lira-text hover:bg-gray-100'}`}
     >
       {icon}{children}
     </button>
@@ -106,7 +106,7 @@ function KpiRow({ m }: { m: Metrics }) {
     <div className="p-6 pb-4 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50/60 border-b border-lira-border flex-shrink-0">
       <Kpi title="Total Work" icon={<Layers className="w-4 h-4 text-lira-blue" />} value={m.total} valueClass="text-lira-text" note="items in space" noteClass="text-lira-muted" />
       <Kpi title="Done" icon={<CheckCircle2 className="w-4 h-4 text-emerald-600" />} value={m.done} valueClass="text-emerald-600" note={`${m.completionRate}% completed`} noteClass="text-emerald-700 font-semibold" />
-      <Kpi title="In Progress" icon={<Clock className="w-4 h-4 text-lira-blue" />} value={m.inProgress} valueClass="text-lira-blue" note={`${m.inFlightRate}% active in flight`} noteClass="text-blue-700 font-semibold" />
+      <Kpi title="In Progress" icon={<Clock className="w-4 h-4 text-lira-blue" />} value={m.inProgress} valueClass="text-lira-blue" note={`${m.inFlightRate}% active in flight`} noteClass="text-lira-blue font-semibold" />
       <Kpi
         title="Story Points" icon={<Award className="w-4 h-4 text-purple-600" />} valueClass="text-purple-700"
         value={<>{m.donePoints} <span className="text-sm font-normal text-lira-muted">/ {m.totalPoints}</span></>}
@@ -186,7 +186,7 @@ export const ReportsModal: React.FC<ReportsModalProps> = ({ isOpen, onClose, spa
             {status
               ? <BreakdownBars rows={STATUS_BARS} counts={m.byStatus} total={m.total} />
               : <BreakdownBars rows={PRIORITY_BARS} counts={m.byPriority} total={m.total} />}
-            <div className="p-3 bg-blue-50/50 border border-blue-200/70 rounded-xl text-xs text-blue-900 mt-2 flex items-start gap-2.5">
+            <div className="p-3 bg-lira-blue-light/50 border border-lira-border rounded-xl text-xs text-lira-text mt-2 flex items-start gap-2.5">
               <TrendingUp className="w-4 h-4 text-lira-blue flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold">Project Progress: </span>

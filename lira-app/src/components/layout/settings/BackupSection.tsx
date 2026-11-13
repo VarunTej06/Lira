@@ -56,16 +56,16 @@ export function BackupSection(s: SettingsState) {
                   type="button"
                   onClick={handleBackupToDisk}
                   disabled={backupLoading}
-                  className="flex items-center justify-between p-3.5 bg-blue-50 hover:bg-blue-100 text-lira-blue border border-blue-200 rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
+                  className="flex items-center justify-between p-3.5 bg-lira-blue-light hover:brightness-95 text-lira-blue border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
                     <Save className={`w-4 h-4 ${backupLoading ? 'animate-spin' : 'group-hover:scale-110 transition-transform'}`} />
                     <div>
                       <div className="text-sm font-bold">Backup Now</div>
-                      <div className="text-2xs text-blue-600 font-normal">Sync database to PC disk</div>
+                      <div className="text-2xs text-lira-blue font-normal">Sync database to PC disk</div>
                     </div>
                   </div>
-                  <span className="text-3xs bg-lira-blue text-white px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-3xs bg-lira-blue text-lira-on-blue px-2 py-0.5 rounded-full font-bold">
                     Disk Save
                   </span>
                 </button>
@@ -115,13 +115,13 @@ export function BackupSection(s: SettingsState) {
                   className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-lira-text border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
-                    <Upload className="w-4 h-4 text-purple-600 group-hover:scale-110 transition-transform" />
+                    <Upload className="w-4 h-4 text-lira-blue group-hover:scale-110 transition-transform" />
                     <div>
                       <div className="text-sm font-bold">Import Backup File</div>
                       <div className="text-2xs text-lira-muted font-normal">Restore &amp; overwrite data</div>
                     </div>
                   </div>
-                  <span className="text-3xs bg-purple-600 text-white px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-3xs bg-lira-blue text-lira-on-blue px-2 py-0.5 rounded-full font-bold">
                     Browse
                   </span>
                 </button>

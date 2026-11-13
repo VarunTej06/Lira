@@ -5,7 +5,7 @@ function formatInline(str: string): ReactNode {
   return str.split(/(\*\*[^*]+\*\*|`[^`]+`)/g).map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
     if (part.startsWith('`') && part.endsWith('`')) {
-      return <code key={i} className="px-1 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200/60 font-mono text-3xs">{part.slice(1, -1)}</code>;
+      return <code key={i} className="px-1 py-0.5 rounded bg-lira-blue-light text-lira-blue border border-lira-border font-mono text-3xs">{part.slice(1, -1)}</code>;
     }
     return part;
   });
@@ -25,7 +25,7 @@ function Table({ rows }: { rows: string[][] }) {
         </thead>
         <tbody className="divide-y divide-gray-100">
           {body.map((row, ri) => (
-            <tr key={ri} className="hover:bg-purple-50/30 transition-colors">
+            <tr key={ri} className="hover:bg-lira-blue-light/30 transition-colors">
               {row.map((cell, ci) => <td key={ci} className="px-2 py-1 text-gray-700">{formatInline(cell)}</td>)}
             </tr>
           ))}

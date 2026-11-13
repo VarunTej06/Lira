@@ -29,7 +29,7 @@ function EmptyResults({ onReset }: { onReset: () => void }) {
       </p>
       <button
         onClick={onReset}
-        className="mt-4 px-4 py-2 bg-lira-blue text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
+        className="mt-4 px-4 py-2 bg-lira-blue text-lira-on-blue rounded-lg text-xs font-semibold hover:bg-lira-blue-hover transition-colors cursor-pointer"
       >
         Reset all filters
       </button>
@@ -74,7 +74,7 @@ function SpaceButton({ space, spaceId, onSelectSpace }: { space: SpaceInfo; spac
         e.stopPropagation();
         if (spaceId && onSelectSpace) onSelectSpace(spaceId);
       }}
-      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-2xs font-medium hover:opacity-80 hover:ring-1 hover:ring-blue-300 transition-all cursor-pointer text-left"
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-2xs font-medium hover:opacity-80 hover:ring-1 hover:ring-lira-blue transition-all cursor-pointer text-left"
       style={{
         backgroundColor: (space?.color || PALETTE.brand) + '15',
         color: space?.color || PALETTE.brand,
@@ -113,7 +113,7 @@ function AssigneeCell({ issue }: { issue: Issue }) {
 
 function ResultRow({ issue, space, onSelectIssue, onSelectSpace }: { issue: Issue; space: SpaceInfo; onSelectIssue: (issue: Issue) => void; onSelectSpace?: (spaceId: number) => void }) {
   return (
-    <tr onClick={() => onSelectIssue(issue)} {...issueLink(issue)} className="hover:bg-blue-50/40 transition-colors cursor-pointer group">
+    <tr onClick={() => onSelectIssue(issue)} {...issueLink(issue)} className="hover:bg-lira-blue-light/40 transition-colors cursor-pointer group">
       <td className="py-3 px-4 text-center font-bold text-sm">
         <span className="inline-flex"><TypeIcon type={issue.type} className="w-4 h-4" /></span>
       </td>

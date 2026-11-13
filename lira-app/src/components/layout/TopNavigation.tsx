@@ -113,7 +113,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   }, [showToast]);
 
   return (
-    <nav className="mx-2 mt-2 h-14 rounded-2xl bg-gradient-to-r from-[#1C2540] via-[#1A2236] to-[#151B2B] border border-white/[0.08] shadow-[0_8px_26px_rgba(0,0,0,0.32)] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
+    <nav className="mx-2 mt-2 h-14 rounded-2xl bg-lira-nav border border-white/[0.08] shadow-[0_8px_26px_rgba(0,0,0,0.32)] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
       {/* App Launcher with Custom Geometric Logo */}
       <AppLauncher
         onToggleAI={onToggleAI}
@@ -149,7 +149,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Create button */}
       <button
         onClick={onCreateIssue}
-        className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-lira-blue to-lira-blue-hover hover:brightness-110 text-white text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgb(var(--lira-blue)/0.35)] hover:shadow-[0_6px_18px_rgb(var(--lira-blue)/0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
+        className="flex items-center gap-1.5 px-4 py-2 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgb(var(--lira-blue)/0.35)] hover:shadow-[0_6px_18px_rgb(var(--lira-blue)/0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
         title="Create a ticket — you'll choose the space"
       >
         <Plus className="w-4 h-4" />
@@ -225,7 +225,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold animate-scale-in transition-all ${
           toast.type === 'error'
             ? 'bg-red-900/95 text-red-100 border-red-700'
-            : 'bg-[#1D2939]/95 text-white border-white/20'
+            : 'bg-lira-nav/95 text-white border-white/20'
         }`}>
           {toast.type === 'error' ? (
             <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />

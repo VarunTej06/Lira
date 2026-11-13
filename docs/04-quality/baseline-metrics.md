@@ -9,7 +9,7 @@ Same tools, same commands (see "How to re-measure"). The pass changed no behavio
 | Area | Before | After |
 |---|---|---|
 | Typecheck (`tsc -b`) | Clean | Clean |
-| Tests | 655 (63 files) + 15 health | **1585 (138 files)** + 15 health |
+| Tests | 655 (63 files) + 15 health | **1602 (139 files)** + 15 health |
 | Lint (oxlint) warnings | 128 | **0** |
 | `npm audit` | 0 | 0 |
 | Semgrep (110 rules) | 0 findings, 302 files | 0 findings, 321 files |
@@ -20,15 +20,17 @@ Same tools, same commands (see "How to re-measure"). The pass changed no behavio
 | Suppression comments | 14 | **10** (9 hooks-rule, 1 regex) |
 | `setState` called inside an effect | 40 | **0** |
 | Impure calls while rendering (`Date`) | 14 | **0** |
-| Hex colours in `.tsx` | 238 | **88** (the most used 23 colours now live in `theme/palette.ts`) |
+| Hex colours in `.tsx` | 238 | **40** (88 before the 13 Nov 2026 theme change; the most used 23 colours live in `theme/palette.ts`) |
 | One-off pixel text sizes | 371 | **0** (named classes `text-4xs`, `text-3xs`, `text-2xs`, `text-ui`) |
 | Direct `localStorage` reads and writes in app code | 147 | **0** outside the mirror and `appStorage` |
 | `useEffect` calls | 110 | **78** |
 | Functions over cyclomatic complexity 12 | 81 | **22** |
 | Functions over cognitive complexity 15 | 23 | **5** |
 | Functions over 80 lines | 101 | 80 |
-| Inline `style={{` in `.tsx` | 150 | 150 (not touched) |
-| Purple, indigo and violet class references | 152 | 152 (a design decision, see below) |
+| Inline `style={{` in `.tsx` | 150 | 146 |
+| Purple, indigo and violet class references | 152 | **86** (what is left marks epics, ticket types and categories; the decorative ones became theme tokens on 13 Nov 2026) |
+| Fixed blue class references | 237 | **39** (To Do, In Progress and Task badges only) |
+| Gradients | 12 | **1** (a hairline under the Viva header) |
 | **Slop score (rubric below)** | **36 / 100** | **26 / 100** (22 for the code alone) |
 
 Slop score after: (1 security + 1 dead code and duplication + 1 tests and hygiene + 4 function size and complexity + 2 type safety and suppressions + 4 UI consistency + 5 process) / 7 = 2.6, so 26. Without the process row: 2.2, so 22.
@@ -36,7 +38,7 @@ Slop score after: (1 security + 1 dead code and duplication + 1 tests and hygien
 ### What is left, in order of effect on the score
 1. **Function size and complexity (22 / 5 / 80 offenders).** Still the biggest single contributor. The worst offender is now 18 (it was 36). All are React components or hooks where the branching is in the JSX or the state wiring: `SprintsPage` (18), `DatePicker` (17), `App` (15), then 14 (`CreateIssueModal`, `roadmapFilter`, `standupUtils`) and a tail of 13s. Nothing above 18 is left. Screens already split and covered by tests: ticket popup, create ticket, rich text editor, roadmap item dialog and planner, sprints page, create sprint, Viva chat bubble, filter dropdowns, filters results table. Done: `findTargetSpace` (36), the dashboard numbers (`scopeIssues`, `metricValue`, `groupIssues`, `metricIssues`, `widgetData`, `planFromPrompt`, the Markdown snapshot, `WidgetBody`), `buildPreview`, `generateDomainSubtasks`, `markdownToHtml`, `sprintRisk`, `handleCreateIssue`, `handleTicketDetail`, `processUserMessage`, `fileForKey`, `checkApiRequest`, the disk store load, save and roadmap functions. Next step: split the components above into smaller components and hooks, one at a time, checking each in a real browser.
 2. **9 suppressions of the hooks rule.** Each hides real findings: the roadmap Timeline, Planner and Table drag and scroll code, `useEnsureEpics`, `useProjects`, and the draft reset in `useIssueDetail`. They were left because they need a real browser to verify. The cap in `src/hygiene.test.ts` stops the number from growing.
-3. **UI tokens.** 88 hex colours and 150 inline styles remain in `.tsx`; the purple, indigo and violet classes (152) and the 12 gradients are a look-and-feel decision. Decide the palette and reference screens first (rule in `CLAUDE.md`), then migrate screen by screen.
+3. **UI tokens.** The palette was decided on 13 Nov 2026 (three themes, reference screens in `ui-references/`) and the brand colours moved to tokens. 40 hex colours and 146 inline styles remain in `.tsx`; the remaining blue, purple, indigo and violet classes carry meaning (status, ticket type, category) and were kept on purpose. The slop score was not re-worked for this change.
 4. **Process.** CI, pre-commit hooks and the multi-user work are not started (the DevOps step comes after multi-user and SSO).
 5. **Data boundary.** Server records are typed but not schema-validated (needed for multi-user); the Gemini model name is hard-coded.
 

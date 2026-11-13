@@ -96,7 +96,7 @@ export function TechnicalTab(ctx: DetailCtx) {
                     {environments.map(env => (
                       <div
                         key={env}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-lira-blue border border-blue-200 rounded-lg text-xs font-semibold"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-lira-blue-light text-lira-blue border border-lira-border rounded-lg text-xs font-semibold"
                       >
                         <Server className="w-3.5 h-3.5" />
                         <span>{env}</span>

@@ -83,7 +83,7 @@ export function RoadmapHeader({ roadmap, space, spaces, onBack, onChange, onDele
       <div className="flex flex-wrap items-center gap-2">
         <button onClick={onExport} className={BUTTON}><Download className="w-3.5 h-3.5" /> Export CSV</button>
         <button onClick={onAddMilestone} className={BUTTON}><Flag className="w-3.5 h-3.5" /> Milestone</button>
-        <button onClick={onAddItem} className="text-xs px-3 py-1.5 bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-3.5 h-3.5" /> Add epic</button>
+        <button onClick={onAddItem} className="text-xs px-3 py-1.5 bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-3.5 h-3.5" /> Add epic</button>
         <OptionsMenu roadmap={roadmap} onChange={onChange} onDelete={onDelete} />
       </div>
     </div>

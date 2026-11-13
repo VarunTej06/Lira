@@ -45,7 +45,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
 
   const tiles = [
     { label: 'Active sprint', value: active ? `${active.stats.percent}%` : '—', sub: active ? `${active.stats.done}/${active.stats.total} done · ${daysLeft(cur)}d left` : 'No tickets', icon: <CalendarClock className="w-4 h-4" />, tone: 'text-teal-600 bg-teal-50' },
-    { label: 'Avg completion', value: `${avgCompletion}%`, sub: `over ${closed.length} finished sprints`, icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-blue-50' },
+    { label: 'Avg completion', value: `${avgCompletion}%`, sub: `over ${closed.length} finished sprints`, icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Avg velocity', value: avgVelocity, sub: 'tickets done / sprint', icon: <TrendingUp className="w-4 h-4" />, tone: 'text-emerald-600 bg-emerald-50' },
     { label: 'Carried over', value: carried, sub: `${stranded} stuck in ended sprints`, icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
   ];
@@ -54,13 +54,13 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
     <div className="flex-1 overflow-y-auto bg-lira-bg">
       <div className="max-w-6xl mx-auto p-6 space-y-5">
         {toClose.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl px-4 py-3 space-y-2" role="status" data-testid="overview-rollover">
+          <div className="bg-lira-blue-light border border-lira-border rounded-2xl px-4 py-3 space-y-2" role="status" data-testid="overview-rollover">
             {toClose.map(r => (
-              <div key={r.key} className="flex items-center gap-3 text-sm text-blue-900">
+              <div key={r.key} className="flex items-center gap-3 text-sm text-lira-text">
                 <span className="flex-1">
                   {sprintName(r.key)} ended with <strong>{r.stats.open}</strong> unfinished ticket{r.stats.open === 1 ? '' : 's'}. Carry {r.stats.open === 1 ? 'it' : 'them'} over?
                 </span>
-                <button onClick={() => onOpenSprint(r.key)} {...sprintLink(r.key)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">Review</button>
+                <button onClick={() => onOpenSprint(r.key)} {...sprintLink(r.key)} className="text-xs font-medium px-3 py-1.5 rounded-lg bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer">Review</button>
               </div>
             ))}
           </div>
@@ -75,7 +75,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
           </div>
           <div className="flex items-center gap-2">
             <button onClick={onOpenAllTickets} className="text-sm px-3 py-1.5 border border-lira-border rounded-xl bg-white text-lira-text hover:bg-gray-50 cursor-pointer">All tickets</button>
-            <button onClick={onCreateSprint} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-xl bg-lira-blue text-white hover:bg-lira-blue-hover cursor-pointer">
+            <button onClick={onCreateSprint} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-xl bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer">
               <Plus className="w-3.5 h-3.5" /> New sprint
             </button>
           </div>

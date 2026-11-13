@@ -19,4 +19,4 @@ export function dayTone(opts: { dragOver: boolean; today: boolean; inMonth: bool
 
 /** The round number of a day: filled for today, dark in this month, dim outside it. */
 export const dayNumberTone = (today: boolean, inMonth: boolean): string =>
-  today ? 'bg-lira-blue text-white font-bold shadow-xs' : inMonth ? 'text-lira-text font-semibold' : 'text-lira-muted';
+  today ? 'bg-lira-blue text-lira-on-blue font-bold shadow-xs' : inMonth ? 'text-lira-text font-semibold' : 'text-lira-muted';

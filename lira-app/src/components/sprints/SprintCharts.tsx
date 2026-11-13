@@ -34,7 +34,7 @@ export const BurndownChart: React.FC<{ data: ReturnType<typeof burndown>; total:
           <text key={d} x={x(d)} y={H - 6} fontSize="9" textAnchor="middle" fill={PALETTE.textMuted}>{d}</text>
         ))}
         <motion.polyline points={ideal} fill="none" stroke={PALETTE.textFaint} strokeWidth="1.5" strokeDasharray="4 3" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.6 }} />
-        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" stroke={PALETTE.brand} strokeWidth="2" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
+        {actualPts.length > 0 && <motion.polyline points={actual} fill="none" className="stroke-lira-blue" strokeWidth="2" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />}
       </svg>
       <div className="flex gap-3 text-3xs text-lira-muted">
         <span><span className="inline-block w-3 border-t-2 border-dashed border-gray-400 mr-1 align-middle" />Ideal</span>

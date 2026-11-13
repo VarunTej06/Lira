@@ -1,5 +1,4 @@
 import React, { useId } from 'react';
-import { PALETTE } from '../../theme/palette';
 
 interface LiraAIAvatarProps {
   size?: number;
@@ -25,31 +24,9 @@ export const LiraAIAvatar: React.FC<LiraAIAvatarProps> = ({
       className={className}
     >
       <defs>
-        {/* Rich Multidimensional Gradient */}
-        <linearGradient id={`${id}-bg`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#4F46E5" />
-          <stop offset="45%" stopColor="#7C3AED" />
-          <stop offset="85%" stopColor={PALETTE.brand} />
-          <stop offset="100%" stopColor="#0284C7" />
-        </linearGradient>
-
-        {/* Glow / Rim Gradient */}
-        <linearGradient id={`${id}-rim`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#C084FC" stopOpacity="0.85" />
-          <stop offset="50%" stopColor="#60A5FA" stopOpacity="0.65" />
-          <stop offset="100%" stopColor="#38BDF8" stopOpacity="0.95" />
-        </linearGradient>
-
-        {/* Golden Sparkle Gradient */}
-        <linearGradient id={`${id}-sparkle`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FDE047" />
-          <stop offset="50%" stopColor="#F59E0B" />
-          <stop offset="100%" stopColor="#38BDF8" />
-        </linearGradient>
-
         {/* Soft Drop Shadow for the "L" */}
         <filter id={`${id}-shadow`} x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" floodColor="#0F172A" floodOpacity="0.45" />
+          <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" floodColor="black" floodOpacity="0.45" />
         </filter>
 
         {/* Ambient Outer Glow */}
@@ -59,15 +36,14 @@ export const LiraAIAvatar: React.FC<LiraAIAvatarProps> = ({
         </filter>
       </defs>
 
-      {/* Outer rounded squircle background */}
+      {/* Outer rounded squircle background: the navigation colour of the theme, so the white "L" always reads */}
       <rect
+        className="fill-lira-nav stroke-lira-nav-accent/60"
         x="2"
         y="2"
         width="44"
         height="44"
         rx="13"
-        fill={`url(#${id}-bg)`}
-        stroke={`url(#${id}-rim)`}
         strokeWidth="1.5"
       />
 
@@ -103,15 +79,15 @@ export const LiraAIAvatar: React.FC<LiraAIAvatarProps> = ({
           {/* Main 4-point AI Star in Top-Right */}
           <path
             d="M 35 14 C 35 11.5 36.5 10 39 10 C 36.5 10 35 8.5 35 6 C 35 8.5 33.5 10 31 10 C 33.5 10 35 11.5 35 14 Z"
-            fill={`url(#${id}-sparkle)`}
+            className="fill-lira-blue"
           />
           {/* Micro Sparkle Star */}
           <path
             d="M 28 8 C 28 6.8 28.7 6 30 6 C 28.7 6 28 5.2 28 4 C 28 5.2 27.3 6 26 6 C 27.3 6 28 6.8 28 8 Z"
-            fill="#FEF08A"
+            className="fill-lira-nav-accent"
           />
           {/* Mini pulse dot */}
-          <circle cx="39" cy="18" r="1" fill="#38BDF8" />
+          <circle cx="39" cy="18" r="1" className="fill-lira-nav-accent" />
         </g>
       )}
     </svg>

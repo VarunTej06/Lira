@@ -179,10 +179,17 @@ describe('Quality ratchets: things that were cleaned up must stay clean', () => 
   });
 
   it('colours kept in the palette are not written out again as hex codes', () => {
-    const allowed = ['theme/palette.ts', 'utils/accent.ts']; // the palette itself, and the swatches offered for choosing an accent
+    const allowed = ['theme/palette.ts'];
     const values = Object.values(PALETTE).map(v => v.toLowerCase());
     const hits = offenders(src, t => values.some(v => new RegExp(`['"]${v}['"]`, 'i').test(t))).filter(f => !allowed.some(a => f.endsWith(a)));
     expect(hits).toEqual([]);
+  });
+
+  it('a label on the accent colour is never fixed white: it would be unreadable on the yellow and baby blue themes', () => {
+    const fill = String.raw`(?<![\w:-])bg-lira-blue(?![\w/-])`;
+    const white = String.raw`(?<![\w:-])text-white(?![\w/-])`;
+    const both = new RegExp(`${fill}[^'"\`]*${white}|${white}[^'"\`]*${fill}`);
+    expect(offenders(src, t => both.test(t))).toEqual([]);
   });
 
   it('the palette holds plain 6-digit hex colours, each name once', () => {

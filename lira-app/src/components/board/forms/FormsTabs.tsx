@@ -13,7 +13,7 @@ export function FormsTabs(s: FormsState) {
               onClick={() => { setActiveTab('list'); setPreviewForm(null); }}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
                 activeTab === 'list' && !previewForm
-                  ? 'bg-lira-blue text-white shadow-xs'
+                  ? 'bg-lira-blue text-lira-on-blue shadow-xs'
                   : 'text-lira-muted hover:text-lira-text hover:bg-gray-200/60'
               }`}
             >
@@ -23,7 +23,7 @@ export function FormsTabs(s: FormsState) {
               onClick={() => { setActiveTab('builder'); setPreviewForm(null); }}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'builder'
-                  ? 'bg-lira-blue text-white shadow-xs'
+                  ? 'bg-lira-blue text-lira-on-blue shadow-xs'
                   : 'text-lira-muted hover:text-lira-text hover:bg-gray-200/60'
               }`}
             >

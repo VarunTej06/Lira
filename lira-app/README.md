@@ -19,7 +19,7 @@
 | **Local PC Storage** | JSON files under `../data/` | Source of truth for everything (tickets, projects, sprints, roadmaps, teams, standups, settings) |
 | **Drag & Drop** | [@hello-pangea/dnd](https://github.com/hello-pangea/dnd) | Kanban board |
 | **Dates / QR** | date-fns, qrcode | Due dates; the QR code for opening Lira on a phone |
-| **Tests** | Vitest, jsdom, fake-indexeddb | 1585 tests in 138 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
+| **Tests** | Vitest, jsdom, fake-indexeddb | 1602 tests in 139 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
 
 ---
 
@@ -135,7 +135,7 @@ src/
 └── utils/
     ├── sprintUtils.ts, sprintReports.ts   # Sprint dates (monthly and custom), stats, burndown, burnup, flow
     ├── roadmap/                           # Roadmap dates, timeline, progress, planner
-    ├── accent.ts, safeUrl.ts, celebrate.ts
+    ├── theme.ts, safeUrl.ts, celebrate.ts
     ├── appStorage.ts, clock.ts, emptyLists.ts   # The one door to browser storage, the clock, a shared empty ticket list
     └── standupUtils.ts, dateUtils.ts, priorityUtils.ts
 ```

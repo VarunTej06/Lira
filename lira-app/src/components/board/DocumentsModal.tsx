@@ -118,7 +118,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({ isOpen, onClose,
         <div className="flex items-center justify-between px-6 py-2.5 border-b border-lira-border bg-gray-50/70 flex-shrink-0">
           <div className="flex items-center gap-1.5">
             {([['edit', Edit3, 'Markdown Editor'], ['preview', Eye, 'Preview Document']] as const).map(([tab, Icon, label]) => (
-              <button key={tab} onClick={() => setActiveTab(tab)} className={`${TAB} ${activeTab === tab ? 'bg-lira-blue text-white shadow-xs' : 'text-lira-muted hover:text-lira-text hover:bg-gray-200/60'}`}>
+              <button key={tab} onClick={() => setActiveTab(tab)} className={`${TAB} ${activeTab === tab ? 'bg-lira-blue text-lira-on-blue shadow-xs' : 'text-lira-muted hover:text-lira-text hover:bg-gray-200/60'}`}>
                 <Icon className="w-3.5 h-3.5" />{label}
               </button>
             ))}

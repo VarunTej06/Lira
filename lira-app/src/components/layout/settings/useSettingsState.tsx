@@ -1,7 +1,6 @@
 import { notifySaved } from '../../common/savedToastStore';
 import React, { useState, useRef } from 'react';
-import { loadAccent, saveAccent } from '../../../utils/accent';
-import { applyTheme, getTheme } from '../../../utils/theme';
+import { applyTheme, getLightPalette, getTheme, isThemeChange, type LightPalette, type Theme } from '../../../utils/theme';
 import { useBackupState } from './useBackupState';
 import { cleanProfile, loadLocale, loadNotificationPrefs, loadProfile, saveLocale, saveNotificationPrefs, saveProfile } from '../../../utils/userPrefs';
 import { useResetWhen } from '../../../hooks/useResetWhen';
@@ -24,33 +23,26 @@ export function useSettingsState(props: SettingsModalProps) {
     onToast,
   } = props;
   const [activeSection, setActiveSection] = useState<SettingsSection>(initialSection);
-  const [accent, setAccent] = useState<string>(loadAccent);
-  // The accent is a draft until Save is pressed (see handleSaveAppearance)
-  const chooseAccent = (hex: string) => {
-    setAccent(hex.toUpperCase());
-  };
 
   // ── Appearance State ────────────────────────────────────────────────────────
-  const [theme, setTheme] = useState<'light' | 'dark'>(getTheme);
+  // Both are drafts until Save is pressed (see handleSaveAppearance)
+  const [theme, setTheme] = useState<Theme>(getTheme);
+  const [lightPalette, setLightPalette] = useState<LightPalette>(getLightPalette);
 
   // Sync section and theme when the dialog opens
   useResetWhen([isOpen, initialSection], () => {
     if (isOpen) {
       setActiveSection(initialSection);
       setTheme(getTheme()); // an unsaved choice from last time is dropped
-      setAccent(loadAccent());
+      setLightPalette(getLightPalette());
     }
   });
 
-  // Choosing only changes the draft; nothing is applied until Save
-  const handleSelectTheme = (t: 'light' | 'dark') => setTheme(t);
-
-  const appearanceChanged = theme !== getTheme() || accent.toUpperCase() !== loadAccent().toUpperCase();
+  const appearanceChanged = isThemeChange(theme, lightPalette);
 
   const handleSaveAppearance = () => {
     if (!appearanceChanged) { onClose(); return; }
-    applyTheme(theme);
-    saveAccent(accent);
+    applyTheme(theme, lightPalette);
     notifySaved('Appearance saved');
     onClose();
   };
@@ -113,12 +105,10 @@ export function useSettingsState(props: SettingsModalProps) {
     onToast,
     activeSection,
     setActiveSection,
-    accent,
-    setAccent,
-    chooseAccent,
     theme,
     setTheme,
-    handleSelectTheme,
+    lightPalette,
+    setLightPalette,
     appearanceChanged,
     handleSaveAppearance,
     name,

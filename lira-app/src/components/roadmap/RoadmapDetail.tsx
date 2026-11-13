@@ -50,7 +50,7 @@ function RoadmapGone({ onBack }: { onBack: () => void }) {
       <div className="text-center space-y-3">
         <Map className="w-10 h-10 mx-auto text-lira-muted" />
         <p className="text-lira-muted text-sm">This roadmap no longer exists.</p>
-        <button onClick={onBack} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg cursor-pointer">Back to roadmaps</button>
+        <button onClick={onBack} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg cursor-pointer">Back to roadmaps</button>
       </div>
     </div>
   );

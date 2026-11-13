@@ -24,7 +24,7 @@ function ApplyRow({ label, value, onChange, options, disabled, onApply }: {
         <select value={value} onChange={e => onChange(e.target.value)} className="flex-1 px-2 py-1.5 text-xs border border-lira-border rounded-lg bg-white">
           {options.map(([v, text]) => <option key={v} value={v}>{text}</option>)}
         </select>
-        <button type="button" onClick={onApply} disabled={disabled} className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 cursor-pointer whitespace-nowrap">Apply</button>
+        <button type="button" onClick={onApply} disabled={disabled} className="px-2.5 py-1.5 text-xs font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover disabled:opacity-40 cursor-pointer whitespace-nowrap">Apply</button>
       </div>
     </div>
   );
@@ -98,13 +98,13 @@ export const BulkActionsModal: React.FC<{ isOpen: boolean; onClose: () => void; 
           </div>
         </div>
 
-        {feedback && <div className="p-2.5 bg-blue-50 text-blue-800 text-xs rounded-lg border border-blue-200 font-semibold">{feedback}</div>}
+        {feedback && <div className="p-2.5 bg-lira-blue-light text-lira-text text-xs rounded-lg border border-lira-border font-semibold">{feedback}</div>}
 
         <div className="max-h-64 overflow-y-auto border border-lira-border rounded-xl divide-y divide-lira-border">
           {issues.map(issue => {
             const checked = selectedIds.has(issue.id!);
             return (
-              <div key={issue.id} onClick={() => toggleSelect(issue.id!)} className={`p-2.5 flex items-center justify-between text-xs cursor-pointer transition-colors ${checked ? 'bg-blue-50/70' : 'hover:bg-gray-50'}`}>
+              <div key={issue.id} onClick={() => toggleSelect(issue.id!)} className={`p-2.5 flex items-center justify-between text-xs cursor-pointer transition-colors ${checked ? 'bg-lira-blue-light/70' : 'hover:bg-gray-50'}`}>
                 <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">
                   <input type="checkbox" checked={checked} onChange={() => {}} className="w-4 h-4 text-lira-blue rounded border-gray-300 pointer-events-none" />
                   <span className="font-mono font-bold text-lira-blue flex-shrink-0">{issue.key}</span>
@@ -120,7 +120,7 @@ export const BulkActionsModal: React.FC<{ isOpen: boolean; onClose: () => void; 
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs">Done</button>
+          <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer shadow-xs">Done</button>
         </div>
       </div>
 

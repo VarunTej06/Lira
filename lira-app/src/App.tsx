@@ -2,7 +2,7 @@ import { DialogHost } from './components/common/dialogs';
 import { DashboardScheduler } from './components/dashboards/DashboardScheduler';
 import { SavedToastHost } from './components/common/SavedToast';
 import { LinkMenuHost } from './components/common/LinkMenu';
-import { getTheme } from './utils/theme';
+import { getLightPalette, getTheme, paintTheme } from './utils/theme';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoutes } from './AppRoutes';
@@ -35,17 +35,9 @@ import type { Project } from './types/project';
 import type { Space } from './types/space';
 import { useResetWhen } from './hooks/useResetWhen';
 import { NO_ISSUES } from './utils/emptyLists';
-import { appStorage } from './utils/appStorage';
 
-// Immediately apply stored theme to documentElement before render if in browser
-if (typeof window !== 'undefined') {
-  const initialTheme = appStorage.get('lira_theme');
-  if (initialTheme === 'light') {
-    document.documentElement.classList.remove('dark');
-  } else {
-    document.documentElement.classList.add('dark');
-  }
-}
+// Show the saved theme before the first render, so the page never flashes in the wrong colours
+if (typeof window !== 'undefined') paintTheme(getTheme(), getLightPalette());
 
 export default function App() {
   const navigate = useNavigate();
@@ -61,11 +53,6 @@ export default function App() {
   // so "Create" and the sidebar still know where you were.
   const { routeSpace, activeSpace } = useActiveSpace(route, spaces);
   const activeSpaceId = activeSpace?.id;
-
-  // Apply lira_theme on app mount immediately
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', getTheme() === 'dark');
-  }, []);
 
   useEffect(() => { document.title = `${titleOf(route)} · Lira`; }, [route]);
 
@@ -165,7 +152,7 @@ export default function App() {
           onEditSpace={(space) => { setEditingSpace(space); setShowCreateSpace(true); }}
         />
 
-        <main className="flex-1 min-w-0 flex flex-col overflow-hidden my-2 mr-2 ml-2 rounded-2xl border border-lira-border bg-lira-bg shadow-[0_4px_20px_rgba(9,30,66,0.10)]">
+        <main className="flex-1 min-w-0 flex flex-col overflow-hidden my-2 mr-2 ml-2 rounded-2xl border border-lira-border bg-lira-bg shadow-[0_4px_20px_rgba(0,0,0,0.10)]">
           <AppRoutes
             route={route} pageKey={pageKey} spaceList={spaceList} activeSpace={activeSpace} routeSpace={routeSpace}
             projects={projects} selectedProject={selectedProject} allIssues={allIssues} everyIssue={everyIssue} issues={issues}

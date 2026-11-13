@@ -21,7 +21,7 @@ export const FiltersDropdown: React.FC<{
 
   const presets = [
     { id: 'all', label: 'All Issues', desc: 'Show every issue', icon: <Filter className="w-3.5 h-3.5 text-white/40" /> },
-    { id: 'open', label: 'Open Issues', desc: 'Backlog, To-do, In Progress', icon: <Clock className="w-3.5 h-3.5 text-blue-400" /> },
+    { id: 'open', label: 'Open Issues', desc: 'Backlog, To-do, In Progress', icon: <Clock className="w-3.5 h-3.5 text-lira-nav-accent" /> },
     { id: 'completed', label: 'Completed', desc: 'Status: Done', icon: <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> },
     { id: 'recent', label: 'Recently Updated', desc: 'Updated in last 7 days', icon: <Zap className="w-3.5 h-3.5 text-amber-400" /> },
   ];
@@ -39,23 +39,23 @@ export const FiltersDropdown: React.FC<{
         onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-ui font-medium transition-all duration-200 cursor-pointer ${
           open ? 'bg-white/15 text-white shadow-inner' : 'text-white/80 hover:text-white hover:bg-white/10'
-        } ${active && active !== 'all' ? 'text-blue-300' : ''}`}
+        } ${active && active !== 'all' ? 'text-lira-nav-accent' : ''}`}
       >
         Filters <ChevronDown className={`w-3 h-3 opacity-60 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left p-2 transition-all duration-150">
+        <div className="absolute top-full left-0 mt-2 w-72 bg-lira-nav border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left p-2 transition-all duration-150">
           {/* Prominent Action to Open Full Filter Page */}
           <button
             onClick={() => { setOpen(false); onNavigateToFilters?.(); }}
-            className="w-full flex items-center justify-between px-3 py-2.5 bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 border border-blue-500/40 rounded-lg text-xs font-semibold mb-2 transition-all cursor-pointer"
+            className="w-full flex items-center justify-between px-3 py-2.5 bg-lira-nav-accent/15 hover:bg-lira-nav-accent/25 text-lira-nav-accent border border-lira-nav-accent/30 rounded-lg text-xs font-semibold mb-2 transition-all cursor-pointer"
           >
             <span className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-blue-400" />
+              <Filter className="w-4 h-4 text-lira-nav-accent" />
               Advanced Filters Explorer
             </span>
-            <ArrowRight className="w-3.5 h-3.5 text-blue-300" />
+            <ArrowRight className="w-3.5 h-3.5 text-lira-nav-accent" />
           </button>
 
           <p className="text-3xs font-semibold text-white/40 uppercase tracking-wider px-2 py-1">Preset filters</p>

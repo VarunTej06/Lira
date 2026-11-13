@@ -38,7 +38,7 @@ const SAMPLE_ATTACHMENTS: AttachmentItem[] = [
 function FileIcon({ type }: { type: string }) {
   if (type.startsWith('image/')) return <ImageIcon className="w-5 h-5 text-indigo-500" />;
   if (type.includes('pdf') || type.includes('text') || type.includes('doc')) return <FileText className="w-5 h-5 text-amber-500" />;
-  return <File className="w-5 h-5 text-blue-500" />;
+  return <File className="w-5 h-5 text-lira-blue" />;
 }
 
 /** One file in the list: thumbnail or icon, name, size and date, with open and delete. */
@@ -151,7 +151,7 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({ isOpen, onCl
           <div
             {...dragEvents}
             onClick={() => fileInput.current?.click()}
-            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all select-none ${draggingOver ? 'border-lira-blue bg-blue-50/80 ring-4 ring-lira-blue/15 scale-[1.01]' : 'border-lira-border bg-gray-50/60 hover:bg-gray-100/60 hover:border-lira-blue/60'}`}
+            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all select-none ${draggingOver ? 'border-lira-blue bg-lira-blue-light/80 ring-4 ring-lira-blue/15 scale-[1.01]' : 'border-lira-border bg-gray-50/60 hover:bg-gray-100/60 hover:border-lira-blue/60'}`}
           >
             <div className="flex flex-col items-center justify-center space-y-2">
               <div className="p-3 bg-white rounded-full shadow-xs border border-lira-border text-lira-blue"><UploadCloud className="w-6 h-6 animate-pulse" /></div>

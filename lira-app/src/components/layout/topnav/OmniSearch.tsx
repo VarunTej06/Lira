@@ -105,7 +105,7 @@ export const OmniSearch: React.FC<{
   }
 
   return (
-    <div ref={containerRef} className={phone ? 'fixed left-3 right-3 top-3 z-[70] bg-[#18233B] rounded-2xl p-2 shadow-2xl border border-white/10' : 'flex-1 min-w-0 max-w-xs mx-1 sm:mx-2 relative'}>
+    <div ref={containerRef} className={phone ? 'fixed left-3 right-3 top-3 z-[70] bg-lira-nav rounded-2xl p-2 shadow-2xl border border-white/10' : 'flex-1 min-w-0 max-w-xs mx-1 sm:mx-2 relative'}>
       <div className="relative">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40" />
         <input
@@ -131,7 +131,7 @@ export const OmniSearch: React.FC<{
       </div>
 
       {open && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150 animate-scale-in">
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-lira-nav border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150 animate-scale-in">
           <div className="max-h-72 overflow-y-auto py-1">
             {Object.entries(grouped).map(([spaceName, spaceIssues]) => (
               <div key={spaceName}>
@@ -146,7 +146,7 @@ export const OmniSearch: React.FC<{
                         selectedIdx === idx ? 'bg-white/15' : 'hover:bg-white/10'
                       }`}
                     >
-                      <span className="text-3xs font-mono text-blue-400 font-bold flex-shrink-0">{issue.key}</span>
+                      <span className="text-3xs font-mono text-lira-nav-accent font-bold flex-shrink-0">{issue.key}</span>
                       <span className="text-xs text-white/80 truncate flex-1">{issue.title}</span>
                       <span className="text-3xs text-white/30 flex-shrink-0 hidden sm:block">{spaceMap[issue.spaceId]?.name}</span>
                     </button>

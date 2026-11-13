@@ -93,7 +93,7 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
               {att.dataUrl ? (
                 <img src={att.dataUrl} alt={att.name} className="w-10 h-10 object-cover rounded flex-shrink-0" />
               ) : (
-                <div className="w-10 h-10 bg-blue-50 rounded flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-lira-blue-light rounded flex items-center justify-center flex-shrink-0">
                   {LINK_ICON[att.source ?? 'file']}
                 </div>
               )}
@@ -145,7 +145,7 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
                 {att.dataUrl && att.type.startsWith('image/') ? (
                   <img src={att.dataUrl} alt={att.name} className="w-10 h-10 object-cover rounded flex-shrink-0" />
                 ) : (
-                  <div className="w-10 h-10 bg-blue-50 rounded flex items-center justify-center flex-shrink-0">{LINK_ICON[att.source ?? 'file']}</div>
+                  <div className="w-10 h-10 bg-lira-blue-light rounded flex items-center justify-center flex-shrink-0">{LINK_ICON[att.source ?? 'file']}</div>
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-lira-text truncate">{att.name}</p>

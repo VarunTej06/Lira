@@ -42,7 +42,7 @@ function DuplicatesBox({ duplicates, onOpenIssue }: { duplicates: Duplicate[]; o
   );
 }
 
-const CHIP = 'px-2 py-0.5 rounded-full border border-purple-200 bg-white text-purple-700 hover:bg-purple-50 text-2xs font-medium cursor-pointer';
+const CHIP = 'px-2 py-0.5 rounded-full border border-lira-border bg-white text-lira-blue hover:bg-lira-blue-light text-2xs font-medium cursor-pointer';
 
 /** Hints while writing a ticket: possible duplicates, labels, priority and the likely epic. Nothing is applied until you click. */
 export const TicketSuggestions: React.FC<TicketSuggestionsProps> = ({
@@ -64,8 +64,8 @@ export const TicketSuggestions: React.FC<TicketSuggestionsProps> = ({
   if (!hints.any) return null;
 
   return (
-    <div className="rounded-xl border border-purple-200 bg-purple-50/60 px-3 py-2.5 space-y-2" data-testid="ticket-suggestions" aria-live="polite">
-      <div className="flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-wide text-purple-700"><Lightbulb className="w-3.5 h-3.5" aria-hidden /> Viva suggests</div>
+    <div className="rounded-xl border border-lira-border bg-lira-blue-light/60 px-3 py-2.5 space-y-2" data-testid="ticket-suggestions" aria-live="polite">
+      <div className="flex items-center gap-1.5 text-2xs font-semibold uppercase tracking-wide text-lira-blue"><Lightbulb className="w-3.5 h-3.5" aria-hidden /> Viva suggests</div>
       {s.duplicates.length > 0 && <DuplicatesBox duplicates={s.duplicates} onOpenIssue={onOpenIssue} />}
       <div className="flex flex-wrap items-center gap-1.5">
         {hints.labelChips.map(l => <button key={l} type="button" className={CHIP} onClick={() => onAddLabel(l)}>+ {l}</button>)}

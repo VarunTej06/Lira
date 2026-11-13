@@ -62,7 +62,7 @@ function ListSearchBar({ value, onChange, total, spaceName }: { value: string; o
 /** One ticket as a table row. */
 function ListRow({ issue, onSelect }: { issue: Issue; onSelect: (issue: Issue) => void }) {
   return (
-    <tr onClick={() => onSelect(issue)} {...issueLink(issue)} className="hover:bg-blue-50/50 transition-colors cursor-pointer group">
+    <tr onClick={() => onSelect(issue)} {...issueLink(issue)} className="hover:bg-lira-blue-light/50 transition-colors cursor-pointer group">
       <td className="py-2.5 px-3 text-center text-sm">
         <span title={ISSUE_TYPE_CONFIG[issue.type]?.label || issue.type} className="inline-flex"><TypeIcon type={issue.type} className="w-4 h-4" /></span>
       </td>
@@ -172,7 +172,7 @@ export const ListView: React.FC<ListViewProps> = ({ issues, space, onSelectIssue
 
       <div className="flex-1 overflow-auto">
         <table className="w-full border-collapse text-left text-xs">
-          <thead className="bg-[#F4F5F7] sticky top-0 z-10 border-b border-gray-300">
+          <thead className="bg-gray-100 sticky top-0 z-10 border-b border-gray-300">
             <tr>
               {COLUMNS.map(({ field, label, width, centered }) => (
                 <th key={field} onClick={() => sortBy(field)} title={`Sort by ${label.toLowerCase()}`} className={`py-2.5 px-3 font-semibold text-gray-700 cursor-pointer select-none group ${width} ${centered ? 'text-center' : ''}`}>

@@ -46,7 +46,7 @@ export const IssueSubtasks: React.FC<IssueSubtasksProps> = ({ subtasks, onUpdate
         </h3>
         <button
           onClick={() => setAdding(true)}
-          className="flex items-center gap-1 text-xs text-lira-blue hover:text-blue-800 font-medium"
+          className="flex items-center gap-1 text-xs text-lira-blue hover:text-lira-text font-medium"
         >
           <Plus className="w-3.5 h-3.5" />
           Add child issue
@@ -118,7 +118,7 @@ export const IssueSubtasks: React.FC<IssueSubtasksProps> = ({ subtasks, onUpdate
           />
           <button
             onClick={handleAdd}
-            className="px-3 py-1.5 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 font-medium"
+            className="px-3 py-1.5 text-xs bg-lira-blue text-lira-on-blue rounded hover:bg-lira-blue-hover font-medium"
           >
             Add
           </button>

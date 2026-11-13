@@ -75,7 +75,7 @@ export function ParentPill({ issue, parent, eligibleParents, onOpen }: Props) {
             <span className="font-mono text-4xs bg-gray-200/80 px-1.5 py-0.5 rounded text-lira-text font-semibold">{parent.key}</span>
           </div>
 
-          <button type="button" onClick={() => { setOpen(false); onOpen(parent); }} className="w-full text-left px-3 py-2 text-xs text-lira-blue hover:bg-blue-50 font-medium flex items-center gap-2 border-b border-gray-100 transition-colors">
+          <button type="button" onClick={() => { setOpen(false); onOpen(parent); }} className="w-full text-left px-3 py-2 text-xs text-lira-blue hover:bg-lira-blue-light font-medium flex items-center gap-2 border-b border-gray-100 transition-colors">
             <Link2 className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">Open {parent.key} ({parent.title})</span>
           </button>
@@ -88,7 +88,7 @@ export function ParentPill({ issue, parent, eligibleParents, onOpen }: Props) {
                   key={p.id}
                   type="button"
                   onClick={() => p.id && change({ ...parentFields(p), epicLink: p.title })}
-                  className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 truncate transition-colors ${p.id === parent.id ? 'bg-blue-50 text-lira-blue font-semibold' : 'text-lira-text'}`}
+                  className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 flex items-center gap-1.5 truncate transition-colors ${p.id === parent.id ? 'bg-lira-blue-light text-lira-blue font-semibold' : 'text-lira-text'}`}
                 >
                   <span className="text-3xs font-mono text-lira-muted flex-shrink-0">{p.key}</span>
                   <span className="truncate">{p.title}</span>

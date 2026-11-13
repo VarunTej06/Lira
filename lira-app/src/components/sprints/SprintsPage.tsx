@@ -56,12 +56,12 @@ interface SprintsPageProps {
 /** This sprint has ended and still has unfinished tickets: offer to carry them over. */
 function RolloverPrompt({ sprint, keys, unfinished, onCarryOver }: { sprint: string; keys: string[]; unfinished: Issue[]; onCarryOver: () => void }) {
   return (
-    <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3" role="status" data-testid="rollover-prompt">
-      <ArrowRightCircle className="w-4 h-4 text-blue-600 flex-shrink-0" />
-      <p className="text-sm text-blue-900 flex-1">
+    <div className="flex items-center gap-3 bg-lira-blue-light border border-lira-border rounded-lg px-4 py-3" role="status" data-testid="rollover-prompt">
+      <ArrowRightCircle className="w-4 h-4 text-lira-blue flex-shrink-0" />
+      <p className="text-sm text-lira-text flex-1">
         {sprintName(sprint)} ended with <strong>{unfinished.length}</strong> unfinished ticket{unfinished.length > 1 ? 's' : ''}. Carry {unfinished.length > 1 ? 'them' : 'it'} over to {sprintName(followingSprint(sprint, keys))}?
       </p>
-      <button onClick={onCarryOver} className="text-xs font-medium px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 cursor-pointer">Carry over and close</button>
+      <button onClick={onCarryOver} className="text-xs font-medium px-3 py-1.5 rounded bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer">Carry over and close</button>
     </div>
   );
 }
@@ -104,7 +104,7 @@ function ViewTabs({ view, onChange }: { view: View; onChange: (view: View) => vo
 /** Shown while tickets are ticked: move them to another sprint, or clear the selection. */
 function BulkMoveBar({ count, sprint, keys, onMove, onClear }: { count: number; sprint: string; keys: string[]; onMove: (target: string) => void; onClear: () => void }) {
   return (
-    <div className="sticky top-0 z-10 flex items-center gap-3 bg-lira-blue text-white rounded-lg px-4 py-2 shadow-md">
+    <div className="sticky top-0 z-10 flex items-center gap-3 bg-lira-blue text-lira-on-blue rounded-lg px-4 py-2 shadow-md">
       <span className="text-sm font-medium">{count} selected</span>
       <span className="text-xs opacity-80">Move to</span>
       <SprintSelect value="all" options={keys} onChange={v => v !== 'all' && onMove(v)} allLabel="Choose sprint…" className="text-lira-text" />
@@ -141,7 +141,7 @@ function SprintSpacesModal({ isOpen, sprint, spaces, draft, onDraft, onClose, on
         <button onClick={onClose} className="text-sm px-3 py-1.5 rounded-lg border border-lira-border bg-white cursor-pointer">Cancel</button>
         <button
           onClick={() => { setSprintSpaces(sprint, draft.length && draft.length < spaces.length ? draft : null); onClose(); onSaved(); }}
-          className="text-sm px-3 py-1.5 rounded-lg bg-lira-blue text-white cursor-pointer"
+          className="text-sm px-3 py-1.5 rounded-lg bg-lira-blue text-lira-on-blue cursor-pointer"
         >
           Save
         </button>

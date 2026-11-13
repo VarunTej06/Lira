@@ -127,7 +127,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
                     onClick={handleSubmit}
                     disabled={!hasCommentContent(draft, draftFiles)}
                     data-testid="post-comment"
-                    className="flex items-center gap-1.5 px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1 text-xs bg-lira-blue text-lira-on-blue rounded hover:bg-lira-blue-hover disabled:opacity-50 font-medium cursor-pointer"
                   >
                     <Send className="w-3 h-3" />
                     Save
@@ -230,7 +230,7 @@ const CommentView: React.FC<CommentViewProps> = ({ comment: c, date, editing, ca
             onClick={onSaveEdit}
             disabled={!hasCommentContent(editText, editFiles)}
             data-testid="save-comment-edit"
-            className="px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium cursor-pointer"
+            className="px-3 py-1 text-xs bg-lira-blue text-lira-on-blue rounded hover:bg-lira-blue-hover disabled:opacity-50 font-medium cursor-pointer"
           >
             Save
           </button>

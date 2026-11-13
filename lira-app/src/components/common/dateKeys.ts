@@ -24,7 +24,7 @@ export function monthGrid(year: number, month: number): { date: Date; inMonth: b
 
 /** How a day button looks: the chosen day is filled, today is ringed, days of other months are dimmer. */
 export const dayClass = (selected: boolean, today: boolean, inMonth: boolean): string => {
-  if (selected) return 'bg-lira-blue text-white font-semibold';
+  if (selected) return 'bg-lira-blue text-lira-on-blue font-semibold';
   if (today) return 'ring-1 ring-lira-blue text-lira-blue font-semibold hover:bg-lira-blue-light';
   return inMonth ? 'hover:bg-gray-100' : 'text-lira-muted hover:bg-gray-50';
 };

@@ -27,7 +27,7 @@ type CatalogEntry = (typeof CATALOG)[number];
 function GalleryCard({ entry, done, onAdd }: { entry: CatalogEntry; done: boolean; onAdd: () => void }) {
   return (
     <button type="button" data-testid={`add-${entry.id}`} onClick={onAdd}
-      className="text-left rounded-lg border border-lira-border p-3 hover:border-lira-blue hover:bg-blue-50/40 transition-colors cursor-pointer">
+      className="text-left rounded-lg border border-lira-border p-3 hover:border-lira-blue hover:bg-lira-blue-light/40 transition-colors cursor-pointer">
       <div className="flex items-center justify-between gap-2">
         <span className="text-sm font-semibold text-lira-text">{entry.title}</span>
         {done ? <Check className="w-4 h-4 text-emerald-600" /> : <Plus className="w-4 h-4 text-lira-muted" />}
@@ -69,7 +69,7 @@ export const WidgetGallery: React.FC<{ open: boolean; onClose: () => void; onAdd
           })}
           {entries.length === 0 && <p className="text-sm text-lira-muted text-center py-8">No widget matches.</p>}
         </div>
-        <div className="flex justify-end"><button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Done</button></div>
+        <div className="flex justify-end"><button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Done</button></div>
       </div>
     </Modal>
   );
@@ -164,7 +164,7 @@ export const WidgetSettings: React.FC<{
 
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer">Cancel</button>
-          <button onClick={() => onSave(w)} data-testid="widget-settings-save" className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Save</button>
+          <button onClick={() => onSave(w)} data-testid="widget-settings-save" className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Save</button>
         </div>
       </div>
     </Modal>
@@ -202,7 +202,7 @@ export const GoalsModal: React.FC<{ open: boolean; goals: DashboardGoal[]; onClo
         <button type="button" onClick={() => setList(l => [...l, { id: newId('goal'), metric: 'blocked', op: 'above', value: 3 }])} data-testid="add-goal" className="flex items-center gap-1.5 text-sm font-semibold text-lira-blue hover:underline cursor-pointer"><Plus className="w-4 h-4" /> Add an alert</button>
         <div className="flex justify-end gap-2">
           <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer">Cancel</button>
-          <button onClick={() => onSave(list)} data-testid="goals-save" className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Save alerts</button>
+          <button onClick={() => onSave(list)} data-testid="goals-save" className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Save alerts</button>
         </div>
       </div>
     </Modal>
@@ -271,12 +271,12 @@ export const SnapshotModal: React.FC<{
         {s.enabled && <p className="text-xs text-lira-muted">Next snapshot: {next.toLocaleString()}{s.lastRun ? ` · last taken ${new Date(s.lastRun).toLocaleString()}` : ''}</p>}
         <div className="flex flex-wrap gap-2">
           <button type="button" disabled={busy} data-testid="snapshot-now" onClick={takeNow}
-            className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer disabled:opacity-60">Take a snapshot now</button>
+            className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer disabled:opacity-60">Take a snapshot now</button>
           <button type="button" onClick={onDownload} className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium border border-lira-border rounded-lg hover:bg-gray-50 cursor-pointer"><Download className="w-4 h-4" /> Download Markdown</button>
         </div>
         {msg && <p className="text-sm text-emerald-700" role="status" data-testid="snapshot-msg">{msg}</p>}
         <SavedSnapshots files={files} />
-        <div className="flex justify-end"><button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Close</button></div>
+        <div className="flex justify-end"><button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Close</button></div>
       </div>
     </Modal>
   );

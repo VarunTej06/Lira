@@ -46,7 +46,7 @@ History: 36 baseline, 29, 27, 26 (22 for code only). The workings are in `baseli
 
 ## 4. What people spot by looking (UI "tells")
 
-- Default AI palettes (purple or indigo gradients, glowing blue-violet, generic slate). Lira's palette lives in `theme/palette.ts`.
+- Default AI palettes (purple or indigo gradients, glowing blue-violet, generic slate). Lira's palette lives in `theme/palette.ts`: three themes of three colours each, from the owner's reference screens in `docs/04-quality/ui-references/`.
 - Same card, same shadow and same rounded corners everywhere; no empty, loading or error states.
 - Stock icons and emoji as decoration, "Welcome back" copy, lorem-style placeholder text.
 - Layout that looks the same on every screen and ignores the task.

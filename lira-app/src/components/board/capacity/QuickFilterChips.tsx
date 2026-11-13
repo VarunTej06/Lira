@@ -22,7 +22,7 @@ export function QuickFilterChips(s: CapacityState) {
               onClick={() => setLocalQuickFilter(chip.id)}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 localQuickFilter === chip.id
-                  ? 'bg-lira-blue text-white shadow-2xs'
+                  ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
                   : 'bg-gray-100 text-lira-text hover:bg-gray-200'
               }`}
             >

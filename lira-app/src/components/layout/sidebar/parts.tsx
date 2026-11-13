@@ -62,7 +62,7 @@ function SpaceMenu({ space, starred, isHidden, isArchived, onMenuOpen, onStar, o
       <div className="border-t border-white/10 my-1" />
       {onToggleHide && (
         <ContextItem
-          icon={isHidden ? <Eye className="w-3.5 h-3.5 text-blue-400" /> : <EyeOff className="w-3.5 h-3.5 text-amber-400" />}
+          icon={isHidden ? <Eye className="w-3.5 h-3.5 text-lira-nav-accent" /> : <EyeOff className="w-3.5 h-3.5 text-amber-400" />}
           label={isHidden ? 'Unhide space' : 'Hide space'}
           onClick={onToggleHide}
         />
@@ -134,7 +134,7 @@ export const FloatingMenu: React.FC<{ menuRoot: string; onClose: () => void; cla
       {...menuPop}
       data-menu-root={menuRoot}
       data-floating
-      className={`bg-[#1D2939] border border-white/10 rounded-lg shadow-2xl py-1 max-h-[calc(100vh-16px)] overflow-y-auto ${className}`}
+      className={`bg-lira-nav border border-white/10 rounded-lg shadow-2xl py-1 max-h-[calc(100vh-16px)] overflow-y-auto ${className}`}
       style={{ position: 'fixed', top: pos?.top ?? 0, left: pos?.left ?? 0, zIndex: 1000, visibility: pos ? 'visible' : 'hidden', transformOrigin: 'top right' }}
       onClick={e => e.stopPropagation()}
     >

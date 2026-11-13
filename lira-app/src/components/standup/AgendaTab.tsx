@@ -33,7 +33,7 @@ export function AgendaTab(s: StandupState) {
       <div className="flex items-center gap-2">
         <div className="inline-flex rounded-xl border border-lira-border overflow-hidden text-xs">
           {(['status', 'person'] as const).map(v => (
-            <button key={v} onClick={() => setView(v)} className={`px-3 py-1.5 cursor-pointer ${view === v ? 'bg-lira-blue text-white' : 'bg-white text-lira-muted hover:text-lira-text'}`}>
+            <button key={v} onClick={() => setView(v)} className={`px-3 py-1.5 cursor-pointer ${view === v ? 'bg-lira-blue text-lira-on-blue' : 'bg-white text-lira-muted hover:text-lira-text'}`}>
               {v === 'status' ? 'By status' : 'By person'}
             </button>
           ))}

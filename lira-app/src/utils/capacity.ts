@@ -103,7 +103,7 @@ export const teamTotals = (issues: Issue[]) => ({
 
 const STATUS_GROUPS = [
   { id: 'backlog', label: 'Backlog Pool', desc: 'Items awaiting refinement & sprint commitment', dot: PALETTE.textMuted, color: 'border-slate-200 bg-white' },
-  { id: 'todo', label: 'Ready (To Do)', desc: 'Prioritized & groomed items ready for active pickup', dot: PALETTE.textStrong, color: 'border-blue-200 bg-white' },
+  { id: 'todo', label: 'Ready (To Do)', desc: 'Prioritized & groomed items ready for active pickup', dot: PALETTE.textStrong, color: 'border-lira-border bg-white' },
   { id: 'inprogress', label: 'In Flight (In Progress)', desc: 'Active development and implementation', dot: PALETTE.amber, color: 'border-amber-200 bg-white' },
   { id: 'blocked', label: 'Blocked', desc: 'Work that cannot move until something else is resolved', dot: PALETTE.critical, color: 'border-red-200 bg-white' },
   { id: 'done', label: 'Completed (Done)', desc: 'Verified, tested, and resolved work items', dot: PALETTE.success, color: 'border-emerald-200 bg-white' },

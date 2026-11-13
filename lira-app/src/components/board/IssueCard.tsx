@@ -66,7 +66,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, allIssues = 
 
             {labels.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-2">
-                {labels.slice(0, 3).map(label => <span key={label} className="px-1.5 py-0.5 text-3xs font-medium rounded bg-blue-50 text-blue-600">{label}</span>)}
+                {labels.slice(0, 3).map(label => <span key={label} className="px-1.5 py-0.5 text-3xs font-medium rounded bg-lira-blue-light text-lira-text">{label}</span>)}
                 {labels.length > 3 && <span className="px-1.5 py-0.5 text-3xs font-medium rounded bg-gray-100 text-lira-muted">+{labels.length - 3}</span>}
               </div>
             )}

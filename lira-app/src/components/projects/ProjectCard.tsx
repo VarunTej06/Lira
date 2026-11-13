@@ -23,7 +23,7 @@ function SpaceTag({ space }: { space: Space | undefined }) {
 function Lead({ lead }: { lead: string | undefined }) {
   return (
     <div className="flex items-center gap-1 text-2xs text-lira-muted font-medium">
-      <span className="w-5 h-5 rounded-full bg-lira-blue text-white text-4xs font-bold flex items-center justify-center">{lead?.slice(0, 2).toUpperCase() || 'VY'}</span>
+      <span className="w-5 h-5 rounded-full bg-lira-blue text-lira-on-blue text-4xs font-bold flex items-center justify-center">{lead?.slice(0, 2).toUpperCase() || 'VY'}</span>
       <span className="truncate max-w-[80px]">{lead || 'Varun Tej'}</span>
     </div>
   );
@@ -62,7 +62,7 @@ export function ProjectCard({ project, spaces, issues, onOpen }: { project: Proj
             <div>
               <h2 className="text-sm font-bold text-lira-text group-hover:text-lira-blue transition-colors line-clamp-1">{project.name}</h2>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="font-mono text-2xs font-bold bg-blue-50 text-lira-blue px-1.5 py-0.2 rounded border border-blue-200">{project.key}</span>
+                <span className="font-mono text-2xs font-bold bg-lira-blue-light text-lira-blue px-1.5 py-0.2 rounded border border-lira-border">{project.key}</span>
                 <span className="text-lira-muted text-2xs">·</span>
                 <span className="text-2xs text-lira-muted truncate max-w-[130px]">{project.category || 'Software'}</span>
               </div>
@@ -76,7 +76,7 @@ export function ProjectCard({ project, spaces, issues, onOpen }: { project: Proj
               className="!px-2 !py-1"
               scope={{ type: 'project', id: `project:${project.id}`, name: project.name, spaceId: project.spaceId, projectKey: project.key }}
             />
-            <div className="p-1 rounded-md text-gray-400 group-hover:text-lira-blue group-hover:bg-blue-50 transition-all flex-shrink-0"><ChevronRight className="w-4 h-4" /></div>
+            <div className="p-1 rounded-md text-gray-400 group-hover:text-lira-blue group-hover:bg-lira-blue-light transition-all flex-shrink-0"><ChevronRight className="w-4 h-4" /></div>
           </div>
         </div>
 

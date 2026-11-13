@@ -139,7 +139,7 @@ export const WIPLimitsModal: React.FC<{
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs"
+            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer shadow-xs"
           >
             Save WIP Limits
           </button>

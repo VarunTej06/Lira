@@ -22,7 +22,7 @@ export function ActiveFilterChips(s: FiltersState) {
             {selectedSpaces.map(id => (
               <span
                 key={id}
-                className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-md text-2xs font-medium"
+                className="inline-flex items-center gap-1 px-2 py-0.5 bg-lira-blue-light text-lira-text border border-lira-border rounded-md text-2xs font-medium"
               >
                 <button
                   type="button"
@@ -39,7 +39,7 @@ export function ActiveFilterChips(s: FiltersState) {
                     e.stopPropagation();
                     setSelectedSpaces(prev => prev.filter(x => x !== id));
                   }}
-                  className="hover:text-blue-950 ml-0.5 text-blue-500 font-bold cursor-pointer"
+                  className="hover:text-lira-text ml-0.5 text-lira-blue font-bold cursor-pointer"
                   title="Remove filter"
                 >
                   ×

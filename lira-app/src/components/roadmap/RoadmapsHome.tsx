@@ -23,7 +23,7 @@ function Tiles({ totals }: { totals: Totals }) {
   const tiles = [
     { label: 'Roadmaps', value: totals.roadmaps, sub: `${totals.counts.archived} archived`, icon: <Map className="w-4 h-4" />, tone: 'text-orange-600 bg-orange-50' },
     { label: 'Epics planned', value: totals.items, sub: 'across all roadmaps', icon: <Layers className="w-4 h-4" />, tone: 'text-violet-600 bg-violet-50' },
-    { label: 'Average progress', value: `${totals.percent}%`, sub: 'weighted by duration', icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-blue-50' },
+    { label: 'Average progress', value: `${totals.percent}%`, sub: 'weighted by duration', icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Needs attention', value: totals.attention, sub: 'late or blocked epics', icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
   ];
   return (
@@ -48,7 +48,7 @@ function EmptyState({ none, onCreate }: { none: boolean; onCreate: () => void })
       <Map className="w-9 h-9 mx-auto text-lira-muted mb-2" />
       <p className="text-sm text-lira-text font-medium">{none ? 'No roadmaps yet' : 'No roadmaps match'}</p>
       <p className="text-xs text-lira-muted mt-1">{none ? 'Create one, or start from the Lira product roadmap template.' : 'Try another tab or search.'}</p>
-      {none && <button onClick={onCreate} className="mt-4 px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg cursor-pointer">Create roadmap</button>}
+      {none && <button onClick={onCreate} className="mt-4 px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg cursor-pointer">Create roadmap</button>}
     </div>
   );
 }
@@ -86,7 +86,7 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
             <h1 className="text-xl font-semibold text-lira-text flex items-center gap-2"><Map className="w-5 h-5 text-orange-500" /> Roadmaps</h1>
             <p className="text-xs text-lira-muted mt-0.5">Plan work over time. Every item on a roadmap is an epic in Lira. Open a roadmap for the timeline, planner, Now/Next/Later and table views.</p>
           </div>
-          <button onClick={() => setShowNew(true)} className="text-sm px-4 py-2 bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-4 h-4" /> Create roadmap</button>
+          <button onClick={() => setShowNew(true)} className="text-sm px-4 py-2 bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-4 h-4" /> Create roadmap</button>
         </div>
 
         <Tiles totals={totals} />
@@ -94,7 +94,7 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex rounded-lg border border-lira-border overflow-hidden bg-lira-surface">
             {TABS.map(t => (
-              <button key={t} onClick={() => setTab(t)} className={`px-3 py-1.5 text-xs capitalize cursor-pointer ${tab === t ? 'bg-lira-blue text-white' : 'text-lira-text hover:bg-lira-bg'}`}>{t} <span className="opacity-70">{totals.counts[t]}</span></button>
+              <button key={t} onClick={() => setTab(t)} className={`px-3 py-1.5 text-xs capitalize cursor-pointer ${tab === t ? 'bg-lira-blue text-lira-on-blue' : 'text-lira-text hover:bg-lira-bg'}`}>{t} <span className="opacity-70">{totals.counts[t]}</span></button>
             ))}
           </div>
           <div className="relative">

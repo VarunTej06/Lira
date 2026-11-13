@@ -35,7 +35,7 @@ const Field = ({ label, required, children }: { label: string; required?: boolea
 /** A selectable card for the two ways of choosing a space. */
 function ChoiceCard({ selected, onSelect, icon, title, text }: { selected: boolean; onSelect: () => void; icon: ReactNode; title: string; text: string }) {
   return (
-    <div onClick={onSelect} className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selected ? 'border-lira-blue bg-blue-50/40 shadow-xs' : 'border-gray-200 hover:border-gray-300 bg-white'}`}>
+    <div onClick={onSelect} className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selected ? 'border-lira-blue bg-lira-blue-light/40 shadow-xs' : 'border-gray-200 hover:border-gray-300 bg-white'}`}>
       <div className="flex items-center gap-2.5">
         <input type="radio" name="spaceAssociation" checked={selected} onChange={onSelect} className="w-4 h-4 text-lira-blue focus:ring-lira-blue cursor-pointer" />
         {icon}
@@ -123,7 +123,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   return (
     <Modal isOpen={isOpen} onClose={close} title="Create Project" size="lg">
       <form onSubmit={handleSubmit} className="p-6 space-y-5">
-        <div className="flex items-start gap-3 p-3 bg-blue-50/60 border border-blue-200/80 rounded-xl text-xs text-blue-800">
+        <div className="flex items-start gap-3 p-3 bg-lira-blue-light/60 border border-lira-border rounded-xl text-xs text-lira-text">
           <FolderKanban className="w-5 h-5 text-lira-blue flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold text-lira-blue">Lira Project Architecture</p>

@@ -22,7 +22,7 @@ export const AppLauncher: React.FC<{
   const links = [
     {
       label: 'Lira Board',
-      icon: <LayoutGrid className="w-4 h-4 text-blue-400" />,
+      icon: <LayoutGrid className="w-4 h-4 text-lira-nav-accent" />,
       action: () => setOpen(false),
     },
     {
@@ -57,7 +57,7 @@ export const AppLauncher: React.FC<{
         onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
         className={`p-2 rounded-lg transition-all duration-150 flex items-center justify-center group cursor-pointer ${
           open
-            ? 'bg-[#0C66E4]/25 border border-blue-400 text-blue-300 ring-2 ring-blue-500/30 shadow-md'
+            ? 'bg-lira-nav-accent/15 border border-lira-nav-accent text-lira-nav-accent ring-2 ring-lira-nav-accent/30 shadow-md'
             : 'bg-white/5 hover:bg-white/15 active:scale-95 text-white/80 hover:text-white border border-white/10 hover:border-white/20 shadow-2xs'
         }`}
         title="Switch sites or apps"
@@ -83,7 +83,7 @@ export const AppLauncher: React.FC<{
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-60 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 p-2 origin-top-left animate-scale-in">
+        <div className="absolute top-full left-0 mt-2 w-60 bg-lira-nav border border-white/10 rounded-2xl shadow-2xl z-50 p-2 origin-top-left animate-scale-in">
           <p className="text-3xs font-semibold text-white/40 uppercase tracking-wider px-2.5 pb-2 border-b border-white/10 mb-1 flex items-center justify-between">
             <span>Switch sites or apps</span>
             <span className="text-4xs bg-white/10 px-1.5 py-0.2 rounded font-normal text-white/50">Lira v2.0</span>

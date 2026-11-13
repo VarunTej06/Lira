@@ -17,7 +17,7 @@ export function IssueCrashFallback({ onClose }: { onClose: () => void }) {
       <div className="bg-white rounded-xl p-8 max-w-md text-center shadow-modal">
         <p className="text-lg font-semibold text-lira-text mb-2">Failed to render this issue</p>
         <p className="text-sm text-lira-muted mb-4">There was an error displaying the issue details.</p>
-        <button onClick={onClose} className="px-4 py-2 bg-lira-blue text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+        <button onClick={onClose} className="px-4 py-2 bg-lira-blue text-lira-on-blue rounded-lg text-sm font-medium hover:bg-lira-blue-hover">
           Close
         </button>
       </div>

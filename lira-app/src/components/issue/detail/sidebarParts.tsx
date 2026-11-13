@@ -6,7 +6,6 @@ import { BlockedToggle } from './BlockedToggle';
 import { DetailRow } from './detailParts';
 import { ASSIGNEE_OPTIONS, STATUS_OPTIONS } from './issueOptions';
 import type { IssueDetailState } from './useIssueDetail';
-import { PALETTE } from '../../../theme/palette';
 
 const FIELD = 'w-full text-xs text-lira-text bg-white border border-lira-border hover:border-gray-400 rounded px-2 py-1 outline-none focus:border-lira-blue transition-colors cursor-pointer';
 const KNOWN_ASSIGNEES = ['', 'VY', 'Varuntej Yadla', 'Alex Morgan', 'Sarah Connor', 'Dev Team'];
@@ -91,7 +90,7 @@ export function TimeTracking({ logged = 0, estimate = 0 }: { logged?: number; es
   return (
     <div className="w-full">
       <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden mb-1">
-        <div className="h-full rounded-full transition-all" style={{ width: `${Math.min(100, Math.round((logged / (estimate || 1)) * 100))}%`, backgroundColor: PALETTE.brand }} />
+        <div className="h-full rounded-full transition-all bg-lira-blue" style={{ width: `${Math.min(100, Math.round((logged / (estimate || 1)) * 100))}%` }} />
       </div>
       <div className="flex justify-between text-3xs text-lira-muted">
         <span>{formatTimeTracking(logged)} logged</span><span>{formatTimeTracking(estimate)} est.</span>

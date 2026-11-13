@@ -50,7 +50,7 @@ function SpaceLink({ space, onSwitchToSpace }: Pick<DetailCtx, 'space' | 'onSwit
   return (
     <button
       onClick={() => onSwitchToSpace?.(space.id!)}
-      className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-50 hover:bg-blue-50 border border-lira-border hover:border-lira-blue rounded-md text-lira-text text-xs transition-all cursor-pointer group"
+      className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-50 hover:bg-lira-blue-light border border-lira-border hover:border-lira-blue rounded-md text-lira-text text-xs transition-all cursor-pointer group"
       title={`Switch workspace to space ${space.name}`}
     >
       <span>{space.icon || '📁'}</span>
@@ -92,7 +92,7 @@ function Banner({ project, space, projectInitials, onSwitchToSpace }: Pick<Detai
         <div>
           <div className="flex items-center flex-wrap gap-2.5">
             <h1 className="text-xl font-bold text-lira-text tracking-tight">{project.name}</h1>
-            <span className="font-mono text-xs font-bold bg-blue-100 text-lira-blue px-2 py-0.5 rounded border border-blue-200">{project.key}</span>
+            <span className="font-mono text-xs font-bold bg-lira-blue-light text-lira-blue px-2 py-0.5 rounded border border-lira-border">{project.key}</span>
             {project.category && (
               <span className="text-xs bg-gray-100 text-gray-700 font-medium px-2 py-0.5 rounded-full">{project.category}</span>
             )}

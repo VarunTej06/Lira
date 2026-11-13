@@ -40,7 +40,7 @@ export function HiddenSpacesSection(s: SidebarState) {
             {hiddenHeaderMenuOpen && (
               <FloatingMenu menuRoot="hidden-header" onClose={() => setHiddenHeaderMenuOpen(false)} className="min-w-[190px]">
                 <ContextItem
-                  icon={<Eye className="w-3.5 h-3.5 text-blue-400" />}
+                  icon={<Eye className="w-3.5 h-3.5 text-lira-nav-accent" />}
                   label="Unhide all spaces"
                   onClick={(e) => {
                     e.stopPropagation();

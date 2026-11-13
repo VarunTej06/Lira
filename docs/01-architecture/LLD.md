@@ -61,7 +61,7 @@ erDiagram
 | `subtasks`, `issue_links`, `watchers` | normalised from the embedded arrays | `link_type`: relates_to, blocks, blocked_by, duplicates, cloned_by |
 | `attachments` | `id`, `issue_id`/`comment_id`, `name`, `size`, `mime_type`, `blob_key`, `source`, `url`, `scan_status`, `uploaded_by` | Bytes in Blob; link-type attachments keep only `url` |
 | `projects`, `sprints`, `teams`, `team_members`, `standups`, `roadmaps`, `roadmap_items`, `dashboards` | from today's JSON files and `structuredStore.ts` rows | Dashboard widget config as JSONB |
-| `user_preferences` | `user_id`, `key`, `value` | Theme, accent, sidebar. Replaces per-browser `lira_*` keys that are personal |
+| `user_preferences` | `user_id`, `key`, `value` | Theme, light palette, sidebar. Replaces per-browser `lira_*` keys that are personal |
 | `ai_settings` | `org_id`, `provider`, `base_url` (admin allow-listed), `model`, `secret_ref` | Key stored in Key Vault, not here |
 | `audit_log` | `id`, `org_id`, `actor_id`, `action`, `object_type`, `object_id`, `before`, `after`, `ip`, `request_id`, `at` | Append-only; no UPDATE/DELETE grant |
 

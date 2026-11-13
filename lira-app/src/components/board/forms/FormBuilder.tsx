@@ -48,7 +48,7 @@ export function FormBuilder(s: FormsState) {
               </div>
 
               {/* Add Field Box */}
-              <div className="space-y-3 bg-blue-50/40 p-4 rounded-xl border border-blue-200">
+              <div className="space-y-3 bg-lira-blue-light/40 p-4 rounded-xl border border-lira-border">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-lira-blue flex items-center gap-1.5">
                     <ListPlus className="w-4 h-4" /> Add Field
@@ -88,7 +88,7 @@ export function FormBuilder(s: FormsState) {
                     <button
                       type="button"
                       onClick={handleAddField}
-                      className="w-full py-1.5 px-3 bg-lira-blue text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center gap-1"
+                      className="w-full py-1.5 px-3 bg-lira-blue text-lira-on-blue rounded-lg text-xs font-semibold hover:bg-lira-blue-hover transition-colors cursor-pointer flex items-center justify-center gap-1"
                     >
                       <Plus className="w-3.5 h-3.5" /> Add Field
                     </button>

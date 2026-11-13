@@ -23,7 +23,7 @@ interface Props { dashboardId: string; issues: Issue[]; spaces: Space[]; onOpenI
 
 const Btn: React.FC<{ onClick: () => void; children: React.ReactNode; active?: boolean; testId?: string; title?: string }> = ({ onClick, children, active, testId, title }) => (
   <button type="button" onClick={onClick} data-testid={testId} title={title}
-    className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors cursor-pointer ${active ? 'bg-lira-blue text-white border-lira-blue' : 'bg-white text-lira-text border-lira-border hover:bg-gray-50'}`}>
+    className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border transition-colors cursor-pointer ${active ? 'bg-lira-blue text-lira-on-blue border-lira-blue' : 'bg-white text-lira-text border-lira-border hover:bg-gray-50'}`}>
     {children}
   </button>
 );
@@ -37,7 +37,7 @@ function MissingDashboard({ onBack }: { onBack: () => void }) {
       <LayoutDashboard className="w-10 h-10 text-lira-muted" />
       <h1 className="text-lg font-bold text-lira-text">This dashboard does not exist</h1>
       <p className="text-sm text-lira-muted">It may have been deleted, or the link was made on another computer.</p>
-      <button onClick={onBack} className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">All dashboards</button>
+      <button onClick={onBack} className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">All dashboards</button>
     </div>
   );
 }

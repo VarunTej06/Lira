@@ -8,7 +8,7 @@ import { buildNotifications, type Notification } from '../../../utils/notificati
 const BADGE = {
   closed: { color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30', label: '✓ Closed' },
   edited: { color: 'bg-amber-500/20 text-amber-300 border-amber-500/30', label: 'Edited' },
-  created: { color: 'bg-blue-500/20 text-blue-300 border-blue-500/30', label: '+ Created' },
+  created: { color: 'bg-lira-nav-accent/15 text-lira-nav-accent border-lira-nav-accent/30', label: '+ Created' },
 };
 const TABS = [{ id: 'all' as const, label: 'All' }, { id: 'created' as const, label: 'Created' }, { id: 'edited' as const, label: 'Edited' }, { id: 'closed' as const, label: 'Closed' }];
 
@@ -28,7 +28,7 @@ function NotificationRow({ notif, hasUnread, onOpen }: { notif: Notification; ha
           <a
             href={`#issue-${notif.issue.key}`}
             onClick={e => { e.preventDefault(); e.stopPropagation(); onOpen(notif.issue); }}
-            className="text-blue-400 hover:text-blue-300 font-mono font-bold text-xs hover:underline flex items-center gap-0.5"
+            className="text-lira-nav-accent hover:text-lira-nav-accent font-mono font-bold text-xs hover:underline flex items-center gap-0.5"
             title={`Open ${notif.issue.key}`}
           >
             {notif.issue.key}<ExternalLink className="w-2.5 h-2.5 opacity-60 inline" />
@@ -38,7 +38,7 @@ function NotificationRow({ notif, hasUnread, onOpen }: { notif: Notification; ha
         </div>
         <p className="text-3xs text-white/30 mt-1">{relativeTime(notif.createdAt)}</p>
       </div>
-      {hasUnread && <span className="w-2 h-2 rounded-full bg-blue-400 flex-shrink-0 mt-1.5" />}
+      {hasUnread && <span className="w-2 h-2 rounded-full bg-lira-nav-accent flex-shrink-0 mt-1.5" />}
     </div>
   );
 }
@@ -81,11 +81,11 @@ export const NotificationsBell: React.FC<{
         title="Notifications Center"
       >
         <Bell className="w-4.5 h-4.5" style={{ width: 18, height: 18 }} />
-        {hasUnread && <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-[#1D2125]" />}
+        {hasUnread && <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-lira-nav" />}
       </button>
 
       {open && (
-        <div className="absolute top-full right-0 mt-2 w-96 bg-[#1D2939] border border-white/10 rounded-xl shadow-2xl z-50 transition-all duration-150 animate-scale-in overflow-hidden">
+        <div className="absolute top-full right-0 mt-2 w-96 bg-lira-nav border border-white/10 rounded-xl shadow-2xl z-50 transition-all duration-150 animate-scale-in overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-white/10 bg-white/5">
             <div className="flex items-center gap-2">
@@ -100,14 +100,14 @@ export const NotificationsBell: React.FC<{
                   type="checkbox"
                   checked={onlyUnread}
                   onChange={e => setOnlyUnread(e.target.checked)}
-                  className="w-3.5 h-3.5 text-blue-500 rounded border-white/20 bg-white/10"
+                  className="w-3.5 h-3.5 text-lira-nav-accent rounded border-white/20 bg-white/10"
                 />
                 <span>Only unread</span>
               </label>
               {hasUnread && (
                 <button
                   onClick={() => setHasUnread(false)}
-                  className="text-2xs text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+                  className="text-2xs text-lira-nav-accent hover:text-lira-nav-accent transition-colors cursor-pointer"
                 >
                   Mark all as read
                 </button>
@@ -123,7 +123,7 @@ export const NotificationsBell: React.FC<{
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-2.5 py-1 text-xs font-medium rounded-t-lg transition-colors cursor-pointer ${
                   activeTab === tab.id
-                    ? 'bg-[#1D2939] text-white border-t border-x border-white/10'
+                    ? 'bg-lira-nav text-white border-t border-x border-white/10'
                     : 'text-white/40 hover:text-white hover:bg-white/5'
                 }`}
               >

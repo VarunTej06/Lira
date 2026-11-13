@@ -40,7 +40,7 @@ function Facet({ id, open, onToggle, active, summary, icon, width, align = 'left
       <button
         type="button"
         onClick={() => onToggle(open === id ? null : id)}
-        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${active ? 'bg-blue-50/60 border-lira-blue text-lira-blue font-semibold' : 'bg-white border-lira-border text-gray-700 hover:bg-gray-100'}`}
+        className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-left transition-all cursor-pointer ${active ? 'bg-lira-blue-light/60 border-lira-blue text-lira-blue font-semibold' : 'bg-white border-lira-border text-gray-700 hover:bg-gray-100'}`}
       >
         <span className="flex items-center gap-1.5 truncate">{icon}<span className="truncate">{summary}</span></span>
         <ChevronDown className="w-3 h-3 opacity-60 flex-shrink-0" />
@@ -59,7 +59,7 @@ function Choice({ active, onClick, children }: { active: boolean; onClick: () =>
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${active ? 'bg-blue-50 text-lira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'}`}
+      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${active ? 'bg-lira-blue-light text-lira-blue font-semibold' : 'hover:bg-gray-50 text-gray-700'}`}
     >
       {children}
       {active && <Check className="w-3.5 h-3.5 text-lira-blue" />}
@@ -96,7 +96,7 @@ function PresetButtons({ active, counts, onApply }: { active: string; counts: Fi
           <button
             key={preset.id}
             onClick={() => onApply(preset.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${isActive ? 'bg-lira-blue text-white shadow-xs' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${isActive ? 'bg-lira-blue text-lira-on-blue shadow-xs' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
           >
             <span>{preset.icon}</span>
             <span>{preset.label}</span>

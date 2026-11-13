@@ -38,7 +38,7 @@ export function IssueSidebar(s: IssueDetailState) {
           <DetailRow icon={icon(Tag)} label="Labels">
             <div className="flex flex-wrap gap-1">
               {safeArr(local.labels).map(label => (
-                <span key={label} className="flex items-center gap-1 px-1.5 py-0.5 text-xs bg-blue-50 text-blue-700 rounded-full font-medium">
+                <span key={label} className="flex items-center gap-1 px-1.5 py-0.5 text-xs bg-lira-blue-light text-lira-text rounded-full font-medium">
                   {label}
                   <button onClick={() => patch({ labels: local.labels!.filter(l => l !== label) })} className="hover:text-red-500">×</button>
                 </span>
@@ -75,7 +75,7 @@ export function IssueSidebar(s: IssueDetailState) {
 
       <div className="p-4 border-t border-lira-border bg-white sticky bottom-0 z-10 shadow-xs space-y-2">
         {s.dirty && <p className="text-2xs text-amber-600 text-center" data-testid="unsaved-note">You have unsaved changes</p>}
-        <button type="button" onClick={handleSaveChanges} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-lira-blue hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer">
+        <button type="button" onClick={handleSaveChanges} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer">
           <Save className="w-4 h-4" />Save changes
         </button>
       </div>

@@ -166,7 +166,7 @@ export const AccountDropdown: React.FC = () => {
             </button>
             <button
               onClick={saveProfile}
-              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 shadow-xs"
+              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover shadow-xs"
             >
               Save Profile
             </button>

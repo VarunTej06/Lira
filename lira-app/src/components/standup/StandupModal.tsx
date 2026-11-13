@@ -28,9 +28,9 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
     <Modal isOpen={isOpen} onClose={onClose} title={CALL_TITLE[scope.type]} size="xl">
       <div className="flex flex-col max-h-[78vh]">
         <div className="px-6 pt-4 pb-3 border-b border-lira-border flex flex-wrap items-center gap-3">
-          <span className="text-3xs font-bold uppercase tracking-wider px-2 py-1 rounded-lg bg-blue-50 text-lira-blue">{SCOPE_LABEL[scope.type]}</span>
+          <span className="text-3xs font-bold uppercase tracking-wider px-2 py-1 rounded-lg bg-lira-blue-light text-lira-blue">{SCOPE_LABEL[scope.type]}</span>
           <h2 className="text-base font-semibold text-lira-text truncate">{scope.name}</h2>
-          <span className="text-3xs font-semibold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Beta</span>
+          <span className="text-3xs font-semibold px-2 py-0.5 rounded-full bg-lira-blue-light text-lira-blue">Beta</span>
           <span className="text-xs text-lira-muted ml-auto">{s.scoped.length} tickets · {s.members.length} people</span>
         </div>
 
@@ -46,7 +46,7 @@ export const StandupModal: React.FC<StandupModalProps> = ({ isOpen, onClose, sco
           ))}
         </div>
 
-        {s.msg && <div className="mx-6 mt-3 text-xs rounded-xl bg-blue-50 border border-blue-200 text-blue-800 px-3 py-2">{s.msg}</div>}
+        {s.msg && <div className="mx-6 mt-3 text-xs rounded-xl bg-lira-blue-light border border-lira-border text-lira-text px-3 py-2">{s.msg}</div>}
 
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
           {s.tab === 'agenda' && <AgendaTab {...s} />}

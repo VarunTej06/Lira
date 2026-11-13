@@ -85,7 +85,7 @@ export const TicketRow: React.FC<TicketRowProps> = ({
     <div
       onClick={() => onClick(issue)} {...issueLink(issue)}
       className={`flex items-center gap-3 px-3 py-2 border-b border-lira-border last:border-0 hover:bg-gray-50 cursor-pointer transition-colors ${
-        selected ? 'bg-blue-50' : ''
+        selected ? 'bg-lira-blue-light' : ''
       }`}
     >
       {onToggleSelect && (
@@ -152,7 +152,7 @@ export const SprintFilterBar: React.FC<{
   const cur = currentSprintKey();
   const chip = (active: boolean) =>
     `text-xs px-2.5 py-1 rounded-full border cursor-pointer transition-colors ${
-      active ? 'bg-lira-blue text-white border-lira-blue' : 'bg-white text-lira-muted border-lira-border hover:text-lira-text'
+      active ? 'bg-lira-blue text-lira-on-blue border-lira-blue' : 'bg-white text-lira-muted border-lira-border hover:text-lira-text'
     }`;
   return (
     <div className="flex items-center gap-2 px-4 py-2 border-b border-lira-border bg-white">

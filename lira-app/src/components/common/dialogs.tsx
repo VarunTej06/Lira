@@ -6,7 +6,7 @@ import { dialogBackdrop, dialogPanel } from './motionPresets';
 import { confirmLabelFor, currentRequest, dismissAnswer, finish, subscribe, type Request, type Tone } from './dialogStore';
 import { useResetWhen } from '../../hooks/useResetWhen';
 
-const ICON_TONE: Record<Tone, string> = { danger: 'bg-red-100 text-red-600', default: 'bg-blue-100 text-lira-blue' };
+const ICON_TONE: Record<Tone, string> = { danger: 'bg-red-100 text-red-600', default: 'bg-lira-blue-light text-lira-blue' };
 
 /** The round icon of a dialog: a pencil for a question with a text box, an "i" for a notice, a warning triangle for a yes/no. */
 function KindIcon({ kind }: { kind: Request['kind'] }) {
@@ -104,8 +104,8 @@ export const DialogHost: React.FC = () => {
                   ref={confirmRef}
                   type="submit"
                   disabled={blocked}
-                  className={`px-4 py-2 text-sm font-semibold text-white rounded-lg shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
-                    tone === 'danger' ? 'bg-red-600 hover:bg-red-700' : 'bg-lira-blue hover:bg-lira-blue-hover'
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+                    tone === 'danger' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue'
                   }`}
                 >
                   {confirmLabelFor(req, tone)}

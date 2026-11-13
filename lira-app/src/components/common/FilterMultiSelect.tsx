@@ -54,7 +54,7 @@ function OptionRow({ option, on, single, onPick }: { option: FilterOption; on: b
       <li role="option" aria-selected={on}>
         <label className="flex items-center gap-2.5 px-3 py-1.5 text-sm cursor-pointer hover:bg-gray-50">
           <input type={single ? 'radio' : 'checkbox'} className="sr-only peer" checked={on} onChange={onPick} />
-          <span className={`w-4 h-4 ${single ? 'rounded-full' : 'rounded'} border flex items-center justify-center flex-shrink-0 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-white' : 'border-gray-300 bg-white'}`}>
+          <span className={`w-4 h-4 ${single ? 'rounded-full' : 'rounded'} border flex items-center justify-center flex-shrink-0 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-lira-on-blue' : 'border-gray-300 bg-white'}`}>
             {on && <Check className="w-3 h-3" strokeWidth={3} />}
           </span>
           {option.color && <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: option.color }} />}
@@ -79,12 +79,12 @@ function FilterButton({ buttonRef, label, icon, open, highlighted, count, valueL
     aria-expanded={open}
     data-testid={`filter-${label.toLowerCase()}`}
     className={`flex items-center gap-1.5 px-3 py-1.5 text-sm border rounded transition-colors cursor-pointer ${
-      highlighted ? 'border-lira-blue text-lira-blue bg-blue-50 hover:bg-blue-100' : 'text-lira-muted border-lira-border hover:bg-gray-50'
+      highlighted ? 'border-lira-blue text-lira-blue bg-lira-blue-light hover:brightness-95' : 'text-lira-muted border-lira-border hover:bg-gray-50'
     }`}
   >
     {icon}
     <span>{label}{valueLabel ? <span className="font-semibold">{`: ${valueLabel}`}</span> : null}</span>
-    {count > 0 && <span className="bg-blue-100 text-blue-700 text-xs rounded-full px-1.5 font-semibold">{count}</span>}
+    {count > 0 && <span className="bg-lira-blue-light text-lira-blue text-xs rounded-full px-1.5 font-semibold">{count}</span>}
     <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
   </button>
   );

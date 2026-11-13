@@ -23,7 +23,7 @@ export function SettingsTab(ctx: DetailCtx) {
             {/* 1. Workflow States (with ability to rename) */}
             <div className="bg-white rounded-xl border border-lira-border shadow-xs p-6 space-y-4">
               <div className="flex items-center gap-2.5 border-b border-lira-border pb-3">
-                <Workflow className="w-5 h-5 text-blue-600" />
+                <Workflow className="w-5 h-5 text-lira-blue" />
                 <div>
                   <h3 className="text-sm font-bold text-lira-text">Workflow States</h3>
                   <p className="text-xs text-lira-muted mt-0.5">

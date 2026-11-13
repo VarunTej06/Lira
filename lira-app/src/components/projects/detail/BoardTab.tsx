@@ -27,7 +27,7 @@ export function BoardTab(ctx: DetailCtx) {
                   onClick={() => setFilterAssignee(v => !v)}
                   className={`text-xs px-2.5 py-1.5 rounded-lg border font-medium transition-all cursor-pointer ${
                     filterAssignee
-                      ? 'bg-blue-50 border-lira-blue text-lira-blue'
+                      ? 'bg-lira-blue-light border-lira-blue text-lira-blue'
                       : 'bg-white border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >

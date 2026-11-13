@@ -2,7 +2,7 @@
 
 How Lira is tested automatically, what each test protects, how to run them and how to add more.
 
-**Right now:** 1585 automated tests in 138 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
+**Right now:** 1602 automated tests in 139 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
 
 **Done by hand:** [`docs/04-quality/manual-test-checklist.md`](docs/04-quality/manual-test-checklist.md) lists every screen to click through after the refactor.
 
@@ -16,7 +16,7 @@ Run every command from the `lira-app` folder.
 
 | Command | What it does | Time |
 |---|---|---|
-| `npm test` | All 1585 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
+| `npm test` | All 1602 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
 | `npm run test:watch` | Re-runs the tests that matter each time you save a file | |
 | `npm run test:health` | **Data health check**: reads your real `data/` folder and checks it holds together. Changes nothing | about 3 s |
 | `npm run test:all` | Everything in one go: type check, lint, `npm test`, then the data health check | about 1 min |
@@ -85,7 +85,7 @@ Run one file: `npx vitest run src/utils/helpers.test.ts`. Run tests whose name c
 | **Subtask suggestions** | `src/services/ai/subtasks.test.ts` each keyword group, the default breakdown, first match wins, always four open subtasks |
 | **Older Markdown descriptions** | `src/utils/markdownBlocks.test.ts` paragraphs, headings, both list kinds, checklists, quotes, code blocks (also an unclosed one), where a block ends |
 | **Which data file a setting lives in** | `src/services/kvMirrorFiles.test.ts` every rule of the table, exact keys against prefixes, API keys always in secrets |
-| **Theme and colours** | `src/utils/theme.test.ts`, `src/utils/accent.test.ts` themes, and that every accent colour stays readable in dark mode |
+| **Theme and colours** | `src/utils/theme.test.ts` the dark theme and the two light palettes (Sorrel, Fawn): saved and applied only on Save, the stylesheet uses exactly the colours in `theme/palette.ts`, and text, links and button labels stay readable in all three. `src/components/layout/settings/AppearanceSection.test.tsx` and `src/components/layout/topnav/SystemSettingsModal.test.tsx` choosing Light asks which palette, nothing changes until Save |
 
 ---
 
@@ -189,7 +189,7 @@ These click through the real app in a real browser and are the missing layer. Un
 2. **Blocked:** turning it on opens the picker; several tickets; chips with a cross; pressing Blocked again does nothing; the board card shows "Blocked by KEY +N"; the blocker lists what it blocks; flames burn while on.
 3. **Comments and descriptions:** paste a screenshot (Ctrl+V) into each; the picture stays where it was pasted; files show under "Added in comments"; edit your own comment (and cannot edit another's); Copy buttons; the paperclip opens the attach window, never the system dialog.
 4. **Attach window:** drag files; share link for Drive, OneDrive, Dropbox; bad addresses refused.
-5. **Settings and theme:** theme and accent apply only on Save, everywhere they can be set; profile removed from the account menu; each Save closes its window.
+5. **Settings and theme:** theme and light palette apply only on Save, everywhere they can be set; profile removed from the account menu; each Save closes its window.
 6. **Spaces:** tab bar in one rounded background with a sliding pill; filters (Priority, Status, Labels) with checkboxes, search, multi-select; dropdowns close on page scroll and stay inside the screen near the bottom.
 7. **Sprint page:** six stat boxes in one row; one ticket box with select-all (tick, untick, dash when partial), title that follows the Status filter, Status and Space filters in its heading; the page does not jump to the top when ticking, opening a ticket, filtering to nothing, collapsing, or switching sections; velocity bars grow again when switching sprints.
 8. **Animations:** numbers count up from 0 and bars fill on For you, Projects, a project's Overview, Sprints overview and table, a sprint's Reports, Roadmaps, a roadmap, a space Summary (including the completion ring and epic bars); the For you sprint bar fills green into blue as one movement; figures lower on a page start only when scrolled into view.

@@ -19,7 +19,7 @@ export function PageBoundary({ pageKey, children }: { pageKey: string; children:
             <p className="text-sm text-lira-muted">The rest of Lira is fine. You can try again, or go somewhere else from the sidebar.</p>
             {import.meta.env.DEV && error?.message && <pre className="text-2xs text-left bg-lira-surface border border-lira-border rounded-lg p-3 text-lira-muted whitespace-pre-wrap max-h-28 overflow-auto">{error.message}</pre>}
             <div className="flex items-center justify-center gap-2">
-              <button onClick={reset} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-lira-blue-hover cursor-pointer">Try again</button>
+              <button onClick={reset} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer">Try again</button>
               <Link to="/" className="px-4 py-2 text-sm font-medium border border-lira-border rounded-lg text-lira-text hover:bg-lira-surface">Go home</Link>
             </div>
           </div>
@@ -39,7 +39,7 @@ export function NotFound({ what, backTo, backLabel }: { what: string; backTo: st
         <Compass className="w-10 h-10 mx-auto text-lira-muted" />
         <h2 className="text-lg font-semibold text-lira-text">{what} was not found</h2>
         <p className="text-sm text-lira-muted">It may have been deleted, or the link may be wrong.</p>
-        <Link to={backTo} className="inline-block px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-lira-blue-hover">{backLabel}</Link>
+        <Link to={backTo} className="inline-block px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">{backLabel}</Link>
       </div>
     </div>
   );

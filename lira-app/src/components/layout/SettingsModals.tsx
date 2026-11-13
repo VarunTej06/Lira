@@ -64,7 +64,7 @@ export const GeneralSettingsModal: React.FC<{
           <button onClick={onClose} className="px-4 py-2 text-sm text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100">
             Cancel
           </button>
-          <button onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Save Preferences
           </button>
         </div>
@@ -102,7 +102,7 @@ export const NotificationSettingsModal: React.FC<{
             { label: 'Sound Alerts', desc: 'Play subtle audio feedback on status transitions', state: sounds, set: setSounds },
             { label: 'Direct Mentions & Assignments Only', desc: 'Only alert when assigned or tagged', state: mentionsOnly, set: setMentionsOnly },
           ].map((item, idx) => (
-            <div key={idx} onClick={() => item.set(!item.state)} className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-blue-50/30 rounded-xl border border-lira-border cursor-pointer transition-colors">
+            <div key={idx} onClick={() => item.set(!item.state)} className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-lira-blue-light/30 rounded-xl border border-lira-border cursor-pointer transition-colors">
               <div>
                 <h5 className="text-sm font-semibold text-lira-text">{item.label}</h5>
                 <p className="text-xs text-lira-muted">{item.desc}</p>
@@ -121,7 +121,7 @@ export const NotificationSettingsModal: React.FC<{
           <button onClick={onClose} className="px-4 py-2 text-sm text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100">
             Cancel
           </button>
-          <button onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Save Settings
           </button>
         </div>
@@ -161,7 +161,7 @@ export const ManageSpacesModal: React.FC<{
               </div>
               <button
                 onClick={() => { onSelectSpace(s.id!); onClose(); }}
-                className="px-3 py-1.5 text-xs font-semibold bg-blue-50 text-lira-blue hover:bg-blue-100 rounded-lg transition-colors cursor-pointer"
+                className="px-3 py-1.5 text-xs font-semibold bg-lira-blue-light text-lira-blue hover:brightness-95 rounded-lg transition-colors cursor-pointer"
               >
                 Open Space
               </button>
@@ -204,7 +204,7 @@ export const WorkItemsModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Close
           </button>
         </div>
@@ -250,7 +250,7 @@ export const MarketplaceModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Close
           </button>
         </div>
@@ -281,7 +281,7 @@ export const UserManagementModal: React.FC<{
           {users.map(u => (
             <div key={u.email} className="p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-[#0052CC] text-white font-bold text-xs flex items-center justify-center">
+                <div className="w-9 h-9 rounded-full bg-lira-blue text-lira-on-blue font-bold text-xs flex items-center justify-center">
                   {u.initials}
                 </div>
                 <div>
@@ -297,7 +297,7 @@ export const UserManagementModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Close
           </button>
         </div>
@@ -314,10 +314,10 @@ export const BillingModal: React.FC<{
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Billing & Subscriptions" size="md">
       <div className="p-6 space-y-4 text-lira-text">
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-500/10 dark:to-indigo-500/10 border border-blue-200 rounded-xl space-y-2">
+        <div className="p-4 bg-lira-blue-light border border-lira-border rounded-xl space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-lira-blue">Current Plan</span>
-            <span className="text-xs font-bold bg-lira-blue text-white px-2 py-0.5 rounded-full">Free &amp; Open Source</span>
+            <span className="text-xs font-bold bg-lira-blue text-lira-on-blue px-2 py-0.5 rounded-full">Free &amp; Open Source</span>
           </div>
           <h3 className="text-lg font-extrabold text-lira-text">Lira Community Edition v2.0</h3>
           <p className="text-xs text-lira-muted">
@@ -341,7 +341,7 @@ export const BillingModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Close
           </button>
         </div>

@@ -161,7 +161,7 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({
           <button
             onClick={handleCreate}
             disabled={creating || !addingTitle.trim()}
-            className="px-3 py-1.5 text-xs bg-lira-blue text-white rounded-md hover:bg-blue-700 disabled:opacity-50 font-medium"
+            className="px-3 py-1.5 text-xs bg-lira-blue text-lira-on-blue rounded-md hover:bg-lira-blue-hover disabled:opacity-50 font-medium"
           >
             {creating ? '…' : 'Add'}
           </button>

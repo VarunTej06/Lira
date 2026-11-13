@@ -50,7 +50,7 @@ function GroupMenu({ s, menuRef }: { s: ActionBarState; menuRef: ActionBarState[
             <button
               key={opt.value}
               onClick={() => s.handleGroupChange(opt.value)}
-              className={`w-full text-left px-3 py-2 text-sm transition-colors ${s.groupBy === opt.value ? 'text-lira-blue bg-blue-50 font-medium' : 'text-lira-text hover:bg-gray-50'}`}
+              className={`w-full text-left px-3 py-2 text-sm transition-colors ${s.groupBy === opt.value ? 'text-lira-blue bg-lira-blue-light font-medium' : 'text-lira-text hover:bg-gray-50'}`}
             >
               {opt.label}
             </button>

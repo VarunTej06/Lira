@@ -16,7 +16,7 @@ export function SettingsNav(s: SettingsState) {
             onClick={() => setActiveSection('appearance')}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer text-left whitespace-nowrap ${
               activeSection === 'appearance'
-                ? 'bg-lira-blue text-white shadow-xs'
+                ? 'bg-lira-blue text-lira-on-blue shadow-xs'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
@@ -28,7 +28,7 @@ export function SettingsNav(s: SettingsState) {
             onClick={() => setActiveSection('backup')}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer text-left whitespace-nowrap ${
               activeSection === 'backup'
-                ? 'bg-lira-blue text-white shadow-xs'
+                ? 'bg-lira-blue text-lira-on-blue shadow-xs'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
@@ -40,7 +40,7 @@ export function SettingsNav(s: SettingsState) {
             onClick={() => setActiveSection('devices')}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer text-left whitespace-nowrap ${
               activeSection === 'devices'
-                ? 'bg-lira-blue text-white shadow-xs'
+                ? 'bg-lira-blue text-lira-on-blue shadow-xs'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
@@ -52,7 +52,7 @@ export function SettingsNav(s: SettingsState) {
             onClick={() => setActiveSection('profile')}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer text-left whitespace-nowrap ${
               activeSection === 'profile'
-                ? 'bg-lira-blue text-white shadow-xs'
+                ? 'bg-lira-blue text-lira-on-blue shadow-xs'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
@@ -69,7 +69,7 @@ export function SettingsNav(s: SettingsState) {
             onClick={() => setActiveSection('general')}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer text-left whitespace-nowrap ${
               activeSection === 'general'
-                ? 'bg-lira-blue text-white shadow-xs'
+                ? 'bg-lira-blue text-lira-on-blue shadow-xs'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
@@ -81,7 +81,7 @@ export function SettingsNav(s: SettingsState) {
             onClick={() => setActiveSection('notifications')}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer text-left whitespace-nowrap ${
               activeSection === 'notifications'
-                ? 'bg-lira-blue text-white shadow-xs'
+                ? 'bg-lira-blue text-lira-on-blue shadow-xs'
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >

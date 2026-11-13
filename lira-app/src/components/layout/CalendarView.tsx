@@ -77,7 +77,7 @@ function DayCell({ day, idx, todayKey, monthName, drag, expanded, onToggle, onSe
         {dayIssues.length > 0 && <span className="text-3xs font-medium text-lira-muted">{dayIssues.length}</span>}
       </div>
       {isDragOver && (
-        <div className="absolute inset-x-2 bottom-2 bg-lira-blue text-white rounded-md py-1 text-center text-3xs font-semibold flex items-center justify-center gap-1 pointer-events-none">
+        <div className="absolute inset-x-2 bottom-2 bg-lira-blue text-lira-on-blue rounded-md py-1 text-center text-3xs font-semibold flex items-center justify-center gap-1 pointer-events-none">
           <CalendarPlus className="w-3 h-3" /> Due {monthName.slice(0, 3)} {date.getDate()}
         </div>
       )}

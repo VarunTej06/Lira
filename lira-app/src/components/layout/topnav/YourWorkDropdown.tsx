@@ -51,7 +51,7 @@ export const YourWorkDropdown: React.FC<{
   const statusIcon = (status: string) => {
     if (status === 'done') return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />;
     if (status === 'inprogress') return <Clock className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />;
-    return <AlertCircle className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />;
+    return <AlertCircle className="w-3.5 h-3.5 text-lira-nav-accent flex-shrink-0" />;
   };
 
   return (
@@ -66,7 +66,7 @@ export const YourWorkDropdown: React.FC<{
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-80 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150">
+        <div className="absolute top-full left-0 mt-2 w-80 bg-lira-nav border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150">
           <div className="flex border-b border-white/10 px-2 pt-2 gap-1 bg-white/5">
             {[
               { id: 'worked' as const, label: 'Worked on' },
@@ -78,7 +78,7 @@ export const YourWorkDropdown: React.FC<{
                 onClick={() => setTab(t.id)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-t-lg transition-colors cursor-pointer ${
                   tab === t.id
-                    ? 'bg-[#1D2939] text-white border-t border-x border-white/10'
+                    ? 'bg-lira-nav text-white border-t border-x border-white/10'
                     : 'text-white/50 hover:text-white hover:bg-white/5'
                 }`}
               >

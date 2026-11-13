@@ -60,7 +60,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
           <div>
             <h1 className="text-xl font-bold text-lira-text flex items-center gap-2">
               {space?.name || 'Workspace'}
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-lira-blue-light text-lira-blue font-semibold border border-lira-border">
                 Summary & Analytics
               </span>
             </h1>
@@ -90,7 +90,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
       {/* Row 1 — 4 Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { title: 'Total Issues', icon: <Layers className="w-4 h-4 text-blue-500" />, valueClass: 'text-lira-text', value: stats.total, note: <>Across all Kanban columns</> },
+          { title: 'Total Issues', icon: <Layers className="w-4 h-4 text-lira-blue" />, valueClass: 'text-lira-text', value: stats.total, note: <>Across all Kanban columns</> },
           { title: 'In Progress', icon: <Clock className="w-4 h-4 text-amber-500" />, valueClass: 'text-amber-600', value: stats.inProgress, note: <><CountUp value={share(stats.inProgress)} suffix="%" /> of active workload</> },
           { title: 'Completed', icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />, valueClass: 'text-emerald-600', value: stats.done, note: <><CountUp value={stats.completionRate} suffix="%" /> resolved successfully</> },
           { title: 'Overdue Issues', icon: <AlertTriangle className={`w-4 h-4 ${stats.overdue > 0 ? 'text-red-500' : 'text-gray-400'}`} />, valueClass: stats.overdue > 0 ? 'text-red-600' : 'text-gray-600', value: stats.overdue, note: <>Requires immediate attention</> },
@@ -191,7 +191,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                 </div>
                 <div className="text-sm font-semibold text-lira-text truncate mb-2">{epic.title}</div>
                 <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden mb-1.5">
-                  <GrowBar className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full" percent={progress} />
+                  <GrowBar className="h-full bg-purple-500 rounded-full" percent={progress} />
                 </div>
                 <div className="text-2xs text-lira-muted flex justify-between">
                   <span><CountUp value={completedChildren} /> of {totalChildren} work items done</span>
@@ -251,10 +251,10 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
               {stats.topLabels.map(([label, count]) => (
                 <div
                   key={label}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-lg text-xs font-semibold"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-lira-blue-light text-lira-text border border-lira-border rounded-lg text-xs font-semibold"
                 >
                   <span>#{label}</span>
-                  <span className="bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded-full text-3xs">
+                  <span className="bg-lira-blue/15 text-lira-text px-1.5 py-0.2 rounded-full text-3xs">
                     {count}
                   </span>
                 </div>

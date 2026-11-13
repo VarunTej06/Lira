@@ -14,7 +14,7 @@ type Stats = DetailCtx['stats'];
 
 // Class names are written out in full (not built from a colour name) so Tailwind can find them.
 const STAT_CARDS = [
-  { title: 'Total Issues', note: 'In this project scope', value: (s: Stats) => s.total, valueClass: 'text-lira-text', iconBox: 'bg-blue-50 text-lira-blue', Icon: Layers },
+  { title: 'Total Issues', note: 'In this project scope', value: (s: Stats) => s.total, valueClass: 'text-lira-text', iconBox: 'bg-lira-blue-light text-lira-blue', Icon: Layers },
   { title: 'Open Issues', note: 'Backlog + Todo + In Progress', value: (s: Stats) => s.open, valueClass: 'text-amber-600', iconBox: 'bg-amber-50 text-amber-600', Icon: AlertCircle },
   { title: 'Completed Issues', note: 'Done & verified', value: (s: Stats) => s.done, valueClass: 'text-emerald-600', iconBox: 'bg-emerald-50 text-emerald-600', Icon: CheckCircle2 },
   { title: 'Completion %', note: null, value: (s: Stats) => s.percent, suffix: '%', valueClass: 'text-purple-600', iconBox: 'bg-purple-50 text-purple-600', Icon: TrendingUp },
@@ -171,7 +171,7 @@ export function OverviewTab(ctx: DetailCtx) {
         ) : (
           <div className="divide-y divide-gray-100 border border-lira-border rounded-xl overflow-hidden">
             {recentIssues.map(issue => (
-              <div key={issue.id || issue.key} onClick={() => onIssueClick?.(issue)} className="p-3.5 hover:bg-blue-50/50 transition-colors cursor-pointer flex items-center justify-between gap-3 group">
+              <div key={issue.id || issue.key} onClick={() => onIssueClick?.(issue)} className="p-3.5 hover:bg-lira-blue-light/50 transition-colors cursor-pointer flex items-center justify-between gap-3 group">
                 <div className="flex items-center gap-3 min-w-0">
                   <span className="text-base" title={ISSUE_TYPE_CONFIG[issue.type]?.label || issue.type}><TypeIcon type={issue.type} className="w-4 h-4" /></span>
                   <span className="font-mono text-xs font-bold text-lira-blue group-hover:underline whitespace-nowrap">{issue.key}</span>

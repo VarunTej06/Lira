@@ -51,7 +51,7 @@ export function SprintPageHeader({ spaces, scope, onScopeChange, lockedSpaceId, 
           className="!py-1.5 !text-sm"
         />
         {onCreateSprint && (
-          <button onClick={onCreateSprint} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg bg-lira-blue text-white hover:bg-lira-blue-hover cursor-pointer">
+          <button onClick={onCreateSprint} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-lg bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer">
             <Plus className="w-3.5 h-3.5" /> New sprint
           </button>
         )}

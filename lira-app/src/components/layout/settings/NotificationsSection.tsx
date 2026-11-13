@@ -37,7 +37,7 @@ export function NotificationsSection(s: SettingsState) {
                   <div
                     key={item.key}
                     onClick={() => setNotificationPrefs(p => ({ ...p, [item.key]: !p[item.key] }))}
-                    className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-blue-50/20 rounded-xl border border-lira-border cursor-pointer transition-colors"
+                    className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-lira-blue-light/20 rounded-xl border border-lira-border cursor-pointer transition-colors"
                   >
                     <div>
                       <h4 className="text-sm font-semibold text-lira-text">{item.title}</h4>
@@ -64,7 +64,7 @@ export function NotificationsSection(s: SettingsState) {
                 <button
                   type="button"
                   onClick={handleSaveNotifications}
-                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer"
+                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors shadow-xs cursor-pointer"
                 >
                   Save Changes
                 </button>

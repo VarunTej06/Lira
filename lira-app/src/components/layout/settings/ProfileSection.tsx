@@ -24,7 +24,7 @@ export function ProfileSection(s: SettingsState) {
                 <div>
                   <h4 className="text-sm font-bold text-lira-text">{name}</h4>
                   <p className="text-xs text-lira-muted">{email}</p>
-                  <span className="inline-block mt-1 text-3xs font-semibold text-lira-blue bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full">
+                  <span className="inline-block mt-1 text-3xs font-semibold text-lira-blue bg-lira-blue-light border border-lira-border px-2 py-0.5 rounded-full">
                     {role}
                   </span>
                 </div>
@@ -86,7 +86,7 @@ export function ProfileSection(s: SettingsState) {
               <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
                 <button
                   type="submit"
-                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer"
+                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors shadow-xs cursor-pointer"
                 >
                   Save Changes
                 </button>

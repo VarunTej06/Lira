@@ -137,7 +137,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
               }}
               onDragEnd={() => setDraggedKey(null)}
               className={`group relative flex items-center justify-between p-2 rounded-lg transition-colors border ${
-                isVisible ? 'bg-blue-50/20 border-blue-100 hover:bg-blue-50/40' : 'bg-white border-transparent hover:bg-gray-50'
+                isVisible ? 'bg-lira-blue-light/20 border-lira-border hover:bg-lira-blue-light/40' : 'bg-white border-transparent hover:bg-gray-50'
               } ${draggedKey === key ? 'opacity-50 ring-2 ring-lira-blue' : ''}`}
             >
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -253,7 +253,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
               Cancel
             </button>
-            <button type="button" onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer">
+            <button type="button" onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors shadow-xs cursor-pointer">
               Save changes
             </button>
           </div>

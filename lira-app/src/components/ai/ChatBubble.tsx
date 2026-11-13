@@ -36,7 +36,7 @@ function ConfirmRow({ pending, onResolve }: { pending: Pending; onResolve: (conf
     <div className="mt-2.5 flex items-center gap-2" data-testid="viva-confirm">
       {pending.state === 'waiting' ? (
         <>
-          <button type="button" onClick={() => onResolve(true)} className={`${SMALL_BUTTON} bg-lira-blue text-white`}>Confirm</button>
+          <button type="button" onClick={() => onResolve(true)} className={`${SMALL_BUTTON} bg-lira-blue text-lira-on-blue`}>Confirm</button>
           <button type="button" onClick={() => onResolve(false)} className={`${SMALL_BUTTON} bg-white border border-lira-border text-lira-text`}>Cancel</button>
         </>
       ) : (
@@ -66,9 +66,9 @@ function UndoRow({ undo, onUndo }: { undo: UndoState; onUndo: () => void }) {
 /** A link to the dashboard Viva just built. */
 function DashboardCard({ details, onOpen }: { details?: string; onOpen: () => void }) {
   return (
-    <div className="mt-2.5 p-2 bg-purple-50/70 rounded-xl border border-purple-200/60 flex items-center justify-between gap-2" data-testid="viva-dashboard">
+    <div className="mt-2.5 p-2 bg-lira-blue-light/70 rounded-xl border border-lira-border flex items-center justify-between gap-2" data-testid="viva-dashboard">
       <span className="text-2xs font-semibold text-lira-text truncate">{details}</span>
-      <button type="button" onClick={() => onOpen()} data-testid="viva-open-dashboard" className={`${OPEN_BUTTON} hover:bg-purple-600 hover:text-white text-purple-700 border-purple-300`}>
+      <button type="button" onClick={() => onOpen()} data-testid="viva-open-dashboard" className={`${OPEN_BUTTON} hover:bg-lira-blue hover:text-lira-on-blue text-lira-blue border-lira-border`}>
         Open dashboard <ArrowRight className="w-3 h-3" />
       </button>
     </div>
@@ -78,12 +78,12 @@ function DashboardCard({ details, onOpen }: { details?: string; onOpen: () => vo
 /** A link to the ticket Viva created or looked at. */
 function IssueCard({ issue, onOpen }: { issue: Issue; onOpen: () => void }) {
   return (
-    <div className="mt-2.5 p-2 bg-blue-50/70 rounded-xl border border-blue-200/60 flex items-center justify-between gap-2">
+    <div className="mt-2.5 p-2 bg-lira-blue-light/70 rounded-xl border border-lira-border flex items-center justify-between gap-2">
       <div className="min-w-0">
         <span className="font-mono font-bold text-3xs text-lira-blue block truncate">{issue.key}</span>
         <span className="text-2xs font-semibold text-lira-text truncate block">{issue.title}</span>
       </div>
-      <button type="button" onClick={() => onOpen()} className={`${OPEN_BUTTON} hover:bg-lira-blue hover:text-white text-lira-blue border-lira-blue/30`}>
+      <button type="button" onClick={() => onOpen()} className={`${OPEN_BUTTON} hover:bg-lira-blue hover:text-lira-on-blue text-lira-blue border-lira-blue/30`}>
         Open <ArrowRight className="w-3 h-3" />
       </button>
     </div>
@@ -102,7 +102,7 @@ function SuggestedActions({ actions, onSend }: { actions: string[]; onSend: (tex
           initial={{ opacity: 0, y: 10, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ type: 'spring', stiffness: 460, damping: 28, delay: 0.12 + i * 0.07 }}
-          className="px-2.5 py-1 bg-white hover:bg-purple-50 text-purple-700 hover:text-purple-900 border border-purple-200 rounded-full text-3xs-plus font-medium transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-1 cursor-pointer"
+          className="px-2.5 py-1 bg-white hover:bg-lira-blue-light text-lira-blue hover:text-lira-text border border-lira-border rounded-full text-3xs-plus font-medium transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-1 cursor-pointer"
         >
           <Zap className="w-3 h-3" /> {action}
         </motion.button>
@@ -111,7 +111,7 @@ function SuggestedActions({ actions, onSend }: { actions: string[]; onSend: (tex
   );
 }
 
-const BUBBLE_USER = 'bg-lira-blue text-white rounded-tr-md shadow-sm font-medium';
+const BUBBLE_USER = 'bg-lira-blue text-lira-on-blue rounded-tr-md shadow-sm font-medium';
 const BUBBLE_VIVA = 'bg-white text-lira-text rounded-tl-md shadow-card border border-lira-border/80';
 
 /** What Viva attached to a message: confirm buttons, undo, a link to a dashboard, a ticket card. */

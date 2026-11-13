@@ -37,7 +37,7 @@ export function SprintStrip({ sprint, keys, scoped, onPick }: Props) {
               key={k}
               onClick={() => onPick(k)}
               data-active-sprint={active ? 'true' : undefined}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-md border text-left cursor-pointer transition-colors ${active ? 'bg-lira-blue border-lira-blue text-white' : 'bg-white border-lira-border text-lira-text hover:bg-gray-50'}`}
+              className={`flex-shrink-0 px-3 py-1.5 rounded-md border text-left cursor-pointer transition-colors ${active ? 'bg-lira-blue border-lira-blue text-lira-on-blue' : 'bg-white border-lira-border text-lira-text hover:bg-gray-50'}`}
             >
               <div className="text-xs font-semibold flex items-center gap-1">
                 {sprintLabel(k, true)}

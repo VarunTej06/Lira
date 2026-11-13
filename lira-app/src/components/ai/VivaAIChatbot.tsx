@@ -84,7 +84,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
           <button
             type="button"
             onClick={onToggle}
-            className={`relative rounded-2xl flex items-center justify-center p-0 cursor-pointer shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 animate-float-subtle animate-pulse-glow ${isOpen ? 'ring-2 ring-purple-500 shadow-purple-500/40 rotate-6' : ''}`}
+            className={`relative rounded-2xl flex items-center justify-center p-0 cursor-pointer shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 animate-float-subtle animate-pulse-glow ${isOpen ? 'ring-2 ring-lira-blue shadow-lira-blue/40 rotate-6' : ''}`}
             title="Viva AI"
             aria-label="Toggle Viva AI chat"
           >
@@ -95,7 +95,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
             </span>
           </button>
           {!isOpen && (
-            <div className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 absolute right-16 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 bg-[#1D2125] text-white text-xs font-semibold rounded-xl shadow-xl border border-white/10 flex items-center gap-1.5 translate-x-1 group-hover:translate-x-0">
+            <div className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 absolute right-16 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 bg-lira-nav text-white text-xs font-semibold rounded-xl shadow-xl border border-white/10 flex items-center gap-1.5 translate-x-1 group-hover:translate-x-0">
               <Sparkles className="w-3.5 h-3.5 text-cyan-300" /><span>Ask Viva AI</span>
             </div>
           )}
@@ -113,20 +113,20 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
             exit={{ opacity: 0, scale: 0.2, y: 50, transition: { duration: 0.22, ease: [0.5, 0, 0.75, 0] } }}
             transition={{ type: 'spring', stiffness: 340, damping: 28, mass: 0.9 }}
             style={{ ...panelStyle, transformOrigin: panelOrigin }}
-            className="fixed bottom-20 right-5 z-50 max-w-[calc(100vw-2.5rem)] bg-white/95 backdrop-blur-2xl border border-purple-500/25 shadow-[0_24px_60px_-12px_rgba(99,102,241,0.35)] rounded-3xl overflow-hidden flex flex-col font-sans ring-1 ring-black/10 transition-[width,height] duration-300 ease-[cubic-bezier(.4,0,.2,1)]"
+            className="fixed bottom-20 right-5 z-50 max-w-[calc(100vw-2.5rem)] bg-white/95 backdrop-blur-2xl border border-lira-border shadow-[0_24px_60px_-12px_rgba(0,0,0,0.3)] rounded-3xl overflow-hidden flex flex-col font-sans ring-1 ring-black/10 transition-[width,height] duration-300 ease-[cubic-bezier(.4,0,.2,1)]"
           >
-            <div className="h-[68px] bg-gradient-to-r from-[#0C1018] via-[#1A1F3A] to-[#0C1018] text-white flex items-center justify-between px-4 sm:px-5 flex-shrink-0 select-none relative">
+            <div className="h-[68px] bg-lira-nav text-white flex items-center justify-between px-4 sm:px-5 flex-shrink-0 select-none relative">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="relative flex-shrink-0">
                   <LiraAIAvatar size={34} hasSparkles={false} />
-                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-[#0C1018]" />
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-lira-nav" />
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-1.5">
                     <span className="font-bold text-sm tracking-tight whitespace-nowrap">Viva AI</span>
                     <span className="px-1.5 py-0.5 text-4xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/35 rounded-full">Read &amp; Write</span>
                   </div>
-                  <p className="text-2xs text-indigo-200/75 font-medium truncate mt-0.5">{MODEL_LABEL(provider, oai.model)} · {spaces.length} spaces connected</p>
+                  <p className="text-2xs text-white/75 font-medium truncate mt-0.5">{MODEL_LABEL(provider, oai.model)} · {spaces.length} spaces connected</p>
                 </div>
               </div>
               <div className="flex items-center gap-1 flex-shrink-0">
@@ -135,7 +135,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                 <HeaderButton title={maximized ? 'Restore size' : 'Maximise'} onClick={() => setMaximized(v => !v)}>{maximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}</HeaderButton>
                 <HeaderButton title="Close" onClick={onClose}><X className="w-4 h-4" /></HeaderButton>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400/60 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lira-nav-accent/60 to-transparent" />
             </div>
 
             {showSettings ? (
@@ -157,13 +157,13 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                     {chat.loading && (
                       <motion.div initial={{ opacity: 0, y: 12, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: 'spring', stiffness: 420, damping: 30 }} className="flex items-start gap-2 max-w-[85%] py-1 select-none">
                         <div className="flex-shrink-0 mt-0.5"><LiraAIAvatar size={26} hasSparkles={true} /></div>
-                        <div className="px-3.5 py-2 bg-gradient-to-r from-[#0C1018] via-[#1A1F3A] to-[#0C1018] rounded-2xl rounded-tl-md border border-purple-500/30 shadow-md text-white flex items-center gap-2.5">
+                        <div className="px-3.5 py-2 bg-lira-nav rounded-2xl rounded-tl-md border border-lira-border shadow-md text-white flex items-center gap-2.5">
                           <div className="flex items-center gap-1 py-0.5">
-                            <span className="w-2 h-2 rounded-full bg-purple-400 animate-typing-dot-1" />
-                            <span className="w-2 h-2 rounded-full bg-purple-400 animate-typing-dot-2" />
-                            <span className="w-2 h-2 rounded-full bg-purple-400 animate-typing-dot-3" />
+                            <span className="w-2 h-2 rounded-full bg-lira-nav-accent animate-typing-dot-1" />
+                            <span className="w-2 h-2 rounded-full bg-lira-nav-accent animate-typing-dot-2" />
+                            <span className="w-2 h-2 rounded-full bg-lira-nav-accent animate-typing-dot-3" />
                           </div>
-                          <span className="text-2xs font-medium text-purple-200/90 tracking-wide">Viva AI is thinking…</span>
+                          <span className="text-2xs font-medium text-white/80 tracking-wide">Viva AI is thinking…</span>
                         </div>
                       </motion.div>
                     )}
@@ -179,10 +179,10 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                       value={chat.input}
                       onChange={e => chat.setInput(e.target.value)}
                       placeholder="Ask anything, or tell me what to do (e.g. “Create a bug in Atmos”)…"
-                      className="flex-1 pl-4 pr-4 py-2.5 text-xs border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all"
+                      className="flex-1 pl-4 pr-4 py-2.5 text-xs border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-lira-blue/50 focus:border-lira-blue transition-all"
                       disabled={chat.loading}
                     />
-                    <button type="submit" disabled={!chat.input.trim() || chat.loading} className="p-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-2xl disabled:opacity-40 transition-all shadow-md hover:scale-105 active:scale-95 flex-shrink-0 cursor-pointer" title="Send">
+                    <button type="submit" disabled={!chat.input.trim() || chat.loading} className="p-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue rounded-2xl disabled:opacity-40 transition-all shadow-md hover:scale-105 active:scale-95 flex-shrink-0 cursor-pointer" title="Send">
                       <Send className="w-4 h-4" />
                     </button>
                   </form>

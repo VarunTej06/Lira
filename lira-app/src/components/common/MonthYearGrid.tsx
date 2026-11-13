@@ -39,7 +39,7 @@ export const MonthYearGrid: React.FC<Props> = ({ year, month, onPick }) => {
               aria-pressed={selected}
               onClick={() => onPick(shownYear, m)}
               className={`py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
-                selected ? 'bg-lira-blue text-white font-semibold'
+                selected ? 'bg-lira-blue text-lira-on-blue font-semibold'
                   : current ? 'ring-1 ring-lira-blue text-lira-blue font-semibold hover:bg-lira-blue-light'
                   : 'text-lira-text hover:bg-gray-100'
               }`}

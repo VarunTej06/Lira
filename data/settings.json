@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-13T11:11:31.274Z",
+  "updatedAt": "2026-11-13T11:16:44.650Z",
   "entries": {
     "lira_accent": "#0C66E4",
-    "lira_active_space_id": "6",
+    "lira_active_space_id": "2",
     "lira_light_palette": "fawn",
     "lira_notif_config": {
       "inAppFeed": true,
@@ -20,7 +20,7 @@
       "roadmapId": "rm-lira",
       "showDeps": true,
       "view": "timeline",
-      "zoom": "weeks"
+      "zoom": "months"
     },
     "lira_sidebar_collapsed": "false",
     "lira_sidebar_customization": {

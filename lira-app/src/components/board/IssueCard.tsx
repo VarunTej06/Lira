@@ -95,7 +95,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, allIssues = 
                   </div>
                 )}
                 <span title={priority.label}><PriorityIcon priority={issue.priority} className="w-4 h-4" /></span>
-                {issue.assigneeInitials && <Avatar initials={issue.assigneeInitials} size="xs" color={PALETTE.brand} />}
+                {issue.assigneeInitials && <Avatar initials={issue.assigneeInitials} size="xs" />}
                 <CardActions issue={issue} hasParent={!!parentIssue} eligibleParents={eligibleParents} onOpen={onClick} />
               </div>
             </div>

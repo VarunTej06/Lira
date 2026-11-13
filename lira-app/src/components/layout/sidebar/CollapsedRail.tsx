@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../../common/SpaceIcon';
 import { pageLink, spaceLink } from '../../../utils/links';
 import { ChevronRight, Plus } from 'lucide-react';
 import type { SidebarState } from './useSidebarState';
@@ -64,7 +65,7 @@ export function CollapsedRail(s: SidebarState) {
                 style={activeSpaceId === space.id ? { backgroundColor: space.color } : {}}
                 title={space.name}
               >
-                {space.icon}
+                <SpaceIcon icon={space.icon} />
               </button>
             ))}
 
@@ -83,7 +84,7 @@ export function CollapsedRail(s: SidebarState) {
                     style={activeSpaceId === space.id ? { backgroundColor: space.color } : {}}
                     title={`[Hidden] ${space.name}`}
                   >
-                    {space.icon}
+                    <SpaceIcon icon={space.icon} />
                     <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400" />
                   </button>
                 ))}

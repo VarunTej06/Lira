@@ -7,7 +7,7 @@ afterEach(cleanup);
 describe('StartupScreen', () => {
   it('shows the logo and says Lira is starting', () => {
     mount(<StartupScreen />);
-    expect(q('img[alt="Lira Logo"]')).not.toBeNull();
+    expect(q('svg[aria-label="Lira"]')).not.toBeNull();
     expect(document.body.textContent).toContain('Initializing Lira');
   });
 });

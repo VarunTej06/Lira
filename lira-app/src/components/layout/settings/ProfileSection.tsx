@@ -18,7 +18,7 @@ export function ProfileSection(s: SettingsState) {
 
               {/* Avatar Preview */}
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-lira-border">
-                <div className="w-14 h-14 rounded-full bg-[#00875A] text-white font-bold text-xl flex items-center justify-center shadow-xs">
+                <div className="w-14 h-14 rounded-full bg-lira-blue text-lira-on-blue font-bold text-xl flex items-center justify-center shadow-xs">
                   {initials || 'VY'}
                 </div>
                 <div>

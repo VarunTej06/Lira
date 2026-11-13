@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../common/SpaceIcon';
 import { issueLink, projectLink, sprintLink } from '../../utils/links';
 import React, { useMemo } from 'react';
 import { Sparkles, AlertTriangle, Clock, CheckCircle2, ListTodo, ArrowRight, FolderKanban, CalendarClock, Activity } from 'lucide-react';
@@ -181,7 +182,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                   return (
                     <button key={s.id} onClick={() => onOpenSpace(s.id!)}
                       className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors text-left cursor-pointer">
-                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style={{ backgroundColor: s.color + '26' }}>{s.icon}</span>
+                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style={{ backgroundColor: s.color + '26', color: s.color }}><SpaceIcon icon={s.icon} /></span>
                       <span className="flex-1 min-w-0">
                         <span className="block text-sm font-medium text-lira-text truncate">{s.name}</span>
                         <span className="block text-2xs text-lira-muted"><CountUp value={open} suffix=" open" /></span>

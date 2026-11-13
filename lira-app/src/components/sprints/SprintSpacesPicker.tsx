@@ -24,7 +24,7 @@ export const SprintSpacesPicker: React.FC<SprintSpacesPickerProps> = ({ spaces, 
           {spaces.map(s => (
             <label key={s.id} className={`flex items-center gap-2 text-sm rounded-lg border px-2.5 py-1.5 cursor-pointer ${value.includes(s.id!) ? 'border-lira-blue bg-lira-blue-light text-lira-blue' : 'border-lira-border bg-white text-lira-text'}`}>
               <input type="checkbox" checked={value.includes(s.id!)} onChange={() => toggle(s.id!)} />
-              <span className="truncate">{s.icon} {s.name}</span>
+              <span className="truncate">{s.name}</span>
             </label>
           ))}
         </div>

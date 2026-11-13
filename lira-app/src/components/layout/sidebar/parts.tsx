@@ -1,3 +1,5 @@
+import { LiraLogo } from '../../common/LiraLogo';
+import { SpaceIcon } from '../../common/SpaceIcon';
 import { spaceLink } from '../../../utils/links';
 import { motion } from '../../common/motionPresets';
 import { menuPop } from '../../common/motionPresets';
@@ -39,8 +41,8 @@ function SpaceButton({ space, active, starred, isHidden, isArchived, onSelect }:
         active ? 'text-white font-medium' : 'text-white/60 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
       }`}
     >
-      <div className="w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0" style={{ backgroundColor: space.color + '33', color: space.color }}>
-        {space.icon}
+      <div className="w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0" style={{ backgroundColor: space.color + '55' }}>
+        <SpaceIcon icon={space.icon} className="w-3.5 h-3.5 text-white" />
       </div>
       <span className={`truncate font-medium flex-1 text-left ${nameClass(isHidden, isArchived)}`}>{space.name}</span>
       {isHidden && <span title="Hidden space" className="flex items-center text-amber-400/80 mr-1 flex-shrink-0"><EyeOff className="w-3 h-3" /></span>}
@@ -77,7 +79,7 @@ function SpaceMenu({ space, starred, isHidden, isArchived, onMenuOpen, onStar, o
       <ContextItem icon={<Trash2 className="w-3.5 h-3.5" />} label="Delete space" onClick={onDelete} danger />
       <div className="px-3 py-2 border-t border-white/10 mt-1">
         <div className="flex items-center gap-2 text-3xs text-white/30">
-          <img src="/lira-logo.png" alt="Lira" className="w-4 h-4 object-contain rounded" />
+          <LiraLogo className="w-4 h-4" motion="none" />
           <span>Business space · Team-managed</span>
         </div>
       </div>

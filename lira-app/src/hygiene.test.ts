@@ -56,15 +56,9 @@ describe('The source is in the shape we agreed', () => {
     expect(offenders(src, t => /type=["']date["']/.test(t))).toEqual([]);
   });
 
-  it('no emojis in the interface; only the icons chosen for spaces may use them', () => {
-    // These files hold the picker for space icons, the sample spaces, and the fallback shown when a space has no icon.
-    const SPACE_ICON_FILES = ['components/board/CreateSpaceModal.tsx', 'components/projects/CreateProjectModal.tsx', 'db/seedData.ts'];
-    const FALLBACKS = /[\u{1F4C1}\u{1F680}]/gu; // folder and rocket: the icon used when a space has none
-    const emoji = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{2B50}\u{2705}\u{274C}]/gu;
-    const hits = src.filter(p => !SPACE_ICON_FILES.some(f => rel(p).endsWith(f))).filter(p => {
-      const text = read(p).replace(FALLBACKS, '').replace(/[✓✔]/g, ''); // a plain tick character is text, not an emoji
-      return emoji.test(text);
-    }).map(rel);
+  it('no emojis in the interface, the icons of spaces included (they are line icons: utils/spaceIcon.ts)', () => {
+    const emoji = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{2B50}\u{2705}\u{274C}]/u;
+    const hits = src.filter(p => emoji.test(read(p).replace(/[✓✔]/g, ''))).map(rel); // a plain tick character is text, not an emoji
     expect(hits).toEqual([]);
   });
 

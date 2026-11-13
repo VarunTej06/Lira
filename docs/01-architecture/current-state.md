@@ -27,7 +27,7 @@ flowchart LR
 | Area | Today |
 |---|---|
 | Language / build | TypeScript 7, React 18.3.1, Vite 8, Tailwind 3.4, React Router 7 |
-| Size | ~360 source files; about 33.4k lines of non-test code; 1602 automated tests in 139 files plus a 15-check data health run |
+| Size | ~360 source files; about 33.4k lines of non-test code; 1622 automated tests in 144 files plus a 15-check data health run |
 | Users | None. UI assumes one user ("VY"). No login. |
 | Source of truth | JSON files under `data/`. Browser storage is a cache. |
 | Tickets | Dexie tables `spaces`, `issues`, `columns` (3 schema versions); saved to `data/spaces/<KEY>.json` by `localDiskSync.ts` |
@@ -42,7 +42,7 @@ flowchart LR
 
 ## Domain model (from `src/types/`)
 
-- **Space** `{id, name, key, icon, color, description}` with **Columns** `{id, spaceId, name, order, wipLimit}`.
+- **Space** `{id, name, key, icon, color, description}` (`icon` is an icon name such as `rocket`; an emoji saved by an older version is still read and shown as the matching icon, see `utils/spaceIcon.ts`) with **Columns** `{id, spaceId, name, order, wipLimit}`.
 - **Issue** `{id, spaceId, key, type: epic|task|bug|subtask, status, priority, parentId, epicId, assignee, reporter, labels, dueDate, storyPoints, sprint, rank, blocked, blockedByIds}` with embedded arrays `subtasks`, `comments` (HTML), `activity`, `attachments` (base64 or link), `linkedIssues`, `statusLog`, `watchers`.
 - **Project** `{id, name, key, lead, spaceId, repoUrl, environments}`. **Sprint**, **Team**, **Standup**, **Roadmap**, **Dashboard** are held as JSON structures (see `structuredStore.ts` for the row shapes).
 

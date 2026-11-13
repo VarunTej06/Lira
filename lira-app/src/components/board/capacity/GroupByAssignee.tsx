@@ -23,7 +23,7 @@ export function GroupByAssignee(s: CapacityState) {
                 {/* Member Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Avatar initials={member.initials} size="md" color={member.avatarColor} />
+                    <Avatar initials={member.initials} size="md" />
                     <div>
                       <h3 className="text-sm font-bold text-lira-text leading-tight">{member.name}</h3>
                       <p className="text-2xs text-lira-muted font-medium">

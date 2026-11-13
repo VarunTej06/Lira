@@ -176,7 +176,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
                 <option value="all">All Spaces ({spaces.length})</option>
                 {spaces.map(s => (
                   <option key={s.id} value={s.id}>
-                    {s.icon} {s.name} ({s.key})
+                    {s.name} ({s.key})
                   </option>
                 ))}
               </select>

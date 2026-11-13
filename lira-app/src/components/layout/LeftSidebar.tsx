@@ -57,7 +57,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
     <>
     {phone && <div className="fixed inset-0 z-[55] bg-black/55" onClick={() => setDrawerOpen(false)} aria-hidden />}
     <aside
-      className={`flex-shrink-0 p-2 pr-0 transition-[width] duration-300 ease-[cubic-bezier(.4,0,.2,1)] ${
+      className={`flex-shrink-0 p-2 pr-0 transition-[width] duration-150 ease-out ${
         phone ? 'fixed inset-y-0 left-0 z-[60] w-[min(300px,86vw)] pr-2' : isCollapsed ? 'w-[68px]' : 'w-[272px]'
       }`}
     >
@@ -72,10 +72,11 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
           style={{ top: indicator.top, height: indicator.height, opacity: indicator.visible ? 1 : 0 }}
         />
       )}
+        {/* The full list keeps a fixed width while the panel slides: its rows are clipped, not laid out again on every frame */}
         {isCollapsed ? (
           <CollapsedRail {...s} />
         ) : (
-          <div key="full" className="relative z-10 w-full flex flex-col flex-shrink-0 animate-sidebar-in">
+          <div key="full" className={`relative z-10 w-full flex flex-col flex-shrink-0 animate-sidebar-in ${phone ? '' : 'min-w-[262px]'}`}>
             <NavigationList {...s} />
             <StarredSection {...s} />
             {visibleSectionKeys.map(k => <React.Fragment key={k}>{sections[k]}</React.Fragment>)}

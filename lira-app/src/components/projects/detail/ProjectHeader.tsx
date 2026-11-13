@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../../common/SpaceIcon';
 import type { ComponentType } from 'react';
 import { ArrowLeft, BarChart3, KanbanSquare, Ticket, GitBranch, Settings, Plus, ExternalLink, Clock, CalendarClock } from 'lucide-react';
 import { Button } from '../../common/Button';
@@ -53,7 +54,7 @@ function SpaceLink({ space, onSwitchToSpace }: Pick<DetailCtx, 'space' | 'onSwit
       className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-gray-50 hover:bg-lira-blue-light border border-lira-border hover:border-lira-blue rounded-md text-lira-text text-xs transition-all cursor-pointer group"
       title={`Switch workspace to space ${space.name}`}
     >
-      <span>{space.icon || '📁'}</span>
+      <SpaceIcon icon={space.icon} className="w-3.5 h-3.5" />
       <span>Space: <strong className="group-hover:text-lira-blue">{space.name}</strong></span>
       <ExternalLink className="w-3 h-3 text-gray-400 group-hover:text-lira-blue" />
     </button>

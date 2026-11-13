@@ -11,7 +11,7 @@ How to run it
 
 ---
 
-## A. The screens that were reworked (A1–A21)
+## A. The screens that were reworked (A1–A22)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -224,6 +224,19 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Gear menu, System settings. Expect: choosing Light shows Sorrel and Fawn; Save applies the choice.
 - [ ] Reload the page, and open Lira in a browser that has never opened it (dev server running). Expect: the saved theme and palette are shown from the first moment.
 - [ ] In each theme walk the board, list, calendar, summary, sprints, roadmaps, dashboards, filters, projects, For you, a ticket popup and the Viva chat. Expect: no white label on a yellow or baby blue button, no leftover navy bars or purple gradients, every text readable.
+
+### A22. Space icons, app switcher and sidebar speed (13 Nov 2026)  ◐
+- [ ] Sidebar, board header, summary, filters, calendar, projects, For you. Expect: every space shows a line icon like the navigation icons; no emoji anywhere.
+- [ ] A space created before this change. Expect: it shows the icon that matches its old emoji (clipboard, trophy, book ...), or a folder.
+- [ ] Create space (sidebar +) and Create project with a new space. Expect: a grid of 24 line icons, the chosen one highlighted and shown in the preview; the new space appears with that icon.
+- [ ] Edit a space, change only its name, save. Expect: its icon is unchanged.
+- [ ] Space dropdowns (create ticket, sprint filter, all tickets) and Viva's answers. Expect: the space name without an emoji in front.
+- [ ] App switcher (nine dots, top left). Expect: a panel headed Lira with a v3.4 badge and five tiles; each opens what it names; Escape and a click outside close it.
+- [ ] Start-up screen and Settings, Plan. Expect: both say v3.4.
+- [ ] Hover the nine dots, then move away. Expect: the panel opens, then closes. Hover again and click the dots. Expect: it closes.
+- [ ] Logo (top bar, start-up screen, browser tab). Expect: a block L with an arrow; the arrow grows out of the corner on load and when the logo is hovered, and keeps growing while Lira starts. With "reduce motion" on in the system it stands still.
+- [ ] Avatars (top right, board cards, ticket popup, filters, capacity). Expect: all in the button colour of the theme, with a readable label.
+- [ ] Collapse and expand the sidebar several times on a full board. Expect: it slides quickly, without stutter, and the rows do not jump or re-wrap while it moves.
 
 ---
 

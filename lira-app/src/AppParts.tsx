@@ -1,10 +1,13 @@
+import { LiraLogo } from './components/common/LiraLogo';
+import { APP_VERSION } from './utils/appVersion';
+
 /** The loading screen while the app starts. */
 export function StartupScreen() {
   return (
     <div className="h-screen flex items-center justify-center bg-lira-bg">
       <div className="text-center space-y-3">
-        <img src="/lira-logo.png" alt="Lira Logo" className="w-16 h-16 mx-auto animate-pulse object-contain" />
-        <p className="text-lira-muted text-sm font-medium">Initializing Lira v2.0…</p>
+        <LiraLogo className="w-16 h-16 mx-auto text-lira-text" accentClassName="stroke-lira-blue" motion="loop" />
+        <p className="text-lira-muted text-sm font-medium">Initializing Lira v{APP_VERSION}…</p>
       </div>
     </div>
   );

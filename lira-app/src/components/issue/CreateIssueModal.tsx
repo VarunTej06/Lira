@@ -68,7 +68,7 @@ function SpacePicker({ spaces, value, onChange }: { spaces: Space[]; value: numb
         className={`${SELECT} cursor-pointer`}
       >
         <option value="">Select a space…</option>
-        {spaces.map(s => <option key={s.id} value={s.id}>{s.icon} {s.name} ({s.key})</option>)}
+        {spaces.map(s => <option key={s.id} value={s.id}>{s.name} ({s.key})</option>)}
       </select>
     </div>
   );

@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../../common/SpaceIcon';
 import { Share2, EyeOff, Archive } from 'lucide-react';
 import { StandupButton } from '../../standup/StandupButton';
 import type { ActionBarState } from './useActionBarState';
@@ -15,7 +16,7 @@ export function SpaceHeader(s: ActionBarState) {
               className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
               style={{ backgroundColor: space.color + '22', color: space.color }}
             >
-              {space.icon}
+              <SpaceIcon icon={space.icon} className="w-5 h-5" />
             </div>
           )}
           <div>

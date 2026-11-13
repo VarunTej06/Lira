@@ -21,7 +21,7 @@ describe('ticket detail text', () => {
     expect(await textFor(ticket())).toBe(
       '### Ticket Details: **AAA-1**\n\n'
       + '- **Title**: Fix login\n'
-      + '- **Space**: A **Alpha** (`AAA`)\n'
+      + '- **Space**: **Alpha** (`AAA`)\n'
       + '- **Type**: `BUG` | **Priority**: `HIGH`\n'
       + '- **Status**: **TODO**\n'
       + '- **Assignee**: Varun | **Reporter**: Bob\n',
@@ -29,7 +29,7 @@ describe('ticket detail text', () => {
   });
   it('has fallbacks for a missing space, assignee and reporter', async () => {
     const text = await textFor(ticket({ assignee: '', reporter: '' } as never), null);
-    expect(text).toContain('- **Space**: 📁 **Unknown** (`?`)');
+    expect(text).toContain('- **Space**: **Unknown** (`?`)');
     expect(text).toContain('- **Assignee**: Unassigned | **Reporter**: VY');
   });
   it('adds the due date and the parent epic only when there are some', async () => {

@@ -106,7 +106,7 @@ Organisation → Space → Ticket. Projects, Sprints, Roadmaps, Dashboards, Team
 | Performance | p95 board load < 1.5 s for 2,000 tickets in a space; p95 write < 300 ms | Load test in staging |
 | Durability | Point-in-time restore; RPO ≤ 15 min, RTO ≤ 4 h (to be confirmed) | Quarterly restore drill (SOP 02) |
 | Auditability | Every write and permission change recorded, retained per policy | Audit tests and sampling |
-| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 1602 tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
+| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 1622 tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
 | Accessibility | WCAG 2.1 AA for core flows | Axe checks, manual review |
 
 ## 7. Deployment view (target, built in the DevOps step)

@@ -115,7 +115,7 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
               <>
                 <Section title="Which spaces?" hint="Leave all off to include every space.">
                   <div className="flex flex-wrap gap-2">
-                    {spaces.filter(s => s.id).map(s => <Chip key={s.id} on={filters.spaceIds.includes(s.id!)} onClick={() => set({ spaceIds: toggle(filters.spaceIds, s.id!) })} testId={`space-${s.key}`}>{s.icon} {s.name}</Chip>)}
+                    {spaces.filter(s => s.id).map(s => <Chip key={s.id} on={filters.spaceIds.includes(s.id!)} onClick={() => set({ spaceIds: toggle(filters.spaceIds, s.id!) })} testId={`space-${s.key}`}>{s.name}</Chip>)}
                   </div>
                 </Section>
                 <Section title="Which sprint?">

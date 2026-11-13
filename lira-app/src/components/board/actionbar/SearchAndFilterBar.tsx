@@ -6,7 +6,6 @@ import { FilterMultiSelect } from '../../common/FilterMultiSelect';
 import { STATUS_LIST, BLOCKED_META } from '../../../utils/status';
 import type { ActionBarState } from './useActionBarState';
 import { currentUser } from '../../../utils/currentUser';
-import { PALETTE } from '../../../theme/palette';
 
 type Icon = ComponentType<{ className?: string }>;
 
@@ -150,7 +149,7 @@ export function SearchAndFilterBar(s: ActionBarState) {
         className={`flex items-center gap-1 transition-all rounded-full p-0.5 ${s.filterAssignee ? 'ring-2 ring-lira-blue ring-offset-1' : 'opacity-70 hover:opacity-100'}`}
         title={s.filterAssignee ? 'Show all assignees' : 'Filter by me (VY)'}
       >
-        <Avatar initials={currentUser().initials} size="sm" color={PALETTE.brand} />
+        <Avatar initials={currentUser().initials} size="sm" />
       </button>
 
       {/* One small dropdown each, with a checkbox per value */}

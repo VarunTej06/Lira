@@ -1,6 +1,6 @@
 # Test strategy
 
-**Today:** 1602 automated tests in 139 files (Vitest, jsdom, fake-indexeddb) plus a 15-check read-only data health run (`npm run test:health`). Layers: pure logic (`src/utils`, `src/services`), server and guard (`server/*.test.ts`), screens in a fake browser (`src/components/**`), source-hygiene and quality-ratchet rules (`src/hygiene.test.ts`: no `eval`, no `dangerouslySetInnerHTML`, no secrets in source, no `any`, storage through `appStorage`, no one-off text sizes, palette colours not repeated, a cap on lint suppressions, the documents agree on the test count), and documents. Details: [`../../TESTING.md`](../../TESTING.md).
+**Today:** 1622 automated tests in 144 files (Vitest, jsdom, fake-indexeddb) plus a 15-check read-only data health run (`npm run test:health`). Layers: pure logic (`src/utils`, `src/services`), server and guard (`server/*.test.ts`), screens in a fake browser (`src/components/**`), source-hygiene and quality-ratchet rules (`src/hygiene.test.ts`: no `eval`, no `dangerouslySetInnerHTML`, no secrets in source, no `any`, storage through `appStorage`, no one-off text sizes, palette colours not repeated, a cap on lint suppressions, the documents agree on the test count), and documents. Details: [`../../TESTING.md`](../../TESTING.md).
 
 ## Target pyramid for the hosted edition
 

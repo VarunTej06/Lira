@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../../common/SpaceIcon';
 import { issueLink } from '../../../utils/links';
 import { statusLabel } from '../../../utils/status';
 import { TypeIcon, PriorityLabel } from '../../common/Icons';
@@ -81,7 +82,7 @@ function SpaceButton({ space, spaceId, onSelectSpace }: { space: SpaceInfo; spac
       }}
       title={`Open ${space?.name || 'Space'} board`}
     >
-      <span>{space?.icon || '📁'}</span>
+      <SpaceIcon icon={space?.icon} className="w-3 h-3" />
       <span className="truncate max-w-[100px]">{space?.name || 'Space'}</span>
     </button>
   );
@@ -104,7 +105,6 @@ function AssigneeCell({ issue }: { issue: Issue }) {
       <Avatar
         initials={issue.assigneeInitials || (issue.assignee ? issue.assignee.slice(0, 2) : 'UN')}
         size="xs"
-        color={issue.assigneeInitials === 'VY' ? PALETTE.brand : PALETTE.textMuted}
       />
       <span className="truncate max-w-[80px] text-lira-text font-medium">{issue.assignee || 'Unassigned'}</span>
     </div>

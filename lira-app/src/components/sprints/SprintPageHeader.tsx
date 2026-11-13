@@ -37,7 +37,7 @@ export function SprintPageHeader({ spaces, scope, onScopeChange, lockedSpaceId, 
             aria-label="Space"
           >
             <option value="all">All spaces</option>
-            {spaces.map(s => <option key={s.id} value={s.id}>{s.icon} {s.name}</option>)}
+            {spaces.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
         )}
         <StandupButton

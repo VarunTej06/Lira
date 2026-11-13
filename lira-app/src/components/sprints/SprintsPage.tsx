@@ -123,7 +123,7 @@ function SpaceShortcuts({ spaces, list, onOpenSpace }: { spaces: Space[]; list: 
       Jump to a space:
       {spaces.filter(s => list.some(i => i.spaceId === s.id)).map(s => (
         <button key={s.id} onClick={() => onOpenSpace(s.id!)} className="px-2 py-1 rounded border border-lira-border bg-white hover:bg-gray-50 text-lira-text cursor-pointer">
-          {s.icon} {s.name} ({list.filter(i => i.spaceId === s.id).length})
+          {s.name} ({list.filter(i => i.spaceId === s.id).length})
         </button>
       ))}
     </div>

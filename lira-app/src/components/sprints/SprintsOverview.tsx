@@ -183,7 +183,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
               <tbody className="divide-y divide-lira-border">
                 {spaces.map(s => (
                   <tr key={s.id}>
-                    <td className="px-3 py-2 text-lira-text whitespace-nowrap">{s.icon} {s.name}</td>
+                    <td className="px-3 py-2 text-lira-text whitespace-nowrap">{s.name}</td>
                     {lastSix.map(r => {
                       const l = r.list.filter(i => i.spaceId === s.id);
                       const d = l.filter(isDone).length;

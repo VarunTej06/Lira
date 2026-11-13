@@ -34,7 +34,7 @@ export const SprintFilter: React.FC<SprintFilterProps> = ({ spaces, value, onCha
       />
       <FilterMultiSelect
         label="Space"
-        options={spaces.filter(s => s.id).map(s => ({ value: String(s.id), label: `${s.icon} ${s.name}` }))}
+        options={spaces.filter(s => s.id).map(s => ({ value: String(s.id), label: s.name }))}
         selected={value.spaceIds.map(String)}
         onToggle={v => onChange({ ...value, spaceIds: flip(value.spaceIds, Number(v)) })}
         onClear={() => onChange({ ...value, spaceIds: [] })}

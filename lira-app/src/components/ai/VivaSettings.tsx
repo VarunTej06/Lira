@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../common/SpaceIcon';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { Check, Database, FileText, Key, RotateCcw, Shield, Sparkles } from 'lucide-react';
 import type { Space } from '../../types/space';
@@ -54,7 +55,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
         <div className="flex flex-wrap gap-1.5">
           {spaces.map(s => (
             <span key={s.id} className={`px-2 py-0.5 rounded-lg text-3xs font-semibold border flex items-center gap-1 ${s.id === activeSpace?.id ? 'bg-lira-blue-light text-lira-blue border-lira-border' : 'bg-gray-100 text-gray-700 border-gray-200'}`}>
-              <span>{s.icon}</span><span>{s.name}</span><span className="font-mono text-gray-400">[{s.key}]</span>
+              <SpaceIcon icon={s.icon} className="w-3 h-3" /><span>{s.name}</span><span className="font-mono text-gray-400">[{s.key}]</span>
             </span>
           ))}
         </div>

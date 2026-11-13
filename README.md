@@ -8,7 +8,7 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
 [![Dexie.js](https://img.shields.io/badge/Dexie.js-IndexedDB-orange.svg)](https://dexie.org/)
 [![Storage](https://img.shields.io/badge/Storage-JSON_files_in_data/-emerald.svg)](./data/)
-[![Tests](https://img.shields.io/badge/tests-1602_passing-brightgreen.svg)](#-tests)
+[![Tests](https://img.shields.io/badge/tests-1622_passing-brightgreen.svg)](#-tests)
 
 **Next stage (decided 9 Nov 2026):** multi-user with SSO. Design, decisions, security standard, SOPs and a stakeholder deck are in [docs/](docs/README.md); rules for contributors and AI assistants are in [CLAUDE.md](CLAUDE.md). Everything below describes today's single-user app.
 
@@ -28,7 +28,7 @@
 | **Everything is in files** | Projects, sprints, teams, standups, roadmaps and settings are saved as JSON under `data/`, so clearing the browser loses nothing. |
 | **Tablet and phone** | `npm run dev:lan` opens Lira to your own Wi-Fi behind a private link and QR code (**Settings, Other devices**). Phone and upright-tablet layouts use a menu drawer. |
 | **Motion** | Framer Motion: dialogs and menus animate in and out, sliding tab underline and sidebar highlight, count-up numbers, bars that grow, burndown lines that draw themselves, confetti when a ticket reaches Done or a sprint closes. Reduced-motion settings are respected. |
-| **Look** | Three themes, each built from three colours: Dark (black, silver, yellow buttons) and two light palettes, Sorrel (off-white, sage, tomato red buttons) and Fawn (cream, brown, baby blue buttons). Choosing Light asks which palette. Also rounded panels, scroll bars kept inside their panels. |
+| **Look** | Three themes, each built from three colours: Dark (black, silver, yellow buttons) and two light palettes, Sorrel (off-white, sage, tomato red buttons) and Fawn (cream, brown, baby blue buttons). Choosing Light asks which palette. The logo is a block L with an arrow that grows out of its corner; avatars use the button colour of the theme. Spaces have line icons from the same family as the navigation (no emoji). Also rounded panels, scroll bars kept inside their panels. |
 | **Editing and saving** | The ticket popup is a draft: nothing is written until **Save changes**, which also closes it, and closing with unsaved changes asks first. Settings pages close on Save. The theme and light palette apply only when saved. Every save shows a small animated "saved" card. Lira's own dialogs replace every browser confirm, prompt and alert. You can edit your own comments. |
 | **Rich descriptions** | A full editor for ticket descriptions: headings, bold, italic, underline, strikethrough, bullet, numbered and checkbox lists, quotes, code, links, text colour, highlight, **@mentions**, and files (pictures show in the text, every file joins the ticket's attachments). Older Markdown descriptions open converted. |
 | **Dashboards** | Sidebar, Dashboards. Start from one of 10 scenario templates (My work, Sprint health, Team workload, Blocked and risks, Delivery and flow, Project progress, Roadmap view, Quality and bugs, Executive summary, Custom), run the 4-step wizard (Goal, Scope, Focus, Widgets, with a live preview), or **describe** what you want in a sentence (or ask Viva) and Lira picks the widgets and filters. 51 ready-made widgets: numbers with the change since last week, bar and donut charts, created vs finished, throughput, aging, due-date strip, burndown, burnup, cumulative flow, lists (needs attention, overdue, stale, my tickets...), blocked tickets with their blockers, team workload with overload warnings, progress by epic, project or sprint, roadmap status, and a plain-words summary. **Customise** to drag, resize (S, M, L, full width), set up (including filters for one widget only), add or remove widgets. Click a number or a bar to open its tickets. **Alerts** warn when a number passes a limit. **Snapshot** saves the dashboard as a Markdown file every week. **Export** as a picture (PNG), print or PDF, Markdown or a dashboard file; **Share** copies a link. |
@@ -39,7 +39,7 @@
 | **Attachments** | **Add attachment** opens a window to choose the source: this computer (drag and drop or browse), a Google Drive, OneDrive or Dropbox share link, or any web link. |
 | **Dates** | A themed date picker everywhere a date is chosen. Click the month and year to jump to any month of any year. The month calendar has the same chooser and "+N more" days. |
 | **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
-| **Code health** | Large files split into small parts (no component over about 350 lines), 1602 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
+| **Code health** | Large files split into small parts (no component over about 350 lines), 1622 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
 
 ## Key Highlights
 
@@ -110,7 +110,7 @@ Other commands:
 | Command | What it does |
 |---|---|
 | `npm run dev:lan` | Same, and also opens Lira to your own Wi-Fi for a tablet or phone (private link and QR code in **Settings, Other devices**) |
-| `npm test` | 1602 automated tests (Vitest) |
+| `npm test` | 1622 automated tests (Vitest) |
 | `npm run test:health` | Read-only check of your `data/` folder (15 checks) |
 | `npm run test:all` | Type check, lint, all tests, data health |
 | `npm run build` | Type-check, then production build |

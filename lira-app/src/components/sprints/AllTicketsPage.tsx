@@ -95,7 +95,7 @@ export const AllTicketsPage: React.FC<AllTicketsPageProps> = ({ spaces, issues, 
           </div>
           <select className={sel} value={spaceId} onChange={e => { setSpaceId(e.target.value === 'all' ? 'all' : Number(e.target.value)); setLimit(PAGE_SIZE); }} aria-label="Space">
             <option value="all">All spaces</option>
-            {spaces.map(s => <option key={s.id} value={s.id}>{s.icon} {s.name}</option>)}
+            {spaces.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
           <SprintSelect value={sprint} options={keys} onChange={v => { setSprint(v); setLimit(PAGE_SIZE); }} allLabel="All sprints" className="!text-sm !px-2.5 !py-1.5 !rounded-md" />
           <select className={sel} value={status} onChange={e => { setStatus(e.target.value); setLimit(PAGE_SIZE); }} aria-label="Status">

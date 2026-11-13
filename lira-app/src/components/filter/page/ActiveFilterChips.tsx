@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../../common/SpaceIcon';
 import { Zap } from 'lucide-react';
 import type { FiltersState } from './useFiltersState';
 
@@ -30,7 +31,7 @@ export function ActiveFilterChips(s: FiltersState) {
                   className="inline-flex items-center gap-1 hover:underline cursor-pointer"
                   title={`Open ${spaceMap[id]?.name || id} board`}
                 >
-                  <span>{spaceMap[id]?.icon || '📁'}</span>
+                  <SpaceIcon icon={spaceMap[id]?.icon} className="w-3 h-3" />
                   <span>{spaceMap[id]?.name || id}</span>
                 </button>
                 <button

@@ -97,8 +97,8 @@ export async function handleSubtaskBreakdown(c: AgentContext): Promise<ChatMessa
   return undefined;
 }
 
-/** "- **Space**: 📁 **Alpha** (`AAA`)", with fallbacks for a space that is missing. */
-const spaceLine = (space: Space | undefined): string => `- **Space**: ${space?.icon || '📁'} **${space?.name || 'Unknown'}** (\`${space?.key || '?'}\`)`;
+/** "- **Space**: **Alpha** (`AAA`)", with fallbacks for a space that is missing. */
+const spaceLine = (space: Space | undefined): string => `- **Space**: **${space?.name || 'Unknown'}** (\`${space?.key || '?'}\`)`;
 
 /** "- **Subtasks**: 1/4 completed (25%)", or nothing when there are none. */
 function subtaskLine(subtasks: { completed?: boolean }[]): string | undefined {
@@ -238,7 +238,7 @@ export async function handleCreateIssue(c: AgentContext): Promise<ChatMessage | 
       return {
         id: uuidv4(),
         sender: 'assistant',
-        text: `**Created Issue**: **${created.key}** (*${created.title}*)\n- **Space**: ${spaceToUse.icon} **${spaceToUse.name}** (\`${spaceToUse.key}\`)\n- **Type**: \`${rawType.toUpperCase()}\` | **Status**: **${status.toUpperCase()}** | **Priority**: \`${priority.toUpperCase()}\`\n- Added 3 initial subtasks automatically.`,
+        text: `**Created Issue**: **${created.key}** (*${created.title}*)\n- **Space**: **${spaceToUse.name}** (\`${spaceToUse.key}\`)\n- **Type**: \`${rawType.toUpperCase()}\` | **Status**: **${status.toUpperCase()}** | **Priority**: \`${priority.toUpperCase()}\`\n- Added 3 initial subtasks automatically.`,
         timestamp: now,
         refinedPrompt: refinedMetadata,
         actionTaken: {

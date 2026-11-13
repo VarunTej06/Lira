@@ -8,7 +8,6 @@ export type QuickFilter = 'all' | 'vy' | 'inprogress' | 'blocked' | 'high' | 'ov
 export interface MemberWorkload {
   name: string;
   initials: string;
-  avatarColor: string;
   total: number;
   backlog: number;
   todo: number;
@@ -67,10 +66,9 @@ export function filterCapacityIssues(issues: Issue[], f: CapacityFilter, now: Da
 export const hasCapacityFilters = (f: CapacityFilter): boolean =>
   f.searchQuery.trim().length > 0 || f.mineOnly || !!f.active?.priorities?.length || !!f.active?.labels?.length || !!f.active?.statuses?.length || f.assignee !== null || f.quick !== 'all';
 
-const avatarColor = (initials: string): string => (initials === 'VY' ? PALETTE.brand : initials === 'UN' ? PALETTE.textMuted : PALETTE.successDeep);
 
 const blankWorkload = (name: string, initials: string): MemberWorkload => ({
-  name, initials, avatarColor: avatarColor(initials), total: 0, backlog: 0, todo: 0, inProgress: 0, blocked: 0, done: 0, overdue: 0, storyPoints: 0, issues: [],
+  name, initials, total: 0, backlog: 0, todo: 0, inProgress: 0, blocked: 0, done: 0, overdue: 0, storyPoints: 0, issues: [],
 });
 
 /** Which status counter a ticket adds to; anything that is not done, in progress or to do counts as backlog. */

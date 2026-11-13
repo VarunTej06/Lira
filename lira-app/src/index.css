@@ -288,7 +288,7 @@
   .lira-sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .animate-sidebar-in { animation: none !important; }
+  .animate-sidebar-in, [data-logo-arrow] { animation: none !important; }
 }
 
 /* Touch screens have no hover, so anything that only appears on hover (row menus, quick actions) is always shown there. */

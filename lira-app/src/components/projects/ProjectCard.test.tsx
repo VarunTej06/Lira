@@ -55,7 +55,7 @@ describe('ProjectCard', () => {
     it('says Unlinked Space with none, and uses the default colour and icon', () => {
       show(project({ spaceId: 99, key: 'ZZZ' }), [space()]);
       expect(text()).toContain('Unlinked Space');
-      expect(text()).toContain('📁');
+      expect(document.querySelector('svg[data-space-icon="folder"]')).not.toBeNull();
     });
   });
   describe('lead', () => {

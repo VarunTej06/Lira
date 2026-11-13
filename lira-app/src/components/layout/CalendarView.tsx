@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../common/SpaceIcon';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, ChevronDown, ChevronUp, CalendarPlus } from 'lucide-react';
 import { MonthYearGrid } from '../common/MonthYearGrid';
@@ -126,7 +127,7 @@ function SpaceChip({ space }: { space: Space }) {
   const color = space.color || PALETTE.brand;
   return (
     <span className="text-xs px-2 py-0.5 rounded-md font-medium flex items-center gap-1" style={{ backgroundColor: color + '22', color }}>
-      <span>{space.icon || '📁'}</span><span>{space.name}</span>
+      <SpaceIcon icon={space.icon} className="w-3 h-3" /><span>{space.name}</span>
     </span>
   );
 }

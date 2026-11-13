@@ -1,3 +1,4 @@
+import { LiraLogo } from '../common/LiraLogo';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Settings, Plus, HardDrive, CheckCircle2, AlertCircle } from 'lucide-react';
 import { exportBackup, importBackup } from '../../db/storageService';
@@ -125,12 +126,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       />
 
       {/* Lira Logo + Brand */}
-      <div className="flex-shrink-0 flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200 hover:scale-[1.04]">
-        <img
-          src="/lira-logo.png"
-          alt="Lira Logo"
-          className="w-7 h-7 object-contain drop-shadow-xs"
-        />
+      <div className="group flex-shrink-0 flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200 hover:scale-[1.04]">
+        <LiraLogo className="w-7 h-7 text-white" />
         <span className="text-white font-bold text-base tracking-tight">Lira</span>
       </div>
 

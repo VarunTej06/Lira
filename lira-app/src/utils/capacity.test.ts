@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Issue } from '../types/issue';
 import { buildWorkloads, filterCapacityIssues, groupByEpic, groupByPriority, groupByStatus, hasCapacityFilters, teamTotals, type CapacityFilter } from './capacity';
-import { PALETTE } from '../theme/palette';
 
 const NOW = new Date(2026, 10, 10);
 let n = 0;
@@ -70,13 +69,11 @@ describe('buildWorkloads', () => {
     ];
     const { workloads } = buildWorkloads(list, NOW);
     expect(workloads.map(w => w.initials)).toEqual(['VY', 'BO']);
-    expect(workloads[0]).toMatchObject({ name: 'Varun', total: 3, done: 1, inProgress: 1, backlog: 1, todo: 0, blocked: 1, storyPoints: 5, avatarColor: PALETTE.brand });
-    expect(workloads[1].avatarColor).toBe(PALETTE.successDeep);
+    expect(workloads[0]).toMatchObject({ name: 'Varun', total: 3, done: 1, inProgress: 1, backlog: 1, todo: 0, blocked: 1, storyPoints: 5 });
   });
   it('derives initials from the name, and uses UN for nobody', () => {
     const { workloads } = buildWorkloads([t({ assignee: 'zed' }), t()], NOW);
     expect(workloads.map(w => [w.initials, w.name]).sort()).toEqual([['UN', 'Unassigned'], ['ZE', 'zed']]);
-    expect(workloads.find(w => w.initials === 'UN')!.avatarColor).toBe(PALETTE.textMuted);
   });
   it('counts overdue tickets that are not done, per person and in total', () => {
     const past = new Date(2026, 10, 1) as never;

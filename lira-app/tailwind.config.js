@@ -118,7 +118,11 @@ export default {
         'slide-in': 'slideIn 0.2s ease-out',
         'fade-in': 'fadeIn 0.15s ease-out',
         'scale-in': 'scaleIn 0.15s ease-out',
-        'sidebar-in': 'sidebarIn 0.35s cubic-bezier(.4,0,.2,1)',
+        'sidebar-in': 'sidebarIn 0.14s ease-out',
+        // The arrow of the logo: once on load, again on hover (a second name restarts it), and on a loop while starting
+        'logo-grow': 'logoGrow 0.7s cubic-bezier(.2,.8,.3,1) both',
+        'logo-grow-again': 'logoGrowAgain 0.7s cubic-bezier(.2,.8,.3,1) both',
+        'logo-grow-loop': 'logoGrow 1.3s cubic-bezier(.2,.8,.3,1) infinite',
         'chat-pop': 'chatPop 0.42s cubic-bezier(.22,1,.36,1) both',
         'chat-out': 'chatOut 0.3s cubic-bezier(.5,0,.75,0) forwards',
         'msg-in': 'msgIn 0.35s cubic-bezier(.2,.8,.3,1) both',
@@ -138,6 +142,8 @@ export default {
           "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        logoGrow: { '0%': { transform: 'scale(0)', opacity: '0' }, '55%': { opacity: '1' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+        logoGrowAgain: { '0%': { transform: 'scale(0)', opacity: '0' }, '55%': { opacity: '1' }, '100%': { transform: 'scale(1)', opacity: '1' } },
         sidebarIn: {
           "0%": { opacity: "0", transform: "translateX(-10px)" },
           "100%": { opacity: "1", transform: "translateX(0)" },

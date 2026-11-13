@@ -1,9 +1,9 @@
+import { SpaceIcon } from '../../common/SpaceIcon';
 import type { ReactNode, Dispatch, SetStateAction } from 'react';
 import { PriorityIcon, TypeIcon } from '../../common/Icons';
 import { Search, Filter, X, ChevronDown, Check, Clock, CheckCircle2, Zap, Tag, Layers, User as UserIcon } from 'lucide-react';
 import { Avatar } from '../../common/Avatar';
 import type { FiltersState } from './useFiltersState';
-import { PALETTE } from '../../../theme/palette';
 import { assigneeSummary, prioritySummary, spaceSummary, statusSummary, tagCount, tagSummary, typeSummary } from './facetSummaries';
 
 const PRESETS = [
@@ -168,7 +168,7 @@ function FacetRow({ s }: { s: FiltersState }) {
         <Heading>Filter by Space</Heading>
         {s.spaces.map(sp => (
           <Choice key={sp.id} active={s.selectedSpaces.includes(sp.id!)} onClick={() => toggle(s.setSelectedSpaces, sp.id!)}>
-            <span className="flex items-center gap-2 truncate"><span>{sp.icon}</span><span className="truncate">{sp.name}</span></span>
+            <span className="flex items-center gap-2 truncate"><SpaceIcon icon={sp.icon} className="w-3.5 h-3.5 flex-shrink-0" /><span className="truncate">{sp.name}</span></span>
           </Choice>
         ))}
       </Facet>
@@ -205,7 +205,7 @@ function FacetRow({ s }: { s: FiltersState }) {
         {s.allAssignees.map(init => (
           <Choice key={init} active={s.selectedAssignees.includes(init)} onClick={() => toggle(s.setSelectedAssignees, init)}>
             <div className="flex items-center gap-2">
-              <Avatar initials={init} size="xs" color={init === 'VY' ? PALETTE.brand : PALETTE.textMuted} />
+              <Avatar initials={init} size="xs" />
               <span>{init === 'VY' ? 'Varun Tej (VY)' : init}</span>
             </div>
           </Choice>

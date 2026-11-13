@@ -43,7 +43,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
     {
       name: 'General Tasks',
       key: 'GEN',
-      icon: '📋',
+      icon: 'clipboard',
       color: PALETTE.purple,
       description: 'General day-to-day tasks and miscellaneous work items',
       createdAt: daysAgo(60),
@@ -52,7 +52,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
     {
       name: 'Creator Hub',
       key: 'CRE',
-      icon: '✨',
+      icon: 'sparkles',
       color: PALETTE.info,
       description: 'Content creation, writing, and creative projects',
       createdAt: daysAgo(45),
@@ -61,7 +61,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
     {
       name: 'Certifications',
       key: 'CERT',
-      icon: '🏆',
+      icon: 'trophy',
       color: PALETTE.brand,
       description: 'Technical certification study plans and exam preparation',
       createdAt: daysAgo(30),
@@ -70,7 +70,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
     {
       name: 'Courses',
       key: 'CRS',
-      icon: '📚',
+      icon: 'book',
       color: PALETTE.success,
       description: 'Online course tracking and learning milestones',
       createdAt: daysAgo(20),
@@ -79,7 +79,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
     {
       name: 'ATMOS - Weather App',
       key: 'ATMOS',
-      icon: '🌤️',
+      icon: 'cloud',
       color: PALETTE.danger,
       description: 'Side project: Full-stack weather application',
       createdAt: daysAgo(15),
@@ -88,7 +88,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
     {
       name: 'Lira',
       key: 'LIRA',
-      icon: '🎯',
+      icon: 'target',
       color: PALETTE.brand,
       description: 'Lira product roadmap, feature development, and issue tracking',
       createdAt: daysAgo(10),
@@ -660,7 +660,7 @@ async function ensureLiraSpace(): Promise<void> {
     liraSpaceId = await db.spaces.add({
       name: 'Lira',
       key: 'LIRA',
-      icon: '🎯',
+      icon: 'target',
       color: PALETTE.brand,
       description: 'Lira product roadmap, feature development, and issue tracking',
       createdAt: daysAgo(10),

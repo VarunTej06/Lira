@@ -9,7 +9,6 @@ import { CopyButton } from '../common/CopyButton';
 import { descriptionToText } from '../../utils/richText';
 import { isOwnComment, hasCommentContent } from './commentUtils';
 import { currentUser } from '../../utils/currentUser';
-import { PALETTE } from '../../theme/palette';
 
 interface IssueActivityFeedProps {
   comments: Comment[];
@@ -79,7 +78,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
 
       {/* Comment box */}
       <div className="flex gap-3">
-        <Avatar initials={currentUser().initials} size="sm" color={PALETTE.brand} className="flex-shrink-0 mt-1" />
+        <Avatar initials={currentUser().initials} size="sm" className="flex-shrink-0 mt-1" />
         <div className="flex-1 min-w-0">
           {!focused ? (
             <>

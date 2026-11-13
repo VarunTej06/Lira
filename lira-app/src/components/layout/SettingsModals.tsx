@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../common/SpaceIcon';
 import { notifySaved } from '../common/savedToastStore';
 import { Bot, HardDrive, Zap, Brain } from 'lucide-react';
 import { TypeIcon } from '../common/Icons';
@@ -6,6 +7,7 @@ import { Modal } from '../common/Modal';
 import type { Space } from '../../types/space';
 import { PALETTE } from '../../theme/palette';
 import { appStorage } from '../../utils/appStorage';
+import { APP_VERSION } from '../../utils/appVersion';
 
 // ─── 1. General Settings Modal ────────────────────────────────────────────────
 export const GeneralSettingsModal: React.FC<{
@@ -152,7 +154,7 @@ export const ManageSpacesModal: React.FC<{
                   className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-2xs"
                   style={{ backgroundColor: (s.color || PALETTE.brand) + '22', color: s.color || PALETTE.brand }}
                 >
-                  {s.icon || '📁'}
+                  <SpaceIcon icon={s.icon} className="w-5 h-5" />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-lira-text">{s.name}</h4>
@@ -319,7 +321,7 @@ export const BillingModal: React.FC<{
             <span className="text-xs font-bold uppercase tracking-wider text-lira-blue">Current Plan</span>
             <span className="text-xs font-bold bg-lira-blue text-lira-on-blue px-2 py-0.5 rounded-full">Free &amp; Open Source</span>
           </div>
-          <h3 className="text-lg font-extrabold text-lira-text">Lira Community Edition v2.0</h3>
+          <h3 className="text-lg font-extrabold text-lira-text">Lira Community Edition v{APP_VERSION}</h3>
           <p className="text-xs text-lira-muted">
             Unlimited spaces, unlimited issues, offline local disk sync, Dexie IndexedDB caching, and Viva AI Agent.
           </p>

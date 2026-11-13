@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../common/SpaceIcon';
 import { CountUp, GrowBar } from '../common/motion';
 import { motion } from '../common/motionPresets';
 import { issueLink } from '../../utils/links';
@@ -54,7 +55,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
               className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold shadow-xs"
               style={{ backgroundColor: (space.color || PALETTE.brand) + '22', color: space.color || PALETTE.brand }}
             >
-              {space.icon || '🚀'}
+              <SpaceIcon icon={space.icon} className="w-6 h-6" />
             </div>
           )}
           <div>

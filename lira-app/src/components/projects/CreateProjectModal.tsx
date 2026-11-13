@@ -1,3 +1,4 @@
+import { SpaceIconPicker } from '../common/SpaceIcon';
 import React, { useState, type ReactNode } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
@@ -18,7 +19,6 @@ interface CreateProjectModalProps {
   onProjectCreated: (project: Project) => void;
 }
 
-const SPACE_ICONS = ['🚀', '🎯', '⚡', '💡', '🏆', '🔧', '🌐', '🧠', '📋', '✨', '📚', '🌤️'];
 const SPACE_COLORS = [PALETTE.brand, PALETTE.info, PALETTE.purple, PALETTE.success, PALETTE.danger, PALETTE.amber, PALETTE.orange, PALETTE.textStrong];
 const DEFAULT_LEAD = 'Varun Tej';
 
@@ -59,7 +59,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   const [lead, setLead] = useState(DEFAULT_LEAD);
   const [associationType, setAssociationType] = useState<'existing' | 'new'>('existing');
   const [selectedSpaceId, setSelectedSpaceId] = useState<number>(() => spaces[0]?.id || 1);
-  const [newSpaceIcon, setNewSpaceIcon] = useState('🚀');
+  const [newSpaceIcon, setNewSpaceIcon] = useState<string>('rocket');
   const [newSpaceColor, setNewSpaceColor] = useState(PALETTE.brand);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -79,7 +79,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   const resetForm = () => {
     setName(''); setKey(''); setKeyEdited(false); setDescription(''); setLead(DEFAULT_LEAD);
     setAssociationType('existing'); setSelectedSpaceId(spaces[0]?.id || 1);
-    setNewSpaceIcon('🚀'); setNewSpaceColor(PALETTE.brand); setError('');
+    setNewSpaceIcon('rocket'); setNewSpaceColor(PALETTE.brand); setError('');
   };
   const close = () => { resetForm(); onClose(); };
 
@@ -169,7 +169,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
             <div className="p-3 bg-gray-50 border border-lira-border rounded-xl space-y-2 animate-fade-in">
               <label className="block text-xs font-medium text-lira-text">Select Space to Link:</label>
               <select value={selectedSpaceId} onChange={e => setSelectedSpaceId(Number(e.target.value))} className="w-full text-sm border border-lira-border rounded-lg px-3 py-2 bg-white text-lira-text focus:outline-none focus:border-lira-blue cursor-pointer">
-                {spaces.map(sp => <option key={sp.id} value={sp.id}>{sp.icon} {sp.name} ({sp.key})</option>)}
+                {spaces.map(sp => <option key={sp.id} value={sp.id}>{sp.name} ({sp.key})</option>)}
               </select>
             </div>
           ) : (
@@ -180,11 +180,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
               </div>
               <div>
                 <label className="block text-xs text-lira-muted mb-1.5">Space Icon</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {SPACE_ICONS.map(ic => (
-                    <button key={ic} type="button" onClick={() => setNewSpaceIcon(ic)} className={`w-8 h-8 rounded-lg text-base flex items-center justify-center transition-all cursor-pointer ${newSpaceIcon === ic ? 'ring-2 ring-lira-blue bg-white shadow-xs scale-105' : 'hover:bg-white/70'}`}>{ic}</button>
-                  ))}
-                </div>
+                <SpaceIconPicker value={newSpaceIcon} onChange={setNewSpaceIcon} />
               </div>
               <div>
                 <label className="block text-xs text-lira-muted mb-1.5">Space Color Accent</label>

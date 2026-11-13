@@ -1,11 +1,17 @@
 import type { SpaceFilters } from '../../../utils/spaceFilters';
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import type { Space } from '../../../types/space';
 import type { Issue } from '../../../types/issue';
+import { useClickOutside } from '../../../hooks/useClickOutside';
+import { downloadFile } from '../../../utils/download';
+import type { GroupBy } from '../boardColumns';
+import { useBoardFilters } from './useBoardFilters';
+import { PALETTE } from '../../../theme/palette';
+import { appStorage } from '../../../utils/appStorage';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type GroupBy = 'status' | 'assignee' | 'priority' | 'epic';
+export type { GroupBy };
 
 export interface BoardActionBarProps {
   space: Space | undefined;
@@ -35,10 +41,10 @@ export const MORE_TABS = ['Forms', 'Documents', 'Attachments', 'Reports'];
 
 export const PRIORITIES: { label: string; value: string; color: string }[] = [
   { label: 'Highest', value: 'highest', color: '#FF0000' },
-  { label: 'High',    value: 'high',    color: '#FF5630' },
-  { label: 'Medium',  value: 'medium',  color: '#FF8B00' },
-  { label: 'Low',     value: 'low',     color: '#36B37E' },
-  { label: 'Lowest',  value: 'lowest',  color: '#00B8D9' },
+  { label: 'High',    value: 'high',    color: PALETTE.danger },
+  { label: 'Medium',  value: 'medium',  color: PALETTE.orangeDeep },
+  { label: 'Low',     value: 'low',     color: PALETTE.success },
+  { label: 'Lowest',  value: 'lowest',  color: PALETTE.info },
 ];
 
 export const GROUP_OPTIONS: { label: string; value: GroupBy }[] = [
@@ -48,29 +54,7 @@ export const GROUP_OPTIONS: { label: string; value: GroupBy }[] = [
   { label: 'Epic / Parent',value: 'epic'     },
 ];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-export function useClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () => void) {
-  useEffect(() => {
-    const listener = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) handler();
-    };
-    document.addEventListener('mousedown', listener);
-    return () => document.removeEventListener('mousedown', listener);
-  }, [ref, handler]);
-}
-
-export function downloadFile(content: string, filename: string, mime: string) {
-  const blob = new Blob([content], { type: mime });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-export function issuesToCSV(issues: Issue[]): string {
+function issuesToCSV(issues: Issue[]): string {
   const header = ['Key', 'Title', 'Type', 'Status', 'Priority', 'Assignee', 'Labels', 'Due Date'];
   const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
   const rows = issues.map(i => [
@@ -120,13 +104,7 @@ export function useActionBarState(props: BoardActionBarProps) {
   const moreRef = useRef<HTMLDivElement>(null);
   useClickOutside(moreRef, () => setShowMore(false));
 
-  // ── Filter popover ───────────────────────────────────────────────────────────
-  const [showFilter, setShowFilter] = useState(false);
-  const [filterPriorities, setFilterPriorities] = useState<string[]>([]);
-  const [filterLabels, setFilterLabels] = useState<string[]>([]);
-  const [filterStatuses, setFilterStatuses] = useState<string[]>([]);
-  const filterRef = useRef<HTMLDivElement>(null);
-  useClickOutside(filterRef, () => setShowFilter(false));
+  const filters = useBoardFilters(onFilterChange, onClearFilters);
 
   // ── Group dropdown ───────────────────────────────────────────────────────────
   const [groupBy, setGroupBy] = useState<GroupBy>('status');
@@ -140,12 +118,12 @@ export function useActionBarState(props: BoardActionBarProps) {
   useClickOutside(overflowRef, () => setShowOverflow(false));
   const [wipEnabled, setWipEnabled] = useState<boolean>(() => {
     try {
-      const raw = localStorage.getItem('lira_wip_limits');
+      const raw = appStorage.get('lira_wip_limits');
       if (!raw) return false;
       if (raw === 'true') return true;
       if (raw.startsWith('{')) {
         const obj = JSON.parse(raw);
-        return Object.values(obj).some((v: any) => typeof v === 'number' && v > 0);
+        return Object.values(obj).some((v: unknown) => typeof v === 'number' && v > 0);
       }
       return false;
     } catch { return false; }
@@ -175,47 +153,7 @@ export function useActionBarState(props: BoardActionBarProps) {
     }
   };
 
-  // ── Notify parent when filter changes ────────────────────────────────────────
-  const handlePriorityToggle = (value: string) => {
-    const next = filterPriorities.includes(value)
-      ? filterPriorities.filter(p => p !== value)
-      : [...filterPriorities, value];
-    setFilterPriorities(next);
-    onFilterChange?.({ priorities: next, labels: filterLabels, statuses: filterStatuses });
-  };
-
-  const handleLabelToggle = (label: string) => {
-    const next = filterLabels.includes(label)
-      ? filterLabels.filter(l => l !== label)
-      : [...filterLabels, label];
-    setFilterLabels(next);
-    onFilterChange?.({ priorities: filterPriorities, labels: next, statuses: filterStatuses });
-  };
-
-  const handleStatusToggle = (status: string) => {
-    const next = filterStatuses.includes(status) ? filterStatuses.filter(s => s !== status) : [...filterStatuses, status];
-    setFilterStatuses(next);
-    onFilterChange?.({ priorities: filterPriorities, labels: filterLabels, statuses: next });
-  };
-
-  /** Clears one dropdown, keeping the other filters. */
-  const handleClearGroup = (group: 'priorities' | 'labels' | 'statuses') => {
-    const next = { priorities: filterPriorities, labels: filterLabels, statuses: filterStatuses, [group]: [] as string[] };
-    if (group === 'priorities') setFilterPriorities([]);
-    if (group === 'labels') setFilterLabels([]);
-    if (group === 'statuses') setFilterStatuses([]);
-    onFilterChange?.(next);
-  };
-
-  const handleClearFilters = () => {
-    setFilterPriorities([]);
-    setFilterLabels([]);
-    setFilterStatuses([]);
-    onFilterChange?.({ priorities: [], labels: [], statuses: [] });
-    onClearFilters?.();
-  };
-
-  const activeFilterCount = filterPriorities.length + filterLabels.length + filterStatuses.length;
+  const activeFilterCount = filters.activeCount;
 
   // ── Group change ─────────────────────────────────────────────────────────────
   const handleGroupChange = (value: GroupBy) => {
@@ -252,12 +190,12 @@ export function useActionBarState(props: BoardActionBarProps) {
     setWipEnabled(next);
     try {
       if (next) {
-        const raw = localStorage.getItem('lira_wip_config');
+        const raw = appStorage.get('lira_wip_config');
         const parsed = raw ? JSON.parse(raw) : null;
         const limits = parsed?.limits || { todo: 5, inprogress: 3 };
-        localStorage.setItem('lira_wip_limits', JSON.stringify(limits));
+        appStorage.set('lira_wip_limits', JSON.stringify(limits));
       } else {
-        localStorage.setItem('lira_wip_limits', JSON.stringify({}));
+        appStorage.set('lira_wip_limits', JSON.stringify({}));
       }
       window.dispatchEvent(new Event('lira_wip_limits_changed'));
     } catch { /* ignore */ }
@@ -300,7 +238,6 @@ export function useActionBarState(props: BoardActionBarProps) {
     onGroupChange,
     onClearFilters,
     availableLabels,
-    onBulkAction,
     isSpaceHidden,
     isSpaceArchived,
     onToggleHideSpace,
@@ -315,16 +252,14 @@ export function useActionBarState(props: BoardActionBarProps) {
     showMore,
     setShowMore,
     moreRef,
-    showFilter,
-    setShowFilter,
-    filterPriorities,
-    setFilterPriorities,
-    filterLabels,
-    setFilterLabels,
-    filterStatuses,
-    handleStatusToggle,
-    handleClearGroup,
-    filterRef,
+    filterPriorities: filters.priorities,
+    filterLabels: filters.labels,
+    filterStatuses: filters.statuses,
+    handleStatusToggle: (v: string) => filters.toggle('statuses', v),
+    handlePriorityToggle: (v: string) => filters.toggle('priorities', v),
+    handleLabelToggle: (v: string) => filters.toggle('labels', v),
+    handleClearFilters: filters.clearAll,
+    handleClearGroup: filters.clearGroup,
     groupBy,
     setGroupBy,
     showGroup,
@@ -350,9 +285,6 @@ export function useActionBarState(props: BoardActionBarProps) {
     showReportsModal,
     setShowReportsModal,
     handleMoreOptionClick,
-    handlePriorityToggle,
-    handleLabelToggle,
-    handleClearFilters,
     activeFilterCount,
     handleGroupChange,
     handleCopyLink,

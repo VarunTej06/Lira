@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Check, Star } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
-import { notifySaved } from '../common/SavedToast';
+import { notifySaved } from '../common/savedToastStore';
 import { FilterMultiSelect } from '../common/FilterMultiSelect';
 import { addDashboard, buildDashboard } from '../../utils/dashboards/store';
 import { CATALOG, CATEGORY_ORDER, SCENARIOS, scenarioById, scenarioFilters, widgetFromEntry } from '../../utils/dashboards/catalog';
@@ -23,7 +23,7 @@ const toggle = <T,>(list: T[], v: T) => (list.includes(v) ? list.filter(x => x !
 
 const Chip: React.FC<{ on: boolean; onClick: () => void; children: React.ReactNode; testId?: string }> = ({ on, onClick, children, testId }) => (
   <button type="button" aria-pressed={on} onClick={onClick} data-testid={testId}
-    className={`px-3 py-1.5 text-sm rounded-full border transition-colors cursor-pointer ${on ? 'bg-lira-blue text-white border-lira-blue' : 'border-lira-border text-lira-text hover:bg-gray-50'}`}>{children}</button>
+    className={`px-3 py-1.5 text-sm rounded-full border transition-colors cursor-pointer ${on ? 'bg-lira-blue text-lira-on-blue border-lira-blue' : 'border-lira-border text-lira-text hover:bg-gray-50'}`}>{children}</button>
 );
 
 const Section: React.FC<{ title: string; hint?: string; children: React.ReactNode }> = ({ title, hint, children }) => (
@@ -87,7 +87,7 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
           {STEPS.map((s, i) => (
             <li key={s} className="flex items-center gap-2">
               <button type="button" onClick={() => setStep(i)} aria-current={i === step ? 'step' : undefined} data-testid={`step-${i}`}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium cursor-pointer ${i === step ? 'bg-lira-blue text-white' : i < step ? 'bg-emerald-50 text-emerald-700' : 'bg-white border border-lira-border text-lira-muted'}`}>
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium cursor-pointer ${i === step ? 'bg-lira-blue text-lira-on-blue' : i < step ? 'bg-emerald-50 text-emerald-700' : 'bg-white border border-lira-border text-lira-muted'}`}>
                 <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">{i < step ? <Check className="w-3 h-3" /> : i + 1}</span>{s}
               </button>
               {i < STEPS.length - 1 && <span className="w-4 h-px bg-lira-border" />}
@@ -102,9 +102,9 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {SCENARIOS.map(s => (
                     <button key={s.id} type="button" onClick={() => pick(s.id)} aria-pressed={scenarioId === s.id} data-testid={`goal-${s.id}`}
-                      className={`text-left rounded-xl border p-3.5 flex items-start gap-3 transition-all cursor-pointer ${scenarioId === s.id ? 'border-lira-blue ring-1 ring-lira-blue bg-blue-50/40' : 'border-lira-border hover:border-lira-blue'}`}>
+                      className={`text-left rounded-xl border p-3.5 flex items-start gap-3 transition-all cursor-pointer ${scenarioId === s.id ? 'border-lira-blue ring-1 ring-lira-blue bg-lira-blue-light/40' : 'border-lira-border hover:border-lira-blue'}`}>
                       <ScenarioIcon icon={s.icon} className="w-9 h-9" />
-                      <span className="min-w-0"><span className="block text-sm font-bold text-lira-text">{s.name}</span><span className="block text-xs text-lira-muted">{s.tagline}</span><span className="block text-[11px] text-lira-muted mt-1">For: {s.audience}</span></span>
+                      <span className="min-w-0"><span className="block text-sm font-bold text-lira-text">{s.name}</span><span className="block text-xs text-lira-muted">{s.tagline}</span><span className="block text-2xs text-lira-muted mt-1">For: {s.audience}</span></span>
                     </button>
                   ))}
                 </div>
@@ -115,7 +115,7 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
               <>
                 <Section title="Which spaces?" hint="Leave all off to include every space.">
                   <div className="flex flex-wrap gap-2">
-                    {spaces.filter(s => s.id).map(s => <Chip key={s.id} on={filters.spaceIds.includes(s.id!)} onClick={() => set({ spaceIds: toggle(filters.spaceIds, s.id!) })} testId={`space-${s.key}`}>{s.icon} {s.name}</Chip>)}
+                    {spaces.filter(s => s.id).map(s => <Chip key={s.id} on={filters.spaceIds.includes(s.id!)} onClick={() => set({ spaceIds: toggle(filters.spaceIds, s.id!) })} testId={`space-${s.key}`}>{s.name}</Chip>)}
                   </div>
                 </Section>
                 <Section title="Which sprint?">
@@ -154,14 +154,14 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
                   <div className="space-y-4 max-h-[48vh] overflow-y-auto pr-1" data-testid="wizard-widgets">
                     {CATEGORY_ORDER.map(cat => (
                       <div key={cat}>
-                        <h4 className="text-[11px] font-bold uppercase tracking-wider text-lira-muted mb-1.5">{cat}</h4>
+                        <h4 className="text-2xs font-bold uppercase tracking-wider text-lira-muted mb-1.5">{cat}</h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                           {CATALOG.filter(c => c.category === cat).map(c => {
                             const on = entries.includes(c.id);
                             return (
-                              <label key={c.id} className={`flex items-start gap-2.5 rounded-lg border px-2.5 py-2 cursor-pointer transition-colors ${on ? 'border-lira-blue bg-blue-50/40' : 'border-lira-border hover:bg-gray-50'}`}>
+                              <label key={c.id} className={`flex items-start gap-2.5 rounded-lg border px-2.5 py-2 cursor-pointer transition-colors ${on ? 'border-lira-blue bg-lira-blue-light/40' : 'border-lira-border hover:bg-gray-50'}`}>
                                 <input type="checkbox" className="mt-0.5" checked={on} onChange={() => setEntries(e => toggle(e, c.id))} data-testid={`pick-${c.id}`} />
-                                <span className="min-w-0"><span className="flex items-center gap-1.5 text-sm font-medium text-lira-text">{c.title}{recommended.has(c.id) && <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase px-1 py-0.5 rounded bg-emerald-100 text-emerald-700"><Star className="w-2.5 h-2.5" />recommended</span>}</span><span className="block text-xs text-lira-muted">{c.description}</span></span>
+                                <span className="min-w-0"><span className="flex items-center gap-1.5 text-sm font-medium text-lira-text">{c.title}{recommended.has(c.id) && <span className="inline-flex items-center gap-0.5 text-4xs font-bold uppercase px-1 py-0.5 rounded bg-emerald-100 text-emerald-700"><Star className="w-2.5 h-2.5" />recommended</span>}</span><span className="block text-xs text-lira-muted">{c.description}</span></span>
                               </label>
                             );
                           })}
@@ -176,9 +176,9 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
             <div className="flex items-center justify-between pt-2 border-t border-lira-border">
               <button type="button" disabled={step === 0} onClick={() => setStep(s => s - 1)} className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text disabled:opacity-40 cursor-pointer"><ArrowLeft className="w-4 h-4" /> Back</button>
               {canNext ? (
-                <button type="button" onClick={() => setStep(s => s + 1)} data-testid="wizard-next" className="flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Next <ArrowRight className="w-4 h-4" /></button>
+                <button type="button" onClick={() => setStep(s => s + 1)} data-testid="wizard-next" className="flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Next <ArrowRight className="w-4 h-4" /></button>
               ) : (
-                <button type="button" onClick={create} data-testid="wizard-create" className="flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer"><Check className="w-4 h-4" /> Create dashboard</button>
+                <button type="button" onClick={create} data-testid="wizard-create" className="flex items-center gap-1.5 px-5 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer"><Check className="w-4 h-4" /> Create dashboard</button>
               )}
             </div>
           </div>

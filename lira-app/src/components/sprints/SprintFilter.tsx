@@ -3,9 +3,8 @@ import { Filter, X } from 'lucide-react';
 import { FilterMultiSelect } from '../common/FilterMultiSelect';
 import type { Space } from '../../types/space';
 import { BLOCKED_META, STATUS_LIST } from '../../utils/status';
+import { EMPTY_FILTER, type SprintFilterValue } from './sprintFilterDefaults';
 
-export interface SprintFilterValue { statuses: string[]; spaceIds: number[] }
-export const EMPTY_FILTER: SprintFilterValue = { statuses: [], spaceIds: [] };
 /** The four statuses, and Blocked (a switch on the ticket, so it can be filtered like a status). */
 const STATUSES = [...STATUS_LIST.map(s => ({ value: s.id as string, label: s.label, color: s.color })), { value: 'blocked', label: 'Blocked', color: BLOCKED_META.color }];
 
@@ -35,7 +34,7 @@ export const SprintFilter: React.FC<SprintFilterProps> = ({ spaces, value, onCha
       />
       <FilterMultiSelect
         label="Space"
-        options={spaces.filter(s => s.id).map(s => ({ value: String(s.id), label: `${s.icon} ${s.name}` }))}
+        options={spaces.filter(s => s.id).map(s => ({ value: String(s.id), label: s.name }))}
         selected={value.spaceIds.map(String)}
         onToggle={v => onChange({ ...value, spaceIds: flip(value.spaceIds, Number(v)) })}
         onClear={() => onChange({ ...value, spaceIds: [] })}

@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SprintFilter, EMPTY_FILTER } from './SprintFilter';
+import { SprintFilter } from './SprintFilter';
+import { EMPTY_FILTER } from './sprintFilterDefaults';
 import { cleanup, click, mount, q, qa, settle, typeInto } from '../../test/render';
 import { makeSpace } from '../../test/factories';
 
@@ -37,7 +38,7 @@ describe('Sprint filter (Status and Space dropdowns)', () => {
     await click(q('[data-testid=filter-space]'));
     await settle();
     await typeInto(q<HTMLInputElement>('[aria-label="Search or type a space"]'), 'li');
-    expect(qa('[aria-label="Space filter"] label').map(l => l.textContent?.trim())).toEqual(['L Lira', 'F Lifestyle']);
+    expect(qa('[aria-label="Space filter"] label').map(l => l.textContent?.trim())).toEqual(['Lira', 'Lifestyle']);
     await click(qa('[aria-label="Space filter"] input[type=checkbox]')[0]);
     expect(onChange).toHaveBeenLastCalledWith({ statuses: [], spaceIds: [1] });
   });

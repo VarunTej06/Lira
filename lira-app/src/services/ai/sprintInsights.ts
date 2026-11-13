@@ -1,7 +1,7 @@
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import {
-  currentSprintKey, daysElapsed, getIssueSprint, getSprintMeta, isDone, isSprintWork, issuesInSprint, nextSprint,
+  daysElapsed, getIssueSprint, getSprintMeta, isDone, isSprintWork, issuesInSprint,
   sprintDays, sprintIncludesSpace, sprintName, sprintPhase, sprintStats,
 } from '../../utils/sprintUtils';
 import { startedAt, suggestedCapacity } from '../../utils/sprintReports';
@@ -48,8 +48,8 @@ export function planSprintFromBacklog(issues: Issue[], target: string, spaceId?:
   return { target, picked, skipped, capacity, capacitySource, alreadyPoints, pickedPoints: used - alreadyPoints };
 }
 
-export type RiskLevel = 'ok' | 'watch' | 'atrisk';
-export interface SprintRisk {
+type RiskLevel = 'ok' | 'watch' | 'atrisk';
+interface SprintRisk {
   key: string;
   level: RiskLevel;
   elapsedPct: number;
@@ -58,30 +58,52 @@ export interface SprintRisk {
   reasons: string[];
 }
 
+interface Finding { level: Exclude<RiskLevel, 'ok'>; reason: string }
+interface RiskInput { key: string; phase: ReturnType<typeof sprintPhase>; stats: ReturnType<typeof sprintStats>; elapsedPct: number; donePct: number }
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+/** A finished sprint with work left over. */
+function endedUnfinished({ phase, stats }: RiskInput): Finding[] {
+  return phase === 'past' && stats.open > 0 ? [{ level: 'atrisk', reason: `ended with ${plural(stats.open, 'unfinished ticket')}` }] : [];
+}
+
+/** A running sprint where the work done lags the time gone. */
+function behindPace({ phase, stats, elapsedPct, donePct }: RiskInput): Finding[] {
+  if (phase !== 'active' || stats.total === 0) return [];
+  const behind = elapsedPct - donePct;
+  if (elapsedPct >= 25 && behind >= 30) return [{ level: 'atrisk', reason: `${elapsedPct}% of the time has passed but only ${donePct}% is done` }];
+  if (elapsedPct >= 15 && behind >= 15) return [{ level: 'watch', reason: `${donePct}% done against ${elapsedPct}% of the time` }];
+  return [];
+}
+
+/** Half the time is gone and most tickets have not been picked up. */
+function mostlyNotStarted({ phase, stats, elapsedPct }: RiskInput): Finding[] {
+  if (phase !== 'active' || stats.total === 0 || elapsedPct < 50) return [];
+  const notStarted = stats.todo + stats.backlog;
+  return notStarted / stats.total > 0.5 ? [{ level: 'watch', reason: `${notStarted} of ${stats.total} tickets have not been started` }] : [];
+}
+
+/** More points planned than the team capacity that was set. */
+function overCommitted({ key, phase, stats }: RiskInput): Finding[] {
+  const capacity = getSprintMeta('all', key).capacity;
+  return phase !== 'past' && capacity !== undefined && stats.points > capacity
+    ? [{ level: 'watch', reason: `over-committed: ${stats.points} points against a capacity of ${capacity}` }]
+    : [];
+}
+
+const CHECKS = [endedUnfinished, behindPace, mostlyNotStarted, overCommitted];
+
 /** Is the sprint on pace? Compares the share of the sprint that has passed with the share of work done. */
 export function sprintRisk(list: Issue[], key: string): SprintRisk {
-  const phase = sprintPhase(key);
   const stats = sprintStats(list);
-  const usePoints = stats.points > 0;
-  const donePct = usePoints ? Math.round((stats.donePoints / stats.points) * 100) : stats.percent;
+  const donePct = stats.points > 0 ? Math.round((stats.donePoints / stats.points) * 100) : stats.percent;
   const elapsedPct = Math.round((daysElapsed(key) / sprintDays(key)) * 100);
-  const reasons: string[] = [];
-  let level: RiskLevel = 'ok';
-  const raise = (l: RiskLevel) => { if (l === 'atrisk' || (l === 'watch' && level === 'ok')) level = l; };
+  const input: RiskInput = { key, phase: sprintPhase(key), stats, elapsedPct, donePct };
 
-  if (phase === 'past' && stats.open > 0) { raise('atrisk'); reasons.push(`ended with ${stats.open} unfinished ticket${stats.open === 1 ? '' : 's'}`); }
-  if (phase === 'active' && stats.total > 0) {
-    const behind = elapsedPct - donePct;
-    if (elapsedPct >= 25 && behind >= 30) { raise('atrisk'); reasons.push(`${elapsedPct}% of the time has passed but only ${donePct}% is done`); }
-    else if (elapsedPct >= 15 && behind >= 15) { raise('watch'); reasons.push(`${donePct}% done against ${elapsedPct}% of the time`); }
-    const notStarted = stats.todo + stats.backlog;
-    if (elapsedPct >= 50 && stats.total > 0 && notStarted / stats.total > 0.5) { raise('watch'); reasons.push(`${notStarted} of ${stats.total} tickets have not been started`); }
-  }
-  const meta = getSprintMeta('all', key);
-  if (phase !== 'past' && meta.capacity !== undefined && stats.points > meta.capacity) {
-    raise('watch'); reasons.push(`over-committed: ${stats.points} points against a capacity of ${meta.capacity}`);
-  }
-  return { key, level, elapsedPct, donePct, open: stats.open, reasons };
+  const findings = CHECKS.flatMap(check => check(input));
+  const level: RiskLevel = findings.some(f => f.level === 'atrisk') ? 'atrisk' : findings.length ? 'watch' : 'ok';
+  return { key, level, elapsedPct, donePct, open: stats.open, reasons: findings.map(f => f.reason) };
 }
 
 /** In-progress tickets nobody has touched for `days` days. */
@@ -173,4 +195,3 @@ export function standupDigestText(issues: Issue[], spaces: Space[], now: Date, a
   return out.join('\n');
 }
 
-export const currentAndNext = () => ({ current: currentSprintKey(), next: nextSprint(currentSprintKey()) });

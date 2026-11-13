@@ -5,7 +5,7 @@ import { byText, cleanup, click, mount, press, q, qa, settle } from '../../test/
 afterEach(cleanup);
 
 const trigger = () => q<HTMLButtonElement>('button[aria-haspopup=dialog]')!;
-const day = (n: number) => qa<HTMLButtonElement>('[role=gridcell]').find(b => b.textContent === String(n) && !b.className.includes('text-lira-muted/60'))!;
+const day = (n: number) => qa<HTMLButtonElement>('[role=gridcell]').find(b => b.textContent === String(n) && !b.className.includes('text-lira-muted'))!;
 
 describe('Date picker', () => {
   it('shows the chosen date in a readable form, and a placeholder when empty', () => {

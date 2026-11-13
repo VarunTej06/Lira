@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { currentTime } from '../../utils/clock';
 
 const MONTHS = Array.from({ length: 12 }, (_, m) => new Date(2000, m, 1).toLocaleString('en-US', { month: 'short' }));
 
@@ -13,7 +14,7 @@ interface Props {
 /** Jump to any month of any year: step the year with the arrows, then click a month. */
 export const MonthYearGrid: React.FC<Props> = ({ year, month, onPick }) => {
   const [shownYear, setShownYear] = useState(year);
-  const now = new Date();
+  const now = currentTime();
   return (
     <div data-testid="month-year-grid">
       <div className="flex items-center justify-between mb-3">
@@ -38,7 +39,7 @@ export const MonthYearGrid: React.FC<Props> = ({ year, month, onPick }) => {
               aria-pressed={selected}
               onClick={() => onPick(shownYear, m)}
               className={`py-2.5 text-sm rounded-lg transition-colors cursor-pointer ${
-                selected ? 'bg-lira-blue text-white font-semibold'
+                selected ? 'bg-lira-blue text-lira-on-blue font-semibold'
                   : current ? 'ring-1 ring-lira-blue text-lira-blue font-semibold hover:bg-lira-blue-light'
                   : 'text-lira-text hover:bg-gray-100'
               }`}

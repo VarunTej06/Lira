@@ -3,10 +3,11 @@ import { Zap, SquareCheckBig, Bug, CornerDownRight, ChevronsUp, ChevronUp, Equal
 import type { IssueType, Priority } from '../../types/issue';
 import { ISSUE_TYPE_CONFIG } from '../../types/issue';
 import { PRIORITY_CONFIG } from '../../utils/priorityUtils';
+import { PALETTE } from '../../theme/palette';
 
 /** The small picture for a work item type (Epic, Task, Bug, Subtask), in the type's own colour. */
 export const TypeIcon: React.FC<{ type: IssueType | string; className?: string; colored?: boolean }> = ({ type, className = 'w-3.5 h-3.5', colored = true }) => {
-  const color = colored ? (ISSUE_TYPE_CONFIG[type as IssueType]?.color ?? '#6B778C') : undefined;
+  const color = colored ? (ISSUE_TYPE_CONFIG[type as IssueType]?.color ?? PALETTE.textMuted) : undefined;
   const props = { className: `${className} flex-shrink-0`, style: color ? { color } : undefined, 'aria-hidden': true };
   switch (type) {
     case 'epic': return <Zap {...props} />;
@@ -47,10 +48,3 @@ export const ColorDot: React.FC<{ color: string; className?: string }> = ({ colo
   <span className={`inline-block rounded-full flex-shrink-0 ${className}`} style={{ backgroundColor: color }} aria-hidden />
 );
 
-/** Type picture and its name. */
-export const TypeLabel: React.FC<{ type: IssueType | string; className?: string }> = ({ type, className = '' }) => (
-  <span className={`inline-flex items-center gap-1 ${className}`}>
-    <TypeIcon type={type} />
-    {ISSUE_TYPE_CONFIG[type as IssueType]?.label ?? type}
-  </span>
-);

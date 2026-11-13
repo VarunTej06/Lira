@@ -1,8 +1,8 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-08T06:58:17.658Z",
+  "savedAt": "2026-11-13T09:32:21.542Z",
   "spaceCount": 8,
-  "totalIssueCount": 153,
+  "totalIssueCount": 155,
   "spaces": [
     {
       "id": 1,
@@ -73,17 +73,17 @@
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-11-05T12:17:43.513Z",
-      "issueCount": 66,
+      "issueCount": 67,
       "file": "spaces/LIRA.json"
     },
     {
       "name": "Interview Guide",
       "key": "IG",
-      "icon": "🧠",
-      "color": "#0052CC",
+      "icon": "brain",
+      "color": "#6554C0",
       "description": "",
       "createdAt": "2026-10-28T18:30:46.269Z",
-      "updatedAt": "2026-10-28T18:30:46.269Z",
+      "updatedAt": "2026-11-13T09:32:20.974Z",
       "id": 13,
       "issueCount": 7,
       "file": "spaces/IG.json"
@@ -97,7 +97,7 @@
       "createdAt": "2026-10-28T18:31:08.254Z",
       "updatedAt": "2026-10-31T14:52:42.942Z",
       "id": 14,
-      "issueCount": 18,
+      "issueCount": 19,
       "file": "spaces/AI.json"
     }
   ]

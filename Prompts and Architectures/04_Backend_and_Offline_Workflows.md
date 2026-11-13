@@ -2,25 +2,22 @@
 
 > **Updated November 2026.** This document was written earlier; the last section, "Update (November 2026)", lists what has changed since. The root [README](../README.md), [SETUP](../SETUP.md) and [ROADMAP](../ROADMAP.md) are always the most current.
 
-## 1. Zero-Backend Architecture
+## 1. Thin-Server, Offline-First Architecture
 
-Lira has no server.  The entire application is a **static Single-Page App (SPA)**
-that runs entirely inside the browser.  Here is how each "backend" concern is
-handled client-side:
+Lira's screens are a static **Single-Page App (SPA)** that runs in the browser. Because the browser cannot write files, one small local server (a Vite dev-server plugin, see the Update section at the end) saves the data as JSON files under `data/`. Here is how each "backend" concern is handled today:
 
-| Traditional Backend Concern | Lira's Client-Side Solution |
-|-----------------------------|-----------------------------|
-| REST API endpoints | Dexie.js async methods (`db.issues.add()`, `.update()`, `.where()`) |
-| Authentication / sessions | Fixed user "VY" — no login required |
-| Database server | IndexedDB on the user's local disk |
-| File uploads | FileReader API → base64 → IndexedDB |
-| Email notifications | Browser Notification API (future) |
-| Real-time sync | Dexie `useLiveQuery` (local change observation) |
+| Traditional Backend Concern | How Lira handles it today |
+|-----------------------------|---------------------------|
+| REST API endpoints | Screens read and write through Dexie (`db.issues.add()`, `.update()`, `.where()`). A few local `/api/*` routes persist that data to disk (section "Update") |
+| Authentication / sessions | None. Fixed user "VY". This changes with multi-user and SSO (see PUBLIC_EDITION_PLAN.md) |
+| Database server | JSON files under `data/` are the source of truth; IndexedDB is a cache |
+| File uploads | FileReader API → base64, kept with the ticket (50 MB limit per save) |
+| Email notifications | Not built. Calendar invites are `.ics` downloads |
+| Real-time sync | Dexie `useLiveQuery` updates every open screen in one browser. There is no sync between users yet |
 | Server-side search | Client-side filter on in-memory arrays |
-| Schema migrations | Dexie versioned `.upgrade()` functions |
+| Schema migrations | Dexie versioned `.upgrade()` functions (3 versions today) |
 
-> **Analogy:** Think of Lira as a spreadsheet application (like Excel) rather
-> than a web service.  All data is local; computation is local; UI is local.
+> **Analogy:** Think of Lira as a spreadsheet application (like Excel) with an autosave file next to it. All computation happens in the browser; the small server only saves and loads files.
 
 ---
 

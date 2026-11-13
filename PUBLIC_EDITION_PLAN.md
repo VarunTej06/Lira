@@ -1,6 +1,6 @@
 # Lira: Public Edition Plan
 
-**Status: draft for discussion. Nothing in this document is built yet.** It records the strategy we talked through, the questions you need to answer before we plan in detail, and a proposed plan to take Lira from a single-user local app to an app that outside users can use, hosted on Azure.
+**Status: draft for discussion. Nothing in this document is built yet.** *Update 9 November 2026: the product owner confirmed the target is a multi-user application with SSO, starting within two to three days, and that CI/CD is built in the DevOps step after that.* It records the strategy we talked through, the questions you need to answer before we plan in detail, and a proposed plan to take Lira from a single-user local app to an app that outside users can use, hosted on Azure.
 
 Related documents: [README](README.md) · [SETUP](SETUP.md) · [ROADMAP](ROADMAP.md) (phases of the current app) · [SECURITY_REPORT](SECURITY_REPORT.md) (what is safe today, and what only applies once there are many users)
 
@@ -22,8 +22,8 @@ Along the way we finish the application itself: fix the known bugs, close the fu
 | 2 | Local edition keeps **JSON files**; the public edition uses a **database** | **Decided** | See section 4 |
 | 3 | The UI should not care where data lives | **Decided, with one refinement** | It still needs to know what it is *allowed* to do (for example, whether there is a login). See section 4 |
 | 4 | Azure for hosting, **using services other than AKS** (Container Apps, App Service and similar) | **Decided** | See section 7 |
-| 5 | DevOps (pipelines, environments, code scanning) is done **after** the app reaches its best version | **Decided**, with two cheap things done early | See section 9 |
-| 6 | Outside users sign in through a free or low-cost identity service, with roles | **Direction decided**, provider open | See sections 5 and 6 |
+| 5 | DevOps (pipelines, environments, code scanning) is done **after** the app reaches its best version | **Decided**, re-confirmed 9 Nov 2026: CI/CD comes after multi-user and SSO; two cheap things done early | See section 9 |
+| 6 | Users sign in through SSO, with roles | **Decided 9 Nov 2026** (multi-user with SSO, starts within days); identity provider still open | See sections 5 and 6 |
 | 7 | **Repository layout**: one repo (monorepo) with a shared core and two apps | **Recommended**, not yet confirmed | See section 3 |
 | 8 | **Branching strategy**: trunk-based | **Recommended**, not yet confirmed | See section 9 |
 | 9 | Everything in section 11 (questions) | **Open** | You answer, then we plan |

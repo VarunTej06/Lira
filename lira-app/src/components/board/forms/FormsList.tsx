@@ -1,6 +1,5 @@
 import { FileText, Plus, Trash2, Eye, ChevronRight } from 'lucide-react';
 import { Button } from '../../common/Button';
-import type {  } from '../../../types/space';
 import type { FormsState } from './useFormsState';
 
 /** The saved forms. */
@@ -53,7 +52,7 @@ export function FormsList(s: FormsState) {
                       <div>
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2">
-                            <span className="p-1.5 bg-blue-50 text-lira-blue rounded-lg">
+                            <span className="p-1.5 bg-lira-blue-light text-lira-blue rounded-lg">
                               <FileText className="w-4 h-4" />
                             </span>
                             <h4 className="text-sm font-bold text-lira-text group-hover:text-lira-blue transition-colors">
@@ -75,7 +74,7 @@ export function FormsList(s: FormsState) {
                           </p>
                         )}
 
-                        <div className="flex items-center gap-2 mt-3 text-[11px] text-lira-muted">
+                        <div className="flex items-center gap-2 mt-3 text-2xs text-lira-muted">
                           <span className="font-semibold text-lira-text">{form.fields.length}</span> fields
                           <span>•</span>
                           <span>{new Date(form.createdAt).toLocaleDateString()}</span>

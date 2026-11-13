@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { withIssue } from '../routes';
 import type { Issue } from '../types/issue';
+import { useResetWhen } from './useResetWhen';
 
 /**
  * The ticket popup. It lives in the URL (?issue=LIRA-12), so it can be shared and bookmarked, Back closes it, and a page
@@ -19,14 +20,14 @@ export function useIssuePopup(allIssues: Issue[]) {
   }, [setSearchParams]);
 
   // URL -> popup (page load, Back / Forward)
-  useEffect(() => {
+  useResetWhen([issueParam, allIssues], () => {
     if (!issueParam) { if (stack.length) setStack([]); return; }
     if (selectedIssue?.key === issueParam) return;
     const inStack = stack.findIndex(i => i.key === issueParam);
     if (inStack >= 0) { setStack(s => s.slice(0, inStack + 1)); return; }
     const found = allIssues.find(i => i.key === issueParam);
     if (found) setStack([found]);
-  }, [issueParam, allIssues]); // eslint-disable-line react-hooks/exhaustive-deps
+  });
 
   const openIssue = useCallback((issue: Issue) => { setStack([issue]); setIssueParam(issue.key); }, [setIssueParam]);
   const navigateToIssue = useCallback((issue: Issue) => {

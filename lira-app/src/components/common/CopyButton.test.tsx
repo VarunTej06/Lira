@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CopyButton, copyText } from './CopyButton';
+import { CopyButton } from './CopyButton';
+import { copyText } from './copyText';
 import { cleanup, click, mount, q, settle } from '../../test/render';
 
 const clipboard = { writeText: vi.fn() };

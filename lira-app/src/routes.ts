@@ -33,23 +33,31 @@ const SPRINT_KEY = /^\d{4}-\d{2}(-\d{2})?$/; // a month, or a weekly / bi-weekly
 const tabFromSlug = (slug?: string) => SPACE_TABS.find(t => t.toLowerCase() === (slug || '').toLowerCase());
 const seg = (s: string) => encodeURIComponent(s);
 
+/** The path split into pieces, each decoded; a piece that cannot be decoded is kept as it is. */
+const decodedParts = (pathname: string): string[] =>
+  pathname.split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch { return p; } });
+
+const sprintRoute = (key?: string): AppRoute => (key && SPRINT_KEY.test(key) ? { kind: 'sprints', sprintKey: key } : { kind: 'sprints' });
+const spaceRoute = (key?: string, tabSlug?: string): AppRoute => (key ? { kind: 'space', spaceKey: key.toUpperCase(), tab: tabFromSlug(tabSlug) ?? DEFAULT_SPACE_TAB } : { kind: 'home' });
+
 /** Path to route. Anything unknown goes home (the app then redirects to the last space). */
 export function parsePath(pathname: string): AppRoute {
-  const parts = pathname.split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch { return p; } });
-  const [a, b, c] = parts;
+  const [a, b, c] = decodedParts(pathname);
   switch (a) {
-    case undefined: return { kind: 'home' };
     case 'for-you': return { kind: 'forYou' };
     case 'filters': return { kind: 'filters' };
     case 'tickets': return { kind: 'tickets' };
     case 'projects': return { kind: 'projects', projectId: b };
-    case 'sprints': return b && SPRINT_KEY.test(b) ? { kind: 'sprints', sprintKey: b } : { kind: 'sprints' };
+    case 'sprints': return sprintRoute(b);
     case 'roadmaps': return { kind: 'roadmaps', roadmapId: b };
     case 'dashboards': return { kind: 'dashboards', dashboardId: b };
-    case 'space': return b ? { kind: 'space', spaceKey: b.toUpperCase(), tab: tabFromSlug(c) ?? DEFAULT_SPACE_TAB } : { kind: 'home' };
+    case 'space': return spaceRoute(b, c);
     default: return { kind: 'home' };
   }
 }
+
+/** "/projects/p1" for a page that names one item, "/projects" without one. */
+const itemPath = (base: string, id?: string, encode = true): string => (id ? `${base}/${encode ? seg(id) : id}` : base);
 
 /** Route to path. */
 export function pathFor(route: AppRoute): string {
@@ -58,10 +66,10 @@ export function pathFor(route: AppRoute): string {
     case 'forYou': return '/for-you';
     case 'filters': return '/filters';
     case 'tickets': return '/tickets';
-    case 'projects': return route.projectId ? `/projects/${seg(route.projectId)}` : '/projects';
-    case 'sprints': return route.sprintKey ? `/sprints/${route.sprintKey}` : '/sprints';
-    case 'roadmaps': return route.roadmapId ? `/roadmaps/${seg(route.roadmapId)}` : '/roadmaps';
-    case 'dashboards': return route.dashboardId ? `/dashboards/${seg(route.dashboardId)}` : '/dashboards';
+    case 'projects': return itemPath('/projects', route.projectId);
+    case 'sprints': return itemPath('/sprints', route.sprintKey, false);
+    case 'roadmaps': return itemPath('/roadmaps', route.roadmapId);
+    case 'dashboards': return itemPath('/dashboards', route.dashboardId);
     case 'space': return `/space/${seg(route.spaceKey)}/${route.tab.toLowerCase()}`;
   }
 }
@@ -110,7 +118,7 @@ export function withIssue(search: string, key: string | null): string {
   return s ? `?${s}` : '';
 }
 
-export interface TabContext { spaceKey?: string; projectId?: string; sprintKey?: string; roadmapId?: string }
+interface TabContext { spaceKey?: string; projectId?: string; sprintKey?: string; roadmapId?: string }
 
 /**
  * The route for a page name. Components that still talk in page names (the board tabs, the sidebar) call this through

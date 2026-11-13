@@ -7,7 +7,7 @@ import { formatRelativeDate, formatAbsoluteDate } from '../../../utils/dateUtils
 import { SprintSelect, SprintChip } from '../../sprints/sprintParts';
 import { getStatusBadgeClass, getPriorityBadge } from './badges';
 import { getIssueSprint } from '../../../utils/sprintUtils';
-import type { DetailCtx } from './types';
+import type { DetailCtx } from './detailContext';
 
 export function TicketsTab(ctx: DetailCtx) {
   const { onIssueClick, ticketSubTab, setTicketSubTab, ticketSearch, setTicketSearch, ticketSprint, setTicketSprint, sprintKeys, ticketCounts, ticketsToDisplay } = ctx;
@@ -21,12 +21,12 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('all')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'all'
-                      ? 'bg-lira-blue text-white shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>All</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'all' ? 'bg-blue-800 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'all' ? 'bg-lira-blue text-lira-on-blue' : 'bg-gray-100 text-gray-700'}`}>
                     {ticketCounts.all}
                   </span>
                 </button>
@@ -35,12 +35,12 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('open')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'open'
-                      ? 'bg-lira-blue text-white shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>Open</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'open' ? 'bg-blue-800 text-white' : 'bg-amber-100 text-amber-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'open' ? 'bg-lira-blue text-lira-on-blue' : 'bg-amber-100 text-amber-800'}`}>
                     {ticketCounts.open}
                   </span>
                 </button>
@@ -49,12 +49,12 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('completed')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'completed'
-                      ? 'bg-lira-blue text-white shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>Completed</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'completed' ? 'bg-blue-800 text-white' : 'bg-emerald-100 text-emerald-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'completed' ? 'bg-lira-blue text-lira-on-blue' : 'bg-emerald-100 text-emerald-800'}`}>
                     {ticketCounts.completed}
                   </span>
                 </button>
@@ -63,12 +63,12 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('high_priority')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'high_priority'
-                      ? 'bg-lira-blue text-white shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>High Priority</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'high_priority' ? 'bg-blue-800 text-white' : 'bg-red-100 text-red-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'high_priority' ? 'bg-lira-blue text-lira-on-blue' : 'bg-red-100 text-red-800'}`}>
                     {ticketCounts.high_priority}
                   </span>
                 </button>
@@ -77,12 +77,12 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('my_tasks')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'my_tasks'
-                      ? 'bg-lira-blue text-white shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>My Tasks</span>
-                  <span className={`text-[11px] px-1.5 py-0.2 rounded-full ${ticketSubTab === 'my_tasks' ? 'bg-blue-800 text-white' : 'bg-purple-100 text-purple-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'my_tasks' ? 'bg-lira-blue text-lira-on-blue' : 'bg-purple-100 text-purple-800'}`}>
                     {ticketCounts.my_tasks}
                   </span>
                 </button>
@@ -106,7 +106,7 @@ export function TicketsTab(ctx: DetailCtx) {
             {/* Table Container */}
             <div className="flex-1 overflow-auto">
               <table className="w-full border-collapse text-left text-xs">
-                <thead className="bg-[#F4F5F7] sticky top-0 z-10 border-b border-gray-300">
+                <thead className="bg-gray-100 sticky top-0 z-10 border-b border-gray-300">
                   <tr>
                     <th className="py-2.5 px-3 font-semibold text-gray-700 w-12 text-center">Type</th>
                     <th className="py-2.5 px-3 font-semibold text-gray-700 w-28">Key</th>
@@ -136,7 +136,7 @@ export function TicketsTab(ctx: DetailCtx) {
                       <tr
                         key={issue.id || issue.key}
                         onClick={() => onIssueClick?.(issue)}
-                        className="hover:bg-blue-50/50 transition-colors cursor-pointer group"
+                        className="hover:bg-lira-blue-light/50 transition-colors cursor-pointer group"
                       >
                         {/* Type Icon */}
                         <td className="py-2.5 px-3 text-center text-sm">
@@ -165,7 +165,7 @@ export function TicketsTab(ctx: DetailCtx) {
 
                         {/* Status Badge */}
                         <td className="py-2.5 px-3 whitespace-nowrap">
-                          <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>
+                          <span className={`inline-block px-2 py-0.5 rounded text-2xs font-semibold border capitalize ${getStatusBadgeClass(issue.status)}`}>
                             {statusLabel(issue.status)}
                           </span>
                         </td>

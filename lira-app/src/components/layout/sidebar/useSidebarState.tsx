@@ -1,13 +1,15 @@
-import { confirmDialog } from '../../common/dialogs';
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import { confirmDialog } from '../../common/dialogStore';
+import React, { useState, useRef, useEffect } from 'react';
 import type { Space } from '../../../types/space';
 import type { Project } from '../../../types/project';
 import { currentSprintKey } from '../../../utils/sprintUtils';
 import { deleteSpace } from '../../../hooks/useSpaces';
 import { isGlobalTab } from '../../../routes';
-import { loadSidebarConfig, type SidebarConfig } from '../CustomiseSidebarModal';
-import { prevOf, useSectionState } from './parts';
+import { loadSidebarConfig, type SidebarConfig } from '../sidebarConfig';
+import { prevOf, useSectionState } from './sectionState';
+import { useActiveIndicator } from './useActiveIndicator';
 import { User, FolderKanban, CalendarClock, Ticket, Map, LayoutDashboard } from 'lucide-react';
+import { appStorage } from '../../../utils/appStorage';
 
 export interface LeftSidebarProps {
   spaces: Space[];
@@ -49,12 +51,10 @@ export interface LeftSidebarProps {
 /** All of the sidebar's state and handlers. The parts of the sidebar (rail, navigation, sections...) read from this. */
 export function useSidebarState(props: LeftSidebarProps) {
   const {
-  
     spaces,
     activeSpaceId,
     onSpaceSelect,
-    onCreateSpace,
-    onEditSpace,
+    
     onNavigateToDashboards,
     onNavigateToRoadmaps,
     onNavigateToProjects,
@@ -63,26 +63,21 @@ export function useSidebarState(props: LeftSidebarProps) {
     onNavigateToAllTickets,
     projects = [],
     activeProjectId,
-    onSelectProject,
-    onCreateProject,
+    
     sprintKeys = [],
     sprintCounts = {},
     activeSprint,
-    onSelectSprint,
-    onCreateSprint,
-    onDeleteProject,
-    onDeleteSprint,
+    
+    
     sidebarCollapsed = false,
     setSidebarCollapsed,
     activeTab,
     hiddenSpaceIds = [],
     archivedSpaceIds = [],
-    onToggleHideSpace,
-    onToggleArchiveSpace,
-    onUnhideAllSpaces,
+    
   } = props;
   const [internalCollapsed, setInternalCollapsed] = useState<boolean>(
-    () => localStorage.getItem('lira_sidebar_collapsed') === 'true'
+    () => appStorage.get('lira_sidebar_collapsed') === 'true'
   );
   const isCollapsed = setSidebarCollapsed !== undefined ? sidebarCollapsed : internalCollapsed;
   const [isRotating, setIsRotating] = useState(false);
@@ -131,37 +126,21 @@ export function useSidebarState(props: LeftSidebarProps) {
   // Sidebar layout (which items are shown and in what order), edited in the Customise dialog
   const [sidebarConfig, setSidebarConfig] = useState<SidebarConfig>(loadSidebarConfig);
 
-  const collapse = () => {
+  /** Collapses or expands the sidebar, remembers it, and spins the toggle icon briefly. */
+  const setCollapsedTo = (collapsed: boolean) => {
     setIsRotating(true);
-    localStorage.setItem('lira_sidebar_collapsed', 'true');
-    if (setSidebarCollapsed) {
-      setSidebarCollapsed(true);
-    } else {
-      setInternalCollapsed(true);
-    }
+    appStorage.set('lira_sidebar_collapsed', String(collapsed));
+    if (setSidebarCollapsed) setSidebarCollapsed(collapsed); else setInternalCollapsed(collapsed);
     setTimeout(() => setIsRotating(false), 300);
   };
-
-  const expand = () => {
-    setIsRotating(true);
-    localStorage.setItem('lira_sidebar_collapsed', 'false');
-    if (setSidebarCollapsed) {
-      setSidebarCollapsed(false);
-    } else {
-      setInternalCollapsed(false);
-    }
-    setTimeout(() => setIsRotating(false), 300);
-  };
+  const collapse = () => setCollapsedTo(true);
+  const expand = () => setCollapsedTo(false);
 
   const handleSpaceClick = (id: number) => {
     setOpenMenuId(null);
     onSpaceSelect(id);
     if (isGlobalTab(activeTab ?? '')) {
-      if (setSidebarCollapsed) {
-        setSidebarCollapsed(false);
-      } else {
-        setInternalCollapsed(false);
-      }
+      if (setSidebarCollapsed) setSidebarCollapsed(false); else setInternalCollapsed(false);
     }
   };
 
@@ -173,7 +152,8 @@ export function useSidebarState(props: LeftSidebarProps) {
     e.stopPropagation();
     setStarredIds(prev => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
     setOpenMenuId(null);
@@ -189,7 +169,7 @@ export function useSidebarState(props: LeftSidebarProps) {
 
   // Navigation items (the order and visibility come from the sidebar settings)
   const navItemDefs: Record<string, { label: string; icon: React.ReactNode; tab?: string; action: () => void }> = {
-    forYou: { label: 'For you', icon: <User className="w-3.5 h-3.5 text-blue-400" />, tab: 'ForYou', action: () => onNavigateToForYou?.() },
+    forYou: { label: 'For you', icon: <User className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'ForYou', action: () => onNavigateToForYou?.() },
     projects: { label: 'Projects', icon: <FolderKanban className="w-3.5 h-3.5 text-violet-400" />, tab: 'Projects', action: () => onNavigateToProjects?.() },
     sprints: { label: 'Sprints', icon: <CalendarClock className="w-3.5 h-3.5 text-teal-400" />, tab: 'SprintsHub', action: () => onNavigateToSprints?.() },
     allTickets: { label: 'All tickets', icon: <Ticket className="w-3.5 h-3.5 text-yellow-400" />, tab: 'AllTickets', action: () => onNavigateToAllTickets?.() },
@@ -218,80 +198,17 @@ export function useSidebarState(props: LeftSidebarProps) {
   );
 
   const inSpaceView = !isGlobalTab(activeTab ?? '');
-  const panelRef = useRef<HTMLDivElement>(null);
-  const [indicator, setIndicator] = useState({ top: 0, height: 0, visible: false });
-  // Glide between rows, but not on the very first appearance (it would slide in from the top)
-  const [indicatorAnimated, setIndicatorAnimated] = useState(false);
-  useEffect(() => {
-    if (indicator.visible && !indicatorAnimated) {
-      const t = window.setTimeout(() => setIndicatorAnimated(true), 80);
-      return () => window.clearTimeout(t);
-    }
-  }, [indicator.visible, indicatorAnimated]);
-
-  // Measure the active row and glide the highlight to it. Re-measures through the section
-  // expand/collapse animation so the highlight tracks rows while they move.
   const measureKey = [activeTab, activeSpaceId, activeProjectId, activeSprint, spacesExpanded, projectsExpanded, sprintsExpanded, isCollapsed, spaces.length, projects.length, sprintKeys.length, showAllSprints, hiddenSpaceIds.length, archivedSpaceIds.length].join('|');
-  useLayoutEffect(() => {
-    const panel = panelRef.current;
-    if (!panel || isCollapsed) return;
-    const measure = () => {
-      const el = panel.querySelector<HTMLElement>('[data-active="true"]');
-      if (!el) {
-        setIndicator(prev => (prev.visible ? { ...prev, visible: false } : prev));
-        return;
-      }
-      const top = el.getBoundingClientRect().top - panel.getBoundingClientRect().top + panel.scrollTop;
-      const height = el.getBoundingClientRect().height;
-      setIndicator(prev => (prev.visible && Math.abs(prev.top - top) < 0.5 && Math.abs(prev.height - height) < 0.5 ? prev : { top, height, visible: true }));
-    };
-    measure();
-    const start = performance.now();
-    let raf = 0;
-    const loop = () => {
-      measure();
-      if (performance.now() - start < 450) raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    // Keep the highlight on its row when layout shifts later (web fonts loading, sections resizing)
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : undefined;
-    ro?.observe(panel);
-    Array.from(panel.children).forEach(c => ro?.observe(c));
-    document.fonts?.ready.then(measure).catch(() => undefined);
-    return () => { cancelAnimationFrame(raf); ro?.disconnect(); };
-  }, [measureKey]);
+  const { panelRef, indicator, indicatorAnimated } = useActiveIndicator(measureKey, isCollapsed);
 
   return {
-    spaces,
-    activeSpaceId,
-    onSpaceSelect,
-    onCreateSpace,
-    onEditSpace,
-    onNavigateToDashboards,
-    onNavigateToRoadmaps,
-    onNavigateToProjects,
-    onNavigateToSprints,
-    onNavigateToForYou,
-    onNavigateToAllTickets,
+    ...props,
     projects,
-    activeProjectId,
-    onSelectProject,
-    onCreateProject,
     sprintKeys,
     sprintCounts,
-    activeSprint,
-    onSelectSprint,
-    onCreateSprint,
-    onDeleteProject,
-    onDeleteSprint,
     sidebarCollapsed,
-    setSidebarCollapsed,
-    activeTab,
     hiddenSpaceIds,
     archivedSpaceIds,
-    onToggleHideSpace,
-    onToggleArchiveSpace,
-    onUnhideAllSpaces,
     internalCollapsed,
     setInternalCollapsed,
     isCollapsed,
@@ -342,9 +259,7 @@ export function useSidebarState(props: LeftSidebarProps) {
     inSpaceView,
     panelRef,
     indicator,
-    setIndicator,
     indicatorAnimated,
-    setIndicatorAnimated,
     measureKey,
   };
 }

@@ -4,11 +4,13 @@ import type { Project } from '../../types/project';
 import type { Roadmap } from '../roadmap/types';
 import { ISSUE_TYPE_CONFIG } from '../../types/issue';
 import { PRIORITY_CONFIG } from '../priorityUtils';
-import { STATUS_LIST, BLOCKED_META } from '../status';
+import { STATUS_LIST } from '../status';
 import { currentSprintKey, getIssueSprint, sprintName } from '../sprintUtils';
 import { startedAt } from '../sprintReports';
 import { resolveItem } from '../roadmap/progress';
 import type { DashboardFilters, GroupBy, ListKind, Measure, ProgressBy, StatMetric } from './types';
+import { PALETTE as BASE_COLORS } from '../../theme/palette';
+import { appStorage } from '../appStorage';
 
 /**
  * Everything a dashboard shows is worked out here from the tickets, projects and roadmaps: pure functions, no screens.
@@ -27,7 +29,7 @@ export interface DataCtx {
   me: string[];
 }
 
-export const PALETTE = ['#0C66E4', '#22A06B', '#E2740B', '#8F7EE7', '#00B8D9', '#C9372C', '#B38600', '#6B778C', '#E774BB', '#2E7D6B'];
+const PALETTE = [BASE_COLORS.link, BASE_COLORS.successSoft, BASE_COLORS.warning, '#8F7EE7', BASE_COLORS.info, BASE_COLORS.criticalDeep, '#B38600', BASE_COLORS.textMuted, '#E774BB', '#2E7D6B'];
 
 const toDate = (v: unknown): Date | undefined => {
   if (!v) return undefined;
@@ -36,11 +38,11 @@ const toDate = (v: unknown): Date | undefined => {
 };
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
-export const isDone = (i: Issue) => i.status?.toLowerCase() === 'done';
-export const isOpen = (i: Issue) => !isDone(i);
-export const workItems = (list: Issue[]) => list.filter(i => i.type !== 'epic');
+const isDone = (i: Issue) => i.status?.toLowerCase() === 'done';
+const isOpen = (i: Issue) => !isDone(i);
+const workItems = (list: Issue[]) => list.filter(i => i.type !== 'epic');
 /** When a finished ticket was finished. */
-export const doneAt = (i: Issue): Date | undefined => (isDone(i) ? toDate(i.resolvedAt) ?? toDate(i.updatedAt) : undefined);
+const doneAt = (i: Issue): Date | undefined => (isDone(i) ? toDate(i.resolvedAt) ?? toDate(i.updatedAt) : undefined);
 const points = (i: Issue) => i.storyPoints || 0;
 const priorityRank = (i: Issue) => ['highest', 'high', 'medium', 'low', 'lowest'].indexOf(i.priority);
 
@@ -48,13 +50,13 @@ const priorityRank = (i: Issue) => ['highest', 'high', 'medium', 'low', 'lowest'
 export function myNames(): string[] {
   const out = new Set<string>(['vy']);
   try {
-    const n = localStorage.getItem('lira_user_name'); if (n) out.add(n.toLowerCase());
-    const i = localStorage.getItem('lira_user_initials'); if (i) out.add(i.toLowerCase());
+    const n = appStorage.get('lira_user_name'); if (n) out.add(n.toLowerCase());
+    const i = appStorage.get('lira_user_initials'); if (i) out.add(i.toLowerCase());
   } catch { /* storage unavailable */ }
   return [...out];
 }
 
-export const isMine = (i: Issue, me: string[]) =>
+const isMine = (i: Issue, me: string[]) =>
   me.includes((i.assigneeInitials || '').toLowerCase()) || me.includes((i.assignee || '').toLowerCase());
 
 export function mergeFilters(base: DashboardFilters, over?: Partial<DashboardFilters>): DashboardFilters {
@@ -62,25 +64,36 @@ export function mergeFilters(base: DashboardFilters, over?: Partial<DashboardFil
 }
 
 const RANGE_DAYS: Record<string, number | null> = { all: null, '7d': 7, '30d': 30, '90d': 90 };
-export const rangeDays = (r: DashboardFilters['range']) => RANGE_DAYS[r] ?? null;
+const rangeDays = (r: DashboardFilters['range']) => RANGE_DAYS[r] ?? null;
+
+type ScopeMe = Pick<DataCtx, 'me'>['me'];
+
+const inSpaces = (i: Issue, f: DashboardFilters) => !f.spaceIds.length || f.spaceIds.includes(i.spaceId);
+/** Epics never match a sprint filter; every other ticket must be in the chosen sprint. */
+const inSprint = (i: Issue, sprint: string | undefined) => !sprint || sprint === 'all' || (i.type !== 'epic' && getIssueSprint(i) === sprint);
+/** Tickets finished before the time window began are out. */
+const inRange = (i: Issue, since: Date | undefined) => {
+  if (!since || !isDone(i)) return true;
+  const d = doneAt(i);
+  return !d || !(d < since);
+};
+const matchesAssignee = (i: Issue, f: DashboardFilters, me: ScopeMe) => {
+  if (f.assignee === 'me') return isMine(i, me);
+  if (f.assignee === 'unassigned') return !i.assignee && !i.assigneeInitials;
+  return f.assignee === 'all' || (i.assignee || '').toLowerCase() === f.assignee.toLowerCase();
+};
+const hasPriority = (i: Issue, f: DashboardFilters) => !f.priorities.length || f.priorities.includes(i.priority);
+const hasType = (i: Issue, f: DashboardFilters) => !f.types?.length || f.types.includes(i.type);
+const hasLabel = (i: Issue, f: DashboardFilters) => !f.labels.length || (i.labels || []).some(l => f.labels.includes(l));
 
 /** The tickets a dashboard (or one widget) looks at, after its filters. */
 export function scopeIssues(all: Issue[], f: DashboardFilters, ctx: Pick<DataCtx, 'now' | 'me'>): Issue[] {
   const days = rangeDays(f.range);
   const since = days ? new Date(ctx.now.getTime() - days * DAY) : undefined;
   const sprint = f.sprint === 'current' ? currentSprintKey() : f.sprint;
-  return all.filter(i => {
-    if (f.spaceIds.length && !f.spaceIds.includes(i.spaceId)) return false;
-    if (sprint && sprint !== 'all' && (i.type === 'epic' || getIssueSprint(i) !== sprint)) return false;
-    if (since && isDone(i)) { const d = doneAt(i); if (d && d < since) return false; }
-    if (f.assignee === 'me') { if (!isMine(i, ctx.me)) return false; }
-    else if (f.assignee === 'unassigned') { if (i.assignee || i.assigneeInitials) return false; }
-    else if (f.assignee !== 'all' && (i.assignee || '').toLowerCase() !== f.assignee.toLowerCase()) return false;
-    if (f.priorities.length && !f.priorities.includes(i.priority)) return false;
-    if (f.types?.length && !f.types.includes(i.type)) return false;
-    if (f.labels.length && !(i.labels || []).some(l => f.labels.includes(l))) return false;
-    return true;
-  });
+  return all.filter(i =>
+    inSpaces(i, f) && inSprint(i, sprint) && inRange(i, since) && matchesAssignee(i, f, ctx.me) &&
+    hasPriority(i, f) && hasType(i, f) && hasLabel(i, f));
 }
 
 // ── Numbers (stat cards, goals) ────────────────────────────────────────────────
@@ -134,33 +147,42 @@ function metricAt(metric: StatMetric, work: Issue[], at: number): number | undef
 
 export interface MetricResult { value: number; suffix: string; label: string; trend?: number; meta: MetricMeta }
 
+interface MetricInput { work: Issue[]; open: Issue[]; now: Date; today: number }
+
+const sumPoints = (list: Issue[]) => list.reduce((a, i) => a + points(i), 0);
+const dueTime = (i: Issue) => toDate(i.dueDate)?.getTime();
+
+/** Average days from created to done, to one decimal; 0 when nothing is done. */
+function leadDays(work: Issue[]): number {
+  const spans = work.filter(isDone)
+    .map(i => { const d = doneAt(i), c = toDate(i.createdAt); return d && c ? Math.max(0, (d.getTime() - c.getTime()) / DAY) : undefined; })
+    .filter((n): n is number => n !== undefined);
+  return spans.length ? Math.round((spans.reduce((a, b) => a + b, 0) / spans.length) * 10) / 10 : 0;
+}
+
+/** How each number is worked out. */
+const COMPUTE: Record<StatMetric, (c: MetricInput) => number> = {
+  open: c => c.open.length,
+  total: c => c.work.length,
+  done: c => c.work.filter(isDone).length,
+  in_progress: c => c.work.filter(i => i.status === 'inprogress').length,
+  blocked: c => c.open.filter(i => i.blocked).length,
+  overdue: c => c.open.filter(i => { const d = dueTime(i); return d !== undefined && d < c.today; }).length,
+  due_soon: c => c.open.filter(i => { const d = dueTime(i); return d !== undefined && d >= c.today && d <= c.today + 7 * DAY; }).length,
+  unassigned: c => c.open.filter(i => !i.assignee && !i.assigneeInitials).length,
+  high_priority: c => c.open.filter(i => i.priority === 'highest' || i.priority === 'high').length,
+  bugs_open: c => c.open.filter(i => i.type === 'bug').length,
+  points_open: c => sumPoints(c.open),
+  points_done: c => sumPoints(c.work.filter(isDone)),
+  done_week: c => c.work.filter(i => inWindow(doneAt(i), c.now.getTime() - 7 * DAY, c.now.getTime())).length,
+  created_week: c => c.work.filter(i => inWindow(toDate(i.createdAt), c.now.getTime() - 7 * DAY, c.now.getTime())).length,
+  lead_days: c => leadDays(c.work),
+  completion: c => (c.work.length ? Math.round((c.work.filter(isDone).length / c.work.length) * 100) : 0),
+};
+
 export function metricValue(metric: StatMetric, scoped: Issue[], now: Date): MetricResult {
   const work = workItems(scoped);
-  const today = startOfDay(now).getTime();
-  const open = work.filter(isOpen);
-  let value = 0;
-  switch (metric) {
-    case 'open': value = open.length; break;
-    case 'total': value = work.length; break;
-    case 'done': value = work.filter(isDone).length; break;
-    case 'in_progress': value = work.filter(i => i.status === 'inprogress').length; break;
-    case 'blocked': value = open.filter(i => i.blocked).length; break;
-    case 'overdue': value = open.filter(i => { const d = toDate(i.dueDate); return !!d && d.getTime() < today; }).length; break;
-    case 'due_soon': value = open.filter(i => { const d = toDate(i.dueDate); return !!d && d.getTime() >= today && d.getTime() <= today + 7 * DAY; }).length; break;
-    case 'unassigned': value = open.filter(i => !i.assignee && !i.assigneeInitials).length; break;
-    case 'high_priority': value = open.filter(i => i.priority === 'highest' || i.priority === 'high').length; break;
-    case 'bugs_open': value = open.filter(i => i.type === 'bug').length; break;
-    case 'points_open': value = open.reduce((a, i) => a + points(i), 0); break;
-    case 'points_done': value = work.filter(isDone).reduce((a, i) => a + points(i), 0); break;
-    case 'done_week': value = work.filter(i => inWindow(doneAt(i), now.getTime() - 7 * DAY, now.getTime())).length; break;
-    case 'created_week': value = work.filter(i => inWindow(toDate(i.createdAt), now.getTime() - 7 * DAY, now.getTime())).length; break;
-    case 'lead_days': {
-      const spans = work.filter(isDone).map(i => { const d = doneAt(i), c = toDate(i.createdAt); return d && c ? Math.max(0, (d.getTime() - c.getTime()) / DAY) : undefined; }).filter((n): n is number => n !== undefined);
-      value = spans.length ? Math.round((spans.reduce((a, b) => a + b, 0) / spans.length) * 10) / 10 : 0;
-      break;
-    }
-    case 'completion': value = work.length ? Math.round((work.filter(isDone).length / work.length) * 100) : 0; break;
-  }
+  const value = COMPUTE[metric]({ work, open: work.filter(isOpen), now, today: startOfDay(now).getTime() });
   const meta = METRICS[metric];
   const before = metricAt(metric, work, now.getTime() - 7 * DAY);
   return { value, suffix: meta.suffix ?? '', label: meta.label, trend: before === undefined ? undefined : value - before, meta };
@@ -168,7 +190,7 @@ export function metricValue(metric: StatMetric, scoped: Issue[], now: Date): Met
 
 // ── Goals ──────────────────────────────────────────────────────────────────────
 
-export interface GoalStatus { goal: { metric: StatMetric; op: 'above' | 'below'; value: number }; value: number; breached: boolean; text: string }
+interface GoalStatus { goal: { metric: StatMetric; op: 'above' | 'below'; value: number }; value: number; breached: boolean; text: string }
 
 export function evaluateGoal(goal: GoalStatus['goal'], scoped: Issue[], now: Date): GoalStatus {
   const { value, meta } = (() => { const r = metricValue(goal.metric, scoped, now); return { value: r.value, meta: r.meta }; })();
@@ -187,35 +209,56 @@ const epicOf = (i: Issue, all: Issue[]) => {
   return e && e.type === 'epic' ? e : undefined;
 };
 
-export function groupIssues(list: Issue[], by: GroupBy, measure: Measure, ctx: Pick<DataCtx, 'issues' | 'spaces'>, limit = 8): Group[] {
-  const work = workItems(list);
+interface Bucket { key: string; label: string; color: string }
+type GroupCtx = Pick<DataCtx, 'issues' | 'spaces'>;
+const UNSET = '';
+
+/** For each way of grouping: which group (or groups) a ticket falls in. */
+const BUCKETS: Record<GroupBy, (i: Issue, ctx: GroupCtx) => Bucket[]> = {
+  status: i => { const s = STATUS_LIST.find(x => x.id === i.status); return [{ key: i.status, label: s?.label ?? i.status, color: s?.color ?? BASE_COLORS.textMuted }]; },
+  priority: i => { const p = PRIORITY_CONFIG[i.priority]; return [{ key: i.priority, label: p?.label ?? i.priority, color: p?.color ?? BASE_COLORS.textMuted }]; },
+  type: i => { const t = ISSUE_TYPE_CONFIG[i.type]; return [{ key: i.type, label: t?.label ?? i.type, color: t?.color ?? BASE_COLORS.textMuted }]; },
+  assignee: i => [{ key: i.assignee || 'Unassigned', label: i.assignee || 'Unassigned', color: i.assignee ? UNSET : BASE_COLORS.textFaint }],
+  label: i => ((i.labels || []).length === 0
+    ? [{ key: '(none)', label: 'No label', color: BASE_COLORS.textFaint }]
+    : i.labels.map(l => ({ key: l, label: l, color: UNSET }))),
+  epic: (i, ctx) => { const e = epicOf(i, ctx.issues); return [{ key: e ? e.key : '(none)', label: e ? `${e.key} ${e.title}` : 'No epic', color: e ? UNSET : BASE_COLORS.textFaint }]; },
+  sprint: i => { const k = getIssueSprint(i); return [{ key: k, label: sprintName(k), color: UNSET }]; },
+  space: (i, ctx) => { const s = ctx.spaces.find(x => x.id === i.spaceId); return [{ key: String(i.spaceId), label: s?.name ?? 'Space', color: s?.color || UNSET }]; },
+};
+
+/** Groups that always come in one fixed order, not by size. */
+const FIXED_ORDERS: Partial<Record<GroupBy, string[]>> = {
+  priority: ['highest', 'high', 'medium', 'low', 'lowest'],
+  type: ['task', 'bug', 'subtask', 'epic'],
+};
+const fixedOrderFor = (by: GroupBy): string[] | null => (by === 'status' ? STATUS_LIST.map(s => s.id as string) : FIXED_ORDERS[by] ?? null);
+
+/** Keeps the biggest `limit - 1` groups and folds the rest into one "Other" group. */
+function foldSmallGroups(groups: Group[], limit: number): Group[] {
+  if (groups.length <= limit) return groups;
+  const rest = groups.slice(limit - 1);
+  return [...groups.slice(0, limit - 1), {
+    key: '(other)', label: `Other (${rest.length})`, value: rest.reduce((a, g) => a + g.value, 0), color: BASE_COLORS.textFaint,
+    issues: [...new Set(rest.flatMap(g => g.issues))],
+  }];
+}
+
+export function groupIssues(list: Issue[], by: GroupBy, measure: Measure, ctx: GroupCtx, limit = 8): Group[] {
   const map = new Map<string, Group>();
-  const add = (key: string, label: string, color: string, i: Issue) => {
-    let g = map.get(key);
-    if (!g) { g = { key, label, value: 0, color, issues: [] }; map.set(key, g); }
+  const add = (b: Bucket, i: Issue) => {
+    let g = map.get(b.key);
+    if (!g) { g = { key: b.key, label: b.label, value: 0, color: b.color, issues: [] }; map.set(b.key, g); }
     g.issues.push(i);
     g.value += measure === 'points' ? points(i) : 1;
   };
-  work.forEach(i => {
-    switch (by) {
-      case 'status': { const s = STATUS_LIST.find(x => x.id === i.status); add(i.status, s?.label ?? i.status, s?.color ?? '#6B778C', i); break; }
-      case 'priority': { const p = PRIORITY_CONFIG[i.priority]; add(i.priority, p?.label ?? i.priority, p?.color ?? '#6B778C', i); break; }
-      case 'type': { const t = ISSUE_TYPE_CONFIG[i.type]; add(i.type, t?.label ?? i.type, t?.color ?? '#6B778C', i); break; }
-      case 'assignee': add(i.assignee || 'Unassigned', i.assignee || 'Unassigned', i.assignee ? '' : '#97A0AF', i); break;
-      case 'label': if ((i.labels || []).length === 0) add('(none)', 'No label', '#97A0AF', i); else i.labels.forEach(l => add(l, l, '', i)); break;
-      case 'epic': { const e = epicOf(i, ctx.issues); add(e ? e.key : '(none)', e ? `${e.key} ${e.title}` : 'No epic', e ? '' : '#97A0AF', i); break; }
-      case 'sprint': { const k = getIssueSprint(i); add(k, sprintName(k), '', i); break; }
-      case 'space': { const s = ctx.spaces.find(x => x.id === i.spaceId); add(String(i.spaceId), s?.name ?? 'Space', s?.color || '', i); break; }
-    }
-  });
+  workItems(list).forEach(i => BUCKETS[by](i, ctx).forEach(b => add(b, i)));
+
+  const fixedOrder = fixedOrderFor(by);
   let groups = [...map.values()];
-  const fixedOrder = by === 'status' ? STATUS_LIST.map(s => s.id as string) : by === 'priority' ? ['highest', 'high', 'medium', 'low', 'lowest'] : by === 'type' ? ['task', 'bug', 'subtask', 'epic'] : null;
   if (fixedOrder) groups.sort((a, b) => fixedOrder.indexOf(a.key) - fixedOrder.indexOf(b.key));
-  else groups.sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
-  if (!fixedOrder && groups.length > limit) {
-    const rest = groups.slice(limit - 1);
-    groups = [...groups.slice(0, limit - 1), { key: '(other)', label: `Other (${rest.length})`, value: rest.reduce((a, g) => a + g.value, 0), color: '#97A0AF', issues: [...new Set(rest.flatMap(g => g.issues))] }];
-  }
+  else groups = foldSmallGroups(groups.sort((a, b) => b.value - a.value || a.label.localeCompare(b.label)), limit);
+
   let n = 0;
   groups.forEach(g => { if (!g.color) g.color = PALETTE[n++ % PALETTE.length]; });
   return groups;
@@ -379,7 +422,7 @@ export function progressRows(by: ProgressBy, scoped: Issue[], ctx: Pick<DataCtx,
   return rows.sort((a, b) => (by === 'sprint' ? a.key.localeCompare(b.key) : b.total - a.total)).slice(0, limit);
 }
 
-export const AGING_BUCKETS = [{ label: '0-2 days', max: 2, color: '#22A06B' }, { label: '3-5 days', max: 5, color: '#B38600' }, { label: '6-10 days', max: 10, color: '#E2740B' }, { label: 'Over 10 days', max: Infinity, color: '#C9372C' }];
+const AGING_BUCKETS = [{ label: '0-2 days', max: 2, color: BASE_COLORS.successSoft }, { label: '3-5 days', max: 5, color: '#B38600' }, { label: '6-10 days', max: 10, color: BASE_COLORS.warning }, { label: 'Over 10 days', max: Infinity, color: BASE_COLORS.criticalDeep }];
 
 /** Tickets in progress, grouped by how long they have been in progress. */
 export function agingGroups(scoped: Issue[], now: Date): Group[] {
@@ -434,26 +477,31 @@ export function summaryLines(scoped: Issue[], ctx: Pick<DataCtx, 'now' | 'me' | 
   return lines;
 }
 
-export { BLOCKED_META };
 
-/** The tickets behind a number, so a stat card can open them. */
+const dueBefore = (i: Issue, limit: number) => { const d = dueTime(i); return d !== undefined && d < limit; };
+const dueWithin = (i: Issue, from: number, to: number) => { const d = dueTime(i); return d !== undefined && d >= from && d <= to; };
+
+/** The tickets behind each number, so a stat card can open them. */
+const BEHIND: Record<StatMetric, (c: MetricInput) => Issue[]> = {
+  open: c => c.open,
+  points_open: c => c.open,
+  total: c => c.work,
+  completion: c => c.work,
+  done: c => c.work.filter(isDone),
+  points_done: c => c.work.filter(isDone),
+  lead_days: c => c.work.filter(isDone),
+  in_progress: c => c.work.filter(i => i.status === 'inprogress'),
+  blocked: c => c.open.filter(i => i.blocked),
+  overdue: c => c.open.filter(i => dueBefore(i, c.today)),
+  due_soon: c => c.open.filter(i => dueWithin(i, c.today, c.today + 7 * DAY)),
+  unassigned: c => c.open.filter(i => !i.assignee && !i.assigneeInitials),
+  high_priority: c => c.open.filter(i => i.priority === 'highest' || i.priority === 'high'),
+  bugs_open: c => c.open.filter(i => i.type === 'bug'),
+  done_week: c => c.work.filter(i => inWindow(doneAt(i), c.now.getTime() - 7 * DAY, c.now.getTime())),
+  created_week: c => c.work.filter(i => inWindow(toDate(i.createdAt), c.now.getTime() - 7 * DAY, c.now.getTime())),
+};
+
 export function metricIssues(metric: StatMetric, scoped: Issue[], now: Date): Issue[] {
   const work = workItems(scoped);
-  const open = work.filter(isOpen);
-  const today = startOfDay(now).getTime();
-  const due = (i: Issue) => toDate(i.dueDate)?.getTime();
-  switch (metric) {
-    case 'open': case 'points_open': return open;
-    case 'total': case 'completion': return work;
-    case 'done': case 'points_done': case 'lead_days': return work.filter(isDone);
-    case 'in_progress': return work.filter(i => i.status === 'inprogress');
-    case 'blocked': return open.filter(i => i.blocked);
-    case 'overdue': return open.filter(i => { const d = due(i); return d !== undefined && d < today; });
-    case 'due_soon': return open.filter(i => { const d = due(i); return d !== undefined && d >= today && d <= today + 7 * DAY; });
-    case 'unassigned': return open.filter(i => !i.assignee && !i.assigneeInitials);
-    case 'high_priority': return open.filter(i => i.priority === 'highest' || i.priority === 'high');
-    case 'bugs_open': return open.filter(i => i.type === 'bug');
-    case 'done_week': return work.filter(i => inWindow(doneAt(i), now.getTime() - 7 * DAY, now.getTime()));
-    case 'created_week': return work.filter(i => inWindow(toDate(i.createdAt), now.getTime() - 7 * DAY, now.getTime()));
-  }
+  return BEHIND[metric]({ work, open: work.filter(isOpen), now, today: startOfDay(now).getTime() });
 }

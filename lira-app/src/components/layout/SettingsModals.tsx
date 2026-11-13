@@ -1,9 +1,12 @@
-import { notifySaved } from '../common/SavedToast';
+import { SpaceIcon } from '../common/SpaceIcon';
+import { notifySaved } from '../common/savedToastStore';
 import { Bot, HardDrive, Zap, Brain } from 'lucide-react';
 import { TypeIcon } from '../common/Icons';
 import React, { useState } from 'react';
 import { Modal } from '../common/Modal';
 import type { Space } from '../../types/space';
+import { appStorage } from '../../utils/appStorage';
+import { APP_VERSION } from '../../utils/appVersion';
 
 // ─── 1. General Settings Modal ────────────────────────────────────────────────
 export const GeneralSettingsModal: React.FC<{
@@ -13,9 +16,9 @@ export const GeneralSettingsModal: React.FC<{
   const [language, setLanguage] = useState('en-US');
   const [timeZone, setTimeZone] = useState('Asia/Kolkata');
   const handleSave = () => {
-    localStorage.setItem('lira_locale_prefs', JSON.stringify({ language, timeZone }));
-    localStorage.setItem('lira_pref_lang', language);
-    localStorage.setItem('lira_pref_tz', timeZone);
+    appStorage.set('lira_locale_prefs', JSON.stringify({ language, timeZone }));
+    appStorage.set('lira_pref_lang', language);
+    appStorage.set('lira_pref_tz', timeZone);
     notifySaved('General settings saved');
     onClose();
   };
@@ -62,7 +65,7 @@ export const GeneralSettingsModal: React.FC<{
           <button onClick={onClose} className="px-4 py-2 text-sm text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100">
             Cancel
           </button>
-          <button onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Save Preferences
           </button>
         </div>
@@ -81,8 +84,8 @@ export const NotificationSettingsModal: React.FC<{
   const [mentionsOnly, setMentionsOnly] = useState(false);
   const handleSave = () => {
     const prefs = { inApp, sounds, mentionsOnly };
-    localStorage.setItem('lira_notification_prefs', JSON.stringify(prefs));
-    localStorage.setItem('lira_notif_config', JSON.stringify(prefs));
+    appStorage.set('lira_notification_prefs', JSON.stringify(prefs));
+    appStorage.set('lira_notif_config', JSON.stringify(prefs));
     notifySaved('Notification settings saved');
     onClose();
   };
@@ -100,7 +103,7 @@ export const NotificationSettingsModal: React.FC<{
             { label: 'Sound Alerts', desc: 'Play subtle audio feedback on status transitions', state: sounds, set: setSounds },
             { label: 'Direct Mentions & Assignments Only', desc: 'Only alert when assigned or tagged', state: mentionsOnly, set: setMentionsOnly },
           ].map((item, idx) => (
-            <div key={idx} onClick={() => item.set(!item.state)} className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-blue-50/30 rounded-xl border border-lira-border cursor-pointer transition-colors">
+            <div key={idx} onClick={() => item.set(!item.state)} className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-lira-blue-light/30 rounded-xl border border-lira-border cursor-pointer transition-colors">
               <div>
                 <h5 className="text-sm font-semibold text-lira-text">{item.label}</h5>
                 <p className="text-xs text-lira-muted">{item.desc}</p>
@@ -119,7 +122,7 @@ export const NotificationSettingsModal: React.FC<{
           <button onClick={onClose} className="px-4 py-2 text-sm text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100">
             Cancel
           </button>
-          <button onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Save Settings
           </button>
         </div>
@@ -147,10 +150,8 @@ export const ManageSpacesModal: React.FC<{
             <div key={s.id} className="p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-3">
                 <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-2xs"
-                  style={{ backgroundColor: (s.color || '#0052CC') + '22', color: s.color || '#0052CC' }}
-                >
-                  {s.icon || '📁'}
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-2xs bg-lira-blue-light text-lira-blue"                >
+                  <SpaceIcon icon={s.icon} className="w-5 h-5" />
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-lira-text">{s.name}</h4>
@@ -159,7 +160,7 @@ export const ManageSpacesModal: React.FC<{
               </div>
               <button
                 onClick={() => { onSelectSpace(s.id!); onClose(); }}
-                className="px-3 py-1.5 text-xs font-semibold bg-blue-50 text-lira-blue hover:bg-blue-100 rounded-lg transition-colors cursor-pointer"
+                className="px-3 py-1.5 text-xs font-semibold bg-lira-blue-light text-lira-blue hover:brightness-95 rounded-lg transition-colors cursor-pointer"
               >
                 Open Space
               </button>
@@ -202,7 +203,7 @@ export const WorkItemsModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Close
           </button>
         </div>
@@ -240,7 +241,7 @@ export const MarketplaceModal: React.FC<{
                   <p className="text-xs text-lira-muted mt-0.5">{app.desc}</p>
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full whitespace-nowrap">
+              <span className="text-3xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full whitespace-nowrap">
                 {app.status}
               </span>
             </div>
@@ -248,7 +249,7 @@ export const MarketplaceModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Close
           </button>
         </div>
@@ -279,7 +280,7 @@ export const UserManagementModal: React.FC<{
           {users.map(u => (
             <div key={u.email} className="p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-[#0052CC] text-white font-bold text-xs flex items-center justify-center">
+                <div className="w-9 h-9 rounded-full bg-lira-blue text-lira-on-blue font-bold text-xs flex items-center justify-center">
                   {u.initials}
                 </div>
                 <div>
@@ -287,7 +288,7 @@ export const UserManagementModal: React.FC<{
                   <p className="text-xs text-lira-muted">{u.email} · <span className="font-medium text-lira-text">{u.role}</span></p>
                 </div>
               </div>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+              <span className="text-2xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
                 {u.status}
               </span>
             </div>
@@ -295,7 +296,7 @@ export const UserManagementModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Close
           </button>
         </div>
@@ -312,12 +313,12 @@ export const BillingModal: React.FC<{
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Billing & Subscriptions" size="md">
       <div className="p-6 space-y-4 text-lira-text">
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-500/10 dark:to-indigo-500/10 border border-blue-200 rounded-xl space-y-2">
+        <div className="p-4 bg-lira-blue-light border border-lira-border rounded-xl space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-lira-blue">Current Plan</span>
-            <span className="text-xs font-bold bg-lira-blue text-white px-2 py-0.5 rounded-full">Free &amp; Open Source</span>
+            <span className="text-xs font-bold bg-lira-blue text-lira-on-blue px-2 py-0.5 rounded-full">Free &amp; Open Source</span>
           </div>
-          <h3 className="text-lg font-extrabold text-lira-text">Lira Community Edition v2.0</h3>
+          <h3 className="text-lg font-extrabold text-lira-text">Lira Community Edition v{APP_VERSION}</h3>
           <p className="text-xs text-lira-muted">
             Unlimited spaces, unlimited issues, offline local disk sync, Dexie IndexedDB caching, and Viva AI Agent.
           </p>
@@ -339,7 +340,7 @@ export const BillingModal: React.FC<{
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700">
+          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover">
             Close
           </button>
         </div>

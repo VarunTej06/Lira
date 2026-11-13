@@ -12,7 +12,7 @@ const RANGES: { value: DateRange; label: string }[] = [
 const PRIORITIES = ['highest', 'high', 'medium', 'low', 'lowest'].map(p => ({ value: p, label: p.charAt(0).toUpperCase() + p.slice(1) }));
 const TYPES = [{ value: 'task', label: 'Tasks' }, { value: 'bug', label: 'Bugs' }, { value: 'subtask', label: 'Subtasks' }, { value: 'epic', label: 'Epics' }];
 
-export const countFilters = (f: DashboardFilters) =>
+const countFilters = (f: DashboardFilters) =>
   (f.spaceIds.length ? 1 : 0) + (f.sprint !== 'all' ? 1 : 0) + (f.range !== 'all' ? 1 : 0) + (f.assignee !== 'all' ? 1 : 0) + (f.priorities.length ? 1 : 0) + (f.labels.length ? 1 : 0) + (f.types.length ? 1 : 0);
 
 interface Props {
@@ -44,7 +44,7 @@ export const FilterControls: React.FC<Props> = ({ value, onChange, issues, space
     <div className="flex flex-wrap items-center gap-2" data-testid="dashboard-filters">
       <span className="flex items-center gap-1 text-xs font-semibold text-lira-muted mr-1"><Filter className="w-3.5 h-3.5" /> Scope</span>
       <FilterMultiSelect
-        label="Spaces" options={spaces.filter(s => s.id).map(s => ({ value: String(s.id), label: `${s.icon} ${s.name}` }))}
+        label="Spaces" options={spaces.filter(s => s.id).map(s => ({ value: String(s.id), label: s.name }))}
         selected={value.spaceIds.map(String)} onToggle={v => set({ spaceIds: toggle(value.spaceIds, Number(v)) })} onClear={() => set({ spaceIds: [] })} emptyText="No spaces"
       />
       <FilterMultiSelect single label="Sprint" active={value.sprint !== 'all'} valueLabel={nameOf(sprintOptions, value.sprint)} options={sprintOptions} selected={[value.sprint]} onToggle={v => set({ sprint: v })} />

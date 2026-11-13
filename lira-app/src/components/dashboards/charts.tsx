@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { motion } from '../common/motion';
+import { motion } from '../common/motionPresets';
 import type { Group } from '../../utils/dashboards/metrics';
+import { PALETTE } from '../../theme/palette';
 
 /** Small chart pieces for the dashboard widgets. Plain SVG and HTML, no chart library. */
 
@@ -43,16 +44,17 @@ export const Donut: React.FC<{ groups: Group[]; total: number; measure?: 'count'
   const live = groups.filter(g => g.value > 0);
   if (!live.length) return <Empty />;
   const R = 42, C = 2 * Math.PI * R;
-  let offset = 0;
+  const lengths = live.map(g => (g.value / total) * C);
   const hovered = live.find(g => g.key === hover);
   return (
     <div className="flex items-center gap-4 h-full" data-testid="donut">
       <div className="relative w-[120px] h-[120px] flex-shrink-0">
         <svg viewBox="0 0 120 120" className="w-full h-full -rotate-90" role="img" aria-label="Share of tickets">
           <circle cx="60" cy="60" r={R} fill="none" stroke="currentColor" strokeWidth="14" className="text-gray-100" />
-          {live.map(g => {
-            const len = (g.value / total) * C;
-            const el = (
+          {live.map((g, i) => {
+            const len = lengths[i];
+            const offset = lengths.slice(0, i).reduce((a, b) => a + b, 0);
+            return (
               <motion.circle
                 key={g.key} cx="60" cy="60" r={R} fill="none" stroke={g.color} strokeWidth={hover === g.key ? 17 : 14}
                 strokeDasharray={`${len} ${C - len}`} strokeDashoffset={-offset}
@@ -63,13 +65,11 @@ export const Donut: React.FC<{ groups: Group[]; total: number; measure?: 'count'
                 <title>{`${g.label}: ${g.value}`}</title>
               </motion.circle>
             );
-            offset += len;
-            return el;
           })}
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-xl font-bold text-lira-text leading-none">{hovered ? hovered.value : total}</span>
-          <span className="text-[10px] text-lira-muted mt-0.5 max-w-[70px] truncate">{hovered ? hovered.label : measure === 'points' ? 'points' : 'tickets'}</span>
+          <span className="text-3xs text-lira-muted mt-0.5 max-w-[70px] truncate">{hovered ? hovered.label : measure === 'points' ? 'points' : 'tickets'}</span>
         </div>
       </div>
       <ul className="flex-1 min-w-0 space-y-1.5">
@@ -88,7 +88,7 @@ export const Donut: React.FC<{ groups: Group[]; total: number; measure?: 'count'
   );
 };
 
-export interface Series { name: string; color: string; values: number[]; dashed?: boolean }
+interface Series { name: string; color: string; values: number[]; dashed?: boolean }
 
 const W = 480, H = 200, PAD = { l: 34, r: 12, t: 12, b: 26 };
 
@@ -132,7 +132,7 @@ export const LineChart: React.FC<{ labels: string[]; series: Series[]; ariaLabel
           </g>
         ))}
       </svg>
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-lira-muted pt-1">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-2xs text-lira-muted pt-1">
         {series.map(s => <span key={s.name} className="flex items-center gap-1.5"><span className="inline-block w-3 h-0.5 rounded" style={{ backgroundColor: s.color }} />{s.name}</span>)}
       </div>
     </div>
@@ -161,7 +161,7 @@ export const Columns: React.FC<{ labels: string[]; values: number[]; color: stri
           </g>
         );
       })}
-      {average && avg > 0 && <g><line x1={PAD.l} x2={W - PAD.r} y1={PAD.t + ih - (avg / max) * ih} y2={PAD.t + ih - (avg / max) * ih} stroke="#E2740B" strokeDasharray="5 4" strokeWidth="1.5" /><text x={W - PAD.r} y={PAD.t + ih - (avg / max) * ih - 4} textAnchor="end" fontSize="10" fill="#E2740B">{`average ${avg.toFixed(1)}`}</text></g>}
+      {average && avg > 0 && <g><line x1={PAD.l} x2={W - PAD.r} y1={PAD.t + ih - (avg / max) * ih} y2={PAD.t + ih - (avg / max) * ih} stroke={PALETTE.warning} strokeDasharray="5 4" strokeWidth="1.5" /><text x={W - PAD.r} y={PAD.t + ih - (avg / max) * ih - 4} textAnchor="end" fontSize="10" fill={PALETTE.warning}>{`average ${avg.toFixed(1)}`}</text></g>}
     </svg>
   );
 };
@@ -188,7 +188,7 @@ export const AreaStack: React.FC<{ labels: string[]; layers: Series[]; ariaLabel
           {polys.map(p => <polygon key={p.l.name} points={p.pts} fill={p.l.color} opacity="0.9"><title>{p.l.name}</title></polygon>)}
         </motion.g>
       </svg>
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-lira-muted pt-1">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-2xs text-lira-muted pt-1">
         {[...layers].reverse().map(l => <span key={l.name} className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: l.color }} />{l.name}</span>)}
       </div>
     </div>

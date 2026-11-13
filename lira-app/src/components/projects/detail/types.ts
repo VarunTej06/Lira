@@ -1,8 +1,6 @@
 import type { Project } from '../../../types/project';
 import type { Space } from '../../../types/space';
 import type { Issue } from '../../../types/issue';
-import type { ProjectData } from './useProjectData';
-import type { ProjectForms } from './useProjectForms';
 
 export interface ProjectDetailViewProps {
   project: Project;
@@ -48,9 +46,3 @@ export const DEFAULT_CUSTOM_FIELDS: CustomFieldItem[] = [
   { id: 'cf-4', name: 'Git Branch / PR', type: 'Text Link', description: 'Associated repository branch or pull request' },
   { id: 'cf-5', name: 'Customer Impact', type: 'Single Select', description: 'Severity score for client-facing features' },
 ];
-
-/** Everything a tab of the project page can use: the props, the data hook, the forms hook and the current tab. */
-export type DetailCtx = ProjectDetailViewProps & ProjectData & ProjectForms & {
-  activeTab: TabType;
-  setActiveTab: (tab: TabType) => void;
-};

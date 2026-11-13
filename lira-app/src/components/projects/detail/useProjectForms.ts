@@ -1,8 +1,10 @@
-import { confirmDialog } from '../../common/dialogs';
-import React, { useEffect, useState } from 'react';
+import { confirmDialog } from '../../common/dialogStore';
+import React, { useState } from 'react';
 import type { Project } from '../../../types/project';
 import { writeProjects } from '../../../hooks/useProjects';
 import { DEFAULT_CUSTOM_FIELDS, DEFAULT_WORKFLOW_STATES, type CustomFieldItem, type WorkflowStateItem } from './types';
+import { useResetWhen } from '../../../hooks/useResetWhen';
+import { appStorage } from '../../../utils/appStorage';
 
 /** The technical-details form and the settings (workflow states, custom fields). Kept in the parent so edits survive switching tabs. */
 export function useProjectForms(
@@ -22,14 +24,14 @@ export function useProjectForms(
   const [newEnvInput, setNewEnvInput] = useState('');
   const [techSavedToast, setTechSavedToast] = useState(false);
 
-  useEffect(() => {
+  useResetWhen([project], () => {
     setRepoUrl(project.repoUrl || '');
     setDescription(project.description || '');
     setLead(project.lead || 'Varun Tej');
     if (project.environments && project.environments.length > 0) {
       setEnvironments(project.environments);
     }
-  }, [project]);
+  });
 
   const handleAddEnv = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +59,7 @@ export function useProjectForms(
     };
 
     try {
-      const raw = localStorage.getItem('lira_projects');
+      const raw = appStorage.get('lira_projects');
       if (raw) {
         const list: Project[] = JSON.parse(raw);
         const next = list.map(p => p.id === project.id ? updated : p);
@@ -75,7 +77,7 @@ export function useProjectForms(
   // ── Tab 5: Settings State ──
   const [workflowStates, setWorkflowStates] = useState<WorkflowStateItem[]>(() => {
     try {
-      const raw = localStorage.getItem(`lira_project_settings_${project.id}`);
+      const raw = appStorage.get(`lira_project_settings_${project.id}`);
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed.workflowStates) && parsed.workflowStates.length > 0) {
@@ -90,7 +92,7 @@ export function useProjectForms(
 
   const [customFields, setCustomFields] = useState<CustomFieldItem[]>(() => {
     try {
-      const raw = localStorage.getItem(`lira_project_settings_${project.id}`);
+      const raw = appStorage.get(`lira_project_settings_${project.id}`);
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed.customFields) && parsed.customFields.length > 0) {
@@ -140,7 +142,7 @@ export function useProjectForms(
         customFields,
         updatedAt: new Date().toISOString(),
       };
-      localStorage.setItem(`lira_project_settings_${project.id}`, JSON.stringify(payload));
+      appStorage.set(`lira_project_settings_${project.id}`, JSON.stringify(payload));
       setSettingsSavedToast(true);
       setTimeout(() => setSettingsSavedToast(false), 2000);
     } catch (err) {

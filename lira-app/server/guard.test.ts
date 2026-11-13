@@ -191,3 +191,38 @@ describe('network access (tablet and phone)', () => {
     } finally { fs.rmSync(dir, { recursive: true, force: true }) }
   })
 })
+
+describe('request guard: one rule at a time', () => {
+  it('refuses a page whose Origin is this computer under a different name than the Host', () => {
+    expect(checkApiRequest(req({ host: 'localhost:5173', origin: 'http://127.0.0.1:5173' }))).toMatchObject({ ok: false, status: 403, reason: 'Origin not allowed' })
+  })
+
+  it('reports the Host problem first, before the Origin or the content type', () => {
+    expect(checkApiRequest(req({ host: 'evil.example', origin: 'https://evil.example', 'content-type': 'text/plain' }, 'POST'))).toMatchObject({ status: 403, reason: 'Host not allowed' })
+  })
+
+  it('treats every changing method like a write: JSON only', () => {
+    for (const method of ['POST', 'PUT', 'PATCH', 'DELETE']) {
+      expect(checkApiRequest(req({ ...own, 'content-type': 'text/plain' }, method)), method).toMatchObject({ ok: false, status: 415 })
+      expect(checkApiRequest(req({ ...own, 'content-type': 'application/json' }, method)).ok, method).toBe(true)
+    }
+  })
+
+  it('lets reads through without a content type', () => {
+    expect(checkApiRequest(req(own, 'GET')).ok).toBe(true)
+    expect(checkApiRequest(req(own, 'HEAD')).ok).toBe(true)
+  })
+
+  it('accepts a request that carries no Origin at all (a plain navigation or a script on this computer)', () => {
+    expect(checkApiRequest(req({ ...own, 'sec-fetch-site': 'none' })).ok).toBe(true)
+  })
+
+  it('on the network (LAN mode) accepts a private address that agrees with its Origin, and still refuses a web name', () => {
+    const lan = { lan: true }
+    expect(checkApiRequest(req({ host: '192.168.1.20:5173', origin: 'http://192.168.1.20:5173' }), lan).ok).toBe(true)
+    expect(checkApiRequest(req({ host: '192.168.1.20:5173', origin: 'http://192.168.1.21:5173' }), lan).ok).toBe(false)
+    expect(checkApiRequest(req({ host: 'example.com' }), lan).ok).toBe(false)
+    expect(checkApiRequest(req({ host: '192.168.1.20:5173' })).ok).toBe(false) // not allowed when LAN mode is off
+  })
+})
+

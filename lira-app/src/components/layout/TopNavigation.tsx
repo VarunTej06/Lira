@@ -1,3 +1,4 @@
+import { LiraLogo } from '../common/LiraLogo';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Settings, Plus, HardDrive, CheckCircle2, AlertCircle } from 'lucide-react';
 import { exportBackup, importBackup } from '../../db/storageService';
@@ -21,6 +22,7 @@ import { FiltersDropdown } from './topnav/FiltersDropdown';
 import { OmniSearch } from './topnav/OmniSearch';
 import { NotificationsBell } from './topnav/NotificationsBell';
 import { SystemSettingsModal } from './topnav/SystemSettingsModal';
+import { appStorage } from '../../utils/appStorage';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -112,7 +114,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   }, [showToast]);
 
   return (
-    <nav className="mx-2 mt-2 h-14 rounded-2xl bg-gradient-to-r from-[#1C2540] via-[#1A2236] to-[#151B2B] border border-white/[0.08] shadow-[0_8px_26px_rgba(0,0,0,0.32)] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
+    <nav className="mx-2 mt-2 h-14 rounded-2xl bg-lira-nav border border-white/[0.08] shadow-[0_8px_26px_rgba(0,0,0,0.32)] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
       {/* App Launcher with Custom Geometric Logo */}
       <AppLauncher
         onToggleAI={onToggleAI}
@@ -124,12 +126,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       />
 
       {/* Lira Logo + Brand */}
-      <div className="flex-shrink-0 flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200 hover:scale-[1.04]">
-        <img
-          src="/lira-logo.png"
-          alt="Lira Logo"
-          className="w-7 h-7 object-contain drop-shadow-xs"
-        />
+      <div className="group flex-shrink-0 flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200 hover:scale-[1.04]">
+        <LiraLogo className="w-7 h-7 text-white" />
         <span className="text-white font-bold text-base tracking-tight">Lira</span>
       </div>
 
@@ -148,7 +146,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Create button */}
       <button
         onClick={onCreateIssue}
-        className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-lira-blue to-lira-blue-hover hover:brightness-110 text-white text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgb(var(--lira-blue)/0.35)] hover:shadow-[0_6px_18px_rgb(var(--lira-blue)/0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
+        className="flex items-center gap-1.5 px-4 py-2 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgb(var(--lira-blue)/0.35)] hover:shadow-[0_6px_18px_rgb(var(--lira-blue)/0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
         title="Create a ticket — you'll choose the space"
       >
         <Plus className="w-4 h-4" />
@@ -172,17 +170,17 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         {syncState.status === 'saving' ? (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-            <span className="text-amber-300 text-[11px] font-medium">Saving to PC…</span>
+            <span className="text-amber-300 text-2xs font-medium">Saving to PC…</span>
           </>
         ) : syncState.status === 'error' ? (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
-            <span className="text-red-300 text-[11px] font-medium">Save error</span>
+            <span className="text-red-300 text-2xs font-medium">Save error</span>
           </>
         ) : (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span className="text-emerald-300 text-[11px] font-medium">PC Saved</span>
+            <span className="text-emerald-300 text-2xs font-medium">PC Saved</span>
           </>
         )}
       </button>
@@ -224,7 +222,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold animate-scale-in transition-all ${
           toast.type === 'error'
             ? 'bg-red-900/95 text-red-100 border-red-700'
-            : 'bg-[#1D2939]/95 text-white border-white/20'
+            : 'bg-lira-nav/95 text-white border-white/20'
         }`}>
           {toast.type === 'error' ? (
             <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
@@ -253,7 +251,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         onClose={() => setShowSpacesModal(false)}
         spaces={spaces}
         onSelectSpace={(id) => {
-          localStorage.setItem('lira_active_space_id', String(id));
+          appStorage.set('lira_active_space_id', String(id));
           window.location.reload();
         }}
       />

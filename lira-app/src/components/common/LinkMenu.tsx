@@ -1,9 +1,11 @@
+import { isEditable } from '../../utils/isEditable';
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ExternalLink, Link2 } from 'lucide-react';
-import { AnimatePresence, motion, menuPop } from './motion';
-import { copyText } from './CopyButton';
-import { notifySaved } from './SavedToast';
+import { AnimatePresence, motion } from './motionPresets';
+import { menuPop } from './motionPresets';
+import { copyText } from './copyText';
+import { notifySaved } from './savedToastStore';
 import { flushDiskSync } from '../../services/localDiskSync';
 
 /**
@@ -22,11 +24,6 @@ const absolute = (href: string) => new URL(href, window.location.origin).toStrin
 /** Saves anything still waiting to be written, then opens the page in a new tab (which reads the same saved data). */
 const openTab = (href: string) => { flushDiskSync(); window.open(absolute(href), '_blank', 'noopener'); };
 
-/** Text fields keep the browser's own menu (cut, copy, paste, spelling). */
-const isEditable = (t: EventTarget | null) => {
-  const el = t as HTMLElement | null;
-  return !!el?.closest?.('input, textarea, select, [contenteditable="true"]');
-};
 
 export const LinkMenuHost: React.FC = () => {
   const [menu, setMenu] = useState<{ x: number; y: number; href: string } | null>(null);

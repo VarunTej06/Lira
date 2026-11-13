@@ -1,30 +1,21 @@
-import { alertDialog } from '../common/dialogs';
-import { notifySaved } from '../common/SavedToast';
+import { alertDialog } from '../common/dialogStore';
+import { notifySaved } from '../common/savedToastStore';
 import React, { useState, useRef, useEffect } from 'react';
 import {
   User, Settings, Users, LogOut,
 } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
-
-function useClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () => void) {
-  useEffect(() => {
-    const listener = (e: MouseEvent) => {
-      if (!ref.current || ref.current.contains(e.target as Node)) return;
-      handler();
-    };
-    document.addEventListener('mousedown', listener);
-    return () => document.removeEventListener('mousedown', listener);
-  }, [ref, handler]);
-}
+import { useClickOutside } from '../../hooks/useClickOutside';
+import { appStorage } from '../../utils/appStorage';
 
 export const AccountDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const [userName, setUserName] = useState(() => localStorage.getItem('lira_user_name') || 'Varuntej Yadla');
-  const [userEmail, setUserEmail] = useState(() => localStorage.getItem('lira_user_email') || 'yvaruntej0612@gmail.com');
-  const [userInitials, setUserInitials] = useState(() => localStorage.getItem('lira_user_initials') || 'VY');
+  const [userName, setUserName] = useState(() => appStorage.get('lira_user_name') || 'Varuntej Yadla');
+  const [userEmail, setUserEmail] = useState(() => appStorage.get('lira_user_email') || 'yvaruntej0612@gmail.com');
+  const [userInitials, setUserInitials] = useState(() => appStorage.get('lira_user_initials') || 'VY');
 
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setOpen(false));
@@ -38,18 +29,18 @@ export const AccountDropdown: React.FC = () => {
 
 
   const saveProfile = () => {
-    const same = userName === (localStorage.getItem('lira_user_name') || 'Varuntej Yadla') && userEmail === (localStorage.getItem('lira_user_email') || 'yvaruntej0612@gmail.com') && userInitials === (localStorage.getItem('lira_user_initials') || 'VY');
+    const same = userName === (appStorage.get('lira_user_name') || 'Varuntej Yadla') && userEmail === (appStorage.get('lira_user_email') || 'yvaruntej0612@gmail.com') && userInitials === (appStorage.get('lira_user_initials') || 'VY');
     if (same) { setShowProfileModal(false); return; }
     const profile = {
       name: userName,
       email: userEmail,
       initials: userInitials,
-      role: localStorage.getItem('lira_user_role') || 'MLOps & Platform Engineer',
+      role: appStorage.get('lira_user_role') || 'MLOps & Platform Engineer',
     };
-    localStorage.setItem('lira_user_profile', JSON.stringify(profile));
-    localStorage.setItem('lira_user_name', userName);
-    localStorage.setItem('lira_user_email', userEmail);
-    localStorage.setItem('lira_user_initials', userInitials);
+    appStorage.set('lira_user_profile', JSON.stringify(profile));
+    appStorage.set('lira_user_name', userName);
+    appStorage.set('lira_user_email', userEmail);
+    appStorage.set('lira_user_initials', userInitials);
     notifySaved('Profile saved');
     setShowProfileModal(false);
   };
@@ -62,7 +53,7 @@ export const AccountDropdown: React.FC = () => {
         className="flex items-center justify-center p-0.5 rounded-full hover:ring-2 hover:ring-white/60 transition-all cursor-pointer ml-1"
         title="Your account"
       >
-        <Avatar initials={userInitials} size="sm" color="#00875A" />
+        <Avatar initials={userInitials} size="sm" />
       </button>
 
       {/* Popover matching Account Opions screen.png */}
@@ -70,7 +61,7 @@ export const AccountDropdown: React.FC = () => {
         <div className="absolute top-full right-0 mt-2 w-72 bg-white text-lira-text border border-lira-border rounded-xl shadow-2xl z-50 overflow-hidden transition-all duration-150 animate-scale-in">
           {/* Header */}
           <div className="p-4 flex items-center gap-3.5 bg-gray-50/70 border-b border-lira-border">
-            <div className="w-12 h-12 rounded-full bg-[#00875A] text-white font-bold text-base flex items-center justify-center flex-shrink-0 shadow-2xs">
+            <div className="w-12 h-12 rounded-full bg-lira-blue text-lira-on-blue font-bold text-base flex items-center justify-center flex-shrink-0 shadow-2xs">
               {userInitials}
             </div>
             <div className="min-w-0 flex-1">
@@ -122,13 +113,13 @@ export const AccountDropdown: React.FC = () => {
       <Modal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} title="Profile & Account Settings" size="md">
         <div className="p-6 space-y-4 text-lira-text">
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-lira-border">
-            <div className="w-14 h-14 rounded-full bg-[#00875A] text-white font-bold text-lg flex items-center justify-center shadow-xs">
+            <div className="w-14 h-14 rounded-full bg-lira-blue text-lira-on-blue font-bold text-lg flex items-center justify-center shadow-xs">
               {userInitials}
             </div>
             <div>
               <h4 className="font-bold text-lira-text text-base">{userName}</h4>
               <p className="text-xs text-lira-muted">{userEmail}</p>
-              <span className="inline-block mt-1 text-[10px] font-semibold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+              <span className="inline-block mt-1 text-3xs font-semibold uppercase bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
                 Local Workspace Owner
               </span>
             </div>
@@ -174,7 +165,7 @@ export const AccountDropdown: React.FC = () => {
             </button>
             <button
               onClick={saveProfile}
-              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 shadow-xs"
+              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover shadow-xs"
             >
               Save Profile
             </button>

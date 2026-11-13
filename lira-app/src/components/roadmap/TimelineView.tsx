@@ -1,15 +1,19 @@
+import { stackMilestones } from '../../utils/roadmap/milestoneLabels';
+import { useElementWidth } from '../../hooks/useElementWidth';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { TimelineHeader } from './TimelineHeader';
 import { ChevronDown, Flag, Diamond } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import {
-  PX_PER_DAY, STATUS_META, buildHeader, computeRange, daysBetween, dependencyIssues, fmtShort,
+  STATUS_META, buildHeader, computeRange, daysBetween, dependencyIssues, fitPpd, fmtShort,
   laneColor, layoutRows, parseDay, resizeItem, resolveItem, shiftItem, xOf,
   type Roadmap, type RoadmapItem, type Zoom,
 } from '../../utils/roadmapUtils';
+import { PALETTE } from '../../theme/palette';
 
 const LABEL_W = 270;
 const HEADER_H = 52;
-const MILESTONE_H = 66;
+const MILESTONE_TIER_H = 20;
 const BAR_H = 26;
 
 interface TimelineViewProps {
@@ -33,12 +37,12 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   roadmap, items, issues, zoom, showDeps, collapsedLanes, onToggleLane, onChangeItem, onOpenItem, onOpenMilestone, scrollToTodayKey,
 }) => {
   const today = useMemo(() => new Date(), []);
-  const ppd = PX_PER_DAY[zoom];
+  const scrollRef = useRef<HTMLDivElement>(null);
   const range = useMemo(() => computeRange(roadmap, today), [roadmap, today]);
-  const header = useMemo(() => buildHeader(range, zoom), [range, zoom]);
+  const ppd = fitPpd(zoom, range.days, useElementWidth(scrollRef) - LABEL_W); // the calendar fills the panel
+  const header = useMemo(() => buildHeader(range, zoom, ppd), [range, zoom, ppd]);
   const { rows, height, yOf } = useMemo(() => layoutRows(items, roadmap.lanes, collapsedLanes), [items, roadmap.lanes, collapsedLanes]);
   const width = range.days * ppd;
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const dragRef = useRef<Drag | null>(null);
   dragRef.current = drag;
@@ -87,18 +91,10 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   const problems = useMemo(() => dependencyIssues(roadmap.items), [roadmap.items]);
   const conflictKey = new Set(problems.filter(p => p.kind === 'conflict').map(p => `${p.from}>${p.to}`));
 
-  // Milestone labels: alternate tiers when two sit close together so text does not overlap
-  const milestones = useMemo(() => {
-    const sorted = [...roadmap.milestones].sort((a, b) => a.date.localeCompare(b.date));
-    const tierEnd = [-1e9, -1e9, -1e9]; // right edge of the last label placed on each tier
-    return sorted.map(m => {
-      const x = xOf(range, parseDay(m.date), ppd) + ppd / 2;
-      const labelW = m.title.length * 6 + 70;
-      let tier = tierEnd.findIndex(end => x > end + 8);
-      if (tier < 0) tier = tierEnd.indexOf(Math.min(...tierEnd));
-      tierEnd[tier] = x + labelW;
-      return { ...m, x, tier };
-    });
+  // Milestone labels are stacked in as many rows as it takes for none to overlap
+  const { milestones, milestoneH } = useMemo(() => {
+    const placed = stackMilestones([...roadmap.milestones].sort((a, b) => a.date.localeCompare(b.date)).map(m => ({ ...m, x: xOf(range, parseDay(m.date), ppd) + ppd / 2 })));
+    return { milestones: placed.labels, milestoneH: 10 + Math.max(2, placed.tiers) * MILESTONE_TIER_H };
   }, [roadmap.milestones, range, ppd]);
 
   // Dependency arrows between visible bars
@@ -136,33 +132,19 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   };
 
   return (
-    <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 330px)', minHeight: 320 }}>
-      <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + MILESTONE_H + height }}>
-        {/* ── Sticky header (corner + period cells) ── */}
-        <div className="sticky top-0 z-30 flex" style={{ height: HEADER_H }}>
-          <div className="sticky left-0 z-40 bg-lira-surface border-b border-r border-lira-border flex items-end px-4 pb-2 text-[11px] font-semibold uppercase tracking-wider text-lira-muted" style={{ width: LABEL_W }}>
-            Work item
-          </div>
-          <div className="relative bg-lira-surface border-b border-lira-border" style={{ width }}>
-            {header.top.map((c, i) => (
-              <div key={i} className="absolute top-0 h-6 flex items-center px-2 text-[11px] font-semibold text-lira-text border-r border-lira-border/70 overflow-hidden whitespace-nowrap" style={{ left: c.x, width: c.width }}>{c.label}</div>
-            ))}
-            {header.bottom.map((c, i) => (
-              <div key={i} className="absolute top-6 h-[26px] flex items-center px-2 text-[11px] text-lira-muted border-r border-t border-lira-border/60 overflow-hidden whitespace-nowrap" style={{ left: c.x, width: c.width }}>{c.label}</div>
-            ))}
-            <div className="absolute top-[28px] -translate-x-1/2 px-1.5 rounded bg-red-500 text-white text-[9px] font-bold z-10 leading-[14px]" style={{ left: todayX }}>TODAY</div>
-          </div>
-        </div>
+    <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 250px)', minHeight: 360 }}>
+      <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + milestoneH + height }}>
+        <TimelineHeader header={header} width={width} labelWidth={LABEL_W} height={HEADER_H} todayX={todayX} corner="Work item" />
 
         {/* ── Milestones row ── */}
-        <div className="flex" style={{ height: MILESTONE_H }}>
+        <div className="flex" style={{ height: milestoneH }}>
           <div className="sticky left-0 z-20 bg-lira-surface border-b border-r border-lira-border flex items-center gap-2 px-4 text-xs font-semibold text-lira-text" style={{ width: LABEL_W }}>
             <Flag className="w-3.5 h-3.5 text-lira-blue" /> Milestones &amp; releases
           </div>
           <div className="relative border-b border-lira-border" style={{ width }}>
             {milestones.map(m => (
-              <button key={m.id} onClick={() => onOpenMilestone(m.id)} className="absolute -translate-x-[6px] flex flex-col items-start cursor-pointer hover:opacity-80 transition-opacity" style={{ left: m.x, top: 4 + m.tier * 20 }} title={`${m.title} · ${fmtShort(m.date)}`}>
-                <div className="flex items-center gap-1 whitespace-nowrap text-[10px] font-medium text-lira-text">
+              <button key={m.id} onClick={() => onOpenMilestone(m.id)} className="absolute -translate-x-[6px] flex flex-col items-start cursor-pointer hover:opacity-80 transition-opacity" style={{ left: m.x, top: 4 + m.tier * MILESTONE_TIER_H }} title={`${m.title} · ${fmtShort(m.date)}`}>
+                <div className="flex items-center gap-1 whitespace-nowrap text-3xs font-medium text-lira-text">
                   {m.kind === 'release'
                     ? <Flag className="w-3 h-3 text-emerald-500 fill-emerald-500/30" />
                     : <Diamond className="w-3 h-3 text-violet-500 fill-violet-500/40" />}
@@ -187,7 +169,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                 <ChevronDown className={`w-3.5 h-3.5 text-lira-muted transition-transform ${collapsedLanes.includes(r.lane) ? '-rotate-90' : ''}`} />
                 <span className="w-2.5 h-2.5 rounded-sm" style={{ background: laneColor(roadmap, r.lane) }} />
                 <span className="text-xs font-semibold text-lira-text truncate">{r.lane}</span>
-                <span className="ml-auto text-[10px] text-lira-muted bg-lira-surface border border-lira-border rounded-full px-1.5">{r.count}</span>
+                <span className="ml-auto text-3xs text-lira-muted bg-lira-surface border border-lira-border rounded-full px-1.5">{r.count}</span>
               </button>
             ) : (
               <button
@@ -199,7 +181,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
               >
                 <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: STATUS_META[resolveItem(r.item, issues, today).status].color }} />
                 <span className="text-xs text-lira-text truncate">{r.item.title}</span>
-                {r.item.owner && <span className="ml-auto text-[9px] font-bold text-white bg-lira-blue/80 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">{r.item.owner.slice(0, 2).toUpperCase()}</span>}
+                {r.item.owner && <span className="ml-auto text-4xs font-bold text-white bg-lira-blue/80 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">{r.item.owner.slice(0, 2).toUpperCase()}</span>}
               </button>
             ))}
           </div>
@@ -232,10 +214,10 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
               <svg className="absolute inset-0 pointer-events-none z-10" width={width} height={height}>
                 <defs>
                   <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#8590A2" /></marker>
-                  <marker id="arr-bad" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#C9372C" /></marker>
+                  <marker id="arr-bad" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill={PALETTE.criticalDeep} /></marker>
                 </defs>
                 {arrows.map(a => (
-                  <path key={a.id} d={a.d} fill="none" stroke={a.conflict ? '#C9372C' : '#8590A2'} strokeWidth={1.4} strokeDasharray={a.conflict ? '4 3' : undefined} markerEnd={`url(#${a.conflict ? 'arr-bad' : 'arr'})`} />
+                  <path key={a.id} d={a.d} fill="none" stroke={a.conflict ? PALETTE.criticalDeep : '#8590A2'} strokeWidth={1.4} strokeDasharray={a.conflict ? '4 3' : undefined} markerEnd={`url(#${a.conflict ? 'arr-bad' : 'arr'})`} />
                 ))}
               </svg>
             )}
@@ -258,14 +240,14 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                   title={`${it.title}\n${fmtShort(it.start)} → ${fmtShort(it.end)} · ${progress}%`}
                 >
                   <div className="absolute inset-y-0 left-0" style={{ width: `${progress}%`, background: color, opacity: 0.6, borderRadius: progress >= 100 ? 5 : '5px 0 0 5px' }} />
-                  <div className="relative h-full flex items-center px-2 text-[11px] font-medium whitespace-nowrap overflow-hidden text-lira-text">
+                  <div className="relative h-full flex items-center px-2 text-2xs font-medium whitespace-nowrap overflow-hidden text-lira-text">
                     <span className="truncate">{w > 90 ? it.title : ''}</span>
                     {w > 150 && <span className="ml-auto pl-2 opacity-80">{progress}%</span>}
                   </div>
                   <div className="absolute inset-y-0 left-0 w-2 cursor-ew-resize opacity-0 group-hover:opacity-100 bg-white/40 rounded-l-md" onPointerDown={e => startDrag(e, it.id, 'start')} />
                   <div className="absolute inset-y-0 right-0 w-2 cursor-ew-resize opacity-0 group-hover:opacity-100 bg-white/40 rounded-r-md" onPointerDown={e => startDrag(e, it.id, 'end')} />
                   {w <= 90 && (
-                    <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 text-[11px] text-lira-text whitespace-nowrap pointer-events-none">{it.title}</span>
+                    <span className="absolute left-full top-1/2 -translate-y-1/2 ml-2 text-2xs text-lira-text whitespace-nowrap pointer-events-none">{it.title}</span>
                   )}
                 </div>
               );

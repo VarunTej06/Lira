@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../common/SpaceIcon';
 import { issueLink, projectLink, sprintLink } from '../../utils/links';
 import React, { useMemo } from 'react';
 import { Sparkles, AlertTriangle, Clock, CheckCircle2, ListTodo, ArrowRight, FolderKanban, CalendarClock, Activity } from 'lucide-react';
@@ -10,6 +11,8 @@ import {
 import { formatRelativeDate } from '../../utils/dateUtils';
 import { TicketRow } from '../sprints/sprintParts';
 import { CountUp, SequenceBar } from '../common/motion';
+import { isMine } from '../../utils/currentUser';
+import { currentTime, currentTimeMs } from '../../utils/clock';
 
 interface ForYouPageProps {
   spaces: Space[];
@@ -23,7 +26,6 @@ interface ForYouPageProps {
 }
 
 const PRIORITY_RANK: Record<string, number> = { highest: 0, high: 1, medium: 2, low: 3, lowest: 4 };
-const isMine = (i: Issue) => i.assigneeInitials === 'VY' || i.assignee === 'VY' || i.assignee === 'Varun Tej';
 const DAY = 86_400_000;
 
 const Card: React.FC<{ title: string; icon?: React.ReactNode; action?: React.ReactNode; children: React.ReactNode }> = ({ title, icon, action, children }) => (
@@ -53,7 +55,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
     [mine]
   );
 
-  const now = Date.now();
+  const now = currentTimeMs();
   const overdue = myOpen.filter(i => i.dueDate && new Date(i.dueDate).getTime() < now);
   const dueSoon = myOpen.filter(i => {
     if (!i.dueDate) return false;
@@ -69,7 +71,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
     [issues]
   );
 
-  const curStats = useMemo(() => sprintStats(issuesInSprint(issues, cur)), [issues, cur]);
+  const curStats = sprintStats(issuesInSprint(issues, cur)); // one pass over the tickets: cheaper than keeping a memo in step
   const activity = useMemo(() => {
     const rows: { issue: Issue; text: string; at: Date }[] = [];
     issues.forEach(i => (i.activity || []).forEach(a => {
@@ -79,11 +81,11 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
     return rows.sort((a, b) => b.at.getTime() - a.at.getTime()).slice(0, 8);
   }, [issues]);
 
-  const hour = new Date().getHours();
+  const hour = currentTime().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
   const stats = [
-    { label: 'Assigned to me', value: myOpen.length, icon: <ListTodo className="w-4 h-4" />, tone: 'text-lira-blue bg-blue-50' },
+    { label: 'Assigned to me', value: myOpen.length, icon: <ListTodo className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Overdue', value: overdue.length, icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-red-600 bg-red-50' },
     { label: 'Due in 7 days', value: dueSoon.length, icon: <Clock className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
     { label: 'Done this sprint', value: doneThisSprint, icon: <CheckCircle2 className="w-4 h-4" />, tone: 'text-emerald-600 bg-emerald-50' },
@@ -101,10 +103,10 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
               <Sparkles className="w-5 h-5 text-amber-400" /> {greeting}, Varun
             </h1>
             <p className="text-sm text-lira-muted mt-0.5">
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {sprintName(cur)} · {daysLeft(cur)} days left
+              {currentTime().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {sprintName(cur)} · {daysLeft(cur)} days left
             </p>
           </div>
-          <button onClick={onCreateIssue} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-lira-blue text-white text-sm font-semibold hover:bg-lira-blue-hover transition-colors cursor-pointer">
+          <button onClick={onCreateIssue} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-lira-blue text-lira-on-blue text-sm font-semibold hover:bg-lira-blue-hover transition-colors cursor-pointer">
             + Create ticket
           </button>
         </div>
@@ -116,7 +118,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
               <span className={`w-9 h-9 rounded-xl flex items-center justify-center ${s.tone}`}>{s.icon}</span>
               <div>
                 <div className="text-2xl font-semibold text-lira-text leading-none"><CountUp value={s.value} /></div>
-                <div className="text-[11px] text-lira-muted mt-1">{s.label}</div>
+                <div className="text-2xs text-lira-muted mt-1">{s.label}</div>
               </div>
             </div>
           ))}
@@ -166,7 +168,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                   {[['To Do', curStats.todo + curStats.backlog], ['In progress', curStats.inprogress], ['Blocked', curStats.blocked], ['Done', curStats.done]].map(([l, v]) => (
                     <div key={l as string} className="rounded-xl bg-gray-50 border border-lira-border py-2">
                       <div className="text-lg font-semibold text-lira-text"><CountUp value={v as number} /></div>
-                      <div className="text-[10px] text-lira-muted">{l}</div>
+                      <div className="text-3xs text-lira-muted">{l}</div>
                     </div>
                   ))}
                 </div>
@@ -180,10 +182,10 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                   return (
                     <button key={s.id} onClick={() => onOpenSpace(s.id!)}
                       className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors text-left cursor-pointer">
-                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style={{ backgroundColor: s.color + '26' }}>{s.icon}</span>
+                      <span className="w-8 h-8 rounded-lg flex items-center justify-center text-sm bg-lira-blue-light text-lira-blue"><SpaceIcon icon={s.icon} /></span>
                       <span className="flex-1 min-w-0">
                         <span className="block text-sm font-medium text-lira-text truncate">{s.name}</span>
-                        <span className="block text-[11px] text-lira-muted"><CountUp value={open} suffix=" open" /></span>
+                        <span className="block text-2xs text-lira-muted"><CountUp value={open} suffix=" open" /></span>
                       </span>
                       <ArrowRight className="w-3.5 h-3.5 text-lira-muted" />
                     </button>
@@ -197,7 +199,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                 {projects.length === 0 ? empty('No projects yet') : projects.map(p => (
                   <button key={p.id} onClick={() => onOpenProject(p)} {...projectLink(p.id)}
                     className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-50 transition-colors text-left cursor-pointer">
-                    <span className="w-8 h-8 rounded-lg bg-lira-blue text-white text-[10px] font-bold flex items-center justify-center">{p.key.slice(0, 2)}</span>
+                    <span className="w-8 h-8 rounded-lg bg-lira-blue text-lira-on-blue text-3xs font-bold flex items-center justify-center">{p.key.slice(0, 2)}</span>
                     <span className="flex-1 min-w-0 text-sm font-medium text-lira-text truncate">{p.name}</span>
                   </button>
                 ))}
@@ -209,7 +211,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                 <button key={idx} onClick={() => onIssueClick(a.issue)} {...issueLink(a.issue)}
                   className="w-full text-left px-4 py-2 border-b border-lira-border last:border-0 hover:bg-gray-50 transition-colors cursor-pointer">
                   <div className="text-xs text-lira-text truncate"><span className="font-mono text-lira-muted">{a.issue.key}</span> {a.text}</div>
-                  <div className="text-[10px] text-lira-muted">{formatRelativeDate(a.at)}</div>
+                  <div className="text-3xs text-lira-muted">{formatRelativeDate(a.at)}</div>
                 </button>
               ))}
             </Card>

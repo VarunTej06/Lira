@@ -1,7 +1,9 @@
-import { descriptionToText } from '../../../utils/richText';
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { facetOptions, issuesToCsv, presetCounts, searchIssues } from '../../../utils/issueSearch';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
+import { useClickOutside } from '../../../hooks/useClickOutside';
+import { useResetWhen } from '../../../hooks/useResetWhen';
 
 export interface FiltersPageProps {
   issues: Issue[];
@@ -11,17 +13,6 @@ export interface FiltersPageProps {
   onBackToBoard?: () => void;
   initialPreset?: string | null;
   onClearPreset?: () => void;
-}
-
-export function useClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () => void) {
-  useEffect(() => {
-    const listener = (e: MouseEvent) => {
-      if (!ref.current || ref.current.contains(e.target as Node)) return;
-      handler();
-    };
-    document.addEventListener('mousedown', listener);
-    return () => document.removeEventListener('mousedown', listener);
-  }, [ref, handler]);
 }
 
 /** All the state of the Filters page: the chosen filters, the matching tickets, sorting and exporting. */
@@ -102,12 +93,8 @@ export function useFiltersState(props: FiltersPageProps) {
   };
 
   // Automatically apply preset when initialPreset prop changes
-  useEffect(() => {
-    if (initialPreset) {
-      applyPreset(initialPreset);
-      onClearPreset?.();
-    }
-  }, [initialPreset, onClearPreset]);
+  useResetWhen([initialPreset], () => { if (initialPreset) applyPreset(initialPreset); });
+  useEffect(() => { if (initialPreset) onClearPreset?.(); }, [initialPreset, onClearPreset]);
 
   // Space map for quick lookup
   const spaceMap = useMemo(() => {
@@ -116,114 +103,14 @@ export function useFiltersState(props: FiltersPageProps) {
     return map;
   }, [spaces]);
 
-  // Derived metadata options
-  const allLabels = useMemo(() => {
-    const set = new Set<string>();
-    issues.forEach(i => i.labels?.forEach(l => set.add(l)));
-    return Array.from(set).sort();
-  }, [issues]);
+  const { labels: allLabels, assignees: allAssignees, teams: allTeams } = useMemo(() => facetOptions(issues), [issues]);
 
-  const allAssignees = useMemo(() => {
-    const set = new Set<string>();
-    issues.forEach(i => {
-      if (i.assigneeInitials) set.add(i.assigneeInitials);
-      else if (i.assignee) set.add(i.assignee);
-    });
-    return Array.from(set);
-  }, [issues]);
+  const counts = useMemo(() => presetCounts(issues), [issues]);
 
-  const allTeams = useMemo(() => {
-    const set = new Set<string>();
-    issues.forEach(i => { if (i.team) set.add(i.team); });
-    return Array.from(set);
-  }, [issues]);
-
-  // Preset Counts
-  const presetCounts = useMemo(() => {
-    const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-    return {
-      all: issues.length,
-      open: issues.filter(i => i.status !== 'done').length,
-      completed: issues.filter(i => i.status === 'done').length,
-      recent: issues.filter(i => new Date(i.updatedAt || i.createdAt).getTime() >= sevenDaysAgo).length,
-    };
-  }, [issues]);
-
-  // Filter evaluation
-  const filteredIssues = useMemo(() => {
-    return issues.filter(issue => {
-      // Recent only preset
-      if (isRecentOnly) {
-        const date = new Date(issue.updatedAt || issue.createdAt).getTime();
-        if (date < Date.now() - 7 * 24 * 60 * 60 * 1000) return false;
-      }
-
-      // Search query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchesKey = issue.key.toLowerCase().includes(q);
-        const matchesTitle = issue.title.toLowerCase().includes(q);
-        const matchesDesc = descriptionToText(issue.description).toLowerCase().includes(q);
-        const matchesLabel = issue.labels?.some(l => l.toLowerCase().includes(q));
-        if (!matchesKey && !matchesTitle && !matchesDesc && !matchesLabel) return false;
-      }
-
-      // Spaces
-      if (selectedSpaces.length > 0 && !selectedSpaces.includes(issue.spaceId)) {
-        return false;
-      }
-
-      // Status
-      if (selectedStatuses.length > 0 && !selectedStatuses.includes(issue.status) && !(issue.blocked && selectedStatuses.includes('blocked'))) {
-        return false;
-      }
-
-      // Priority
-      if (selectedPriorities.length > 0 && !selectedPriorities.includes(issue.priority)) {
-        return false;
-      }
-
-      // Type
-      if (selectedTypes.length > 0 && !selectedTypes.includes(issue.type)) {
-        return false;
-      }
-
-      // Assignee
-      if (selectedAssignees.length > 0) {
-        const init = issue.assigneeInitials || issue.assignee || 'UN';
-        if (!selectedAssignees.includes(init)) return false;
-      }
-
-      // Team
-      if (selectedTeam !== 'all') {
-        if (issue.team !== selectedTeam) return false;
-      }
-
-      // Labels
-      if (selectedLabels.length > 0) {
-        if (!issue.labels?.some(l => selectedLabels.includes(l))) return false;
-      }
-
-      return true;
-    }).sort((a, b) => {
-      let comparison = 0;
-      if (sortField === 'key') comparison = a.key.localeCompare(b.key, undefined, { numeric: true });
-      else if (sortField === 'title') comparison = a.title.localeCompare(b.title);
-      else if (sortField === 'status') comparison = a.status.localeCompare(b.status);
-      else if (sortField === 'priority') {
-        const pOrder: Record<string, number> = { highest: 5, high: 4, medium: 3, low: 2, lowest: 1 };
-        comparison = (pOrder[b.priority] || 0) - (pOrder[a.priority] || 0);
-      } else {
-        const dateA = new Date(a.updatedAt || a.createdAt).getTime();
-        const dateB = new Date(b.updatedAt || b.createdAt).getTime();
-        comparison = dateB - dateA;
-      }
-      return sortAsc ? -comparison : comparison;
-    });
-  }, [
-    issues, isRecentOnly, searchQuery, selectedSpaces, selectedStatuses, selectedPriorities,
-    selectedTypes, selectedAssignees, selectedTeam, selectedLabels, sortField, sortAsc
-  ]);
+  const filteredIssues = useMemo(() => searchIssues(issues, {
+    query: searchQuery, spaces: selectedSpaces, statuses: selectedStatuses, priorities: selectedPriorities, types: selectedTypes,
+    assignees: selectedAssignees, labels: selectedLabels, team: selectedTeam, recentOnly: isRecentOnly, sort: sortField, ascending: sortAsc,
+  }), [issues, isRecentOnly, searchQuery, selectedSpaces, selectedStatuses, selectedPriorities, selectedTypes, selectedAssignees, selectedTeam, selectedLabels, sortField, sortAsc]);
 
   const activeFiltersCount =
     (selectedSpaces.length > 0 ? 1 : 0) +
@@ -237,20 +124,7 @@ export function useFiltersState(props: FiltersPageProps) {
     (searchQuery.trim() ? 1 : 0);
 
   const handleExportCSV = () => {
-    const headers = ['Key', 'Title', 'Space', 'Type', 'Status', 'Priority', 'Assignee', 'Labels', 'Updated'];
-    const rows = filteredIssues.map(i => [
-      `"${i.key}"`,
-      `"${i.title.replace(/"/g, '""')}"`,
-      `"${spaceMap[i.spaceId]?.name || i.spaceId}"`,
-      `"${i.type}"`,
-      `"${i.status}"`,
-      `"${i.priority}"`,
-      `"${i.assignee || 'Unassigned'}"`,
-      `"${(i.labels || []).join(', ')}"`,
-      `"${new Date(i.updatedAt || i.createdAt).toLocaleDateString()}"`,
-    ]);
-    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([issuesToCsv(filteredIssues, id => spaceMap[id]?.name || String(id))], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -325,7 +199,7 @@ export function useFiltersState(props: FiltersPageProps) {
     allLabels,
     allAssignees,
     allTeams,
-    presetCounts,
+    presetCounts: counts,
     filteredIssues,
     activeFiltersCount,
     handleExportCSV,

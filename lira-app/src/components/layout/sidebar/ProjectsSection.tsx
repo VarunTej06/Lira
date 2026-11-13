@@ -1,5 +1,5 @@
 import { projectLink } from '../../../utils/links';
-import { confirmDialog } from '../../common/dialogs';
+import { confirmDialog } from '../../common/dialogStore';
 import { Trash2, FolderKanban } from 'lucide-react';
 import { RowMenuButton, ContextItem, SectionHeader, Collapsible } from './parts';
 import type { SidebarState } from './useSidebarState';
@@ -22,7 +22,7 @@ export function ProjectsSection(s: SidebarState) {
         <Collapsible open={projectsExpanded}>
           <div className="mt-0.5 px-2 space-y-0.5">
             {projects.length === 0 ? (
-              <div className="px-2 py-1.5 text-[11px] text-white/30 italic">No projects yet</div>
+              <div className="px-2 py-1.5 text-2xs text-white/30 italic">No projects yet</div>
             ) : (
               projects.map(p => {
                 const space = spaces.find(sp => sp.id === p.spaceId);
@@ -38,9 +38,7 @@ export function ProjectsSection(s: SidebarState) {
                       }`}
                     >
                       <span
-                        className="w-5 h-5 rounded-md flex items-center justify-center text-[9px] font-bold text-white flex-shrink-0"
-                        style={{ backgroundColor: space?.color || '#0052CC' }}
-                      >
+                        className="w-5 h-5 rounded-md flex items-center justify-center text-4xs font-bold text-white bg-white/15 flex-shrink-0"                      >
                         {p.key.slice(0, 2)}
                       </span>
                       <span className="truncate flex-1">{p.name}</span>

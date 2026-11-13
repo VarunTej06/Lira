@@ -4,6 +4,8 @@ import { Plus, AlertCircle } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { IssueCard } from './IssueCard';
+import { PALETTE } from '../../theme/palette';
+import { appStorage } from '../../utils/appStorage';
 
 interface BoardColumnProps {
   id: string;
@@ -19,10 +21,10 @@ interface BoardColumnProps {
 }
 
 const COLUMN_HEADER_STYLES: Record<string, { color: string; bg: string; dot: string }> = {
-  backlog: { color: '#6B778C', bg: '#F4F5F7', dot: '#6B778C' },
-  todo: { color: '#172B4D', bg: '#DFE1E6', dot: '#172B4D' },
-  inprogress: { color: '#0052CC', bg: '#DEEBFF', dot: '#FFAB00' },
-  done: { color: '#006644', bg: '#E3FCEF', dot: '#36B37E' },
+  backlog: { color: PALETTE.textMuted, bg: PALETTE.surfaceMuted, dot: PALETTE.textMuted },
+  todo: { color: PALETTE.textStrong, bg: PALETTE.border, dot: PALETTE.textStrong },
+  inprogress: { color: PALETTE.brand, bg: PALETTE.brandBg, dot: PALETTE.amber },
+  done: { color: '#006644', bg: '#E3FCEF', dot: PALETTE.success },
 };
 
 export const BoardColumn: React.FC<BoardColumnProps> = ({
@@ -42,7 +44,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
   // Read WIP limit configuration (object { [columnName]: number } or fallback)
   const [internalLimit, setInternalLimit] = useState<number | undefined>(() => {
     try {
-      const raw = localStorage.getItem('lira_wip_limits');
+      const raw = appStorage.get('lira_wip_limits');
       if (raw && raw.startsWith('{')) {
         const parsed = JSON.parse(raw);
         return parsed[id] || parsed[title] || parsed[id.toLowerCase()];
@@ -56,7 +58,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
   useEffect(() => {
     const handler = () => {
       try {
-        const raw = localStorage.getItem('lira_wip_limits');
+        const raw = appStorage.get('lira_wip_limits');
         if (raw && raw.startsWith('{')) {
           const parsed = JSON.parse(raw);
           setInternalLimit(parsed[id] || parsed[title] || parsed[id.toLowerCase()]);
@@ -137,8 +139,8 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             className={`
               flex flex-col gap-2.5 p-2 rounded-xl transition-colors duration-150 flex-1 w-full
               ${snapshot.isDraggingOver
-                ? 'bg-blue-50/95 border-2 border-dashed border-lira-blue/70 shadow-xs ring-2 ring-lira-blue/20'
-                : 'bg-[#091E4206] hover:bg-[#091E420A] border-2 border-transparent'
+                ? 'bg-lira-blue-light/95 border-2 border-dashed border-lira-blue/70 shadow-xs ring-2 ring-lira-blue/20'
+                : 'bg-gray-100/50 hover:bg-gray-100 border-2 border-transparent'
               }
             `}
           >
@@ -158,7 +160,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             {issues.length === 0 && !snapshot.isDraggingOver && (
               <div
                 onClick={() => onAddIssue(id)}
-                className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-gray-200 hover:border-lira-blue/50 hover:bg-blue-50/20 rounded-xl text-center cursor-pointer transition-all group my-1 select-none flex-1 min-h-[140px]"
+                className="flex flex-col items-center justify-center py-10 px-4 border-2 border-dashed border-gray-200 hover:border-lira-blue/50 hover:bg-lira-blue-light/20 rounded-xl text-center cursor-pointer transition-all group my-1 select-none flex-1 min-h-[140px]"
                 role="button"
                 tabIndex={0}
               >

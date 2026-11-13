@@ -1,11 +1,13 @@
-import { notifySaved } from '../../common/SavedToast';
-import { confirmDialog } from '../../common/dialogs';
+import { notifySaved } from '../../common/savedToastStore';
+import { confirmDialog } from '../../common/dialogStore';
 import React, { useState, useEffect } from 'react';
 import type { Space } from '../../../types/space';
+import { useResetWhen } from '../../../hooks/useResetWhen';
+import { appStorage } from '../../../utils/appStorage';
 
 export type FormFieldType = 'text' | 'textarea' | 'number' | 'date' | 'select' | 'checkbox';
 
-export interface FormField {
+interface FormField {
   id: string;
   name: string;
   type: FormFieldType;
@@ -13,7 +15,7 @@ export interface FormField {
   options?: string[];
 }
 
-export interface IntakeForm {
+interface IntakeForm {
   id: string;
   spaceId?: number;
   title: string;
@@ -28,7 +30,17 @@ export interface FormsModalProps {
   space: Space | undefined;
 }
 
-export const DEFAULT_SAMPLE_FORMS: IntakeForm[] = [
+/** The forms saved for this space, or null when nothing usable is saved yet. */
+const savedForms = (key: string): IntakeForm[] | null => {
+  try {
+    const parsed = JSON.parse(appStorage.get(key) || 'null');
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : null;
+  } catch {
+    return null;
+  }
+};
+
+const DEFAULT_SAMPLE_FORMS: IntakeForm[] = [
   {
     id: 'sample-bug-form',
     title: 'Customer Bug Report',
@@ -83,29 +95,19 @@ export function useFormsState(props: FormsModalProps) {
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
   // Load saved forms from localStorage
+  useResetWhen([isOpen, storageKey], () => {
+    if (isOpen) setForms(savedForms(storageKey) ?? DEFAULT_SAMPLE_FORMS);
+  });
+  // Seed the sample forms once, the first time the window opens
   useEffect(() => {
-    if (!isOpen) return;
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setForms(parsed);
-          return;
-        }
-      }
-      // Seed with sample forms if empty
-      setForms(DEFAULT_SAMPLE_FORMS);
-      localStorage.setItem(storageKey, JSON.stringify(DEFAULT_SAMPLE_FORMS));
-    } catch {
-      setForms(DEFAULT_SAMPLE_FORMS);
-    }
+    if (!isOpen || savedForms(storageKey)) return;
+    try { appStorage.set(storageKey, JSON.stringify(DEFAULT_SAMPLE_FORMS)); } catch { /* storage unavailable */ }
   }, [isOpen, storageKey]);
 
   const saveFormsToStorage = (updatedForms: IntakeForm[]) => {
     setForms(updatedForms);
     try {
-      localStorage.setItem(storageKey, JSON.stringify(updatedForms));
+      appStorage.set(storageKey, JSON.stringify(updatedForms));
     } catch (e) {
       console.error('Failed to save intake forms to localStorage', e);
     }

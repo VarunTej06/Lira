@@ -1,60 +1,13 @@
-import { notifySaved } from '../common/SavedToast';
+import { notifySaved } from '../common/savedToastStore';
 import React, { useState, useEffect } from 'react';
 import {
   GripVertical, MoreHorizontal, User, Map, Folder, Ticket, CalendarClock, LayoutDashboard, EyeOff as HiddenIcon,
   ChevronUp, ChevronDown, Check, ArrowUp, ArrowDown, Eye, EyeOff, RotateCcw, FolderKanban,
 } from 'lucide-react';
 import { Modal } from '../common/Modal';
-
-export interface SidebarConfig {
-  version?: number;
-  /** Items of the Navigation block at the top of the sidebar, in order. */
-  navOrder: string[];
-  /** Collapsible blocks below it (Spaces, Projects, Sprints, Hidden spaces), in order. */
-  sectionOrder: string[];
-  visibility: Record<string, boolean>;
-}
-
-const CONFIG_VERSION = 2;
-
-export const DEFAULT_NAV_ORDER = ['forYou', 'projects', 'sprints', 'allTickets', 'roadmaps', 'dashboards'];
-export const DEFAULT_SECTION_ORDER = ['sec_spaces', 'sec_projects', 'sec_sprints', 'sec_hidden'];
-
-export const DEFAULT_VISIBILITY: Record<string, boolean> = Object.fromEntries(
-  [...DEFAULT_NAV_ORDER, ...DEFAULT_SECTION_ORDER].map(k => [k, true]),
-);
-
-export const DEFAULT_SIDEBAR_CONFIG: SidebarConfig = {
-  version: CONFIG_VERSION,
-  navOrder: DEFAULT_NAV_ORDER,
-  sectionOrder: DEFAULT_SECTION_ORDER,
-  visibility: DEFAULT_VISIBILITY,
-};
-
-/** Keeps only known items, appends any that are missing, and fills in visibility. Older saved layouts are replaced by the defaults. */
-export function normalizeSidebarConfig(raw: unknown): SidebarConfig {
-  const r = (raw && typeof raw === 'object' ? raw : {}) as Partial<SidebarConfig>;
-  if (r.version !== CONFIG_VERSION) return DEFAULT_SIDEBAR_CONFIG;
-  const fix = (saved: unknown, defaults: string[]) => {
-    const list = Array.isArray(saved) ? (saved as string[]).filter(k => defaults.includes(k)) : [];
-    return [...list, ...defaults.filter(k => !list.includes(k))];
-  };
-  return {
-    version: CONFIG_VERSION,
-    navOrder: fix(r.navOrder, DEFAULT_NAV_ORDER),
-    sectionOrder: fix(r.sectionOrder, DEFAULT_SECTION_ORDER),
-    visibility: { ...DEFAULT_VISIBILITY, ...(r.visibility || {}), forYou: true },
-  };
-}
-
-export function loadSidebarConfig(): SidebarConfig {
-  try {
-    const saved = localStorage.getItem('lira_sidebar_customization');
-    return normalizeSidebarConfig(saved ? JSON.parse(saved) : undefined);
-  } catch {
-    return DEFAULT_SIDEBAR_CONFIG;
-  }
-}
+import { type SidebarConfig, DEFAULT_NAV_ORDER, DEFAULT_SECTION_ORDER, loadSidebarConfig, CONFIG_VERSION, DEFAULT_VISIBILITY } from './sidebarConfig';
+import { useResetWhen } from '../../hooks/useResetWhen';
+import { appStorage } from '../../utils/appStorage';
 
 interface CustomiseSidebarModalProps {
   isOpen: boolean;
@@ -95,13 +48,13 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
   const [visibility, setVisibility] = useState<Record<string, boolean>>(initial.visibility);
 
   // Re-read the saved layout each time the dialog opens, so Cancel really discards edits
-  useEffect(() => {
+  useResetWhen([isOpen], () => {
     if (!isOpen) return;
     const cfg = loadSidebarConfig();
     setNavOrder(cfg.navOrder);
     setSectionOrder(cfg.sectionOrder);
     setVisibility(cfg.visibility);
-  }, [isOpen]);
+  });
 
   const [openMenuKey, setOpenMenuKey] = useState<string | null>(null);
   const [draggedKey, setDraggedKey] = useState<string | null>(null);
@@ -148,12 +101,12 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
     const finalConfig: SidebarConfig = { version: CONFIG_VERSION, navOrder, sectionOrder, visibility };
     let previous = '';
     try {
-      const raw = localStorage.getItem('lira_sidebar_customization');
+      const raw = appStorage.get('lira_sidebar_customization');
       const base = raw ? JSON.parse(raw) : { navOrder: DEFAULT_NAV_ORDER, sectionOrder: DEFAULT_SECTION_ORDER, visibility: DEFAULT_VISIBILITY };
       previous = JSON.stringify([base.navOrder, base.sectionOrder, base.visibility]);
     } catch { /* treat as changed */ }
     if (previous === JSON.stringify([navOrder, sectionOrder, visibility])) { onClose(); return; }
-    localStorage.setItem('lira_sidebar_customization', JSON.stringify(finalConfig));
+    appStorage.set('lira_sidebar_customization', JSON.stringify(finalConfig));
     onSave?.(finalConfig);
     notifySaved('Sidebar saved');
     onClose();
@@ -184,7 +137,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
               }}
               onDragEnd={() => setDraggedKey(null)}
               className={`group relative flex items-center justify-between p-2 rounded-lg transition-colors border ${
-                isVisible ? 'bg-blue-50/20 border-blue-100 hover:bg-blue-50/40' : 'bg-white border-transparent hover:bg-gray-50'
+                isVisible ? 'bg-lira-blue-light/20 border-lira-border hover:bg-lira-blue-light/40' : 'bg-white border-transparent hover:bg-gray-50'
               } ${draggedKey === key ? 'opacity-50 ring-2 ring-lira-blue' : ''}`}
             >
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -273,7 +226,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
         <div>
           <div className="flex items-center justify-between mb-1">
             <h3 className="text-sm font-bold text-lira-text">Navigation</h3>
-            <span className="text-[11px] text-lira-muted">Reorder &amp; toggle visibility</span>
+            <span className="text-2xs text-lira-muted">Reorder &amp; toggle visibility</span>
           </div>
           <p className="text-xs text-lira-muted mb-3">Pages shown at the top of the sidebar.</p>
           {renderList('nav', navOrder, NAV_ITEMS)}
@@ -283,7 +236,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
         <div className="border-t border-lira-border pt-4">
           <div className="flex items-center justify-between mb-1">
             <h3 className="text-sm font-bold text-lira-text">Sections</h3>
-            <span className="text-[11px] text-lira-muted">Reorder &amp; toggle visibility</span>
+            <span className="text-2xs text-lira-muted">Reorder &amp; toggle visibility</span>
           </div>
           <p className="text-xs text-lira-muted mb-3">Expandable lists below the navigation.</p>
           {renderList('sections', sectionOrder, SECTION_ITEMS)}
@@ -300,7 +253,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
               Cancel
             </button>
-            <button type="button" onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 transition-colors shadow-xs cursor-pointer">
+            <button type="button" onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors shadow-xs cursor-pointer">
               Save changes
             </button>
           </div>

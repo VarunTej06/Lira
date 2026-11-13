@@ -1,5 +1,5 @@
-import { evaluateGoal, METRICS, scopeIssues, type DataCtx } from './metrics';
-import { widgetData, widgetFilters, widgetScope, type WidgetData } from './data';
+import { evaluateGoal, scopeIssues, type DataCtx } from './metrics';
+import { widgetData, type WidgetData } from './data';
 import type { Dashboard, SnapshotSchedule } from './types';
 import { sprintName } from '../sprintUtils';
 
@@ -43,40 +43,60 @@ export function snapshotFileName(d: Pick<Dashboard, 'id' | 'name'>, now: Date): 
 
 const esc = (s: string) => s.replace(/\|/g, '\\|');
 
+type Render<K extends WidgetData['kind']> = (data: Extract<WidgetData, { kind: K }>, out: string[]) => void;
+
+/** How each kind of widget is written in the Markdown snapshot. */
+const RENDER: { [K in WidgetData['kind']]: Render<K> } = {
+  stat: (data, out) => {
+    const r = data.result;
+    const t = r.trend === undefined || r.trend === 0 ? '' : ` (${r.trend > 0 ? '+' : ''}${r.trend} vs 7 days ago)`;
+    out.push(`**${r.value}${r.suffix}**${t}`);
+  },
+  groups: (data, out) => {
+    data.groups.forEach(g => out.push(`- ${g.label}: ${g.value}${data.measure === 'points' ? ' points' : ''}`)); if (!data.groups.length) out.push('_Nothing to show._');
+  },
+  series: (data, out) => {
+    out.push('| Week ending | Created | Finished | Open |', '| --- | --- | --- | --- |', ...data.points.map(p => `| ${p.label} | ${p.created} | ${p.done} | ${p.open} |`));
+  },
+  burn: (data, out) => {
+    const last = data.points[data.points.length - 1];
+    out.push(last ? `${sprintName(data.sprint)}: ${last.donePoints} of ${last.scopePoints} points done (${last.done} of ${last.scope} tickets).` : `${sprintName(data.sprint)} has not started.`);
+  },
+  cfd: (data, out) => {
+    const last = data.points[data.points.length - 1];
+    out.push(last ? `${sprintName(data.sprint)} today: backlog ${last.backlog}, to do ${last.todo}, in progress ${last.inprogress}, done ${last.done}.` : `${sprintName(data.sprint)} has not started.`);
+  },
+  rows: (data, out) => {
+    data.rows.forEach(r => out.push(`- ${r.issue.key} ${r.issue.title} (${r.note})`)); if (!data.rows.length) out.push('_Nothing here._'); else if (data.total > data.rows.length) out.push(`- ...and ${data.total - data.rows.length} more`);
+  },
+  blocked: (data, out) => {
+    data.rows.forEach(r => out.push(`- ${r.issue.key} ${r.issue.title}: blocked by ${r.blockers.map(b => b.key).join(', ') || 'unknown'} for ${r.days}d`)); if (!data.rows.length) out.push('_Nothing is blocked._');
+  },
+  progress: (data, out) => {
+    data.rows.forEach(r => out.push(`- ${r.label}: ${r.done}/${r.total} (${r.percent}%)`)); if (!data.rows.length) out.push('_Nothing to show._');
+  },
+  workload: (data, out) => {
+    out.push('| Person | Open | Points | In progress | Blocked | Overdue |', '| --- | --- | --- | --- | --- | --- |', ...data.rows.map(r => `| ${esc(r.name)}${r.overloaded ? ' (overloaded)' : ''} | ${r.open} | ${r.points} | ${r.inProgress} | ${r.blocked} | ${r.overdue} |`));
+  },
+  due: (data, out) => {
+    data.days.filter(d => d.count).forEach(d => out.push(`- ${d.date.toDateString()}: ${d.count} due`)); if (!data.days.some(d => d.count)) out.push('_Nothing due in the next 14 days._');
+  },
+  roadmap: (data, out) => {
+    data.rows.forEach(r => out.push(`- ${r.roadmap}: ${r.title} is ${r.status} (${r.progress}%, ends ${r.end})`)); if (!data.rows.length) out.push('_No roadmap items._');
+  },
+  summary: (data, out) => {
+    data.lines.forEach(l => out.push(`- ${l}`));
+  },
+};
+
 function dataMarkdown(w: { title: string }, data: WidgetData): string[] {
   const out: string[] = [`### ${w.title}`, ''];
-  switch (data.kind) {
-    case 'stat': {
-      const r = data.result;
-      const t = r.trend === undefined || r.trend === 0 ? '' : ` (${r.trend > 0 ? '+' : ''}${r.trend} vs 7 days ago)`;
-      out.push(`**${r.value}${r.suffix}**${t}`);
-      break;
-    }
-    case 'groups': data.groups.forEach(g => out.push(`- ${g.label}: ${g.value}${data.measure === 'points' ? ' points' : ''}`)); if (!data.groups.length) out.push('_Nothing to show._'); break;
-    case 'series': out.push('| Week ending | Created | Finished | Open |', '| --- | --- | --- | --- |', ...data.points.map(p => `| ${p.label} | ${p.created} | ${p.done} | ${p.open} |`)); break;
-    case 'burn': {
-      const last = data.points[data.points.length - 1];
-      out.push(last ? `${sprintName(data.sprint)}: ${last.donePoints} of ${last.scopePoints} points done (${last.done} of ${last.scope} tickets).` : `${sprintName(data.sprint)} has not started.`);
-      break;
-    }
-    case 'cfd': {
-      const last = data.points[data.points.length - 1];
-      out.push(last ? `${sprintName(data.sprint)} today: backlog ${last.backlog}, to do ${last.todo}, in progress ${last.inprogress}, done ${last.done}.` : `${sprintName(data.sprint)} has not started.`);
-      break;
-    }
-    case 'rows': data.rows.forEach(r => out.push(`- ${r.issue.key} ${r.issue.title} (${r.note})`)); if (!data.rows.length) out.push('_Nothing here._'); else if (data.total > data.rows.length) out.push(`- ...and ${data.total - data.rows.length} more`); break;
-    case 'blocked': data.rows.forEach(r => out.push(`- ${r.issue.key} ${r.issue.title}: blocked by ${r.blockers.map(b => b.key).join(', ') || 'unknown'} for ${r.days}d`)); if (!data.rows.length) out.push('_Nothing is blocked._'); break;
-    case 'progress': data.rows.forEach(r => out.push(`- ${r.label}: ${r.done}/${r.total} (${r.percent}%)`)); if (!data.rows.length) out.push('_Nothing to show._'); break;
-    case 'workload': out.push('| Person | Open | Points | In progress | Blocked | Overdue |', '| --- | --- | --- | --- | --- | --- |', ...data.rows.map(r => `| ${esc(r.name)}${r.overloaded ? ' (overloaded)' : ''} | ${r.open} | ${r.points} | ${r.inProgress} | ${r.blocked} | ${r.overdue} |`)); break;
-    case 'due': data.days.filter(d => d.count).forEach(d => out.push(`- ${d.date.toDateString()}: ${d.count} due`)); if (!data.days.some(d => d.count)) out.push('_Nothing due in the next 14 days._'); break;
-    case 'roadmap': data.rows.forEach(r => out.push(`- ${r.roadmap}: ${r.title} is ${r.status} (${r.progress}%, ends ${r.end})`)); if (!data.rows.length) out.push('_No roadmap items._'); break;
-    case 'summary': data.lines.forEach(l => out.push(`- ${l}`)); break;
-  }
+  (RENDER[data.kind] as (d: WidgetData, o: string[]) => void)(data, out);
   out.push('');
   return out;
 }
 
-export function describeFilters(d: Pick<Dashboard, 'filters'>, ctx: Pick<DataCtx, 'spaces'>): string {
+function describeFilters(d: Pick<Dashboard, 'filters'>, ctx: Pick<DataCtx, 'spaces'>): string {
   const f = d.filters;
   const parts: string[] = [];
   parts.push(f.spaceIds.length ? `spaces: ${f.spaceIds.map(id => ctx.spaces.find(s => s.id === id)?.name ?? id).join(', ')}` : 'all spaces');
@@ -128,4 +148,5 @@ export function downloadText(name: string, text: string, type = 'text/markdown')
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
-export { widgetFilters, widgetScope, METRICS };
+/** The file name for a dashboard's JSON export: "my-board.dashboard.json". */
+export const dashboardJsonName = (name: string): string => `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.dashboard.json`;

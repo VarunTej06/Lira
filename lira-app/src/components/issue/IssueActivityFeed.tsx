@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Avatar } from '../common/Avatar';
 import { formatRelativeDate, formatDayDateTime } from '../../utils/dateUtils';
 import type { Comment, ActivityEntry, Attachment } from '../../types/issue';
-import { v4 as uuidv4 } from 'uuid';
 import { Send, Pencil } from 'lucide-react';
 import { RichTextEditor } from '../common/richtext/RichTextEditor';
 import { CopyButton } from '../common/CopyButton';
 import { descriptionToText } from '../../utils/richText';
+import { isOwnComment, hasCommentContent, newComment, NO_COMMENT_DRAFT, type CommentDraft } from './commentUtils';
+import { currentUser } from '../../utils/currentUser';
 
 interface IssueActivityFeedProps {
   comments: Comment[];
@@ -14,33 +15,18 @@ interface IssueActivityFeedProps {
   onAddComment: (comment: Comment) => void;
   /** Changes a comment. Only the person who wrote it can do this. */
   onEditComment?: (id: string, content: string, attachments: Attachment[]) => void;
+  /** The comment being written. It is kept by the ticket popup so that Save changes can ask about it. */
+  draft: CommentDraft;
+  onDraftChange: (draft: CommentDraft) => void;
 }
-
-/** The person using Lira, as set in their profile. */
-function currentUser() {
-  try {
-    return {
-      name: localStorage.getItem('lira_user_name') || 'Varuntej Yadla',
-      initials: localStorage.getItem('lira_user_initials') || 'VY',
-    };
-  } catch { return { name: 'Varuntej Yadla', initials: 'VY' }; }
-}
-
-/** A comment can be edited by the person who wrote it. */
-export function isOwnComment(c: Comment): boolean {
-  const me = currentUser();
-  return [c.author, c.authorInitials].some(v => !!v && (v === me.initials || v === me.name));
-}
-
-/** A comment has something to post when it has text or a file. */
-export const hasCommentContent = (html: string, attachments: Attachment[]) => !!descriptionToText(html).trim() || attachments.length > 0;
 
 type ViewTab = 'all' | 'comments' | 'history';
 
-export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, activity, onAddComment, onEditComment }) => {
+export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, activity, onAddComment, onEditComment, draft: commentDraft, onDraftChange }) => {
   const [activeTab, setActiveTab] = useState<ViewTab>('all');
-  const [draft, setDraft] = useState('');
-  const [draftFiles, setDraftFiles] = useState<Attachment[]>([]);
+  const { html: draft, files: draftFiles } = commentDraft;
+  const setDraft = (html: string) => onDraftChange({ html, files: draftFiles });
+  const setDraftFiles = (files: Attachment[]) => onDraftChange({ html: draft, files });
   const [focused, setFocused] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
@@ -48,12 +34,11 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
 
   const QUICK_CHIPS = ['Status update...', 'Thanks!', 'Agree!', 'Will fix ASAP'];
 
-  const reset = () => { setDraft(''); setDraftFiles([]); setFocused(false); };
+  const reset = () => { onDraftChange(NO_COMMENT_DRAFT); setFocused(false); };
 
   const handleSubmit = () => {
     if (!hasCommentContent(draft, draftFiles)) return;
-    const me = currentUser();
-    onAddComment({ id: uuidv4(), author: me.initials, authorInitials: me.initials, content: draft, attachments: draftFiles, createdAt: new Date() });
+    onAddComment(newComment(commentDraft));
     reset();
   };
 
@@ -95,7 +80,7 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
 
       {/* Comment box */}
       <div className="flex gap-3">
-        <Avatar initials={currentUser().initials} size="sm" color="#0052CC" className="flex-shrink-0 mt-1" />
+        <Avatar initials={currentUser().initials} size="sm" className="flex-shrink-0 mt-1" />
         <div className="flex-1 min-w-0">
           {!focused ? (
             <>
@@ -133,17 +118,14 @@ export const IssueActivityFeed: React.FC<IssueActivityFeedProps> = ({ comments, 
                 ariaLabel="Add a comment"
                 onSubmit={handleSubmit}
               />
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-[10px] text-lira-muted">
-                  Paste a screenshot anywhere in the text, or use the paperclip. <kbd className="px-1 py-0.5 bg-gray-100 rounded text-[10px] font-mono">Ctrl+Enter</kbd> to post
-                </span>
+              <div className="flex items-center justify-end pt-2">
                 <div className="flex gap-2">
                   <button onClick={reset} className="px-3 py-1 text-xs text-lira-muted hover:text-lira-text rounded cursor-pointer">Cancel</button>
                   <button
                     onClick={handleSubmit}
                     disabled={!hasCommentContent(draft, draftFiles)}
                     data-testid="post-comment"
-                    className="flex items-center gap-1.5 px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium cursor-pointer"
+                    className="flex items-center gap-1.5 px-3 py-1 text-xs bg-lira-blue text-lira-on-blue rounded hover:bg-lira-blue-hover disabled:opacity-50 font-medium cursor-pointer"
                   >
                     <Send className="w-3 h-3" />
                     Save
@@ -246,7 +228,7 @@ const CommentView: React.FC<CommentViewProps> = ({ comment: c, date, editing, ca
             onClick={onSaveEdit}
             disabled={!hasCommentContent(editText, editFiles)}
             data-testid="save-comment-edit"
-            className="px-3 py-1 text-xs bg-lira-blue text-white rounded hover:bg-blue-700 disabled:opacity-50 font-medium cursor-pointer"
+            className="px-3 py-1 text-xs bg-lira-blue text-lira-on-blue rounded hover:bg-lira-blue-hover disabled:opacity-50 font-medium cursor-pointer"
           >
             Save
           </button>

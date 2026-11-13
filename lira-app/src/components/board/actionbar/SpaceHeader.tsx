@@ -1,5 +1,5 @@
+import { SpaceIcon } from '../../common/SpaceIcon';
 import { Share2, EyeOff, Archive } from 'lucide-react';
-import type {  } from '../../../types/space';
 import { StandupButton } from '../../standup/StandupButton';
 import type { ActionBarState } from './useActionBarState';
 
@@ -13,10 +13,9 @@ export function SpaceHeader(s: ActionBarState) {
         <div className="flex items-center gap-3">
           {space && (
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-              style={{ backgroundColor: space.color + '22', color: space.color }}
-            >
-              {space.icon}
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 bg-lira-blue-light text-lira-blue"
+                >
+              <SpaceIcon icon={space.icon} className="w-5 h-5" />
             </div>
           )}
           <div>
@@ -25,13 +24,13 @@ export function SpaceHeader(s: ActionBarState) {
                 {space?.name || 'Select a space'}
               </h1>
               {isSpaceHidden && (
-                <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-semibold shadow-2xs">
+                <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-semibold shadow-2xs">
                   <EyeOff className="w-3 h-3 text-amber-600" />
                   Hidden Space
                 </span>
               )}
               {isSpaceArchived && (
-                <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-300 font-semibold shadow-2xs">
+                <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-300 font-semibold shadow-2xs">
                   <Archive className="w-3 h-3 text-slate-600" />
                   Archived Space
                 </span>

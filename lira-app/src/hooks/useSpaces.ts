@@ -6,13 +6,6 @@ export function useSpaces() {
   return useLiveQuery(() => db.spaces.orderBy('createdAt').toArray(), [], []);
 }
 
-export function useSpace(id: number | undefined) {
-  return useLiveQuery(
-    () => id ? db.spaces.get(id) : undefined,
-    [id]
-  );
-}
-
 import { triggerDiskSync } from '../services/localDiskSync';
 
 export async function createSpace(space: Omit<Space, 'id'>): Promise<number> {

@@ -1,7 +1,7 @@
 import { TypeIcon } from '../../common/Icons';
 import { X, Share2, MoreHorizontal, Eye, ChevronDown, ChevronRight, Trash2, ExternalLink, Link } from 'lucide-react';
 import type {  IssueType } from '../../../types/issue';
-import { ISSUE_TYPE_OPTIONS, safeArr } from './useIssueDetail';
+import { ISSUE_TYPE_OPTIONS, safeArr } from './issueOptions';
 import type { IssueDetailState } from './useIssueDetail';
 
 /** Breadcrumb, type selector and the action buttons. */
@@ -41,7 +41,7 @@ export function IssueHeader(s: IssueDetailState) {
               </button>
               {showTypeMenu && (
                 <div className="absolute left-0 top-8 z-50 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 min-w-[160px] animate-scale-in">
-                  <div className="px-3 py-1 text-[10px] font-semibold text-lira-muted uppercase tracking-wider border-b border-gray-100">
+                  <div className="px-3 py-1 text-3xs font-semibold text-lira-muted uppercase tracking-wider border-b border-gray-100">
                     Change Issue Type
                   </div>
                   {ISSUE_TYPE_OPTIONS.map(opt => (
@@ -53,12 +53,12 @@ export function IssueHeader(s: IssueDetailState) {
                         handleTypeChange(opt.value as IssueType);
                       }}
                       className={`w-full text-left px-3 py-1.5 text-xs flex items-center gap-2 hover:bg-gray-50 transition-colors ${
-                        opt.value === local.type ? 'bg-blue-50/70 font-semibold text-lira-blue' : 'text-lira-text'
+                        opt.value === local.type ? 'bg-lira-blue-light/70 font-semibold text-lira-blue' : 'text-lira-text'
                       }`}
                     >
                       <span>{opt.icon}</span>
                       <span>{opt.label}</span>
-                      {opt.value === local.type && <span className="ml-auto text-lira-blue text-[11px]">✓</span>}
+                      {opt.value === local.type && <span className="ml-auto text-lira-blue text-2xs">✓</span>}
                     </button>
                   ))}
                 </div>

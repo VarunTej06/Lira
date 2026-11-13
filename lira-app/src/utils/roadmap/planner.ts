@@ -3,13 +3,13 @@ import { type RoadmapItem } from './types';
 import { epicFor, epicTickets, ticketDate } from './progress';
 
 /** Planner rows: lane > epic > tickets. */
-export const PLANNER_LANE_H = 34;
+const PLANNER_LANE_H = 34;
 
-export const PLANNER_EPIC_H = 42;
+const PLANNER_EPIC_H = 42;
 
-export const PLANNER_TICKET_H = 32;
+const PLANNER_TICKET_H = 32;
 
-export type PlannerRow =
+type PlannerRow =
   | { kind: 'lane'; lane: string; y: number; h: number; count: number }
   | { kind: 'epic'; item: RoadmapItem; epic?: Issue; tickets: Issue[]; expanded: boolean; y: number; h: number }
   | { kind: 'ticket'; issue: Issue; item: RoadmapItem; y: number; h: number };

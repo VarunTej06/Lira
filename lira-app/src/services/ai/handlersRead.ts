@@ -32,7 +32,7 @@ export async function handleStatusMatrix(c: AgentContext): Promise<ChatMessage |
       totalInprogress += ip;
       totalDone += d;
 
-      text += `| ${s.icon} **${s.name}** | \`${s.key}\` | ${b} | ${td} | ${ip} | ${d} | **${issues.length}** |\n`;
+      text += `| **${s.name}** | \`${s.key}\` | ${b} | ${td} | ${ip} | ${d} | **${issues.length}** |\n`;
     });
 
     text += `| **Workspace Total** | — | **${totalBacklog}** | **${totalTodo}** | **${totalInprogress}** | **${totalDone}** | **${allIssues.length}** |\n`;
@@ -74,7 +74,7 @@ export async function handlePriorityBreakdown(c: AgentContext): Promise<ChatMess
       const high = issues.filter(i => i.priority === 'high').length;
       const medium = issues.filter(i => i.priority === 'medium').length;
       const low = issues.filter(i => i.priority === 'low' || i.priority === 'lowest').length;
-      text += `| ${s.icon} **${s.name}** | \`${s.key}\` | ${highest} | ${high} | ${medium} | ${low} | **${issues.length}** |\n`;
+      text += `| **${s.name}** | \`${s.key}\` | ${highest} | ${high} | ${medium} | ${low} | **${issues.length}** |\n`;
     });
 
     return {
@@ -107,7 +107,7 @@ export async function handleSpaceQuery(c: AgentContext): Promise<ChatMessage | u
         return {
           id: uuidv4(),
           sender: 'assistant',
-          text: `In **${spaceToQuery.icon} ${spaceToQuery.name}**, there are currently **0 tickets** in **${statusFilter.toUpperCase()}**.\n\nTotal tickets in this space: **${spaceIssues.length}**.`,
+          text: `In **${spaceToQuery.name}**, there are currently **0 tickets** in **${statusFilter.toUpperCase()}**.\n\nTotal tickets in this space: **${spaceIssues.length}**.`,
           timestamp: now,
           refinedPrompt: refinedMetadata,
           suggestedActions: [
@@ -122,7 +122,7 @@ export async function handleSpaceQuery(c: AgentContext): Promise<ChatMessage | u
       return {
         id: uuidv4(),
         sender: 'assistant',
-        text: `### ${spaceToQuery.icon} **${spaceToQuery.name}** — ${statusFilter.toUpperCase()} (${filtered.length} items):\n\n${list}`,
+        text: `### **${spaceToQuery.name}** — ${statusFilter.toUpperCase()} (${filtered.length} items):\n\n${list}`,
         timestamp: now,
         refinedPrompt: refinedMetadata,
         suggestedActions: [
@@ -142,7 +142,7 @@ export async function handleSpaceQuery(c: AgentContext): Promise<ChatMessage | u
       done: spaceIssues.filter(i => i.status === 'done'),
     };
 
-    let text = `### ${spaceToQuery.icon} **${spaceToQuery.name}** (\`${spaceToQuery.key}\`) — ${spaceIssues.length} Total Tickets:\n\n`;
+    let text = `### **${spaceToQuery.name}** (\`${spaceToQuery.key}\`) — ${spaceIssues.length} Total Tickets:\n\n`;
     text += `| Column | Count | Tickets |\n|---|:---:|---|\n`;
     text += `| **Backlog** | ${byStatus.backlog.length} | ${byStatus.backlog.map(i => `\`${i.key}\``).join(', ') || '—'} |\n`;
     text += `| **To Do** | ${byStatus.todo.length} | ${byStatus.todo.map(i => `\`${i.key}\``).join(', ') || '—'} |\n`;
@@ -194,7 +194,7 @@ export async function handleEpicsList(c: AgentContext): Promise<ChatMessage | un
         const children = allIssues.filter(i => i.parentId === e.id || i.epicId === e.id);
         const doneChildren = children.filter(c => c.status === 'done').length;
         text += `- **${e.key}**: **${e.title}**\n`;
-        text += `  - Space: ${space?.icon} **${space?.name}** | Status: **${e.status.toUpperCase()}** | Priority: \`${e.priority}\`\n`;
+        text += `  - Space: **${space?.name}** | Status: **${e.status.toUpperCase()}** | Priority: \`${e.priority}\`\n`;
         text += `  - Progress: ${doneChildren}/${children.length} tasks completed\n`;
       });
 
@@ -322,7 +322,7 @@ export async function handleKeywordSearch(c: AgentContext): Promise<ChatMessage 
       let text = `### **Search Results for "${refinedGoal.searchKeyword}" (${matches.length} matches across spaces):**\n\n`;
       matches.forEach(i => {
         const space = spacesMap.get(i.spaceId);
-        text += `- **${i.key}** [${space?.icon} ${space?.name}]: **${i.title}** (${i.status.toUpperCase()} | \`${i.priority}\`)\n`;
+        text += `- **${i.key}** [${space?.name}]: **${i.title}** (${i.status.toUpperCase()} | \`${i.priority}\`)\n`;
       });
 
       return {

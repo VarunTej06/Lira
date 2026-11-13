@@ -23,17 +23,17 @@ export function GroupByAssignee(s: CapacityState) {
                 {/* Member Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Avatar initials={member.initials} size="md" color={member.avatarColor} />
+                    <Avatar initials={member.initials} size="md" />
                     <div>
                       <h3 className="text-sm font-bold text-lira-text leading-tight">{member.name}</h3>
-                      <p className="text-[11px] text-lira-muted font-medium">
+                      <p className="text-2xs text-lira-muted font-medium">
                         {member.storyPoints} Story Points · {member.total} Work Items
                       </p>
                     </div>
                   </div>
 
                   {member.overdue > 0 && (
-                    <span className="flex items-center gap-1 text-[11px] font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
+                    <span className="flex items-center gap-1 text-2xs font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
                       <AlertTriangle className="w-3 h-3" />
                       {member.overdue} Overdue
                     </span>
@@ -72,23 +72,23 @@ export function GroupByAssignee(s: CapacityState) {
                   {/* Stage counters */}
                   <div className="grid grid-cols-5 gap-1.5 text-center pt-2">
                     <div className="bg-gray-50 border border-lira-border rounded p-1.5">
-                      <div className="text-[9px] text-lira-muted uppercase font-bold">Backlog</div>
+                      <div className="text-4xs text-lira-muted uppercase font-bold">Backlog</div>
                       <div className="text-xs font-bold text-slate-700">{member.backlog}</div>
                     </div>
                     <div className="bg-blue-50/60 border border-blue-200 rounded p-1.5">
-                      <div className="text-[9px] text-blue-600 uppercase font-bold">To Do</div>
+                      <div className="text-4xs text-blue-600 uppercase font-bold">To Do</div>
                       <div className="text-xs font-bold text-blue-700">{member.todo}</div>
                     </div>
                     <div className="bg-amber-50/60 border border-amber-200 rounded p-1.5">
-                      <div className="text-[9px] text-amber-600 uppercase font-bold">In Prog</div>
+                      <div className="text-4xs text-amber-600 uppercase font-bold">In Prog</div>
                       <div className="text-xs font-bold text-amber-700">{member.inProgress}</div>
                     </div>
                     <div className="bg-red-50/60 border border-red-200 rounded p-1.5">
-                      <div className="text-[9px] text-red-600 uppercase font-bold">Blocked</div>
+                      <div className="text-4xs text-red-600 uppercase font-bold">Blocked</div>
                       <div className="text-xs font-bold text-red-700">{member.blocked}</div>
                     </div>
                     <div className="bg-emerald-50/60 border border-emerald-200 rounded p-1.5">
-                      <div className="text-[9px] text-emerald-600 uppercase font-bold">Done</div>
+                      <div className="text-4xs text-emerald-600 uppercase font-bold">Done</div>
                       <div className="text-xs font-bold text-emerald-700">{member.done}</div>
                     </div>
                   </div>
@@ -119,13 +119,13 @@ export function GroupByAssignee(s: CapacityState) {
                             {task.key}
                           </span>
                           <span className="text-lira-text truncate flex-1">{task.title}</span>
-                          <span className="text-[10px] ml-2 font-semibold text-gray-500 uppercase">
+                          <span className="text-3xs ml-2 font-semibold text-gray-500 uppercase">
                             {task.priority}
                           </span>
                         </div>
                       ))}
                       {inProgressIssues.length > 4 && (
-                        <div className="text-[10px] text-lira-muted text-right font-medium">
+                        <div className="text-3xs text-lira-muted text-right font-medium">
                           +{inProgressIssues.length - 4} more active tickets
                         </div>
                       )}

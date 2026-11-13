@@ -6,15 +6,15 @@ import { saveSnapshotFile, snapshotDue, snapshotFileName, snapshotMarkdown } fro
 import { myNames } from '../../utils/dashboards/metrics';
 import { readProjects } from '../../hooks/useProjects';
 import { readRoadmaps } from '../../hooks/useRoadmaps';
-import { notifySaved } from '../common/SavedToast';
+import { notifySaved } from '../common/savedToastStore';
+import { useLatest } from '../../hooks/useLatest';
 
 /**
  * Takes the weekly dashboard snapshots. It checks once a minute (and at start-up) while Lira is open, and takes
  * every snapshot whose day and hour have passed since the last one. Shows nothing.
  */
 export function DashboardScheduler({ issues, spaces }: { issues: Issue[]; spaces: Space[] }) {
-  const latest = useRef({ issues, spaces });
-  latest.current = { issues, spaces };
+  const latest = useLatest({ issues, spaces });
   const running = useRef(false);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export function DashboardScheduler({ issues, spaces }: { issues: Issue[]; spaces
     const first = window.setTimeout(() => { void check(); }, 4000);
     const t = window.setInterval(() => { void check(); }, 60_000);
     return () => { window.clearTimeout(first); window.clearInterval(t); };
-  }, []);
+  }, [latest]);
 
   return null;
 }

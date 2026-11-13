@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { makeIssue } from '../test/factories'
 import {
   addDays, blankRoadmap, buildHeader, buildPlannerRows, movedDate, computeRange, daysBetween, dependencyIssues, duplicateRoadmap, effectiveStatus, epicStatusFor, resolveItem, roadmapSpan, statusFromEpic, ticketDate, fmtDay, horizonOf,
-  itemProgress, layoutRows, parseDay, PX_PER_DAY, resizeItem, seedLiraRoadmap, shiftItem, summarize, toCsv, xOf,
+  itemProgress, layoutRows, parseDay, PX_PER_DAY, fitPpd, resizeItem, seedLiraRoadmap, shiftItem, summarize, toCsv, xOf,
   type RoadmapItem,
 } from './roadmapUtils'
 
@@ -30,29 +30,45 @@ describe('timeline scale', () => {
   const rm = seedLiraRoadmap()
   const range = computeRange(rm, TODAY)
 
-  it('covers all items and milestones, snapped to month boundaries', () => {
-    expect(fmtDay(range.start)).toBe('2026-11-01')
-    expect(range.end >= parseDay('2026-11-30')).toBe(true)
-    expect(range.end.getDate()).toBe(new Date(range.end.getFullYear(), range.end.getMonth() + 1, 0).getDate())
+  it('covers all items, milestones and today, with four days of room on each side and no empty months', () => {
+    const dates = [TODAY, ...rm.items.flatMap(i => [parseDay(i.start), parseDay(i.end)]), ...rm.milestones.map(m => parseDay(m.date))].map(d => d.getTime())
+    expect(daysBetween(range.start, new Date(Math.min(...dates)))).toBe(4)
+    expect(daysBetween(new Date(Math.max(...dates)), range.end)).toBe(4)
+    expect(range.days).toBe(daysBetween(range.start, range.end) + 1)
+  })
+
+  it('fits the calendar to the room it has: wider days for a short range, never tighter than the scale', () => {
+    expect(fitPpd('months', 30, 900)).toBe(30)                       // 30 days in 900 px
+    expect(fitPpd('months', 400, 900)).toBe(PX_PER_DAY.months)       // a long roadmap keeps its scale and scrolls
+    expect(fitPpd('weeks', 30, 0)).toBe(PX_PER_DAY.weeks)            // not measured yet
+    expect(fitPpd('quarters', 0, 900)).toBe(PX_PER_DAY.quarters)
+    expect(fitPpd('weeks', 30, -380)).toBe(PX_PER_DAY.weeks)         // a panel narrower than its label column
   })
 
   it('positions dates by pixels per day', () => {
-    expect(xOf(range, parseDay('2026-11-01'), 6)).toBe(0)
-    expect(xOf(range, parseDay('2026-11-11'), 6)).toBe(60)
+    expect(xOf(range, range.start, 6)).toBe(0)
+    expect(xOf(range, addDays(range.start, 10), 6)).toBe(60)
   })
 
   it('builds month headers whose widths add up to the whole range', () => {
     const { top, bottom } = buildHeader(range, 'months')
     expect(top[0].label).toBe('2026')
-    expect(bottom[0].label).toBe('Nov')
+    expect(bottom[0].label).toBe(range.start.toLocaleDateString('en-US', { month: 'short' })) // the month the range starts in
+    expect(bottom.map(c => c.label)).toContain('Nov')
     const total = bottom.reduce((a, c) => a + c.width, 0)
     expect(total).toBeCloseTo(range.days * PX_PER_DAY.months, 5)
+  })
+
+  it('header cells follow the pixels per day they are given, so they line up with the bars when the calendar is stretched', () => {
+    const { bottom } = buildHeader(range, 'months', 25)
+    expect(bottom.reduce((a, c) => a + c.width, 0)).toBeCloseTo(range.days * 25, 5)
+    expect(bottom[0].x).toBe(0)
   })
 
   it('builds quarter and week headers', () => {
     expect(buildHeader(range, 'quarters').bottom[0].label).toBe('Q4')
     const w = buildHeader(range, 'weeks')
-    expect(w.top[0].label).toBe('November 2026')
+    expect(w.top.map(c => c.label)).toContain('November 2026')
     expect(w.bottom[0].x).toBeGreaterThanOrEqual(0)
   })
 })

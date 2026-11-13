@@ -29,7 +29,7 @@ export function GroupByEpic(s: CapacityState) {
               {/* Progress bar */}
               <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full transition-all duration-300"
+                  className="h-full bg-purple-500 rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -49,7 +49,7 @@ export function GroupByEpic(s: CapacityState) {
                   >
                     <span className="font-mono font-bold text-lira-blue mr-2 group-hover:underline">{child.key}</span>
                     <span className="truncate flex-1 text-lira-text">{child.title}</span>
-                    <span className="text-[10px] uppercase font-semibold text-gray-500 ml-2">
+                    <span className="text-3xs uppercase font-semibold text-gray-500 ml-2">
                       {statusLabel(child.status)}
                     </span>
                   </div>

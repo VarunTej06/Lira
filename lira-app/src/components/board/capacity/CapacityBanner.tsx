@@ -31,7 +31,7 @@ export function CapacityBanner(s: CapacityState) {
         {/* Global Metrics Bar */}
         <div className="flex items-center gap-4 bg-gray-50/80 px-4 py-2.5 rounded-xl border border-lira-border flex-shrink-0">
           <div className="text-right">
-            <div className="text-[10px] font-bold uppercase text-lira-muted tracking-wider">
+            <div className="text-3xs font-bold uppercase text-lira-muted tracking-wider">
               Sprint Story Points
             </div>
             <div className="text-xl font-extrabold text-lira-text">
@@ -42,7 +42,7 @@ export function CapacityBanner(s: CapacityState) {
           <div className="h-8 w-px bg-lira-border" />
 
           <div className="text-right">
-            <div className="text-[10px] font-bold uppercase text-lira-muted tracking-wider">
+            <div className="text-3xs font-bold uppercase text-lira-muted tracking-wider">
               Sprint Progress
             </div>
             <div className="text-xl font-extrabold text-emerald-600">
@@ -50,7 +50,7 @@ export function CapacityBanner(s: CapacityState) {
             </div>
           </div>
 
-          <div className="w-11 h-11 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center border-2 border-blue-500 shadow-2xs">
+          <div className="w-11 h-11 rounded-full bg-lira-blue-light text-lira-blue font-bold text-xs flex items-center justify-center border-2 border-lira-blue shadow-2xs">
             {teamInProgress} In Prog
           </div>
         </div>

@@ -3,8 +3,8 @@
   "spaceId": 14,
   "spaceKey": "AI",
   "spaceName": "AI Projects",
-  "updatedAt": "2026-11-06T02:28:32.132Z",
-  "issueCount": 18,
+  "updatedAt": "2026-11-13T08:20:37.182Z",
+  "issueCount": 19,
   "space": {
     "name": "AI Projects",
     "key": "AI",
@@ -14,7 +14,7 @@
     "createdAt": "2026-10-28T18:31:08.254Z",
     "updatedAt": "2026-10-31T14:52:42.942Z",
     "id": 14,
-    "issueCount": 18,
+    "issueCount": 19,
     "file": "spaces/AI.json"
   },
   "issues": [
@@ -1399,6 +1399,50 @@
       "id": 132,
       "parentId": 71,
       "sprint": "2026-11"
+    },
+    {
+      "spaceId": 14,
+      "key": "AI-19",
+      "parentId": 71,
+      "epicId": 71,
+      "epicLink": "Creating Claude Skills & Autonomous Workflows",
+      "title": "Migrate ATS Resume Skill to Github",
+      "description": "",
+      "type": "task",
+      "status": "inprogress",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "labels": [
+        "claude-skill",
+        "ats-resume",
+        "resume-optimization",
+        "career"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "activity": [
+        {
+          "id": "d3aa64b6-3444-4ae5-8ed5-77ce82b23657",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this issue",
+          "createdAt": "2026-11-11T18:04:27.728Z"
+        }
+      ],
+      "attachments": [],
+      "linkedIssues": [],
+      "sprint": "2026-11",
+      "rank": 900,
+      "createdAt": "2026-11-11T18:04:27.728Z",
+      "updatedAt": "2026-11-11T18:04:49.475Z",
+      "watchers": [
+        "VY"
+      ],
+      "id": 184
     }
   ]
 }

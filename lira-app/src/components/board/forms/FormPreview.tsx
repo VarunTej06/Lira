@@ -1,4 +1,4 @@
-import { alertDialog } from '../../common/dialogs';
+import { alertDialog } from '../../common/dialogStore';
 import { FileText } from 'lucide-react';
 import { Button } from '../../common/Button';
 import type { FormsState } from './useFormsState';
@@ -12,7 +12,7 @@ export function FormPreview(s: FormsState) {
             <div className="space-y-5 max-w-lg mx-auto">
               <div className="border-b border-lira-border pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="p-1.5 bg-blue-50 text-lira-blue rounded-md">
+                  <span className="p-1.5 bg-lira-blue-light text-lira-blue rounded-md">
                     <FileText className="w-4 h-4" />
                   </span>
                   <h3 className="text-base font-bold text-lira-text">{previewForm.title}</h3>

@@ -3,45 +3,120 @@
 @tailwind utilities;
 
 @layer base {
+  /*
+   * Three themes, each built from the three colours named in theme/palette.ts (theme.test.ts checks they match):
+   *   Sorrel (the default light palette): off-white page, sage frame, tomato red buttons.
+   *   Fawn (the other light palette): cream page, brown text, baby blue buttons.
+   *   Dark: black page, silver text, yellow buttons.
+   * The "lira-blue" names are the accent of the theme (they were blue once). --lira-blue fills buttons,
+   * --lira-on-blue is the label on that fill, --lira-blue-text is the accent dark enough to be read as a link.
+   */
   :root {
-    --lira-bg: 244 245 247;
-    --lira-surface: 255 255 255;
-    --lira-border: 223 225 230;
-    --lira-text: 23 43 77;
-    --lira-muted: 107 119 140;
-    --lira-blue: 0 82 204;
-    --lira-blue-hover: 0 101 255;
-    --lira-blue-light: 222 235 255;
-    --lira-amber-light: 255 247 214;
-    --lira-green-light: 227 252 239;
-    --lira-red-light: 255 235 230;
-    --lira-purple-light: 234 230 255;
-    --lira-teal-light: 230 252 255;
-    --app-frame: 230 234 241;
-    --surface-2: 250 251 252;
-    --surface-3: 244 245 247;
-    --surface-4: 235 236 240;
+    --lira-bg: 247 245 239;
+    --lira-surface: 255 254 251;
+    --lira-border: 221 221 207;
+    --lira-text: 38 48 31;
+    --lira-muted: 92 102 80;
+    --lira-blue: 232 65 44;
+    --lira-blue-hover: 208 52 32;
+    --lira-blue-light: 229 236 221;
+    --lira-blue-text: 184 44 26;
+    --lira-on-blue: 255 255 255;
+    --lira-nav: 79 97 66;
+    --lira-nav-accent: 247 245 239;
+    --lira-amber-light: 252 240 204;
+    --lira-green-light: 224 240 216;
+    --lira-red-light: 252 228 222;
+    --lira-purple-light: 236 230 244;
+    --lira-teal-light: 220 240 237;
+    --app-frame: 156 175 136;
+    --surface-2: 250 249 244;
+    --surface-3: 242 240 232;
+    --surface-4: 231 230 218;
+    --gray-50: 250 249 244;
+    --gray-100: 242 240 232;
+    --gray-200: 229 228 216;
+    --gray-300: 209 209 194;
+    --gray-400: 152 158 140;
+    --gray-500: 104 112 94;
+    --gray-600: 77 86 68;
+    --gray-700: 58 68 50;
+    --gray-800: 42 52 35;
+    --gray-900: 30 38 25;
+    --gray-950: 18 24 14;
     color-scheme: light;
   }
 
+  [data-palette='fawn'] {
+    --lira-bg: 242 232 218;
+    --lira-surface: 250 244 235;
+    --lira-border: 222 208 189;
+    --lira-text: 59 36 24;
+    --lira-muted: 111 87 71;
+    --lira-blue: 142 197 255;
+    --lira-blue-hover: 116 180 247;
+    --lira-blue-light: 224 237 250;
+    --lira-blue-text: 31 95 158;
+    --lira-on-blue: 59 36 24;
+    --lira-nav: 59 36 24;
+    --lira-nav-accent: 142 197 255;
+    --lira-amber-light: 250 234 196;
+    --lira-green-light: 226 236 210;
+    --lira-red-light: 250 222 212;
+    --lira-purple-light: 234 224 238;
+    --lira-teal-light: 216 235 234;
+    --app-frame: 232 220 203;
+    --surface-2: 246 238 226;
+    --surface-3: 238 227 211;
+    --surface-4: 228 215 197;
+    --gray-50: 246 238 226;
+    --gray-100: 238 227 211;
+    --gray-200: 228 215 197;
+    --gray-300: 210 194 173;
+    --gray-400: 160 140 122;
+    --gray-500: 122 100 84;
+    --gray-600: 96 74 60;
+    --gray-700: 78 55 42;
+    --gray-800: 66 43 30;
+    --gray-900: 59 36 24;
+    --gray-950: 40 23 14;
+    color-scheme: light;
+  }
+
+  /* The greys stay light-to-dark here: theme-dark.css turns the light ones used as surfaces and text around. */
   .dark {
-    --lira-bg: 13 17 23;
-    --lira-surface: 22 27 34;
-    --lira-border: 48 54 61;
-    --lira-text: 230 237 243;
-    --lira-muted: 139 148 158;
-    --lira-blue: 38 132 255;
-    --lira-blue-hover: 76 154 255;
-    --lira-blue-light: 17 45 92;
+    --lira-bg: 10 10 10;
+    --lira-surface: 20 20 21;
+    --lira-border: 43 45 49;
+    --lira-text: 217 218 220;
+    --lira-muted: 150 152 157;
+    --lira-blue: 255 201 60;
+    --lira-blue-hover: 255 214 102;
+    --lira-blue-light: 46 40 20;
+    --lira-blue-text: 255 201 60;
+    --lira-on-blue: 10 10 10;
+    --lira-nav: 20 20 21;
+    --lira-nav-accent: 255 201 60;
     --lira-amber-light: 66 49 8;
     --lira-green-light: 12 58 40;
     --lira-red-light: 74 24 16;
     --lira-purple-light: 44 36 88;
     --lira-teal-light: 8 55 66;
-    --app-frame: 8 11 16;
-    --surface-2: 28 34 43;
-    --surface-3: 36 43 54;
-    --surface-4: 48 56 70;
+    --app-frame: 0 0 0;
+    --surface-2: 28 28 30;
+    --surface-3: 38 38 41;
+    --surface-4: 52 53 57;
+    --gray-50: 250 250 250;
+    --gray-100: 245 245 245;
+    --gray-200: 229 229 229;
+    --gray-300: 212 212 212;
+    --gray-400: 163 163 163;
+    --gray-500: 115 115 115;
+    --gray-600: 82 82 82;
+    --gray-700: 64 64 64;
+    --gray-800: 38 38 38;
+    --gray-900: 23 23 23;
+    --gray-950: 10 10 10;
     color-scheme: dark;
   }
 
@@ -115,7 +190,7 @@
 /* Kanban board scrollbar - prominent in right corner, easy to drag with mouse */
 .lira-board-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #B3BAC5 rgba(9, 30, 66, 0.04);
+  scrollbar-color: rgb(var(--gray-300)) rgb(var(--gray-100));
 }
 
 .lira-board-scrollbar::-webkit-scrollbar {
@@ -124,20 +199,20 @@
 }
 
 .lira-board-scrollbar::-webkit-scrollbar-track {
-  background: rgba(9, 30, 66, 0.04);
+  background: rgb(var(--gray-100));
   border-radius: 9999px;
   margin: 4px;
 }
 
 .lira-board-scrollbar::-webkit-scrollbar-thumb {
-  background: #C1C7D0;
+  background: rgb(var(--gray-300));
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 .lira-board-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6B778C;
+  background: rgb(var(--gray-500));
 }
 
 .lira-board-scrollbar::-webkit-scrollbar-corner {
@@ -156,10 +231,10 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 15px rgba(124, 58, 237, 0.4), 0 0 25px rgba(79, 70, 229, 0.2);
+    box-shadow: 0 0 15px rgb(var(--lira-blue) / 0.35), 0 0 25px rgb(var(--lira-blue) / 0.15);
   }
   50% {
-    box-shadow: 0 0 22px rgba(124, 58, 237, 0.65), 0 0 35px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 0 22px rgb(var(--lira-blue) / 0.55), 0 0 35px rgb(var(--lira-blue) / 0.3);
   }
 }
 
@@ -213,7 +288,7 @@
   .lira-sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.18) transparent; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .animate-sidebar-in { animation: none !important; }
+  .animate-sidebar-in, [data-logo-arrow] { animation: none !important; }
 }
 
 /* Touch screens have no hover, so anything that only appears on hover (row menus, quick actions) is always shown there. */
@@ -243,18 +318,18 @@
 .lira-rich-body ul[data-type='taskList'] li[data-checked='true'] > div { text-decoration: line-through; color: rgb(var(--lira-muted)); }
 .lira-rich-body blockquote { border-left: 3px solid rgb(var(--lira-border)); padding-left: 0.85rem; color: rgb(var(--lira-muted)); }
 .lira-rich-body code { background: rgb(var(--lira-border) / 0.55); padding: 0.1rem 0.3rem; border-radius: 4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.85em; }
-.lira-rich-body pre { background: #0b1220; color: #e5e7eb; padding: 0.75rem; border-radius: 8px; overflow: auto; }
+.lira-rich-body pre { background: rgb(var(--lira-nav)); color: rgb(255 255 255 / 0.92); padding: 0.75rem; border-radius: 8px; overflow: auto; }
 .lira-rich-body pre code { background: transparent; padding: 0; color: inherit; }
-.lira-rich-body mark { border-radius: 3px; padding: 0 2px; color: #172B4D; }
+.lira-rich-body mark { border-radius: 3px; padding: 0 2px; color: #2B2D31; }
 .lira-rich-body img { max-width: 100%; height: auto; border-radius: 8px; display: block; }
 .lira-rich-body img.ProseMirror-selectednode { outline: 2px solid rgb(var(--lira-blue)); }
-.lira-rich-body a { color: rgb(var(--lira-blue)); text-decoration: underline; cursor: pointer; }
+.lira-rich-body a { color: rgb(var(--lira-blue-text)); text-decoration: underline; cursor: pointer; }
 .lira-rich-body hr { border: 0; border-top: 1px solid rgb(var(--lira-border)); margin: 0.75rem 0; }
 .lira-rich-body p.is-editor-empty:first-child::before { content: attr(data-placeholder); float: left; height: 0; pointer-events: none; color: rgb(var(--lira-muted)); }
-.lira-mention { background: rgb(var(--lira-blue) / 0.14); color: rgb(var(--lira-blue)); border-radius: 4px; padding: 0 4px; font-weight: 600; }
+.lira-mention { background: rgb(var(--lira-blue-light)); color: rgb(var(--lira-blue-text)); border-radius: 4px; padding: 0 4px; font-weight: 600; }
 .lira-mention-list { position: fixed; z-index: 400; min-width: 200px; max-height: 240px; overflow-y: auto; background: rgb(var(--lira-surface)); border: 1px solid rgb(var(--lira-border)); border-radius: 12px; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28); padding: 4px; }
 .lira-mention-item { display: block; width: 100%; text-align: left; padding: 6px 10px; border-radius: 8px; font-size: 13px; color: rgb(var(--lira-text)); background: transparent; border: 0; cursor: pointer; }
-.lira-mention-item:hover, .lira-mention-item.is-selected { background: rgb(var(--lira-blue) / 0.14); color: rgb(var(--lira-blue)); }
+.lira-mention-item:hover, .lira-mention-item.is-selected { background: rgb(var(--lira-blue-light)); color: rgb(var(--lira-blue-text)); }
 .lira-mention-empty { padding: 6px 10px; font-size: 12px; color: rgb(var(--lira-muted)); }
 
 /* ── Blocked switch: small flames that keep rising around the white half while a ticket is blocked ── */

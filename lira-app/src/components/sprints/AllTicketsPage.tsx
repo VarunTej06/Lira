@@ -3,7 +3,8 @@ import { Search, Ticket, CalendarClock } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { allSprintKeys, currentSprintKey, getIssueSprint, sprintLabel } from '../../utils/sprintUtils';
-import { SprintSelect, STATUS_META, TicketRow } from './sprintParts';
+import { SprintSelect, TicketRow } from './sprintParts';
+import { STATUS_META } from '../../utils/status';
 
 interface AllTicketsPageProps {
   spaces: Space[];
@@ -94,7 +95,7 @@ export const AllTicketsPage: React.FC<AllTicketsPageProps> = ({ spaces, issues, 
           </div>
           <select className={sel} value={spaceId} onChange={e => { setSpaceId(e.target.value === 'all' ? 'all' : Number(e.target.value)); setLimit(PAGE_SIZE); }} aria-label="Space">
             <option value="all">All spaces</option>
-            {spaces.map(s => <option key={s.id} value={s.id}>{s.icon} {s.name}</option>)}
+            {spaces.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
           <SprintSelect value={sprint} options={keys} onChange={v => { setSprint(v); setLimit(PAGE_SIZE); }} allLabel="All sprints" className="!text-sm !px-2.5 !py-1.5 !rounded-md" />
           <select className={sel} value={status} onChange={e => { setStatus(e.target.value); setLimit(PAGE_SIZE); }} aria-label="Status">
@@ -125,7 +126,7 @@ export const AllTicketsPage: React.FC<AllTicketsPageProps> = ({ spaces, issues, 
             <div key={k} className="bg-white border border-lira-border rounded-lg overflow-hidden">
               <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
                 <span className="text-xs font-semibold text-lira-text">{k === 'epic' ? 'Epics (outside sprints)' : `${sprintLabel(k)} Sprint`}</span>
-                {k === currentSprintKey() && <span className="text-[10px] bg-green-100 text-green-700 rounded px-1.5 py-0.5 font-semibold">ACTIVE</span>}
+                {k === currentSprintKey() && <span className="text-3xs bg-green-100 text-green-700 rounded px-1.5 py-0.5 font-semibold">ACTIVE</span>}
                 <span className="text-xs text-lira-muted">{rows.length}</span>
               </div>
               {rows.map(renderRow)}

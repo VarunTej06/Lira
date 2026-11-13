@@ -41,17 +41,6 @@ export function formatAbsoluteDate(date: Date | string | undefined | null): stri
   }
 }
 
-export function formatDateTime(date: Date | string | undefined | null): string {
-  const d = toValidDate(date);
-  if (!d) return '';
-  try {
-    if (isToday(d)) return `Today at ${format(d, 'h:mm a')}`;
-    if (isYesterday(d)) return `Yesterday at ${format(d, 'h:mm a')}`;
-    return format(d, 'd MMM yyyy, h:mm a');
-  } catch {
-    return '';
-  }
-}
 
 export function formatDueDate(date: Date | string | undefined | null): string {
   const d = toValidDate(date);

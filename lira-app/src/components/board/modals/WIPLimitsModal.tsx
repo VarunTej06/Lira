@@ -1,11 +1,12 @@
-import { notifySaved } from '../../common/SavedToast';
+import { notifySaved } from '../../common/savedToastStore';
 import React, { useState } from 'react';
 import { Modal } from '../../common/Modal';
 import type { Space } from '../../../types/space';
+import { appStorage } from '../../../utils/appStorage';
 
 /** WIP Limits Modal */
 
-export interface WipLimitsConfig {
+interface WipLimitsConfig {
   enabled: boolean;
   limits: {
     backlog: number;
@@ -15,7 +16,7 @@ export interface WipLimitsConfig {
   };
 }
 
-export const DEFAULT_WIP_CONFIG: WipLimitsConfig = {
+const DEFAULT_WIP_CONFIG: WipLimitsConfig = {
   enabled: false,
   limits: {
     backlog: 0, // 0 = unlimited
@@ -33,11 +34,11 @@ export const WIPLimitsModal: React.FC<{
 }> = ({ isOpen, onClose, space, onConfigSaved }) => {
   const [config, setConfig] = useState<WipLimitsConfig>(() => {
     try {
-      const savedLimits = localStorage.getItem('lira_wip_limits');
-      const savedConfig = localStorage.getItem('lira_wip_config');
+      const savedLimits = appStorage.get('lira_wip_limits');
+      const savedConfig = appStorage.get('lira_wip_config');
       if (savedLimits && savedLimits.startsWith('{')) {
         const parsedLimits = JSON.parse(savedLimits);
-        const hasLimits = Object.values(parsedLimits).some((v: any) => typeof v === 'number' && v > 0);
+        const hasLimits = Object.values(parsedLimits).some((v: unknown) => typeof v === 'number' && v > 0);
         return {
           enabled: hasLimits,
           limits: { ...DEFAULT_WIP_CONFIG.limits, ...parsedLimits }
@@ -50,11 +51,11 @@ export const WIPLimitsModal: React.FC<{
   });
 
   const handleSave = () => {
-    localStorage.setItem('lira_wip_config', JSON.stringify(config));
+    appStorage.set('lira_wip_config', JSON.stringify(config));
     if (config.enabled) {
-      localStorage.setItem('lira_wip_limits', JSON.stringify(config.limits));
+      appStorage.set('lira_wip_limits', JSON.stringify(config.limits));
     } else {
-      localStorage.setItem('lira_wip_limits', JSON.stringify({}));
+      appStorage.set('lira_wip_limits', JSON.stringify({}));
     }
     window.dispatchEvent(new Event('lira_wip_limits_changed'));
     onConfigSaved?.(config);
@@ -120,7 +121,7 @@ export const WIPLimitsModal: React.FC<{
                     }}
                     className="w-20 px-2 py-1 text-sm border border-lira-border rounded font-bold text-center bg-gray-50 focus:bg-white focus:border-lira-blue"
                   />
-                  <span className="text-[11px] text-lira-muted">{col.desc}</span>
+                  <span className="text-2xs text-lira-muted">{col.desc}</span>
                 </div>
               </div>
             ))}
@@ -138,7 +139,7 @@ export const WIPLimitsModal: React.FC<{
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-white rounded-lg hover:bg-blue-700 cursor-pointer shadow-xs"
+            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer shadow-xs"
           >
             Save WIP Limits
           </button>

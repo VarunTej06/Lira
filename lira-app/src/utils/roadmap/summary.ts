@@ -4,7 +4,7 @@ import { parseDay, daysBetween } from './dates';
 import { resolveItem } from './progress';
 
 /** Roadmap summary numbers and CSV export. */
-export interface RoadmapSummary {
+interface RoadmapSummary {
   total: number;
   byStatus: Record<RoadmapStatus, number>;
   percent: number;          // average progress, weighted by duration
@@ -38,7 +38,7 @@ export function summarize(rm: Roadmap, issues: Issue[] = [], today = new Date())
   };
 }
 
-export const csvCell = (v: string | number) => {
+const csvCell = (v: string | number) => {
   const s = String(v);
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };

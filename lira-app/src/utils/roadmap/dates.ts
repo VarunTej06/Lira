@@ -1,5 +1,5 @@
 /** Calendar-day helpers (no times, no time zones). */
-export const DAY = 86_400_000;
+const DAY = 86_400_000;
 
 export function parseDay(s: string): Date {
   const [y, m, d] = s.split('-').map(Number);
@@ -18,8 +18,6 @@ export function daysBetween(a: Date, b: Date): number {
   const ub = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
   return Math.round((ub - ua) / DAY);
 }
-
-export const todayStr = (now = new Date()) => fmtDay(now);
 
 export function fmtShort(s: string): string {
   return parseDay(s).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });

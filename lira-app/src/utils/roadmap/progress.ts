@@ -26,7 +26,7 @@ export const epicTickets = (epic: Issue | undefined, issues: Issue[]): Issue[] =
   epic ? issues.filter(i => i.type !== 'epic' && i.type !== 'subtask' && (i.parentId === epic.id || i.epicId === epic.id)) : [];
 
 /** The task that carries an item's checklist. */
-export const taskFor = (item: RoadmapItem, issues: Issue[]): Issue | undefined =>
+const taskFor = (item: RoadmapItem, issues: Issue[]): Issue | undefined =>
   item.taskKey ? issues.find(i => i.key === item.taskKey && i.type !== 'epic') : undefined;
 
 /** The checklist to show: the linked task's subtasks when there is a task (so ticking one on the ticket shows here), else the saved list. */

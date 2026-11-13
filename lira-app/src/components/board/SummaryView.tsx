@@ -1,6 +1,9 @@
-import { CountUp, GrowBar, motion } from '../common/motion';
+import { SpaceIcon } from '../common/SpaceIcon';
+import { CountUp, GrowBar } from '../common/motion';
+import { motion } from '../common/motionPresets';
 import { issueLink } from '../../utils/links';
 import { statusLabel } from '../../utils/status';
+import { summaryStats } from '../../utils/summaryStats';
 import { ColorDot } from '../common/Icons';
 import React, { useMemo } from 'react';
 import {
@@ -16,82 +19,30 @@ interface SummaryViewProps {
   onIssueClick: (issue: Issue) => void;
 }
 
+/** One labelled row: a count, its percentage, and a bar that grows to it. */
+function BarRow({ label, count, percent, barClass, valueClass, pctClass }: {
+  label: React.ReactNode; count: number; percent: number; barClass: string; valueClass: string; pctClass: string;
+}) {
+  return (
+    <div className="space-y-1">
+      <div className="flex justify-between text-xs font-medium">
+        <span className="text-lira-text">{label}</span>
+        <span className={valueClass}><CountUp value={count} /> <span className={pctClass}>(<CountUp value={percent} suffix="%" />)</span></span>
+      </div>
+      <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+        <GrowBar className={`h-full ${barClass} rounded-full`} percent={percent} />
+      </div>
+    </div>
+  );
+}
+
 export const SummaryView: React.FC<SummaryViewProps> = ({
   issues,
   space,
   onIssueClick,
 }) => {
-  const stats = useMemo(() => {
-    const total = issues.length;
-    const done = issues.filter(i => i.status === 'done').length;
-    const inProgress = issues.filter(i => i.status === 'inprogress').length;
-    const blocked = issues.filter(i => i.blocked).length;
-    const todo = issues.filter(i => i.status === 'todo').length;
-    const backlog = issues.filter(i => i.status === 'backlog').length;
-
-    const now = new Date();
-    const overdue = issues.filter(i => {
-      if (i.status === 'done' || !i.dueDate) return false;
-      return new Date(i.dueDate) < now;
-    }).length;
-
-    const completionRate = total > 0 ? Math.round((done / total) * 100) : 0;
-
-    // Priority counts
-    const priorityCounts: Record<string, number> = {
-      highest: issues.filter(i => i.priority === 'highest').length,
-      high: issues.filter(i => i.priority === 'high').length,
-      medium: issues.filter(i => i.priority === 'medium').length,
-      low: issues.filter(i => i.priority === 'low').length,
-      lowest: issues.filter(i => i.priority === 'lowest').length,
-    };
-
-    // High priority callouts
-    const highPriorityIssues = issues
-      .filter(i => (i.priority === 'highest' || i.priority === 'high') && i.status !== 'done')
-      .slice(0, 5);
-
-    // Recent updates
-    const recentlyUpdated = [...issues]
-      .sort((a, b) => new Date(b.updatedAt || b.createdAt).getTime() - new Date(a.updatedAt || a.createdAt).getTime())
-      .slice(0, 5);
-
-    // Epics with progress
-    const epics = issues.filter(i => i.type === 'epic');
-    const epicProgress = epics.map(epic => {
-      const children = issues.filter(i => i.parentId === epic.id || i.epicId === epic.id);
-      const completedChildren = children.filter(i => i.status === 'done').length;
-      const progress = children.length > 0 ? Math.round((completedChildren / children.length) * 100) : (epic.status === 'done' ? 100 : 0);
-      return { epic, totalChildren: children.length, completedChildren, progress };
-    });
-
-    // Top labels
-    const labelCounts: Record<string, number> = {};
-    issues.forEach(i => {
-      i.labels?.forEach(label => {
-        labelCounts[label] = (labelCounts[label] || 0) + 1;
-      });
-    });
-    const topLabels = Object.entries(labelCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8);
-
-    return {
-      total,
-      done,
-      inProgress,
-      blocked,
-      todo,
-      backlog,
-      overdue,
-      completionRate,
-      priorityCounts,
-      highPriorityIssues,
-      recentlyUpdated,
-      epicProgress,
-      topLabels,
-    };
-  }, [issues]);
+  const stats = useMemo(() => summaryStats(issues), [issues]);
+  const share = (n: number) => (stats.total > 0 ? Math.round((n / stats.total) * 100) : 0);
 
   return (
     <div className="flex-1 overflow-y-auto bg-gray-50/50 p-6 space-y-6">
@@ -100,16 +51,14 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
         <div className="flex items-center gap-4">
           {space && (
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold shadow-xs"
-              style={{ backgroundColor: (space.color || '#0052CC') + '22', color: space.color || '#0052CC' }}
-            >
-              {space.icon || '🚀'}
+              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold shadow-xs bg-lira-blue-light text-lira-blue"            >
+              <SpaceIcon icon={space.icon} className="w-6 h-6" />
             </div>
           )}
           <div>
             <h1 className="text-xl font-bold text-lira-text flex items-center gap-2">
               {space?.name || 'Workspace'}
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold border border-blue-200">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-lira-blue-light text-lira-blue font-semibold border border-lira-border">
                 Summary & Analytics
               </span>
             </h1>
@@ -122,7 +71,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
         {/* Global Progress Dial */}
         <div className="flex items-center gap-4 bg-gray-50 px-4 py-2.5 rounded-lg border border-lira-border">
           <div className="text-right">
-            <div className="text-[11px] font-semibold uppercase text-lira-muted tracking-wider">Completion Rate</div>
+            <div className="text-2xs font-semibold uppercase text-lira-muted tracking-wider">Completion Rate</div>
             <div className="text-2xl font-extrabold text-lira-text"><CountUp value={stats.completionRate} suffix="%" /></div>
           </div>
           <div className="relative w-12 h-12 rounded-full flex items-center justify-center font-bold text-xs text-emerald-700 bg-emerald-50" data-testid="completion-ring">
@@ -138,47 +87,21 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
 
       {/* Row 1 — 4 Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-lira-border shadow-xs hover:border-lira-blue transition-all">
-          <div className="flex items-center justify-between text-lira-muted mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Total Issues</span>
-            <Layers className="w-4 h-4 text-blue-500" />
+        {[
+          { title: 'Total Issues', icon: <Layers className="w-4 h-4 text-lira-blue" />, valueClass: 'text-lira-text', value: stats.total, note: <>Across all Kanban columns</> },
+          { title: 'In Progress', icon: <Clock className="w-4 h-4 text-amber-500" />, valueClass: 'text-amber-600', value: stats.inProgress, note: <><CountUp value={share(stats.inProgress)} suffix="%" /> of active workload</> },
+          { title: 'Completed', icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />, valueClass: 'text-emerald-600', value: stats.done, note: <><CountUp value={stats.completionRate} suffix="%" /> resolved successfully</> },
+          { title: 'Overdue Issues', icon: <AlertTriangle className={`w-4 h-4 ${stats.overdue > 0 ? 'text-red-500' : 'text-gray-400'}`} />, valueClass: stats.overdue > 0 ? 'text-red-600' : 'text-gray-600', value: stats.overdue, note: <>Requires immediate attention</> },
+        ].map(card => (
+          <div key={card.title} className="bg-white p-4 rounded-xl border border-lira-border shadow-xs hover:border-lira-blue transition-all">
+            <div className="flex items-center justify-between text-lira-muted mb-2">
+              <span className="text-xs font-semibold uppercase tracking-wider">{card.title}</span>
+              {card.icon}
+            </div>
+            <div className={`text-2xl font-bold ${card.valueClass}`}><CountUp value={card.value} /></div>
+            <div className="text-xs text-lira-muted mt-1">{card.note}</div>
           </div>
-          <div className="text-2xl font-bold text-lira-text"><CountUp value={stats.total} /></div>
-          <div className="text-xs text-lira-muted mt-1">Across all Kanban columns</div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-lira-border shadow-xs hover:border-lira-blue transition-all">
-          <div className="flex items-center justify-between text-lira-muted mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">In Progress</span>
-            <Clock className="w-4 h-4 text-amber-500" />
-          </div>
-          <div className="text-2xl font-bold text-amber-600"><CountUp value={stats.inProgress} /></div>
-          <div className="text-xs text-lira-muted mt-1">
-            <CountUp value={stats.total > 0 ? Math.round((stats.inProgress / stats.total) * 100) : 0} suffix="%" /> of active workload
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-lira-border shadow-xs hover:border-lira-blue transition-all">
-          <div className="flex items-center justify-between text-lira-muted mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Completed</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-          </div>
-          <div className="text-2xl font-bold text-emerald-600"><CountUp value={stats.done} /></div>
-          <div className="text-xs text-lira-muted mt-1">
-            <CountUp value={stats.completionRate} suffix="%" /> resolved successfully
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-lira-border shadow-xs hover:border-lira-blue transition-all">
-          <div className="flex items-center justify-between text-lira-muted mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Overdue Issues</span>
-            <AlertTriangle className={`w-4 h-4 ${stats.overdue > 0 ? 'text-red-500' : 'text-gray-400'}`} />
-          </div>
-          <div className={`text-2xl font-bold ${stats.overdue > 0 ? 'text-red-600' : 'text-gray-600'}`}>
-            <CountUp value={stats.overdue} />
-          </div>
-          <div className="text-xs text-lira-muted mt-1">Requires immediate attention</div>
-        </div>
+        ))}
       </div>
 
       {/* Row 2 — Status Breakdown & Priority Distribution */}
@@ -200,22 +123,9 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
               { label: 'In Progress', count: stats.inProgress, color: 'bg-amber-500', textColor: 'text-amber-600' },
               { label: 'Blocked (flagged)', count: stats.blocked, color: 'bg-red-500', textColor: 'text-red-600' },
               { label: 'Done', count: stats.done, color: 'bg-emerald-500', textColor: 'text-emerald-600' },
-            ].map(col => {
-              const pct = stats.total > 0 ? Math.round((col.count / stats.total) * 100) : 0;
-              return (
-                <div key={col.label} className="space-y-1">
-                  <div className="flex justify-between text-xs font-medium">
-                    <span className="text-lira-text">{col.label}</span>
-                    <span className={col.textColor}>
-                      <CountUp value={col.count} /> <span className="text-lira-muted">(<CountUp value={pct} suffix="%" />)</span>
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <GrowBar className={`h-full ${col.color} rounded-full`} percent={pct} />
-                  </div>
-                </div>
-              );
-            })}
+            ].map(col => (
+              <BarRow key={col.label} label={col.label} count={col.count} percent={share(col.count)} barClass={col.color} valueClass={col.textColor} pctClass="text-lira-muted" />
+            ))}
           </div>
         </div>
 
@@ -236,25 +146,17 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
               { label: 'Medium', key: 'medium', color: 'bg-amber-400', dot: '#FBBF24' },
               { label: 'Low', key: 'low', color: 'bg-emerald-400', dot: '#34D399' },
               { label: 'Lowest', key: 'lowest', color: 'bg-slate-400', dot: '#94A3B8' },
-            ].map(p => {
-              const count = stats.priorityCounts[p.key] || 0;
-              const pct = stats.total > 0 ? Math.round((count / stats.total) * 100) : 0;
-              return (
-                <div key={p.key} className="space-y-1">
-                  <div className="flex justify-between text-xs font-medium">
-                    <span className="flex items-center gap-1.5 text-lira-text">
-                      <ColorDot color={p.dot} /> {p.label}
-                    </span>
-                    <span className="text-lira-muted">
-                      <CountUp value={count} /> <span className="text-gray-400">(<CountUp value={pct} suffix="%" />)</span>
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <GrowBar className={`h-full ${p.color} rounded-full`} percent={pct} />
-                  </div>
-                </div>
-              );
-            })}
+            ].map(p => (
+              <BarRow
+                key={p.key}
+                label={<span className="flex items-center gap-1.5"><ColorDot color={p.dot} /> {p.label}</span>}
+                count={stats.priorityCounts[p.key] || 0}
+                percent={share(stats.priorityCounts[p.key] || 0)}
+                barClass={p.color}
+                valueClass="text-lira-muted"
+                pctClass="text-gray-400"
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -287,9 +189,9 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                 </div>
                 <div className="text-sm font-semibold text-lira-text truncate mb-2">{epic.title}</div>
                 <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden mb-1.5">
-                  <GrowBar className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full" percent={progress} />
+                  <GrowBar className="h-full bg-purple-500 rounded-full" percent={progress} />
                 </div>
-                <div className="text-[11px] text-lira-muted flex justify-between">
+                <div className="text-2xs text-lira-muted flex justify-between">
                   <span><CountUp value={completedChildren} /> of {totalChildren} work items done</span>
                   <span className="capitalize text-gray-500">{epic.status}</span>
                 </div>
@@ -325,7 +227,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
                       {issue.title}
                     </span>
                   </div>
-                  <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
+                  <span className="text-3xs uppercase font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">
                     {statusLabel(issue.status)}
                   </span>
                 </div>
@@ -347,10 +249,10 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
               {stats.topLabels.map(([label, count]) => (
                 <div
                   key={label}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-lg text-xs font-semibold"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-lira-blue-light text-lira-text border border-lira-border rounded-lg text-xs font-semibold"
                 >
                   <span>#{label}</span>
-                  <span className="bg-blue-200/80 text-blue-900 px-1.5 py-0.2 rounded-full text-[10px]">
+                  <span className="bg-lira-blue/15 text-lira-text px-1.5 py-0.2 rounded-full text-3xs">
                     {count}
                   </span>
                 </div>

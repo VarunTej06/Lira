@@ -1,8 +1,9 @@
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { DialogHost, alertDialog, confirmDialog, promptDialog } from './dialogs';
-import { toKey, fromKey, monthGrid, formatPretty } from './DatePicker';
+import { DialogHost } from './dialogs';
+import { alertDialog, chooseDialog, confirmDialog, promptDialog } from './dialogStore';
+import { toKey, fromKey, monthGrid, formatPretty } from './dateKeys';
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -99,5 +100,32 @@ describe('date picker helpers', () => {
     expect(g[0].date.getDay()).toBe(1);               // Monday
     expect(toKey(g[0].date)).toBe('2026-10-26');
     expect(g.filter(d => d.inMonth)).toHaveLength(30);
+  });
+});
+
+describe('choose (two answers and a way back)', () => {
+  const ask = () => chooseDialog({ title: 'Save your comment?', message: 'm', confirmLabel: 'Save comment', altLabel: 'Discard comment', cancelLabel: 'Keep editing' });
+
+  it('answers "confirm" for the main button and "alt" for the other one', async () => {
+    let a: unknown = 'pending';
+    await act(async () => { void ask().then(v => { a = v; }); await wait(0); });
+    expect(button('Discard comment')).toBeDefined();
+    await click('Save comment');
+    expect(a).toBe('confirm');
+    let b: unknown = 'pending';
+    await act(async () => { void ask().then(v => { b = v; }); await wait(0); });
+    await click('Discard comment');
+    expect(b).toBe('alt');
+  });
+
+  it('answers null when it is dismissed: the cancel button or Escape choose neither', async () => {
+    let a: unknown = 'pending';
+    await act(async () => { void ask().then(v => { a = v; }); await wait(0); });
+    await click('Keep editing');
+    expect(a).toBeNull();
+    let b: unknown = 'pending';
+    await act(async () => { void ask().then(v => { b = v; }); await wait(0); });
+    await act(async () => { document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await wait(0); });
+    expect(b).toBeNull();
   });
 });

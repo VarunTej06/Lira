@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { createSpace, updateSpace } from '../../hooks/useSpaces';
 import type { Space } from '../../types/space';
+import { useResetWhen } from '../../hooks/useResetWhen';
+import { SpaceIcon, SpaceIconPicker } from '../common/SpaceIcon';
+import { DEFAULT_SPACE_ICON, SPACE_COLOR, spaceIconKey } from '../../utils/spaceIcon';
 
 interface CreateSpaceModalProps {
   isOpen: boolean;
@@ -12,8 +15,6 @@ interface CreateSpaceModalProps {
   onUpdated?: (space: Space) => void;
 }
 
-const SPACE_ICONS = ['📋', '✨', '🏆', '📚', '🌤️', '🚀', '💡', '🎯', '🔧', '🌐', '🧠', '⚡'];
-const SPACE_COLORS = ['#0052CC', '#00B8D9', '#6554C0', '#36B37E', '#FF5630', '#FFAB00', '#FF991F', '#172B4D'];
 
 export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
   isOpen,
@@ -24,24 +25,26 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [key, setKey] = useState('');
-  const [icon, setIcon] = useState('📋');
-  const [color, setColor] = useState('#0052CC');
+  const [icon, setIcon] = useState<string>(DEFAULT_SPACE_ICON);
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
+  const resetForm = () => {
+    setName(''); setKey(''); setIcon(DEFAULT_SPACE_ICON); setDescription(''); setError('');
+  };
+
+  useResetWhen([isOpen, editingSpace], () => {
     if (editingSpace) {
       setName(editingSpace.name || '');
       setKey(editingSpace.key || '');
-      setIcon(editingSpace.icon || '📋');
-      setColor(editingSpace.color || '#0052CC');
+      setIcon(spaceIconKey(editingSpace.icon)); // an older emoji becomes its icon name on the next save
       setDescription(editingSpace.description || '');
       setError('');
     } else {
       resetForm();
     }
-  }, [isOpen, editingSpace]);
+  });
 
   const handleNameChange = (v: string) => {
     setName(v);
@@ -69,7 +72,6 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
           name: name.trim(),
           key: key.toUpperCase().trim(),
           icon,
-          color,
           description: description.trim(),
           updatedAt: now,
         });
@@ -78,7 +80,6 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
           name: name.trim(),
           key: key.toUpperCase().trim(),
           icon,
-          color,
           description: description.trim(),
           updatedAt: now,
         });
@@ -88,7 +89,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
           name: name.trim(),
           key: key.toUpperCase().trim(),
           icon,
-          color,
+          color: SPACE_COLOR,
           description: description.trim(),
           createdAt: now,
           updatedAt: now,
@@ -97,15 +98,11 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
         onClose();
         resetForm();
       }
-    } catch (err) {
+    } catch {
       setError(editingSpace ? 'Failed to update space.' : 'Failed to create space.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const resetForm = () => {
-    setName(''); setKey(''); setIcon('📋'); setColor('#0052CC'); setDescription(''); setError('');
   };
 
   const modalTitle = editingSpace ? 'Space Settings & Edit' : 'Create Space';
@@ -114,38 +111,9 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={() => { resetForm(); onClose(); }} title={modalTitle} size="md">
       <form onSubmit={handleSubmit} className="p-6 space-y-5">
-        {/* Icon & Color */}
         <div>
           <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Icon</label>
-          <div className="flex flex-wrap gap-2">
-            {SPACE_ICONS.map(ic => (
-              <button
-                key={ic}
-                type="button"
-                onClick={() => setIcon(ic)}
-                className={`w-9 h-9 rounded-lg text-lg flex items-center justify-center transition-all ${
-                  icon === ic ? 'ring-2 ring-lira-blue scale-110' : 'hover:bg-gray-100'
-                }`}
-              >
-                {ic}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-lira-muted mb-2 uppercase tracking-wide">Color</label>
-          <div className="flex gap-2 flex-wrap">
-            {SPACE_COLORS.map(c => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setColor(c)}
-                className={`w-7 h-7 rounded-full transition-all ${color === c ? 'ring-2 ring-offset-2 ring-lira-blue scale-110' : 'hover:scale-105'}`}
-                style={{ backgroundColor: c }}
-              />
-            ))}
-          </div>
+          <SpaceIconPicker value={icon} onChange={setIcon} />
         </div>
 
         <div>
@@ -171,7 +139,7 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
             placeholder="e.g. PY"
             className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue font-mono uppercase transition-all"
           />
-          <p className="text-[10px] text-lira-muted mt-1">Used as ticket prefix (e.g. {key || 'KEY'}-1)</p>
+          <p className="text-3xs text-lira-muted mt-1">Used as ticket prefix (e.g. {key || 'KEY'}-1)</p>
         </div>
 
         <div>
@@ -189,8 +157,8 @@ export const CreateSpaceModal: React.FC<CreateSpaceModalProps> = ({
 
         {/* Preview */}
         <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-lira-border">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl" style={{ backgroundColor: color + '22', color }}>
-            {icon}
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl bg-lira-blue-light text-lira-blue">
+            <SpaceIcon icon={icon} className="w-5 h-5" />
           </div>
           <div>
             <p className="text-sm font-semibold text-lira-text">{name || 'Space Name'}</p>

@@ -6,11 +6,11 @@ Build order for the versions of Lira. Pick a phase number to start and it will b
 |---|---|---|---|---|
 | 1 | Persistence cleanup and core tests | Foundation | Medium | **Done** |
 | 2 | Routing and file splitting | Foundation | Medium | **Done** |
-| 3 | Teams feature, real standup and invites | Collaboration | Large | Deferred (depends on the multi-user decision) |
+| 3 | Teams feature, real standup and invites | Collaboration | Large | Deferred (starts after the multi-user and SSO foundation, Phase 7) |
 | 4 | Sprint planning, rollover, retros, reports | Agile | Large | **Done** |
 | 5 | Command palette, bulk edit, saved filters | Productivity | Medium | Not started |
 | 6 | Viva AI: confirm-and-undo, sprint-aware prompts | AI | Medium | **Done** |
-| 7 | Decide on multi-user | Architecture | Decision, then Very large | Being planned: see [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (one repo with a shared core and two editions, hosted on Azure) |
+| 7 | Multi-user with SSO | Architecture | Very large | **Decided 9 November 2026, starting within days.** Plan: see [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (one repo with a shared core and two editions, hosted on Azure) |
 
 Phases 1 and 2 make every later phase cheaper, so they came first.
 
@@ -18,6 +18,7 @@ Phases 1 and 2 make every later phase cheaper, so they came first.
 
 - **Sprint length and sprint spaces:** monthly, weekly, bi-weekly or N-day sprints, and a choice of which spaces work in each sprint (Phase 4 follow-up).
 - **Sprint page filter:** by status and by space.
+- **Code-quality pass (9 Nov 2026):** lint warnings 128 to 0, `any` 10 to 0, import cycles 3 to 0, one-off pixel text sizes 371 to named type-scale classes, repeated hex colours moved to `theme/palette.ts`, browser storage behind `utils/appStorage.ts`, effects that only copied state replaced by `useResetWhen`, 409 new tests (1105 in total), and functions over the complexity limit from 81 to 59 (ten screens split into small tested parts: ticket popup, create ticket, rich text editor, roadmap item dialog and planner, sprints page, create sprint, Viva chat, filter dropdowns, results table) (dashboard numbers and widgets, the Markdown reader, Viva's previews, sprint risk, the disk store and the guard were split into small, tested pieces). Behaviour was not changed. Remaining debt is listed in `docs/04-quality/baseline-metrics.md`.
 - **Security review:** all 20 points checked, 8 fixed (see [SECURITY_REPORT.md](SECURITY_REPORT.md)): local API guard, safe file names and links, security headers, audit log, React Router 7, local fonts.
 - **Animations:** Framer Motion for dialogs, menus, tabs, the sidebar highlight, Viva, count-up numbers, line drawing and confetti (reduced-motion respected). A slide between pages and a click ring were tried and removed.
 - **Tablet and phone:** `npm run dev:lan` with a private link and QR code, a menu drawer for phones and upright tablets, always-visible hover actions on touch screens.
@@ -143,17 +144,23 @@ Phases 1 and 2 make every later phase cheaper, so they came first.
 
 ---
 
-## Phase 7: Decide on multi-user
+## Phase 7: Multi-user with SSO
 
 Everything above works for a single user on one machine. A real team tool needs a backend: accounts, roles, live sync, notifications, and the OAuth work in Phase 3.
 
-Decision to make:
-- **Stay local and single-user**, sharing through git and exports. Cheapest, and no server to run.
-- **Add a backend** (accounts, a real database, realtime). It is the biggest change and affects storage, auth and hosting.
+**Decision (9 November 2026):** Lira becomes a **multi-user application with single sign-on (SSO)**. Work starts within two to three days. The identity provider, database and hosting details are settled in the decision records under `docs/00-decisions/` before implementation starts.
 
-Decide before starting Phase 3's real invites, since it changes how they are built.
+Sequence agreed:
+1. Decisions and design (HLD, LLD, security standard) written and reviewed first.
+2. Multi-user and SSO implementation.
+3. DevOps: CI/CD pipelines, environments, code and dependency scanning. These are deliberately **after** step 2.
+
+Phase 3's real invites are designed on top of this foundation, not before it.
 
 ---
+
+### Decided 13 November 2026, to build with the roles of Phase 7
+- Today every new ticket starts in Backlog or To Do. With roles: admins and managers may create a ticket in any status; other members move a ticket one status at a time. Needs a short design first (which roles, whether moving backwards is allowed).
 
 ## Cross-cutting, any phase
 

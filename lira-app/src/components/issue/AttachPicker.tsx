@@ -4,7 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { Monitor, HardDrive, Cloud, Package, Link2, X, UploadCloud, FileText, ExternalLink, Check } from 'lucide-react';
 import type { Attachment, AttachmentSource } from '../../types/issue';
 import { readAttachment, formatBytes, MAX_EMBED_BYTES, SOURCE_LABEL } from '../../utils/attachments';
-import { AnimatePresence, motion, dialogBackdrop, dialogPanel } from '../common/motion';
+import { AnimatePresence, motion } from '../common/motionPresets';
+import { dialogBackdrop, dialogPanel } from '../common/motionPresets';
+import { useResetWhen } from '../../hooks/useResetWhen';
 
 type SourceId = 'computer' | Exclude<AttachmentSource, 'file'>;
 
@@ -50,10 +52,10 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
   const [busy, setBusy] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  useResetWhen([open], () => {
     if (!open) return;
     setSource('computer'); setStaged([]); setLinkUrl(''); setLinkName(''); setBusy(false); setDragging(false);
-  }, [open]);
+  });
 
   useEffect(() => {
     if (!open) return;
@@ -123,7 +125,7 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
                     <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${s.tile}`}>{s.icon}</span>
                     <span className="min-w-0">
                       <span className="block text-sm font-medium text-lira-text whitespace-nowrap">{s.label}</span>
-                      <span className="hidden sm:block text-[11px] text-lira-muted truncate">{s.hint}</span>
+                      <span className="hidden sm:block text-2xs text-lira-muted truncate">{s.hint}</span>
                     </span>
                   </button>
                 ))}
@@ -141,19 +143,19 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
                       <span className="mx-auto mb-3 w-12 h-12 rounded-full bg-white shadow-xs ring-1 ring-lira-border flex items-center justify-center text-lira-blue"><UploadCloud className="w-6 h-6" /></span>
                       <p className="text-sm font-medium text-lira-text">Drag files here</p>
                       <p className="text-xs text-lira-muted mt-1">or</p>
-                      <button onClick={() => fileInput.current?.click()} className="mt-2 px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer">Choose files</button>
+                      <button onClick={() => fileInput.current?.click()} className="mt-2 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer">Choose files</button>
                       <input ref={fileInput} type="file" multiple className="hidden" data-testid="attach-file-input" onChange={e => { stage(e.target.files); e.target.value = ''; }} />
-                      <p className="text-[11px] text-lira-muted mt-4">Files up to {formatBytes(MAX_EMBED_BYTES)} are stored in Lira. Larger files are listed by name only.</p>
+                      <p className="text-2xs text-lira-muted mt-4">Files up to {formatBytes(MAX_EMBED_BYTES)} are stored in Lira. Larger files are listed by name only.</p>
                     </div>
 
                     {staged.length > 0 && (
                       <ul className="space-y-1.5" aria-label="Files to attach">
                         {staged.map((f, i) => (
                           <li key={`${f.name}-${i}`} className="flex items-center gap-3 px-3 py-2 border border-lira-border rounded-lg">
-                            <span className="w-8 h-8 rounded-lg bg-blue-50 text-lira-blue flex items-center justify-center flex-shrink-0"><FileText className="w-4 h-4" /></span>
+                            <span className="w-8 h-8 rounded-lg bg-lira-blue-light text-lira-blue flex items-center justify-center flex-shrink-0"><FileText className="w-4 h-4" /></span>
                             <span className="min-w-0 flex-1">
                               <span className="block text-sm text-lira-text truncate">{f.name}</span>
-                              <span className="block text-[11px] text-lira-muted">{formatBytes(f.size)}{f.size > MAX_EMBED_BYTES ? ' - too large to store, name only' : ''}</span>
+                              <span className="block text-2xs text-lira-muted">{formatBytes(f.size)}{f.size > MAX_EMBED_BYTES ? ' - too large to store, name only' : ''}</span>
                             </span>
                             <button onClick={() => setStaged(p => p.filter((_, j) => j !== i))} aria-label={`Remove ${f.name}`} className="p-1 rounded hover:bg-red-50 text-lira-muted hover:text-red-500 cursor-pointer"><X className="w-3.5 h-3.5" /></button>
                           </li>
@@ -202,7 +204,7 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
               <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer">Cancel</button>
               <button
                 onClick={() => void attach()} disabled={!canAttach || busy} data-testid="attach-confirm"
-                className="px-4 py-2 text-sm font-semibold text-white bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLinkSource ? 'Add link' : staged.length > 1 ? `Attach ${staged.length} files` : 'Attach'}
               </button>

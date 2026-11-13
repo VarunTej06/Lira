@@ -1,9 +1,11 @@
+import { isEditable } from '../../../utils/isEditable';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Search, X } from 'lucide-react';
 import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
 import { useClickOutside, fuzzyMatch } from './shared';
 import { useMediaQuery } from '../../../hooks/useMediaQuery';
+import { useResetWhen } from '../../../hooks/useResetWhen';
 
 export const OmniSearch: React.FC<{
   issues: Issue[];
@@ -29,8 +31,7 @@ export const OmniSearch: React.FC<{
   // Global hotkey: Ctrl+K or /
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      const activeTag = (document.activeElement as HTMLElement)?.tagName?.toLowerCase();
-      const inInput = activeTag === 'input' || activeTag === 'textarea';
+      const inInput = isEditable(document.activeElement); // also the comment and description editors, which are not <input>s
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
         inputRef.current?.focus();
@@ -56,9 +57,7 @@ export const OmniSearch: React.FC<{
     }).slice(0, 10);
   }, [issues, query]);
 
-  useEffect(() => {
-    setSelectedIdx(0);
-  }, [results]);
+  useResetWhen([results], () => setSelectedIdx(0));
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (!open || results.length === 0) return;
@@ -106,7 +105,7 @@ export const OmniSearch: React.FC<{
   }
 
   return (
-    <div ref={containerRef} className={phone ? 'fixed left-3 right-3 top-3 z-[70] bg-[#18233B] rounded-2xl p-2 shadow-2xl border border-white/10' : 'flex-1 min-w-0 max-w-xs mx-1 sm:mx-2 relative'}>
+    <div ref={containerRef} className={phone ? 'fixed left-3 right-3 top-3 z-[70] bg-lira-nav rounded-2xl p-2 shadow-2xl border border-white/10' : 'flex-1 min-w-0 max-w-xs mx-1 sm:mx-2 relative'}>
       <div className="relative">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40" />
         <input
@@ -127,16 +126,16 @@ export const OmniSearch: React.FC<{
             <X className="w-3 h-3" />
           </button>
         ) : (
-          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-white/30 font-mono">/</kbd>
+          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-3xs text-white/30 font-mono">/</kbd>
         )}
       </div>
 
       {open && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-[#1D2939] border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150 animate-scale-in">
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-lira-nav border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150 animate-scale-in">
           <div className="max-h-72 overflow-y-auto py-1">
             {Object.entries(grouped).map(([spaceName, spaceIssues]) => (
               <div key={spaceName}>
-                <div className="px-3 py-1.5 text-[10px] font-semibold text-white/40 uppercase tracking-wider">{spaceName}</div>
+                <div className="px-3 py-1.5 text-3xs font-semibold text-white/40 uppercase tracking-wider">{spaceName}</div>
                 {spaceIssues.map(issue => {
                   const idx = flatIdx++;
                   return (
@@ -147,16 +146,16 @@ export const OmniSearch: React.FC<{
                         selectedIdx === idx ? 'bg-white/15' : 'hover:bg-white/10'
                       }`}
                     >
-                      <span className="text-[10px] font-mono text-blue-400 font-bold flex-shrink-0">{issue.key}</span>
+                      <span className="text-3xs font-mono text-lira-nav-accent font-bold flex-shrink-0">{issue.key}</span>
                       <span className="text-xs text-white/80 truncate flex-1">{issue.title}</span>
-                      <span className="text-[10px] text-white/30 flex-shrink-0 hidden sm:block">{spaceMap[issue.spaceId]?.name}</span>
+                      <span className="text-3xs text-white/30 flex-shrink-0 hidden sm:block">{spaceMap[issue.spaceId]?.name}</span>
                     </button>
                   );
                 })}
               </div>
             ))}
           </div>
-          <div className="border-t border-white/10 px-3 py-1.5 flex gap-3 text-[10px] text-white/30">
+          <div className="border-t border-white/10 px-3 py-1.5 flex gap-3 text-3xs text-white/30">
             <span><kbd className="font-mono">↑↓</kbd> navigate</span>
             <span><kbd className="font-mono">Enter</kbd> open</span>
             <span><kbd className="font-mono">Esc</kbd> close</span>

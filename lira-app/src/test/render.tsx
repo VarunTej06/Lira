@@ -55,6 +55,16 @@ export async function typeInto(input: HTMLInputElement | HTMLTextAreaElement | n
   });
 }
 
+/** Picks a value in a <select> the way a person does, so React notices. */
+export async function choose(select: HTMLSelectElement | null | undefined, value: string) {
+  if (!select) throw new Error('choose: select not found');
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')!.set!.call(select, value);
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    await wait(0);
+  });
+}
+
 export async function press(key: string, target: EventTarget = document) {
   await act(async () => { target.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })); await wait(0); });
 }

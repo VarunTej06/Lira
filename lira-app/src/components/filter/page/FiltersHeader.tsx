@@ -13,7 +13,7 @@ export function FiltersHeader(s: FiltersState) {
             <div className="flex items-center gap-2">
               <h1 className="text-xl font-bold text-lira-text">Filters &amp; Search Explorer</h1>
               {activeFiltersCount > 0 && (
-                <span className="text-xs bg-blue-100 text-blue-700 font-semibold px-2.5 py-0.5 rounded-full">
+                <span className="text-xs bg-lira-blue-light text-lira-blue font-semibold px-2.5 py-0.5 rounded-full">
                   {activeFiltersCount} active {activeFiltersCount === 1 ? 'filter' : 'filters'}
                 </span>
               )}
@@ -45,7 +45,7 @@ export function FiltersHeader(s: FiltersState) {
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-lira-text border border-lira-border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
               title="Download results as JSON"
             >
-              <FileJson className="w-3.5 h-3.5 text-blue-600" />
+              <FileJson className="w-3.5 h-3.5 text-lira-blue" />
               Export JSON
             </button>
           </div>

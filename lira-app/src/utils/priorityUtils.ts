@@ -1,7 +1,8 @@
 import type { Priority } from '../types/issue';
+import { PALETTE } from '../theme/palette';
 
 // The picture for each priority is drawn by PriorityIcon (components/common/Icons.tsx).
-export interface PriorityConfig {
+interface PriorityConfig {
   label: string;
   color: string;
   bgColor: string;
@@ -11,33 +12,33 @@ export interface PriorityConfig {
 export const PRIORITY_CONFIG: Record<Priority, PriorityConfig> = {
   highest: {
     label: 'Highest',
-    color: '#DE350B',
-    bgColor: '#FFEBE6',
-    borderColor: '#DE350B',
+    color: PALETTE.critical,
+    bgColor: PALETTE.criticalBg,
+    borderColor: PALETTE.critical,
   },
   high: {
     label: 'High',
-    color: '#FF5630',
-    bgColor: '#FFEBE6',
-    borderColor: '#FF5630',
+    color: PALETTE.danger,
+    bgColor: PALETTE.criticalBg,
+    borderColor: PALETTE.danger,
   },
   medium: {
     label: 'Medium',
-    color: '#FF991F',
+    color: PALETTE.orange,
     bgColor: '#FFF7D6',
-    borderColor: '#FF991F',
+    borderColor: PALETTE.orange,
   },
   low: {
     label: 'Low',
-    color: '#36B37E',
+    color: PALETTE.success,
     bgColor: '#E3FCEF',
-    borderColor: '#36B37E',
+    borderColor: PALETTE.success,
   },
   lowest: {
     label: 'Lowest',
-    color: '#6B778C',
-    bgColor: '#F4F5F7',
-    borderColor: '#6B778C',
+    color: PALETTE.textMuted,
+    bgColor: PALETTE.surfaceMuted,
+    borderColor: PALETTE.textMuted,
   },
 };
 

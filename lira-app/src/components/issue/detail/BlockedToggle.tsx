@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { Ban, Flame, Plus, Search, X } from 'lucide-react';
-import type { Issue, IssueType } from '../../../types/issue';
+import React, { useMemo, useState } from 'react';
+import { Ban, Flame, Plus, X } from 'lucide-react';
+import type { Issue } from '../../../types/issue';
 import { useAllIssues } from '../../../hooks/useIssues';
 import { TypeIcon } from '../../common/Icons';
-import { AnimatePresence, motion, dialogBackdrop, dialogPanel } from '../../common/motion';
+import { motion } from '../../common/motionPresets';
+import { TicketPicker } from '../../common/TicketPicker';
 import { BLOCKED_META } from '../../../utils/status';
+import { NO_ISSUES } from '../../../utils/emptyLists';
 
 /**
  * The Blocked switch of a ticket: a two-part pill ("Not blocked" | "Blocked").
@@ -65,7 +66,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
           else if (blocked) onChange([]);
         }}
         className={`relative z-10 flex-1 px-3 py-1.5 text-xs font-semibold rounded-full transition-colors duration-200 whitespace-nowrap ${
-          selected ? 'text-[var(--blocked-track)] cursor-default' : 'text-white cursor-pointer'
+          selected ? 'text-[var(--blocked-track)] cursor-default' : `${blocked ? 'text-white' : 'text-lira-on-blue'} cursor-pointer`
         }`}
       >
         {label}
@@ -80,7 +81,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
         role="radiogroup"
         aria-labelledby="issue-blocked-label"
         data-testid="blocked-toggle"
-        style={{ ['--blocked-track' as string]: blocked ? BLOCKED_META.color : 'rgb(var(--lira-blue))', backgroundColor: blocked ? BLOCKED_META.color : 'rgb(var(--lira-blue))' }}
+        style={{ ['--blocked-track' as string]: blocked ? BLOCKED_META.color : 'rgb(var(--lira-blue-text))',backgroundColor: blocked ? BLOCKED_META.color : 'rgb(var(--lira-blue))' }}
         className="relative flex p-1 rounded-full transition-colors duration-300"
       >
         <motion.span
@@ -100,7 +101,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
       {blocked && blockers.length > 0 && (
         <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-2.5 py-2 text-xs" data-testid="blocked-by">
           <div className="flex items-center justify-between mb-1.5">
-            <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-red-700"><Ban className="w-3.5 h-3.5" /> Blocked by</div>
+            <div className="flex items-center gap-1.5 text-3xs font-semibold uppercase tracking-wide text-red-700"><Ban className="w-3.5 h-3.5" /> Blocked by</div>
             <button type="button" onClick={() => setPicking(true)} data-testid="blocked-add" className="flex items-center gap-0.5 text-lira-blue font-semibold hover:underline cursor-pointer">
               <Plus className="w-3 h-3" /> {blockers.length === 1 ? 'Add or change' : 'Add'}
             </button>
@@ -132,7 +133,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
 
       {blocking.length > 0 && (
         <div className="mt-2 rounded-lg border border-amber-200 bg-amber-50 px-2.5 py-2 text-xs" data-testid="blocking-list">
-          <div className="text-[10px] font-semibold uppercase tracking-wide text-amber-800 mb-1">This ticket is blocking</div>
+          <div className="text-3xs font-semibold uppercase tracking-wide text-amber-800 mb-1">This ticket is blocking</div>
           <ul className="space-y-1">
             {blocking.map(b => (
               <li key={b.id}>
@@ -158,123 +159,27 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
   );
 };
 
-const TYPES: { id: IssueType | 'all'; label: string }[] = [
-  { id: 'all', label: 'All' }, { id: 'epic', label: 'Epics' }, { id: 'task', label: 'Tasks' }, { id: 'bug', label: 'Bugs' }, { id: 'subtask', label: 'Subtasks' },
-];
-
 interface PickerProps { open: boolean; issue: Issue; alreadyIds: number[]; onClose: () => void; onPick: (issues: Issue[]) => void }
 
 /** Choose the ticket, or tickets, that block this one. */
-export const BlockerPicker: React.FC<PickerProps> = ({ open, issue, alreadyIds, onClose, onPick }) => {
-  const all = useAllIssues() || [];
-  const [query, setQuery] = useState('');
-  const [type, setType] = useState<IssueType | 'all'>('all');
-  const [chosen, setChosen] = useState<number[]>([]);
+const BlockerPicker: React.FC<PickerProps> = ({ open, issue, alreadyIds, onClose, onPick }) => {
+  const all = useAllIssues() ?? NO_ISSUES;
   const adding = alreadyIds.length > 0;
-
-  useEffect(() => {
-    if (!open) return;
-    setQuery(''); setType('all'); setChosen([]);
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { e.stopPropagation(); onClose(); } };
-    document.addEventListener('keydown', onKey, true);
-    return () => document.removeEventListener('keydown', onKey, true);
-  }, [open, onClose]);
-
-  const candidates = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return all
-      .filter(i => i.id !== issue.id && i.status !== 'done' && !alreadyIds.includes(i.id!) && !(i.blocked && i.blockedByIds?.includes(issue.id!))) // not itself, not finished, not already linked, not one that waits on this ticket
-      .filter(i => type === 'all' || i.type === type)
-      .filter(i => !q || i.key.toLowerCase().includes(q) || i.title.toLowerCase().includes(q))
-      .sort((a, b) => (a.spaceId === issue.spaceId ? 0 : 1) - (b.spaceId === issue.spaceId ? 0 : 1) || a.key.localeCompare(b.key, undefined, { numeric: true }))
-      .slice(0, 100);
-  }, [all, issue.id, issue.spaceId, alreadyIds, query, type]);
-
-  const toggle = (id: number) => setChosen(c => (c.includes(id) ? c.filter(x => x !== id) : [...c, id]));
-  const chosenIssues = chosen.map(id => all.find(i => i.id === id)).filter((i): i is Issue => !!i);
-
-  return createPortal(
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          key="blocker-picker"
-          {...dialogBackdrop}
-          className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}
-        >
-          <motion.div
-            {...dialogPanel}
-            role="dialog" aria-modal="true" aria-label="Blocked by" data-testid="blocker-picker"
-            className="bg-white rounded-xl shadow-2xl border border-lira-border w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh]"
-          >
-            <div className="flex items-start justify-between px-5 py-4 border-b border-lira-border">
-              <div className="flex items-start gap-3">
-                <span className="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0"><Ban className="w-5 h-5" /></span>
-                <div>
-                  <h2 className="text-base font-bold text-lira-text">{adding ? `What else is blocking ${issue.key}?` : `What is blocking ${issue.key}?`}</h2>
-                  <p className="text-xs text-lira-muted mt-0.5">Choose one or more epics, tasks, bugs or subtasks this work is waiting on. Each is linked to this ticket.</p>
-                </div>
-              </div>
-              <button onClick={onClose} aria-label="Close" className="p-1.5 rounded-lg hover:bg-gray-100 text-lira-muted cursor-pointer"><X className="w-4 h-4" /></button>
-            </div>
-
-            <div className="px-5 pt-4 space-y-3">
-              <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-lira-muted" />
-                <input
-                  autoFocus value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by key or title" aria-label="Search tickets"
-                  className="w-full text-sm border border-lira-border rounded-lg pl-9 pr-3 py-2 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue bg-white text-lira-text"
-                />
-              </div>
-              <div className="flex flex-wrap gap-1.5" role="group" aria-label="Ticket type">
-                {TYPES.map(t => (
-                  <button key={t.id} type="button" aria-pressed={type === t.id} onClick={() => setType(t.id)}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-full border cursor-pointer transition-colors ${type === t.id ? 'bg-lira-blue text-white border-lira-blue' : 'border-lira-border text-lira-muted hover:bg-gray-50'}`}>
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <ul className="flex-1 min-h-[160px] overflow-y-auto px-3 py-3" aria-label="Tickets">
-              {candidates.length === 0 && <li className="text-sm text-lira-muted text-center py-8">No open tickets match.</li>}
-              {candidates.map(i => {
-                const on = chosen.includes(i.id!);
-                return (
-                  <li key={i.id}>
-                    <label
-                      data-testid={`blocker-${i.key}`}
-                      className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer transition-colors ${on ? 'bg-lira-blue-light ring-1 ring-lira-blue' : 'hover:bg-gray-50'}`}
-                    >
-                      <input type="checkbox" className="sr-only peer" checked={on} onChange={() => toggle(i.id!)} />
-                      <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 peer-focus-visible:ring-2 peer-focus-visible:ring-lira-blue ${on ? 'bg-lira-blue border-lira-blue text-white' : 'border-gray-300 bg-white'}`}>
-                        {on && <svg viewBox="0 0 12 12" className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 6.5l2.2 2.2L9.5 3.5" /></svg>}
-                      </span>
-                      <TypeIcon type={i.type} className="w-4 h-4 flex-shrink-0" />
-                      <span className="font-mono text-xs font-semibold text-lira-muted w-20 flex-shrink-0">{i.key}</span>
-                      <span className="flex-1 min-w-0 text-sm text-lira-text truncate">{i.title}</span>
-                    </label>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div className="flex items-center justify-between gap-2 px-5 py-3 border-t border-lira-border bg-gray-50/60">
-              <span className="text-xs text-lira-muted truncate">{chosenIssues.length === 0 ? 'Select one or more tickets' : `${chosenIssues.length} selected: ${chosenIssues.map(c => c.key).join(', ')}`}</span>
-              <div className="flex gap-2 flex-shrink-0">
-                <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer">Cancel</button>
-                <button
-                  disabled={chosenIssues.length === 0} data-testid="blocker-confirm" onClick={() => onPick(chosenIssues)}
-                  className="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {adding ? 'Add to blocked by' : 'Mark as blocked'}
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>,
-    document.body,
+  // not itself, not finished, not already linked, not one that waits on this ticket
+  const candidates = useMemo(
+    () => all.filter(i => i.id !== issue.id && i.status !== 'done' && !alreadyIds.includes(i.id!) && !(i.blocked && i.blockedByIds?.includes(issue.id!))),
+    [all, issue.id, alreadyIds],
+  );
+  return (
+    <TicketPicker
+      open={open} onClose={onClose} testId="blocker" tone="danger" typeFilter
+      icon={<Ban className="w-5 h-5" />}
+      title={adding ? `What else is blocking ${issue.key}?` : `What is blocking ${issue.key}?`}
+      hint="Choose one or more epics, tasks, bugs or subtasks this work is waiting on. Each is linked to this ticket."
+      candidates={candidates} homeSpaceId={issue.spaceId}
+      emptyText="No open tickets match."
+      confirmLabel={adding ? 'Add to blocked by' : 'Mark as blocked'}
+      onPick={picked => onPick(picked.map(p => p.issue))}
+    />
   );
 };

@@ -2,11 +2,13 @@ import { issueLink } from '../../utils/links';
 import React, { useMemo } from 'react';
 import { Download, Printer } from 'lucide-react';
 import type { Issue } from '../../types/issue';
-import { CountUp, motion } from '../common/motion';
+import { CountUp } from '../common/motion';
+import { motion } from '../common/motionPresets';
 import { getSprintMeta, isSprintWork, issuesInSprint, sprintName } from '../../utils/sprintUtils';
 import {
   buildReport, reportHtml, reportMarkdown, type BurnupPoint, type FlowPoint, type SprintReport as Report,
 } from '../../utils/sprintReports';
+import { PALETTE } from '../../theme/palette';
 
 interface SprintReportsProps {
   issues: Issue[];
@@ -24,13 +26,13 @@ const Axes: React.FC<{ max: number; days: number }> = ({ max, days }) => (
       const y = P.t + ih - f * ih;
       return (
         <g key={f}>
-          <line x1={P.l} x2={W - P.r} y1={y} y2={y} stroke="#DFE1E6" strokeWidth="1" />
-          <text x={P.l - 4} y={y + 3} fontSize="9" textAnchor="end" fill="#6B778C">{Math.round(max * f)}</text>
+          <line x1={P.l} x2={W - P.r} y1={y} y2={y} stroke={PALETTE.border} strokeWidth="1" />
+          <text x={P.l - 4} y={y + 3} fontSize="9" textAnchor="end" fill={PALETTE.textMuted}>{Math.round(max * f)}</text>
         </g>
       );
     })}
     {[1, Math.ceil(days / 2), days].filter((d, i, a) => a.indexOf(d) === i).map(d => (
-      <text key={d} x={P.l + ((d - 1) / Math.max(1, days - 1)) * iw} y={H - 6} fontSize="9" textAnchor="middle" fill="#6B778C">day {d}</text>
+      <text key={d} x={P.l + ((d - 1) / Math.max(1, days - 1)) * iw} y={H - 6} fontSize="9" textAnchor="middle" fill={PALETTE.textMuted}>day {d}</text>
     ))}
   </>
 );
@@ -43,13 +45,13 @@ const BurnupChart: React.FC<{ data: BurnupPoint[]; days: number }> = ({ data, da
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40" role="img" aria-label="Burnup chart: scope and completed work">
       <Axes max={max} days={days} />
-      <motion.polyline points={data.map(d => `${x(d.day)},${y(d.scope)}`).join(' ')} fill="none" stroke="#97A0AF" strokeWidth="2" strokeDasharray="4 3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} />
-      <motion.polyline points={data.map(d => `${x(d.day)},${y(d.done)}`).join(' ')} fill="none" stroke="#00875A" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />
+      <motion.polyline points={data.map(d => `${x(d.day)},${y(d.scope)}`).join(' ')} fill="none" stroke={PALETTE.textFaint} strokeWidth="2" strokeDasharray="4 3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} />
+      <motion.polyline points={data.map(d => `${x(d.day)},${y(d.done)}`).join(' ')} fill="none" stroke={PALETTE.successDeep} strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.1, ease: 'easeInOut', delay: 0.15 }} />
     </svg>
   );
 };
 
-const FLOW_COLORS = { done: '#36B37E', inprogress: '#4C9AFF', todo: '#B3BAC5', backlog: '#EBECF0' } as const;
+const FLOW_COLORS = { done: PALETTE.success, inprogress: '#4C9AFF', todo: '#B3BAC5', backlog: '#EBECF0' } as const;
 
 const FlowChart: React.FC<{ data: FlowPoint[]; days: number }> = ({ data, days }) => {
   const max = Math.max(1, ...data.map(d => d.backlog + d.todo + d.inprogress + d.done));
@@ -76,8 +78,8 @@ const FlowChart: React.FC<{ data: FlowPoint[]; days: number }> = ({ data, days }
 const Tile: React.FC<{ label: string; value: React.ReactNode; sub?: React.ReactNode }> = ({ label, value, sub }) => (
   <div className="border border-lira-border rounded-xl px-3 py-2 bg-white">
     <div className="text-xl font-semibold text-lira-text">{value}</div>
-    <div className="text-[11px] text-lira-muted">{label}</div>
-    {sub && <div className="text-[10px] text-lira-muted">{sub}</div>}
+    <div className="text-2xs text-lira-muted">{label}</div>
+    {sub && <div className="text-3xs text-lira-muted">{sub}</div>}
   </div>
 );
 
@@ -149,15 +151,15 @@ export const SprintReports: React.FC<SprintReportsProps> = ({ issues, sprint, sc
         <div className="bg-white border border-lira-border rounded-xl p-4">
           <h4 className="text-sm font-semibold text-lira-text mb-1">Burnup</h4>
           <BurnupChart data={burnup} days={report.days} />
-          <div className="flex gap-3 text-[10px] text-lira-muted">
+          <div className="flex gap-3 text-3xs text-lira-muted">
             <span><span className="inline-block w-3 border-t-2 border-dashed border-gray-400 mr-1 align-middle" />Scope</span>
-            <span><span className="inline-block w-3 border-t-2 mr-1 align-middle" style={{ borderColor: '#00875A' }} />Done</span>
+            <span><span className="inline-block w-3 border-t-2 mr-1 align-middle" style={{ borderColor: PALETTE.successDeep }} />Done</span>
           </div>
         </div>
         <div className="bg-white border border-lira-border rounded-xl p-4">
           <h4 className="text-sm font-semibold text-lira-text mb-1">Cumulative flow</h4>
           <FlowChart data={flow} days={report.days} />
-          <div className="flex flex-wrap gap-3 text-[10px] text-lira-muted">
+          <div className="flex flex-wrap gap-3 text-3xs text-lira-muted">
             {(['done', 'inprogress', 'todo', 'backlog'] as const).map(k => (
               <span key={k}><span className="inline-block w-2 h-2 mr-1 rounded-sm" style={{ backgroundColor: FLOW_COLORS[k] }} />{{ done: 'Done', inprogress: 'In Progress', todo: 'To Do', backlog: 'Backlog' }[k]}</span>
             ))}
@@ -177,7 +179,7 @@ export const SprintReports: React.FC<SprintReportsProps> = ({ issues, sprint, sc
             {changes.map((c, i) => (
               <li key={`${c.issue.id}-${i}`} className="flex items-center gap-3 px-4 py-2 border-b border-lira-border last:border-0 text-sm hover:bg-gray-50 cursor-pointer" onClick={() => onIssueClick(c.issue)} {...issueLink(c.issue)}>
                 <span className="text-xs text-lira-muted w-14 flex-shrink-0">{c.at.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-                <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded flex-shrink-0 ${c.kind === 'added' ? 'bg-amber-100 text-amber-800' : c.kind === 'carried' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
+                <span className={`text-3xs font-semibold uppercase px-2 py-0.5 rounded flex-shrink-0 ${c.kind === 'added' ? 'bg-amber-100 text-amber-800' : c.kind === 'carried' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'}`}>
                   {c.kind === 'added' ? 'Added' : c.kind === 'carried' ? 'Carried over' : 'Removed'}
                 </span>
                 <span className="text-xs text-lira-muted flex-shrink-0">{c.issue.key}</span>

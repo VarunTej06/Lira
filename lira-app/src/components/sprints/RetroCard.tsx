@@ -33,7 +33,7 @@ export const RetroCard: React.FC<RetroCardProps> = ({ sprint, scope, onEdit, onC
       <div className="flex items-center gap-2">
         <MessageSquareText className="w-4 h-4 text-lira-blue" aria-hidden />
         <h3 className="text-sm font-semibold text-lira-text">Retrospective</h3>
-        {retro.savedAt && <span className="text-[11px] text-lira-muted">saved {new Date(retro.savedAt).toLocaleDateString()}</span>}
+        {retro.savedAt && <span className="text-2xs text-lira-muted">saved {new Date(retro.savedAt).toLocaleDateString()}</span>}
         <button onClick={onEdit} className="ml-auto text-xs text-lira-blue hover:underline cursor-pointer">Edit</button>
       </div>
       <div className="grid sm:grid-cols-2 gap-5">

@@ -1,7 +1,7 @@
 import Dexie, { type Table } from 'dexie';
 import type { Issue } from '../types/issue';
 import type { Space, Column } from '../types/space';
-import type { ProjectRow, SprintRow, TeamRow, StandupRow } from '../services/structuredStore';
+import type { ProjectRow, SprintRow, TeamRow, StandupRow } from '../types/structured';
 import { celebrate } from '../utils/celebrate';
 
 let restoringIssues = false;
@@ -11,7 +11,7 @@ export async function restoringIssuesExactly<T>(fn: () => Promise<T>): Promise<T
   try { return await fn(); } finally { restoringIssues = false; }
 }
 
-export class LiraDatabase extends Dexie {
+class LiraDatabase extends Dexie {
   spaces!: Table<Space, number>;
   issues!: Table<Issue, number>;
   columns!: Table<Column, string>;

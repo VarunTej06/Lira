@@ -58,13 +58,13 @@ export function DevicesSection(s: SettingsState) {
                   <div className="min-w-0 flex-1 space-y-2 w-full">
                     <p className="text-xs text-lira-muted">Scan the code with the device&apos;s camera, or open this link on it once:</p>
                     <input readOnly value={u} onFocus={e => e.currentTarget.select()} aria-label="Private link" className="w-full text-xs font-mono border border-lira-border rounded-lg px-2.5 py-2 bg-white text-lira-text" />
-                    <button onClick={() => copy(u)} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-lira-blue text-white cursor-pointer">
+                    <button onClick={() => copy(u)} className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-lira-blue text-lira-on-blue cursor-pointer">
                       {copied === u ? <><Check className="w-3.5 h-3.5" /> Copied</> : <><Copy className="w-3.5 h-3.5" /> Copy link</>}
                     </button>
                   </div>
                 </div>
               ))}
-              <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+              <p className="text-2xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                 This link is a password: anyone with it on your Wi-Fi can read and change your tickets. Do not share it or use it on public Wi-Fi.
                 To cancel every device, delete <code>data/private/lan-token</code> and restart Lira.
               </p>

@@ -1,4 +1,4 @@
-import { issueLink } from '../../../utils/links';
+import { WorkItemCard } from './WorkItemCard';
 import type { CapacityState } from './useCapacityState';
 
 /** Workload grouped by status. */
@@ -36,7 +36,7 @@ export function GroupByStatus(s: CapacityState) {
                     style={{ width: `${stage.pct}%`, backgroundColor: stage.dot }}
                   />
                 </div>
-                <p className="text-[11px] text-lira-muted pt-1">{stage.desc}</p>
+                <p className="text-2xs text-lira-muted pt-1">{stage.desc}</p>
               </div>
 
               {/* Item Cards */}
@@ -47,27 +47,8 @@ export function GroupByStatus(s: CapacityState) {
                   </p>
                 ) : (
                   stage.items.map(issue => (
-                    <div
-                      key={issue.id}
-                      onClick={() => onIssueClick?.(issue)} {...issueLink(issue)}
-                      className="p-3 rounded-lg border border-lira-border hover:border-lira-blue hover:bg-blue-50/20 transition-all cursor-pointer text-xs space-y-1.5 bg-white group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono font-bold text-lira-blue group-hover:underline">
-                          {issue.key}
-                        </span>
-                        <span className="text-[10px] uppercase font-semibold text-gray-500">
-                          {issue.priority}
-                        </span>
-                      </div>
-                      <div className="font-medium text-lira-text line-clamp-2 leading-snug">
-                        {issue.title}
-                      </div>
-                      <div className="flex items-center justify-between pt-1 text-[10px] text-lira-muted border-t border-gray-100">
-                        <span>{issue.assignee || 'Unassigned'}</span>
-                        <span className="font-bold text-lira-text">{issue.storyPoints || 1} pts</span>
-                      </div>
-                    </div>
+                    <WorkItemCard key={issue.id} issue={issue} onOpen={onIssueClick}
+                      tag={<span className="text-3xs uppercase font-semibold text-gray-500">{issue.priority}</span>} />
                   ))
                 )}
               </div>

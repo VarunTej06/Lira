@@ -23,63 +23,83 @@ function inline(s: string): string {
   return t;
 }
 
+/** One block read from the Markdown (a heading, a list, a quote...) and where reading continues. */
+interface Block { html: string; next: number }
+type BlockReader = (lines: string[], i: number) => Block | null;
+
+const FENCE = /^```/;
+const HEADING = /^(#{1,6})\s+(.*)$/;
+const QUOTE = /^>\s?/;
+const CHECK_ITEM = /^\s*[-*]\s+\[([ xX])\]\s+(.*)$/;
+const BULLET_ITEM = /^\s*[-*]\s+/;
+const NUMBER_ITEM = /^\s*\d+[.)]\s+/;
+
+/** The run of lines from `i` that all match `re`. */
+function run(lines: string[], i: number, re: RegExp): string[] {
+  const out: string[] = [];
+  while (i + out.length < lines.length && re.test(lines[i + out.length])) out.push(lines[i + out.length]);
+  return out;
+}
+
+const fencedCode: BlockReader = (lines, i) => {
+  if (!FENCE.test(lines[i])) return null;
+  const code: string[] = [];
+  let j = i + 1;
+  while (j < lines.length && !FENCE.test(lines[j])) code.push(lines[j++]);
+  return { html: `<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`, next: j + 1 };
+};
+
+const heading: BlockReader = (lines, i) => {
+  const h = HEADING.exec(lines[i]);
+  if (!h) return null;
+  const n = Math.min(h[1].length, 3);
+  return { html: `<h${n}>${inline(h[2])}</h${n}>`, next: i + 1 };
+};
+
+const quote: BlockReader = (lines, i) => {
+  const q = run(lines, i, QUOTE);
+  if (!q.length) return null;
+  return { html: `<blockquote><p>${q.map(l => inline(l.replace(QUOTE, ''))).join('<br>')}</p></blockquote>`, next: i + q.length };
+};
+
+const checklist: BlockReader = (lines, i) => {
+  const items = run(lines, i, CHECK_ITEM);
+  if (!items.length) return null;
+  const li = items.map(line => {
+    const m = CHECK_ITEM.exec(line)!;
+    const checked = m[1].toLowerCase() === 'x';
+    return `<li data-type="taskItem" data-checked="${checked}"><label><input type="checkbox"${checked ? ' checked' : ''}><span></span></label><div><p>${inline(m[2])}</p></div></li>`;
+  });
+  return { html: `<ul data-type="taskList">${li.join('')}</ul>`, next: i + items.length };
+};
+
+/** A list whose items start with `marker` (bullets or numbers). */
+const listReader = (marker: RegExp, tag: 'ul' | 'ol'): BlockReader => (lines, i) => {
+  const items = run(lines, i, marker);
+  if (!items.length) return null;
+  const li = items.map(line => `<li><p>${inline(line.replace(marker, ''))}</p></li>`);
+  return { html: `<${tag}>${li.join('')}</${tag}>`, next: i + items.length };
+};
+
+/** Tried in this order: a checkbox line is also a bullet line, so checklists come first. */
+const READERS: BlockReader[] = [fencedCode, heading, quote, checklist, listReader(BULLET_ITEM, 'ul'), listReader(NUMBER_ITEM, 'ol')];
+
 /** A small Markdown reader for the descriptions written before the editor existed. */
 export function markdownToHtml(md: string): string {
   const lines = md.replace(/\r\n/g, '\n').split('\n');
   const out: string[] = [];
-  let i = 0;
-  const flushPara = (buf: string[]) => { if (buf.length) out.push(`<p>${buf.map(inline).join('<br>')}</p>`); buf.length = 0; };
   let para: string[] = [];
+  const flushPara = () => { if (para.length) out.push(`<p>${para.map(inline).join('<br>')}</p>`); para = []; };
 
+  let i = 0;
   while (i < lines.length) {
-    const line = lines[i];
-    if (/^```/.test(line)) { // fenced code
-      flushPara(para);
-      const code: string[] = [];
-      i++;
-      while (i < lines.length && !/^```/.test(lines[i])) code.push(lines[i++]);
-      i++;
-      out.push(`<pre><code>${escapeHtml(code.join('\n'))}</code></pre>`);
-      continue;
-    }
-    const h = /^(#{1,6})\s+(.*)$/.exec(line);
-    if (h) { flushPara(para); const n = Math.min(h[1].length, 3); out.push(`<h${n}>${inline(h[2])}</h${n}>`); i++; continue; }
-    if (/^>\s?/.test(line)) {
-      flushPara(para);
-      const q: string[] = [];
-      while (i < lines.length && /^>\s?/.test(lines[i])) q.push(lines[i++].replace(/^>\s?/, ''));
-      out.push(`<blockquote><p>${q.map(inline).join('<br>')}</p></blockquote>`);
-      continue;
-    }
-    if (/^\s*[-*]\s+\[[ xX]\]\s+/.test(line)) { // checkbox list
-      flushPara(para);
-      const items: string[] = [];
-      while (i < lines.length && /^\s*[-*]\s+\[[ xX]\]\s+/.test(lines[i])) {
-        const m = /^\s*[-*]\s+\[([ xX])\]\s+(.*)$/.exec(lines[i++])!;
-        items.push(`<li data-type="taskItem" data-checked="${m[1].toLowerCase() === 'x'}"><label><input type="checkbox"${m[1].toLowerCase() === 'x' ? ' checked' : ''}><span></span></label><div><p>${inline(m[2])}</p></div></li>`);
-      }
-      out.push(`<ul data-type="taskList">${items.join('')}</ul>`);
-      continue;
-    }
-    if (/^\s*[-*]\s+/.test(line)) {
-      flushPara(para);
-      const items: string[] = [];
-      while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) items.push(`<li><p>${inline(lines[i++].replace(/^\s*[-*]\s+/, ''))}</p></li>`);
-      out.push(`<ul>${items.join('')}</ul>`);
-      continue;
-    }
-    if (/^\s*\d+[.)]\s+/.test(line)) {
-      flushPara(para);
-      const items: string[] = [];
-      while (i < lines.length && /^\s*\d+[.)]\s+/.test(lines[i])) items.push(`<li><p>${inline(lines[i++].replace(/^\s*\d+[.)]\s+/, ''))}</p></li>`);
-      out.push(`<ol>${items.join('')}</ol>`);
-      continue;
-    }
-    if (line.trim() === '') { flushPara(para); i++; continue; }
-    para.push(line);
+    const block = READERS.reduce<Block | null>((found, read) => found ?? read(lines, i), null);
+    if (block) { flushPara(); out.push(block.html); i = block.next; continue; }
+    if (lines[i].trim() === '') flushPara();
+    else para.push(lines[i]);
     i++;
   }
-  flushPara(para);
+  flushPara();
   return out.join('');
 }
 

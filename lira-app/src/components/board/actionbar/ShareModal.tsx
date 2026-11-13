@@ -1,5 +1,4 @@
 import { Download, FileJson, FileText } from 'lucide-react';
-import type {  } from '../../../types/space';
 import { Modal } from '../../common/Modal';
 import { Button } from '../../common/Button';
 import type { ActionBarState } from './useActionBarState';
@@ -43,7 +42,7 @@ export function ShareModal(s: ActionBarState) {
               onClick={handleExportJSON}
               className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-lira-text border border-lira-border rounded-lg hover:bg-gray-50 transition-colors"
             >
-              <FileJson className="w-4 h-4 text-blue-600" />
+              <FileJson className="w-4 h-4 text-lira-blue" />
               Export JSON
               <Download className="w-3.5 h-3.5 ml-auto text-lira-muted" />
             </button>

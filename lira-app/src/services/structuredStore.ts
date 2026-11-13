@@ -1,3 +1,4 @@
+import { appStorage } from '../utils/appStorage';
 /**
  * Structured (queryable) copy of the settings-style data, kept in Dexie tables:
  * projects, sprints, teams, standups.
@@ -7,30 +8,9 @@
  * on real tables instead of parsing localStorage. It is one-way: nothing is read back from these tables.
  */
 import { db } from '../db/db'
+import type { ProjectRow, SprintRow, TeamRow, StandupRow } from '../types/structured'
 
-export interface ProjectRow { id: string; [field: string]: unknown }
-export interface SprintRow {
-  id: string
-  spaceId: number | 'all'
-  sprint: string // YYYY-MM (a month) or YYYY-MM-DD (a weekly / bi-weekly / N-day sprint starting that day)
-  goal?: string
-  completedAt?: string
-  start?: string
-  end?: string
-  kind?: string
-  planned: boolean
-}
-export interface TeamRow {
-  id: string
-  kind: 'scope' | 'member'
-  owner?: string // scope teams: "space:6", "project:proj-x", "global"
-  memberKeys?: string[]
-  name?: string
-  email?: string
-}
-export interface StandupRow { id: string; scopeId: string; [field: string]: unknown }
-
-export interface Structured {
+interface Structured {
   projects: ProjectRow[]
   sprints: SprintRow[]
   teams: TeamRow[]
@@ -85,7 +65,7 @@ export async function syncStructured(): Promise<void> {
     const local: Record<string, string> = {}
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i)
-      if (k && k.startsWith('lira_') && !k.startsWith('lira__')) local[k] = localStorage.getItem(k) as string
+      if (k && k.startsWith('lira_') && !k.startsWith('lira__')) local[k] = appStorage.get(k) as string
     }
     const s = projectStructured(local)
     await db.transaction('rw', [db.projects, db.sprints, db.teams, db.standups], async () => {

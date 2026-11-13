@@ -121,7 +121,7 @@ function localFileDbPlugin(): Plugin {
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify(data))
             return
-          } catch (err) {
+          } catch {
             res.statusCode = 500
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify({ error: 'Failed to read data files' }))
@@ -195,7 +195,7 @@ function localFileDbPlugin(): Plugin {
               writeAudit(dataDir, 'save-settings', written)
               res.setHeader('Content-Type', 'application/json')
               res.end(JSON.stringify({ success: true, written }))
-            } catch (err) {
+            } catch {
               res.statusCode = 400
               res.setHeader('Content-Type', 'application/json')
               res.end(JSON.stringify({ error: 'Failed to write store files' }))

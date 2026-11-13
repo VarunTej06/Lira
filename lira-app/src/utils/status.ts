@@ -6,21 +6,22 @@
  * as a filter and is counted on the summary, sprint, project and capacity screens.
  */
 import type { Issue } from '../types/issue';
+import { PALETTE } from '../theme/palette';
 
-export const STATUS_IDS = ['backlog', 'todo', 'inprogress', 'done'] as const;
-export type KnownStatus = (typeof STATUS_IDS)[number];
+const STATUS_IDS = ['backlog', 'todo', 'inprogress', 'done'] as const;
+type KnownStatus = (typeof STATUS_IDS)[number];
 
-export interface StatusMeta { id: KnownStatus; label: string; color: string; bg: string }
+interface StatusMeta { id: KnownStatus; label: string; color: string; bg: string }
 
 export const STATUS_META: Record<KnownStatus, StatusMeta> = {
-  backlog: { id: 'backlog', label: 'Backlog', color: '#6B778C', bg: '#EBECF0' },
-  todo: { id: 'todo', label: 'To Do', color: '#172B4D', bg: '#DFE1E6' },
-  inprogress: { id: 'inprogress', label: 'In Progress', color: '#0052CC', bg: '#DEEBFF' },
+  backlog: { id: 'backlog', label: 'Backlog', color: '#5E6C84', bg: '#EBECF0' },
+  todo: { id: 'todo', label: 'To Do', color: PALETTE.textStrong, bg: PALETTE.border },
+  inprogress: { id: 'inprogress', label: 'In Progress', color: PALETTE.brand, bg: PALETTE.brandBg },
   done: { id: 'done', label: 'Done', color: '#006644', bg: '#E3FCEF' },
 };
 
 /** How a blocked ticket is coloured. */
-export const BLOCKED_META = { label: 'Blocked', color: '#BF2600', bg: '#FFEBE6' } as const;
+export const BLOCKED_META = { label: 'Blocked', color: '#BF2600', bg: PALETTE.criticalBg } as const;
 
 /** Every status, in the order they are listed in dropdowns and filters. */
 export const STATUS_LIST: StatusMeta[] = STATUS_IDS.map(id => STATUS_META[id]);

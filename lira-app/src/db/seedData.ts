@@ -2,6 +2,7 @@ import { db } from './db';
 import type { Space } from '../types/space';
 import type { Issue } from '../types/issue';
 import { v4 as uuidv4 } from 'uuid';
+import { PALETTE } from '../theme/palette';
 
 const now = new Date();
 const daysAgo = (n: number) => new Date(now.getTime() - n * 24 * 60 * 60 * 1000);
@@ -15,63 +16,7 @@ export async function seedDatabase(): Promise<void> {
     return;
   }
 
-  // Create spaces
-  const spaces: Omit<Space, 'id'>[] = [
-    {
-      name: 'General Tasks',
-      key: 'GEN',
-      icon: '📋',
-      color: '#6554C0',
-      description: 'General day-to-day tasks and miscellaneous work items',
-      createdAt: daysAgo(60),
-      updatedAt: daysAgo(1),
-    },
-    {
-      name: 'Creator Hub',
-      key: 'CRE',
-      icon: '✨',
-      color: '#00B8D9',
-      description: 'Content creation, writing, and creative projects',
-      createdAt: daysAgo(45),
-      updatedAt: daysAgo(3),
-    },
-    {
-      name: 'Certifications',
-      key: 'CERT',
-      icon: '🏆',
-      color: '#0052CC',
-      description: 'Technical certification study plans and exam preparation',
-      createdAt: daysAgo(30),
-      updatedAt: now,
-    },
-    {
-      name: 'Courses',
-      key: 'CRS',
-      icon: '📚',
-      color: '#36B37E',
-      description: 'Online course tracking and learning milestones',
-      createdAt: daysAgo(20),
-      updatedAt: daysAgo(2),
-    },
-    {
-      name: 'ATMOS - Weather App',
-      key: 'ATMOS',
-      icon: '🌤️',
-      color: '#FF5630',
-      description: 'Side project: Full-stack weather application',
-      createdAt: daysAgo(15),
-      updatedAt: daysAgo(5),
-    },
-    {
-      name: 'Lira',
-      key: 'LIRA',
-      icon: '🎯',
-      color: '#0052CC',
-      description: 'Lira product roadmap, feature development, and issue tracking',
-      createdAt: daysAgo(10),
-      updatedAt: now,
-    },
-  ];
+  const spaces = sampleSpaces();
 
   const spaceIds = await db.spaces.bulkAdd(spaces, { allKeys: true }) as number[];
   const genSpaceId = spaceIds[0];
@@ -80,8 +25,81 @@ export async function seedDatabase(): Promise<void> {
   const atmosSpaceId = spaceIds[4];
   const liraSpaceId = spaceIds[5];
 
-  // Seed Certification issues
-  const certIssues: Omit<Issue, 'id'>[] = [
+  await db.issues.bulkAdd(certIssues(certSpaceId));
+
+  await db.issues.bulkAdd(courseIssues(coursesSpaceId));
+
+  await db.issues.bulkAdd(atmosIssues(atmosSpaceId));
+
+  await db.issues.bulkAdd(genIssues(genSpaceId));
+
+  // Seed Lira project issues
+  await seedLiraIssues(liraSpaceId);
+}
+
+/** The sample spaces. */
+function sampleSpaces(): Omit<Space, 'id'>[] {
+  return [
+    {
+      name: 'General Tasks',
+      key: 'GEN',
+      icon: 'clipboard',
+      color: PALETTE.purple,
+      description: 'General day-to-day tasks and miscellaneous work items',
+      createdAt: daysAgo(60),
+      updatedAt: daysAgo(1),
+    },
+    {
+      name: 'Creator Hub',
+      key: 'CRE',
+      icon: 'sparkles',
+      color: PALETTE.info,
+      description: 'Content creation, writing, and creative projects',
+      createdAt: daysAgo(45),
+      updatedAt: daysAgo(3),
+    },
+    {
+      name: 'Certifications',
+      key: 'CERT',
+      icon: 'trophy',
+      color: PALETTE.brand,
+      description: 'Technical certification study plans and exam preparation',
+      createdAt: daysAgo(30),
+      updatedAt: now,
+    },
+    {
+      name: 'Courses',
+      key: 'CRS',
+      icon: 'book',
+      color: PALETTE.success,
+      description: 'Online course tracking and learning milestones',
+      createdAt: daysAgo(20),
+      updatedAt: daysAgo(2),
+    },
+    {
+      name: 'ATMOS - Weather App',
+      key: 'ATMOS',
+      icon: 'cloud',
+      color: PALETTE.danger,
+      description: 'Side project: Full-stack weather application',
+      createdAt: daysAgo(15),
+      updatedAt: daysAgo(5),
+    },
+    {
+      name: 'Lira',
+      key: 'LIRA',
+      icon: 'target',
+      color: PALETTE.brand,
+      description: 'Lira product roadmap, feature development, and issue tracking',
+      createdAt: daysAgo(10),
+      updatedAt: now,
+    },
+  ];
+}
+
+/** The sample Certification tickets. */
+function certIssues(certSpaceId: number): Omit<Issue, 'id'>[] {
+  return [
     {
       spaceId: certSpaceId,
       key: 'CERT-1',
@@ -429,11 +447,11 @@ export async function seedDatabase(): Promise<void> {
       watchers: ['VY'],
     },
   ];
+}
 
-  await db.issues.bulkAdd(certIssues);
-
-  // Seed Courses issues
-  const courseIssues: Omit<Issue, 'id'>[] = [
+/** The sample Courses tickets. */
+function courseIssues(coursesSpaceId: number): Omit<Issue, 'id'>[] {
+  return [
     {
       spaceId: coursesSpaceId,
       key: 'CRS-1',
@@ -476,11 +494,11 @@ export async function seedDatabase(): Promise<void> {
       watchers: ['VY'],
     },
   ];
+}
 
-  await db.issues.bulkAdd(courseIssues);
-
-  // Seed ATMOS project issues
-  const atmosIssues: Omit<Issue, 'id'>[] = [
+/** The sample ATMOS project tickets. */
+function atmosIssues(atmosSpaceId: number): Omit<Issue, 'id'>[] {
+  return [
     {
       spaceId: atmosSpaceId,
       key: 'ATMOS-1',
@@ -593,11 +611,11 @@ export async function seedDatabase(): Promise<void> {
       watchers: ['VY'],
     },
   ];
+}
 
-  await db.issues.bulkAdd(atmosIssues);
-
-  // Seed General issues
-  const genIssues: Omit<Issue, 'id'>[] = [
+/** The sample General tickets. */
+function genIssues(genSpaceId: number): Omit<Issue, 'id'>[] {
+  return [
     {
       spaceId: genSpaceId,
       key: 'GEN-1',
@@ -632,11 +650,6 @@ export async function seedDatabase(): Promise<void> {
       watchers: ['VY'],
     },
   ];
-
-  await db.issues.bulkAdd(genIssues);
-
-  // Seed Lira project issues
-  await seedLiraIssues(liraSpaceId);
 }
 
 async function ensureLiraSpace(): Promise<void> {
@@ -647,8 +660,8 @@ async function ensureLiraSpace(): Promise<void> {
     liraSpaceId = await db.spaces.add({
       name: 'Lira',
       key: 'LIRA',
-      icon: '🎯',
-      color: '#0052CC',
+      icon: 'target',
+      color: PALETTE.brand,
       description: 'Lira product roadmap, feature development, and issue tracking',
       createdAt: daysAgo(10),
       updatedAt: now,
@@ -663,7 +676,7 @@ async function ensureLiraSpace(): Promise<void> {
   }
 }
 
-export async function seedLiraIssues(liraSpaceId: number): Promise<void> {
+async function seedLiraIssues(liraSpaceId: number): Promise<void> {
   const issues: Omit<Issue, 'id'>[] = [
     {
       spaceId: liraSpaceId,

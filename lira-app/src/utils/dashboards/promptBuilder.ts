@@ -1,7 +1,7 @@
 import type { Space } from '../../types/space';
 import type { DashboardFilters, DateRange, ScenarioId } from './types';
 import { DEFAULT_FILTERS } from './types';
-import { findTargetSpace } from '../../services/ai/intent';
+import { findTargetSpace } from '../../services/ai/spaceMatch';
 
 /**
  * Builds a dashboard from a sentence: "show me what is blocked in the sprint and who is overloaded".
@@ -46,36 +46,68 @@ export function isDashboardRequest(text: string): boolean {
   return /\bdashboards?\b/.test(q) && /\b(create|build|make|generate|set ?up|new|show|give|need|want|add)\b/.test(q);
 }
 
-export function planFromPrompt(text: string, spaces: Space[] = []): DashboardPlan {
-  const q = text.toLowerCase();
-  const understood: string[] = [];
-  const filters: DashboardFilters = { ...DEFAULT_FILTERS };
-  const entries: string[] = [];
-  const topics: string[] = [];
-  let scenario: ScenarioId | undefined;
+interface FilterRule { when: (q: string) => boolean; apply: (f: DashboardFilters) => void; note: string }
 
+/** Words that narrow the dashboard, each with the sentence that tells the person what was understood. */
+const FILTER_RULES: FilterRule[] = [
+  { when: q => /\bsprint\b/.test(q) && !/\bsprints\b.*\ball\b/.test(q), apply: f => { f.sprint = 'current'; }, note: 'Limited to the current sprint.' },
+  { when: q => /\b(my|mine|me|myself)\b/.test(q) && !/\b(team|everyone|people)\b/.test(q), apply: f => { f.assignee = 'me'; }, note: 'Only tickets assigned to you.' },
+  { when: q => /\bbugs?\b/.test(q), apply: f => { f.types = ['bug']; }, note: 'Only bugs.' },
+  { when: q => /\b(high|highest|urgent|critical)\b.*\bpriorit/.test(q) || /\b(urgent|critical)\b/.test(q), apply: f => { f.priorities = ['highest', 'high']; }, note: 'Only high priority work.' },
+];
+
+const RANGE_WORDS: { range: DateRange; test: RegExp; label: string }[] = [
+  { range: '7d', test: /\b(this week|last week|past week|7 days|seven days)\b/, label: 'last 7 days' },
+  { range: '30d', test: /\b(this month|last month|30 days|past month)\b/, label: 'last 30 days' },
+  { range: '90d', test: /\b(quarter|90 days|three months)\b/, label: 'last 90 days' },
+];
+
+const OVERVIEW_ENTRIES = ['summary', 'stat-open', 'stat-done-week', 'stat-blocked', 'stat-overdue', 'bar-status', 'list-attention'];
+
+/** The widgets and the scenario the words ask for. */
+function topicsFor(q: string) {
   const hits = RULES.filter(r => r.test.test(q));
   // the generic "sprint" word should not drown out something more specific
   const specific = hits.filter(h => h.topic !== 'Sprint');
   const used = specific.length ? specific : hits;
+  const entries: string[] = [];
+  let scenario: ScenarioId | undefined;
   used.forEach(r => {
-    topics.push(r.topic);
     r.entries.forEach(id => { if (!entries.includes(id)) entries.push(id); });
     scenario = scenario ?? r.scenario;
   });
+  return { topics: used.map(r => r.topic), entries, scenario };
+}
 
-  if (/\bsprint\b/.test(q) && !/\bsprints\b.*\ball\b/.test(q)) { filters.sprint = 'current'; understood.push('Limited to the current sprint.'); }
-  if (/\b(my|mine|me|myself)\b/.test(q) && !/\b(team|everyone|people)\b/.test(q)) { filters.assignee = 'me'; understood.push('Only tickets assigned to you.'); }
-  if (/\bbugs?\b/.test(q)) { filters.types = ['bug']; understood.push('Only bugs.'); }
-  if (/\b(high|highest|urgent|critical)\b.*\bpriorit/.test(q) || /\b(urgent|critical)\b/.test(q)) { filters.priorities = ['highest', 'high']; understood.push('Only high priority work.'); }
-  const range: DateRange | null = /\b(this week|last week|past week|7 days|seven days)\b/.test(q) ? '7d' : /\b(this month|last month|30 days|past month)\b/.test(q) ? '30d' : /\b(quarter|90 days|three months)\b/.test(q) ? '90d' : null;
-  if (range) { filters.range = range; understood.push(`Finished work from the ${range === '7d' ? 'last 7 days' : range === '30d' ? 'last 30 days' : 'last 90 days'} (open work always counts).`); }
+/** The filters the words ask for, and a sentence about each. */
+function filtersFor(text: string, q: string, spaces: Space[]) {
+  const filters: DashboardFilters = { ...DEFAULT_FILTERS };
+  const understood: string[] = [];
+  for (const rule of FILTER_RULES) {
+    if (rule.when(q)) { rule.apply(filters); understood.push(rule.note); }
+  }
+  const range = RANGE_WORDS.find(r => r.test.test(q));
+  if (range) {
+    filters.range = range.range;
+    understood.push(`Finished work from the ${range.label} (open work always counts).`);
+  }
   const space = findTargetSpace(text, spaces);
-  if (space?.id && !/\b(all spaces|every space|everything)\b/.test(q)) { filters.spaceIds = [space.id]; understood.push(`Only the ${space.name} space.`); }
+  if (space?.id && !/\b(all spaces|every space|everything)\b/.test(q)) {
+    filters.spaceIds = [space.id];
+    understood.push(`Only the ${space.name} space.`);
+  }
+  return { filters, understood };
+}
+
+export function planFromPrompt(text: string, spaces: Space[] = []): DashboardPlan {
+  const q = text.toLowerCase();
+  const { topics, entries, scenario: found } = topicsFor(q);
+  const { filters, understood } = filtersFor(text, q, spaces);
+  let scenario = found;
 
   if (entries.length === 0) {
     // nothing recognised: a general overview
-    entries.push('summary', 'stat-open', 'stat-done-week', 'stat-blocked', 'stat-overdue', 'bar-status', 'list-attention');
+    entries.push(...OVERVIEW_ENTRIES);
     scenario = 'executive';
     topics.push('Overview');
     understood.push('I did not recognise a specific topic, so this is a general overview.');
@@ -84,10 +116,8 @@ export function planFromPrompt(text: string, spaces: Space[] = []): DashboardPla
     understood.unshift(`Topics: ${topics.join(', ')}.`);
   }
 
-  const parts = [...new Set(topics)].slice(0, 3);
-  let name = parts.join(' and ');
+  let name = [...new Set(topics)].slice(0, 3).join(' and ');
   if (filters.sprint === 'current') name += ' (this sprint)';
-  if (filters.assignee === 'me') name = `My ${name.toLowerCase()}`;
-  if (filters.assignee === 'me') scenario = 'my-work';
+  if (filters.assignee === 'me') { name = `My ${name.toLowerCase()}`; scenario = 'my-work'; }
   return { name: titleCase(name || 'New dashboard'), scenario: scenario ?? 'custom', filters, entries, understood };
 }

@@ -184,7 +184,7 @@
 | Standup and sprint calls | Per space, project or sprint; Google Calendar, Teams and email invites; `.ics` download |
 | Navigation | A URL for every page; Back and Forward; shared links; ticket popup link (`?issue=KEY`); sidebar customisable (Navigation items and sections, reorder, hide) |
 | Persistence | Everything in JSON files; backup and restore of all of it |
-| Look | Light and dark; accent colours; rounded panels; Framer Motion animations, count-up numbers, line drawing, confetti |
+| Look | Dark (black, silver, yellow) and two light palettes, Sorrel and Fawn; rounded panels; Framer Motion animations, count-up numbers, line drawing, confetti |
 | Devices | Phone and tablet layouts; `npm run dev:lan` with a private link and QR code |
 | Safety | Local API guard, safe links and file names, security headers, audit log |
 

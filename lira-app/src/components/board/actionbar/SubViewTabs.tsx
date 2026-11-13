@@ -1,6 +1,7 @@
 import { spaceLink } from '../../../utils/links';
 import { ChevronDown } from 'lucide-react';
-import { motion, slide } from '../../common/motion';
+import { motion } from '../../common/motionPresets';
+import { slide } from '../../common/motionPresets';
 import { MAIN_TABS, MORE_TABS } from './useActionBarState';
 import type { ActionBarState } from './useActionBarState';
 

@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Download, Upload, HardDrive, Moon, Sun } from 'lucide-react';
 import { Modal } from '../../common/Modal';
-import { applyTheme, getTheme, type Theme } from '../../../utils/theme';
+import { applyTheme, getLightPalette, getTheme, isThemeChange, type LightPalette, type Theme } from '../../../utils/theme';
+import { THEMES } from '../../../theme/palette';
+import { useResetWhen } from '../../../hooks/useResetWhen';
 
 export const SystemSettingsModal: React.FC<{
   isOpen: boolean;
@@ -13,9 +15,11 @@ export const SystemSettingsModal: React.FC<{
 }> = ({ isOpen, onClose, importing, importStatus, onExport, onImportClick }) => {
   // The choice is a draft until Apply; closing the dialog drops it
   const [theme, setTheme] = useState<Theme>(getTheme);
-  useEffect(() => { if (isOpen) setTheme(getTheme()); }, [isOpen]);
-  const changed = theme !== getTheme();
-  const handleApply = () => { applyTheme(theme); };
+  const [palette, setPalette] = useState<LightPalette>(getLightPalette);
+  useResetWhen([isOpen], () => { if (isOpen) { setTheme(getTheme()); setPalette(getLightPalette()); } });
+  const changed = isThemeChange(theme, palette);
+  const handleApply = () => { applyTheme(theme, palette); };
+  const pill = (on: boolean) => `px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1 ${on ? 'bg-lira-blue text-lira-on-blue' : 'bg-gray-200 text-gray-800'}`;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="System & Data Management" size="md">
@@ -35,13 +39,13 @@ export const SystemSettingsModal: React.FC<{
         <div className="space-y-3">
           <button
             onClick={onExport}
-            className="w-full flex items-center justify-between px-4 py-3 bg-blue-50 text-lira-blue rounded-xl hover:bg-blue-100 transition-colors text-sm font-semibold cursor-pointer border border-blue-200"
+            className="w-full flex items-center justify-between px-4 py-3 bg-lira-blue-light text-lira-blue rounded-xl hover:brightness-95 transition-colors text-sm font-semibold cursor-pointer border border-lira-border"
           >
             <span className="flex items-center gap-2">
               <Download className="w-4 h-4" />
               Export Unified JSON Backup
             </span>
-            <span className="text-[11px] bg-lira-blue text-white px-2 py-0.5 rounded-full font-medium">
+            <span className="text-2xs bg-lira-blue text-lira-on-blue px-2 py-0.5 rounded-full font-medium">
               Download + Disk Sync
             </span>
           </button>
@@ -55,7 +59,7 @@ export const SystemSettingsModal: React.FC<{
               <Upload className="w-4 h-4 text-gray-600" />
               {importing ? 'Importing dataset...' : 'Import JSON Backup'}
             </span>
-            <span className="text-[11px] text-lira-muted">Restore &amp; Overwrite</span>
+            <span className="text-2xs text-lira-muted">Restore &amp; Overwrite</span>
           </button>
         </div>
 
@@ -77,9 +81,7 @@ export const SystemSettingsModal: React.FC<{
                 key={opt}
                 onClick={() => setTheme(opt)}
                 aria-pressed={theme === opt}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1 ${
-                  theme === opt ? 'bg-lira-blue text-white' : 'bg-gray-200 text-gray-800'
-                }`}
+                className={pill(theme === opt)}
               >
                 {opt === 'dark' ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
                 {opt === 'dark' ? 'Dark' : 'Light'}
@@ -94,6 +96,19 @@ export const SystemSettingsModal: React.FC<{
             </button>
           </div>
         </div>
+
+        {theme === 'light' && (
+          <div className="flex items-center justify-between" role="group" aria-label="Light palette">
+            <p className="text-xs text-lira-muted">Which light palette?</p>
+            <div className="flex items-center gap-2">
+              {(['sorrel', 'fawn'] as const).map(p => (
+                <button key={p} onClick={() => setPalette(p)} aria-pressed={palette === p} title={THEMES[p].note} className={pill(palette === p)}>
+                  {THEMES[p].label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </Modal>
   );

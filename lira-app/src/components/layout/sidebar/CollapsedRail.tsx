@@ -1,3 +1,4 @@
+import { SpaceIcon } from '../../common/SpaceIcon';
 import { pageLink, spaceLink } from '../../../utils/links';
 import { ChevronRight, Plus } from 'lucide-react';
 import type { SidebarState } from './useSidebarState';
@@ -58,13 +59,11 @@ export function CollapsedRail(s: SidebarState) {
                 onClick={() => handleSpaceClick(space.id!)} {...spaceLink(space.key)}
                 className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all cursor-pointer flex-shrink-0 ${
                   activeSpaceId === space.id
-                    ? 'ring-2 ring-white/60 text-white shadow-xs'
+                    ? 'ring-2 ring-white/60 bg-white/20 text-white shadow-xs'
                     : 'text-white/60 hover:text-white hover:bg-white/10'
-                }`}
-                style={activeSpaceId === space.id ? { backgroundColor: space.color } : {}}
-                title={space.name}
+                }`}                title={space.name}
               >
-                {space.icon}
+                <SpaceIcon icon={space.icon} />
               </button>
             ))}
 
@@ -77,13 +76,11 @@ export function CollapsedRail(s: SidebarState) {
                     onClick={() => handleSpaceClick(space.id!)} {...spaceLink(space.key)}
                     className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all cursor-pointer flex-shrink-0 relative ${
                       activeSpaceId === space.id
-                        ? 'ring-2 ring-amber-400 text-white shadow-xs'
+                        ? 'ring-2 ring-amber-400 bg-white/20 text-white shadow-xs'
                         : 'text-white/40 hover:text-white hover:bg-white/10'
-                    }`}
-                    style={activeSpaceId === space.id ? { backgroundColor: space.color } : {}}
-                    title={`[Hidden] ${space.name}`}
+                    }`}                    title={`[Hidden] ${space.name}`}
                   >
-                    {space.icon}
+                    <SpaceIcon icon={space.icon} />
                     <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400" />
                   </button>
                 ))}

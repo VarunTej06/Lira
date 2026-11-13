@@ -3,7 +3,7 @@
   "spaceId": 1,
   "spaceKey": "GT",
   "spaceName": "General Tasks",
-  "updatedAt": "2026-11-06T02:28:32.132Z",
+  "updatedAt": "2026-11-13T08:20:39.558Z",
   "issueCount": 13,
   "space": {
     "id": 1,
@@ -271,8 +271,20 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z",
-      "sprint": "2026-11"
+      "updatedAt": "2026-11-13T08:20:39.044Z",
+      "sprint": "2026-11",
+      "statusLog": [
+        {
+          "from": "inprogress",
+          "to": "done",
+          "at": "2026-11-13T08:20:36.668Z"
+        },
+        {
+          "from": "done",
+          "to": "inprogress",
+          "at": "2026-11-13T08:20:39.085Z"
+        }
+      ]
     },
     {
       "id": 123,
@@ -463,7 +475,16 @@
           "createdAt": "2026-10-31T18:58:39.340Z"
         }
       ],
-      "comments": [],
+      "comments": [
+        {
+          "id": "a9c64eab-e98d-40fe-9eb7-0e660ab955c8",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "<p>Will be started in December</p>",
+          "attachments": [],
+          "createdAt": "2026-11-09T12:35:23.838Z"
+        }
+      ],
       "activity": [
         {
           "id": "ab3a9c8c-7eb4-4ca9-ac86-1d0d3d8b7c9a",
@@ -481,8 +502,25 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T19:00:17.204Z",
-      "sprint": "2026-11"
+      "updatedAt": "2026-11-09T12:35:23.839Z",
+      "sprint": "2026-11",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-09T12:34:13.018Z"
+        },
+        {
+          "from": "done",
+          "to": "inprogress",
+          "at": "2026-11-09T12:34:16.510Z"
+        },
+        {
+          "from": "inprogress",
+          "to": "backlog",
+          "at": "2026-11-09T12:34:19.339Z"
+        }
+      ]
     },
     {
       "id": 126,

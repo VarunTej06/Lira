@@ -9,7 +9,7 @@ export function StarredSection(s: SidebarState) {
       {/* ── Starred Section ── */}
       {starredIds.size > 0 && (
         <div className="py-2 border-b border-white/10">
-          <div className="px-3 mb-1 text-white/30 text-[10px] font-semibold uppercase tracking-wider">
+          <div className="px-3 mb-1 text-white/30 text-3xs font-semibold uppercase tracking-wider">
             Starred
           </div>
           {spaces.filter(s => s.id && starredIds.has(s.id)).map(space => (

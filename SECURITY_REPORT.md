@@ -38,7 +38,26 @@ Lira is a **single-user app that runs on your own computer**. It has no accounts
 | 19 | Insecure deserialization | Pass |
 | 20 | Stack traces | Fixed |
 
-**Totals:** 6 pass, 8 fixed, 2 partial, 4 not applicable. After the fixes: `npm audit` reports 0 vulnerabilities, 294 automated tests pass (including the security tests listed below), and the app was re-run in a real browser with the new policies and showed no violations.
+**Totals:** 6 pass, 8 fixed, 2 partial, 4 not applicable. After the fixes: `npm audit` reports 0 vulnerabilities, 1732 automated tests pass (including the security tests listed below), and the app was re-run in a real browser with the new policies and showed no violations.
+
+## Re-check, 9 November 2026
+
+The code was re-checked with independent tools. Nothing was changed by the check.
+
+| Tool | Result |
+| --- | --- |
+| TypeScript (`tsc -b`) | Clean |
+| `npm audit` | 0 vulnerabilities |
+| Semgrep (TypeScript, React and secrets rule sets; 110 rules, 321 files) | 0 findings |
+| Secret scan of tracked files and git history | No keys found |
+| Test suite | 1732 passing, plus the 15-check data health run |
+| Lint (oxlint) and import cycles (madge) | 0 warnings, 0 cycles (after the code-quality pass of 9 Nov 2026; before: 128 warnings, 3 cycles) |
+
+Observations carried forward to the multi-user and SSO work (none is exploitable on a single-user local app):
+- **Access cookie holds the token itself.** The tablet and phone cookie (`lira_access`) is the shared link token, valid for one year, without the `Secure` flag (acceptable on plain HTTP in a home network). Multi-user needs per-user sessions with expiry and revocation instead.
+- **Data at the disk boundary is typed but not validated.** `server/diskStore.ts` now uses typed records (no `any`), but still does not check every field against a schema (see item 4). Multi-user needs a schema on every write.
+- **Request size.** The 50 MB body limit is generous for one user; a shared server needs a lower limit and per-user quotas.
+- **Gemini model name is hard-coded** (`gemini-1.5-flash` in `src/services/ai/gemini.ts`). Make it a setting and confirm the model is still served.
 
 ## Problems found that are not on the list
 

@@ -12,7 +12,7 @@ How to run it
 
 ---
 
-## A. The screens that were reworked (A1–A24)
+## A. The screens that were reworked (A1–A25)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -275,6 +275,18 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Create space, and Create project with a new space. Expect: no colour swatches; an icon grid only.
 - [ ] Sidebar, board header, summary, filters, calendar, projects, For you, sprint planning. Expect: every space tile and chip uses the colours of the theme; no space has a colour of its own.
 - [ ] Edit an existing space and save. Expect: nothing about its look changes.
+
+### A25. Roadmap layout (13 Nov 2026)  ◐
+- [ ] Open a roadmap. Expect: one strip with the four numbers and the status bar, and the timeline directly below the toolbar, not at the bottom of the page.
+- [ ] Timeline with a short roadmap (a month or two). Expect: the calendar spans the whole panel, with no empty area to the right; bars are wide enough to tell apart.
+- [ ] Switch Weeks, Months, Quarters. Expect: the calendar still fills the panel in each; only the header rows change for a short roadmap.
+- [ ] A long roadmap (a year or more) in Weeks. Expect: it keeps its scale and scrolls sideways.
+- [ ] Look at the first and last dates. Expect: the calendar starts a few days before the first item and ends a few days after the last; no empty months.
+- [ ] Several milestones close together. Expect: their labels sit in separate rows and none overlaps another; the milestone row grows as needed.
+- [ ] Collapse and expand the sidebar, and resize the window. Expect: the calendar re-fits the new width.
+- [ ] Drag a bar, and drag its edge. Expect: it follows the pointer day by day and lands on the day shown, as before.
+- [ ] Planner. Expect: it fills the panel the same way; dragging an epic bar or a ticket chip lands on the day under the pointer.
+- [ ] Today button. Expect: today's line is in view.
 
 ---
 

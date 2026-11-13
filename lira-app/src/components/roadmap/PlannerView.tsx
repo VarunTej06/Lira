@@ -1,3 +1,4 @@
+import { useElementWidth } from '../../hooks/useElementWidth';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TimelineHeader } from './TimelineHeader';
 import { PlannerLabels } from './PlannerLabels';
@@ -6,7 +7,7 @@ import { dragTip, dropAction, type Drag } from './plannerDrag';
 import { GripHorizontal } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import {
-  PX_PER_DAY, buildHeader, buildPlannerRows, computeRange, 
+  buildHeader, buildPlannerRows, computeRange, fitPpd,
   parseDay, ticketDate, xOf,
   type Roadmap, type RoadmapItem,
 } from '../../utils/roadmapUtils';
@@ -14,7 +15,6 @@ import { PALETTE } from '../../theme/palette';
 
 const LABEL_W = 380;
 const HEADER_H = 52;
-const ppd = PX_PER_DAY.months;
 
 interface PlannerViewProps {
   roadmap: Roadmap;
@@ -53,7 +53,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
     rows.forEach(r => { if (r.kind === 'ticket') extra.push(ticketDate(r.issue).date); });
     return computeRange(roadmap, today, extra);
   }, [roadmap, rows, today]);
-  const header = useMemo(() => buildHeader(range, 'months'), [range]);
+  const ppd = fitPpd('months', range.days, useElementWidth(scrollRef) - LABEL_W); // the calendar fills the panel
+  const header = useMemo(() => buildHeader(range, 'months', ppd), [range, ppd]);
   const width = range.days * ppd;
   const todayX = xOf(range, today, ppd) + ppd / 2;
 
@@ -91,7 +92,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
     window.addEventListener('pointerup', onUp);
     return () => { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [!!drag, items, issues]);
+  }, [!!drag, items, issues, ppd]);
 
   const start = (e: React.PointerEvent, kind: Drag['kind'], id: string | number, mode: Drag['mode']) => {
     if (e.button !== 0) return;
@@ -120,7 +121,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
         <span>{ticketCount} tickets shown{unscheduled > 0 ? ` · ${unscheduled} without a due date (dashed, at the start of their sprint month)` : ''}</span>
       </div>
 
-      <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 360px)', minHeight: 320 }}>
+      <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 280px)', minHeight: 360 }}>
         <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + height }}>
           <TimelineHeader header={header} width={width} labelWidth={LABEL_W} height={HEADER_H} todayX={todayX} corner="Lane · Epic · Ticket" />
 
@@ -148,8 +149,8 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               ))}
 
               {rows.map(r => {
-                if (r.kind === 'epic') return <EpicBar key={`eb-${r.item.id}`} item={r.item} y={r.y} h={r.h} drag={drag} issues={issues} today={today} range={range} onStart={start} />;
-                if (r.kind === 'ticket') return <TicketBar key={`tb-${r.issue.id}`} issue={r.issue} y={r.y} h={r.h} drag={drag} range={range} onStart={start} />;
+                if (r.kind === 'epic') return <EpicBar key={`eb-${r.item.id}`} item={r.item} y={r.y} h={r.h} drag={drag} issues={issues} today={today} range={range} ppd={ppd} onStart={start} />;
+                if (r.kind === 'ticket') return <TicketBar key={`tb-${r.issue.id}`} issue={r.issue} y={r.y} h={r.h} drag={drag} range={range} ppd={ppd} onStart={start} />;
                 return null;
               })}
             </div>

@@ -27,7 +27,7 @@ flowchart LR
 | Area | Today |
 |---|---|
 | Language / build | TypeScript 7, React 18.3.1, Vite 8, Tailwind 3.4, React Router 7 |
-| Size | ~360 source files; about 33.4k lines of non-test code; 1722 automated tests in 152 files plus a 15-check data health run |
+| Size | ~360 source files; about 33.4k lines of non-test code; 1732 automated tests in 154 files plus a 15-check data health run |
 | Users | None. UI assumes one user ("VY"). No login. |
 | Source of truth | JSON files under `data/`. Browser storage is a cache. |
 | Tickets | Dexie tables `spaces`, `issues`, `columns` (3 schema versions); saved to `data/spaces/<KEY>.json` by `localDiskSync.ts` |

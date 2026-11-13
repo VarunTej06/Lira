@@ -9,7 +9,7 @@ Same tools, same commands (see "How to re-measure"). The pass changed no behavio
 | Area | Before | After |
 |---|---|---|
 | Typecheck (`tsc -b`) | Clean | Clean |
-| Tests | 655 (63 files) + 15 health | **1722 (152 files)** + 15 health |
+| Tests | 655 (63 files) + 15 health | **1732 (154 files)** + 15 health |
 | Lint (oxlint) warnings | 128 | **0** |
 | `npm audit` | 0 | 0 |
 | Semgrep (110 rules) | 0 findings, 302 files | 0 findings, 321 files |

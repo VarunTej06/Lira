@@ -1,9 +1,11 @@
+import { stackMilestones } from '../../utils/roadmap/milestoneLabels';
+import { useElementWidth } from '../../hooks/useElementWidth';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TimelineHeader } from './TimelineHeader';
 import { ChevronDown, Flag, Diamond } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import {
-  PX_PER_DAY, STATUS_META, buildHeader, computeRange, daysBetween, dependencyIssues, fmtShort,
+  STATUS_META, buildHeader, computeRange, daysBetween, dependencyIssues, fitPpd, fmtShort,
   laneColor, layoutRows, parseDay, resizeItem, resolveItem, shiftItem, xOf,
   type Roadmap, type RoadmapItem, type Zoom,
 } from '../../utils/roadmapUtils';
@@ -11,7 +13,7 @@ import { PALETTE } from '../../theme/palette';
 
 const LABEL_W = 270;
 const HEADER_H = 52;
-const MILESTONE_H = 66;
+const MILESTONE_TIER_H = 20;
 const BAR_H = 26;
 
 interface TimelineViewProps {
@@ -35,12 +37,12 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   roadmap, items, issues, zoom, showDeps, collapsedLanes, onToggleLane, onChangeItem, onOpenItem, onOpenMilestone, scrollToTodayKey,
 }) => {
   const today = useMemo(() => new Date(), []);
-  const ppd = PX_PER_DAY[zoom];
+  const scrollRef = useRef<HTMLDivElement>(null);
   const range = useMemo(() => computeRange(roadmap, today), [roadmap, today]);
-  const header = useMemo(() => buildHeader(range, zoom), [range, zoom]);
+  const ppd = fitPpd(zoom, range.days, useElementWidth(scrollRef) - LABEL_W); // the calendar fills the panel
+  const header = useMemo(() => buildHeader(range, zoom, ppd), [range, zoom, ppd]);
   const { rows, height, yOf } = useMemo(() => layoutRows(items, roadmap.lanes, collapsedLanes), [items, roadmap.lanes, collapsedLanes]);
   const width = range.days * ppd;
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const dragRef = useRef<Drag | null>(null);
   dragRef.current = drag;
@@ -89,18 +91,10 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   const problems = useMemo(() => dependencyIssues(roadmap.items), [roadmap.items]);
   const conflictKey = new Set(problems.filter(p => p.kind === 'conflict').map(p => `${p.from}>${p.to}`));
 
-  // Milestone labels: alternate tiers when two sit close together so text does not overlap
-  const milestones = useMemo(() => {
-    const sorted = [...roadmap.milestones].sort((a, b) => a.date.localeCompare(b.date));
-    const tierEnd = [-1e9, -1e9, -1e9]; // right edge of the last label placed on each tier
-    return sorted.map(m => {
-      const x = xOf(range, parseDay(m.date), ppd) + ppd / 2;
-      const labelW = m.title.length * 6 + 70;
-      let tier = tierEnd.findIndex(end => x > end + 8);
-      if (tier < 0) tier = tierEnd.indexOf(Math.min(...tierEnd));
-      tierEnd[tier] = x + labelW;
-      return { ...m, x, tier };
-    });
+  // Milestone labels are stacked in as many rows as it takes for none to overlap
+  const { milestones, milestoneH } = useMemo(() => {
+    const placed = stackMilestones([...roadmap.milestones].sort((a, b) => a.date.localeCompare(b.date)).map(m => ({ ...m, x: xOf(range, parseDay(m.date), ppd) + ppd / 2 })));
+    return { milestones: placed.labels, milestoneH: 10 + Math.max(2, placed.tiers) * MILESTONE_TIER_H };
   }, [roadmap.milestones, range, ppd]);
 
   // Dependency arrows between visible bars
@@ -138,18 +132,18 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
   };
 
   return (
-    <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 330px)', minHeight: 320 }}>
-      <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + MILESTONE_H + height }}>
+    <div ref={scrollRef} className="relative overflow-auto rounded-2xl border border-lira-border bg-lira-surface" style={{ maxHeight: 'calc(100vh - 250px)', minHeight: 360 }}>
+      <div className="relative" style={{ width: LABEL_W + width, minHeight: HEADER_H + milestoneH + height }}>
         <TimelineHeader header={header} width={width} labelWidth={LABEL_W} height={HEADER_H} todayX={todayX} corner="Work item" />
 
         {/* ── Milestones row ── */}
-        <div className="flex" style={{ height: MILESTONE_H }}>
+        <div className="flex" style={{ height: milestoneH }}>
           <div className="sticky left-0 z-20 bg-lira-surface border-b border-r border-lira-border flex items-center gap-2 px-4 text-xs font-semibold text-lira-text" style={{ width: LABEL_W }}>
             <Flag className="w-3.5 h-3.5 text-lira-blue" /> Milestones &amp; releases
           </div>
           <div className="relative border-b border-lira-border" style={{ width }}>
             {milestones.map(m => (
-              <button key={m.id} onClick={() => onOpenMilestone(m.id)} className="absolute -translate-x-[6px] flex flex-col items-start cursor-pointer hover:opacity-80 transition-opacity" style={{ left: m.x, top: 4 + m.tier * 20 }} title={`${m.title} · ${fmtShort(m.date)}`}>
+              <button key={m.id} onClick={() => onOpenMilestone(m.id)} className="absolute -translate-x-[6px] flex flex-col items-start cursor-pointer hover:opacity-80 transition-opacity" style={{ left: m.x, top: 4 + m.tier * MILESTONE_TIER_H }} title={`${m.title} · ${fmtShort(m.date)}`}>
                 <div className="flex items-center gap-1 whitespace-nowrap text-3xs font-medium text-lira-text">
                   {m.kind === 'release'
                     ? <Flag className="w-3 h-3 text-emerald-500 fill-emerald-500/30" />

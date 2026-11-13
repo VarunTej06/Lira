@@ -6,15 +6,24 @@ export const PX_PER_DAY: Record<Zoom, number> = { weeks: 22, months: 9, quarters
 
 interface TimeRange { start: Date; end: Date; days: number }
 
-/** Visible range: covers every item and milestone, padded, snapped to whole months. */
+/** Days of empty calendar kept before the first date and after the last, so bars and labels do not touch the edges. */
+const RANGE_PAD_DAYS = 4;
+
+/**
+ * Pixels per day so that the calendar fills the room it has. Never tighter than the scale's own width (a long roadmap
+ * scrolls), wider when the range is short, so a two-month roadmap is not squeezed into a corner of an empty panel.
+ */
+export const fitPpd = (zoom: Zoom, days: number, room: number): number => Math.max(PX_PER_DAY[zoom], days > 0 && room > 0 ? room / days : 0);
+
+/** Visible range: every item, milestone and today, with a few days of room on each side. */
 export function computeRange(rm: Roadmap, today = new Date(), extra: Date[] = []): TimeRange {
   const dates: Date[] = [today, ...extra];
   rm.items.forEach(i => { dates.push(parseDay(i.start), parseDay(i.end)); });
   rm.milestones.forEach(m => dates.push(parseDay(m.date)));
   const min = new Date(Math.min(...dates.map(d => d.getTime())));
   const max = new Date(Math.max(...dates.map(d => d.getTime())));
-  const start = new Date(min.getFullYear(), min.getMonth(), 1);
-  const end = new Date(max.getFullYear(), max.getMonth() + 2, 0); // end of the month after the last date
+  const start = addDays(new Date(min.getFullYear(), min.getMonth(), min.getDate()), -RANGE_PAD_DAYS);
+  const end = addDays(new Date(max.getFullYear(), max.getMonth(), max.getDate()), RANGE_PAD_DAYS);
   return { start, end, days: daysBetween(start, end) + 1 };
 }
 
@@ -77,8 +86,7 @@ function quartersHeader({ range, cell, clampEnd }: HeaderTools): Header {
 const HEADERS: Record<Zoom, (tools: HeaderTools) => Header> = { weeks: weeksHeader, months: monthsHeader, quarters: quartersHeader };
 
 /** Two header rows: bigger periods on top (year / quarter), finer below (month / week). */
-export function buildHeader(range: TimeRange, zoom: Zoom): Header {
-  const ppd = PX_PER_DAY[zoom];
+export function buildHeader(range: TimeRange, zoom: Zoom, ppd = PX_PER_DAY[zoom]): Header {
   const cell = (label: string, from: Date, to: Date): HeaderCell => ({
     label, x: xOf(range, from, ppd), width: (daysBetween(from, to) + 1) * ppd,
   });

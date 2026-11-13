@@ -231,7 +231,7 @@ npm run build     # must succeed
 npm run lint
 ```
 
-Tests (1722, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
+Tests (1732, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
 
 ---
 

@@ -2,12 +2,11 @@ import React from 'react';
 import { CalendarDays } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import {
-  PX_PER_DAY, STATUS_META, daysBetween, fmtDay, fmtShort, movedDate, parseDay, resolveItem, ticketDate, xOf, type computeRange, type RoadmapItem,
+  STATUS_META, daysBetween, fmtDay, fmtShort, movedDate, parseDay, resolveItem, ticketDate, xOf, type computeRange, type RoadmapItem,
 } from '../../utils/roadmapUtils';
 import { PALETTE } from '../../theme/palette';
 import { liveItem, type Drag } from './plannerDrag';
 
-const ppd = PX_PER_DAY.months;
 type Range = ReturnType<typeof computeRange>;
 type StartDrag = (e: React.PointerEvent, kind: Drag['kind'], id: string | number, mode: Drag['mode']) => void;
 
@@ -17,7 +16,9 @@ const ticketColor = (status: string) => {
 };
 
 /** One epic as a bar on the calendar: drag to move, drag an edge to change its length. */
-export function EpicBar({ item, y, h, drag, issues, today, range, onStart }: { item: RoadmapItem; y: number; h: number; drag: Drag | null; issues: Issue[]; today: Date; range: Range; onStart: StartDrag }) {
+interface BarPlace { y: number; h: number; drag: Drag | null; range: Range; /** pixels per day of the calendar */ ppd: number; onStart: StartDrag }
+
+export function EpicBar({ item, y, h, drag, issues, today, range, ppd, onStart }: BarPlace & { item: RoadmapItem; issues: Issue[]; today: Date }) {
   const live = liveItem(item, drag);
   const { progress, status } = resolveItem(live, issues, today);
   const color = STATUS_META[status].color;
@@ -44,7 +45,7 @@ export function EpicBar({ item, y, h, drag, issues, today, range, onStart }: { i
 }
 
 /** One ticket as a chip on the calendar: drag to give it another due date. */
-export function TicketBar({ issue, y, h, drag, range, onStart }: { issue: Issue; y: number; h: number; drag: Drag | null; range: Range; onStart: StartDrag }) {
+export function TicketBar({ issue, y, h, drag, range, ppd, onStart }: BarPlace & { issue: Issue }) {
   const t = issue;
   const base = ticketDate(t);
   const dragging = drag?.kind === 'ticket' && drag.id === t.id && drag.moved;

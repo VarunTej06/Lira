@@ -3,7 +3,7 @@
   "spaceId": 14,
   "spaceKey": "AI",
   "spaceName": "AI Projects",
-  "updatedAt": "2026-11-11T18:04:50.045Z",
+  "updatedAt": "2026-11-13T08:20:37.182Z",
   "issueCount": 19,
   "space": {
     "name": "AI Projects",
@@ -14,7 +14,7 @@
     "createdAt": "2026-10-28T18:31:08.254Z",
     "updatedAt": "2026-10-31T14:52:42.942Z",
     "id": 14,
-    "issueCount": 18,
+    "issueCount": 19,
     "file": "spaces/AI.json"
   },
   "issues": [

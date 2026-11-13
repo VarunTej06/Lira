@@ -3,7 +3,7 @@
   "spaceId": 1,
   "spaceKey": "GT",
   "spaceName": "General Tasks",
-  "updatedAt": "2026-11-09T12:35:24.691Z",
+  "updatedAt": "2026-11-13T08:20:39.558Z",
   "issueCount": 13,
   "space": {
     "id": 1,
@@ -271,8 +271,20 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z",
-      "sprint": "2026-11"
+      "updatedAt": "2026-11-13T08:20:39.044Z",
+      "sprint": "2026-11",
+      "statusLog": [
+        {
+          "from": "inprogress",
+          "to": "done",
+          "at": "2026-11-13T08:20:36.668Z"
+        },
+        {
+          "from": "done",
+          "to": "inprogress",
+          "at": "2026-11-13T08:20:39.085Z"
+        }
+      ]
     },
     {
       "id": 123,

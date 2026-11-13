@@ -3,7 +3,7 @@
   "spaceId": 6,
   "spaceKey": "LIRA",
   "spaceName": "Lira",
-  "updatedAt": "2026-11-11T09:58:53.596Z",
+  "updatedAt": "2026-11-13T10:53:55.653Z",
   "issueCount": 67,
   "space": {
     "id": 6,
@@ -14,7 +14,7 @@
     "description": "Lira product roadmap, feature development, DevOps and AI assistant",
     "createdAt": "2026-10-18T08:15:46.633Z",
     "updatedAt": "2026-11-05T12:17:43.513Z",
-    "issueCount": 66,
+    "issueCount": 67,
     "file": "spaces/LIRA.json"
   },
   "issues": [
@@ -4011,7 +4011,9 @@
       "labels": [
         "ui",
         "bug",
-        "LIRA Bugs"
+        "LIRA Bugs",
+        "Bugs",
+        "v3.x.x"
       ],
       "subtasks": [],
       "comments": [
@@ -4137,7 +4139,7 @@
       "sprint": "2026-11",
       "rank": 800,
       "createdAt": "2026-11-07T17:24:29.304Z",
-      "updatedAt": "2026-11-11T09:54:08.383Z",
+      "updatedAt": "2026-11-13T10:53:54.647Z",
       "watchers": [
         "VY"
       ],
@@ -4162,7 +4164,11 @@
       ],
       "storyPoints": 6,
       "blocked": false,
-      "blockedByIds": []
+      "blockedByIds": [],
+      "inheritedLabels": [
+        "Bugs",
+        "v3.x.x"
+      ]
     },
     {
       "spaceId": 6,
@@ -4191,6 +4197,14 @@
           "content": "<p>Status for newly created tickets should only Backlog or To Do. Or based on the roles we can have like only Admins or Managers can create tickets at any place usual team members should have progress one by one level only. {Needs revision and improvement on feature}</p><p>When entering lables - hitting comma or Enter button should add the label and keep the control within the label input field only to add other lables as well. </p><p>Need Automatic labels propagation on tickets based on type. </p>",
           "attachments": [],
           "createdAt": "2026-11-11T09:58:52.612Z"
+        },
+        {
+          "id": "11be39da-113b-45cc-bc47-96ef5ba62d08",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "<p>Hi testing comment bug</p>",
+          "attachments": [],
+          "createdAt": "2026-11-13T10:53:52.010Z"
         }
       ],
       "activity": [
@@ -4208,11 +4222,12 @@
       "sprint": "2026-11",
       "rank": 700,
       "createdAt": "2026-11-11T09:52:44.437Z",
-      "updatedAt": "2026-11-11T09:58:52.613Z",
+      "updatedAt": "2026-11-13T10:53:52.924Z",
       "watchers": [
         "VY"
       ],
-      "id": 183
+      "id": 183,
+      "inheritedLabels": []
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-11T18:04:50.045Z",
+  "savedAt": "2026-11-13T10:53:55.653Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -72,17 +72,17 @@
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
       "updatedAt": "2026-11-05T12:17:43.513Z",
-      "issueCount": 66,
+      "issueCount": 67,
       "file": "spaces/LIRA.json"
     },
     {
       "name": "Interview Guide",
       "key": "IG",
-      "icon": "🧠",
-      "color": "#0052CC",
+      "icon": "brain",
+      "color": "#6554C0",
       "description": "",
       "createdAt": "2026-10-28T18:30:46.269Z",
-      "updatedAt": "2026-10-28T18:30:46.269Z",
+      "updatedAt": "2026-11-13T09:32:20.974Z",
       "id": 13,
       "issueCount": 7,
       "file": "spaces/IG.json"
@@ -96,7 +96,7 @@
       "createdAt": "2026-10-28T18:31:08.254Z",
       "updatedAt": "2026-10-31T14:52:42.942Z",
       "id": 14,
-      "issueCount": 18,
+      "issueCount": 19,
       "file": "spaces/AI.json"
     }
   ],
@@ -7862,8 +7862,20 @@
         "VY"
       ],
       "createdAt": "2026-10-31T18:58:39.340Z",
-      "updatedAt": "2026-10-31T18:58:39.340Z",
-      "sprint": "2026-11"
+      "updatedAt": "2026-11-13T08:20:39.044Z",
+      "sprint": "2026-11",
+      "statusLog": [
+        {
+          "from": "inprogress",
+          "to": "done",
+          "at": "2026-11-13T08:20:36.668Z"
+        },
+        {
+          "from": "done",
+          "to": "inprogress",
+          "at": "2026-11-13T08:20:39.085Z"
+        }
+      ]
     },
     {
       "id": 123,
@@ -10471,7 +10483,9 @@
       "labels": [
         "ui",
         "bug",
-        "LIRA Bugs"
+        "LIRA Bugs",
+        "Bugs",
+        "v3.x.x"
       ],
       "subtasks": [],
       "comments": [
@@ -10597,7 +10611,7 @@
       "sprint": "2026-11",
       "rank": 800,
       "createdAt": "2026-11-07T17:24:29.304Z",
-      "updatedAt": "2026-11-11T09:54:08.383Z",
+      "updatedAt": "2026-11-13T10:53:54.647Z",
       "watchers": [
         "VY"
       ],
@@ -10622,7 +10636,11 @@
       ],
       "storyPoints": 6,
       "blocked": false,
-      "blockedByIds": []
+      "blockedByIds": [],
+      "inheritedLabels": [
+        "Bugs",
+        "v3.x.x"
+      ]
     },
     {
       "spaceId": 6,
@@ -10651,6 +10669,14 @@
           "content": "<p>Status for newly created tickets should only Backlog or To Do. Or based on the roles we can have like only Admins or Managers can create tickets at any place usual team members should have progress one by one level only. {Needs revision and improvement on feature}</p><p>When entering lables - hitting comma or Enter button should add the label and keep the control within the label input field only to add other lables as well. </p><p>Need Automatic labels propagation on tickets based on type. </p>",
           "attachments": [],
           "createdAt": "2026-11-11T09:58:52.612Z"
+        },
+        {
+          "id": "11be39da-113b-45cc-bc47-96ef5ba62d08",
+          "author": "VY",
+          "authorInitials": "VY",
+          "content": "<p>Hi testing comment bug</p>",
+          "attachments": [],
+          "createdAt": "2026-11-13T10:53:52.010Z"
         }
       ],
       "activity": [
@@ -10668,11 +10694,12 @@
       "sprint": "2026-11",
       "rank": 700,
       "createdAt": "2026-11-11T09:52:44.437Z",
-      "updatedAt": "2026-11-11T09:58:52.613Z",
+      "updatedAt": "2026-11-13T10:53:52.924Z",
       "watchers": [
         "VY"
       ],
-      "id": 183
+      "id": 183,
+      "inheritedLabels": []
     },
     {
       "spaceId": 14,

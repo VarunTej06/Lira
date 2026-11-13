@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-11T18:04:28.198Z",
+  "savedAt": "2026-11-13T09:32:21.542Z",
   "spaceCount": 8,
   "totalIssueCount": 155,
   "spaces": [
@@ -79,11 +79,11 @@
     {
       "name": "Interview Guide",
       "key": "IG",
-      "icon": "🧠",
-      "color": "#0052CC",
+      "icon": "brain",
+      "color": "#6554C0",
       "description": "",
       "createdAt": "2026-10-28T18:30:46.269Z",
-      "updatedAt": "2026-10-28T18:30:46.269Z",
+      "updatedAt": "2026-11-13T09:32:20.974Z",
       "id": 13,
       "issueCount": 7,
       "file": "spaces/IG.json"

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-14T18:05:52.578Z",
+  "updatedAt": "2026-11-14T18:38:12.048Z",
   "entries": {
     "lira_accent": "#0C66E4",
     "lira_active_space_id": "6",
@@ -61,6 +61,6 @@
       "filters",
       "dashboards"
     ],
-    "lira_theme": "light"
+    "lira_theme": "dark"
   }
 }

@@ -72,3 +72,5 @@ Answered on 13 Nov 2026 (see "Confirmed requirements" above): identity providers
 8. Legal entity (company name and address) and a privacy contact address, for the Terms and the Privacy Policy.
 9. Product name and domain. The name "Lira" is already used by other products, so a new, unused name is to be found (14 Nov 2026); the logo is then redrawn and the name replaced everywhere it is shown.
 10. The exact deletion grace period: 7 or 10 days.
+11. Landing-page palettes: the landing pages have a dark mode and a light mode, each using one of the app's palettes (dark: Pace or Blackridge; light: Sorrel, Fawn, Mossgrove or Tidewell). Which one of each is not decided (raised 15 Nov 2026).
+12. Landing-page references and animation library: the owner will send reference sites; highly animated on scroll, not a copy of any of them. Whether to add a scroll-animation library beside Framer Motion is not decided.

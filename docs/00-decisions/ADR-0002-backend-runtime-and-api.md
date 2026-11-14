@@ -1,8 +1,8 @@
 # ADR-0002: Backend runtime and API style
 
-- **Status:** Proposed
+- **Status:** Accepted (14 Nov 2026): Option A with **NestJS**
 - **Date proposed:** 2026-11-09
-- **Decision owner:** (to be named)
+- **Decision owner:** product owner
 
 ## Context
 The only server today is a Vite dev-server plugin (`lira-app/vite.config.ts`, `lira-app/server/`). It exposes `/api/health`, `/data`, `/save`, `/kv`, `/spaces`, `/lan`, `/snapshot(s)` and **cannot run in production** (`npm run preview` or a build cannot save). A real API service is required. The team works in TypeScript and already has tested guard, disk store and snapshot code.
@@ -15,8 +15,8 @@ The only server today is a Vite dev-server plugin (`lira-app/vite.config.ts`, `l
 | **C. .NET or Java** | Strong enterprise ecosystem | New language for the team; no schema sharing with UI |
 | **D. Backend-as-a-service** (Supabase, Firebase) | Fast start, built-in auth/RLS | Vendor lock-in; limits on custom logic and hosting choice |
 
-## Recommendation
-Option A with **Fastify** (small, fast, schema-first) and **zod** schemas shared from a `core` package. Publish an **OpenAPI** document generated from the schemas. Stateless containers; all state in the database and object store. Keep Viva's pure logic (`src/services/ai/*`) in the shared package so the server can run it.
+## Decision
+Option A with **NestJS**. The first recommendation was Fastify; the product owner asked for an enterprise-grade framework, and NestJS is the established one for Node.js: modules, dependency injection, and guards that map onto the roles and organisation checks of ADR 0004. **zod** schemas are shared from a `core` package. Publish an **OpenAPI** document generated from the schemas. Stateless containers; all state in the database and object store. Keep Viva's pure logic (`src/services/ai/*`) in the shared package so the server can run it.
 
 ## Consequences
 - The dev-server plugin remains for the local edition only.

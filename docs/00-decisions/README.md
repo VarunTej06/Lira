@@ -15,11 +15,12 @@ These are decided. Where a decision record below still says Proposed, it is beca
 
 | Topic | Requirement |
 |---|---|
-| Backend and database | Lira gets a **real backend service and a real database**. Today the only server code is a plugin inside the Vite dev server that saves the whole workspace as JSON files; it has no accounts and does not exist in a production build. Which runtime and which database is still open (ADR 0002, 0003). |
+| Backend and database | Lira gets a **real backend service and a real database**. Today the only server code is a plugin inside the Vite dev server that saves the whole workspace as JSON files; it has no accounts and does not exist in a production build. Decided 14 Nov 2026: NestJS on Node.js with TypeScript, and PostgreSQL (ADR 0002, 0003). |
 | Audience | Many organisations (SaaS). Each organisation has its own isolated workspace. |
 | Sign-in | Microsoft Entra ID, Google, email and password, and email magic link. |
 | Joining | Public sign-up creates a new organisation (the person becomes its Owner). Colleagues join an existing organisation by invitation. |
 | Roles | All six of the access matrix from the start: Owner, Admin, Space Admin, Member, Viewer, Guest. |
+| Groups | An organisation can make groups of people (for example "Managers") and give a group one of the six roles, for the whole organisation or for one space. A person's role is the highest of their own role and the roles of their groups. There is no separate "Manager" role (decided 14 Nov 2026). |
 | Offline | Online with a local cache. No offline editing. |
 | Local edition | Stays supported beside the hosted edition (JSON files, no accounts). |
 | First target | Runs on the owner's PC first. Azure deployment comes in the DevOps step. |
@@ -28,6 +29,7 @@ These are decided. Where a decision record below still says Proposed, it is beca
 | Data location | Azure regions in India. |
 | Deletion | A deleted account or organisation is kept 7 to 10 days with an option to restore, then erased (exact number of days to be fixed). |
 | Cookies | Analytics and marketing cookies are wanted, so the landing pages need a cookie consent banner. |
+| Age | Adults only for now (18 and over), stated in the Terms and confirmed at sign-up. No parental-consent flow in the first version (decided 14 Nov 2026). |
 | Pricing page | Built behind a feature flag and switched on later. |
 | Tests and documents | Unit tests for everything new, every README and document kept true, and Playwright browser tests for the whole application before the DevOps step starts. |
 
@@ -38,8 +40,8 @@ Consequences that are now requirements too: an email-sending service (magic link
 | ADR | Decision | Priority | Status | Blocks |
 |---|---|---|---|---|
 | [0001](ADR-0001-identity-provider-and-sso.md) | Identity provider and SSO protocol | Must | Proposed | Everything auth |
-| [0002](ADR-0002-backend-runtime-and-api.md) | Backend runtime and API style | Must | Proposed | API, data layer |
-| [0003](ADR-0003-database.md) | Database | Must | Proposed | Data model, migration |
+| [0002](ADR-0002-backend-runtime-and-api.md) | Backend runtime and API style | Must | **Accepted** (NestJS on Node.js, 14 Nov 2026) | API, data layer |
+| [0003](ADR-0003-database.md) | Database | Must | **Accepted** (PostgreSQL; Flyway to be confirmed, 14 Nov 2026) | Data model, migration |
 | [0004](ADR-0004-tenancy-and-authorization.md) | Tenancy and authorization model | Must | Proposed | Every query |
 | [0005](ADR-0005-client-data-sync-and-offline.md) | Client data layer, sync and offline behaviour | Must | Proposed | UI data access |
 | [0006](ADR-0006-hosting-on-azure.md) | Hosting topology on Azure | Should | Proposed | DevOps step |
@@ -60,13 +62,13 @@ Consequences that are now requirements too: an email-sending service (magic link
 
 Answered on 13 Nov 2026 (see "Confirmed requirements" above): identity providers, single or many organisations, compliance regime, offline, and the future of the local edition. Still open:
 
-1. Backend runtime and database: the records recommend Node.js with Fastify and PostgreSQL; the owner wants to discuss before accepting (ADR 0002, 0003).
-2. Under-18 users: the owner wants them allowed. Indian law then requires verifiable parental consent and no tracking or targeted advertising for them. Choose between adults only for now, or a parental-consent flow from the start.
+1. Migration tool: Flyway is recommended with the accepted NestJS and PostgreSQL stack; the owner has not confirmed it yet (the alternative is Prisma Migrate).
+2. Sign-in library or managed identity service for the four sign-in methods: candidates still to be compared.
 3. Email service for magic links, password resets and invitations, and the sending address.
 4. Which analytics and marketing tools (each must be named in the Privacy Policy).
 5. Expected size: organisations, users, tickets, attachments per organisation (sizing for ADR 0003 and 0006).
 6. Whether the owner's current workspace in `data/` is imported as the first organisation (ADR 0008).
 7. Viva AI keys: each organisation's own, or one provided by Lira.
 8. Legal entity (company name and address) and a privacy contact address, for the Terms and the Privacy Policy.
-9. Product name and domain for the landing pages.
+9. Product name and domain. The name "Lira" is already used by other products, so a new, unused name is to be found (14 Nov 2026); the logo is then redrawn and the name replaced everywhere it is shown.
 10. The exact deletion grace period: 7 or 10 days.

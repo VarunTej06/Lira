@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Download, Upload, HardDrive, Moon, Sun } from 'lucide-react';
 import { Modal } from '../../common/Modal';
-import { applyTheme, getLightPalette, getTheme, isThemeChange, type LightPalette, type Theme } from '../../../utils/theme';
-import { THEMES } from '../../../theme/palette';
+import { PALETTES, applyTheme, getPalette, getTheme, isThemeChange, type Theme } from '../../../utils/theme';
+import { THEMES, type ThemeName } from '../../../theme/palette';
 import { useResetWhen } from '../../../hooks/useResetWhen';
 
 export const SystemSettingsModal: React.FC<{
@@ -15,8 +15,10 @@ export const SystemSettingsModal: React.FC<{
 }> = ({ isOpen, onClose, importing, importStatus, onExport, onImportClick }) => {
   // The choice is a draft until Apply; closing the dialog drops it
   const [theme, setTheme] = useState<Theme>(getTheme);
-  const [palette, setPalette] = useState<LightPalette>(getLightPalette);
-  useResetWhen([isOpen], () => { if (isOpen) { setTheme(getTheme()); setPalette(getLightPalette()); } });
+  const savedPalettes = (): Record<Theme, ThemeName> => ({ dark: getPalette('dark'), light: getPalette('light') });
+  const [palettes, setPalettes] = useState(savedPalettes);
+  useResetWhen([isOpen], () => { if (isOpen) { setTheme(getTheme()); setPalettes(savedPalettes()); } });
+  const palette = palettes[theme];
   const changed = isThemeChange(theme, palette);
   const handleApply = () => { applyTheme(theme, palette); };
   const pill = (on: boolean) => `px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer inline-flex items-center gap-1 ${on ? 'bg-lira-blue text-lira-on-blue' : 'bg-gray-200 text-gray-800'}`;
@@ -97,18 +99,16 @@ export const SystemSettingsModal: React.FC<{
           </div>
         </div>
 
-        {theme === 'light' && (
-          <div className="flex items-center justify-between" role="group" aria-label="Light palette">
-            <p className="text-xs text-lira-muted">Which light palette?</p>
-            <div className="flex items-center gap-2">
-              {(['sorrel', 'fawn'] as const).map(p => (
-                <button key={p} onClick={() => setPalette(p)} aria-pressed={palette === p} title={THEMES[p].note} className={pill(palette === p)}>
-                  {THEMES[p].label}
-                </button>
-              ))}
-            </div>
+        <div className="flex items-center justify-between gap-3" role="group" aria-label="Palette">
+          <p className="text-xs text-lira-muted flex-shrink-0">Which {theme} palette?</p>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {PALETTES[theme].map(p => (
+              <button key={p} onClick={() => setPalettes(all => ({ ...all, [theme]: p }))} aria-pressed={palette === p} title={THEMES[p].note} className={pill(palette === p)}>
+                {THEMES[p].label}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
       </div>
     </Modal>
   );

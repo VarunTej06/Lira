@@ -2,7 +2,7 @@ import { DialogHost } from './components/common/dialogs';
 import { DashboardScheduler } from './components/dashboards/DashboardScheduler';
 import { SavedToastHost } from './components/common/SavedToast';
 import { LinkMenuHost } from './components/common/LinkMenu';
-import { getLightPalette, getTheme, paintTheme } from './utils/theme';
+import { paintTheme } from './utils/theme';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoutes } from './AppRoutes';
@@ -37,7 +37,7 @@ import { useResetWhen } from './hooks/useResetWhen';
 import { NO_ISSUES } from './utils/emptyLists';
 
 // Show the saved theme before the first render, so the page never flashes in the wrong colours
-if (typeof window !== 'undefined') paintTheme(getTheme(), getLightPalette());
+if (typeof window !== 'undefined') paintTheme();
 
 export default function App() {
   const navigate = useNavigate();

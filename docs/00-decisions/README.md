@@ -9,6 +9,30 @@ Already decided (from `PUBLIC_EDITION_PLAN.md` and the product owner):
 - CI/CD, environments and code scanning are built in a DevOps step **after** multi-user + SSO.
 - The existing local edition keeps working (JSON files, no accounts).
 
+## Confirmed requirements (product owner, 13 Nov 2026, branch `v4.0.0`)
+
+These are decided. Where a decision record below still says Proposed, it is because its technology choice is not settled yet, not because the requirement is in doubt.
+
+| Topic | Requirement |
+|---|---|
+| Backend and database | Lira gets a **real backend service and a real database**. Today the only server code is a plugin inside the Vite dev server that saves the whole workspace as JSON files; it has no accounts and does not exist in a production build. Which runtime and which database is still open (ADR 0002, 0003). |
+| Audience | Many organisations (SaaS). Each organisation has its own isolated workspace. |
+| Sign-in | Microsoft Entra ID, Google, email and password, and email magic link. |
+| Joining | Public sign-up creates a new organisation (the person becomes its Owner). Colleagues join an existing organisation by invitation. |
+| Roles | All six of the access matrix from the start: Owner, Admin, Space Admin, Member, Viewer, Guest. |
+| Offline | Online with a local cache. No offline editing. |
+| Local edition | Stays supported beside the hosted edition (JSON files, no accounts). |
+| First target | Runs on the owner's PC first. Azure deployment comes in the DevOps step. |
+| Market and law | India only at first; India's Digital Personal Data Protection Act 2023. |
+| Terms and privacy | Terms and Conditions and a Privacy Policy, accepted at sign-up, with a record of who accepted which version and when. None exist yet: first versions are drafted for a lawyer to review. |
+| Data location | Azure regions in India. |
+| Deletion | A deleted account or organisation is kept 7 to 10 days with an option to restore, then erased (exact number of days to be fixed). |
+| Cookies | Analytics and marketing cookies are wanted, so the landing pages need a cookie consent banner. |
+| Pricing page | Built behind a feature flag and switched on later. |
+| Tests and documents | Unit tests for everything new, every README and document kept true, and Playwright browser tests for the whole application before the DevOps step starts. |
+
+Consequences that are now requirements too: an email-sending service (magic links, password resets, invitations), and the security work a password login brings (hashing, reset flow, lockout, email verification).
+
 ## Decision register
 
 | ADR | Decision | Priority | Status | Blocks |
@@ -34,9 +58,15 @@ Already decided (from `PUBLIC_EDITION_PLAN.md` and the product owner):
 
 ## Open questions for the product owner
 
-1. Which identity provider does the organisation already use (Microsoft Entra ID, Google Workspace, Okta, other)? One provider or several?
-2. Single organisation (internal tool) or many organisations (SaaS)? This changes tenancy (ADR 0004) and cost.
-3. Expected size: users, tickets, attachments per organisation? (Sizing for ADR 0003 and 0006.)
-4. Any compliance regime (GDPR, SOC 2, ISO 27001, data residency)?
-5. Must it work offline for a user, or is "online with a local cache" acceptable? (ADR 0005.)
-6. Is the existing local edition still supported long term, or only a migration source?
+Answered on 13 Nov 2026 (see "Confirmed requirements" above): identity providers, single or many organisations, compliance regime, offline, and the future of the local edition. Still open:
+
+1. Backend runtime and database: the records recommend Node.js with Fastify and PostgreSQL; the owner wants to discuss before accepting (ADR 0002, 0003).
+2. Under-18 users: the owner wants them allowed. Indian law then requires verifiable parental consent and no tracking or targeted advertising for them. Choose between adults only for now, or a parental-consent flow from the start.
+3. Email service for magic links, password resets and invitations, and the sending address.
+4. Which analytics and marketing tools (each must be named in the Privacy Policy).
+5. Expected size: organisations, users, tickets, attachments per organisation (sizing for ADR 0003 and 0006).
+6. Whether the owner's current workspace in `data/` is imported as the first organisation (ADR 0008).
+7. Viva AI keys: each organisation's own, or one provided by Lira.
+8. Legal entity (company name and address) and a privacy contact address, for the Terms and the Privacy Policy.
+9. Product name and domain for the landing pages.
+10. The exact deletion grace period: 7 or 10 days.

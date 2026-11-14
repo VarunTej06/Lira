@@ -1,10 +1,8 @@
 import type { ReactNode } from 'react';
 import { Moon, Sun, Check } from 'lucide-react';
 import { THEMES, type ThemeName } from '../../../theme/palette';
-import type { LightPalette } from '../../../utils/theme';
+import { PALETTES } from '../../../utils/theme';
 import type { SettingsState } from './useSettingsState';
-
-const LIGHT_PALETTES: LightPalette[] = ['sorrel', 'fawn'];
 
 interface ChoiceCardProps { selected: boolean; onSelect: () => void; title: string; swatchesOf: ThemeName; icon?: ReactNode }
 
@@ -34,32 +32,30 @@ function ChoiceCard({ selected, onSelect, title, swatchesOf, icon }: ChoiceCardP
   );
 }
 
-/** Theme (dark or light) and, for light, which of the two palettes. */
+/** Theme (dark or light) and which of that theme's palettes. */
 export function AppearanceSection(s: SettingsState) {
-  const { activeSection, theme, setTheme, lightPalette, setLightPalette, appearanceChanged, handleSaveAppearance, onClose } = s;
+  const { activeSection, theme, setTheme, palettes, choosePalette, appearanceChanged, handleSaveAppearance, onClose } = s;
   if (activeSection !== 'appearance') return null;
   return (
     <div className="space-y-6">
       <div>
         <h3 className="text-base font-bold text-lira-text">Appearance &amp; Theme</h3>
-        <p className="text-xs text-lira-muted mt-1">Pick a theme, then press Save to apply it. Each theme has its own button colour.</p>
+        <p className="text-xs text-lira-muted mt-1">Pick a theme and one of its palettes, then press Save to apply it. Each palette has its own button colour.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <ChoiceCard selected={theme === 'dark'} onSelect={() => setTheme('dark')} title="Dark Mode (Default)" swatchesOf="dark" icon={<Moon className="w-4 h-4" />} />
-        <ChoiceCard selected={theme === 'light'} onSelect={() => setTheme('light')} title="Light Mode" swatchesOf={lightPalette} icon={<Sun className="w-4 h-4" />} />
+        <ChoiceCard selected={theme === 'dark'} onSelect={() => setTheme('dark')} title="Dark Mode (Default)" swatchesOf={palettes.dark} icon={<Moon className="w-4 h-4" />} />
+        <ChoiceCard selected={theme === 'light'} onSelect={() => setTheme('light')} title="Light Mode" swatchesOf={palettes.light} icon={<Sun className="w-4 h-4" />} />
       </div>
 
-      {theme === 'light' && (
-        <div className="border-t border-lira-border pt-4" role="group" aria-labelledby="light-palette-h">
-          <h4 id="light-palette-h" className="text-xs font-bold text-lira-muted uppercase tracking-wider mb-3">Choose a light palette</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {LIGHT_PALETTES.map(p => (
-              <ChoiceCard key={p} selected={lightPalette === p} onSelect={() => setLightPalette(p)} title={THEMES[p].label} swatchesOf={p} />
-            ))}
-          </div>
+      <div className="border-t border-lira-border pt-4" role="group" aria-labelledby="palette-h">
+        <h4 id="palette-h" className="text-xs font-bold text-lira-muted uppercase tracking-wider mb-3">Choose a {theme} palette</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {PALETTES[theme].map(p => (
+            <ChoiceCard key={p} selected={palettes[theme] === p} onSelect={() => choosePalette(p)} title={THEMES[p].label} swatchesOf={p} />
+          ))}
         </div>
-      )}
+      </div>
 
       <div className="flex items-center justify-end gap-2 border-t border-lira-border pt-4">
         {appearanceChanged && <span className="text-2xs text-lira-muted mr-auto">Not saved yet</span>}

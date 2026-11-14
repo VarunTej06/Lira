@@ -5,14 +5,14 @@ No behaviour was meant to change anywhere. **If anything looks or acts different
 
 How to run it
 - Use a **copy** of your workspace if you can (`LIRA_DATA_DIR`), or accept that testing edits `data/`.
-- Start with `npm run dev` in `lira-app/`. Test in **all three themes** (Dark, and the light palettes Sorrel and Fawn: Settings, Appearance) for sections marked ◐.
+- Start with `npm run dev` in `lira-app/`. Test in **dark and light mode** (Settings, Appearance) for sections marked ◐, and walk the main screens once in each of the six palettes (section A26).
 - Open the browser console once (F12): there should be **no red errors** while you work through the list.
 - Tick each box. "Expect" says what you should see.
 - The same cases are in `Lira-manual-test-cases.xlsx`. After adding a section here, copy it into the workbook with `python docs/04-quality/sync-manual-cases.py A25` (workbook closed in Excel).
 
 ---
 
-## A. The screens that were reworked (A1–A25)
+## A. The screens that were reworked (A1–A26)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -214,7 +214,7 @@ The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest ch
 - [ ] The board bar filters (search, "me", Priority, Status, Labels) also narrow this view; an overdue ticket is one that is not done with a due date in the past.
 - [ ] Group by **Status** (five columns, Blocked is the flag), **Priority** (low and lowest together), **Assignee** and **Epic / Parent** (progress per epic, an epic with no children shows 100 % when done, else 0 %); points and shares add up.
 
-### A21. Themes and light palettes (13 Nov 2026)  ◐
+### A21. Themes and light palettes (13 Nov 2026; more palettes were added later, see A26)  ◐
 Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Settings, Appearance. Expect: a Dark and a Light card, each showing its three colours; Dark is selected in a new workspace; there is no accent colour picker.
 - [ ] Choose **Light**. Expect: "Choose a light palette" appears with **Sorrel** (selected) and **Fawn**; the page behind does not change; "Not saved yet" shows.
@@ -222,7 +222,7 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Reopen, pick **Sorrel**, **Save**. Expect: off-white page, sage frame and navigation, tomato red buttons with white labels.
 - [ ] Choose **Dark**, **Save**. Expect: black page, silver text, yellow buttons with black labels.
 - [ ] Choose another theme or palette, then **Cancel**. Expect: nothing changes; reopening shows the saved choice.
-- [ ] Gear menu, System settings. Expect: choosing Light shows Sorrel and Fawn; Save applies the choice.
+- [ ] Gear menu, System settings. Expect: choosing Light shows the light palettes; Save applies the choice.
 - [ ] Reload the page, and open Lira in a browser that has never opened it (dev server running). Expect: the saved theme and palette are shown from the first moment.
 - [ ] In each theme walk the board, list, calendar, summary, sprints, roadmaps, dashboards, filters, projects, For you, a ticket popup and the Viva chat. Expect: no white label on a yellow or baby blue button, no leftover navy bars or purple gradients, every text readable.
 
@@ -288,6 +288,19 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Planner. Expect: it fills the panel the same way; dragging an epic bar or a ticket chip lands on the day under the pointer.
 - [ ] Today button. Expect: today's line is in view.
 
+### A26. Six palettes (14 Nov 2026)  ◐
+Reference screens: `docs/04-quality/ui-references/`.
+- [ ] Settings, Appearance, Dark Mode. Expect: "Choose a dark palette" with Pace (selected in a new workspace) and Blackridge.
+- [ ] Pick **Blackridge**, Save. Expect: jet black page, smoke grey secondary text, cherry red buttons with white labels.
+- [ ] Choose Light Mode. Expect: four palettes: Sorrel, Fawn, Mossgrove, Tidewell.
+- [ ] Pick **Mossgrove**, Save. Expect: white cards on a pale green page, emerald navigation and links, tangerine buttons with dark green labels.
+- [ ] Pick **Tidewell**, Save. Expect: pearl white page, ink navy navigation and text, electric coral buttons with navy labels.
+- [ ] Pick Blackridge for dark, switch to Light and pick Tidewell, switch back to Dark without saving. Expect: Blackridge is still the one picked; each mode remembers its own choice.
+- [ ] Save in Light, later switch to Dark and save. Expect: Dark comes back in the dark palette you last saved, and Light later in the light one.
+- [ ] Gear menu, System settings. Expect: the palette pills are those of the chosen mode (two for dark, four for light) and Save applies the choice.
+- [ ] Reload the page in Blackridge, Mossgrove and Tidewell. Expect: each comes back as saved.
+- [ ] In each of the three new palettes walk the board, a ticket popup, sprints, roadmaps, dashboards, filters and the Viva chat. Expect: every label on a button is readable, links are readable, and no screen falls back to another palette's colours.
+
 ---
 
 ## B. Things that changed everywhere (quick sweeps)
@@ -308,7 +321,7 @@ For each: open, type something, close, reopen. Expect: empty / reset, not the ol
 ### B3. Colours and text sizes (look only)  ◐
 - [ ] Ticket type icons, priority colours, status badges, avatars, charts, donuts: each keeps its own colour (green done, amber in progress, red blocked, purple epic) in all three themes.
 - [ ] Small text (badges, captions, dashboard labels, table headers) looks the same size as before; no text suddenly bigger or smaller.
-- [ ] All three themes: nothing unreadable. Button labels are black on yellow (Dark), white on tomato red (Sorrel), brown on baby blue (Fawn).
+- [ ] Every palette: nothing unreadable. Button labels are black on yellow (Dark), white on tomato red (Sorrel), brown on baby blue (Fawn).
 
 ### B4. Dates and "today"
 - [ ] **For you**: greeting and date line show today; "days left" correct.

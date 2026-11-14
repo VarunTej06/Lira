@@ -16,12 +16,12 @@ import { MotionProvider } from './components/common/motion'
 import { Confetti } from './components/common/Confetti'
 import { initKvMirror, onKvChange } from './services/kvMirror'
 import { syncStructured } from './services/structuredStore'
-import { getLightPalette, getTheme, paintTheme } from './utils/theme'
+import { paintTheme } from './utils/theme'
 
 // Restore projects, sprints, teams, standups and preferences from data/*.json before anything reads them.
 onKvChange(() => { void syncStructured() })
 initKvMirror().finally(() => {
-  paintTheme(getTheme(), getLightPalette()) // the theme saved on disk, now that it has been restored (a new browser has none of its own)
+  paintTheme() // the theme saved on disk, now that it has been restored (a new browser has none of its own)
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <MotionProvider>

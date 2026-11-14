@@ -31,19 +31,25 @@ const palette = {
 
 export const PALETTE: Readonly<Record<keyof typeof palette, string>> = Object.freeze(palette);
 
-export type ThemeName = 'dark' | 'sorrel' | 'fawn';
+export type ThemeName = 'pace' | 'blackridge' | 'sorrel' | 'fawn' | 'mossgrove' | 'tidewell';
 
 interface ThemeSwatches { label: string; note: string; swatches: readonly { name: string; hex: string }[] }
 
 /**
- * The three themes and the three colours each is built from (the owner's reference screens are in docs/04-quality/ui-references).
+ * The six palettes (two for dark mode, four for light mode) and the three colours each is built from. The owner's reference
+ * screens are in docs/04-quality/ui-references. Which palette belongs to which mode is in utils/theme.ts.
  * The full set of shades derived from them is in index.css; theme.test.ts fails if the two disagree.
  */
 export const THEMES: Readonly<Record<ThemeName, ThemeSwatches>> = Object.freeze({
-  dark: {
-    label: 'Dark',
+  pace: {
+    label: 'Pace',
     note: 'Black page, silver text, yellow buttons.',
     swatches: [{ name: 'Black', hex: '#0A0A0A' }, { name: 'Silver', hex: '#D9DADC' }, { name: 'Yellow', hex: '#FFC93C' }],
+  },
+  blackridge: {
+    label: 'Blackridge',
+    note: 'Jet black page, smoke grey text, cherry red buttons.',
+    swatches: [{ name: 'Jet Black', hex: '#0B0B0C' }, { name: 'Smoke Grey', hex: '#8A8D93' }, { name: 'Cherry Red', hex: '#C8102E' }],
   },
   sorrel: {
     label: 'Sorrel',
@@ -54,5 +60,15 @@ export const THEMES: Readonly<Record<ThemeName, ThemeSwatches>> = Object.freeze(
     label: 'Fawn',
     note: 'Cream page, brown text, baby blue buttons.',
     swatches: [{ name: 'Brown', hex: '#3B2418' }, { name: 'Cream', hex: '#F2E8DA' }, { name: 'Baby Blue', hex: '#8EC5FF' }],
+  },
+  mossgrove: {
+    label: 'Mossgrove',
+    note: 'White cards, emerald navigation and links, tangerine buttons.',
+    swatches: [{ name: 'Emerald', hex: '#0F5C45' }, { name: 'White', hex: '#FFFFFF' }, { name: 'Tangerine', hex: '#F28C28' }],
+  },
+  tidewell: {
+    label: 'Tidewell',
+    note: 'Pearl white page, ink navy text and navigation, electric coral buttons.',
+    swatches: [{ name: 'Ink Navy', hex: '#141B2D' }, { name: 'Pearl White', hex: '#F4F1EA' }, { name: 'Electric Coral', hex: '#FF5A4E' }],
   },
 });

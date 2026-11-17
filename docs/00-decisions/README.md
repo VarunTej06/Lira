@@ -15,6 +15,7 @@ These are decided. Where a decision record below still says Proposed, it is beca
 
 | Topic | Requirement |
 |---|---|
+| New product name and logo | The product is renamed. "Lira" is already used by other products, so a new name that is not in use is chosen and the logo is redrawn. The new name and logo then replace the old ones everywhere they are shown: app, landing pages, documents, browser tab and phone icon. The name itself is not chosen yet (see open question 9). Internal names in the code, such as the `lira_` settings keys, can stay to avoid touching saved data (confirmed 17 Nov 2026). |
 | Backend and database | Lira gets a **real backend service and a real database**. Today the only server code is a plugin inside the Vite dev server that saves the whole workspace as JSON files; it has no accounts and does not exist in a production build. Decided 14 Nov 2026: NestJS on Node.js with TypeScript, and PostgreSQL (ADR 0002, 0003). |
 | Audience | Many organisations (SaaS). Each organisation has its own isolated workspace. |
 | Sign-in | Microsoft Entra ID, Google, email and password, and email magic link. |
@@ -30,6 +31,7 @@ These are decided. Where a decision record below still says Proposed, it is beca
 | Deletion | A deleted account or organisation is kept 7 to 10 days with an option to restore, then erased (exact number of days to be fixed). |
 | Cookies | Analytics and marketing cookies are wanted, so the landing pages need a cookie consent banner. |
 | Age | Adults only for now (18 and over), stated in the Terms and confirmed at sign-up. No parental-consent flow in the first version (decided 14 Nov 2026). |
+| MCP server | Lira gets an MCP server so AI assistants can work with it (list, search and view tickets, sprints and roadmaps; later create and change them). Built in TypeScript on top of the multi-user API, after that API works. It acts as the signed-in person, never with a shared key, and is limited by that person's role and organisation. First version is read-only; write tools need a preview, confirmation and undo, as the Viva rules already require. Every change through it is audited as coming from an assistant (confirmed 17 Nov 2026). |
 | Pricing page | Built behind a feature flag and switched on later. |
 | Tests and documents | Unit tests for everything new, every README and document kept true, and Playwright browser tests for the whole application before the DevOps step starts. |
 

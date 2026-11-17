@@ -111,13 +111,11 @@ export default function App() {
     <div className="h-screen flex flex-col overflow-hidden bg-app-frame font-sans">
       <TopNavigation
         onCreateIssue={() => createIssue.open('todo', { chooseSpace: true })}
-        onToggleAI={() => setShowAIChatbot(v => !v)}
         issues={everyIssue}
         spaces={spaceList}
         onSelectIssue={openIssue}
         onApplyFilter={handleApplyFilter}
         onNavigateToFilters={() => navigate('/filters')}
-        onNavigateToProjects={() => navigate('/projects')}
       />
 
       <div className="flex flex-1 overflow-hidden">

@@ -7,6 +7,9 @@ export { AnimatePresence, motion } from 'framer-motion';
 /** A calmer spring for things that slide: panels, tab underlines. */
 export const slide: Transition = { type: 'spring', stiffness: 280, damping: 32, mass: 0.9 };
 
+/** The highlight that follows the page you click in the sidebar: it must keep up when pages are opened one after another. */
+export const glide: Transition = { type: 'spring', stiffness: 900, damping: 60, mass: 0.6 };
+
 /** Dialog: the backdrop fades, the panel rises and settles. Both animate out when closed. */
 export const dialogBackdrop = {
   initial: { opacity: 0 },

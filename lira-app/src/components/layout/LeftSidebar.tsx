@@ -68,7 +68,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
       {!isCollapsed && (
         <div
           aria-hidden
-          className={`absolute left-2 right-2 z-0 rounded-xl bg-lira-nav-accent/15 ring-1 ring-lira-nav-accent/25 pointer-events-none ${indicatorAnimated ? 'transition-[top,height,opacity] duration-300 ease-[cubic-bezier(.4,0,.2,1)]' : ''}`}
+          className={`absolute left-2 right-2 z-0 rounded-xl bg-lira-nav-accent/15 ring-1 ring-lira-nav-accent/25 pointer-events-none ${indicatorAnimated ? 'transition-[top,height,opacity] duration-150 ease-out' : ''}`}
           style={{ top: indicator.top, height: indicator.height, opacity: indicator.visible ? 1 : 0 }}
         />
       )}

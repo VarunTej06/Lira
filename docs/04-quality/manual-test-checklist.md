@@ -12,7 +12,7 @@ How to run it
 
 ---
 
-## A. The screens that were reworked (A1–A27)
+## A. The screens that were reworked (A1–A29)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -232,9 +232,7 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Create space (sidebar +) and Create project with a new space. Expect: a grid of 24 line icons, the chosen one highlighted and shown in the preview; the new space appears with that icon.
 - [ ] Edit a space, change only its name, save. Expect: its icon is unchanged.
 - [ ] Space dropdowns (create ticket, sprint filter, all tickets) and Viva's answers. Expect: the space name without an emoji in front.
-- [ ] App switcher (nine dots, top left). Expect: a panel headed Lira with a v3.4 badge and five tiles; each opens what it names; Escape and a click outside close it.
 - [ ] Start-up screen and Settings, Plan. Expect: both say v3.4.
-- [ ] Hover the nine dots, then move away. Expect: the panel opens, then closes. Hover again and click the dots. Expect: it closes.
 - [ ] Logo (top bar, start-up screen, browser tab). Expect: a block L with an arrow; the arrow grows out of the corner on load and when the logo is hovered, and keeps growing while Lira starts. With "reduce motion" on in the system it stands still.
 - [ ] Avatars (top right, board cards, ticket popup, filters, capacity). Expect: all in the button colour of the theme, with a readable label.
 - [ ] Collapse and expand the sidebar several times on a full board. Expect: it slides quickly, without stutter, and the rows do not jump or re-wrap while it moves.
@@ -315,6 +313,19 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Reload the page with a slow connection (browser tools, Slow 3G). Expect: a grey skeleton of the app while it starts, then the real screen; with "reduce motion" on, the skeleton does not pulse.
 - [ ] Open Dashboards, Roadmaps, Projects, Sprints and Filters for the first time. Expect: a grey page skeleton for a moment, then the page.
 - [ ] Open a ticket for the first time after loading, and Viva. Expect: both open correctly (they load when first used).
+
+### A28. Top bar and quick page changes (18 Nov 2026)  ◐
+- [ ] Look at the top bar. Expect: no nine-dot app switcher; the Lira mark and name sit alone at the left, on the page colour, not in the dark box.
+- [ ] Look at the dark box. Expect: it holds only Your work, Filters, the search field and Create, centred on the screen.
+- [ ] Look at the right side. Expect: the bell, the settings gear and your avatar sit outside the box, each in its own dark circle; PC Saved has no circle and is readable in every palette.
+- [ ] Open Your work, Filters, the bell and the account menu. Expect: each panel opens under its control and closes on Escape or a click outside.
+- [ ] Click Projects, Sprints, All tickets and Roadmaps one after another, quickly. Expect: the highlight in the sidebar keeps up (about a tenth of a second per step) and each page appears at once, without a long grey skeleton after the first second of use.
+- [ ] Narrow the window to phone width. Expect: the mark, the box (search and Create) and the three circles all fit with no sideways scroll.
+- [ ] Open Viva from its round button at the bottom right, and Backup from Settings. Expect: both still work now that the switcher is gone.
+
+### A29. Sidebar rows all the same size (18 Nov 2026)  ◐
+- [ ] Look down the left sidebar: For you, Projects, Sprints, All tickets, Roadmaps, then spaces, projects and sprints. Expect: every row has the same height, the same text size and weight, and the icons line up in one column.
+- [ ] Hover a space, a project and a sprint. Expect: the row keeps its size and the "..." button appears at the right without moving the name much.
 
 ---
 

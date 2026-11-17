@@ -58,7 +58,7 @@ export const YourWorkDropdown: React.FC<{
     <div ref={ref} className="relative" {...hover}>
       <button
         onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-ui font-medium transition-all duration-200 cursor-pointer ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-ui font-medium whitespace-nowrap transition-colors duration-100 cursor-pointer ${
           open ? 'bg-white/15 text-white' : 'text-white/80 hover:text-white hover:bg-white/10'
         }`}
       >

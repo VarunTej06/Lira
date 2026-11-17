@@ -33,7 +33,7 @@ export function ProjectsSection(s: SidebarState) {
                       onClick={() => { setRowMenu(null); onSelectProject?.(p); }} {...projectLink(p.id)}
                       title={p.name}
                       data-active={active ? 'true' : undefined}
-                      className={`w-full flex items-center gap-2.5 pl-2.5 pr-2.5 group-hover:pr-8 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${
+                      className={`w-full flex items-center gap-3 px-3 group-hover:pr-9 min-h-8 py-1.5 rounded-xl text-left text-xs transition-colors duration-100 cursor-pointer ${
                         active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
                       }`}
                     >

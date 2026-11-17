@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { NotFound, PageBoundary } from './components/common/PageBoundary';
 import { NoSpaces } from './components/common/AppPages';
@@ -19,6 +19,15 @@ import { spacePath, type AppRoute } from './routes';
 import type { Project } from './types/project';
 import type { Space } from './types/space';
 import type { Issue } from './types/issue';
+
+// Once the first screen is showing, the other pages are fetched quietly, so opening them one after another does not wait on the network
+const PAGE_LOADERS = [
+  () => import('./components/dashboards/DashboardsPage'), () => import('./components/filter/FiltersPage'),
+  () => import('./components/projects/ProjectsOverview'), () => import('./components/projects/ProjectDetailView'),
+  () => import('./components/sprints/SprintsPage'), () => import('./components/sprints/SprintsOverview'),
+  () => import('./components/foryou/ForYouPage'), () => import('./components/sprints/AllTicketsPage'),
+  () => import('./components/roadmap/RoadmapsRoute'),
+];
 
 type AddIssue = (status: string, opts?: { sprint?: string; spaceId?: number; chooseSpace?: boolean }) => void;
 
@@ -57,6 +66,10 @@ interface AppRoutesProps {
 /** Every page of the app and the address it lives at. */
 export function AppRoutes(p: AppRoutesProps) {
   const navigate = useNavigate();
+  useEffect(() => {
+    const id = window.setTimeout(() => PAGE_LOADERS.forEach(load => { void load(); }), 1200);
+    return () => window.clearTimeout(id);
+  }, []);
   const { route, spaceList, activeSpace, routeSpace, allIssues, everyIssue, issues, selectedProject } = p;
   return (
   <PageBoundary pageKey={p.pageKey}>

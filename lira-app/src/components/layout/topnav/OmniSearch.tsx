@@ -105,7 +105,7 @@ export const OmniSearch: React.FC<{
   }
 
   return (
-    <div ref={containerRef} className={phone ? 'fixed left-3 right-3 top-3 z-[70] bg-lira-nav rounded-2xl p-2 border border-white/10' : 'flex-1 min-w-0 max-w-xs mx-1 sm:mx-2 relative'}>
+    <div ref={containerRef} className={phone ? 'fixed left-3 right-3 top-3 z-[70] bg-lira-nav rounded-2xl p-2 border border-white/10' : 'flex-[1_1_20rem] min-w-0 max-w-xs mx-1 sm:mx-2 relative'}>
       <div className="relative">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/40" />
         <input

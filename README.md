@@ -74,7 +74,7 @@
 * **Interactive & Reactive "Customise Your Sidebar"**: Modal drawer allowing users to customize visible navigation items (For you, Recent, Filters, Dashboards, Teams, Apps, Starred, Spaces) with instant reactive rendering and `localStorage` persistence.
 * **Space Visibility & Lifecycle Management (Hide & Archive)**: Dedicated **"Hidden Spaces"** and **"Archived Spaces"** sidebar sections with real-time counters, expand/collapse toggles, and contextual 3-dots options. Users can hide/unhide and archive/unarchive spaces either directly from sidebar space rows or from the Kanban board toolbar (`...` menu). Hidden and archived spaces remain fully accessible to view, edit, modify issues, and update space settings at any time.
 * **Seamless Project-to-Space Navigation**: Smoothly transition between the Projects overview/workspace and any Space board with automatic state switching and sidebar restoration.
-* **Aesthetic Geometric App Launcher**: Multi-tone gradient 9-module app switcher button with instant operational triggers for Lira Board, Lira AI, and local PC Backup & Restore.
+* **Top bar**: the Lira mark at the left, one centred box with Your work, Filters, search and Create, and the bell, settings and account in circles at the right. (The nine-dot app switcher was removed on 18 Nov 2026; Viva opens from its own button, Backup is in Settings.)
 
 ### 4. Viva AI: Copilot & Autonomous Agent
 * **Floating launcher** in the bottom-right corner opens a curved chat card that grows out of the button and shrinks back into it. Compact and expanded sizes.

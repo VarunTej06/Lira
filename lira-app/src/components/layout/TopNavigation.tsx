@@ -16,7 +16,6 @@ import {
 } from './SettingsModals';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
-import { AppLauncher } from './topnav/AppLauncher';
 import { YourWorkDropdown } from './topnav/YourWorkDropdown';
 import { FiltersDropdown } from './topnav/FiltersDropdown';
 import { OmniSearch } from './topnav/OmniSearch';
@@ -28,26 +27,22 @@ import { appStorage } from '../../utils/appStorage';
 
 interface TopNavigationProps {
   onCreateIssue?: () => void;
-  onToggleAI?: () => void;
   issues?: Issue[];
   spaces?: Space[];
   onSelectIssue?: (issue: Issue) => void;
   onApplyFilter?: (filter: string) => void;
   onNavigateToFilters?: () => void;
-  onNavigateToProjects?: () => void;
 }
 
 // ─── Main TopNavigation Export ────────────────────────────────────────────────
 
 export const TopNavigation: React.FC<TopNavigationProps> = ({
   onCreateIssue,
-  onToggleAI,
   issues = [],
   spaces = [],
   onSelectIssue,
   onApplyFilter,
   onNavigateToFilters,
-  onNavigateToProjects,
 }) => {
   const [showUnifiedSettingsModal, setShowUnifiedSettingsModal] = useState(false);
   const [settingsInitialSection, setSettingsInitialSection] = useState<SettingsSection>('appearance');
@@ -114,44 +109,37 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   }, [showToast]);
 
   return (
-    <nav className="mx-2 mt-2 h-14 rounded-2xl bg-lira-nav border border-white/[0.08] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
-      {/* App Launcher with Custom Geometric Logo */}
-      <AppLauncher
-        onToggleAI={onToggleAI}
-        onNavigateToProjects={onNavigateToProjects}
-        onOpenBackup={() => {
-          setSettingsInitialSection('backup');
-          setShowUnifiedSettingsModal(true);
-        }}
-      />
-
-      {/* Lira Logo + Brand */}
-      <div className="group flex-shrink-0 flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200">
-        <LiraLogo className="w-7 h-7 text-white" />
-        <span className="text-white font-bold text-base tracking-tight">Lira</span>
+    <nav className="mx-2 mt-2 h-14 flex items-center gap-3 flex-shrink-0 z-40 relative">
+      {/* Left: the product mark, on the page frame */}
+      <div className="flex-1 basis-0 flex items-center gap-2 select-none">
+        <span className="w-10 h-10 rounded-full bg-lira-nav border border-white/10 flex items-center justify-center flex-shrink-0">
+          <LiraLogo className="w-6 h-6 text-white" />
+        </span>
+        <span className="hidden sm:inline text-lira-text font-bold text-lg tracking-tight">Lira</span>
       </div>
 
-      {/* Nav items — Your work + Filters */}
-      <div className="hidden md:flex items-center gap-0.5">
-        <YourWorkDropdown issues={issues} spaces={spaces} onSelectIssue={onSelectIssue} />
-        <FiltersDropdown
-          onApplyFilter={onApplyFilter}
-          onNavigateToFilters={onNavigateToFilters}
-        />
+      {/* Centre: the working controls, in one dark box */}
+      <div className="flex-[0_1_auto] min-w-0 h-14 rounded-2xl bg-lira-nav border border-white/[0.08] flex items-center px-3 gap-2">
+        <div className="hidden md:flex items-center gap-0.5">
+          <YourWorkDropdown issues={issues} spaces={spaces} onSelectIssue={onSelectIssue} />
+          <FiltersDropdown
+            onApplyFilter={onApplyFilter}
+            onNavigateToFilters={onNavigateToFilters}
+          />
+        </div>
+        <OmniSearch issues={issues} spaces={spaces} onSelectIssue={onSelectIssue} />
+        <button
+          onClick={onCreateIssue}
+          className="flex items-center gap-1.5 px-4 py-2 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-sm font-semibold rounded-xl transition-colors duration-150 ml-1 cursor-pointer"
+          title="Create a ticket. You'll choose the space"
+        >
+          <Plus className="w-4 h-4" />
+          <span className="hidden sm:inline">Create</span>
+        </button>
       </div>
 
-      {/* Omni-Search */}
-      <OmniSearch issues={issues} spaces={spaces} onSelectIssue={onSelectIssue} />
-
-      {/* Create button */}
-      <button
-        onClick={onCreateIssue}
-        className="flex items-center gap-1.5 px-4 py-2 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-sm font-semibold rounded-xl active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
-        title="Create a ticket. You'll choose the space"
-      >
-        <Plus className="w-4 h-4" />
-        <span className="hidden sm:inline">Create</span>
-      </button>
+      {/* Right: save state and utilities, on the page frame */}
+      <div className="flex-1 basis-0 flex items-center justify-end gap-2">
 
       {/* Local PC Storage Indicator */}
       <button
@@ -163,30 +151,28 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             ok ? 'success' : 'error'
           );
         }}
-        className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs transition-all border border-white/15 hover:border-white/30 hover:bg-white/5 ml-auto cursor-pointer"
+        className="hidden lg:flex items-center gap-1.5 px-2 py-1 text-xs text-lira-text hover:opacity-70 transition-opacity cursor-pointer"
         title={`Saved locally on your PC in: ${syncState.filePath}\nClick to force save now.`}
       >
-        <HardDrive className="w-3.5 h-3.5 text-white/60" />
+        <HardDrive className="w-4 h-4" />
         {syncState.status === 'saving' ? (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-            <span className="text-amber-300 text-2xs font-medium">Saving to PC…</span>
+            <span className="text-2xs font-medium">Saving to PC…</span>
           </>
         ) : syncState.status === 'error' ? (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-red-400" />
-            <span className="text-red-300 text-2xs font-medium">Save error</span>
+            <span className="text-2xs font-medium">Save error</span>
           </>
         ) : (
           <>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span className="text-emerald-300 text-2xs font-medium">PC Saved</span>
+            <span className="text-2xs font-medium">PC Saved</span>
           </>
         )}
       </button>
 
-      {/* Right utilities */}
-      <div className="flex items-center gap-1 ml-1">
         <NotificationsBell issues={issues} onSelectIssue={onSelectIssue} />
 
         {/* Wired Settings Gear Icon Button */}
@@ -195,8 +181,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             setSettingsInitialSection('appearance');
             setShowUnifiedSettingsModal(true);
           }}
-          className={`p-2 rounded-xl hover:bg-white/10 transition-all duration-200 cursor-pointer ${
-            showUnifiedSettingsModal ? 'bg-white/15 text-white ring-1 ring-white/30' : 'text-white/70 hover:text-white'
+          className={`w-10 h-10 rounded-full flex items-center justify-center bg-lira-nav border border-white/10 hover:border-white/30 transition-colors cursor-pointer ${
+            showUnifiedSettingsModal ? 'text-white ring-1 ring-white/40' : 'text-white/75 hover:text-white'
           }`}
           title="Settings & Administration"
         >

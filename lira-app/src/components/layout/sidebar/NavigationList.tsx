@@ -1,7 +1,7 @@
 import { pageLink } from '../../../utils/links';
 import { ChevronLeft } from 'lucide-react';
 import { motion } from '../../common/motionPresets';
-import { slide } from '../../common/motionPresets';
+import { glide } from '../../common/motionPresets';
 import type { SidebarState } from './useSidebarState';
 
 /** For you, Projects, Sprints ... (the items chosen in the sidebar settings), with the collapse button. */
@@ -43,14 +43,14 @@ export function NavigationList(s: SidebarState) {
               key={k}
               onClick={item.action} {...pageLink(item.tab)}
               data-active={isActive ? 'true' : undefined}
-              className={`group relative w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs transition-all duration-200 cursor-pointer text-left ${
+              className={`group relative w-full flex items-center gap-3 px-3 min-h-8 py-1.5 rounded-xl text-xs transition-colors duration-100 cursor-pointer text-left ${
                 isActive ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
               }`}
             >
               {isActive && (
-                <motion.span layoutId="nav-active-pill" transition={slide} className="absolute inset-0 rounded-xl bg-white/[0.14] ring-1 ring-white/10" aria-hidden />
+                <motion.span layoutId="nav-active-pill" transition={glide} className="absolute inset-0 rounded-xl bg-white/[0.14] ring-1 ring-white/10" aria-hidden />
               )}
-              <span className="relative">{item.icon}</span>
+              <span className="relative w-5 flex justify-center flex-shrink-0">{item.icon}</span>
               <span className="relative">{item.label}</span>
             </button>
           );

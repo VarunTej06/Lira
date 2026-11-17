@@ -50,7 +50,7 @@ export const AccountDropdown: React.FC = () => {
       {/* Avatar Button Trigger */}
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center justify-center p-0.5 rounded-full hover:ring-2 hover:ring-white/60 transition-all cursor-pointer ml-1"
+        className="w-10 h-10 rounded-full flex items-center justify-center bg-lira-nav border border-white/10 hover:border-white/30 transition-colors cursor-pointer"
         title="Your account"
       >
         <Avatar initials={userInitials} size="sm" />

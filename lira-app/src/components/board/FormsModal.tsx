@@ -27,7 +27,7 @@ export const FormsModal: React.FC<FormsModalProps> = (props) => {
     
       {/* 2-second green toast */}
       {s.successToast && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg animate-fade-in pointer-events-none">
           <Check className="w-4 h-4 text-white" />
           <span>Form saved ✓</span>
         </div>

@@ -67,7 +67,7 @@ export const DialogHost: React.FC = () => {
         <motion.div
           key="dialog-host"
           {...dialogBackdrop}
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60"
           onMouseDown={e => { if (e.target === e.currentTarget) finish(req, dismissAnswer(req)); }}
         >
           <motion.div
@@ -75,7 +75,7 @@ export const DialogHost: React.FC = () => {
             role={req.kind === 'alert' ? 'alertdialog' : 'dialog'}
             aria-modal="true"
             aria-label={req.title}
-            className="bg-white rounded-xl shadow-2xl border border-lira-border w-full max-w-md overflow-hidden"
+            className="bg-white rounded-xl border border-lira-border w-full max-w-md overflow-hidden"
           >
             <form onSubmit={e => { e.preventDefault(); submit(); }} className="p-6 space-y-4">
               <div className="flex items-start gap-3">
@@ -109,7 +109,7 @@ export const DialogHost: React.FC = () => {
                   ref={confirmRef}
                   type="submit"
                   disabled={blocked}
-                  className={`px-4 py-2 text-sm font-semibold rounded-lg shadow-xs whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                     tone === 'danger' ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue'
                   }`}
                 >

@@ -106,11 +106,11 @@ describe('CalendarView', () => {
     it('colours a chip by state: done, blocked, in progress, high priority, other', () => {
       show([due(1, { status: 'done' }), due(2, { blocked: true } as never), due(3, { status: 'inprogress' }), due(4, { priority: 'high' }), due(5)]);
       const tone = (d: string) => chips(`2026-11-${d}`)[0].className;
-      expect(tone('01')).toContain('border-l-emerald-500');
-      expect(tone('02')).toContain('border-l-red-600');
-      expect(tone('03')).toContain('border-l-blue-500');
-      expect(tone('04')).toContain('border-l-red-500');
-      expect(tone('05')).toContain('border-l-slate-400');
+      expect(tone('01')).toContain('border-emerald-500');
+      expect(tone('02')).toContain('border-red-600');
+      expect(tone('03')).toContain('border-blue-500');
+      expect(tone('04')).toContain('border-red-500');
+      expect(tone('05')).toContain('border-slate-400');
     });
     it('opens a ticket on click', async () => {
       const a = due(10);

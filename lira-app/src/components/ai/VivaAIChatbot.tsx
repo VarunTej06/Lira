@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Send, Trash2, Sparkles, Maximize2, Minimize2, Settings } from 'lucide-react';
+import { X, Send, Trash2, Maximize2, Minimize2, Settings } from 'lucide-react';
 import type { Space } from '../../types/space';
 import type { Issue } from '../../types/issue';
 import { getAiProvider, getOpenAiConfig, getConfirmWrites, type AiProvider } from '../../services/aiAgentService';
@@ -30,7 +30,7 @@ const HeaderButton: React.FC<{ title: string; onClick: () => void; active?: bool
     onClick={onClick}
     title={title}
     aria-label={title}
-    className={`p-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 ${active ? 'text-amber-300 bg-white/15 ring-1 ring-amber-400/40' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
+    className={`p-2 rounded-xl transition-all cursor-pointer active:scale-95 ${active ? 'text-amber-300 bg-white/15 ring-1 ring-amber-400/40' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
   >
     {children}
   </button>
@@ -84,19 +84,19 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
           <button
             type="button"
             onClick={onToggle}
-            className={`relative rounded-2xl flex items-center justify-center p-0 cursor-pointer shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 animate-float-subtle animate-pulse-glow ${isOpen ? 'ring-2 ring-lira-blue shadow-lira-blue/40 rotate-6' : ''}`}
+            className={`relative rounded-2xl flex items-center justify-center p-0 cursor-pointer transition-all duration-300 active:scale-95 ${isOpen ? 'ring-2 ring-lira-blue rotate-6' : ''}`}
             title="Viva AI"
             aria-label="Toggle Viva AI chat"
           >
-            <LiraAIAvatar size={50} hasSparkles={true} />
+            <LiraAIAvatar size={50} />
             <span className="absolute -bottom-1 -right-1 flex h-3.5 w-3.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white shadow-xs" />
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white" />
             </span>
           </button>
           {!isOpen && (
-            <div className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 absolute right-16 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 bg-lira-nav text-white text-xs font-semibold rounded-xl shadow-xl border border-white/10 flex items-center gap-1.5 translate-x-1 group-hover:translate-x-0">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-300" /><span>Ask Viva AI</span>
+            <div className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 absolute right-16 top-1/2 -translate-y-1/2 whitespace-nowrap px-3 py-1.5 bg-lira-nav text-white text-xs font-semibold rounded-xl border border-white/10 flex items-center gap-1.5 translate-x-1">
+              <span>Ask Viva AI</span>
             </div>
           )}
         </div>
@@ -113,12 +113,12 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
             exit={{ opacity: 0, scale: 0.2, y: 50, transition: { duration: 0.22, ease: [0.5, 0, 0.75, 0] } }}
             transition={{ type: 'spring', stiffness: 340, damping: 28, mass: 0.9 }}
             style={{ ...panelStyle, transformOrigin: panelOrigin }}
-            className="fixed bottom-20 right-5 z-50 max-w-[calc(100vw-2.5rem)] bg-white/95 backdrop-blur-2xl border border-lira-border shadow-[0_24px_60px_-12px_rgba(0,0,0,0.3)] rounded-3xl overflow-hidden flex flex-col font-sans ring-1 ring-black/10 transition-[width,height] duration-300 ease-[cubic-bezier(.4,0,.2,1)]"
+            className="fixed bottom-20 right-5 z-50 max-w-[calc(100vw-2.5rem)] bg-white border border-lira-border rounded-3xl overflow-hidden flex flex-col font-sans ring-1 ring-black/10 transition-[width,height] duration-300 ease-[cubic-bezier(.4,0,.2,1)]"
           >
             <div className="h-[68px] bg-lira-nav text-white flex items-center justify-between px-4 sm:px-5 flex-shrink-0 select-none relative">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="relative flex-shrink-0">
-                  <LiraAIAvatar size={34} hasSparkles={false} />
+                  <LiraAIAvatar size={34} />
                   <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-lira-nav" />
                 </div>
                 <div className="min-w-0">
@@ -135,7 +135,6 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                 <HeaderButton title={maximized ? 'Restore size' : 'Maximise'} onClick={() => setMaximized(v => !v)}>{maximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}</HeaderButton>
                 <HeaderButton title="Close" onClick={onClose}><X className="w-4 h-4" /></HeaderButton>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lira-nav-accent/60 to-transparent" />
             </div>
 
             {showSettings ? (
@@ -156,8 +155,8 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
 
                     {chat.loading && (
                       <motion.div initial={{ opacity: 0, y: 12, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: 'spring', stiffness: 420, damping: 30 }} className="flex items-start gap-2 max-w-[85%] py-1 select-none">
-                        <div className="flex-shrink-0 mt-0.5"><LiraAIAvatar size={26} hasSparkles={true} /></div>
-                        <div className="px-3.5 py-2 bg-lira-nav rounded-2xl rounded-tl-md border border-lira-border shadow-md text-white flex items-center gap-2.5">
+                        <div className="flex-shrink-0 mt-0.5"><LiraAIAvatar size={26} /></div>
+                        <div className="px-3.5 py-2 bg-lira-nav rounded-2xl rounded-tl-md border border-lira-border text-white flex items-center gap-2.5">
                           <div className="flex items-center gap-1 py-0.5">
                             <span className="w-2 h-2 rounded-full bg-lira-nav-accent animate-typing-dot-1" />
                             <span className="w-2 h-2 rounded-full bg-lira-nav-accent animate-typing-dot-2" />
@@ -182,7 +181,7 @@ export const VivaAIChatbot: React.FC<VivaAIChatbotProps> = ({
                       className="flex-1 pl-4 pr-4 py-2.5 text-xs border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-lira-blue/50 focus:border-lira-blue transition-all"
                       disabled={chat.loading}
                     />
-                    <button type="submit" disabled={!chat.input.trim() || chat.loading} className="p-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue rounded-2xl disabled:opacity-40 transition-all shadow-md hover:scale-105 active:scale-95 flex-shrink-0 cursor-pointer" title="Send">
+                    <button type="submit" disabled={!chat.input.trim() || chat.loading} className="p-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue rounded-2xl disabled:opacity-40 transition-all active:scale-95 flex-shrink-0 cursor-pointer" title="Send">
                       <Send className="w-4 h-4" />
                     </button>
                   </form>

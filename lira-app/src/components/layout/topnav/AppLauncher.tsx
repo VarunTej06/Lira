@@ -68,13 +68,13 @@ export const AppLauncher: React.FC<{
         aria-label="Switch sites or apps"
         aria-expanded={open}
       >
-        <svg className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-90' : 'group-hover:rotate-90'}`} viewBox="0 0 16 16" fill="currentColor" aria-hidden>
+        <svg className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-90' : ''}`} viewBox="0 0 16 16" fill="currentColor" aria-hidden>
           {DOTS.map(({ x, y }, i) => <rect key={i} x={x} y={y} width="3" height="3" rx="1.5" className={i === 4 ? 'fill-lira-nav-accent' : undefined} />)}
         </svg>
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-56 bg-lira-nav border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden origin-top-left animate-scale-in">
+        <div className="absolute top-full left-0 mt-2 w-56 bg-lira-nav border border-white/10 rounded-2xl z-50 overflow-hidden origin-top-left animate-scale-in">
           <div className="flex items-center justify-between px-3 py-2 border-b border-white/10 bg-white/[0.04]">
             <div>
               <p className="text-sm font-bold text-white tracking-tight leading-none">Lira</p>

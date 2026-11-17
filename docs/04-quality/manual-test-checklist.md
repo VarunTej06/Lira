@@ -12,7 +12,7 @@ How to run it
 
 ---
 
-## A. The screens that were reworked (A1–A26)
+## A. The screens that were reworked (A1–A27)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -300,6 +300,21 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Gear menu, System settings. Expect: the palette pills are those of the chosen mode (two for dark, four for light) and Save applies the choice.
 - [ ] Reload the page in Blackridge, Mossgrove and Tidewell. Expect: each comes back as saved.
 - [ ] In each of the three new palettes walk the board, a ticket popup, sprints, roadmaps, dashboards, filters and the Viva chat. Expect: every label on a button is readable, links are readable, and no screen falls back to another palette's colours.
+
+### A27. Flat design pass (18 Nov 2026)  ◐
+- [ ] Open the board, a ticket popup, a dropdown, a dialog and Viva in any palette. Expect: no drop shadows anywhere; panels are separated by borders and surface steps; nothing glows.
+- [ ] Hover buttons, cards, icons and the Viva button. Expect: colour changes only; nothing grows, slides or tilts.
+- [ ] Look at dialog backdrops. Expect: a plain dim layer, no blur behind it.
+- [ ] Look at corners. Expect: small, even rounding everywhere; nothing pill-shaped except round avatars and dots.
+- [ ] Open Viva. Expect: a flat panel in the navigation colour, the product mark as its picture, no sparkle icon, no glow, no purple.
+- [ ] Look at epics, labels, categories and anything that used to be purple. Expect: the accent colour of the palette in use, or ochre for epics.
+- [ ] Look at status colours (red, green, amber, blue) in light and dark palettes. Expect: four muted hues only, readable on every page colour.
+- [ ] Calendar view and the roadmap Now/Next/Later board. Expect: no coloured stripe down the side of a card; a thin full outline or a small coloured dot instead.
+- [ ] A blocked ticket. Expect: the flames still rise, with a flat outline instead of a glow.
+- [ ] Read any message from Viva, the standup agenda and the sprint report. Expect: no em dashes.
+- [ ] Reload the page with a slow connection (browser tools, Slow 3G). Expect: a grey skeleton of the app while it starts, then the real screen; with "reduce motion" on, the skeleton does not pulse.
+- [ ] Open Dashboards, Roadmaps, Projects, Sprints and Filters for the first time. Expect: a grey page skeleton for a moment, then the page.
+- [ ] Open a ticket for the first time after loading, and Viva. Expect: both open correctly (they load when first used).
 
 ---
 

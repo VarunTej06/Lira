@@ -19,7 +19,7 @@ export interface StandupScope {
 }
 
 export interface TeamMember {
-  key: string;           // initials or email — unique id
+  key: string;           // initials or email, a unique id
   name: string;
   email: string;
 }
@@ -126,6 +126,9 @@ export function removeScopeExtra(scope: StandupScope, memberKey: string) {
   owners.forEach(o => write(TEAM_PREFIX + o, read<string[]>(TEAM_PREFIX + o, []).filter(k => k !== memberKey)));
 }
 
+/** The key of the row that holds tickets nobody is assigned to. */
+export const NO_ASSIGNEE_KEY = 'unassigned';
+
 export function personKey(i: Issue): string | undefined {
   return i.assigneeInitials || i.assignee || undefined;
 }
@@ -178,7 +181,7 @@ export function buildAgenda(scoped: Issue[], everything: Issue[], now = Date.now
     } else if (status(i) === 'inprogress' && !personKey(i)) {
       needsUpdate.push({ issue: i, reason: 'In progress but unassigned', severity: 'medium' });
     } else if ((status(i) === 'todo' || status(i) === 'backlog') && idleDays >= 14) {
-      needsUpdate.push({ issue: i, reason: `Stale — untouched for ${idleDays}d`, severity: 'low' });
+      needsUpdate.push({ issue: i, reason: `Stale, untouched for ${idleDays}d`, severity: 'low' });
     }
   });
   const sev = { high: 0, medium: 1, low: 2 } as const;
@@ -208,8 +211,8 @@ export function agendaText(scopeName: string, a: Agenda, notes: string): string 
   const line = (i: Issue) => `  - ${i.key} ${i.title}${personKey(i) ? ` (${personKey(i)})` : ''}`;
   const block = (title: string, list: string[]) => (list.length ? `${title}\n${list.join('\n')}\n` : '');
   return [
-    `Call notes — ${scopeName} — ${new Date().toLocaleDateString()}\n`,
-    block('Needs an update:', a.needsUpdate.map(x => `  - ${x.issue.key} ${x.issue.title} — ${x.reason}`)),
+    `Call notes: ${scopeName}, ${new Date().toLocaleDateString()}\n`,
+    block('Needs an update:', a.needsUpdate.map(x => `  - ${x.issue.key} ${x.issue.title}: ${x.reason}`)),
     block('Blocked:', a.blocked.map(b => `  - ${b.issue.key} ${b.issue.title} ← ${b.blockedBy.map(x => x.key).join(', ')}`)),
     block('In progress:', a.inProgress.map(line)),
     block('Done in the last 24h:', a.doneRecently.map(line)),
@@ -239,7 +242,7 @@ export function rrule(repeat: Repeat, start: Date): string | undefined {
 }
 
 export function inviteDescription(scopeName: string, a: Agenda, platform: Platform, link: string, callName = 'Daily standup'): string {
-  const top = a.needsUpdate.slice(0, 6).map(x => `• ${x.issue.key} ${x.issue.title} — ${x.reason}`);
+  const top = a.needsUpdate.slice(0, 6).map(x => `• ${x.issue.key} ${x.issue.title}: ${x.reason}`);
   return [
     `${callName} for ${scopeName} (scheduled from Lira).`,
     link ? `Join: ${link}` : platform === 'meet' ? 'A Google Meet link is added by Google Calendar.' : '',

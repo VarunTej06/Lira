@@ -47,7 +47,7 @@ export function FormsList(s: FormsState) {
                   {forms.map(form => (
                     <div
                       key={form.id}
-                      className="border border-lira-border rounded-xl p-4 hover:border-lira-blue/50 hover:shadow-xs transition-all bg-white flex flex-col justify-between group"
+                      className="border border-lira-border rounded-xl p-4 hover:border-lira-blue/50 transition-all bg-white flex flex-col justify-between group"
                     >
                       <div>
                         <div className="flex items-start justify-between gap-2">
@@ -88,7 +88,7 @@ export function FormsList(s: FormsState) {
                         >
                           <Eye className="w-3.5 h-3.5" /> Preview Form
                         </button>
-                        <ChevronRight className="w-4 h-4 text-lira-muted group-hover:translate-x-0.5 transition-transform" />
+                        <ChevronRight className="w-4 h-4 text-lira-muted transition-transform" />
                       </div>
                     </div>
                   ))}

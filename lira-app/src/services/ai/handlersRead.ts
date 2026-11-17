@@ -35,7 +35,7 @@ export async function handleStatusMatrix(c: AgentContext): Promise<ChatMessage |
       text += `| **${s.name}** | \`${s.key}\` | ${b} | ${td} | ${ip} | ${d} | **${issues.length}** |\n`;
     });
 
-    text += `| **Workspace Total** | — | **${totalBacklog}** | **${totalTodo}** | **${totalInprogress}** | **${totalDone}** | **${allIssues.length}** |\n`;
+    text += `| **Workspace Total** | n/a | **${totalBacklog}** | **${totalTodo}** | **${totalInprogress}** | **${totalDone}** | **${allIssues.length}** |\n`;
 
     return {
       id: uuidv4(),
@@ -122,7 +122,7 @@ export async function handleSpaceQuery(c: AgentContext): Promise<ChatMessage | u
       return {
         id: uuidv4(),
         sender: 'assistant',
-        text: `### **${spaceToQuery.name}** — ${statusFilter.toUpperCase()} (${filtered.length} items):\n\n${list}`,
+        text: `### **${spaceToQuery.name}**: ${statusFilter.toUpperCase()} (${filtered.length} items):\n\n${list}`,
         timestamp: now,
         refinedPrompt: refinedMetadata,
         suggestedActions: [
@@ -142,14 +142,14 @@ export async function handleSpaceQuery(c: AgentContext): Promise<ChatMessage | u
       done: spaceIssues.filter(i => i.status === 'done'),
     };
 
-    let text = `### **${spaceToQuery.name}** (\`${spaceToQuery.key}\`) — ${spaceIssues.length} Total Tickets:\n\n`;
+    let text = `### **${spaceToQuery.name}** (\`${spaceToQuery.key}\`): ${spaceIssues.length} Total Tickets:\n\n`;
     text += `| Column | Count | Tickets |\n|---|:---:|---|\n`;
-    text += `| **Backlog** | ${byStatus.backlog.length} | ${byStatus.backlog.map(i => `\`${i.key}\``).join(', ') || '—'} |\n`;
-    text += `| **To Do** | ${byStatus.todo.length} | ${byStatus.todo.map(i => `\`${i.key}\``).join(', ') || '—'} |\n`;
-    text += `| **In Progress** | ${byStatus.inprogress.length} | ${byStatus.inprogress.map(i => `\`${i.key}\``).join(', ') || '—'} |\n`;
-    text += `| **Blocked (flagged)** | ${byStatus.blocked.length} | ${byStatus.blocked.map(i => `\`${i.key}\``).join(', ') || '—'} |
+    text += `| **Backlog** | ${byStatus.backlog.length} | ${byStatus.backlog.map(i => `\`${i.key}\``).join(', ') || 'None'} |\n`;
+    text += `| **To Do** | ${byStatus.todo.length} | ${byStatus.todo.map(i => `\`${i.key}\``).join(', ') || 'None'} |\n`;
+    text += `| **In Progress** | ${byStatus.inprogress.length} | ${byStatus.inprogress.map(i => `\`${i.key}\``).join(', ') || 'None'} |\n`;
+    text += `| **Blocked (flagged)** | ${byStatus.blocked.length} | ${byStatus.blocked.map(i => `\`${i.key}\``).join(', ') || 'None'} |
 `;
-    text += `| **Done** | ${byStatus.done.length} | ${byStatus.done.map(i => `\`${i.key}\``).join(', ') || '—'} |\n\n`;
+    text += `| **Done** | ${byStatus.done.length} | ${byStatus.done.map(i => `\`${i.key}\``).join(', ') || 'None'} |\n\n`;
 
     if (spaceIssues.length > 0) {
       text += `**Sample tickets in this space:**\n`;

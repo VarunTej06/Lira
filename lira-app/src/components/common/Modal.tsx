@@ -51,13 +51,13 @@ export const Modal: React.FC<ModalProps> = ({
       key="modal"
       ref={overlayRef}
       {...dialogBackdrop}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60"
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
       <motion.div
         {...dialogPanel}
         className={`
-          bg-white rounded-xl shadow-modal w-full
+          bg-white rounded-xl w-full
           flex flex-col overflow-hidden text-lira-text
           ${SIZE_CLASSES[size]} ${className}
         `}

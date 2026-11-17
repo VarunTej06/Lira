@@ -56,7 +56,7 @@ export function GeneralSection(s: SettingsState) {
                 <button
                   type="button"
                   onClick={handleSaveGeneral}
-                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors shadow-xs cursor-pointer"
+                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors cursor-pointer"
                 >
                   Save General Settings
                 </button>

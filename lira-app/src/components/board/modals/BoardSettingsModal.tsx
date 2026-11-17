@@ -99,8 +99,8 @@ export const BoardSettingsModal: React.FC<{
           </label>
           <div className="divide-y divide-lira-border border border-lira-border rounded-xl overflow-hidden bg-gray-50/50">
             {[
-              { key: 'showStoryPoints' as const, label: 'Story points badge', desc: 'Display estimated points on card footer', icon: <Tag className="w-4 h-4 text-purple-500" /> },
-              { key: 'showEpicBadge' as const, label: 'Epic badge', desc: 'Show parent epic pill at top of card', icon: <Layers className="w-4 h-4 text-indigo-500" /> },
+              { key: 'showStoryPoints' as const, label: 'Story points badge', desc: 'Display estimated points on card footer', icon: <Tag className="w-4 h-4 text-lira-blue" /> },
+              { key: 'showEpicBadge' as const, label: 'Epic badge', desc: 'Show parent epic pill at top of card', icon: <Layers className="w-4 h-4 text-lira-blue" /> },
               { key: 'showDueDate' as const, label: 'Due dates & overdue indicators', desc: 'Alert on approaching or past-due dates', icon: <Calendar className="w-4 h-4 text-amber-500" /> },
               { key: 'showAssignee' as const, label: 'Assignee avatar', desc: 'Show user initials avatar on card', icon: <User className="w-4 h-4 text-lira-blue" /> },
               { key: 'showPriority' as const, label: 'Priority badge & chevron', desc: 'Show high / medium / low indicator', icon: <Eye className="w-4 h-4 text-emerald-500" /> },
@@ -139,7 +139,7 @@ export const BoardSettingsModal: React.FC<{
           <button
             type="button"
             onClick={handleSave}
-            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer shadow-xs"
+            className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer"
           >
             Save Changes
           </button>

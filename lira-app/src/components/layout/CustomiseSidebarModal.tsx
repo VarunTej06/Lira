@@ -25,11 +25,11 @@ interface SidebarItemDef {
 const ico = 'w-4 h-4 text-gray-500';
 const NAV_ITEMS: Record<string, SidebarItemDef> = {
   forYou: { key: 'forYou', label: 'For you', icon: <User className={ico} />, locked: true },
-  projects: { key: 'projects', label: 'Projects', icon: <FolderKanban className="w-4 h-4 text-violet-500" /> },
+  projects: { key: 'projects', label: 'Projects', icon: <FolderKanban className="w-4 h-4 text-lira-blue" /> },
   sprints: { key: 'sprints', label: 'Sprints', icon: <CalendarClock className="w-4 h-4 text-teal-500" /> },
   allTickets: { key: 'allTickets', label: 'All tickets', icon: <Ticket className="w-4 h-4 text-yellow-500" /> },
   roadmaps: { key: 'roadmaps', label: 'Roadmaps', icon: <Map className="w-4 h-4 text-orange-500" /> },
-  dashboards: { key: 'dashboards', label: 'Dashboards', icon: <LayoutDashboard className="w-4 h-4 text-purple-500" /> },
+  dashboards: { key: 'dashboards', label: 'Dashboards', icon: <LayoutDashboard className="w-4 h-4 text-lira-blue" /> },
 };
 
 const SECTION_ITEMS: Record<string, SidebarItemDef> = {
@@ -184,7 +184,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
                   </button>
 
                   {openMenuKey === key && (
-                    <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-lira-border rounded-lg shadow-xl py-1 z-50 text-xs text-lira-text animate-scale-in" onClick={(e) => e.stopPropagation()}>
+                    <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-lira-border rounded-lg py-1 z-50 text-xs text-lira-text animate-scale-in" onClick={(e) => e.stopPropagation()}>
                       <button type="button" onClick={() => moveItem(section, idx, idx - 1)} disabled={!canUp} className="w-full flex items-center gap-2 px-3 py-1.5 hover:bg-gray-50 text-left disabled:opacity-40 cursor-pointer">
                         <ArrowUp className="w-3.5 h-3.5" /> Move up
                       </button>
@@ -253,7 +253,7 @@ export const CustomiseSidebarModal: React.FC<CustomiseSidebarModalProps> = ({ is
             <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
               Cancel
             </button>
-            <button type="button" onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors shadow-xs cursor-pointer">
+            <button type="button" onClick={handleSave} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors cursor-pointer">
               Save changes
             </button>
           </div>

@@ -1,3 +1,5 @@
+> **Update 18 Nov 2026:** the tells below were fixed except the stock icon set (#2), which is a future task after the rename (the typeface, #10, is now the device's own font), and Terms and Privacy shown in the product (#26, #27), which wait for sign-up. The current state of each tell is in `vibe-check.md` section 4. Also fixed: the single 2 MB bundle is now 0.7 MB for the first load, with pages, the rich text editor and Viva loaded when used.
+
 ## Audit Health Score
 
 | # | Dimension | Score | Key Finding |

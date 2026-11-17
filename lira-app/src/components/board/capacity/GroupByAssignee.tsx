@@ -18,7 +18,7 @@ export function GroupByAssignee(s: CapacityState) {
             return (
               <div
                 key={member.initials}
-                className="bg-white rounded-xl border border-lira-border shadow-xs p-5 space-y-4 hover:border-lira-blue transition-all"
+                className="bg-white rounded-xl border border-lira-border p-5 space-y-4 hover:border-lira-blue transition-all"
               >
                 {/* Member Header */}
                 <div className="flex items-center justify-between">

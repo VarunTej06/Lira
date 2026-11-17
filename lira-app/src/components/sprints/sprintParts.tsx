@@ -26,7 +26,7 @@ export const PhaseBadge: React.FC<{ sprint: string }> = ({ sprint }) => {
 export const SprintChip: React.FC<{ sprint: string; carried?: boolean }> = ({ sprint, carried }) => (
   <span
     title={sprintName(sprint)}
-    className="inline-flex items-center gap-1 text-3xs font-medium px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 whitespace-nowrap"
+    className="inline-flex items-center gap-1 text-3xs font-medium px-1.5 py-0.5 rounded bg-lira-blue-light text-lira-blue whitespace-nowrap"
   >
     {sprintLabel(sprint, true)}
     {carried && <span title="Carried over from an earlier sprint">↻</span>}

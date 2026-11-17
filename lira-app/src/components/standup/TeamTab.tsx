@@ -19,10 +19,10 @@ export function TeamTab(s: StandupState) {
           <strong className="text-lira-text">Invites go to the team assigned to this {scope.type}.</strong>{' '}
           {TEAM_NOTE[scope.type]}
         </p>
-        <p>Dedicated Teams (named groups per space and project) are coming in a later version — they will replace this automatic list. Emails are remembered for every space, project and sprint.</p>
+        <p>Dedicated Teams (named groups per space and project) are coming in a later version. They will replace this automatic list. Emails are remembered for every space, project and sprint.</p>
       </div>
       <section className="border border-lira-border rounded-2xl overflow-hidden bg-white">
-        {members.length === 0 && <p className="px-4 py-6 text-sm text-lira-muted">No assignees yet — add people below.</p>}
+        {members.length === 0 && <p className="px-4 py-6 text-sm text-lira-muted">No assignees yet. Add people below.</p>}
         {members.map(m => (
           <div key={m.key} className="flex items-center gap-3 px-3 py-2 border-b border-lira-border last:border-0">
             <input type="checkbox" checked={selected.has(m.key)} onChange={() => s.toggleMember(m.key)} className="cursor-pointer" aria-label={`Invite ${m.name}`} />

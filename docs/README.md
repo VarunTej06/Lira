@@ -10,6 +10,7 @@ Start here. Everything under `docs/` is written for the **multi-user, SSO** stag
 | [`03-sop/`](03-sop/README.md) | Standard operating procedures: release, backup/restore, incident, access, dependencies, onboarding | Running or supporting the system |
 | [`04-quality/`](04-quality/README.md) | Definition of done, code-review checklist for AI-assisted code, test strategy, today's measured baseline, the manual test checklist | Writing or reviewing code |
 | [`05-presentations/`](05-presentations/README.md) | PowerPoint deck for stakeholders | Presenting the plan |
+| [`06-legal/`](06-legal/README.md) | Draft Terms of Service and Privacy Policy, and what a lawyer must fill in | Before sign-up goes live |
 
 Other documents (older, still maintained): root [`README.md`](../README.md), [`SETUP.md`](../SETUP.md), [`TESTING.md`](../TESTING.md), [`SECURITY_REPORT.md`](../SECURITY_REPORT.md) (single-user security check), [`ROADMAP.md`](../ROADMAP.md), [`PUBLIC_EDITION_PLAN.md`](../PUBLIC_EDITION_PLAN.md), and the nine design notes in [`Prompts and Architectures/`](../Prompts%20and%20Architectures/). [`CLAUDE.md`](../CLAUDE.md) holds the rules AI coding assistants must follow.
 

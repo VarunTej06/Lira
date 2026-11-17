@@ -21,7 +21,7 @@ export function SettingsTab(ctx: DetailCtx) {
             </div>
 
             {/* 1. Workflow States (with ability to rename) */}
-            <div className="bg-white rounded-xl border border-lira-border shadow-xs p-6 space-y-4">
+            <div className="bg-white rounded-xl border border-lira-border p-6 space-y-4">
               <div className="flex items-center gap-2.5 border-b border-lira-border pb-3">
                 <Workflow className="w-5 h-5 text-lira-blue" />
                 <div>
@@ -59,10 +59,10 @@ export function SettingsTab(ctx: DetailCtx) {
             </div>
 
             {/* 2. Custom Fields */}
-            <div className="bg-white rounded-xl border border-lira-border shadow-xs p-6 space-y-4">
+            <div className="bg-white rounded-xl border border-lira-border p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-lira-border pb-3">
                 <div className="flex items-center gap-2.5">
-                  <Sliders className="w-5 h-5 text-purple-600" />
+                  <Sliders className="w-5 h-5 text-lira-blue" />
                   <div>
                     <h3 className="text-sm font-bold text-lira-text">Custom Fields</h3>
                     <p className="text-xs text-lira-muted mt-0.5">
@@ -87,7 +87,7 @@ export function SettingsTab(ctx: DetailCtx) {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-bold text-lira-text">{f.name}</span>
-                        <span className="text-3xs font-mono bg-purple-50 text-purple-700 px-2 py-0.5 rounded border border-purple-200">
+                        <span className="text-3xs font-mono bg-lira-blue-light text-lira-blue px-2 py-0.5 rounded border border-lira-border">
                           {f.type}
                         </span>
                       </div>
@@ -119,7 +119,7 @@ export function SettingsTab(ctx: DetailCtx) {
             </div>
 
             {/* 3. Danger Zone */}
-            <div className="bg-white rounded-xl border border-red-200 shadow-xs p-6 space-y-3">
+            <div className="bg-white rounded-xl border border-red-200 p-6 space-y-3">
               <h3 className="text-sm font-bold text-red-600 flex items-center gap-2">
                 <Trash2 className="w-4 h-4" />
                 Danger Zone
@@ -139,8 +139,8 @@ export function SettingsTab(ctx: DetailCtx) {
 
       {/* Add Custom Field Modal */}
       {showAddFieldModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fade-in">
-          <div className="bg-white rounded-xl shadow-modal w-full max-w-md p-6 space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in">
+          <div className="bg-white rounded-xl w-full max-w-md p-6 space-y-4">
             <h3 className="text-base font-bold text-lira-text">Add Custom Field to Project</h3>
             <form onSubmit={handleAddCustomField} className="space-y-4">
               <div>

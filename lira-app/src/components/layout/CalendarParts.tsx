@@ -20,7 +20,7 @@ export function IssueChip({ issue, drag, onSelect }: { issue: Issue; drag: DragH
       onDragStart={e => drag.onDragStart(e, issue)}
       onDragEnd={drag.onDragEnd}
       onClick={() => onSelect(issue)} {...issueLink(issue)}
-      className={`text-2xs px-1.5 py-1 rounded-md border-l-[3px] leading-tight cursor-grab active:cursor-grabbing transition-all hover:shadow-sm hover:-translate-y-px group select-none ${chipTone(issue)} ${drag.draggingId === issue.id ? 'opacity-40 scale-95' : ''} ${isDone ? 'opacity-70' : ''}`}
+      className={`text-2xs px-1.5 py-1 rounded-md leading-tight cursor-grab active:cursor-grabbing transition-all group select-none ${chipTone(issue)} ${drag.draggingId === issue.id ? 'opacity-40 scale-95' : ''} ${isDone ? 'opacity-70' : ''}`}
       title={`${issue.key} · ${issue.title}. Drag to change the due date.`}
     >
       <div className="flex items-center gap-1 min-w-0">
@@ -41,7 +41,7 @@ export function UnscheduledChip({ issue, drag, onSelect }: { issue: Issue; drag:
       onDragStart={e => drag.onDragStart(e, issue)}
       onDragEnd={drag.onDragEnd}
       onClick={() => onSelect(issue)} {...issueLink(issue)}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border rounded-lg text-xs transition-all cursor-grab active:cursor-grabbing select-none group ${drag.draggingId === issue.id ? 'opacity-40 border-dashed border-lira-blue scale-95' : 'border-lira-border hover:border-lira-blue hover:shadow-xs'}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border rounded-lg text-xs transition-all cursor-grab active:cursor-grabbing select-none group ${drag.draggingId === issue.id ? 'opacity-40 border-dashed border-lira-blue scale-95' : 'border-lira-border hover:border-lira-blue'}`}
       title="Drag onto a day to set the due date, or click to open"
     >
       <GripVertical className="w-3 h-3 text-lira-muted group-hover:text-lira-blue" />

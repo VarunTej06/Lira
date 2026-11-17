@@ -7,7 +7,7 @@ import { PALETTE } from '../../../theme/palette';
 export const STATUS_OPTIONS = STATUS_LIST.map(s => ({ value: s.id as string, label: s.label, color: s.color, bgColor: s.bg }));
 
 export const ISSUE_TYPE_OPTIONS: { value: IssueType; label: string; icon: React.ReactNode; color: string; bgColor: string }[] = [
-  { value: 'epic', label: 'Epic', icon: <TypeIcon type="epic" />, color: PALETTE.purple, bgColor: '#EAE6FF' },
+  { value: 'epic', label: 'Epic', icon: <TypeIcon type="epic" />, color: PALETTE.epic, bgColor: PALETTE.epicBg },
   { value: 'task', label: 'Task', icon: <TypeIcon type="task" />, color: PALETTE.brand, bgColor: PALETTE.brandBg },
   { value: 'bug', label: 'Bug', icon: <TypeIcon type="bug" />, color: PALETTE.critical, bgColor: PALETTE.criticalBg },
   { value: 'subtask', label: 'Subtask', icon: <TypeIcon type="subtask" />, color: PALETTE.textMuted, bgColor: PALETTE.surfaceMuted },

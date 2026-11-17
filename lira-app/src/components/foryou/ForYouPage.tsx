@@ -1,7 +1,7 @@
 import { SpaceIcon } from '../common/SpaceIcon';
 import { issueLink, projectLink, sprintLink } from '../../utils/links';
 import React, { useMemo } from 'react';
-import { Sparkles, AlertTriangle, Clock, CheckCircle2, ListTodo, ArrowRight, FolderKanban, CalendarClock, Activity } from 'lucide-react';
+import { AlertTriangle, Clock, CheckCircle2, ListTodo, ArrowRight, FolderKanban, CalendarClock, Activity } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import type { Project } from '../../types/project';
@@ -100,7 +100,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-semibold text-lira-text flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-400" /> {greeting}, Varun
+              {greeting}, Varun
             </h1>
             <p className="text-sm text-lira-muted mt-0.5">
               {currentTime().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {sprintName(cur)} · {daysLeft(cur)} days left
@@ -128,7 +128,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
           <div className="lg:col-span-2 space-y-5">
             <Card title="Assigned to me" icon={<ListTodo className="w-4 h-4 text-lira-blue" />}
               action={<span className="text-xs text-lira-muted"><CountUp value={myOpen.length} suffix=" open" /></span>}>
-              {myOpen.length === 0 ? empty('Nothing assigned to you — enjoy the quiet.') :
+              {myOpen.length === 0 ? empty('Nothing assigned to you. Enjoy the quiet.') :
                 myOpen.slice(0, 8).map(i => (
                   <TicketRow key={i.id} issue={i} space={spaceById.get(i.spaceId)} showSpace showSprint sprintOptions={sprintKeys} onClick={onIssueClick} />
                 ))}
@@ -194,7 +194,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
               </div>
             </Card>
 
-            <Card title="Projects" icon={<FolderKanban className="w-4 h-4 text-violet-500" />}>
+            <Card title="Projects" icon={<FolderKanban className="w-4 h-4 text-lira-blue" />}>
               <div className="p-2">
                 {projects.length === 0 ? empty('No projects yet') : projects.map(p => (
                   <button key={p.id} onClick={() => onOpenProject(p)} {...projectLink(p.id)}

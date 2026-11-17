@@ -10,7 +10,7 @@ export function ScheduleTab(s: StandupState) {
   const { scope, saved, invited, invitedEmails, missingEmail, setTab } = s;
   const actions = [
     { label: 'Google Meet invite', hint: 'Pre-filled Google Calendar event, whole team as guests', Icon: Video, tint: 'bg-emerald-100 text-emerald-700', run: s.sendGoogle },
-    { label: 'Microsoft Teams invite', hint: 'Pre-filled Teams meeting with all attendees', Icon: Video, tint: 'bg-indigo-100 text-indigo-700', run: s.sendTeams },
+    { label: 'Microsoft Teams invite', hint: 'Pre-filled Teams meeting with all attendees', Icon: Video, tint: 'bg-lira-blue-light text-lira-blue', run: s.sendTeams },
     { label: 'Download .ics', hint: 'Works with Outlook, Apple Calendar and others', Icon: Download, tint: 'bg-amber-100 text-amber-700', run: s.downloadIcs },
     { label: 'Email the team', hint: 'Draft with time and tickets that need updates', Icon: Mail, tint: 'bg-sky-100 text-sky-700', run: s.emailTeam },
   ];
@@ -72,14 +72,14 @@ export function ScheduleTab(s: StandupState) {
           </select>
         </div>
         <div className="sm:col-span-2">
-          <label className={LABEL}>Meeting link (optional — paste it after creating the invite so “Join” works)</label>
+          <label className={LABEL}>Meeting link (optional: paste it after creating the invite so “Join” works)</label>
           <input className={FIELD} value={s.link} onChange={e => s.setLink(e.target.value)} placeholder="https://meet.google.com/abc-defg-hij" />
         </div>
       </div>
 
       <div className="rounded-2xl border border-lira-border bg-gray-50 px-4 py-3 text-xs text-lira-muted">
         Inviting the <strong className="text-lira-text">{scope.name}</strong> team: <strong className="text-lira-text">{invitedEmails.length}</strong> of {invited.length} people have an email
-        {missingEmail.length > 0 && <> — missing: {missingEmail.map(m => m.name).join(', ')} (<button className="text-lira-blue underline cursor-pointer" onClick={() => setTab('team')}>add emails</button>)</>}.
+        {missingEmail.length > 0 && <>. Missing: {missingEmail.map(m => m.name).join(', ')} (<button className="text-lira-blue underline cursor-pointer" onClick={() => setTab('team')}>add emails</button>)</>}.
         Lira opens a pre-filled invite for everyone; you confirm it in your calendar, which then emails the whole team.
       </div>
 

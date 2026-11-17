@@ -90,7 +90,7 @@ export const LinkMenuHost: React.FC = () => {
           data-link-menu
           role="menu"
           style={{ position: 'fixed', top: menu.y, left: menu.x, zIndex: 500, transformOrigin: 'top left' }}
-          className="w-52 bg-white border border-lira-border rounded-xl shadow-2xl py-1 text-sm text-lira-text"
+          className="w-52 bg-white border border-lira-border rounded-xl py-1 text-sm text-lira-text"
         >
           <button role="menuitem" data-testid="open-new-tab" onClick={() => { openTab(menu.href); setMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 cursor-pointer text-left">
             <ExternalLink className="w-4 h-4 text-lira-muted" /> Open in new tab

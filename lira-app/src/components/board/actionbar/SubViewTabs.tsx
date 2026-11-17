@@ -8,7 +8,7 @@ import type { ActionBarState } from './useActionBarState';
 /** The coloured pill that sits around the tab you are on, and slides to the next one. */
 const Pill = () => (
   <motion.span layoutId="space-tab-pill" transition={slide} aria-hidden data-testid="space-tab-pill"
-    className="absolute inset-0 rounded-xl bg-lira-blue-light ring-1 ring-lira-blue/40 shadow-xs" />
+    className="absolute inset-0 rounded-xl bg-lira-blue-light ring-1 ring-lira-blue/40" />
 );
 
 /** Summary, Board, List, Calendar, Sprints, Capacity and More: one rounded bar, the current tab highlighted all round. */
@@ -48,7 +48,7 @@ export function SubViewTabs(s: ActionBarState) {
               </span>
             </button>
             {showMore && (
-              <div className="absolute top-full left-0 mt-1 z-20 bg-white border border-lira-border rounded-xl shadow-dropdown py-1 min-w-[140px]">
+              <div className="absolute top-full left-0 mt-1 z-20 bg-white border border-lira-border rounded-xl py-1 min-w-[140px]">
                 {MORE_TABS.map(tab => (
                   <button
                     key={tab}

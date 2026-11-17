@@ -63,9 +63,9 @@ export function ActiveFilterChips(s: FiltersState) {
             ))}
 
             {selectedTypes.map(t => (
-              <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 bg-purple-50 text-purple-800 border border-purple-200 rounded-md text-2xs font-medium capitalize">
+              <span key={t} className="inline-flex items-center gap-1 px-2 py-0.5 bg-lira-blue-light text-lira-blue border border-lira-border rounded-md text-2xs font-medium capitalize">
                 Type: {t}
-                <button onClick={() => setSelectedTypes(prev => prev.filter(x => x !== t))} className="hover:text-purple-950 ml-0.5">×</button>
+                <button onClick={() => setSelectedTypes(prev => prev.filter(x => x !== t))} className="hover:text-lira-text ml-0.5">×</button>
               </span>
             ))}
 
@@ -77,9 +77,9 @@ export function ActiveFilterChips(s: FiltersState) {
             ))}
 
             {selectedLabels.map(l => (
-              <span key={l} className="inline-flex items-center gap-1 px-2 py-0.5 bg-indigo-50 text-indigo-800 border border-indigo-200 rounded-md text-2xs font-mono">
+              <span key={l} className="inline-flex items-center gap-1 px-2 py-0.5 bg-lira-blue-light text-lira-blue border border-lira-border rounded-md text-2xs font-mono">
                 #{l}
-                <button onClick={() => setSelectedLabels(prev => prev.filter(x => x !== l))} className="hover:text-indigo-950 ml-0.5">×</button>
+                <button onClick={() => setSelectedLabels(prev => prev.filter(x => x !== l))} className="hover:text-lira-text ml-0.5">×</button>
               </span>
             ))}
 

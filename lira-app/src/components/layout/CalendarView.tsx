@@ -48,7 +48,7 @@ function MonthYearPicker({ year, month, monthName, onPick }: { year: number; mon
         <ChevronDown className={`w-4 h-4 text-lira-muted transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div className="absolute left-0 top-full mt-2 z-30 w-[272px] bg-white border border-lira-border rounded-2xl shadow-2xl p-3 animate-scale-in">
+        <div className="absolute left-0 top-full mt-2 z-30 w-[272px] bg-white border border-lira-border rounded-2xl p-3 animate-scale-in">
           <MonthYearGrid year={year} month={month} onPick={(y, m) => { onPick(y, m); setOpen(false); }} />
         </div>
       )}
@@ -177,7 +177,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ issues, space, onSel
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 pb-4 min-h-0">
-        <div className="rounded-2xl border border-lira-border bg-white overflow-hidden shadow-xs">
+        <div className="rounded-2xl border border-lira-border bg-white overflow-hidden">
           <div className="grid grid-cols-7 bg-gray-50 border-b border-lira-border text-2xs font-semibold uppercase tracking-wider select-none">
             {DAYS_OF_WEEK.map(name => <div key={name} className="py-2.5 text-center text-lira-muted">{name}</div>)}
           </div>

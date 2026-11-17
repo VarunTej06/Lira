@@ -33,7 +33,7 @@ export const SavedToastHost: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -16, scale: 0.96, transition: { duration: 0.16, ease: 'easeIn' as const } }}
             transition={{ type: 'spring', stiffness: 420, damping: 28 }}
-            className="relative pointer-events-auto flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl bg-white text-lira-text border border-lira-border shadow-2xl overflow-hidden"
+            className="relative pointer-events-auto flex items-center gap-3 pl-3 pr-2.5 py-2.5 rounded-2xl bg-white text-lira-text border border-lira-border overflow-hidden"
           >
             <span className="relative flex w-9 h-9 items-center justify-center flex-shrink-0">
               <motion.span

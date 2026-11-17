@@ -38,7 +38,7 @@ function SpaceButton({ space, active, starred, isHidden, isArchived, onSelect }:
       onClick={() => onSelect(space.id!)} {...spaceLink(space.key)}
       data-active={active ? 'true' : undefined}
       className={`w-full flex items-center gap-3 pl-3 pr-3 group-hover:pr-9 py-2 rounded-xl text-sm transition-all duration-200 cursor-pointer ${
-        active ? 'text-white font-medium' : 'text-white/60 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+        active ? 'text-white font-medium' : 'text-white/60 hover:text-white hover:bg-white/[0.06]'
       }`}
     >
       <div className="w-6 h-6 rounded-md flex items-center justify-center text-xs flex-shrink-0 bg-white/10">
@@ -136,7 +136,7 @@ export const FloatingMenu: React.FC<{ menuRoot: string; onClose: () => void; cla
       {...menuPop}
       data-menu-root={menuRoot}
       data-floating
-      className={`bg-lira-nav border border-white/10 rounded-lg shadow-2xl py-1 max-h-[calc(100vh-16px)] overflow-y-auto ${className}`}
+      className={`bg-lira-nav border border-white/10 rounded-lg py-1 max-h-[calc(100vh-16px)] overflow-y-auto ${className}`}
       style={{ position: 'fixed', top: pos?.top ?? 0, left: pos?.left ?? 0, zIndex: 1000, visibility: pos ? 'visible' : 'hidden', transformOrigin: 'top right' }}
       onClick={e => e.stopPropagation()}
     >

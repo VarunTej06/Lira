@@ -1,4 +1,4 @@
-import { Plus, Trash2, ListPlus, Sparkles, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, ListPlus, AlertCircle } from 'lucide-react';
 import { Button } from '../../common/Button';
 import type { FormFieldType } from './useFormsState';
 import type { FormsState } from './useFormsState';
@@ -190,7 +190,6 @@ export function FormBuilder(s: FormsState) {
                   size="sm"
                   className="flex items-center gap-1.5"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
                   Save Form
                 </Button>
               </div>

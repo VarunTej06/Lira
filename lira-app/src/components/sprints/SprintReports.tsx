@@ -143,8 +143,8 @@ export const SprintReports: React.FC<SprintReportsProps> = ({ issues, sprint, sc
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <Tile label="Done" value={<><CountUp value={stats.done} />/{stats.total}</>} sub={<CountUp value={stats.percent} suffix="%" />} />
         <Tile label="Points done" value={<><CountUp value={stats.donePoints} />/{stats.points}</>} sub={meta.capacity !== undefined ? `capacity ${meta.capacity}` : undefined} />
-        <Tile label="Lead time (average)" value={times.lead.n ? days(times.lead.avg) : '—'} sub={times.lead.n ? `median ${times.lead.median} · ${times.lead.n} done` : 'no finished tickets'} />
-        <Tile label="Cycle time (average)" value={times.cycle.n ? days(times.cycle.avg) : '—'} sub={times.cycle.n ? `median ${times.cycle.median} · ${times.cycle.n} tracked` : 'starts when a ticket enters In Progress'} />
+        <Tile label="Lead time (average)" value={times.lead.n ? days(times.lead.avg) : 'n/a'} sub={times.lead.n ? `median ${times.lead.median} · ${times.lead.n} done` : 'no finished tickets'} />
+        <Tile label="Cycle time (average)" value={times.cycle.n ? days(times.cycle.avg) : 'n/a'} sub={times.cycle.n ? `median ${times.cycle.median} · ${times.cycle.n} tracked` : 'starts when a ticket enters In Progress'} />
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">

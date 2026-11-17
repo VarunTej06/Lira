@@ -2,7 +2,7 @@
 
 How Lira is tested automatically, what each test protects, how to run them and how to add more.
 
-**Right now:** 1743 automated tests in 154 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
+**Right now:** 1772 automated tests in 156 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
 
 **Done by hand:** [`docs/04-quality/manual-test-checklist.md`](docs/04-quality/manual-test-checklist.md) lists every screen to click through after the refactor.
 
@@ -16,7 +16,7 @@ Run every command from the `lira-app` folder.
 
 | Command | What it does | Time |
 |---|---|---|
-| `npm test` | All 1743 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
+| `npm test` | All 1772 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
 | `npm run test:watch` | Re-runs the tests that matter each time you save a file | |
 | `npm run test:health` | **Data health check**: reads your real `data/` folder and checks it holds together. Changes nothing | about 3 s |
 | `npm run test:all` | Everything in one go: type check, lint, `npm test`, then the data health check | about 1 min |
@@ -92,6 +92,7 @@ Run one file: `npx vitest run src/utils/helpers.test.ts`. Run tests whose name c
 | **New tickets start in Backlog or To Do** | `src/utils/newIssue.test.ts`, `src/components/issue/CreateIssueModal.test.tsx`, `src/services/aiAgent.test.ts` (Viva too) |
 | **Typing is never a shortcut** | `src/utils/isEditable.test.ts` text boxes, dropdowns and the rich text editors |
 | **Roadmap calendar fits its panel** | `src/utils/roadmapUtils.test.ts` the range is trimmed to the work with four days of room, days widen to fill the panel and never go below the scale, header cells follow. `src/utils/roadmap/milestoneLabels.test.ts` milestone labels stack in as many rows as needed. `src/hooks/useElementWidth.test.tsx` the measured width |
+| **Flat design (the 30 tells)** | `src/theme/colorScales.test.ts` the four status colour scales: contrast of every text shade on every palette page, white labels on the dark shades, quiet tints, and that Tailwind's own palette is not used. `src/components/common/Skeleton.test.tsx` the loading skeletons and their reduced-motion rule. `scripts/vibe-check.mjs` counts the design tells (run it, not part of `npm test`) |
 | **Logo** | `src/components/common/LiraLogo.test.tsx` drawn in the page (no image file), the arrow grows from the corner on load and on hover, loops while starting, takes its size and colour from the caller |
 | **App switcher and version** | `src/components/layout/topnav/AppLauncher.test.tsx` opens, shows the version and five destinations, runs the chosen one, closes on Escape. `src/utils/appVersion.test.ts` the version is written in one place |
 | **Theme and colours** | `src/utils/theme.test.ts` the six palettes (two dark, four light): each theme remembers its own, saved and applied only on Save, the stylesheet uses exactly the colours in `theme/palette.ts`, and text, links and button labels stay readable in all six. `src/components/layout/settings/AppearanceSection.test.tsx` and `src/components/layout/topnav/SystemSettingsModal.test.tsx` each mode offers its own palettes, nothing changes until Save |

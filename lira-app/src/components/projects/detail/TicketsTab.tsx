@@ -21,7 +21,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('all')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'all'
-                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
@@ -35,7 +35,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('open')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'open'
-                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
@@ -49,7 +49,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('completed')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'completed'
-                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
@@ -63,7 +63,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('high_priority')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'high_priority'
-                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
@@ -77,12 +77,12 @@ export function TicketsTab(ctx: DetailCtx) {
                   onClick={() => setTicketSubTab('my_tasks')}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                     ticketSubTab === 'my_tasks'
-                      ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
+                      ? 'bg-lira-blue text-lira-on-blue'
                       : 'bg-white border border-lira-border text-lira-muted hover:text-lira-text'
                   }`}
                 >
                   <span>My Tasks</span>
-                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'my_tasks' ? 'bg-lira-blue text-lira-on-blue' : 'bg-purple-100 text-purple-800'}`}>
+                  <span className={`text-2xs px-1.5 py-0.2 rounded-full ${ticketSubTab === 'my_tasks' ? 'bg-lira-blue text-lira-on-blue' : 'bg-lira-blue-light text-lira-blue'}`}>
                     {ticketCounts.my_tasks}
                   </span>
                 </button>
@@ -98,7 +98,7 @@ export function TicketsTab(ctx: DetailCtx) {
                   value={ticketSearch}
                   onChange={e => setTicketSearch(e.target.value)}
                   placeholder="Filter tickets..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-lira-border rounded-lg focus:outline-none focus:border-lira-blue shadow-2xs"
+                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-lira-border rounded-lg focus:outline-none focus:border-lira-blue"
                 />
               </div>
             </div>
@@ -159,7 +159,7 @@ export function TicketsTab(ctx: DetailCtx) {
 
                         <td className="py-2.5 px-3 whitespace-nowrap">
                           {issue.type === 'epic'
-                            ? <span className="text-lira-muted">—</span>
+                            ? <span className="text-lira-muted">None</span>
                             : <SprintChip sprint={getIssueSprint(issue)} carried={(issue.sprintHistory || []).length > 0} />}
                         </td>
 

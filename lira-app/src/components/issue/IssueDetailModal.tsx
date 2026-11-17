@@ -15,14 +15,14 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = (props) => {
   return (
     <motion.div
       {...dialogBackdrop}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60"
       onClick={e => { if (e.target === e.currentTarget) s.onClose(); }}
     >
       <motion.div
         initial={{ opacity: 0, x: 60, scale: 0.97 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
         transition={dialogPanel.transition}
-        className="bg-white rounded-xl shadow-modal w-full flex flex-col overflow-hidden"
+        className="bg-white rounded-xl w-full flex flex-col overflow-hidden"
         style={{ maxWidth: '1120px', maxHeight: '93vh' }}
         onClick={e => e.stopPropagation()}
       >
@@ -48,7 +48,7 @@ export const IssueDetailModal: React.FC<IssueDetailModalProps> = (props) => {
     
       {/* 2-second green toast */}
       {s.savedToast && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg animate-fade-in pointer-events-none">
           <Check className="w-4 h-4 text-white" />
           <span>Saved ✓</span>
         </div>

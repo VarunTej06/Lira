@@ -37,7 +37,7 @@ src/services/ai/
 ## Component Overview
 
 ### `LiraAIAvatar.tsx`
-Renders the Viva AI avatar as a scalable SVG. Props: `size` (default 48), `className`, `hasSparkles` (default true). Gradient and filter ids come from `useId()` so several avatars never collide.
+Renders Viva's picture: the product mark on a flat tile in the navigation colour of the theme. Props: `size` (default 48), `className`.
 
 ### `VivaAIChatbot.tsx`
 The floating launcher and the chat card.

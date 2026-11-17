@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AlertTriangle, ArrowRight, Copy, LayoutDashboard, Plus, Sparkles, Star, Trash2, Upload, Wand2 } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Copy, FileText, LayoutDashboard, Plus, Star, Trash2, Upload } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { confirmDialog, alertDialog } from '../common/dialogStore';
@@ -67,17 +67,17 @@ export const DashboardsHome: React.FC<{ issues: Issue[]; spaces: Space[] }> = ({
           </div>
           <input ref={fileRef} type="file" accept=".json,application/json" className="hidden" aria-label="Import a dashboard file" data-testid="import-input" onChange={e => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void importFile(f); }} />
           <button type="button" onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium border border-lira-border bg-white rounded-lg hover:bg-gray-50 cursor-pointer"><Upload className="w-4 h-4" /> Import</button>
-          <button type="button" onClick={() => navigate('/dashboards/new')} data-testid="new-dashboard" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer"><Plus className="w-4 h-4" /> New dashboard</button>
+          <button type="button" onClick={() => navigate('/dashboards/new')} data-testid="new-dashboard" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer"><Plus className="w-4 h-4" /> New dashboard</button>
         </div>
 
         {/* Describe it */}
-        <section className="rounded-2xl border border-lira-border bg-white p-5 shadow-xs" aria-labelledby="describe-h">
-          <h2 id="describe-h" className="flex items-center gap-2 text-sm font-bold text-lira-text"><Sparkles className="w-4 h-4 text-lira-blue" /> Build one from a description</h2>
+        <section className="rounded-2xl border border-lira-border bg-white p-5" aria-labelledby="describe-h">
+          <h2 id="describe-h" className="flex items-center gap-2 text-sm font-bold text-lira-text"><FileText className="w-4 h-4 text-lira-blue" /> Build one from a description</h2>
           <p className="text-xs text-lira-muted mt-0.5">Say what you want to see. Lira picks the widgets and filters, and shows you what it understood before it creates anything.</p>
           <form className="mt-3 flex gap-2" onSubmit={e => { e.preventDefault(); if (text.trim()) setPlan(planFromPrompt(text, spaces)); }}>
             <input value={text} onChange={e => { setText(e.target.value); setPlan(null); }} placeholder="For example: what is blocked in this sprint and who is overloaded" aria-label="Describe the dashboard" data-testid="describe-input"
               className="flex-1 min-w-0 text-sm border border-lira-border rounded-lg px-3 py-2.5 bg-white text-lira-text focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue" />
-            <button type="submit" disabled={!text.trim()} data-testid="describe-go" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer disabled:opacity-50"><Wand2 className="w-4 h-4" /> Plan it</button>
+            <button type="submit" disabled={!text.trim()} data-testid="describe-go" className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer disabled:opacity-50"><ArrowRight className="w-4 h-4" /> Plan it</button>
           </form>
           <div className="flex flex-wrap gap-2 mt-3">
             {EXAMPLES.map(x => <button key={x} type="button" onClick={() => { setText(x); setPlan(planFromPrompt(x, spaces)); }} className="px-2.5 py-1 text-xs rounded-full border border-lira-border text-lira-muted hover:text-lira-blue hover:border-lira-blue cursor-pointer">{x}</button>)}
@@ -106,7 +106,7 @@ export const DashboardsHome: React.FC<{ issues: Issue[]; spaces: Space[] }> = ({
                 const sc = scenarioById(d.scenario);
                 const alerts = alertsFor(d.id);
                 return (
-                  <div key={d.id} className="group relative rounded-xl border border-lira-border bg-white p-4 shadow-xs hover:border-lira-blue hover:shadow-md transition-all" data-testid="dashboard-card">
+                  <div key={d.id} className="group relative rounded-xl border border-lira-border bg-white p-4 hover:border-lira-blue transition-all" data-testid="dashboard-card">
                     <button type="button" onClick={() => navigate(`/dashboards/${d.id}`)} {...linkProps(`/dashboards/${d.id}`)} className="w-full text-left cursor-pointer" aria-label={`Open ${d.name}`}>
                       <div className="flex items-start gap-3">
                         <ScenarioIcon icon={sc.icon} />
@@ -137,7 +137,7 @@ export const DashboardsHome: React.FC<{ issues: Issue[]; spaces: Space[] }> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" data-testid="template-cards">
             {SCENARIOS.map(s => (
               <button key={s.id} type="button" onClick={() => navigate(`/dashboards/new?scenario=${s.id}`)} data-testid={`template-${s.id}`}
-                className="text-left rounded-xl border border-lira-border bg-white p-4 shadow-xs hover:border-lira-blue hover:shadow-md transition-all cursor-pointer group">
+                className="text-left rounded-xl border border-lira-border bg-white p-4 hover:border-lira-blue transition-all cursor-pointer group">
                 <div className="flex items-start gap-3">
                   <ScenarioIcon icon={s.icon} />
                   <div className="min-w-0 flex-1">

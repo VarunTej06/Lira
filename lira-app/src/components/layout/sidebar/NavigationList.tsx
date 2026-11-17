@@ -20,7 +20,7 @@ export function NavigationList(s: SidebarState) {
                 aria-label="Collapse sidebar"
               >
             <ChevronLeft
-              className={`w-3.5 h-3.5 transition-transform duration-300 ease-in-out group-hover:scale-110 group-hover:-translate-x-0.5 ${
+              className={`w-3.5 h-3.5 transition-transform duration-300 ease-in-out ${
                 isRotating ? '-rotate-180' : 'rotate-0'
               }`}
             />
@@ -44,7 +44,7 @@ export function NavigationList(s: SidebarState) {
               onClick={item.action} {...pageLink(item.tab)}
               data-active={isActive ? 'true' : undefined}
               className={`group relative w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs transition-all duration-200 cursor-pointer text-left ${
-                isActive ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+                isActive ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
               }`}
             >
               {isActive && (

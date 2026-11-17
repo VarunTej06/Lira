@@ -1,15 +1,20 @@
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import { DashboardsPage } from './components/dashboards/DashboardsPage';
-import { FiltersPage } from './components/filter/FiltersPage';
-import { ProjectsOverview } from './components/projects/ProjectsOverview';
-import { ProjectDetailView } from './components/projects/ProjectDetailView';
 import { NotFound, PageBoundary } from './components/common/PageBoundary';
-import { SprintsPage } from './components/sprints/SprintsPage';
-import { SprintsOverview } from './components/sprints/SprintsOverview';
-import { ForYouPage } from './components/foryou/ForYouPage';
-import { NoSpaces, RoadmapsRoute } from './components/common/AppPages';
-import { AllTicketsPage } from './components/sprints/AllTicketsPage';
+import { NoSpaces } from './components/common/AppPages';
+import { PageSkeleton } from './components/common/Skeleton';
 import { SpaceView } from './components/space/SpaceView';
+
+// Every page except the board is fetched when it is first opened, so the first load stays small
+const DashboardsPage = lazy(() => import('./components/dashboards/DashboardsPage').then(m => ({ default: m.DashboardsPage })));
+const FiltersPage = lazy(() => import('./components/filter/FiltersPage').then(m => ({ default: m.FiltersPage })));
+const ProjectsOverview = lazy(() => import('./components/projects/ProjectsOverview').then(m => ({ default: m.ProjectsOverview })));
+const ProjectDetailView = lazy(() => import('./components/projects/ProjectDetailView').then(m => ({ default: m.ProjectDetailView })));
+const SprintsPage = lazy(() => import('./components/sprints/SprintsPage').then(m => ({ default: m.SprintsPage })));
+const SprintsOverview = lazy(() => import('./components/sprints/SprintsOverview').then(m => ({ default: m.SprintsOverview })));
+const ForYouPage = lazy(() => import('./components/foryou/ForYouPage').then(m => ({ default: m.ForYouPage })));
+const AllTicketsPage = lazy(() => import('./components/sprints/AllTicketsPage').then(m => ({ default: m.AllTicketsPage })));
+const RoadmapsRoute = lazy(() => import('./components/roadmap/RoadmapsRoute').then(m => ({ default: m.RoadmapsRoute })));
 import { spacePath, type AppRoute } from './routes';
 import type { Project } from './types/project';
 import type { Space } from './types/space';
@@ -55,6 +60,7 @@ export function AppRoutes(p: AppRoutesProps) {
   const { route, spaceList, activeSpace, routeSpace, allIssues, everyIssue, issues, selectedProject } = p;
   return (
   <PageBoundary pageKey={p.pageKey}>
+    <Suspense fallback={<PageSkeleton />}>
     <Routes>
       <Route path="/" element={activeSpace
         ? <Navigate to={spacePath(activeSpace.key, 'Board')} replace />
@@ -164,6 +170,7 @@ export function AppRoutes(p: AppRoutesProps) {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   </PageBoundary>
   );
 }

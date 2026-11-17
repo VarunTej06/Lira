@@ -1,6 +1,6 @@
 import { SpaceIcon } from '../common/SpaceIcon';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { Check, Database, FileText, Key, RotateCcw, Shield, Sparkles } from 'lucide-react';
+import { Check, Cpu, Database, FileText, Key, RotateCcw, Shield } from 'lucide-react';
 import type { Space } from '../../types/space';
 import {
   getSystemInstruction, setSystemInstruction, DEFAULT_SYSTEM_INSTRUCTION, getGeminiApiKey, setGeminiApiKey,
@@ -77,7 +77,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
       </div>
 
       <div className={`${CARD} space-y-2`}>
-        <div className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-lira-blue" /><label htmlFor="viva-provider" className={HEADING}>Model</label></div>
+        <div className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-lira-blue" /><label htmlFor="viva-provider" className={HEADING}>Model</label></div>
         <select id="viva-provider" value={provider} onChange={e => setProvider(e.target.value as AiProvider)} className="w-full text-xs border border-gray-300 rounded-xl px-2.5 py-2 bg-white">
           <option value="local">Built-in engine (no network)</option>
           <option value="gemini">Google Gemini</option>
@@ -107,7 +107,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
         </div>
       </div>
 
-      <button type="button" onClick={save} className="w-full py-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue font-semibold text-xs rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all cursor-pointer">
+      <button type="button" onClick={save} className="w-full py-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer">
         {saved ? <><Check className="w-4 h-4 text-emerald-300" /> Saved</> : 'Save settings'}
       </button>
     </div>

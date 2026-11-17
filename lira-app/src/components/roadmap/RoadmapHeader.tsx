@@ -22,7 +22,7 @@ const MENU_ITEM = 'w-full text-left px-3 py-2 hover:bg-lira-bg cursor-pointer te
 /** Where the epics go: the space, or a picker when the roadmap has none yet. */
 function SpaceBadge({ space, spaces, onPick }: { space: Space | undefined; spaces: Space[]; onPick: (key: string) => void }) {
   if (space) {
-    return <span className="text-2xs font-semibold px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-700 dark:text-violet-300 flex items-center gap-1"><Layers className="w-3 h-3" /> Epics in {space.name}</span>;
+    return <span className="text-2xs font-semibold px-2 py-0.5 rounded-full bg-lira-blue-light text-lira-blue flex items-center gap-1"><Layers className="w-3 h-3" /> Epics in {space.name}</span>;
   }
   return (
     <select
@@ -58,7 +58,7 @@ function OptionsMenu({ roadmap, onChange, onDelete }: Pick<Props, 'roadmap' | 'o
     <div className="relative">
       <button onClick={() => setOpen(o => !o)} className="p-1.5 rounded-lg border border-lira-border bg-lira-surface text-lira-muted hover:text-lira-text cursor-pointer" aria-label="Roadmap options"><MoreHorizontal className="w-4 h-4" /></button>
       {open && (
-        <div className="absolute right-0 mt-1 w-48 rounded-lg border border-lira-border bg-lira-surface shadow-dropdown z-40 py-1 text-xs" onMouseLeave={() => setOpen(false)}>
+        <div className="absolute right-0 mt-1 w-48 rounded-lg border border-lira-border bg-lira-surface z-40 py-1 text-xs" onMouseLeave={() => setOpen(false)}>
           <button className={MENU_ITEM} onClick={rename}>Rename roadmap</button>
           <button className={MENU_ITEM} onClick={describe}>Edit description</button>
           <button className="w-full text-left px-3 py-2 hover:bg-red-500/10 text-red-500 cursor-pointer" onClick={remove}>Delete roadmap</button>

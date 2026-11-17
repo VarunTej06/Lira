@@ -27,7 +27,7 @@ export function EpicBar({ item, y, h, drag, issues, today, range, ppd, onStart }
   const dragging = drag?.kind === 'epic' && drag.id === item.id && drag.moved;
   return (
     <div
-              className={`absolute group rounded-md select-none ${dragging ? 'z-20 shadow-lg ring-2 ring-white/60' : 'z-[15]'}`}
+              className={`absolute group rounded-md select-none ${dragging ? 'z-20 ring-2 ring-white/60' : 'z-[15]'}`}
       style={{ left, width: w, top: y + 8, height: h - 16, background: color + '33', border: `1px solid ${color}`, cursor: dragging ? 'grabbing' : 'grab' }}
       onPointerDown={e => onStart(e, 'epic', item.id, 'move')}
       title={`${item.title}\n${fmtShort(live.start)} → ${fmtShort(live.end)} · ${progress}%`}
@@ -54,7 +54,7 @@ export function TicketBar({ issue, y, h, drag, range, ppd, onStart }: BarPlace &
   const color = ticketColor(t.status);
   return (
     <div
-      className={`absolute flex items-center gap-1.5 rounded-full select-none pl-1.5 pr-2.5 text-2xs whitespace-nowrap ${dragging ? 'z-20 shadow-lg ring-2 ring-white/60' : 'z-[15]'}`}
+      className={`absolute flex items-center gap-1.5 rounded-full select-none pl-1.5 pr-2.5 text-2xs whitespace-nowrap ${dragging ? 'z-20 ring-2 ring-white/60' : 'z-[15]'}`}
       style={{ left: x, top: y + 5, height: h - 10, maxWidth: 260, background: color + '26', border: `1px ${base.scheduled ? 'solid' : 'dashed'} ${color}`, cursor: dragging ? 'grabbing' : 'grab' }}
       onPointerDown={e => onStart(e, 'ticket', t.id!, 'move')}
       title={`${t.key} · ${t.title}\n${base.scheduled ? `Due ${fmtDay(base.date)}` : 'No due date: drag to schedule'}`}

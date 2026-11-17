@@ -142,7 +142,7 @@
 | Error boundary | Prevents full app crash on component error |
 | Auto-scroll | Scrollable modal panels |
 | Loading state | Spinner during initialization |
-| Responsive typography | Inter font via Google Fonts |
+| Responsive typography | Device's own interface font |
 | Custom scrollbars | Thin, styled scrollbars (no browser default) |
 | Micro-animations | `animate-fade-in`, `animate-scale-in` on modals |
 | Hover transitions | Cards lift on hover (translate-y, shadow) |

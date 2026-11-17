@@ -121,7 +121,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-lira-blue-light text-lira-blue flex items-center justify-center">
                 <FolderKanban className="w-5 h-5" />
               </div>
               <h1 className="text-xl font-bold text-lira-text tracking-tight">Projects</h1>
@@ -147,7 +147,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
       </div>
 
       {/* ── Filter Toolbar ── */}
-      <div className="bg-white/60 backdrop-blur-xs border-b border-lira-border px-8 py-3.5 flex-shrink-0">
+      <div className="bg-white/60 border-b border-lira-border px-8 py-3.5 flex-shrink-0">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           {/* Search Input */}
           <div className="flex items-center gap-3 flex-1 min-w-[260px] max-w-md">
@@ -158,7 +158,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Search projects by name, key, lead, or description..."
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-lira-border rounded-lg focus:outline-none focus:border-lira-blue shadow-2xs transition-all"
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-lira-border rounded-lg focus:outline-none focus:border-lira-blue transition-all"
               />
             </div>
           </div>
@@ -202,8 +202,8 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
       {/* ── Main Projects Grid ── */}
       <div className="p-8 max-w-7xl mx-auto w-full flex-1">
         {filteredProjects.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-lira-border p-12 text-center max-w-md mx-auto shadow-xs my-8 space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-lira-blue-light text-lira-blue mx-auto flex items-center justify-center text-2xl shadow-inner">
+          <div className="bg-white rounded-2xl border border-lira-border p-12 text-center max-w-md mx-auto my-8 space-y-4">
+            <div className="w-14 h-14 rounded-2xl bg-lira-blue-light text-lira-blue mx-auto flex items-center justify-center text-2xl">
               <FolderKanban className="w-7 h-7" />
             </div>
             <div>

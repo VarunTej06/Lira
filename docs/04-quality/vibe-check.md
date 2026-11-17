@@ -9,7 +9,7 @@ cd lira-app
 node scripts/vibe-check.mjs
 ```
 
-It fails (exit 1) on any of these in `src/` or `server/` (test files excluded) and warns on the last two. It also counts the design tells of section 4:
+It fails (exit 1) on any of these in `src/` or `server/` (test files excluded) and warns on the last two. It also checks the design tells of section 4 (22 of the 30):
 
 | Signal | Limit | Why it matters |
 |---|---|---|
@@ -46,40 +46,40 @@ History: 36 baseline, 29, 27, 26 (22 for code only). The workings are in `baseli
 
 ## 4. The 30 "looks vibe-coded" tells (owner's list, 17 Nov 2026)
 
-Every new screen, landing page and form is checked against all 30 before it is merged. **A tell that appears in new work is a defect.** A tell that is already in the app is counted by `node scripts/vibe-check.mjs`; the limit is today's count, so it may fall and never rise. "Scan" means the script counts it; "manual" means a person checks it against the rendered page.
+Every new screen, landing page and form is checked against all 30 before it is merged. **A tell that appears in new work is a defect.** On 18 Nov 2026 the app was brought to zero on every tell a scan can see, except the two below that need a decision; `node scripts/vibe-check.mjs` now fails if any comes back. "Scan" means the script counts it; "config check" means the script reads the Tailwind config; "manual" means a person checks it against the rendered page.
 
-| # | Tell | Checked by | In Lira today | Rule from now on |
+| # | Tell | Checked by | In Lira now (18 Nov 2026) | Rule from now on |
 |---|---|---|---|---|
-| 1 | Harsh gradients | scan | 1 (a hairline under the Viva header) | None in new work. Flat colours from the palette. |
-| 2 | Lucide icons | scan | 138 files import it | No new file imports `lucide-react`. New screens use the project's own icon set once one is drawn. |
-| 3 | Pure white background | scan (hex) + manual | 4 `#FFF` literals; the Mossgrove palette has white cards (the owner's reference) | Pages sit on a palette background, never `#FFFFFF`. Tailwind's `white` is already mapped to the theme surface. |
-| 4 | Rainbow colouring | scan | 457 stock colour-family classes | A screen uses the palette plus at most one status colour set. New colours go in `theme/palette.ts` first. |
-| 5 | Drop shadows | scan | 183 | Separate with borders and surface steps. New shadows need a reason written next to them. |
-| 6 | Three feature cards in a row | manual | none on landing pages yet; many 3-column grids in the app (fine in an app) | Landing pages never use an equal three-card row. |
-| 7 | Emojis | test (`src/hygiene.test.ts`) | 0 | None anywhere, spaces included. Enforced by a test. |
-| 8 | Liquid glass | scan | 10 uses of `backdrop-blur` | None in new work. |
-| 9 | Em dashes | scan | 57 lines | Not in new text. Use a full stop, a comma or a colon. |
-| 10 | Inter, Geist, Space Grotesk | scan | Inter is the app font (8 lines) | New landing pages choose a typeface on purpose. The app's own font is decided with the rename. |
-| 11 | Coloured left stripe | scan | 3 | None on cards or alerts. A quotation rule is fine. |
+| 1 | Harsh gradients | scan | 0 | None. Flat colours from the palette. |
+| 2 | Lucide icons | scan | **Still there:** 138 files import it | No new file imports `lucide-react`. The app moves to its own icon set once one is drawn (decision open). |
+| 3 | Pure white background | scan (hex) + manual | 4 literals: the print sheet, the Mossgrove swatch, one fallback, the Tailwind name `white` (mapped to the theme surface) | Pages sit on a palette background. Mossgrove's white cards come from the owner's reference. |
+| 4 | Rainbow colouring | config check | Fixed: Tailwind's palette is replaced by four status scales (danger, success, warning, info) in `src/theme/colorScales.json`; the accent comes from the palette in use | No new colour scale. A new colour goes in `theme/palette.ts` or the scales first. |
+| 5 | Drop shadows | scan | 0 | None. Separate with borders and surface steps. |
+| 6 | Three feature cards in a row | manual | none on landing pages yet; app grids are fine | Landing pages never use an equal three-card row. |
+| 7 | Emojis | test (`src/hygiene.test.ts`) | 0 | None anywhere, spaces included. |
+| 8 | Liquid glass | scan | 0 | None. |
+| 9 | Em dashes | scan | 0 | Not in text. Use a full stop, a comma or a colon. |
+| 10 | Inter, Geist, Space Grotesk | scan | Fixed 18 Nov 2026: the app uses the device's own interface font (San Francisco, Segoe UI, Roboto), as Instagram, WhatsApp and LinkedIn do; nothing is downloaded | No Inter, Geist or Space Grotesk. A brand typeface is a separate choice, made with the rename. |
+| 11 | Coloured left stripe | scan | 0 (a quotation rule is allowed) | None on cards or alerts. |
 | 12 | Fake testimonials | scan + manual | 0 | Only real, named, permitted quotes. |
 | 13 | Bento grids | scan + manual | 0 | None. |
 | 14 | Terminal window | scan | 0 | None as decoration. |
 | 15 | "It's not X, it's Y" | scan + manual | 0 | Plain statements. |
-| 16 | Checkmark bullets | manual | 38 uses of a check icon, nearly all as a "selected" mark, not as list bullets | Lists use plain bullets or numbers. A tick means "chosen", nothing else. |
+| 16 | Checkmark bullets | manual | 38 uses of a check icon, nearly all as a "selected" mark, not as list bullets | Lists use plain bullets or numbers. A tick means "chosen". |
 | 17 | Three pricing tiers | manual | no pricing page yet (built later behind a feature flag) | Pricing is designed for the real plans, not the stock three-column template. |
-| 18 | No real product demos | manual | none yet (landing pages not built) | Landing pages show the real product: live screens or recorded use, not mock illustrations. |
-| 19 | Soft corner radius | scan | 231 uses of `rounded-xl` and above | New components use the small radius steps; large radii only on purpose. |
-| 20 | Purple and black | scan | 50 purple, indigo or violet classes (epics, categories, Viva) | None in new work. Viva uses the theme's accent. |
-| 21 | No skeleton loaders | manual | none exist; loading shows a message or nothing | Every screen that waits for data has a skeleton shaped like its content. |
+| 18 | No real product demos | manual | none yet (landing pages not built) | Landing pages show the real product. |
+| 19 | Soft corner radius | config check + scan | Fixed: no step of the radius scale is above 12px (it was 24px) | Keep every step at 12px or less. |
+| 20 | Purple and black | scan | 0 (epics are ochre; purple, indigo and violet classes became the palette accent) | None. |
+| 21 | No skeleton loaders | test | Fixed: the start-up screen and every page that loads on demand show skeletons (`components/common/Skeleton.tsx`) | Every screen that waits for data has a skeleton shaped like its content. |
 | 22 | Radial orbs | scan | 0 | None. |
 | 23 | Dot grids | scan | 0 | None. |
-| 24 | Sparkle icons | scan | 14 lines (Viva) | None in new work. |
-| 25 | Animated arrows | scan | 3 | None in new work. |
-| 26 | No Terms of Service | manual | none yet | Terms are shown and accepted at sign-up (confirmed requirement). |
-| 27 | No Privacy Policy | manual | none yet | Privacy Policy is shown and accepted at sign-up (confirmed requirement). |
-| 28 | Hover animations | scan | 22 | Hover changes colour only. No scaling or sliding. |
-| 29 | Neon colours | scan | 5 (Viva glow) | None. |
-| 30 | Basic pastel colours | scan | 176 `-50` and `-100` tints | New tints are derived from the palette's own tokens. |
+| 24 | Sparkle icons | scan | 0 | None. |
+| 25 | Animated arrows | scan | 0 | None. |
+| 26 | No Terms of Service | manual | **Draft written** (`docs/06-legal/terms-of-service-DRAFT.md`); not yet shown in the product, which has no sign-up | Terms are shown and accepted at sign-up (confirmed requirement). |
+| 27 | No Privacy Policy | manual | **Draft written** (`docs/06-legal/privacy-policy-DRAFT.md`); not yet shown in the product | Privacy Policy is shown and accepted at sign-up (confirmed requirement). |
+| 28 | Hover animations | scan | 0 (hover changes colour only) | Hover changes colour only. |
+| 29 | Neon colours | scan | 0 | None. |
+| 30 | Basic pastel colours | config check | Fixed: tints come from the four muted status scales, not Tailwind's pastels | New tints are derived from those scales or the palette's tokens. |
 
 Other things people spot by looking:
 
@@ -101,5 +101,5 @@ For each report, add one row: source, criterion, how it is measured (script, com
 
 | Source | Criterion | How measured | Result | Fix / date |
 |---|---|---|---|---|
-| Owner's list of 30 tells (video, 17 Nov 2026) | All 30 listed in section 4 | `scripts/vibe-check.mjs` for 22 of them, `src/hygiene.test.ts` for emoji, the rest by a person | Every scannable tell is at or under its limit; the limits are today's counts | Limits written 17 Nov 2026; fixes follow screen by screen |
+| Owner's list of 30 tells (video, 17 Nov 2026) | All 30 listed in section 4 | `scripts/vibe-check.mjs` for 22 of them, `src/hygiene.test.ts` for emoji, the rest by a person | 18 of the 30 failed on 17 Nov; 16 now pass or are fixed, 1 remains as a future task (the icon set, after the rename), 2 wait for sign-up (Terms, Privacy shown in the product), the rest are manual and open until the landing pages exist | Fixed 18 Nov 2026 (see `design-audit-2026-11-17.md`) |
 | | | | | |

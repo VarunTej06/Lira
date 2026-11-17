@@ -4,7 +4,7 @@ export type IssueType = 'task' | 'bug' | 'epic' | 'subtask';
 export type IssueStatus = 'backlog' | 'todo' | 'inprogress' | 'done' | string;
 
 export const ISSUE_TYPE_CONFIG: Record<IssueType, { label: string; color: string; bg: string }> = {
-  epic:    { label: 'Epic',    color: PALETTE.purple, bg: '#EAE6FF' },
+  epic:    { label: 'Epic',    color: PALETTE.epic, bg: PALETTE.epicBg },
   task:    { label: 'Task',    color: PALETTE.brand, bg: PALETTE.brandBg },
   bug:     { label: 'Bug',     color: PALETTE.critical, bg: PALETTE.criticalBg },
   subtask: { label: 'Subtask', color: PALETTE.textMuted, bg: PALETTE.surfaceMuted },

@@ -32,7 +32,7 @@ export function PlanningCard({ issue: i, side, space, showSpace, closed, outSpri
       draggable={!closed}
       onDragStart={e => onDragStart(e, i)}
       onClick={() => onOpen(i)} {...issueLink(i)}
-      className="group flex items-center gap-2 px-2.5 py-2 border border-lira-border bg-white rounded-lg hover:shadow-sm cursor-pointer"
+      className="group flex items-center gap-2 px-2.5 py-2 border border-lira-border bg-white rounded-lg cursor-pointer"
       data-testid={`plan-${side}-${i.key}`}
     >
       <GripVertical className="w-3.5 h-3.5 text-lira-muted flex-shrink-0 cursor-grab" aria-hidden />

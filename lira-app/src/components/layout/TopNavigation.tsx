@@ -114,7 +114,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   }, [showToast]);
 
   return (
-    <nav className="mx-2 mt-2 h-14 rounded-2xl bg-lira-nav border border-white/[0.08] shadow-[0_8px_26px_rgba(0,0,0,0.32)] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
+    <nav className="mx-2 mt-2 h-14 rounded-2xl bg-lira-nav border border-white/[0.08] flex items-center px-3 gap-2 flex-shrink-0 z-40 relative">
       {/* App Launcher with Custom Geometric Logo */}
       <AppLauncher
         onToggleAI={onToggleAI}
@@ -126,7 +126,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       />
 
       {/* Lira Logo + Brand */}
-      <div className="group flex-shrink-0 flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200 hover:scale-[1.04]">
+      <div className="group flex-shrink-0 flex items-center gap-2 mr-2 px-1.5 py-1 rounded-xl cursor-pointer select-none transition-transform duration-200">
         <LiraLogo className="w-7 h-7 text-white" />
         <span className="text-white font-bold text-base tracking-tight">Lira</span>
       </div>
@@ -146,8 +146,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Create button */}
       <button
         onClick={onCreateIssue}
-        className="flex items-center gap-1.5 px-4 py-2 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-sm font-semibold rounded-xl shadow-[0_4px_14px_rgb(var(--lira-blue)/0.35)] hover:shadow-[0_6px_18px_rgb(var(--lira-blue)/0.5)] hover:-translate-y-px active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
-        title="Create a ticket — you'll choose the space"
+        className="flex items-center gap-1.5 px-4 py-2 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-sm font-semibold rounded-xl active:translate-y-0 transition-all duration-200 ml-1 cursor-pointer"
+        title="Create a ticket. You'll choose the space"
       >
         <Plus className="w-4 h-4" />
         <span className="hidden sm:inline">Create</span>
@@ -195,7 +195,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
             setSettingsInitialSection('appearance');
             setShowUnifiedSettingsModal(true);
           }}
-          className={`p-2 rounded-xl hover:bg-white/10 transition-all duration-200 hover:rotate-45 cursor-pointer ${
+          className={`p-2 rounded-xl hover:bg-white/10 transition-all duration-200 cursor-pointer ${
             showUnifiedSettingsModal ? 'bg-white/15 text-white ring-1 ring-white/30' : 'text-white/70 hover:text-white'
           }`}
           title="Settings & Administration"
@@ -219,7 +219,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
 
       {/* Toast Feedback Banner */}
       {toast && (
-        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-2xl border text-xs font-semibold animate-scale-in transition-all ${
+        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl border text-xs font-semibold animate-scale-in transition-all ${
           toast.type === 'error'
             ? 'bg-red-900/95 text-red-100 border-red-700'
             : 'bg-lira-nav/95 text-white border-white/20'

@@ -76,9 +76,9 @@ export function IssueSidebar(s: IssueDetailState) {
 
       <ActivityBox local={local} />
 
-      <div className="p-4 border-t border-lira-border bg-white sticky bottom-0 z-10 shadow-xs space-y-2">
+      <div className="p-4 border-t border-lira-border bg-white sticky bottom-0 z-10 space-y-2">
         {s.dirty && <p className="text-2xs text-amber-600 text-center" data-testid="unsaved-note">You have unsaved changes</p>}
-        <button type="button" onClick={handleSaveChanges} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer">
+        <button type="button" onClick={handleSaveChanges} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue text-xs font-semibold rounded-lg transition-colors cursor-pointer">
           <Save className="w-4 h-4" />Save changes
         </button>
       </div>

@@ -58,10 +58,10 @@ export const AccountDropdown: React.FC = () => {
 
       {/* Popover matching Account Opions screen.png */}
       {open && (
-        <div className="absolute top-full right-0 mt-2 w-72 bg-white text-lira-text border border-lira-border rounded-xl shadow-2xl z-50 overflow-hidden transition-all duration-150 animate-scale-in">
+        <div className="absolute top-full right-0 mt-2 w-72 bg-white text-lira-text border border-lira-border rounded-xl z-50 overflow-hidden transition-all duration-150 animate-scale-in">
           {/* Header */}
           <div className="p-4 flex items-center gap-3.5 bg-gray-50/70 border-b border-lira-border">
-            <div className="w-12 h-12 rounded-full bg-lira-blue text-lira-on-blue font-bold text-base flex items-center justify-center flex-shrink-0 shadow-2xs">
+            <div className="w-12 h-12 rounded-full bg-lira-blue text-lira-on-blue font-bold text-base flex items-center justify-center flex-shrink-0">
               {userInitials}
             </div>
             <div className="min-w-0 flex-1">
@@ -113,7 +113,7 @@ export const AccountDropdown: React.FC = () => {
       <Modal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} title="Profile & Account Settings" size="md">
         <div className="p-6 space-y-4 text-lira-text">
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-lira-border">
-            <div className="w-14 h-14 rounded-full bg-lira-blue text-lira-on-blue font-bold text-lg flex items-center justify-center shadow-xs">
+            <div className="w-14 h-14 rounded-full bg-lira-blue text-lira-on-blue font-bold text-lg flex items-center justify-center">
               {userInitials}
             </div>
             <div>
@@ -165,7 +165,7 @@ export const AccountDropdown: React.FC = () => {
             </button>
             <button
               onClick={saveProfile}
-              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover shadow-xs"
+              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover"
             >
               Save Profile
             </button>

@@ -6,7 +6,7 @@ export function QuickFilterChips(s: CapacityState) {
   return (
     <>
       {/* ── Quick Filter Chips Row ── */}
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-xl border border-lira-border shadow-2xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 rounded-xl border border-lira-border">
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs font-bold text-lira-muted uppercase mr-1">Quick Filter:</span>
           {[
@@ -22,7 +22,7 @@ export function QuickFilterChips(s: CapacityState) {
               onClick={() => setLocalQuickFilter(chip.id)}
               className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 localQuickFilter === chip.id
-                  ? 'bg-lira-blue text-lira-on-blue shadow-2xs'
+                  ? 'bg-lira-blue text-lira-on-blue'
                   : 'bg-gray-100 text-lira-text hover:bg-gray-200'
               }`}
             >

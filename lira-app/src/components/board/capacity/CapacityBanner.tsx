@@ -7,9 +7,9 @@ export function CapacityBanner(s: CapacityState) {
   return (
     <>
       {/* ── Top Analytical Banner ── */}
-      <div className="bg-white border border-lira-border rounded-xl p-5 shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+      <div className="bg-white border border-lira-border rounded-xl p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center border border-purple-200 shadow-2xs flex-shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-lira-blue-light text-lira-blue flex items-center justify-center border border-lira-border flex-shrink-0">
             <Users className="w-6 h-6" />
           </div>
           <div>
@@ -17,7 +17,7 @@ export function CapacityBanner(s: CapacityState) {
               <h1 className="text-xl font-bold text-lira-text leading-tight">
                 Team Capacity &amp; Workload Allocation
               </h1>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 font-bold border border-purple-200">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-lira-blue-light text-lira-blue font-bold border border-lira-border">
                 Group: {groupBy === 'priority' ? 'Priority' : groupBy === 'epic' ? 'Epic' : groupBy === 'status' ? 'Status' : 'Assignee'}
               </span>
             </div>
@@ -50,7 +50,7 @@ export function CapacityBanner(s: CapacityState) {
             </div>
           </div>
 
-          <div className="w-11 h-11 rounded-full bg-lira-blue-light text-lira-blue font-bold text-xs flex items-center justify-center border-2 border-lira-blue shadow-2xs">
+          <div className="w-11 h-11 rounded-full bg-lira-blue-light text-lira-blue font-bold text-xs flex items-center justify-center border-2 border-lira-blue">
             {teamInProgress} In Prog
           </div>
         </div>

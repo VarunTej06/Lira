@@ -137,7 +137,7 @@ export const FilterMultiSelect: React.FC<Props> = ({ label, icon, options, selec
               role="dialog"
               aria-label={`${label} filter`}
               style={panelStyle(pos)}
-              className="w-60 bg-white border border-lira-border rounded-xl shadow-2xl flex flex-col text-lira-text"
+              className="w-60 bg-white border border-lira-border rounded-xl flex flex-col text-lira-text"
             >
               {searchable && <SearchBox query={query} onChange={setQuery} placeholder={searchPlaceholder} />}
               <ul className="overflow-y-auto overscroll-contain py-1 flex-1 min-h-0" role="listbox" aria-multiselectable="true">

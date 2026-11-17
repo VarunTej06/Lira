@@ -9,7 +9,7 @@ Same tools, same commands (see "How to re-measure"). The pass changed no behavio
 | Area | Before | After |
 |---|---|---|
 | Typecheck (`tsc -b`) | Clean | Clean |
-| Tests | 655 (63 files) + 15 health | **1743 (154 files)** + 15 health |
+| Tests | 655 (63 files) + 15 health | **1772 (156 files)** + 15 health |
 | Lint (oxlint) warnings | 128 | **0** |
 | `npm audit` | 0 | 0 |
 | Semgrep (110 rules) | 0 findings, 302 files | 0 findings, 321 files |
@@ -30,7 +30,9 @@ Same tools, same commands (see "How to re-measure"). The pass changed no behavio
 | Inline `style={{` in `.tsx` | 150 | 146 |
 | Purple, indigo and violet class references | 152 | **86** (what is left marks epics, ticket types and categories; the decorative ones became theme tokens on 13 Nov 2026) |
 | Fixed blue class references | 237 | **39** (To Do, In Progress and Task badges only) |
-| Gradients | 12 | **1** (a hairline under the Viva header) |
+| Gradients | 12 | **0** |
+| First-load JavaScript | 2.0 MB in one file | **0.7 MB** (pages, the rich text editor and Viva load when used) |
+| Design tells that a scan can see (`vibe-check.mjs`) | 18 of 22 over their limit | **0 over**; the stock icon set remains, as a future task |
 | **Slop score (rubric below)** | **36 / 100** | **26 / 100** (22 for the code alone) |
 
 Slop score after: (1 security + 1 dead code and duplication + 1 tests and hygiene + 4 function size and complexity + 2 type safety and suppressions + 4 UI consistency + 5 process) / 7 = 2.6, so 26. Without the process row: 2.2, so 22.

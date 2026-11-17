@@ -20,10 +20,10 @@ export const StandupButton: React.FC<StandupButtonProps> = ({ scope, className =
       <button
         type="button"
         onClick={() => setOpen(true)}
-        title={`${CALL_TITLE[scope.type]} — agenda, schedule & invite the team`}
+        title={`${CALL_TITLE[scope.type]}: agenda, schedule and invite the team`}
         className={`flex items-center gap-2 rounded-xl transition-all cursor-pointer ${
           prominent
-            ? 'px-4 py-2.5 text-sm font-semibold text-lira-on-blue bg-lira-blue border border-lira-blue shadow-[0_4px_14px_rgba(38,132,255,0.35)] hover:bg-lira-blue-hover hover:-translate-y-px'
+            ? 'px-4 py-2.5 text-sm font-semibold text-lira-on-blue bg-lira-blue border border-lira-blue hover:bg-lira-blue-hover'
             : 'px-3 py-1.5 text-xs font-medium text-lira-text border border-lira-border hover:bg-gray-50 hover:border-lira-blue'
         } ${className}`}
       >

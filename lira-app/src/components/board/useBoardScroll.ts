@@ -50,7 +50,7 @@ export function useBoardScroll() {
     const board = boardRef.current;
     if (draggingCard.current || !board) return;
     // Pressing on a card, button, link or field must not start a pan.
-    if ((e.target as HTMLElement).closest('[data-rfd-draggable-id], [data-rfd-drag-handle-draggable-id], [data-rbd-draggable-id], .shadow-card, button, a, input, textarea, [role="button"]')) return;
+    if ((e.target as HTMLElement).closest('[data-rfd-draggable-id], [data-rfd-drag-handle-draggable-id], [data-rbd-draggable-id], button, a, input, textarea, [role="button"]')) return;
     panning.current = true;
     panStart.current = { x: e.clientX, y: e.clientY, scrollLeft: board.scrollLeft, scrollTop: board.scrollTop };
   };

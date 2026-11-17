@@ -40,7 +40,7 @@ export function IssueHeader(s: IssueDetailState) {
                 <ChevronDown className="w-3 h-3 ml-0.5 opacity-60 group-hover:opacity-100 transition-opacity" />
               </button>
               {showTypeMenu && (
-                <div className="absolute left-0 top-8 z-50 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 min-w-[160px] animate-scale-in">
+                <div className="absolute left-0 top-8 z-50 bg-white border border-lira-border rounded-lg py-1 min-w-[160px] animate-scale-in">
                   <div className="px-3 py-1 text-3xs font-semibold text-lira-muted uppercase tracking-wider border-b border-gray-100">
                     Change Issue Type
                   </div>
@@ -85,7 +85,7 @@ export function IssueHeader(s: IssueDetailState) {
                 <MoreHorizontal className="w-4 h-4" />
               </button>
               {showMoreMenu && (
-                <div className="absolute right-0 top-8 z-50 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 min-w-[180px] animate-scale-in">
+                <div className="absolute right-0 top-8 z-50 bg-white border border-lira-border rounded-lg py-1 min-w-[180px] animate-scale-in">
                   <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-lira-text">
                     <Link className="w-3.5 h-3.5 text-lira-muted" /> Copy link
                   </button>

@@ -85,7 +85,7 @@ export const NotificationsBell: React.FC<{
       </button>
 
       {open && (
-        <div className="absolute top-full right-0 mt-2 w-96 bg-lira-nav border border-white/10 rounded-xl shadow-2xl z-50 transition-all duration-150 animate-scale-in overflow-hidden">
+        <div className="absolute top-full right-0 mt-2 w-96 bg-lira-nav border border-white/10 rounded-xl z-50 transition-all duration-150 animate-scale-in overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-white/10 bg-white/5">
             <div className="flex items-center gap-2">

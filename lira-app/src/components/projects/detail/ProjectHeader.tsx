@@ -84,7 +84,7 @@ function Banner({ project, space, projectInitials, onSwitchToSpace }: Pick<Detai
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4">
       <div className="flex items-start sm:items-center gap-3.5">
         <div
-          className="w-13 h-13 rounded-2xl flex items-center justify-center bg-lira-blue text-lira-on-blue text-lg font-black shadow-md flex-shrink-0"
+          className="w-13 h-13 rounded-2xl flex items-center justify-center bg-lira-blue text-lira-on-blue text-lg font-black flex-shrink-0"
         >
           {projectInitials}
         </div>

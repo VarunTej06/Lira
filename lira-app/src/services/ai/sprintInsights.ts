@@ -128,11 +128,11 @@ export function riskRadarText(issues: Issue[], keys: string[], spaces: Space[], 
   if (!rows.length) out.push('No sprint looks at risk right now.');
   for (const { k, r } of rows) out.push(`- ${r.level === 'atrisk' ? 'At risk' : 'Watch'}: **${sprintName(k)}**: ${r.reasons.join('; ')}`);
   out.push('', `**Idle tickets** (in progress, no change for 5 days or more): ${idle.length || 'none'}`);
-  idle.slice(0, 8).forEach(x => out.push(line(x.issue, sm, ` — ${x.idleDays} days`)));
+  idle.slice(0, 8).forEach(x => out.push(line(x.issue, sm, ` (${x.idleDays} days)`)));
   const overdue = issues.filter(i => isSprintWork(i) && !isDone(i) && i.dueDate && new Date(i.dueDate) < now);
   if (overdue.length) {
     out.push('', `**Overdue** (${overdue.length}):`);
-    overdue.slice(0, 8).forEach(i => out.push(line(i, sm, ` — due ${new Date(i.dueDate!).toLocaleDateString()}`)));
+    overdue.slice(0, 8).forEach(i => out.push(line(i, sm, ` (due ${new Date(i.dueDate!).toLocaleDateString()})`)));
   }
   return out.join('\n');
 }
@@ -157,7 +157,7 @@ export function sprintSummaryText(issues: Issue[], key: string, spaces: Space[])
     for (const [id, l] of bySpace) out.push(`- ${sm.get(id)?.name ?? id}: ${l.filter(isDone).length}/${l.length} done`);
   }
   const open = list.filter(i => !isDone(i) && (i.priority === 'highest' || i.priority === 'high')).slice(0, 5);
-  if (open.length) { out.push('', '**High-priority work still open**'); open.forEach(i => out.push(line(i, sm, ` — ${i.status}`))); }
+  if (open.length) { out.push('', '**High-priority work still open**'); open.forEach(i => out.push(line(i, sm, ` (${i.status})`))); }
   return out.join('\n');
 }
 
@@ -183,14 +183,14 @@ export function standupDigestText(issues: Issue[], spaces: Space[], now: Date, a
     ...work.filter(i => !isDone(i) && i.dueDate && new Date(i.dueDate) < now).map(i => ({ i, why: 'overdue' })),
   ];
   const out = ['### Standup', '', `**Since ${since.toLocaleDateString('en-US', { weekday: 'long' })}**`];
-  if (done.length) done.forEach(i => out.push(line(i, sm, ' — done ')));
-  if (started.length) started.forEach(i => out.push(line(i, sm, ' — started')));
+  if (done.length) done.forEach(i => out.push(line(i, sm, ' (done)')));
+  if (started.length) started.forEach(i => out.push(line(i, sm, ' (started)')));
   if (!done.length && !started.length) out.push('- Nothing moved to In Progress or Done.');
   out.push('', '**Today**');
   if (active.length) active.slice(0, 8).forEach(i => out.push(line(i, sm)));
   else out.push('- Nothing is in progress. Pick something from To Do.');
   out.push('', '**Blockers and risks**');
-  if (blockers.length) blockers.slice(0, 6).forEach(b => out.push(line(b.i, sm, ` — ${b.why}`)));
+  if (blockers.length) blockers.slice(0, 6).forEach(b => out.push(line(b.i, sm, ` (${b.why})`)));
   else out.push('- None.');
   return out.join('\n');
 }

@@ -44,7 +44,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
   const maxTotal = Math.max(1, ...lastSix.map(r => r.stats.total));
 
   const tiles = [
-    { label: 'Active sprint', value: active ? `${active.stats.percent}%` : '—', sub: active ? `${active.stats.done}/${active.stats.total} done · ${daysLeft(cur)}d left` : 'No tickets', icon: <CalendarClock className="w-4 h-4" />, tone: 'text-teal-600 bg-teal-50' },
+    { label: 'Active sprint', value: active ? `${active.stats.percent}%` : 'n/a', sub: active ? `${active.stats.done}/${active.stats.total} done · ${daysLeft(cur)}d left` : 'No tickets', icon: <CalendarClock className="w-4 h-4" />, tone: 'text-teal-600 bg-teal-50' },
     { label: 'Avg completion', value: `${avgCompletion}%`, sub: `over ${closed.length} finished sprints`, icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Avg velocity', value: avgVelocity, sub: 'tickets done / sprint', icon: <TrendingUp className="w-4 h-4" />, tone: 'text-emerald-600 bg-emerald-50' },
     { label: 'Carried over', value: carried, sub: `${stranded} stuck in ended sprints`, icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
@@ -98,7 +98,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
         {/* Velocity */}
         <section className="bg-white border border-lira-border rounded-2xl p-4">
           <div className="flex items-baseline justify-between mb-3">
-            <h2 className="text-sm font-semibold text-lira-text">Velocity — last sprints</h2>
+            <h2 className="text-sm font-semibold text-lira-text">Velocity over the last sprints</h2>
             <div className="flex gap-3 text-3xs text-lira-muted">
               <span><span className="inline-block w-2 h-2 bg-gray-300 mr-1 rounded-sm" />Committed</span>
               <span><span className="inline-block w-2 h-2 bg-green-500 mr-1 rounded-sm" />Done</span>
@@ -145,7 +145,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                     <td className="px-3 py-2.5 font-semibold text-lira-text"><CountUp value={r.stats.total} /></td>
                     <td className="px-3 py-2.5 text-lira-muted"><CountUp value={r.stats.todo + r.stats.backlog} /></td>
                     <td className="px-3 py-2.5 text-lira-blue"><CountUp value={r.stats.inprogress} /></td>
-                    <td className="px-3 py-2.5 text-red-600">{r.stats.blocked ? <CountUp value={r.stats.blocked} /> : '—'}</td>
+                    <td className="px-3 py-2.5 text-red-600">{r.stats.blocked ? <CountUp value={r.stats.blocked} /> : '0'}</td>
                     <td className="px-3 py-2.5 text-emerald-600 font-medium"><CountUp value={r.stats.done} /></td>
                     <td className="px-3 py-2.5 w-36">
                       <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                       </div>
                     </td>
                     <td className="px-3 py-2.5 text-lira-muted whitespace-nowrap"><CountUp value={r.stats.donePoints} />/<CountUp value={r.stats.points} /></td>
-                    <td className="px-3 py-2.5 text-amber-600">{r.stats.carriedIn ? <CountUp value={r.stats.carriedIn} /> : '—'}</td>
+                    <td className="px-3 py-2.5 text-amber-600">{r.stats.carriedIn ? <CountUp value={r.stats.carriedIn} /> : '0'}</td>
                     <td className="px-3 py-2.5 text-lira-blue opacity-0 group-hover:opacity-100 transition-opacity"><ArrowRight className="w-3.5 h-3.5" /></td>
                   </tr>
                 ))}
@@ -189,7 +189,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                       const d = l.filter(isDone).length;
                       return (
                         <td key={r.key} className="px-3 py-2 text-center">
-                          {l.length === 0 ? <span className="text-lira-muted opacity-50">—</span> : (
+                          {l.length === 0 ? <span className="text-lira-muted opacity-50">None</span> : (
                             <span className={d === l.length ? 'text-emerald-600 font-semibold' : 'text-lira-text'}>{d}/{l.length}</span>
                           )}
                         </td>

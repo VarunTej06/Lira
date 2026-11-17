@@ -63,7 +63,7 @@ export function AppearanceSection(s: SettingsState) {
         <button
           onClick={handleSaveAppearance}
           disabled={!appearanceChanged}
-          className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           Save
         </button>

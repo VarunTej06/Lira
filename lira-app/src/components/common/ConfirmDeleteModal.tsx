@@ -49,13 +49,13 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/60 animate-fade-in"
       onClick={e => {
         if (e.target === e.currentTarget && !isDeleting) onClose();
       }}
     >
       <div
-        className="bg-white rounded-xl shadow-2xl border border-lira-border w-full max-w-md overflow-hidden animate-scale-in"
+        className="bg-white rounded-xl border border-lira-border w-full max-w-md overflow-hidden animate-scale-in"
         onClick={e => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -138,7 +138,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
             type="button"
             disabled={isDeleting}
             onClick={handleDelete}
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-lg transition-colors shadow-sm flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-lg transition-colors flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isDeleting ? (
               <>

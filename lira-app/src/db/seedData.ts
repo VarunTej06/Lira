@@ -44,7 +44,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
       name: 'General Tasks',
       key: 'GEN',
       icon: 'clipboard',
-      color: PALETTE.purple,
+      color: PALETTE.textMuted,
       description: 'General day-to-day tasks and miscellaneous work items',
       createdAt: daysAgo(60),
       updatedAt: daysAgo(1),
@@ -52,7 +52,7 @@ function sampleSpaces(): Omit<Space, 'id'>[] {
     {
       name: 'Creator Hub',
       key: 'CRE',
-      icon: 'sparkles',
+      icon: 'star',
       color: PALETTE.info,
       description: 'Content creation, writing, and creative projects',
       createdAt: daysAgo(45),
@@ -195,7 +195,7 @@ function certIssues(certSpaceId: number): Omit<Issue, 'id'>[] {
           id: uuidv4(),
           author: 'VY',
           authorInitials: 'VY',
-          content: 'Started the Stephane Maarek course — the VPC deep dive section is intense but very well explained.',
+          content: 'Started the Stephane Maarek course. The VPC deep dive section is intense but very well explained.',
           createdAt: daysAgo(12),
         },
         {
@@ -267,7 +267,7 @@ function certIssues(certSpaceId: number): Omit<Issue, 'id'>[] {
       spaceId: certSpaceId,
       key: 'CERT-4',
       title: 'Certified Kubernetes Administrator (CKA)',
-      description: `## Overview\nPrepare for the CKA exam — a performance-based, hands-on Kubernetes administration exam by CNCF/Linux Foundation.\n\n## Prerequisites\n- [x] Complete KCNA first\n- Solid understanding of Linux administration\n- Experience with kubectl and YAML manifests\n\n## Key Skills Required\n- Cluster architecture, installation, and configuration (25%)\n- Workloads and Scheduling (15%)\n- Services and Networking (20%)\n- Storage (10%)\n- Troubleshooting (30%)\n\n## Prep Plan\n1. Certified Kubernetes Administrator course by Mumshad Mannambeth (KodeKloud)\n2. Killer.sh exam simulator (2 sessions included with exam)\n3. Daily kubectl practice`,
+      description: `## Overview\nPrepare for the CKA exam, a performance-based, hands-on Kubernetes administration exam by CNCF/Linux Foundation.\n\n## Prerequisites\n- [x] Complete KCNA first\n- Solid understanding of Linux administration\n- Experience with kubectl and YAML manifests\n\n## Key Skills Required\n- Cluster architecture, installation, and configuration (25%)\n- Workloads and Scheduling (15%)\n- Services and Networking (20%)\n- Storage (10%)\n- Troubleshooting (30%)\n\n## Prep Plan\n1. Certified Kubernetes Administrator course by Mumshad Mannambeth (KodeKloud)\n2. Killer.sh exam simulator (2 sessions included with exam)\n3. Daily kubectl practice`,
       type: 'task',
       status: 'todo',
       priority: 'high',
@@ -455,7 +455,7 @@ function courseIssues(coursesSpaceId: number): Omit<Issue, 'id'>[] {
     {
       spaceId: coursesSpaceId,
       key: 'CRS-1',
-      title: 'MLOps Specialization — DeepLearning.AI (Coursera)',
+      title: 'MLOps Specialization: DeepLearning.AI (Coursera)',
       description: `## Course Details\n- **Platform:** Coursera / DeepLearning.AI\n- **Instructor:** Andrew Ng + team\n- **Duration:** ~4 months at 5hrs/week\n\n## Modules\n1. Introduction to Machine Learning in Production\n2. Machine Learning Data Lifecycle in Production\n3. Machine Learning Modeling Pipelines in Production\n4. Deploying Machine Learning Models in Production`,
       type: 'task',
       status: 'inprogress',
@@ -475,7 +475,7 @@ function courseIssues(coursesSpaceId: number): Omit<Issue, 'id'>[] {
         { id: uuidv4(), title: 'Capstone project', completed: false, createdAt: now },
       ],
       comments: [
-        { id: uuidv4(), author: 'VY', authorInitials: 'VY', content: 'Course 2 was excellent — TFX pipelines section was very practical.', createdAt: daysAgo(10) },
+        { id: uuidv4(), author: 'VY', authorInitials: 'VY', content: 'Course 2 was excellent. TFX pipelines section was very practical.', createdAt: daysAgo(10) },
       ],
       activity: [
         { id: uuidv4(), type: 'created', author: 'VY', authorInitials: 'VY', description: 'created this issue', createdAt: daysAgo(21) },

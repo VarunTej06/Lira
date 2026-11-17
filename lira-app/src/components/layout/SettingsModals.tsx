@@ -150,7 +150,7 @@ export const ManageSpacesModal: React.FC<{
             <div key={s.id} className="p-3.5 flex items-center justify-between hover:bg-gray-50 transition-colors">
               <div className="flex items-center gap-3">
                 <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-2xs bg-lira-blue-light text-lira-blue"                >
+                  className="w-9 h-9 rounded-lg flex items-center justify-center text-lg bg-lira-blue-light text-lira-blue"                >
                   <SpaceIcon icon={s.icon} className="w-5 h-5" />
                 </div>
                 <div>
@@ -186,7 +186,7 @@ export const WorkItemsModal: React.FC<{
 
         <div className="space-y-3">
           {[
-            { type: 'epic' as const, label: 'Epic', color: 'bg-purple-100 text-purple-800 border-purple-200', desc: 'Top-level container for large initiatives, themes, or multi-week goals across spaces.' },
+            { type: 'epic' as const, label: 'Epic', color: 'bg-lira-blue-light text-lira-blue border-lira-border', desc: 'Top-level container for large initiatives, themes, or multi-week goals across spaces.' },
             { type: 'task' as const, label: 'Task', color: 'bg-blue-100 text-blue-800 border-blue-200', desc: 'Standard engineering work item. Child of an Epic. Can contain subtasks.' },
             { type: 'bug' as const, label: 'Bug', color: 'bg-red-100 text-red-800 border-red-200', desc: 'Defect or incident tracking. Sits on the same hierarchy level as Task.' },
             { type: 'subtask' as const, label: 'Subtask', color: 'bg-gray-100 text-gray-800 border-gray-200', desc: 'Granular step or checklist item belonging directly to a parent Task or Bug.' },

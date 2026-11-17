@@ -106,7 +106,7 @@ function ParentPicker({ type, space, candidates, value, onChange }: { type: Issu
   if (type === 'epic') {
     return (
       <p className="text-xs text-lira-muted bg-gray-50 border border-lira-border rounded-xl px-3 py-2">
-        <Zap className="inline w-3.5 h-3.5 -mt-0.5 mr-1 text-purple-600" /> Epics are top-level — they don't link to a parent. Choose the space above.
+        <Zap className="inline w-3.5 h-3.5 -mt-0.5 mr-1 text-lira-blue" /> Epics are top-level. They don't link to a parent. Choose the space above.
       </p>
     );
   }
@@ -123,7 +123,7 @@ function ParentPicker({ type, space, candidates, value, onChange }: { type: Issu
         className={`${SELECT} disabled:opacity-60 disabled:cursor-not-allowed`}
       >
         <option value="">{parentPlaceholder(type, space, candidates.length)}</option>
-        {candidates.map(p => <option key={p.id} value={p.id}>{p.key} — {p.title}</option>)}
+        {candidates.map(p => <option key={p.id} value={p.id}>{p.key}: {p.title}</option>)}
       </select>
     </div>
   );

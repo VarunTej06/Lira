@@ -9,7 +9,7 @@ import { PALETTE } from '../../../theme/palette';
 
 const TEXT_COLORS = [
   { name: 'Default', value: '' }, { name: 'Red', value: PALETTE.critical }, { name: 'Orange', value: PALETTE.orangeDeep }, { name: 'Green', value: PALETTE.successDeep },
-  { name: 'Blue', value: PALETTE.brand }, { name: 'Purple', value: PALETTE.purple }, { name: 'Pink', value: '#C026D3' }, { name: 'Gray', value: PALETTE.textMuted },
+  { name: 'Blue', value: PALETTE.brand }, { name: 'Purple', value: '#6B4FA0' }, { name: 'Pink', value: '#C026D3' }, { name: 'Gray', value: PALETTE.textMuted },
 ];
 const HIGHLIGHTS = [
   { name: 'None', value: '' }, { name: 'Yellow', value: '#FFF0B3' }, { name: 'Green', value: '#ABF5D1' }, { name: 'Blue', value: '#B3D4FF' },
@@ -63,7 +63,7 @@ const ColorMenu: React.FC<{ label: string; icon: React.ReactNode; colors: { name
         <span className="w-3 h-1 rounded-sm border border-lira-border" style={{ backgroundColor: current || 'transparent' }} aria-hidden />
       </button>
       {open && (
-        <div className="absolute z-40 top-full left-0 mt-1 p-2 bg-white border border-lira-border rounded-xl shadow-xl grid grid-cols-4 gap-1.5 w-[148px]" role="menu" aria-label={label}>
+        <div className="absolute z-40 top-full left-0 mt-1 p-2 bg-white border border-lira-border rounded-xl grid grid-cols-4 gap-1.5 w-[148px]" role="menu" aria-label={label}>
           {colors.map(c => (
             <button
               key={c.name}
@@ -73,7 +73,7 @@ const ColorMenu: React.FC<{ label: string; icon: React.ReactNode; colors: { name
               aria-label={c.name}
               onMouseDown={e => e.preventDefault()}
               onClick={() => { onPick(c.value); setOpen(false); }}
-              className="w-7 h-7 rounded-md border border-lira-border flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
+              className="w-7 h-7 rounded-md border border-lira-border flex items-center justify-center cursor-pointer transition-transform"
               style={{ backgroundColor: c.value || 'transparent' }}
             >
               {!c.value && <span className="text-3xs text-lira-muted">{label.startsWith('Text') ? 'A' : 'x'}</span>}
@@ -128,7 +128,7 @@ function HeadingMenu({ editor }: { editor: Editor }) {
     {heading} <ChevronDown className="w-3 h-3" />
   </button>
   {headingOpen && (
-    <div className="absolute z-40 top-full left-0 mt-1 w-44 bg-white border border-lira-border rounded-xl shadow-xl py-1" role="menu">
+    <div className="absolute z-40 top-full left-0 mt-1 w-44 bg-white border border-lira-border rounded-xl py-1" role="menu">
       {[
         { label: 'Normal text', run: () => editor.chain().focus().setParagraph().run(), cls: 'text-sm' },
         { label: 'Heading 1', run: () => editor.chain().focus().toggleHeading({ level: 1 }).run(), cls: 'text-xl font-bold' },

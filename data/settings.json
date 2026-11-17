@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-14T18:38:12.048Z",
+  "updatedAt": "2026-11-17T06:54:57.936Z",
   "entries": {
     "lira_accent": "#0C66E4",
-    "lira_active_space_id": "6",
+    "lira_active_space_id": "3",
     "lira_dark_palette": "blackridge",
-    "lira_light_palette": "mossgrove",
+    "lira_light_palette": "sorrel",
     "lira_notif_config": {
       "inAppFeed": true,
       "mentionsOnly": true,
@@ -61,6 +61,6 @@
       "filters",
       "dashboards"
     ],
-    "lira_theme": "dark"
+    "lira_theme": "light"
   }
 }

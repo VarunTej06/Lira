@@ -1,8 +1,9 @@
-import { Check, Copy, AlertTriangle, Clock, Ban, Sparkles, ListChecks } from 'lucide-react';
+import { Check, Copy, AlertTriangle, Clock, Ban, ListChecks } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import type { Issue } from '../../types/issue';
 import { FIELD, LABEL, Section, TicketRow } from './parts';
 import type { StandupState } from './useStandup';
+import { NO_ASSIGNEE_KEY } from '../../utils/standupUtils';
 
 const SEVERITY_TONE = { high: 'bg-red-100 text-red-700', medium: 'bg-amber-100 text-amber-700', low: 'bg-gray-100 text-gray-600' };
 const blockedNote = (blockedBy: Issue[]) => (blockedBy.length ? `blocked by ${blockedBy.map(x => x.key).join(', ')}` : 'marked Blocked');
@@ -52,7 +53,7 @@ export function AgendaTab(s: StandupState) {
             {agenda.blocked.map(b => <TicketRow key={b.issue.id} issue={b.issue} note={blockedNote(b.blockedBy)} tone="bg-amber-100 text-amber-700" onOpen={openIssue} />)}
           </Section>
           <Section title="In progress" icon={<Clock className="w-3.5 h-3.5 text-lira-blue" />} count={agenda.inProgress.length} empty="Nothing in progress.">{rows(agenda.inProgress)}</Section>
-          <Section title="Done in the last 24 hours" icon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />} count={agenda.doneRecently.length} empty="Nothing finished yet.">{rows(agenda.doneRecently)}</Section>
+          <Section title="Done in the last 24 hours" icon={<Check className="w-3.5 h-3.5 text-emerald-500" />} count={agenda.doneRecently.length} empty="Nothing finished yet.">{rows(agenda.doneRecently)}</Section>
           <Section title="Up next · To do" icon={<ListChecks className="w-3.5 h-3.5 text-lira-muted" />} count={agenda.upNext.length} empty="Nothing waiting.">{rows(agenda.upNext, 8)}</Section>
           <Section title="Backlog (top)" icon={<ListChecks className="w-3.5 h-3.5 text-lira-muted" />} count={agenda.backlog.length} empty="Backlog is empty.">{rows(agenda.backlog, 6)}</Section>
         </div>
@@ -62,14 +63,14 @@ export function AgendaTab(s: StandupState) {
           {people.map(p => (
             <div key={p.key} className="border border-lira-border rounded-2xl bg-white overflow-hidden">
               <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
-                <Avatar initials={p.key === '—' ? '?' : p.key} size="sm" />
+                <Avatar initials={p.key === NO_ASSIGNEE_KEY ? '?' : p.key} size="sm" />
                 <span className="text-sm font-semibold text-lira-text">{p.name}</span>
                 {p.stale.length > 0 && <span className="ml-auto text-3xs px-2 py-0.5 rounded-full bg-red-100 text-red-700">{p.stale.length} need update</span>}
               </div>
               {([['Yesterday', p.done], ['Today', p.doing], ['Next', p.next]] as const).map(([label, list]) => (
                 <div key={label} className="px-3 py-1.5 border-b border-lira-border last:border-0">
                   <div className="text-3xs font-semibold uppercase tracking-wide text-lira-muted mb-0.5">{label}</div>
-                  {list.length === 0 ? <div className="text-xs text-lira-muted">—</div> : list.map(i => (
+                  {list.length === 0 ? <div className="text-xs text-lira-muted">None</div> : list.map(i => (
                     <button key={i.id} onClick={() => openIssue(i)} className="block w-full text-left text-xs text-lira-text truncate hover:text-lira-blue cursor-pointer py-0.5">
                       <span className="font-mono text-lira-muted mr-1.5">{i.key}</span>{i.title}
                     </button>

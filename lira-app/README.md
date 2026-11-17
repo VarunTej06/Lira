@@ -14,12 +14,12 @@
 | **Routing** | [React Router 7](https://reactrouter.com/) | A real URL for every page (`src/routes.ts`) |
 | **Styling** | [Tailwind CSS 3.4](https://tailwindcss.com/) | Design tokens, dark mode (class strategy), responsive utilities |
 | **Motion** | [Framer Motion](https://www.framer.com/motion/) | Dialog, menu, tab and number animations (`components/common/motion.tsx`, presets in `motionPresets.ts`) |
-| **Icons / Fonts** | Lucide React, Inter (`@fontsource/inter`, served locally) | Iconography; no request to Google |
+| **Icons / Fonts** | Lucide React (to be replaced, see `docs/04-quality/vibe-check.md` tell 2), the device's own font | Iconography; no font download |
 | **Local DB** | [Dexie.js 4.x](https://dexie.org/) | Reactive IndexedDB cache with `useLiveQuery` |
 | **Local PC Storage** | JSON files under `../data/` | Source of truth for everything (tickets, projects, sprints, roadmaps, teams, standups, settings) |
 | **Drag & Drop** | [@hello-pangea/dnd](https://github.com/hello-pangea/dnd) | Kanban board |
 | **Dates / QR** | date-fns, qrcode | Due dates; the QR code for opening Lira on a phone |
-| **Tests** | Vitest, jsdom, fake-indexeddb | 1743 tests in 154 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
+| **Tests** | Vitest, jsdom, fake-indexeddb | 1772 tests in 156 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
 
 ---
 

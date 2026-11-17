@@ -16,7 +16,7 @@ export function CollapsedRail(s: SidebarState) {
             aria-label="Expand sidebar"
           >
             <ChevronRight
-              className={`w-4 h-4 transition-transform duration-300 ease-in-out group-hover:scale-110 group-hover:translate-x-0.5 ${
+              className={`w-4 h-4 transition-transform duration-300 ease-in-out ${
                 isRotating ? 'rotate-180' : 'rotate-0'
               }`}
             />
@@ -59,7 +59,7 @@ export function CollapsedRail(s: SidebarState) {
                 onClick={() => handleSpaceClick(space.id!)} {...spaceLink(space.key)}
                 className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all cursor-pointer flex-shrink-0 ${
                   activeSpaceId === space.id
-                    ? 'ring-2 ring-white/60 bg-white/20 text-white shadow-xs'
+                    ? 'ring-2 ring-white/60 bg-white/20 text-white'
                     : 'text-white/60 hover:text-white hover:bg-white/10'
                 }`}                title={space.name}
               >
@@ -76,7 +76,7 @@ export function CollapsedRail(s: SidebarState) {
                     onClick={() => handleSpaceClick(space.id!)} {...spaceLink(space.key)}
                     className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm transition-all cursor-pointer flex-shrink-0 relative ${
                       activeSpaceId === space.id
-                        ? 'ring-2 ring-amber-400 bg-white/20 text-white shadow-xs'
+                        ? 'ring-2 ring-amber-400 bg-white/20 text-white'
                         : 'text-white/40 hover:text-white hover:bg-white/10'
                     }`}                    title={`[Hidden] ${space.name}`}
                   >

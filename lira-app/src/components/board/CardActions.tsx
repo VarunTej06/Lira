@@ -47,7 +47,7 @@ export function CardActions({ issue, hasParent, eligibleParents, onOpen }: Props
       </button>
 
       {menuOpen && (
-        <div className="absolute right-0 bottom-6 z-30 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 min-w-[160px] animate-scale-in">
+        <div className="absolute right-0 bottom-6 z-30 bg-white border border-lira-border rounded-lg py-1 min-w-[160px] animate-scale-in">
           <button onClick={() => { setMenuOpen(false); onOpen(issue); }} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-lira-text">
             <Edit3 className="w-3.5 h-3.5 text-lira-muted" /> Open
           </button>
@@ -70,7 +70,7 @@ export function CardActions({ issue, hasParent, eligibleParents, onOpen }: Props
       )}
 
       {linkOpen && (
-        <div ref={link} className="absolute right-0 bottom-6 z-40 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 min-w-[200px] max-w-[260px] max-h-56 overflow-y-auto animate-scale-in">
+        <div ref={link} className="absolute right-0 bottom-6 z-40 bg-white border border-lira-border rounded-lg py-1 min-w-[200px] max-w-[260px] max-h-56 overflow-y-auto animate-scale-in">
           <div className="px-3 py-1 text-3xs font-semibold text-lira-muted uppercase tracking-wide border-b border-gray-100">Select Parent</div>
           {eligibleParents.map(p => (
             <button

@@ -120,12 +120,12 @@ export const BulkActionsModal: React.FC<{ isOpen: boolean; onClose: () => void; 
         </div>
 
         <div className="flex justify-end border-t border-lira-border pt-4">
-          <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer shadow-xs">Done</button>
+          <button type="button" onClick={onClose} className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer">Done</button>
         </div>
       </div>
 
       {savedToast && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg animate-fade-in pointer-events-none">
           <Check className="w-4 h-4 text-white" /><span>✓ Saved</span>
         </div>
       )}

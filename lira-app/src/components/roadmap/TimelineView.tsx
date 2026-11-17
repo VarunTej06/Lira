@@ -147,7 +147,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
                 <div className="flex items-center gap-1 whitespace-nowrap text-3xs font-medium text-lira-text">
                   {m.kind === 'release'
                     ? <Flag className="w-3 h-3 text-emerald-500 fill-emerald-500/30" />
-                    : <Diamond className="w-3 h-3 text-violet-500 fill-violet-500/40" />}
+                    : <Diamond className="w-3 h-3 text-lira-blue fill-lira-blue/40" />}
                   <span>{m.title}</span>
                   <span className="text-lira-muted">{fmtShort(m.date)}</span>
                 </div>
@@ -205,7 +205,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
             ))}
 
             {/* milestone guide lines */}
-            {milestones.map(m => <div key={`g-${m.id}`} className={`absolute top-0 bottom-0 border-l border-dashed ${m.kind === 'release' ? 'border-emerald-400/50' : 'border-violet-400/50'}`} style={{ left: m.x }} />)}
+            {milestones.map(m => <div key={`g-${m.id}`} className={`absolute top-0 bottom-0 border-l border-dashed ${m.kind === 'release' ? 'border-emerald-400/50' : 'border-lira-border'}`} style={{ left: m.x }} />)}
             {/* today line */}
             <div className="absolute top-0 bottom-0 w-px bg-red-500/80 z-10" style={{ left: todayX }} />
 
@@ -234,7 +234,7 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
               return (
                 <div
                   key={it.id}
-                  className={`absolute group rounded-md select-none ${dragging ? 'z-20 shadow-lg ring-2 ring-white/60' : 'z-[15]'}`}
+                  className={`absolute group rounded-md select-none ${dragging ? 'z-20 ring-2 ring-white/60' : 'z-[15]'}`}
                   style={{ left, width: w, top: r.y + (r.h - BAR_H) / 2, height: BAR_H, background: color + '33', border: `1px solid ${color}`, cursor: dragging ? 'grabbing' : 'grab' }}
                   onPointerDown={e => startDrag(e, it.id, 'move')}
                   title={`${it.title}\n${fmtShort(it.start)} → ${fmtShort(it.end)} · ${progress}%`}

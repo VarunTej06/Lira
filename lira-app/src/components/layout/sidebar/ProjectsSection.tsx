@@ -34,7 +34,7 @@ export function ProjectsSection(s: SidebarState) {
                       title={p.name}
                       data-active={active ? 'true' : undefined}
                       className={`w-full flex items-center gap-2.5 pl-2.5 pr-2.5 group-hover:pr-8 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${
-                        active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+                        active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
                       }`}
                     >
                       <span
@@ -49,7 +49,7 @@ export function ProjectsSection(s: SidebarState) {
                       label="Project actions"
                       menuKey={`project:${p.id}`}
                     >
-                      <ContextItem icon={<FolderKanban className="w-3.5 h-3.5 text-violet-400" />} label="Open project" onClick={() => { setRowMenu(null); onSelectProject?.(p); }} />
+                      <ContextItem icon={<FolderKanban className="w-3.5 h-3.5 text-lira-nav-accent" />} label="Open project" onClick={() => { setRowMenu(null); onSelectProject?.(p); }} />
                       <div className="border-t border-white/10 my-1" />
                       <ContextItem
                         icon={<Trash2 className="w-3.5 h-3.5" />}

@@ -131,7 +131,7 @@ export function ResultsTable(s: FiltersState) {
   const { issues, onSelectIssue, onSelectSpace, clearAllFilters, spaceMap, filteredIssues, toggleSort } = s;
   return (
     <div className="flex-1 overflow-y-auto px-6 pb-6">
-      <div className="bg-white border border-lira-border rounded-xl shadow-xs overflow-hidden">
+      <div className="bg-white border border-lira-border rounded-xl overflow-hidden">
         <div className="bg-gray-50 border-b border-lira-border px-4 py-2.5 flex items-center justify-between text-xs font-semibold text-lira-muted">
           <span>
             Showing <strong className="text-lira-text">{filteredIssues.length}</strong> of{' '}

@@ -22,7 +22,7 @@ export interface Retro {
 
 export interface SprintMeta {
   goal?: string;
-  completedAt?: string; // ISO — set when the sprint was formally closed
+  completedAt?: string; // ISO, set when the sprint was formally closed
   /** Story points the team can take on in this sprint. Planning warns when the sprint goes over it. */
   capacity?: number;
   retro?: Retro;

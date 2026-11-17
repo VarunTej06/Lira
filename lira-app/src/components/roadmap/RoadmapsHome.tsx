@@ -22,7 +22,7 @@ type Totals = ReturnType<typeof homeTotals>;
 function Tiles({ totals }: { totals: Totals }) {
   const tiles = [
     { label: 'Roadmaps', value: totals.roadmaps, sub: `${totals.counts.archived} archived`, icon: <Map className="w-4 h-4" />, tone: 'text-orange-600 bg-orange-50' },
-    { label: 'Epics planned', value: totals.items, sub: 'across all roadmaps', icon: <Layers className="w-4 h-4" />, tone: 'text-violet-600 bg-violet-50' },
+    { label: 'Epics planned', value: totals.items, sub: 'across all roadmaps', icon: <Layers className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Average progress', value: `${totals.percent}%`, sub: 'weighted by duration', icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Needs attention', value: totals.attention, sub: 'late or blocked epics', icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
   ];

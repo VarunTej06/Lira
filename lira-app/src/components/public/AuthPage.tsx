@@ -36,8 +36,9 @@ export default function AuthPage() {
 
   return (
     <div className="relative overflow-hidden min-h-[calc(100vh-4rem)] flex justify-center px-4 py-10">
-      <BoardArt className="hidden lg:block absolute bottom-0 left-0 w-80 pointer-events-none" />
-      <BookArt className="hidden lg:block absolute bottom-0 right-0 w-80 pointer-events-none" />
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-5 bg-lira-border" />
+      <BoardArt className="hidden lg:block absolute bottom-5 left-0 lg:w-72 xl:w-96 pointer-events-none" />
+      <BookArt className="hidden lg:block absolute bottom-5 right-0 lg:w-72 xl:w-96 pointer-events-none" />
       <form onSubmit={submit} noValidate className="relative w-full max-w-sm self-start bg-lira-surface border border-lira-border rounded-lg p-6 flex flex-col gap-3.5">
         <span className="inline-flex items-center justify-center gap-2.5 font-bold text-xl text-lira-text"><LiraLogo className="w-8 h-8" motion="none" />Liraspaces</span>
         <h1 className="text-base font-bold text-center mt-1">Log in to continue</h1>

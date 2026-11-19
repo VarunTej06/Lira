@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import { byText, cleanup, click, mount, q, qa, settle, typeInto } from '../../test/render';
+import { byText, cleanup, click, mount, q, qa, settle } from '../../test/render';
 import { PublicSite } from './PublicSite';
 import { paintTheme } from '../../utils/theme';
 import { CONTACT_EMAIL, LEGAL, OPERATOR_NAME } from './legalText';
@@ -95,16 +95,7 @@ describe('log in and sign up', () => {
     expect(q('[role="status"]')).toBeNull();
   });
 
-  it('does not pretend to sign anyone in: a valid form is not sent, and the page says so', async () => {
-    await visit('/login');
-    await typeInto(q<HTMLInputElement>('#email'), 'asha@example.com');
-    await typeInto(q<HTMLInputElement>('#password'), 'whatever');
-    await click(byText('button', 'Log in'));
-    expect(qa('[role="alert"]')).toHaveLength(0);
-    expect(q('[role="status"]')!.textContent).toContain('Nothing you typed was sent or saved');
-  });
-
-  it('keeps Google sign-in switched off until there is a service to sign in to', async () => {
+  it('keeps Google sign-in switched off until it exists', async () => {
     await visit('/login');
     expect(byText<HTMLButtonElement>('button', 'Google')!.disabled).toBe(true);
   });

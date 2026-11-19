@@ -1,45 +1,37 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { LiraLogo } from '../common/LiraLogo';
-import { validateAuth, type AuthErrors, type AuthValues } from '../../utils/authForm';
+import { login } from '../../services/authApi';
+import { validateAuth, type AuthErrors } from '../../utils/authForm';
+import { goTo } from '../../utils/navigate';
+import { Field, FormError } from './AuthFields';
 import { BoardArt, BookArt } from './LoginArt';
 import { CONTACT_EMAIL } from './legalText';
 import { BTN, BTN_DISABLED, LINK } from './styles';
 
-const INPUT = 'bg-lira-bg border border-lira-border rounded px-3 py-2 text-ui text-lira-text min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-lira-blue';
 const FOOTER_LINKS = [['/privacy', 'Privacy Policy'], ['/notice', 'User Notice'], ['/terms', 'Terms of Service']] as const;
 const REMEMBER_HELP = 'Keeps you signed in on this device for 30 days';
 
-interface FieldProps { id: string; label: string; type: string; value: string; error?: string; autoComplete: string; onChange: (value: string) => void }
-
-function Field({ id, label, type, value, error, autoComplete, onChange }: FieldProps) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-ui font-medium text-lira-text">{label}</label>
-      <input id={id} type={type} value={value} autoComplete={autoComplete} placeholder={`Enter your ${id}`} aria-invalid={error ? true : undefined}
-        aria-describedby={error ? `${id}-error` : undefined} onChange={e => onChange(e.target.value)} className={INPUT} />
-      {error && <p id={`${id}-error`} role="alert" className="text-xs text-lira-blue-text">{error}</p>}
-    </div>
-  );
-}
-
-/**
- * The log-in page. There is no server yet, so a correct form is not sent anywhere: the page says so instead of pretending
- * to sign anyone in. Nothing typed here is stored or logged.
- */
+/** The log-in page. A correct form goes to the server; on success the app opens. The password is sent once and never kept here. */
 export default function AuthPage() {
-  const [values, setValues] = useState<AuthValues>({ name: '', email: '', password: '' });
-  const [errors, setErrors] = useState<AuthErrors>({});
-  const [sent, setSent] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
+  const [errors, setErrors] = useState<AuthErrors>({});
+  const [serverError, setServerError] = useState<string>();
+  const [busy, setBusy] = useState(false);
 
-  const set = (field: keyof AuthValues) => (value: string) => setValues(v => ({ ...v, [field]: value }));
-
-  function submit(e: FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
-    const found = validateAuth('login', values);
+    setServerError(undefined);
+    const found = validateAuth('login', { name: '', email, password });
     setErrors(found);
-    setSent(Object.keys(found).length === 0);
+    if (Object.keys(found).length > 0) return;
+    setBusy(true);
+    const result = await login({ email: email.trim(), password, remember });
+    setBusy(false);
+    if (result.ok) goTo('/app');
+    else setServerError(result.message);
   }
 
   return (
@@ -49,21 +41,17 @@ export default function AuthPage() {
       <form onSubmit={submit} noValidate className="relative w-full max-w-sm self-start bg-lira-surface border border-lira-border rounded-lg p-6 flex flex-col gap-3.5">
         <span className="inline-flex items-center justify-center gap-2.5 font-bold text-xl text-lira-text"><LiraLogo className="w-8 h-8" motion="none" />Liraspaces</span>
         <h1 className="text-base font-bold text-center mt-1">Log in to continue</h1>
-        {sent && (
-          <p role="status" className="text-ui bg-lira-blue-light border border-lira-border rounded px-3 py-2.5">
-            Signing in opens when the hosted service launches. Nothing you typed was sent or saved.
-          </p>
-        )}
-        <Field id="email" label="Email" type="email" autoComplete="email" value={values.email} error={errors.email} onChange={set('email')} />
-        <Field id="password" label="Password" type="password" autoComplete="current-password" value={values.password} error={errors.password} onChange={set('password')} />
+        {serverError && <FormError message={serverError} />}
+        <Field id="email" label="Email" type="email" autoComplete="email" value={email} error={errors.email} onChange={setEmail} />
+        <Field id="password" label="Password" type="password" autoComplete="current-password" value={password} error={errors.password} onChange={setPassword} />
         <div className="flex items-center gap-2 text-ui">
           <input id="remember" type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)} />
           <label htmlFor="remember">Remember me</label>
           <span role="img" aria-label={REMEMBER_HELP} title={REMEMBER_HELP} className="w-4 h-4 rounded-full bg-lira-nav text-white text-3xs font-bold flex items-center justify-center cursor-help">i</span>
         </div>
-        <button type="submit" className={`${BTN} w-full`}>Log in</button>
+        <button type="submit" disabled={busy} className={`${BTN} w-full ${busy ? 'opacity-70' : ''}`}>{busy ? 'Signing in' : 'Log in'}</button>
         <p className="text-ui text-lira-muted text-center mt-1">Or continue with:</p>
-        <button type="button" disabled title="Google sign-in opens with the hosted service" className={`${BTN_DISABLED} w-full`}>Google</button>
+        <button type="button" disabled title="Google sign-in is not available yet" className={`${BTN_DISABLED} w-full`}>Google</button>
         <p className="text-ui text-center">
           <a href={`mailto:${CONTACT_EMAIL}?subject=Cannot%20log%20in`} className={LINK}>Can't log in?</a>
           <span aria-hidden="true" className="mx-2 text-lira-muted">•</span>

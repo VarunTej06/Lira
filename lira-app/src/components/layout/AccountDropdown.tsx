@@ -8,6 +8,9 @@ import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { appStorage } from '../../utils/appStorage';
+import { isHosted } from '../../utils/edition';
+import { goTo } from '../../utils/navigate';
+import { logout } from '../../services/authApi';
 
 export const AccountDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -99,7 +102,11 @@ export const AccountDropdown: React.FC = () => {
             </button>
 
             <button
-              onClick={() => { setOpen(false); void alertDialog({ title: 'Log out', message: 'Offline session: Liraspaces runs on your own computer and needs no cloud login.' }); }}
+              onClick={() => {
+                setOpen(false);
+                if (isHosted()) { void logout().then(() => goTo('/login')); return; }
+                void alertDialog({ title: 'Log out', message: 'Offline session: Liraspaces runs on your own computer and needs no cloud login.' });
+              }}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors cursor-pointer text-left"
             >
               <LogOut className="w-4 h-4 text-red-500" />

@@ -57,6 +57,7 @@ Consequences that are now requirements too: an email-sending service (magic link
 | [0006](ADR-0006-hosting-on-azure.md) | Hosting topology on Azure | Should | Proposed | DevOps step |
 | [0007](ADR-0007-repository-and-branching.md) | Repository layout and branching | Should | Proposed | Code organisation |
 | [0008](ADR-0008-data-migration.md) | Migration of existing JSON data | Must | Proposed | First deploy |
+| [0009](ADR-0009-accounts-sessions-and-sign-in.md) | Accounts, passwords and sessions (first slice) | Must | Accepted (19 Nov 2026) | Built |
 
 ## Readiness checklist (gate before coding)
 

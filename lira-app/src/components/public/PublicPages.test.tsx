@@ -114,14 +114,18 @@ describe('get-started page', () => {
     expect(document.title).toBe('Get started · Liraspaces');
   });
 
-  it('does not pretend to create an account: a valid email is not sent, and the page says so', async () => {
+  it('asks for the email first, then for a name and password for that email', async () => {
     await visit('/signup');
     await click(byText('button', 'Sign up'));
     expect(q('[role="alert"]')!.textContent).toBe('Enter your email.');
-    expect(q('[role="dialog"] [role="status"]')).toBeNull();
+    expect(q('#name')).toBeNull();
     await typeInto(q<HTMLInputElement>('#start-email'), 'asha@example.com');
     await click(byText('button', 'Sign up'));
-    expect(q('[role="dialog"] [role="status"]')!.textContent).toContain('Nothing you typed was sent or saved');
+    expect(q('#name')).not.toBeNull();
+    expect(q<HTMLInputElement>('#password')!.type).toBe('password');
+    expect(q('[role="dialog"]')!.textContent).toContain('asha@example.com');
+    await click(byText('button', 'Use a different email'));
+    expect(q('#start-email')).not.toBeNull();
   });
 
   it('cuts a very long email from the address instead of putting it all in the field', async () => {

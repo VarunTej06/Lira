@@ -52,6 +52,17 @@ Check that the connection is encrypted: `SHOW ssl;` should say `on`. If it canno
 
 ## Step 3. Schema and isolation tests
 
+**Quick way:** `rehearsal-isolation-test.sql` in this folder creates everything below and checks all nine results itself, printing PASS or stopping with FAIL. From Ubuntu (WSL), with the admin password in `PGPASSWORD` (read it from Key Vault, never type it into a file):
+
+```
+read -rs PGPASSWORD; export PGPASSWORD
+docker run --rm -it -e PGPASSWORD -v /mnt/d/MLOps_LLMOps/Lira/docs/03-sop:/sql postgres:16   psql "host=<server>.postgres.database.azure.com port=5432 dbname=postgres user=lirasadmin sslmode=require" -f /sql/rehearsal-isolation-test.sql
+```
+
+The blocks below are the same SQL, to read and to run by hand.
+
+
+
 Create a database for the test, connect to it, and run the blocks below one at a time. The last column says what you must see.
 
 ```sql
@@ -248,9 +259,13 @@ Tokens in a playground expire with the session, so treat them as practice keys: 
 
 | Step | Worked? | Notes (time, errors, settings that differed) |
 |---|---|---|
-| 1 PostgreSQL | | |
-| 2 Connect | | |
-| 3 Isolation tests 1 to 9 | | |
-| 4 Key Vault | | |
-| 5 App Service (or Part B Container Apps) | | |
-| Part B custom domain test.liraspaces.com | | |
+| Sign in with `az login` | Yes | Lab user. CLI 2.88, `containerapp` extension is preview. The three resource providers were already registered. |
+| New resource group | **No** | `AuthorizationFailed` on `resourcegroups/write`. Use the one given (`kml_rg_main-...`, East US). |
+| Container registry (Basic) | Yes | Created in the given group. |
+| Registry cloud build (`az acr build`, `containerapp up --source`) | **No** | `AuthorizationFailed` on `registries/scheduleRun/action`. Built with Docker in Ubuntu (WSL) and pushed with `docker push` using the registry admin user instead. |
+| Container Apps environment | Yes, with limits | Policy: the name must be `container-app-env`, Consumption profile, no zone redundancy. Created with `--logs-destination none`; the default Log Analytics workspace was denied by policy. |
+| Container app | Yes, with limits | Policy: min replicas 0 or 1, max 0, 1 or 2. External ingress works. Sample image first, then our image on target port 8080. |
+| Our web image | Yes | nginx serves `/`, `/login`, `/signup`, `/app`, `/terms` (200), `/health` and `/ready` (200), security headers present, one-year cache on built files. The first request after a revision change times out (scale to zero), later ones are fast. |
+| Custom domain `test.liraspaces.com`, DNS | Yes | CNAME `test` and TXT `asuid.test` in Hostinger. A typo (`suid.test`) delayed it; public resolvers kept the old "not found" for a few minutes. Hostname added to the app; plain HTTP redirects to HTTPS. |
+| Certificate for the custom domain | **No** | Managed certificate (CLI and portal) and an uploaded certificate were all denied by policy ("Non-compliant with policy standards for Azure_playground"). So HTTPS on the custom name cannot be shown in this sandbox. Test it on the real subscription. |
+| PostgreSQL, isolation tests, Key Vault | Not done in this session | |

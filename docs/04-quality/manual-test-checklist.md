@@ -12,7 +12,7 @@ How to run it
 
 ---
 
-## A. The screens that were reworked (A1–A32)
+## A. The screens that were reworked (A1–A33)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -343,8 +343,8 @@ Run `npm run hosted` in a terminal (it builds the hosted edition, then serves it
 - [ ] Click Features, then Solutions, then Templates. Expect: each opens a list; Escape, a click elsewhere or scrolling closes it. Features items go to "What is inside"; the others go to the "Still baking" page.
 - [ ] Click the search button and type "privacy", then "zzzz". Expect: the Privacy Policy is listed and opens when clicked; for "zzzz" it says "Nothing found".
 - [ ] In the email bar press Sign up empty, then with "abc", then with "asha@example.com". Expect: "Enter your email." then "Enter an email like you@example.com." then the get-started page with the email already filled in.
-- [ ] On the get-started page (`/signup`). Expect: a window titled "Get started with Liraspaces" over a grey drawing of the app, the email field, Sign up, a switched-off Google button, "Already have an account? Log in", and a × that returns to the landing page. A valid email shows "Sign-up opens when the hosted service launches. Nothing you typed was sent or saved."
-- [ ] Open `/login`. Expect: a centred card (logo, "Log in to continue", Email, Password, Remember me with a small "i" whose tooltip says 30 days, Log in, Google switched off, "Can't log in?" and "Create an account"), and the footer of the card with the Privacy Policy, User Notice and Terms of Service links. On a wide window two flat pictures sit in the bottom corners. Empty fields show "Enter your email." and "Enter your password."; a valid form shows the "opens when the hosted service launches" message.
+- [ ] On the get-started page (`/signup`). Expect: a window titled "Get started with Liraspaces" over a grey drawing of the app, the email field, Sign up, a switched-off Google button, "Already have an account? Log in", and a × that returns to the landing page. A valid email moves to a second step asking for a name and a password (10 characters or more) for that email, with "Use a different email".
+- [ ] Open `/login`. Expect: a centred card (logo, "Log in to continue", Email, Password, Remember me with a small "i" whose tooltip says 30 days, Log in, Google switched off, "Can't log in?" and "Create an account"), and the footer of the card with the Privacy Policy, User Notice and Terms of Service links. On a wide window two flat pictures sit in the bottom corners. Empty fields show "Enter your email." and "Enter your password.". With the API running (A33), a wrong password shows "The email or password is not correct." and a right one opens the app.
 - [ ] Open `/terms`, `/privacy` and `/notice` from the footer. Expect: each shows a draft notice, names Yadla Sai Varun Teja and the contact email, and the tab title ends in "Liraspaces".
 - [ ] Open `/app`. Expect: the app, with its own addresses under `/app` (for example `/app/for-you`), and refresh keeps you on the same page. Click the logo. Expect: the "Still baking" page.
 - [ ] Open an address that does not exist, such as `/nothing`. Expect: the landing page.
@@ -361,6 +361,18 @@ Same way of running as A31 (`npm run hosted`, then http://localhost:5175).
 - [ ] Scroll to "Discover the latest". Expect: the cards slide in from the right once and stay. Use the arrows, the mouse wheel or a swipe: the row scrolls a card at a time, the left arrow is switched off at the start and the right arrow at the end. Six cards: four "UPDATE" and two "COMING SOON".
 - [ ] Read the closing band and the footer. Expect: "Plan, learn and deliver in Liraspaces" with two gold words, a "Get Liraspaces free" button to the sign-up page; the footer has Contact us, PRODUCT, RESOURCES and LEGAL columns, no Pricing, Careers or Press kit.
 - [ ] Narrow the window to phone width. Expect: no sideways scrolling of the page; the row of cards still scrolls sideways inside itself; the sections stack to one column.
+
+### A33. Sign-up, log-in and the app behind them (19 Nov 2026)
+Needs the API and a database: the rehearsal in `infra/azure-playground/`, or the API run locally (see `api/README.md`) behind the web container.
+- [ ] Open `/signup`, enter an email, press Sign up, then give a name and a password of at least 10 characters and press Create account. Expect: the app opens at `/app` with its own sample data. Refresh the page. Expect: you are still signed in.
+- [ ] Open `/signup` again with the same email in capitals. Expect: "An account with this email already exists." and a Log in link; nothing else changes.
+- [ ] Open `/login` in a private window and log in with a wrong password. Expect: "The email or password is not correct." The same message for an email that has no account.
+- [ ] Give five wrong passwords for one email, then the right one. Expect: "Too many wrong attempts. Wait a few minutes and try again."
+- [ ] Log in with "Remember me" ticked, then without. Expect: both work; with the tick the browser's cookie (developer tools, Application, Cookies) lasts about 30 days, without it about 12 hours. The cookie is marked HttpOnly and Secure.
+- [ ] Open `/app` in a private window without logging in. Expect: you are sent to `/login`, and the app never shows.
+- [ ] In the account menu (top right of the app) press Log out. Expect: you land on `/login`; pressing the browser's Back button does not show the app, and `/app` sends you to `/login` again.
+- [ ] Stop the API (or block `/api/`) and open `/app`. Expect: "Liraspaces could not check your session" with a Try again button, and the app does not show.
+- [ ] Open `https://<address>/api/me` directly. Expect: a plain JSON answer with `"code":"unauthorised"` when not signed in, and no stack trace anywhere.
 ---
 
 ## B. Things that changed everywhere (quick sweeps)

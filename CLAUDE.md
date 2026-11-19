@@ -32,12 +32,13 @@ These are the owner's own standing requirements; they apply to every change.
 
 | Check | Command |
 |---|---|
-| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 1855 tests, data health) |
+| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 1878 tests, data health) |
 | Types | `npx tsc -b` |
 | Lint | `npm run lint` (must report 0 warnings) |
 | Tests | `npm test` (single file: `npx vitest run path/to/file.test.ts`) |
 | Build | `npm run build` (typecheck, then the production bundle) |
 | Dev server | `npm run dev` (`dev:lan` opens it to the local network). It rewrites files under `data/`: do not run it against the real workspace |
+| API (hosted edition) | In `api/`: `npm run build`, `npm run migrate` (needs `ADMIN_DATABASE_URL` and `APP_DB_PASSWORD`), `npm test` (the database tests run only when `TEST_DATABASE_URL` is set; run it against a throwaway schema, never a real database) |
 | Hosted edition | `npm run hosted` builds the public pages at `/` with the app under `/app` and serves them at port 5175 (`build:hosted` and `preview:hosted` do the two steps; `dev:hosted` is the dev server on 5175 and, like `dev`, rewrites `data/`). The default build is the local edition |
 
 ## Protected paths

@@ -9,7 +9,8 @@ import { Confetti } from './components/common/Confetti'
 import { initKvMirror, onKvChange } from './services/kvMirror'
 import { syncStructured } from './services/structuredStore'
 import { paintTheme } from './utils/theme'
-import { EDITION, appBasename, showsPublicSite } from './utils/edition'
+import { EDITION, appBasename, isHosted, showsPublicSite } from './utils/edition'
+import { SessionGate } from './components/layout/SessionGate'
 import { PublicSite } from './components/public/PublicSite'
 
 const root = () => createRoot(document.getElementById('root')!)
@@ -33,7 +34,7 @@ if (showsPublicSite(EDITION, window.location.pathname)) {
       <StrictMode>
         <MotionProvider>
           <BrowserRouter basename={appBasename(EDITION)}>
-            <App />
+            {isHosted() ? <SessionGate><App /></SessionGate> : <App />}
           </BrowserRouter>
           <Confetti />
         </MotionProvider>

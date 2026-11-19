@@ -115,7 +115,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
         <span className="w-10 h-10 rounded-full bg-lira-nav border border-white/10 flex items-center justify-center flex-shrink-0">
           <LiraLogo className="w-6 h-6 text-white" />
         </span>
-        <span className="hidden sm:inline text-lira-text font-bold text-lg tracking-tight">Lira</span>
+        <span className="hidden sm:inline text-lira-text font-bold text-lg tracking-tight">Liraspaces</span>
       </div>
 
       {/* Centre: the working controls, in one dark box */}

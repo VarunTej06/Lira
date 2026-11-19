@@ -22,7 +22,7 @@ describe('AppSkeleton', () => {
     const status = q('[role="status"]')!;
     expect(status.textContent).toContain('Loading the workspace');
     expect(status.getAttribute('aria-live')).toBe('polite');
-    expect(q('svg[aria-label="Lira"]')).not.toBeNull();
+    expect(q('svg[aria-label="Liraspaces"]')).not.toBeNull();
   });
 
   it('has the shape of the app: a top bar, a sidebar and four board columns of grey blocks', () => {

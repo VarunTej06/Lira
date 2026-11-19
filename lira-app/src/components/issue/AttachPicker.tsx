@@ -145,7 +145,7 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
                       <p className="text-xs text-lira-muted mt-1">or</p>
                       <button onClick={() => fileInput.current?.click()} className="mt-2 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Choose files</button>
                       <input ref={fileInput} type="file" multiple className="hidden" data-testid="attach-file-input" onChange={e => { stage(e.target.files); e.target.value = ''; }} />
-                      <p className="text-2xs text-lira-muted mt-4">Files up to {formatBytes(MAX_EMBED_BYTES)} are stored in Lira. Larger files are listed by name only.</p>
+                      <p className="text-2xs text-lira-muted mt-4">Files up to {formatBytes(MAX_EMBED_BYTES)} are stored in Liraspaces. Larger files are listed by name only.</p>
                     </div>
 
                     {staged.length > 0 && (
@@ -182,7 +182,7 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
                         placeholder="https://" inputMode="url"
                         className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue bg-white text-lira-text"
                       />
-                      {linkUrl.trim() && !url && <p className="text-xs text-red-600 mt-1.5">That is not a web address Lira can open.</p>}
+                      {linkUrl.trim() && !url && <p className="text-xs text-red-600 mt-1.5">That is not a web address Liraspaces can open.</p>}
                     </div>
                     <div>
                       <label htmlFor="attach-name" className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Name <span className="normal-case font-normal">(optional)</span></label>

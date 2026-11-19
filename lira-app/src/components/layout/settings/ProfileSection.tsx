@@ -12,7 +12,7 @@ export function ProfileSection(s: SettingsState) {
               <div>
                 <h3 className="text-base font-bold text-lira-text">Personal Profile</h3>
                 <p className="text-xs text-lira-muted mt-1">
-                  Manage your display name, contact email, initials, and role across your Lira workspace.
+                  Manage your display name, contact email, initials, and role across your Liraspaces workspace.
                 </p>
               </div>
 

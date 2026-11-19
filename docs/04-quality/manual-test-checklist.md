@@ -12,7 +12,7 @@ How to run it
 
 ---
 
-## A. The screens that were reworked (A1–A29)
+## A. The screens that were reworked (A1–A30)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -233,7 +233,7 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Edit a space, change only its name, save. Expect: its icon is unchanged.
 - [ ] Space dropdowns (create ticket, sprint filter, all tickets) and Viva's answers. Expect: the space name without an emoji in front.
 - [ ] Start-up screen and Settings, Plan. Expect: both say v3.4.
-- [ ] Logo (top bar, start-up screen, browser tab). Expect: a block L with an arrow; the arrow grows out of the corner on load and when the logo is hovered, and keeps growing while Lira starts. With "reduce motion" on in the system it stands still.
+- [ ] Logo (top bar, start-up screen, browser tab). Expect: a hexagon holding a gold open book; on load the left page settles with a small shake, then the right page; it does the same when the logo is hovered, and keeps moving while Liraspaces starts. With "reduce motion" on in the system it stands still.
 - [ ] Avatars (top right, board cards, ticket popup, filters, capacity). Expect: all in the button colour of the theme, with a readable label.
 - [ ] Collapse and expand the sidebar several times on a full board. Expect: it slides quickly, without stutter, and the rows do not jump or re-wrap while it moves.
 
@@ -326,6 +326,14 @@ Reference screens: `docs/04-quality/ui-references/`.
 ### A29. Sidebar rows all the same size (18 Nov 2026)  ◐
 - [ ] Look down the left sidebar: For you, Projects, Sprints, All tickets, Roadmaps, then spaces, projects and sprints. Expect: every row has the same height, the same text size and weight, and the icons line up in one column.
 - [ ] Hover a space, a project and a sprint. Expect: the row keeps its size and the "..." button appears at the right without moving the name much.
+
+### A30. Name and logo: Liraspaces (19 Nov 2026)  ◐
+- [ ] Look at the browser tab on any page. Expect: the title ends in "Liraspaces" (for example "Board · Liraspaces"), and the icon is the hexagon with the gold book. In a dark browser theme the hexagon is cream; in a light one it is navy.
+- [ ] Look at the top bar, the empty home screen and the start-up screen. Expect: the hexagon logo, with the name "Liraspaces" next to it in the top bar and on the home screen, and "Initializing Liraspaces v..." at start-up. The top bar name still fits on one line at a narrow window.
+- [ ] Open Settings. Expect: the title "Liraspaces Settings & Administration" and, under About, "Liraspaces Community Edition v...".
+- [ ] Read the Share window, the account menu's Log out message, the Devices tab, the Dashboards, Roadmaps and attachment messages, and Viva's example prompt. Expect: they say "Liraspaces" where they mean the app.
+- [ ] Open the space, projects and roadmap that you named "Lira". Expect: they keep the name "Lira"; only the app name changed.
+- [ ] Add the site to the phone home screen (or look at `public/lira-icon.png`). Expect: a navy square with the hexagon and gold book, not the old L.
 
 ---
 

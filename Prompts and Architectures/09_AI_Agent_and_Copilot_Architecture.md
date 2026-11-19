@@ -57,7 +57,7 @@ Previously, the AI drawer was a full-height slide-over panel (`fixed inset-y-0 r
   * **Interactive Tooltip**: Hovering triggers an instant floating badge: *"Ask Lira AI Copilot  Omnipresent"*.
 
 ### 2.2 Enhanced Lira AI Avatar SVG (`LiraAIAvatar.tsx`)
-Constructed from the foundational Lira `favicon.svg` branding, elevated with AI-native visual tokens:
+Constructed from the Liraspaces logo mark (a hexagon holding an open book; `favicon.svg`), elevated with AI-native visual tokens:
 
 | Layer | Implementation | Visual Effect |
 |---|---|---|

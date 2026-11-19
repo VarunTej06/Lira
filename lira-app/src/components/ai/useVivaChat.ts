@@ -11,7 +11,7 @@ const welcomeMessage = (spaceCount: number): ChatMessage => ({
     'Show all spaces with number of tickets in each To do, Backlog, In Progress and Done',
     'What is in progress across all spaces?',
     'Show all Epics across spaces',
-    'Create a task "Review sprint goals" in Lira',
+    'Create a task "Review sprint goals" in Liraspaces',
     'Plan next sprint from my backlog',
     'Write my standup',
     'Show the risk radar',

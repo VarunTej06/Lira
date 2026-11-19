@@ -70,7 +70,7 @@ describe('page names and global pages', () => {
   it('titles the browser tab', () => {
     expect(titleOf({ kind: 'space', spaceKey: 'AP', tab: 'Board' })).toBe('AP · Board')
     expect(titleOf({ kind: 'roadmaps' })).toBe('Roadmaps')
-    expect(titleOf({ kind: 'home' })).toBe('Lira')
+    expect(titleOf({ kind: 'home' })).toBe('Liraspaces')
   })
 })
 

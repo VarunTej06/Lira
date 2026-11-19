@@ -80,7 +80,7 @@ export function ScheduleTab(s: StandupState) {
       <div className="rounded-2xl border border-lira-border bg-gray-50 px-4 py-3 text-xs text-lira-muted">
         Inviting the <strong className="text-lira-text">{scope.name}</strong> team: <strong className="text-lira-text">{invitedEmails.length}</strong> of {invited.length} people have an email
         {missingEmail.length > 0 && <>. Missing: {missingEmail.map(m => m.name).join(', ')} (<button className="text-lira-blue underline cursor-pointer" onClick={() => setTab('team')}>add emails</button>)</>}.
-        Lira opens a pre-filled invite for everyone; you confirm it in your calendar, which then emails the whole team.
+        Liraspaces opens a pre-filled invite for everyone; you confirm it in your calendar, which then emails the whole team.
       </div>
 
       <div className="grid sm:grid-cols-2 gap-2">

@@ -52,7 +52,7 @@ function OptionsMenu({ roadmap, onChange, onDelete }: Pick<Props, 'roadmap' | 'o
   };
   const remove = async () => {
     setOpen(false);
-    if (await confirmDialog({ title: 'Delete roadmap', message: `Delete the roadmap "${roadmap.name}"? Its epics stay in Lira.`, confirmLabel: 'Delete roadmap', tone: 'danger' })) onDelete();
+    if (await confirmDialog({ title: 'Delete roadmap', message: `Delete the roadmap "${roadmap.name}"? Its epics stay in Liraspaces.`, confirmLabel: 'Delete roadmap', tone: 'danger' })) onDelete();
   };
   return (
     <div className="relative">

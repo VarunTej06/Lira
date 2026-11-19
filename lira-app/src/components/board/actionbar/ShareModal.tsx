@@ -16,7 +16,7 @@ export function ShareModal(s: ActionBarState) {
             <span className="text-sm text-green-700 font-medium">Space access: Open</span>
           </div>
           <p className="text-sm text-lira-muted">
-            Anyone with the link can view this board. Since Lira is offline-first, your data never leaves your device.
+            Anyone with the link can view this board. Since Liraspaces is offline-first, your data never leaves your device.
           </p>
 
           {/* Copy link */}

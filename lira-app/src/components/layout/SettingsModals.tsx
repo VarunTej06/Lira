@@ -94,7 +94,7 @@ export const NotificationSettingsModal: React.FC<{
     <Modal isOpen={isOpen} onClose={onClose} title="Notification Settings" size="md">
       <div className="p-6 space-y-5 text-lira-text">
         <p className="text-xs text-lira-muted">
-          Configure how and when Lira notifies you of work item transitions and team activities.
+          Configure how and when Liraspaces notifies you of work item transitions and team activities.
         </p>
 
         <div className="space-y-3">
@@ -181,7 +181,7 @@ export const WorkItemsModal: React.FC<{
     <Modal isOpen={isOpen} onClose={onClose} title="Work Item Types & 3-Tier Hierarchy" size="md">
       <div className="p-6 space-y-4 text-lira-text">
         <p className="text-xs text-lira-muted leading-relaxed">
-          Lira uses a streamlined 3-tier enterprise hierarchy designed for modern software delivery.
+          Liraspaces uses a streamlined 3-tier enterprise hierarchy designed for modern software delivery.
         </p>
 
         <div className="space-y-3">
@@ -228,7 +228,7 @@ export const MarketplaceModal: React.FC<{
     <Modal isOpen={isOpen} onClose={onClose} title="Installed Apps & Extensions" size="md">
       <div className="p-6 space-y-4 text-lira-text">
         <p className="text-xs text-lira-muted">
-          Active integrations, local engines, and agent capabilities in your Lira workspace.
+          Active integrations, local engines, and agent capabilities in your Liraspaces workspace.
         </p>
 
         <div className="space-y-3">
@@ -318,7 +318,7 @@ export const BillingModal: React.FC<{
             <span className="text-xs font-bold uppercase tracking-wider text-lira-blue">Current Plan</span>
             <span className="text-xs font-bold bg-lira-blue text-lira-on-blue px-2 py-0.5 rounded-full">Free &amp; Open Source</span>
           </div>
-          <h3 className="text-lg font-extrabold text-lira-text">Lira Community Edition v{APP_VERSION}</h3>
+          <h3 className="text-lg font-extrabold text-lira-text">Liraspaces Community Edition v{APP_VERSION}</h3>
           <p className="text-xs text-lira-muted">
             Unlimited spaces, unlimited issues, offline local disk sync, Dexie IndexedDB caching, and Viva AI Agent.
           </p>

@@ -55,7 +55,7 @@ function readOnlyReply(userPrompt: string, now: Date, refinedMetadata: ChatMessa
   return {
     id: uuidv4(),
     sender: 'assistant',
-    text: `**Viva AI (Read-Only Mode)**\n\nI am the lightweight search & information assistant. I have full read access across all spaces to answer questions, search tickets, and generate status reports, but I cannot modify tickets or database records.\n\nTo execute **"${refinedGoal.optimizedGoal}"**, please use the **Lira Autonomous Agent**!`,
+    text: `**Viva AI (Read-Only Mode)**\n\nI am the lightweight search & information assistant. I have full read access across all spaces to answer questions, search tickets, and generate status reports, but I cannot modify tickets or database records.\n\nTo execute **"${refinedGoal.optimizedGoal}"**, please use the **Liraspaces Autonomous Agent**!`,
     timestamp: now,
     refinedPrompt: refinedMetadata,
     actionTaken: {

@@ -156,7 +156,7 @@ function ItemFooter({ draft, isNew, valid, onDelete, onClose, save }: { draft: R
   return (
     <div className="flex items-center justify-between pt-3 border-t border-lira-border">
       {!isNew ? (
-        <button onClick={async () => { if (await confirmDialog({ title: 'Remove from roadmap', message: `Remove "${draft.title}" from the roadmap?${draft.epicKey ? `\n\nThe epic ${draft.epicKey} stays in Lira.` : ''}`, confirmLabel: 'Remove', tone: 'danger' })) onDelete(draft.id); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:bg-red-500/10 px-3 py-2 rounded-lg cursor-pointer">
+        <button onClick={async () => { if (await confirmDialog({ title: 'Remove from roadmap', message: `Remove "${draft.title}" from the roadmap?${draft.epicKey ? `\n\nThe epic ${draft.epicKey} stays in Liraspaces.` : ''}`, confirmLabel: 'Remove', tone: 'danger' })) onDelete(draft.id); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:bg-red-500/10 px-3 py-2 rounded-lg cursor-pointer">
           <Trash2 className="w-4 h-4" /> Remove
         </button>
       ) : <span />}

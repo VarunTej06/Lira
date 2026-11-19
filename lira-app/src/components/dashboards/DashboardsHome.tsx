@@ -52,7 +52,7 @@ export const DashboardsHome: React.FC<{ issues: Issue[]; spaces: Space[] }> = ({
       notifySaved('Dashboard imported');
       navigate(`/dashboards/${d.id}`);
     } catch {
-      await alertDialog({ title: 'Could not import', message: 'That file is not a Lira dashboard file. Use a file made with Export, then Dashboard file (JSON).' });
+      await alertDialog({ title: 'Could not import', message: 'That file is not a Liraspaces dashboard file. Use a file made with Export, then Dashboard file (JSON).' });
     }
   };
 
@@ -73,7 +73,7 @@ export const DashboardsHome: React.FC<{ issues: Issue[]; spaces: Space[] }> = ({
         {/* Describe it */}
         <section className="rounded-2xl border border-lira-border bg-white p-5" aria-labelledby="describe-h">
           <h2 id="describe-h" className="flex items-center gap-2 text-sm font-bold text-lira-text"><FileText className="w-4 h-4 text-lira-blue" /> Build one from a description</h2>
-          <p className="text-xs text-lira-muted mt-0.5">Say what you want to see. Lira picks the widgets and filters, and shows you what it understood before it creates anything.</p>
+          <p className="text-xs text-lira-muted mt-0.5">Say what you want to see. Liraspaces picks the widgets and filters, and shows you what it understood before it creates anything.</p>
           <form className="mt-3 flex gap-2" onSubmit={e => { e.preventDefault(); if (text.trim()) setPlan(planFromPrompt(text, spaces)); }}>
             <input value={text} onChange={e => { setText(e.target.value); setPlan(null); }} placeholder="For example: what is blocked in this sprint and who is overloaded" aria-label="Describe the dashboard" data-testid="describe-input"
               className="flex-1 min-w-0 text-sm border border-lira-border rounded-lg px-3 py-2.5 bg-white text-lira-text focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue" />

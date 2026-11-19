@@ -40,7 +40,7 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
 
     onUpdate([...attachments, ...newAttachments]);
     if (tooBig.length) {
-      await alertDialog({ title: 'File not stored', message: `${tooBig.join(', ')} ${tooBig.length === 1 ? 'is' : 'are'} bigger than 2 MB. The name is listed, but the file itself is not stored in Lira.` });
+      await alertDialog({ title: 'File not stored', message: `${tooBig.join(', ')} ${tooBig.length === 1 ? 'is' : 'are'} bigger than 2 MB. The name is listed, but the file itself is not stored in Liraspaces.` });
     }
   }, [attachments, onUpdate]);
 

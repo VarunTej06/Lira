@@ -99,7 +99,7 @@ export const AccountDropdown: React.FC = () => {
             </button>
 
             <button
-              onClick={() => { setOpen(false); void alertDialog({ title: 'Log out', message: 'Offline session: Lira runs on your own computer and needs no cloud login.' }); }}
+              onClick={() => { setOpen(false); void alertDialog({ title: 'Log out', message: 'Offline session: Liraspaces runs on your own computer and needs no cloud login.' }); }}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors cursor-pointer text-left"
             >
               <LogOut className="w-4 h-4 text-red-500" />

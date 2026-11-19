@@ -11,11 +11,11 @@ import { Check } from 'lucide-react';
 import { Modal } from '../common/Modal';
 export type { SettingsSection } from './settings/useSettingsState';
 
-/** Lira Settings & Administration: appearance, export & backup, profile, general and notifications. */
+/** Liraspaces Settings & Administration: appearance, export & backup, profile, general and notifications. */
 export const SettingsModal: React.FC<SettingsModalProps> = (props) => {
   const s = useSettingsState(props);
   return (
-    <Modal isOpen={s.isOpen} onClose={s.onClose} title="Lira Settings & Administration" size="lg">
+    <Modal isOpen={s.isOpen} onClose={s.onClose} title="Liraspaces Settings & Administration" size="lg">
       <div className="flex flex-col md:flex-row min-h-[480px] max-h-[80vh] overflow-hidden">
         <SettingsNav {...s} />
         {/* Right Section Content */}

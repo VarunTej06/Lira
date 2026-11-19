@@ -76,7 +76,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     if (tooBig.length) {
       await alertDialog({
         title: 'File not stored',
-        message: `${tooBig.join(', ')} ${tooBig.length === 1 ? 'is' : 'are'} bigger than 2 MB. The name is kept in the text, but the file itself is not stored in Lira.`,
+        message: `${tooBig.join(', ')} ${tooBig.length === 1 ? 'is' : 'are'} bigger than 2 MB. The name is kept in the text, but the file itself is not stored in Liraspaces.`,
       });
     }
   }, [attachmentsRef, onAttachRef]);
@@ -139,7 +139,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         event.preventDefault();
         const id = a.getAttribute('href')!.slice('#attachment-'.length);
         const att = attachmentsRef.current.find(x => x.id === id);
-        if (att && !downloadAttachment(att)) void alertDialog({ title: 'File not stored', message: `${att.name} was too big to store in Lira, so it cannot be downloaded.` });
+        if (att && !downloadAttachment(att)) void alertDialog({ title: 'File not stored', message: `${att.name} was too big to store in Liraspaces, so it cannot be downloaded.` });
         return true;
       },
     },

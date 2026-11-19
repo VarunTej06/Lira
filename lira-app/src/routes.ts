@@ -106,7 +106,7 @@ export function titleOf(route: AppRoute): string {
     case 'roadmaps': return 'Roadmaps';
     case 'dashboards': return 'Dashboards';
     case 'space': return `${route.spaceKey} · ${route.tab}`;
-    default: return 'Lira';
+    default: return 'Liraspaces';
   }
 }
 

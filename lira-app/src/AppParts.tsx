@@ -3,7 +3,7 @@ import { APP_VERSION } from './utils/appVersion';
 
 /** The loading screen while the app starts: the shape of the app in grey blocks, so nothing jumps when it arrives. */
 export function StartupScreen() {
-  return <AppSkeleton label={`Initializing Lira v${APP_VERSION}`} />;
+  return <AppSkeleton label={`Initializing Liraspaces v${APP_VERSION}`} />;
 }
 
 /** Shown instead of the ticket popup when it crashes while drawing. Clicking anywhere or Close dismisses it. */

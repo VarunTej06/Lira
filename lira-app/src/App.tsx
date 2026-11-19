@@ -56,7 +56,7 @@ export default function App() {
   const { routeSpace, activeSpace } = useActiveSpace(route, spaces);
   const activeSpaceId = activeSpace?.id;
 
-  useEffect(() => { document.title = `${titleOf(route)} · Lira`; }, [route]);
+  useEffect(() => { document.title = `${titleOf(route)} · Liraspaces`; }, [route]);
 
   // Auto-collapse sidebar when on Filters page
   useResetWhen([route.kind], () => { if (route.kind === 'filters') setSidebarCollapsed(true); });

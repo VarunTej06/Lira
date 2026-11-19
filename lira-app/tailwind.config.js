@@ -91,6 +91,8 @@ export default {
       'lira-on-blue': rgbVar('lira-on-blue'),
       'lira-nav': rgbVar('lira-nav'),
       'lira-nav-accent': rgbVar('lira-nav-accent'),
+      // The gold of the Liraspaces logo: fixed in every theme, because it is the brand and not the accent
+      'logo-gold': '#D6A12E',
       gray: greys,
       slate: greys,
       'lira-amber-light': rgbVar('lira-amber-light'),
@@ -131,10 +133,10 @@ export default {
         'fade-in': 'fadeIn 0.15s ease-out',
         'scale-in': 'scaleIn 0.15s ease-out',
         'sidebar-in': 'sidebarIn 0.14s ease-out',
-        // The arrow of the logo: once on load, again on hover (a second name restarts it), and on a loop while starting
-        'logo-grow': 'logoGrow 0.7s cubic-bezier(.2,.8,.3,1) both',
-        'logo-grow-again': 'logoGrowAgain 0.7s cubic-bezier(.2,.8,.3,1) both',
-        'logo-grow-loop': 'logoGrow 1.3s cubic-bezier(.2,.8,.3,1) infinite',
+        // The pages of the logo: once on load, again on hover (a second name restarts it), and on a loop while starting
+        'logo-settle': 'logoSettle 0.9s cubic-bezier(.2,.8,.3,1) both',
+        'logo-settle-again': 'logoSettleAgain 0.9s cubic-bezier(.2,.8,.3,1) both',
+        'logo-settle-loop': 'logoSettle 1.6s cubic-bezier(.2,.8,.3,1) infinite',
         'chat-pop': 'chatPop 0.42s cubic-bezier(.22,1,.36,1) both',
         'chat-out': 'chatOut 0.3s cubic-bezier(.5,0,.75,0) forwards',
         'msg-in': 'msgIn 0.35s cubic-bezier(.2,.8,.3,1) both',
@@ -154,8 +156,8 @@ export default {
           "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        logoGrow: { '0%': { transform: 'scale(0)', opacity: '0' }, '55%': { opacity: '1' }, '100%': { transform: 'scale(1)', opacity: '1' } },
-        logoGrowAgain: { '0%': { transform: 'scale(0)', opacity: '0' }, '55%': { opacity: '1' }, '100%': { transform: 'scale(1)', opacity: '1' } },
+        logoSettle: { '0%': { transform: 'translateY(-5px)', opacity: '0' }, '40%': { transform: 'translateY(1.5px)', opacity: '1' }, '65%': { transform: 'translateY(-1px)' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+        logoSettleAgain: { '0%': { transform: 'translateY(-5px)', opacity: '0' }, '40%': { transform: 'translateY(1.5px)', opacity: '1' }, '65%': { transform: 'translateY(-1px)' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
         sidebarIn: {
           "0%": { opacity: "0", transform: "translateX(-10px)" },
           "100%": { opacity: "1", transform: "translateX(0)" },

@@ -32,12 +32,13 @@ These are the owner's own standing requirements; they apply to every change.
 
 | Check | Command |
 |---|---|
-| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 1772 tests, data health) |
+| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 1846 tests, data health) |
 | Types | `npx tsc -b` |
 | Lint | `npm run lint` (must report 0 warnings) |
 | Tests | `npm test` (single file: `npx vitest run path/to/file.test.ts`) |
 | Build | `npm run build` (typecheck, then the production bundle) |
 | Dev server | `npm run dev` (`dev:lan` opens it to the local network). It rewrites files under `data/`: do not run it against the real workspace |
+| Hosted edition | `npm run hosted` builds the public pages at `/` with the app under `/app` and serves them at port 5175 (`build:hosted` and `preview:hosted` do the two steps; `dev:hosted` is the dev server on 5175 and, like `dev`, rewrites `data/`). The default build is the local edition |
 
 ## Protected paths
 

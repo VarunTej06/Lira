@@ -93,6 +93,18 @@ When fixing existing screens, lower the limit in `scripts/vibe-check.mjs` in the
 
 The first full design audit against these 30 (17 Nov 2026, with the Impeccable skill) is in [`design-audit-2026-11-17.md`](design-audit-2026-11-17.md): health score, findings by severity and the recommended order of fixes.
 
+### Exceptions approved by the owner (19 Nov 2026)
+
+The owner asked for these on the public landing page of the hosted edition, from the reference pictures they shared. They apply only to the files named here. Nowhere else may they appear, and no limit in `scripts/vibe-check.mjs` was raised: the scan does not see them, because they are drawn with a canvas, CSS and text rather than with the words the scan looks for.
+
+| Tell | Where | What is allowed | Safeguards |
+|---|---|---|---|
+| 14 Terminal window | `src/components/public/AiBand.tsx` | The headline of the black AI band is set in a monospace box with a `>` prompt, a line that types itself once, and a blinking caret. No window bar, no traffic lights. | The headline is plain text for screen readers, the caret is hidden from them, and with reduced motion the line simply appears. |
+| 23 Dot grid | `src/components/public/PointerDots.tsx`, `DotIcon.tsx` | Faint dots behind the black band that light up under the mouse, and three small icons drawn from dots. | The canvas is hidden from screen readers. With reduced motion, or on a touch screen, the dots stay still and faint. |
+| 6 Three in a row | `src/components/public/AiBand.tsx`, `DiscoverCards.tsx` | Three short columns in the black band, and a sideways row of cards. | The "More than project management" section uses alternating rows instead of three across. |
+| 28 Hover motion | `src/components/public/PointerDots.tsx` | The dots react to the mouse. Nothing scales or slides on hover. | As above. |
+| Scroll motion | `src/components/public/DiscoverCards.tsx` | The card row slides in from the right once, the first time it scrolls into view. | Shown at once with reduced motion or where scrolling cannot be watched. |
+
 ## 5. Criteria taken from outside reports
 
 The owner's list of 30 tells is the first. The online vibe-test reports from after the merge to `main` are added below it.

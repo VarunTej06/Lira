@@ -12,7 +12,7 @@ How to run it
 
 ---
 
-## A. The screens that were reworked (A1–A30)
+## A. The screens that were reworked (A1–A32)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -335,6 +335,32 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Open the space, projects and roadmap that you named "Lira". Expect: they keep the name "Lira"; only the app name changed.
 - [ ] Add the site to the phone home screen (or look at `public/lira-icon.png`). Expect: a navy square with the hexagon and gold book, not the old L.
 
+### A31. Public pages of the hosted edition (19 Nov 2026)  ◐
+Run `npm run hosted` in a terminal (it builds the hosted edition, then serves it at http://localhost:5175 and does not touch `data/`). Leave it running, and run `npm run dev` in another terminal to see the local app at http://localhost:5173 beside it.
+- [ ] Open `/`. Expect: a fixed top bar (logo set in from the left edge, Features, Solutions, Guides, Templates, a search button, Sign in, Get it free), the headline "Everything you are working on and learning, in one place.", an email bar with Sign up and a switched-off Google button, and the large sample space below. There is no Pricing anywhere. Light mode looks like Sorrel (off-white, sage frame, tomato red buttons); dark mode looks like Pace (black, silver text, yellow buttons).
+- [ ] Scroll down the landing page. Expect: the top bar stays at the top and the page moves beneath it.
+- [ ] Press "Light mode" or "Dark mode" in the top bar (wide windows). Expect: the page switches, and the choice is the same one the app uses.
+- [ ] Click Features, then Solutions, then Templates. Expect: each opens a list; Escape, a click elsewhere or scrolling closes it. Features items go to "What is inside"; the others go to the "Still baking" page.
+- [ ] Click the search button and type "privacy", then "zzzz". Expect: the Privacy Policy is listed and opens when clicked; for "zzzz" it says "Nothing found".
+- [ ] In the email bar press Sign up empty, then with "abc", then with "asha@example.com". Expect: "Enter your email." then "Enter an email like you@example.com." then the get-started page with the email already filled in.
+- [ ] On the get-started page (`/signup`). Expect: a window titled "Get started with Liraspaces" over a grey drawing of the app, the email field, Sign up, a switched-off Google button, "Already have an account? Log in", and a × that returns to the landing page. A valid email shows "Sign-up opens when the hosted service launches. Nothing you typed was sent or saved."
+- [ ] Open `/login`. Expect: a centred card (logo, "Log in to continue", Email, Password, Remember me with a small "i" whose tooltip says 30 days, Log in, Google switched off, "Can't log in?" and "Create an account"), and the footer of the card with the Privacy Policy, User Notice and Terms of Service links. On a wide window two flat pictures sit in the bottom corners. Empty fields show "Enter your email." and "Enter your password."; a valid form shows the "opens when the hosted service launches" message.
+- [ ] Open `/terms`, `/privacy` and `/notice` from the footer. Expect: each shows a draft notice, names Yadla Sai Varun Teja and the contact email, and the tab title ends in "Liraspaces".
+- [ ] Open `/app`. Expect: the app, with its own addresses under `/app` (for example `/app/for-you`), and refresh keeps you on the same page. Click the logo. Expect: the "Still baking" page.
+- [ ] Open an address that does not exist, such as `/nothing`. Expect: the landing page.
+- [ ] Narrow the window to phone width. Expect: no sideways scrolling; the top bar keeps the logo mark, search, Get it free and a Menu button that lists the pages; the email bar stacks; the sample board becomes one column.
+- [ ] With `npm run dev` (local edition) open `/` and `/login`. Expect: the app as before and no landing page.
+
+### A32. Landing page, the rest of the sections (19 Nov 2026)  ◐
+Same way of running as A31 (`npm run hosted`, then http://localhost:5175).
+- [ ] Press the sun or moon button in the top bar. Expect: the page switches between light (Sorrel) and dark (Pace); in dark mode the button shows a sun, in light mode a moon; nothing else moves.
+- [ ] Click into the email field on the landing page and on `/signup`. Expect: the focus box goes around the whole bar (field and Sign up button together) with a small gap, not hard against the button.
+- [ ] Scroll the landing page. Expect, in order: the hero and sample space, "What is inside", "More than project management" (Search, Viva, Roadmaps and dashboards, each with a picture, alternating sides), "Liraspaces is better with documents and files" (with the Includes list and four example cards, one dark), the black band, "Discover the latest", "Your data", the black closing band, and the large grey footer.
+- [ ] Reach the black band. Expect: it is black in light mode too; "Liraspaces for the AI era" and a second line "> connect anywhere" that types itself once with a blinking block caret; "WORKS WITH" shows only "Any MCP agent" with a note that it is coming soon; three columns with dot icons, two of them marked COMING SOON.
+- [ ] Move the mouse over the black band. Expect: faint dots light up around the pointer and fade as it moves away. With "reduce motion" on in the system, or on a phone, the dots stay still.
+- [ ] Scroll to "Discover the latest". Expect: the cards slide in from the right once and stay. Use the arrows, the mouse wheel or a swipe: the row scrolls a card at a time, the left arrow is switched off at the start and the right arrow at the end. Six cards: four "UPDATE" and two "COMING SOON".
+- [ ] Read the closing band and the footer. Expect: "Plan, learn and deliver in Liraspaces" with two gold words, a "Get Liraspaces free" button to the sign-up page; the footer has Contact us, PRODUCT, RESOURCES and LEGAL columns, no Pricing, Careers or Press kit.
+- [ ] Narrow the window to phone width. Expect: no sideways scrolling of the page; the row of cards still scrolls sideways inside itself; the sections stack to one column.
 ---
 
 ## B. Things that changed everywhere (quick sweeps)

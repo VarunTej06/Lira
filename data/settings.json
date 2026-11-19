@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-19T01:20:46.733Z",
+  "updatedAt": "2026-11-19T08:32:38.749Z",
   "entries": {
     "lira_accent": "#0C66E4",
     "lira_active_space_id": "2",
-    "lira_dark_palette": "blackridge",
-    "lira_light_palette": "sorrel",
+    "lira_dark_palette": "pace",
+    "lira_light_palette": "tidewell",
     "lira_notif_config": {
       "inAppFeed": true,
       "mentionsOnly": true,
@@ -23,7 +23,7 @@
       "view": "timeline",
       "zoom": "months"
     },
-    "lira_sidebar_collapsed": "true",
+    "lira_sidebar_collapsed": "false",
     "lira_sidebar_customization": {
       "navOrder": [
         "forYou",

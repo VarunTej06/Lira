@@ -8,7 +8,7 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
 [![Dexie.js](https://img.shields.io/badge/Dexie.js-IndexedDB-orange.svg)](https://dexie.org/)
 [![Storage](https://img.shields.io/badge/Storage-JSON_files_in_data/-emerald.svg)](./data/)
-[![Tests](https://img.shields.io/badge/tests-1772_passing-brightgreen.svg)](#-tests)
+[![Tests](https://img.shields.io/badge/tests-1846_passing-brightgreen.svg)](#-tests)
 
 **Next stage (decided 9 Nov 2026):** multi-user with SSO. Design, decisions, security standard, SOPs and a stakeholder deck are in [docs/](docs/README.md); rules for contributors and AI assistants are in [CLAUDE.md](CLAUDE.md). Everything below describes today's single-user app.
 
@@ -40,7 +40,7 @@
 | **Attachments** | **Add attachment** opens a window to choose the source: this computer (drag and drop or browse), a Google Drive, OneDrive or Dropbox share link, or any web link. |
 | **Dates** | A themed date picker everywhere a date is chosen. Click the month and year to jump to any month of any year. The month calendar has the same chooser and "+N more" days. |
 | **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
-| **Code health** | Large files split into small parts (no component over about 350 lines), 1772 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
+| **Code health** | Large files split into small parts (no component over about 350 lines), 1846 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
 
 ## Key Highlights
 
@@ -111,10 +111,11 @@ Other commands:
 | Command | What it does |
 |---|---|
 | `npm run dev:lan` | Same, and also opens Lira to your own Wi-Fi for a tablet or phone (private link and QR code in **Settings, Other devices**) |
-| `npm test` | 1772 automated tests (Vitest) |
+| `npm test` | 1846 automated tests (Vitest) |
 | `npm run test:health` | Read-only check of your `data/` folder (15 checks) |
 | `npm run test:all` | Type check, lint, all tests, data health |
 | `npm run build` | Type-check, then production build |
+| `npm run hosted` | The hosted edition on http://localhost:5175 (builds, then serves): public pages at `/`, the app under `/app`. Log in and sign up are screens only until the server exists |
 | `npm run lint` | Oxlint (reports 0 warnings; keep it that way) |
 
 Full instructions, where data is stored, URLs, and the tablet and phone steps are in [SETUP.md](SETUP.md).

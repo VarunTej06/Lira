@@ -17,7 +17,7 @@ describe('Top bar layout', () => {
 
   it('puts the logo on the page frame, outside the dark box', () => {
     mount(<TopNavigation />);
-    const logo = q('svg[aria-label="Lira"]')!;
+    const logo = q('svg[aria-label="Liraspaces"]')!;
     const box = q('nav > div:nth-child(2)')!;
     expect(box.className).toContain('bg-lira-nav');
     expect(box.contains(logo)).toBe(false);

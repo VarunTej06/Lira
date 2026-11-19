@@ -19,7 +19,7 @@
 | **Local PC Storage** | JSON files under `../data/` | Source of truth for everything (tickets, projects, sprints, roadmaps, teams, standups, settings) |
 | **Drag & Drop** | [@hello-pangea/dnd](https://github.com/hello-pangea/dnd) | Kanban board |
 | **Dates / QR** | date-fns, qrcode | Due dates; the QR code for opening Lira on a phone |
-| **Tests** | Vitest, jsdom, fake-indexeddb | 1772 tests in 156 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
+| **Tests** | Vitest, jsdom, fake-indexeddb | 1846 tests in 166 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
 
 ---
 
@@ -37,6 +37,7 @@ npm run dev        # http://localhost:5173
 | `npm test` | Unit and integration tests |
 | `npx tsc -b` | Type-check |
 | `npm run build` | Type-check, then production build to `dist/` |
+| `npm run hosted` (or `build:hosted` then `preview:hosted`; `dev:hosted` for the dev server) | The hosted edition, on http://localhost:5175 beside the local app on 5173: landing, log in, sign up and legal pages at `/`, the app under `/app` (see `src/utils/edition.ts`). Log in and sign up are screens only until the hosted server exists |
 | `npm run lint` | Oxlint |
 
 Run every command from `lira-app/`. See the root [SETUP.md](../SETUP.md) for the full guide, and [SECURITY_REPORT.md](../SECURITY_REPORT.md) for how the local API is protected.

@@ -1,4 +1,4 @@
-import { LiraLogo } from '../common/LiraLogo';
+import { BrandMark } from './BrandMark';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Settings, Plus, HardDrive, CheckCircle2, AlertCircle } from 'lucide-react';
 import { exportBackup, importBackup } from '../../db/storageService';
@@ -111,12 +111,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   return (
     <nav className="mx-2 mt-2 h-14 flex items-center gap-3 flex-shrink-0 z-40 relative">
       {/* Left: the product mark, on the page frame */}
-      <div className="flex-1 basis-0 flex items-center gap-2 select-none">
-        <span className="w-10 h-10 rounded-full bg-lira-nav border border-white/10 flex items-center justify-center flex-shrink-0">
-          <LiraLogo className="w-6 h-6 text-white" />
-        </span>
-        <span className="hidden sm:inline text-lira-text font-bold text-lg tracking-tight">Liraspaces</span>
-      </div>
+      <BrandMark />
 
       {/* Centre: the working controls, in one dark box */}
       <div className="flex-[0_1_auto] min-w-0 h-14 rounded-2xl bg-lira-nav border border-white/[0.08] flex items-center px-3 gap-2">

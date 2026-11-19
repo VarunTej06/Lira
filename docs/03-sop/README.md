@@ -10,6 +10,7 @@ Step-by-step procedures for running and supporting Lira. They are written for th
 | [04](SOP-04-dependency-and-vulnerability-management.md) | Dependency and vulnerability management | Tech lead | Monthly run |
 | [05](SOP-05-access-management.md) | Access management (joiner, mover, leaver, review) | Org admin | Each quarter |
 | [06](SOP-06-developer-onboarding-and-local-setup.md) | Developer onboarding and local setup | Tech lead | When tooling changes |
+| [Rehearsal](azure-playground-rehearsal.md) | Azure playground rehearsal (a one-off practice run, not an SOP) | Product owner | Once, then replaced by the real setup |
 
 Format of every SOP: purpose, scope, roles, prerequisites, numbered steps, verification, records to keep, rollback/escalation. Keep each SOP to one page; link to detail instead of repeating it. If a step is wrong, fix the SOP in the same change that fixed the process.
 

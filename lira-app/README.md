@@ -19,7 +19,7 @@
 | **Local PC Storage** | JSON files under `../data/` | Source of truth for everything (tickets, projects, sprints, roadmaps, teams, standups, settings) |
 | **Drag & Drop** | [@hello-pangea/dnd](https://github.com/hello-pangea/dnd) | Kanban board |
 | **Dates / QR** | date-fns, qrcode | Due dates; the QR code for opening Lira on a phone |
-| **Tests** | Vitest, jsdom, fake-indexeddb | 1846 tests in 166 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
+| **Tests** | Vitest, jsdom, fake-indexeddb | 1855 tests in 167 files (`npm test`), plus a 15-check data health run (`npm run test:health`) |
 
 ---
 

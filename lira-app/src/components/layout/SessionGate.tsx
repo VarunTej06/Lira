@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { AppSkeleton } from '../common/Skeleton';
 import { fetchMe } from '../../services/authApi';
+import { applyServerProfile } from '../../utils/hostedProfile';
 import { goTo } from '../../utils/navigate';
 
 type Phase = 'checking' | 'in' | 'out' | 'error';
@@ -17,7 +18,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
     let current = true;
     void fetchMe().then(result => {
       if (!current) return;
-      if (result.ok) { setPhase('in'); return; }
+      if (result.ok) { applyServerProfile(result.data); setPhase('in'); return; }
       if (result.status === 401) { setPhase('out'); goTo('/login'); return; }
       setPhase('error');
     });

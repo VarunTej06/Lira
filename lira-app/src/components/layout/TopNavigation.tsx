@@ -22,6 +22,7 @@ import { OmniSearch } from './topnav/OmniSearch';
 import { NotificationsBell } from './topnav/NotificationsBell';
 import { SystemSettingsModal } from './topnav/SystemSettingsModal';
 import { appStorage } from '../../utils/appStorage';
+import { isHosted } from '../../utils/edition';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -136,7 +137,8 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       {/* Right: save state and utilities, on the page frame */}
       <div className="flex-1 basis-0 flex items-center justify-end gap-2">
 
-      {/* Local PC Storage Indicator */}
+      {/* Local PC Storage Indicator: it saves to this computer's disk through the local server, so the hosted edition has none */}
+      {!isHosted() && (
       <button
         type="button"
         onClick={async () => {
@@ -167,6 +169,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
           </>
         )}
       </button>
+      )}
 
         <NotificationsBell issues={issues} onSelectIssue={onSelectIssue} />
 

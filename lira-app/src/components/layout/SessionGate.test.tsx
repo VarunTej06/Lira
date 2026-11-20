@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { byText, cleanup, click, mount, q, settle } from '../../test/render';
+import { loadProfile } from '../../utils/userPrefs';
 import { SessionGate } from './SessionGate';
+
+function ProfileProbe({ onRender }: { onRender: (name: string) => void }) {
+  onRender(loadProfile().name);
+  return <p id="probe">The app</p>;
+}
 
 const go = vi.hoisted(() => vi.fn());
 vi.mock('../../utils/navigate', () => ({ goTo: go }));
@@ -30,6 +36,15 @@ describe('SessionGate', () => {
     expect(fetchMock.mock.calls[0][0]).toBe('/api/me');
     expect((fetchMock.mock.calls[0][1] as RequestInit).credentials).toBe('same-origin');
     expect(go).not.toHaveBeenCalled();
+  });
+
+  it('puts the signed-in person\'s own name and email into the profile before the app shows', async () => {
+    fetchMock.mockResolvedValue(json(200, { user: { id: '1', email: 'test@gmail.com', name: 'Test User' }, organisations: [{ orgId: 'o', orgName: 'x', role: 'owner' }] }));
+    let seen = '';
+    mount(<SessionGate><ProfileProbe onRender={name => { seen = name; }} /></SessionGate>);
+    await settle(50);
+    expect(seen).toBe('Test User');
+    expect(loadProfile().email).toBe('test@gmail.com');
   });
 
   it('sends someone who is not signed in to the log-in page, and never shows the app', async () => {

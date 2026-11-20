@@ -37,15 +37,20 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+# Text piped into a program (the registry password into docker, in WSL) must not start with the invisible UTF-8 marker this PowerShell adds by default.
+$OutputEncoding = New-Object System.Text.UTF8Encoding($false)
 $Root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $StateFile = Join-Path $PSScriptRoot '.state.json'
 
+# The real Azure CLI program. Our own function is also called Az, and PowerShell would pick the function first, so name the program.
+$AzExe = (Get-Command az -CommandType Application | Select-Object -First 1).Source
 function Az {
-  $out = & az @args --only-show-errors 2>&1
+  $ErrorActionPreference = 'Continue'   # Windows PowerShell turns a program's error text into a failure; the exit code is what counts
+  $out = & $AzExe @args --only-show-errors 2>&1
   if ($LASTEXITCODE -ne 0) { throw "az $($args -join ' ') failed:`n$($out -join "`n")" }
   $out | Where-Object { $_ -isnot [System.Management.Automation.ErrorRecord] }
 }
-function Az-Exists { & az @args --only-show-errors 2>&1 | Out-Null; $LASTEXITCODE -eq 0 }
+function Az-Exists { $ErrorActionPreference = 'Continue'; & $AzExe @args --only-show-errors 2>&1 | Out-Null; $LASTEXITCODE -eq 0 }
 function Load-State { if (Test-Path $StateFile) { Get-Content $StateFile -Raw | ConvertFrom-Json } else { [pscustomobject]@{} } }
 function Save-State($s) { $s | ConvertTo-Json | Set-Content $StateFile -Encoding UTF8 }
 function Set-Field($s, $name, $value) { $s | Add-Member -NotePropertyName $name -NotePropertyValue $value -Force; Save-State $s }
@@ -105,7 +110,7 @@ function Step-Infra($state) {
       --zonal-resiliency Disabled --yes | Out-Null
   }
   # Lets Container Apps reach the database (rehearsal only; the real setup uses a private endpoint)
-  Az postgres flexible-server firewall-rule create -g $rg --name $state.pgServer --rule-name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 | Out-Null
+  Az postgres flexible-server firewall-rule create -g $rg --server-name $state.pgServer --name AllowAzureServices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0 | Out-Null
   Set-Field $state 'pgHost' "$($state.pgServer).postgres.database.azure.com"
 }
 
@@ -130,7 +135,7 @@ function Step-Isolation($state) {
   Need $state 'pgHost' 'isolation'
   $sql = Wsl-Path (Join-Path $Root 'docs\03-sop')
   # the password goes to WSL on standard input, not on a command line
-  (Get-KvSecret $state.vault 'pg-admin-password') | wsl -e bash -lc "read -r PGPASSWORD; export PGPASSWORD; docker run --rm -e PGPASSWORD -v '${sql}:/sql' postgres:16 psql 'host=$($state.pgHost) port=5432 dbname=postgres user=lirasadmin sslmode=require' -f /sql/rehearsal-isolation-test.sql"
+  (Get-KvSecret $state.vault 'pg-admin-password') | wsl -e bash -lc "LC_ALL=C tr -cd '[:print:]' | { read -r PGPASSWORD; export PGPASSWORD; docker run --rm -e PGPASSWORD -v '${sql}:/sql' postgres:16 psql 'host=$($state.pgHost) port=5432 dbname=postgres user=lirasadmin sslmode=require' -f /sql/rehearsal-isolation-test.sql; }"
   if ($LASTEXITCODE -ne 0) { throw 'The isolation checks failed. Read the FAIL line above.' }
 }
 
@@ -145,7 +150,7 @@ function Step-Images($state) {
   $acr = "$($state.registry).azurecr.io"
   wsl -e bash -lc "docker image inspect liraspaces-web:$WebTag liraspaces-api:$ApiTag > /dev/null 2>&1"
   if ($LASTEXITCODE -ne 0) { Step-Build }                                   # build now if the images are not there yet
-  (Az acr credential show -n $state.registry --query 'passwords[0].value' -o tsv | Select-Object -First 1) | wsl -e bash -lc "docker login $acr -u $($state.registry) --password-stdin"
+  (Az acr credential show -n $state.registry --query 'passwords[0].value' -o tsv | Select-Object -First 1) | wsl -e bash -lc "LC_ALL=C tr -cd '[:print:]' | docker login $acr -u $($state.registry) --password-stdin"
   if ($LASTEXITCODE -ne 0) { throw 'docker login failed. Is Docker running in WSL?' }
   wsl -e bash -lc "set -e; for pair in web:$WebTag api:$ApiTag; do n=`${pair%%:*}; t=`${pair##*:}; docker tag liraspaces-`$n:`$t $acr/liraspaces-`$n:`$t; docker push $acr/liraspaces-`$n:`$t; done"
   if ($LASTEXITCODE -ne 0) { throw 'Pushing an image failed. Read the error above.' }

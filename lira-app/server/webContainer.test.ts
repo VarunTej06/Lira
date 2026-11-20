@@ -38,6 +38,14 @@ describe('web container of the hosted edition', () => {
     expect(nginx).toContain('try_files $uri $uri/ /index.html;');
   });
 
+  it('forwards /api/ to the API under the API\'s own name, never under the web app\'s Host header', () => {
+    const block = /location \/api\/ \{([\s\S]*?)\n {2}\}/.exec(nginx)?.[1] ?? '';
+    expect(block).toContain('proxy_pass http://${API_UPSTREAM};');
+    expect(block).not.toMatch(/^\s*proxy_set_header Host /m);
+    expect(block).toContain('X-Forwarded-For');
+    expect(block).toContain('client_max_body_size');
+  });
+
   it('hides dotfiles and its own version', () => {
     expect(nginx).toContain('server_tokens off;');
     expect(nginx).toMatch(/location ~ \/\\\. \{ deny all; \}/);

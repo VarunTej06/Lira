@@ -11,6 +11,10 @@
  *   - key on both, values differ  -> disk wins, UNLESS the browser has unsaved changes (dirty flag), then browser wins
  */
 
+import { isHosted } from '../utils/edition'
+import { COLLECTIONS, isCollectionKey, loadCollection, resetHostedObjects, syncCollection } from './hostedObjects'
+import { readKv, writeKv, type KvChanges } from './workspaceApi'
+
 const MIRROR_PREFIX = 'lira_'
 const INTERNAL_PREFIX = 'lira__'
 const DIRTY_KEY = 'lira__kv_dirty'
@@ -139,6 +143,7 @@ export async function flushKv(): Promise<boolean> {
   if (!enabled || !ready) return false
   window.clearTimeout(timer)
   const sent = version
+  if (hostedOrg) return flushToServer(sent)
   try {
     const res = await fetch('/api/kv', {
       method: 'POST',
@@ -181,7 +186,7 @@ function installStoragePatch() {
     }
   }
   window.addEventListener('pagehide', () => {
-    if (!enabled || !ready || localStorage.getItem(DIRTY_KEY) === null) return
+    if (hostedOrg || !enabled || !ready || localStorage.getItem(DIRTY_KEY) === null) return
     try {
       navigator.sendBeacon('/api/kv', new Blob([JSON.stringify({ files: buildFiles(localStorage) })], { type: 'application/json' }))
     } catch { /* best effort */ }
@@ -194,6 +199,7 @@ function installStoragePatch() {
  */
 export async function initKvMirror(): Promise<void> {
   installStoragePatch()
+  if (isHosted()) return // the hosted edition starts after sign-in, with startHostedKv
   try {
     const ctrl = new AbortController()
     const t = window.setTimeout(() => ctrl.abort(), BOOT_TIMEOUT_MS)
@@ -223,6 +229,96 @@ export async function initKvMirror(): Promise<void> {
     console.warn('[KvMirror] Disk store unavailable, using browser storage only:', err)
   }
 }
+
+// ─── Hosted edition: the server is the store ────────────────────────────────
+
+/** The files whose data the whole organisation shares. Everything else (preferences) belongs to the signed-in person. */
+const SHARED_FILES: StoreFileName[] = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'dashboards']
+const MAX_ENTRIES_PER_REQUEST = 100
+
+let hostedOrg: string | null = null
+/** What the server holds, as it last confirmed. Changes are the difference between this and the browser's copy. */
+let serverHas: Record<string, string> = {}
+let mayShare = false
+
+const isShared = (key: string) => SHARED_FILES.includes(fileForKey(key))
+const syncedKeys = (): string[] => {
+  const keys: string[] = []
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i)
+    if (k && isMirroredKey(k) && fileForKey(k) !== 'secrets') keys.push(k)
+  }
+  return keys
+}
+
+/**
+ * Hosted edition, after sign-in: the server's data replaces whatever this browser held (it may belong to another account), and
+ * every later change is sent to the server. The browser's copy is only a cache. Resolves false when the server cannot be asked.
+ */
+export async function startHostedKv(orgId: string): Promise<boolean> {
+  installStoragePatch()
+  const r = await readKv(orgId)
+  if (!r.ok) return false
+  syncedKeys().forEach(k => rawRemove!.call(localStorage, k))
+  rawRemove!.call(localStorage, DIRTY_KEY)
+  mayShare = r.data.shared !== null
+  // projects, roadmaps and dashboards come from their own rows below, never from this shared data
+  serverHas = Object.fromEntries(Object.entries({ ...(r.data.shared ?? {}), ...r.data.mine }).filter(([k]) => !isCollectionKey(k)))
+  for (const [k, v] of Object.entries(serverHas)) rawSet!.call(localStorage, k, v)
+  for (const key of Object.keys(COLLECTIONS)) {
+    const loaded = await loadCollection(orgId, key)
+    if (!loaded) return false
+    if (loaded.text !== null) rawSet!.call(localStorage, key, loaded.text)
+  }
+  hostedOrg = orgId
+  enabled = true
+  ready = true
+  changeListener?.()
+  return true
+}
+
+/** The entries that differ from what the server has, split by who they belong to. A person without access to shared data sends none of it. */
+export function diffForServer(current: Record<string, string>, server: Record<string, string>, mayShare: boolean): { shared: KvChanges; mine: KvChanges } {
+  const out = { shared: {} as KvChanges, mine: {} as KvChanges }
+  const put = (k: string, v: string | null) => { if (isShared(k)) { if (mayShare) out.shared[k] = v } else out.mine[k] = v }
+  for (const [k, v] of Object.entries(current)) if (server[k] !== v) put(k, v)
+  for (const k of Object.keys(server)) if (!(k in current)) put(k, null)
+  return out
+}
+
+async function flushToServer(sent: number): Promise<boolean> {
+  const current: Record<string, string> = {}
+  for (const k of syncedKeys()) if (!isCollectionKey(k)) current[k] = localStorage.getItem(k) as string
+  const changes = diffForServer(current, serverHas, mayShare)
+  for (const scope of ['shared', 'mine'] as const) {
+    const pairs = Object.entries(changes[scope])
+    for (let i = 0; i < pairs.length; i += MAX_ENTRIES_PER_REQUEST) {
+      const chunk = Object.fromEntries(pairs.slice(i, i + MAX_ENTRIES_PER_REQUEST))
+      const r = await writeKv(hostedOrg!, { [scope]: chunk })
+      if (!r.ok) { console.warn('[KvMirror] Could not save to the server, will retry:', r.message); scheduleFlush(); return false }
+      for (const [k, v] of Object.entries(chunk)) { if (v === null) delete serverHas[k]; else serverHas[k] = v }
+    }
+  }
+  for (const key of Object.keys(COLLECTIONS)) {
+    const outcome = await syncCollection(hostedOrg!, key, localStorage.getItem(key))
+    if (outcome === 'retry') { scheduleFlush(); return false }
+    if (outcome === 'reload') await reloadCollection(key)
+  }
+  if (sent === version) rawRemove?.call(localStorage, DIRTY_KEY)
+  else scheduleFlush()
+  return true
+}
+
+/** The server refused a change to one list: the server's copy replaces the browser's, so the screen shows what is really saved. */
+async function reloadCollection(key: string) {
+  const loaded = await loadCollection(hostedOrg!, key)
+  if (!loaded) return
+  if (loaded.text === null) rawRemove!.call(localStorage, key); else rawSet!.call(localStorage, key, loaded.text)
+  changeListener?.()
+}
+
+/** For the tests: forgets the signed-in state. */
+export function resetHostedKv() { resetHostedObjects(); hostedOrg = null; serverHas = {}; mayShare = false; enabled = false; ready = false }
 
 // ─── Backup / restore ────────────────────────────────────────────────────────
 

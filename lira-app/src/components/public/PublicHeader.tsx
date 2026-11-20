@@ -9,7 +9,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { BTN } from './styles';
 
 /** The top bar of the public pages. It is fixed: the page scrolls beneath it. The logo is set in from the edge, not against it. */
-export function PublicHeader() {
+export function PublicHeader({ showSearch }: { showSearch: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   return (
     <header className="sticky top-0 z-40 bg-lira-bg border-b border-lira-border">
@@ -25,7 +25,7 @@ export function PublicHeader() {
         </nav>
         <div className="flex-1" />
         <ThemeToggle />
-        <SiteSearch />
+        {showSearch && <SiteSearch />}
         <Link to="/login" className="hidden sm:inline text-ui font-bold text-lira-text px-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-lira-blue rounded">Sign in</Link>
         <Link to="/signup" className={`${BTN} rounded-xl`}>Get it free</Link>
         <button type="button" aria-expanded={menuOpen} onClick={() => setMenuOpen(o => !o)} className={`md:hidden ${NAV_TEXT}`}>Menu</button>

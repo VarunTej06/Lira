@@ -5,6 +5,8 @@ export interface Space {
   icon: string; // emoji or icon name
   color: string; // hex color for the space
   description?: string;
+  /** Hosted edition: the version the server last gave this space. A change is sent with it so a stale one is refused. */
+  version?: number;
   createdAt: Date;
   updatedAt: Date;
 }

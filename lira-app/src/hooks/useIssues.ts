@@ -45,7 +45,9 @@ export function useChildIssues(parentId: number | undefined) {
 }
 
 
+import { createIssueHosted } from '../services/hostedSync';
 import { triggerDiskSync } from '../services/localDiskSync';
+import { isHosted } from '../utils/edition';
 
 export async function updateIssue(id: number, changes: Partial<Issue>): Promise<void> {
   await db.issues.update(id, { ...changes, updatedAt: new Date() });
@@ -53,7 +55,8 @@ export async function updateIssue(id: number, changes: Partial<Issue>): Promise<
 }
 
 export async function createIssue(issue: Omit<Issue, 'id'>): Promise<number> {
-  const id = await db.issues.add({ ...issue, sprint: issue.sprint || sprintKey(new Date()) });
+  const full = { ...issue, sprint: issue.sprint || sprintKey(new Date()) };
+  const id = isHosted() ? await createIssueHosted(full) : await db.issues.add(full);
   triggerDiskSync();
   return id;
 }

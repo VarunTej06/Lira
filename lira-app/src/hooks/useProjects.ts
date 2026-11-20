@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Project } from '../types/project';
 import type { Space } from '../types/space';
 import { appStorage } from '../utils/appStorage';
+import { isHosted } from '../utils/edition';
 
 const STORAGE_KEY = 'lira_projects';
 const PROJECTS_EVENT = 'lira-projects-changed';
@@ -51,7 +52,7 @@ export const DEFAULT_PROJECTS = (spaces: Space[]): Project[] => [
   },
 ];
 
-/** Read projects from storage; seeds the defaults the first time (when spaces are known). */
+/** Read projects from storage; seeds the defaults the first time (when spaces are known) in the local edition only. */
 export function readProjects(spaces: Space[] = []): Project[] {
   try {
     const raw = appStorage.get(STORAGE_KEY);
@@ -62,7 +63,7 @@ export function readProjects(spaces: Space[] = []): Project[] {
   } catch (e) {
     console.error('Failed to parse lira_projects', e);
   }
-  if (spaces.length === 0) return [];
+  if (spaces.length === 0 || isHosted()) return []; // a new hosted account starts with no sample projects
   const defaults = DEFAULT_PROJECTS(spaces);
   writeProjects(defaults);
   return defaults;

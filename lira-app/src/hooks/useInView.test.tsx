@@ -22,13 +22,21 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 describe('useInView', () => {
-  it('is false until the element scrolls into view, then true, and stops watching', () => {
+  it('is true while the element is on screen and false again once it has scrolled out, every time', () => {
     mount(<Probe />);
-    expect(q('[data-seen]')!.dataset.seen).toBe('false');
-    act(() => callback!([{ isIntersecting: false }]));
-    expect(q('[data-seen]')!.dataset.seen).toBe('false');
+    const seen = () => q('[data-seen]')!.dataset.seen;
+    expect(seen()).toBe('false');
     act(() => callback!([{ isIntersecting: true }]));
-    expect(q('[data-seen]')!.dataset.seen).toBe('true');
+    expect(seen()).toBe('true');
+    act(() => callback!([{ isIntersecting: false }]));
+    expect(seen()).toBe('false');
+    act(() => callback!([{ isIntersecting: true }]));
+    expect(seen()).toBe('true');
+  });
+
+  it('stops watching when the page is left', () => {
+    mount(<Probe />);
+    cleanup();
     expect(disconnect).toHaveBeenCalled();
   });
 

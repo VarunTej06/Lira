@@ -341,11 +341,12 @@ Run `npm run hosted` in a terminal (it builds the hosted edition, then serves it
 - [ ] Scroll down the landing page. Expect: the top bar stays at the top and the page moves beneath it.
 - [ ] Press "Light mode" or "Dark mode" in the top bar (wide windows). Expect: the page switches, and the choice is the same one the app uses.
 - [ ] Click Features, then Solutions, then Templates. Expect: each opens a list; Escape, a click elsewhere or scrolling closes it. Features items go to "What is inside"; the others go to the "Still baking" page.
+- [ ] Open `/signup`, `/terms`, `/privacy` and `/notice`. Expect: the top bar has no search button on any of them (only the landing page keeps it).
 - [ ] Click the search button and type "privacy", then "zzzz". Expect: the Privacy Policy is listed and opens when clicked; for "zzzz" it says "Nothing found".
 - [ ] In the email bar press Sign up empty, then with "abc", then with "asha@example.com". Expect: "Enter your email." then "Enter an email like you@example.com." then the get-started page with the email already filled in.
 - [ ] On the get-started page (`/signup`). Expect: a window titled "Get started with Liraspaces" over a grey drawing of the app, the email field, Sign up, a switched-off Google button, "Already have an account? Log in", and a × that returns to the landing page. A valid email moves to a second step asking for a name and a password (10 characters or more) for that email, with "Use a different email".
-- [ ] Open `/login`. Expect: a centred card (logo, "Log in to continue", Email, Password, Remember me with a small "i" whose tooltip says 30 days, Log in, Google switched off, "Can't log in?" and "Create an account"), and the footer of the card with the Privacy Policy, User Notice and Terms of Service links. On a wide window two flat scenes sit in the bottom corners: a work board with a chart, tickets and a plant on the left, and an arched library window with books and a graduation cap on the right. Both stay visible in light and dark mode. Empty fields show "Enter your email." and "Enter your password.". With the API running (A33), a wrong password shows "The email or password is not correct." and a right one opens the app.
-- [ ] Open `/terms`, `/privacy` and `/notice` from the footer. Expect: each shows a draft notice, names Yadla Sai Varun Teja and the contact email, and the tab title ends in "Liraspaces".
+- [ ] Open `/login`. Expect: nothing but the card and the two scenes: no top bar, no footer, no search. A centred card (logo, "Log in to continue", Email, Password, Remember me with a small "i" whose tooltip says 30 days, Log in, Google switched off, "Can't log in?" and "Create an account"). On a wide window two flat scenes sit in the bottom corners: a work board with a chart, tickets and a plant on the left, and an arched library window with books and a graduation cap on the right. Both stay visible in light and dark mode. Empty fields show "Enter your email." and "Enter your password.". With the API running (A33), a wrong password shows "The email or password is not correct." and a right one opens the app.
+- [ ] Open `/terms`, `/privacy` and `/notice` from the footer. Expect: each shows a draft notice, names WorldXAdmins and the contact email, and the tab title ends in "Liraspaces".
 - [ ] Open `/app`. Expect: the app, with its own addresses under `/app` (for example `/app/for-you`), and refresh keeps you on the same page. Click the logo. Expect: the "Still baking" page.
 - [ ] Open an address that does not exist, such as `/nothing`. Expect: the landing page.
 - [ ] Narrow the window to phone width. Expect: no sideways scrolling; the top bar keeps the logo mark, search, Get it free and a Menu button that lists the pages; the email bar stacks; the sample board becomes one column.
@@ -431,3 +432,40 @@ For each: open, type something, close, reopen. Expect: empty / reset, not the ol
 ## D. Record the result
 - [ ] Note the date, browser, theme(s) tested and any failures in the pull request.
 - [ ] For each failure: screen, steps, expected, actual, a screenshot.
+
+### A35. Hosted edition: spaces and tickets live on the server (20 Nov 2026)  ◐
+Needs the hosted app running against the API (a cloud rehearsal, A33). Sign up with a new email.
+- [ ] Sign in with the new account. Expect: an empty workspace, no sample spaces or tickets.
+- [ ] Create a space, then a ticket in it. Expect: both appear, the ticket key starts with the space key and counts up (KEY-1, KEY-2), even if you create tickets in two browser tabs.
+- [ ] Reload the page, then open the site in another browser and sign in. Expect: the same space and tickets in both.
+- [ ] Change a ticket's status in one browser, wait a few seconds, reload the other. Expect: the new status.
+- [ ] Change the same ticket in both browsers, one after the other, without reloading the first. Expect: the later save does not silently overwrite: the first browser ends up showing the other's version.
+- [ ] Delete a ticket, then a space. Expect: gone after a reload, in both browsers.
+- [ ] Stop the API (or go offline), change a ticket, start it again. Expect: the change reaches the server within seconds.
+- [ ] Create a project and a roadmap, change the theme, sign out, then sign in again in a private window. Expect: the project and roadmap are there (shared with the organisation) and the theme is yours.
+- [ ] Sign in as a second person on the same browser. Expect: none of the first person's projects or settings show.
+- [ ] Open a ticket, Attachments section. Expect: a drop zone, "No files yet.", then after choosing a picture and a PDF both are listed with their size. Download opens a download (not a page); Remove deletes the file. A .html file is refused with a message. Paste a screenshot into the description: expect a message that says to add files in the Attachments section, and nothing is pasted.
+- [ ] Known gaps (not bugs yet): links to Drive, OneDrive or Dropbox and files while creating a ticket (add them afterwards); the Viva AI key is still only in the browser; two people saving the same roadmap at once: the later save wins.
+
+### A36. Teams, access and invitations (20 Nov 2026)  ◐
+Needs the hosted app against the API (a cloud rehearsal). Use two browsers (or one normal and one private window): the owner in one, the invited person in the other.
+- [ ] As the owner, open the account menu, Teams and access. Expect: People, Teams and Access tabs, and the owner listed as Owner.
+- [ ] People: invite an email with role Member. Expect: since email is not connected, a message with a link to copy, shown once; the invitation is listed under "Waiting to join".
+- [ ] In the other browser, sign up with that email (or log in), open the copied link, press Accept invitation. Expect: "You have joined" and the app opens with no spaces at all.
+- [ ] Try the same link again, and a link opened by a different account. Expect: "not valid any more", and "sent to a different email address".
+- [ ] Teams: make a team, tick the new person, Save people. Delete a second team. Expect: the card shows the count; deleting asks first.
+- [ ] Access: choose Space, then a space, give the team View. In the invited person's browser reload. Expect: that space is listed and its tickets can be read, but creating or changing a ticket is refused.
+- [ ] Change the team to Edit. Expect: after a reload the person can add, change and delete tickets and files, but cannot rename the space or create a new one.
+- [ ] Change it to Manage. Expect: they can rename the space; they still cannot create a new space.
+- [ ] Choose Project, Roadmap and Dashboard in Access. Expect: the list shows their names; a grant on one does not show the others to that person.
+- [ ] Owner: set the person's role to Viewer. Expect: even with Manage granted they can only view. Set Admin, then switch off "Can manage people and access": that Admin sees everything but the Teams page says they have no access.
+- [ ] Remove the person. Expect: they lose every space at once.
+- [ ] A new account (no invitation). Expect: no sample projects, roadmap or forms.
+- [ ] Known gaps (not bugs yet): buttons are not hidden for a person who may only view (the server refuses the change); stand-ups; email is not sent.
+
+### A34. Scroll animations, names and project page (20 Nov 2026)  ◐
+- [ ] On the landing page scroll to the black band, away, and back. Expect: each time, only the word "anywhere" is typed out (the words before it are already there) and the cursor blinks. With reduced motion on, it just appears.
+- [ ] Scroll the "Discover the latest" boxes into view, away and back. Expect: the row slides in from the right every time.
+- [ ] Footer. Expect: "Operated by WorldXAdmins, India"; the legal pages name WorldXAdmins.
+- [ ] Open For you. Expect: no "Recent activity" panel.
+- [ ] Open a project. Expect: the project initials sit in a small badge right before the project name; under it the lead shows as "Lead:", then the avatar, then the name (the signed-in person's name when no lead is set).

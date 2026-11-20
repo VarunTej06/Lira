@@ -9,7 +9,11 @@ const schema = z.object({
   TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(1),
   SESSION_HOURS: z.coerce.number().int().min(1).max(168).default(12),
   REMEMBER_DAYS: z.coerce.number().int().min(1).max(90).default(30),
-});
+  // Blob Storage for ticket attachments (ADR-0011). Both or neither: without them the attachment routes answer 503.
+  STORAGE_ACCOUNT: z.string().regex(/^[a-z0-9]{3,24}$/, 'STORAGE_ACCOUNT must be 3 to 24 lower-case letters or digits').optional(),
+  STORAGE_KEY: z.string().min(20).optional(),
+  STORAGE_CONTAINER: z.string().regex(/^[a-z0-9-]{3,63}$/).default('attachments'),
+}).refine(v => (v.STORAGE_ACCOUNT === undefined) === (v.STORAGE_KEY === undefined), { message: 'STORAGE_ACCOUNT and STORAGE_KEY must be set together', path: ['STORAGE_KEY'] });
 
 export interface Config {
   databaseUrl: string;
@@ -22,6 +26,8 @@ export interface Config {
   trustProxyHops: number;
   sessionHours: number;
   rememberDays: number;
+  /** Where attachments are kept; absent when no storage account is configured. */
+  storage?: { account: string; key: string; container: string };
 }
 
 export const CONFIG = Symbol('CONFIG');
@@ -51,5 +57,6 @@ export function loadConfig(env: Record<string, string | undefined>): Config {
     trustProxyHops: v.TRUST_PROXY_HOPS,
     sessionHours: v.SESSION_HOURS,
     rememberDays: v.REMEMBER_DAYS,
+    ...(v.STORAGE_ACCOUNT && v.STORAGE_KEY ? { storage: { account: v.STORAGE_ACCOUNT, key: v.STORAGE_KEY, container: v.STORAGE_CONTAINER } } : {}),
   };
 }

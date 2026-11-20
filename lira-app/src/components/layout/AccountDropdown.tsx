@@ -8,12 +8,14 @@ import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { appStorage } from '../../utils/appStorage';
+import { useNavigate } from 'react-router-dom';
 import { isHosted } from '../../utils/edition';
 import { goTo } from '../../utils/navigate';
 import { logout } from '../../services/authApi';
 
 export const AccountDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   const [userName, setUserName] = useState(() => appStorage.get('lira_user_name') || 'Varuntej Yadla');
@@ -92,6 +94,13 @@ export const AccountDropdown: React.FC = () => {
             </button>
 
             <div className="border-t border-lira-border my-1" />
+
+            {isHosted() && (
+              <button onClick={() => { setOpen(false); navigate('/teams'); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
+                <Users className="w-4 h-4 text-gray-500" />
+                <span>Teams and access</span>
+              </button>
+            )}
 
             <button
               onClick={() => { setOpen(false); void alertDialog({ title: 'Switch account', message: 'The active user is the only configured local profile (Varuntej Yadla).' }); }}

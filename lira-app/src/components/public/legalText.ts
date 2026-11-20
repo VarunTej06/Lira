@@ -2,7 +2,7 @@
  * Drafts of the three legal pages, for the owner to edit. They describe the hosted service as it is planned, in plain words.
  * They are not legal advice: a lawyer should read them before real customers sign up.
  */
-export const OPERATOR_NAME = 'Yadla Sai Varun Teja';
+export const OPERATOR_NAME = 'WorldXAdmins';
 export const CONTACT_EMAIL = 'varuntej.y0631@gmail.com';
 export const DRAFT_DATE = '19 November 2026';
 

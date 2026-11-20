@@ -6,6 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createApp } from '../app';
 import { loadConfig } from '../config';
 import { applyMigrations, readMigrations } from '../db/migrate';
+import { testSsl } from '../testing/realDb';
 
 /**
  * Tests against a real PostgreSQL. Set TEST_DATABASE_URL to the server admin's connection; without it these are skipped.
@@ -50,7 +51,7 @@ describe.skipIf(!ADMIN_URL)('sign-up, log-in and sessions on a real database', (
   beforeAll(async () => {
     const adminUrl = new URL(ADMIN_URL!);
     adminUrl.searchParams.delete('sslmode');
-    admin = new Client({ connectionString: adminUrl.toString(), ssl: { rejectUnauthorized: true } });
+    admin = new Client({ connectionString: adminUrl.toString(), ssl: testSsl() });
     await admin.connect();
     await admin.query(`CREATE SCHEMA ${schema}`);
     await admin.query(`SET search_path TO ${schema}`);
@@ -60,10 +61,10 @@ describe.skipIf(!ADMIN_URL)('sign-up, log-in and sessions on a real database', (
     await applyMigrations(admin, readMigrations(join(__dirname, '..', '..', 'migrations')));
     await admin.query(`REVOKE CREATE ON SCHEMA ${schema} FROM lira_app`);
 
-    app = await createApp(loadConfig({ DATABASE_URL: appUrl(), ALLOWED_ORIGINS: ORIGIN, TRUST_PROXY_HOPS: '0' }));
+    app = await createApp(loadConfig({ DATABASE_URL: appUrl(), ALLOWED_ORIGINS: ORIGIN, TRUST_PROXY_HOPS: '0', DATABASE_SSL: testSsl() ? 'require' : 'disable' }));
     await app.listen(0, '127.0.0.1');
     base = `http://127.0.0.1:${(app.getHttpServer().address() as { port: number }).port}`;
-    appPool = new Pool({ connectionString: appUrl(), ssl: { rejectUnauthorized: true } });
+    appPool = new Pool({ connectionString: appUrl(), ssl: testSsl() });
   });
 
   afterAll(async () => {

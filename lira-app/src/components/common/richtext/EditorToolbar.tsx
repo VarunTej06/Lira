@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { promptDialog } from '../dialogStore';
 import { PALETTE } from '../../../theme/palette';
+import { isHosted } from '../../../utils/edition';
 
 const TEXT_COLORS = [
   { name: 'Default', value: '' }, { name: 'Red', value: PALETTE.critical }, { name: 'Orange', value: PALETTE.orangeDeep }, { name: 'Green', value: PALETTE.successDeep },
@@ -166,7 +167,7 @@ export function EditorToolbar({ editor, compact, onAttach }: { editor: Editor; c
     <Btn label="Link" active={editor.isActive('link')} onClick={() => { void editLink(editor); }}><Link2 className="w-4 h-4" /></Btn>
     <Sep />
     <Btn label="Mention someone (@)" onClick={() => editor.chain().focus().insertContent('@').run()}><AtSign className="w-4 h-4" /></Btn>
-    <Btn label="Add attachment" onClick={onAttach}><Paperclip className="w-4 h-4" /></Btn>
+    {!isHosted() && <Btn label="Add attachment" onClick={onAttach}><Paperclip className="w-4 h-4" /></Btn>}
     {!compact && <Sep />}
     {!compact && <Btn label="Clear formatting" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}><RemoveFormatting className="w-4 h-4" /></Btn>}
     <Btn label="Undo" disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}><Undo2 className="w-4 h-4" /></Btn>

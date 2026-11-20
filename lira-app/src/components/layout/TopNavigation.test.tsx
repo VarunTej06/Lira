@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import { cleanup, mount, q } from '../../test/render';
 import { TopNavigation } from './TopNavigation';
 
@@ -11,12 +12,12 @@ afterEach(cleanup);
 
 describe('Top bar layout', () => {
   it('has no app switcher', () => {
-    mount(<TopNavigation />);
+    mount(<MemoryRouter><TopNavigation /></MemoryRouter>);
     expect(q('button[aria-label="Switch sites or apps"]')).toBeNull();
   });
 
   it('puts the logo on the page frame, outside the dark box', () => {
-    mount(<TopNavigation />);
+    mount(<MemoryRouter><TopNavigation /></MemoryRouter>);
     const logo = q('svg[aria-label="Liraspaces"]')!;
     const box = q('nav > div:nth-child(2)')!;
     expect(box.className).toContain('bg-lira-nav');
@@ -24,7 +25,7 @@ describe('Top bar layout', () => {
   });
 
   it('keeps Create and search inside the box, and the utilities outside it, each in a circle', () => {
-    mount(<TopNavigation />);
+    mount(<MemoryRouter><TopNavigation /></MemoryRouter>);
     const box = q('nav > div:nth-child(2)')!;
     expect(box.textContent).toContain('Create');
     expect(box.querySelector('input')).not.toBeNull();
@@ -38,7 +39,7 @@ describe('Top bar layout', () => {
   });
 
   it('shows the save state without a circle', () => {
-    mount(<TopNavigation />);
+    mount(<MemoryRouter><TopNavigation /></MemoryRouter>);
     const save = q<HTMLButtonElement>('button[title^="Saved locally"]')!;
     expect(save.textContent).toContain('PC Saved');
     expect(save.className).not.toContain('rounded-full');

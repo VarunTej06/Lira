@@ -137,8 +137,8 @@ export default {
         'logo-settle': 'logoSettle 0.9s cubic-bezier(.2,.8,.3,1) both',
         'logo-settle-again': 'logoSettleAgain 0.9s cubic-bezier(.2,.8,.3,1) both',
         'logo-settle-loop': 'logoSettle 1.6s cubic-bezier(.2,.8,.3,1) infinite',
-        // The second line of the landing page's black band types itself once; the caret blinks
-        typing: 'typing 2.2s steps(16) 0.4s both',
+        // The word "anywhere" in the landing page's black band is typed each time the band scrolls into view; the caret blinks
+        typing: 'typing 1.4s steps(8) 0.3s both',
         caret: 'caret 1.1s steps(1) infinite',
         'chat-pop': 'chatPop 0.42s cubic-bezier(.22,1,.36,1) both',
         'chat-out': 'chatOut 0.3s cubic-bezier(.5,0,.75,0) forwards',

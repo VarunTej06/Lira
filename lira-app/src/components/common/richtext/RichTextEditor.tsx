@@ -11,6 +11,7 @@ import Image from '@tiptap/extension-image';
 import type { Attachment } from '../../../types/issue';
 import { toEditorHtml, toStoredHtml } from '../../../utils/richText';
 import { downloadAttachment, readAttachment } from '../../../utils/attachments';
+import { isHosted } from '../../../utils/edition';
 import { alertDialog } from '../dialogStore';
 import { mentionSuggestion } from './mentions';
 import { EditorToolbar } from './EditorToolbar';
@@ -84,6 +85,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   // files from a drop or a paste (a pasted screenshot is always called "image.png": give each one its own name)
   const addFiles = useCallback(async (files: File[], editor: Editor | null) => {
     if (!files.length || !editor) return;
+    if (isHosted()) {
+      // a file kept inside the text would only live in this browser; ticket files go to the server from the Attachments section
+      await alertDialog({ title: 'Add files as attachments', message: 'Files cannot be placed inside the text. Add them in the Attachments section of the ticket.' });
+      return;
+    }
     const items: Attachment[] = [];
     for (const f of files) {
       const named = screenshotName(f);

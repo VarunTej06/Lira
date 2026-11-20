@@ -1,4 +1,5 @@
 import type { Me } from '../services/authApi';
+import { setActiveOrg } from './hostedOrg';
 import { cleanProfile, saveProfile } from './userPrefs';
 
 /** Up to two capital letters from a name: "Asha Rao" gives "AR", "Asha" gives "A". */
@@ -11,6 +12,7 @@ export const initialsOf = (name: string): string =>
  */
 export function applyServerProfile(me: Me): void {
   const role = me.organisations[0]?.role ?? 'member';
+  setActiveOrg(me.organisations[0]?.orgId ?? null);
   saveProfile(cleanProfile({
     name: me.user.name,
     email: me.user.email,

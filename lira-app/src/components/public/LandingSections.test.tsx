@@ -8,11 +8,13 @@ import { PublicSite } from './PublicSite';
 import { DISCOVER_CARDS } from './discoverContent';
 
 type Callback = (entries: { isIntersecting: boolean }[]) => void;
-let observed: Callback | null = null;
+const watchers = new Map<Element, Callback>();
+/** Tells the page that an element came into view (or left it), as the browser would. */
+const scrollTo = (el: Element, isIntersecting: boolean) => act(() => watchers.get(el)!([{ isIntersecting }]));
 
 beforeEach(() => {
-  observed = null;
-  class FakeObserver { constructor(cb: Callback) { observed = cb; } observe() {} disconnect() {} }
+  watchers.clear();
+  class FakeObserver { cb: Callback; constructor(cb: Callback) { this.cb = cb; } observe(el: Element) { watchers.set(el, this.cb); } disconnect() {} }
   vi.stubGlobal('IntersectionObserver', FakeObserver);
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   vi.stubGlobal('matchMedia', (query: string) => ({ matches: false, media: query }));
@@ -78,8 +80,20 @@ describe('black AI and MCP band', () => {
     expect(band.className).toContain('bg-black');
     expect(q('#ai-title')!.textContent).toContain('Liraspaces for the AI era');
     expect(q('#ai-title')!.textContent).toContain('connect anywhere');
-    expect(q('#ai-title .animate-typing')).not.toBeNull();
     expect(q('#ai-title .animate-caret')!.getAttribute('aria-hidden')).toBe('true');
+  });
+
+  it('types only the word "anywhere", and types it again each time the band scrolls into view', async () => {
+    await landing();
+    const word = () => q('#ai-title [data-typing]')!;
+    expect(word().textContent).toBe('anywhere');
+    expect(word().className).not.toContain('animate-typing');
+    scrollTo(q('#ai-title')!, true);
+    expect(word().className).toContain('animate-typing');
+    scrollTo(q('#ai-title')!, false);
+    expect(word().className).not.toContain('animate-typing');
+    scrollTo(q('#ai-title')!, true);
+    expect(word().className).toContain('animate-typing');
   });
 
   it('claims only what is true: one MCP chip marked coming soon, no other tool names, two columns marked coming soon', async () => {
@@ -154,14 +168,18 @@ describe('Discover the latest', () => {
     expect(list().textContent).not.toMatch(/VIDEO|EBOOK|REPORT/);
   });
 
-  it('slides in from the right once, when the row comes into view', async () => {
+  it('slides in from the right every time the row comes into view, and resets when it leaves', async () => {
     await landing();
     const row = () => list().parentElement!;
     expect(row().className).toContain('translate-x-24');
     expect(row().className).toContain('opacity-0');
-    act(() => observed!([{ isIntersecting: true }]));
+    scrollTo(row(), true);
     expect(row().className).toContain('translate-x-0');
     expect(row().className).toContain('opacity-100');
+    scrollTo(row(), false);
+    expect(row().className).toContain('translate-x-24');
+    scrollTo(row(), true);
+    expect(row().className).toContain('translate-x-0');
   });
 
   it('scrolls a card at a time with the arrows, and switches each arrow off at its end', async () => {

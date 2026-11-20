@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { byText, cleanup, click, mount, q, qa } from '../../../test/render';
+import { appStorage } from '../../../utils/appStorage';
 import type { DetailCtx } from './detailContext';
 
 vi.mock('../../standup/StandupButton', () => ({ StandupButton: () => <button data-testid="standup">Standup</button> }));
@@ -72,12 +73,26 @@ describe('ProjectHeader', () => {
       expect(document.body.textContent).toContain('Enterprise-grade technical project workspace.');
     });
 
-    it('shows the lead, with a fallback name', () => {
+    it('shows the lead with the avatar next to the name, after the word Lead', () => {
       show();
-      expect(document.body.textContent).toContain('Lead: Varun Tej');
-      cleanup();
+      const row = qa('div').find(d => d.firstElementChild?.textContent === 'Lead:')!;
+      expect([...row.children].map(c => c.textContent)).toEqual(['Lead:', 'VA', 'Varun Tej']);
+    });
+
+    it('names the person using the app when the project has no lead, not a fixed name', () => {
+      appStorage.set('lira_user_profile', JSON.stringify({ name: 'Test User', email: 't@x.co', initials: 'TU', role: 'Owner' }));
       show({ project: { ...project, lead: '' } });
-      expect(document.body.textContent).toContain('Lead: Varun Tej');
+      expect(document.body.textContent).toContain('Test User');
+      expect(document.body.textContent).not.toContain('Varun Tej');
+      appStorage.remove('lira_user_profile');
+    });
+
+    it('puts the project initials in the title row, right before the project name, and not in a column of their own', () => {
+      show();
+      const heading = q('h1')!;
+      const row = heading.parentElement!;
+      expect([...row.children][0].textContent).toBe('LC');
+      expect([...row.children][1]).toBe(heading);
     });
 
     it('says when it was created, or "recently" without a date', () => {

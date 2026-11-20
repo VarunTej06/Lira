@@ -3,20 +3,23 @@ import { useEffect, useRef, useState, type RefObject } from 'react';
 const reducedMotion = () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * Turns true once, when the element first scrolls into view. It is already true where nothing could watch (no
- * IntersectionObserver) or where the person asked for less motion, so content is never left hidden waiting for it.
+ * True while the element is on screen, false once it has scrolled out, so an animation can play again on every visit to
+ * the section. It stays true where nothing could watch (no IntersectionObserver) or where the person asked for less
+ * motion, so content is never left hidden waiting for it.
  */
 export function useInView<T extends Element>(): [RefObject<T>, boolean] {
   const ref = useRef<T>(null);
-  const [seen, setSeen] = useState(() => typeof IntersectionObserver === 'undefined' || reducedMotion());
+  const [inView, setInView] = useState(() => typeof IntersectionObserver === 'undefined' || reducedMotion());
+  const alwaysOn = typeof IntersectionObserver === 'undefined' || reducedMotion();
   useEffect(() => {
     const el = ref.current;
-    if (seen || !el) return;
+    if (alwaysOn || !el) return;
     const watcher = new IntersectionObserver(entries => {
-      if (entries.some(e => e.isIntersecting)) { setSeen(true); watcher.disconnect(); }
+      const last = entries[entries.length - 1];
+      if (last) setInView(last.isIntersecting);
     }, { threshold: 0.15 });
     watcher.observe(el);
     return () => watcher.disconnect();
-  }, [seen]);
-  return [ref, seen];
+  }, [alwaysOn]);
+  return [ref, inView];
 }

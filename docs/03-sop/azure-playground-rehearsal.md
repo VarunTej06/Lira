@@ -91,7 +91,7 @@ CREATE UNIQUE INDEX users_email_lower ON users (lower(email));
 CREATE TABLE memberships (
   org_id  uuid NOT NULL REFERENCES organisations(id),
   user_id uuid NOT NULL REFERENCES users(id),
-  role    text NOT NULL CHECK (role IN ('owner','admin','manager','member','viewer','guest')),
+  role    text NOT NULL CHECK (role IN ('owner','admin','space_admin','member','viewer','guest')),
   PRIMARY KEY (org_id, user_id)
 );
 
@@ -161,6 +161,10 @@ Run each one. `SET LOCAL` lasts for one transaction, which is how the applicatio
 | 9 | As `lira_app`: `UPDATE audit_log SET action = 'x';` and `DELETE FROM audit_log;` | error: permission denied for table audit_log |
 
 Write down every result, including any that differ. A difference is the point of the rehearsal.
+
+## Storage account (ticket attachments, ADR-0011)
+
+`Setup-Playground.ps1 -Step infra` creates it. To do it by hand: a Standard LRS StorageV2 account, public blob access off, TLS 1.2, a private container named `attachments`, and the account key stored as a Key Vault secret. Files are reached only through short-lived links the API hands out after checking the caller. If the sandbox refuses it, write down the policy text.
 
 ## Step 4. Key Vault
 

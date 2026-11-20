@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { AppSkeleton } from '../common/Skeleton';
 import { fetchMe } from '../../services/authApi';
+import { startHostedKv } from '../../services/kvMirror';
 import { applyServerProfile } from '../../utils/hostedProfile';
 import { goTo } from '../../utils/navigate';
 
@@ -8,7 +9,8 @@ type Phase = 'checking' | 'in' | 'out' | 'error';
 
 /**
  * Hosted edition only: shows the app to someone who is signed in, and sends everyone else to the log-in page. The server decides;
- * this only asks it (the UI hiding the app is not a control, every API call is checked again there).
+ * this only asks it (the UI hiding the app is not a control, every API call is checked again there). Before the app shows, the
+ * person's settings-style data is loaded from the server, replacing anything an earlier account left in this browser.
  */
 export function SessionGate({ children }: { children: ReactNode }) {
   const [phase, setPhase] = useState<Phase>('checking');
@@ -16,9 +18,16 @@ export function SessionGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let current = true;
-    void fetchMe().then(result => {
+    void fetchMe().then(async result => {
       if (!current) return;
-      if (result.ok) { applyServerProfile(result.data); setPhase('in'); return; }
+      if (result.ok) {
+        const orgId = result.data.organisations[0]?.orgId;
+        if (orgId && !(await startHostedKv(orgId))) { if (current) setPhase('error'); return; }
+        if (!current) return;
+        applyServerProfile(result.data);
+        setPhase('in');
+        return;
+      }
       if (result.status === 401) { setPhase('out'); goTo('/login'); return; }
       setPhase('error');
     });

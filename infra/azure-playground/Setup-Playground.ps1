@@ -3,7 +3,8 @@
   Rebuilds everything we made by hand on the KodeKloud Azure playground, after `az login`.
 
   Creates, in this order:
-    infra      registry (ACR) with admin user, Key Vault with two generated passwords, PostgreSQL 16 and its firewall rules
+    infra      registry (ACR) with admin user, Key Vault with two generated passwords, PostgreSQL 16 and its firewall rules,
+               and a storage account with a private container for ticket attachments (Blob Storage, ADR-0011)
     database   the lira_app role and the tables (api/migrations), and optionally the API tests against the real database
     isolation  the nine tenant-isolation checks of docs/03-sop/rehearsal-isolation-test.sql
     build      builds the web and API Docker images in WSL (no Azure needed: do this any time)
@@ -69,9 +70,22 @@ function Ensure-App($rg, $name, $createArgs, $updateArgs) {
   else { Az containerapp create -n $name -g $rg @createArgs | Out-Null }
 }
 
+# The storage commands read the account and key from these two variables, so the key never appears in a command line or a log.
+function With-StorageKey($state, [scriptblock]$work) {
+  $env:AZURE_STORAGE_ACCOUNT = $state.storage; $env:AZURE_STORAGE_KEY = Get-KvSecret $state.vault 'storage-key'
+  try { & $work } finally { Remove-Item Env:AZURE_STORAGE_ACCOUNT, Env:AZURE_STORAGE_KEY -ErrorAction SilentlyContinue }
+}
+# The browser sends and fetches attachments straight to and from the storage account with short-lived links, so it must allow our own pages.
+function Set-StorageCors($state, [string[]]$origins) {
+  With-StorageKey $state {
+    Az storage cors clear --services b | Out-Null
+    Az storage cors add --services b --methods GET PUT HEAD --origins @origins --allowed-headers '*' --exposed-headers 'ETag' --max-age 3600 | Out-Null
+  }
+}
+
 function Step-Check($state) {
   Write-Host '== Signed in as:'; Az account show --query '{name:name, user:user.name}' -o table
-  foreach ($ns in 'Microsoft.App', 'Microsoft.OperationalInsights', 'Microsoft.ContainerRegistry', 'Microsoft.DBforPostgreSQL', 'Microsoft.KeyVault', 'Microsoft.ContainerInstance') {
+  foreach ($ns in 'Microsoft.App', 'Microsoft.OperationalInsights', 'Microsoft.ContainerRegistry', 'Microsoft.DBforPostgreSQL', 'Microsoft.KeyVault', 'Microsoft.ContainerInstance', 'Microsoft.Storage') {
     Write-Host ("{0,-34} {1}" -f $ns, (Az provider show -n $ns --query registrationState -o tsv))
   }
   Write-Host '== Resource groups (the sandbox does not let you create one; use the one it gives):'
@@ -99,6 +113,17 @@ function Step-Infra($state) {
       Az keyvault secret set --vault-name $state.vault --name $secret --value (New-Secret) | Out-Null
     }
   }
+
+  # Ticket attachments (ADR-0011): the files live here and only a reference lives in the database. Nothing in it is public.
+  if (-not $state.storage) { Set-Field $state 'storage' ("liraspaces$(Suffix)") }
+  Write-Host "== Storage account $($state.storage)  (Standard LRS, no public access, TLS 1.2, private container 'attachments')"
+  if (-not (Az-Exists storage account show -g $rg -n $state.storage)) {
+    Az storage account create -g $rg -n $state.storage -l $Location --sku Standard_LRS --kind StorageV2 --access-tier Hot `
+      --allow-blob-public-access false --min-tls-version TLS1_2 --https-only true | Out-Null
+  }
+  Az keyvault secret set --vault-name $state.vault --name 'storage-key' --value (Az storage account keys list -g $rg -n $state.storage --query '[0].value' -o tsv | Select-Object -First 1) | Out-Null
+  With-StorageKey $state { if (-not (Az-Exists storage container show -n attachments)) { Az storage container create -n attachments --public-access off | Out-Null } }
+  Set-StorageCors $state @("https://$Domain")
 
   if (-not $state.pgServer) { Set-Field $state 'pgServer' ("lirapg$(Suffix)") }
   $myIp = (Invoke-RestMethod https://api.ipify.org).Trim()
@@ -166,21 +191,29 @@ function Step-Deploy($state) {
   $domainOfEnv = (Az containerapp env show -n container-app-env -g $rg --query 'properties.defaultDomain' -o tsv | Select-Object -First 1)
   $reg = Registry-Args $state
 
+  if ($state.storage) { Set-StorageCors $state @("https://$Domain", "https://liraspaces-web.$domainOfEnv") }
   $dbUrl = "postgres://lira_app:$([uri]::EscapeDataString((Get-KvSecret $state.vault 'pg-app-password')))@$($state.pgHost):5432/postgres"
   $origins = "https://$Domain,https://liraspaces-web.$domainOfEnv"
   Write-Host '== API (internal address only)'
   $apiImage = "$acr.azurecr.io/liraspaces-api:$ApiTag"
   $apiEnv = @('DATABASE_URL=secretref:db-url', "ALLOWED_ORIGINS=$origins", 'COOKIE_SECURE=true', "TRUST_PROXY_HOPS=$ProxyHops")
+  $apiSecrets = @("db-url=$dbUrl")
+  if ($state.storage) {                       # file storage for ticket attachments (ADR-0011); without it the attachment routes answer 503
+    $apiSecrets += "storage-key=$(Get-KvSecret $state.vault 'storage-key')"
+    $apiEnv += @("STORAGE_ACCOUNT=$($state.storage)", 'STORAGE_KEY=secretref:storage-key')
+  }
   Ensure-App $rg 'liraspaces-api' `
-    (@('--environment', 'container-app-env', '--image', $apiImage) + $reg + @('--ingress', 'internal', '--target-port', '8080', '--min-replicas', '1', '--max-replicas', '2', '--secrets', "db-url=$dbUrl", '--env-vars') + $apiEnv) `
+    (@('--environment', 'container-app-env', '--image', $apiImage) + $reg + @('--ingress', 'internal', '--target-port', '8080', '--min-replicas', '1', '--max-replicas', '2', '--secrets') + $apiSecrets + @('--env-vars') + $apiEnv) `
     (@('--image', $apiImage, '--replace-env-vars') + $apiEnv)
-  if (Az-Exists containerapp show -n liraspaces-api -g $rg) { Az containerapp secret set -n liraspaces-api -g $rg --secrets "db-url=$dbUrl" | Out-Null }
+  if (Az-Exists containerapp show -n liraspaces-api -g $rg) { Az containerapp secret set -n liraspaces-api -g $rg --secrets @apiSecrets | Out-Null }
 
   Write-Host '== Web (public address)'
   $webImage = "$acr.azurecr.io/liraspaces-web:$WebTag"
+  $webEnv = @('API_UPSTREAM=liraspaces-api')
+  if ($state.storage) { $webEnv += "STORAGE_ORIGIN=https://$($state.storage).blob.core.windows.net" }   # the one address the page may send ticket files to
   Ensure-App $rg 'liraspaces-web' `
-    (@('--environment', 'container-app-env', '--image', $webImage) + $reg + @('--ingress', 'external', '--target-port', '8080', '--min-replicas', '0', '--max-replicas', '2', '--env-vars', 'API_UPSTREAM=liraspaces-api')) `
-    @('--image', $webImage, '--replace-env-vars', 'API_UPSTREAM=liraspaces-api')
+    (@('--environment', 'container-app-env', '--image', $webImage) + $reg + @('--ingress', 'external', '--target-port', '8080', '--min-replicas', '0', '--max-replicas', '2', '--env-vars') + $webEnv) `
+    (@('--image', $webImage, '--replace-env-vars') + $webEnv)
   $fqdn = (Az containerapp show -n liraspaces-web -g $rg --query 'properties.configuration.ingress.fqdn' -o tsv | Select-Object -First 1)
   Set-Field $state 'webFqdn' $fqdn
   Write-Host "Web: https://$fqdn   (the first request after idle is slow: it scales to zero)"
@@ -222,6 +255,11 @@ function Step-Status($state) {
 }
 
 $state = Load-State
+# Names saved by an earlier playground session do not exist in a new one: start fresh instead of failing on them.
+if ($Step -notin 'show', 'check' -and $state.resourceGroup -and -not (Az-Exists group show -n $state.resourceGroup)) {
+  Write-Host "The names in .state.json belong to a session that no longer exists. Starting with an empty state." -ForegroundColor Yellow
+  $state = [pscustomobject]@{}; Save-State $state
+}
 switch ($Step) {
   'check'     { Step-Check $state; Write-Host 'Next: -Step infra' }
   'build'     { Step-Build; Write-Host 'Built locally. Later, with a registry: -Step images' }

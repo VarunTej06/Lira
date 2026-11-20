@@ -58,6 +58,8 @@ Consequences that are now requirements too: an email-sending service (magic link
 | [0007](ADR-0007-repository-and-branching.md) | Repository layout and branching | Should | Proposed | Code organisation |
 | [0008](ADR-0008-data-migration.md) | Migration of existing JSON data | Must | Proposed | First deploy |
 | [0009](ADR-0009-accounts-sessions-and-sign-in.md) | Accounts, passwords and sessions (first slice) | Must | Accepted (19 Nov 2026) | Built |
+| [0010](ADR-0010-teams-and-object-permissions.md) | Teams and permissions on each object (View, Edit, Manage) | Must | Accepted (20 Nov 2026) | Built: rules, teams, grants, objects as rows, Teams page, invitations (email sending not connected). Stand-ups not started |
+| [0011](ADR-0011-attachments-in-blob-storage.md) | Ticket attachments in Blob Storage | Must | Accepted (20 Nov 2026) | Infra script and API endpoints done; app not yet using them |
 
 ## Readiness checklist (gate before coding)
 

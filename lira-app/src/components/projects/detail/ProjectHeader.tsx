@@ -4,6 +4,7 @@ import { ArrowLeft, BarChart3, KanbanSquare, Ticket, GitBranch, Settings, Plus, 
 import { Button } from '../../common/Button';
 import { Avatar } from '../../common/Avatar';
 import { formatAbsoluteDate } from '../../../utils/dateUtils';
+import { loadProfile } from '../../../utils/userPrefs';
 import { StandupButton } from '../../standup/StandupButton';
 import type { DetailCtx } from './detailContext';
 import type { TabType } from './types';
@@ -62,11 +63,13 @@ function SpaceLink({ space, onSwitchToSpace }: Pick<DetailCtx, 'space' | 'onSwit
 
 /** Lead, created date and the linked space. */
 function ProjectFacts({ project, space, onSwitchToSpace }: Pick<DetailCtx, 'project' | 'space' | 'onSwitchToSpace'>) {
+  const lead = project.lead || loadProfile().name; // no lead set: the person using the app, not a fixed name
   return (
     <div className="flex items-center flex-wrap gap-3 mt-2 text-xs text-lira-muted">
       <div className="flex items-center gap-1.5">
-        <Avatar initials={project.lead ? project.lead.slice(0, 2).toUpperCase() : 'VY'} size="xs" />
-        <span>Lead: <strong className="text-lira-text">{project.lead || 'Varun Tej'}</strong></span>
+        <span>Lead:</span>
+        <Avatar initials={lead.slice(0, 2).toUpperCase()} size="xs" />
+        <strong className="text-lira-text">{lead}</strong>
       </div>
       <span className="text-gray-300">•</span>
       <div className="flex items-center gap-1">
@@ -83,13 +86,11 @@ function Banner({ project, space, projectInitials, onSwitchToSpace }: Pick<Detai
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4">
       <div className="flex items-start sm:items-center gap-3.5">
-        <div
-          className="w-13 h-13 rounded-2xl flex items-center justify-center bg-lira-blue text-lira-on-blue text-lg font-black flex-shrink-0"
-        >
-          {projectInitials}
-        </div>
         <div>
           <div className="flex items-center flex-wrap gap-2.5">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-lira-blue text-lira-on-blue text-xs font-black flex-shrink-0">
+              {projectInitials}
+            </div>
             <h1 className="text-xl font-bold text-lira-text tracking-tight">{project.name}</h1>
             <span className="font-mono text-xs font-bold bg-lira-blue-light text-lira-blue px-2 py-0.5 rounded border border-lira-border">{project.key}</span>
             {project.category && (

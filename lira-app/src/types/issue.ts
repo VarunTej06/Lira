@@ -64,6 +64,8 @@ export interface Issue {
   id?: number;
   spaceId: number;
   key: string; // e.g., "CERT-1"
+  /** Hosted edition: the version the server last gave this ticket. A change is sent with it so a stale one is refused. */
+  version?: number;
   parentId?: number;  // ID of parent issue (Task→Epic, Subtask→Task)
   epicId?: number;    // Quick reference to root epic ID
   title: string;

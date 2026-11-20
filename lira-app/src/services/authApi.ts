@@ -35,7 +35,7 @@ export async function readResponse<T>(res: Response): Promise<AuthResult<T>> {
   };
 }
 
-async function send<T>(method: 'GET' | 'POST', path: string, body?: unknown): Promise<AuthResult<T>> {
+export async function send<T>(method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE', path: string, body?: unknown): Promise<AuthResult<T>> {
   try {
     const res = await fetch(path, { method, headers: HEADERS, credentials: 'same-origin', body: body === undefined ? undefined : JSON.stringify(body) });
     return await readResponse<T>(res);

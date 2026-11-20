@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import { cleanup, mount, q } from '../../test/render';
 import { TopNavigation } from './TopNavigation';
 
@@ -12,7 +13,7 @@ afterEach(cleanup);
 
 describe('Top bar in the hosted edition', () => {
   it('has no "PC Saved" or "Save error" indicator, because nothing is saved to a local disk', () => {
-    mount(<TopNavigation />);
+    mount(<MemoryRouter><TopNavigation /></MemoryRouter>);
     expect(document.body.textContent).not.toMatch(/PC Saved|Save error|Saving to PC/);
     expect(q('button[title^="Saved locally on your PC"]')).toBeNull();
     expect(q('button[title="Your account"]')).not.toBeNull();

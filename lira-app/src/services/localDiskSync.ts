@@ -2,6 +2,8 @@ import { db } from '../db/db';
 import type { Space } from '../types/space';
 import type { Issue } from '../types/issue';
 import { seedDatabase } from '../db/seedData';
+import { isHosted } from '../utils/edition';
+import { flushHostedSync, initHostedSync } from './hostedSync';
 
 type SyncStatus = 'synced' | 'saving' | 'offline' | 'error';
 
@@ -44,6 +46,7 @@ let saveVersion = 0;
  * If disk file doesn't exist yet, it seeds default data and writes it to disk.
  */
 export async function initLocalDiskSync(): Promise<void> {
+  if (isHosted()) { await initHostedSync().catch(error => console.warn('[Sync] Could not load the workspace from the server:', error)); return; }
   try {
     const unsaved = localStorage.getItem(ISSUES_DIRTY_KEY) !== null && (await db.issues.count()) > 0;
     if (unsaved) {
@@ -108,6 +111,7 @@ export async function initLocalDiskSync(): Promise<void> {
  * Immediately saves all current spaces and issues to local disk file on PC
  */
 export async function saveToDiskNow(): Promise<boolean> {
+  if (isHosted()) { await flushHostedSync(); return true; }
   currentSyncState.status = 'saving';
   notifyListeners();
   const sentVersion = saveVersion;
@@ -148,6 +152,7 @@ export async function saveToDiskNow(): Promise<boolean> {
  * so the new tab always starts from the latest data.
  */
 export function flushDiskSync(): void {
+  if (isHosted()) { void flushHostedSync(); return; }
   if (syncTimeout) {
     window.clearTimeout(syncTimeout);
     syncTimeout = undefined;
@@ -159,6 +164,7 @@ export function flushDiskSync(): void {
  * Triggers a debounced sync to local PC disk (called on any create/update/delete)
  */
 export function triggerDiskSync(): void {
+  if (isHosted()) return; // the hosted edition sends each change to the server from the database's own hooks (services/hostedSync.ts)
   saveVersion++;
   try { localStorage.setItem(ISSUES_DIRTY_KEY, String(Date.now())); } catch { /* storage unavailable */ }
   currentSyncState.status = 'saving';

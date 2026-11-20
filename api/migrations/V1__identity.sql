@@ -21,7 +21,7 @@ CREATE UNIQUE INDEX users_email_lower ON users (lower(email));
 CREATE TABLE memberships (
   org_id     uuid NOT NULL REFERENCES organisations(id) ON DELETE CASCADE,
   user_id    uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  role       text NOT NULL CHECK (role IN ('owner','admin','manager','member','viewer','guest')),
+  role       text NOT NULL CHECK (role IN ('owner','admin','space_admin','member','viewer','guest')),
   created_at timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY (org_id, user_id)
 );

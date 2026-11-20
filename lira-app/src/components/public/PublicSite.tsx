@@ -6,6 +6,7 @@ const LandingPage = lazy(() => import('./LandingPage'));
 const AuthPage = lazy(() => import('./AuthPage'));
 const GetStartedPage = lazy(() => import('./GetStartedPage'));
 const LegalPage = lazy(() => import('./LegalPage'));
+const AcceptInvitePage = lazy(() => import('./AcceptInvitePage'));
 const ComingSoonPage = lazy(() => import('./ComingSoonPage'));
 
 /** The tab title of each public address. The legal pages set their own from their text. */
@@ -13,6 +14,7 @@ const PUBLIC_TITLES: Readonly<Record<string, string>> = {
   '/': 'Liraspaces',
   '/login': 'Log in to continue · Liraspaces',
   '/signup': 'Get started · Liraspaces',
+  '/invite': 'Join an organisation · Liraspaces',
   '/coming-soon': 'Coming soon · Liraspaces',
 };
 
@@ -21,7 +23,7 @@ export function PublicSite() {
   const { pathname } = useLocation();
   useEffect(() => { if (PUBLIC_TITLES[pathname]) document.title = PUBLIC_TITLES[pathname]; }, [pathname]);
   return (
-    <PublicLayout>
+    <PublicLayout path={pathname}>
       <Suspense fallback={<p role="status" className="p-10 text-lira-muted">Loading</p>}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -30,6 +32,7 @@ export function PublicSite() {
           <Route path="/terms" element={<LegalPage doc="terms" />} />
           <Route path="/privacy" element={<LegalPage doc="privacy" />} />
           <Route path="/notice" element={<LegalPage doc="notice" />} />
+          <Route path="/invite" element={<AcceptInvitePage />} />
           <Route path="/coming-soon" element={<ComingSoonPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

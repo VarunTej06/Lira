@@ -29,7 +29,7 @@ describe('public site', () => {
   });
 
   it('links the Terms, the Privacy Policy, the User Notice and the contact in the footer of every page', async () => {
-    for (const path of ['/', '/login', '/terms']) {
+    for (const path of ['/', '/signup', '/terms']) {
       cleanup();
       await visit(path);
       const footer = q('footer')!;
@@ -37,6 +37,26 @@ describe('public site', () => {
       expect(footer.querySelector(`a[href="mailto:${CONTACT_EMAIL}"]`)).not.toBeNull();
       expect(footer.textContent).toContain(OPERATOR_NAME);
     }
+  });
+
+  it('shows only the log-in card on /login: no top bar, no footer, no search', async () => {
+    await visit('/login');
+    expect(q('form')).not.toBeNull();
+    expect(q('header')).toBeNull();
+    expect(q('footer')).toBeNull();
+    expect(q('[aria-label="Search"], [role="search"]')).toBeNull();
+  });
+
+  it('has no search on the sign-up page or on the Terms, Privacy and User Notice pages, but keeps it on the landing page', async () => {
+    for (const path of ['/signup', '/terms', '/privacy', '/notice']) {
+      cleanup();
+      await visit(path);
+      expect(q('header'), path).not.toBeNull();
+      expect(q('header button[aria-label*="earch"]'), path).toBeNull();
+    }
+    cleanup();
+    await visit('/');
+    expect(q('header button[aria-label*="earch"]')).not.toBeNull();
   });
 
   it('shows each legal page as a draft with the operator named', async () => {

@@ -2,7 +2,7 @@
 
 How Lira is tested automatically, what each test protects, how to run them and how to add more.
 
-**Right now:** 1878 automated tests in 166 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
+**Right now:** 1990 automated tests in 166 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
 
 **Done by hand:** [`docs/04-quality/manual-test-checklist.md`](docs/04-quality/manual-test-checklist.md) lists every screen to click through after the refactor.
 
@@ -16,13 +16,13 @@ Run every command from the `lira-app` folder.
 
 | Command | What it does | Time |
 |---|---|---|
-| `npm test` | All 1878 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
+| `npm test` | All 1990 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
 | `npm run test:watch` | Re-runs the tests that matter each time you save a file | |
 | `npm run test:health` | **Data health check**: reads your real `data/` folder and checks it holds together. Changes nothing | about 3 s |
 | `npm run test:all` | Everything in one go: type check, lint, `npm test`, then the data health check | about 1 min |
 | `npm run lint` | Style and mistake checker (oxlint). It must report **0 warnings** | |
 | `npm run build` | Type check and the production build | |
-| `cd api && npm test` | The API's own tests: 25 that need nothing, and 16 more against a real PostgreSQL when `TEST_DATABASE_URL` is set (not part of `test:all`; see `api/README.md`) | about 30 s |
+| `cd api && npm test` | The API's own tests: 57 that need nothing, and 73 more against a real PostgreSQL when `TEST_DATABASE_URL` is set (not part of `test:all`; see `api/README.md`) | about 30 s |
 | `npm run build:hosted` | The same, for the hosted edition (public pages at `/`, the app under `/app`). `npm run hosted` builds it and serves it at http://localhost:5175 | |
 | `npm audit` | Looks for known security problems in packages | |
 

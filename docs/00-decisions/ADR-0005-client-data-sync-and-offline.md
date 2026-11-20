@@ -1,6 +1,6 @@
 # ADR-0005: Client data layer, sync and offline behaviour
 
-- **Status:** Proposed
+- **Status:** Proposed. Narrowed by the owner on 20 Nov 2026 (see ADR-0010): the hosted edition keeps no shared data in the browser, everything is on the server in PostgreSQL; the local edition keeps JSON files in `data/`. A read cache in the browser is allowed only to make pages load faster; it is never the only copy and can be discarded at any time.
 - **Date proposed:** 2026-11-09
 - **Decision owner:** (to be named)
 
@@ -20,6 +20,9 @@ With several users, a browser cache can be stale, and "browser wins if dirty" is
 | **A. Server is the source of truth; client keeps a read cache** (TanStack Query or similar) with optimistic updates | Simple mental model; correct under concurrency | Needs network for writes |
 | **B. Offline-first with local writes and background sync** (CRDT or operation log) | Works offline | Large complexity; conflict semantics for every field |
 | **C. Keep Dexie as source and sync it** | Fewest UI changes | Hardest to make correct; hides conflicts |
+
+## Built so far (20 Nov 2026)
+The hosted edition loads spaces and tickets from the API and sends each change from the database's own hooks; the browser's database is the cache. Remaining: board columns, projects, roadmaps, sprint goals, teams, stand-ups, dashboards, settings (the `lira_*` keys) and attachments.
 
 ## Recommendation
 Option A. Introduce a **`DataStore` interface** (load/save tickets, sprints, roadmaps…) with two implementations: `LocalFilesStore` (today's behaviour, local edition) and `ApiStore` (hosted edition). Screens depend only on the interface. Use **optimistic concurrency** (`version` per record; the server rejects stale writes with 409 and the UI offers reload/merge). Add **live updates** by Server-Sent Events or WebSocket events so a board refreshes when a colleague moves a card. Per-user preferences (theme, sidebar) stay in one storage wrapper, never mixed with shared data. If offline use is a hard requirement, scope it to read-only access to the last-viewed spaces.

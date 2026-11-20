@@ -9,6 +9,7 @@ const dockerfile = fs.readFileSync(path.join(APP, 'Dockerfile'), 'utf-8');
 const workflow = fs.readFileSync(path.join(APP, '..', '.github', 'workflows', 'web-image.yml'), 'utf-8');
 const dockerignore = fs.readFileSync(path.join(APP, '.dockerignore'), 'utf-8').split(/\r?\n/);
 
+const csp = () => header('Content-Security-Policy')!;
 const header = (name: string) => new RegExp(`add_header ${name} "([^"]*)" always;`).exec(nginx)?.[1];
 
 describe('web container of the hosted edition', () => {
@@ -25,7 +26,13 @@ describe('web container of the hosted edition', () => {
     expect(csp).not.toMatch(/unsafe-eval|script-src[^;]*unsafe-inline/);
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("object-src 'none'");
-    expect(csp).toMatch(/connect-src 'self';/);
+    expect(csp).toContain("connect-src 'self' ${STORAGE_ORIGIN};"); // the page may talk to itself and to the one storage address, nothing else
+  });
+
+  it('fills in the storage address from the environment, and the image has an empty default so the policy stays valid without one', () => {
+    expect(dockerfile).toMatch(/^ENV STORAGE_ORIGIN=$/m);
+    expect(csp()).not.toContain('blob.core.windows.net'); // the address comes from the environment, never from the file
+    expect(csp()).not.toContain('*');
   });
 
   it('asks browsers to use HTTPS only', () => {

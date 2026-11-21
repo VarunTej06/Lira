@@ -3,7 +3,7 @@
   "spaceId": 6,
   "spaceKey": "LIRA",
   "spaceName": "Lira",
-  "updatedAt": "2026-11-13T10:53:55.653Z",
+  "updatedAt": "2026-11-21T08:01:51.231Z",
   "issueCount": 67,
   "space": {
     "id": 6,
@@ -544,6 +544,26 @@
           "oldValue": "October 2026 Sprint",
           "newValue": "November 2026 Sprint",
           "createdAt": "2026-11-05T15:08:26.781Z"
+        },
+        {
+          "id": "4555ba2f-1ee3-4009-bdde-a655b07db5ac",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from November 2026 Sprint to December 2026 Sprint",
+          "oldValue": "November 2026 Sprint",
+          "newValue": "December 2026 Sprint",
+          "createdAt": "2026-11-21T05:11:20.708Z"
+        },
+        {
+          "id": "9e69d359-b757-4b60-9985-465286c9cbac",
+          "type": "field_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from December 2026 Sprint to November 2026 Sprint",
+          "oldValue": "December 2026 Sprint",
+          "newValue": "November 2026 Sprint",
+          "createdAt": "2026-11-21T05:11:26.764Z"
         }
       ],
       "attachments": [],
@@ -554,10 +574,11 @@
         "VY"
       ],
       "createdAt": "2026-10-27T08:15:46.633Z",
-      "updatedAt": "2026-11-08T11:06:08.116Z",
+      "updatedAt": "2026-11-21T05:11:26.764Z",
       "sprint": "2026-11",
       "sprintHistory": [
-        "2026-10"
+        "2026-10",
+        "2026-11"
       ]
     },
     {
@@ -1154,7 +1175,7 @@
       "assigneeInitials": "VY",
       "reporter": "VY",
       "reporterInitials": "VY",
-      "dueDate": "2026-10-28T09:37:55.127Z",
+      "dueDate": "2026-10-28T06:30:00.000Z",
       "resolvedAt": "2026-10-28T09:37:55.127Z",
       "labels": [
         "bug",
@@ -1217,7 +1238,7 @@
       "rank": 1050,
       "id": 30,
       "createdAt": "2026-10-28T09:37:55.127Z",
-      "updatedAt": "2026-10-28T09:37:55.127Z",
+      "updatedAt": "2026-11-21T05:11:00.818Z",
       "parentId": 18,
       "epicId": 15,
       "sprint": "2026-10"
@@ -3986,11 +4007,43 @@
       "sprint": "2026-11",
       "rank": 900,
       "createdAt": "2026-11-07T17:04:47.021Z",
-      "updatedAt": "2026-11-07T17:10:38.838Z",
+      "updatedAt": "2026-11-21T08:01:50.529Z",
       "watchers": [
         "VY"
       ],
-      "id": 181
+      "id": 181,
+      "statusLog": [
+        {
+          "from": "todo",
+          "to": "inprogress",
+          "at": "2026-11-21T07:19:01.708Z"
+        },
+        {
+          "from": "inprogress",
+          "to": "done",
+          "at": "2026-11-21T07:19:04.726Z"
+        },
+        {
+          "from": "done",
+          "to": "todo",
+          "at": "2026-11-21T07:19:08.330Z"
+        },
+        {
+          "from": "todo",
+          "to": "inprogress",
+          "at": "2026-11-21T08:01:45.927Z"
+        },
+        {
+          "from": "inprogress",
+          "to": "done",
+          "at": "2026-11-21T08:01:47.843Z"
+        },
+        {
+          "from": "done",
+          "to": "todo",
+          "at": "2026-11-21T08:01:50.633Z"
+        }
+      ]
     },
     {
       "spaceId": 6,

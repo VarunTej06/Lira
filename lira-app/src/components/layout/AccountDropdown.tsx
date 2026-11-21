@@ -101,6 +101,12 @@ export const AccountDropdown: React.FC = () => {
                 <span>Teams and access</span>
               </button>
             )}
+            {isHosted() && (
+              <button onClick={() => { setOpen(false); navigate('/calls'); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
+                <Users className="w-4 h-4 text-gray-500" />
+                <span>Calls</span>
+              </button>
+            )}
 
             <button
               onClick={() => { setOpen(false); void alertDialog({ title: 'Switch account', message: 'The active user is the only configured local profile (Varuntej Yadla).' }); }}

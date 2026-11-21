@@ -262,3 +262,13 @@ Your study notes, tickets, and progress are precious. Back them up in seconds:
 **Open Lira on a tablet or phone.** Start with `npm run dev:lan`. On the computer open **Settings, Other devices**, scan the QR code with the device (same Wi-Fi), once. See SETUP.md section 13.
 
 **Move around.** Every page has its own address, so Refresh and Back work, and you can paste a link to a page or a ticket.
+
+## Update (21 November 2026, version 4.0.0): the hosted edition
+
+**Sign up.** On the landing page press **Google** (it also connects Meet links and email for your calls), or enter your email and choose a password. You get your own organisation and you are its Owner; it starts empty. **Log in** at `/login`.
+
+**Invite people.** Account menu, **Teams**: invite by email, put people in teams, and give a person or a team View, Edit or Manage on a space, project, roadmap or dashboard. A new member sees nothing until you give access.
+
+**Calls.** Open the **Stand-up** button of the organisation, a space, a project or a sprint. Owners and Admins schedule calls (once or repeating, with a Google Meet link made for you); everyone else sees the calls they are invited to and can join. **Manage calls** inside that window opens the Calls page. The Agenda tab lists every open ticket; point at a ticket and press the comment icon to comment without leaving the call.
+
+**Where is my data?** On the server. Clearing the browser loses nothing.

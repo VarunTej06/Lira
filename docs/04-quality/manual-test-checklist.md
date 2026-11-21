@@ -337,15 +337,15 @@ Reference screens: `docs/04-quality/ui-references/`.
 
 ### A31. Public pages of the hosted edition (19 Nov 2026)  ◐
 Run `npm run hosted` in a terminal (it builds the hosted edition, then serves it at http://localhost:5175 and does not touch `data/`). Leave it running, and run `npm run dev` in another terminal to see the local app at http://localhost:5173 beside it.
-- [ ] Open `/`. Expect: a fixed top bar (logo set in from the left edge, Features, Solutions, Guides, Templates, a search button, Sign in, Get it free), the headline "Everything you are working on and learning, in one place.", an email bar with Sign up and a switched-off Google button, and the large sample space below. There is no Pricing anywhere. Light mode looks like Sorrel (off-white, sage frame, tomato red buttons); dark mode looks like Pace (black, silver text, yellow buttons).
+- [ ] Open `/`. Expect: a fixed top bar (logo set in from the left edge, Features, Solutions, Guides, Templates, a search button, Sign in, Get it free), the headline "Everything you are working on and learning, in one place.", an email bar with Sign up and a Google button (greyed out until Google is set up on the server, A40), and the large sample space below. There is no Pricing anywhere. Light mode looks like Sorrel (off-white, sage frame, tomato red buttons); dark mode looks like Pace (black, silver text, yellow buttons).
 - [ ] Scroll down the landing page. Expect: the top bar stays at the top and the page moves beneath it.
 - [ ] Press "Light mode" or "Dark mode" in the top bar (wide windows). Expect: the page switches, and the choice is the same one the app uses.
 - [ ] Click Features, then Solutions, then Templates. Expect: each opens a list; Escape, a click elsewhere or scrolling closes it. Features items go to "What is inside"; the others go to the "Still baking" page.
 - [ ] Open `/signup`, `/terms`, `/privacy` and `/notice`. Expect: the top bar has no search button on any of them (only the landing page keeps it).
 - [ ] Click the search button and type "privacy", then "zzzz". Expect: the Privacy Policy is listed and opens when clicked; for "zzzz" it says "Nothing found".
 - [ ] In the email bar press Sign up empty, then with "abc", then with "asha@example.com". Expect: "Enter your email." then "Enter an email like you@example.com." then the get-started page with the email already filled in.
-- [ ] On the get-started page (`/signup`). Expect: a window titled "Get started with Liraspaces" over a grey drawing of the app, the email field, Sign up, a switched-off Google button, "Already have an account? Log in", and a × that returns to the landing page. A valid email moves to a second step asking for a name and a password (10 characters or more) for that email, with "Use a different email".
-- [ ] Open `/login`. Expect: nothing but the card and the two scenes: no top bar, no footer, no search. A centred card (logo, "Log in to continue", Email, Password, Remember me with a small "i" whose tooltip says 30 days, Log in, Google switched off, "Can't log in?" and "Create an account"). On a wide window two flat scenes sit in the bottom corners: a work board with a chart, tickets and a plant on the left, and an arched library window with books and a graduation cap on the right. Both stay visible in light and dark mode. Empty fields show "Enter your email." and "Enter your password.". With the API running (A33), a wrong password shows "The email or password is not correct." and a right one opens the app.
+- [ ] On the get-started page (`/signup`). Expect: a window titled "Get started with Liraspaces" over a grey drawing of the app, the email field, Sign up, a Google button (greyed out until Google is set up on the server, A40), "Already have an account? Log in", and a × that returns to the landing page. A valid email moves to a second step asking for a name and a password (10 characters or more) for that email, with "Use a different email".
+- [ ] Open `/login`. Expect: nothing but the card and the two scenes: no top bar, no footer, no search. A centred card (logo, "Log in to continue", Email, Password, Remember me with a small "i" whose tooltip says 30 days, Log in, Google (greyed out until Google is set up, A40), "Can't log in?" and "Create an account"). On a wide window two flat scenes sit in the bottom corners: a work board with a chart, tickets and a plant on the left, and an arched library window with books and a graduation cap on the right. Both stay visible in light and dark mode. Empty fields show "Enter your email." and "Enter your password.". With the API running (A33), a wrong password shows "The email or password is not correct." and a right one opens the app.
 - [ ] Open `/terms`, `/privacy` and `/notice` from the footer. Expect: each shows a draft notice, names WorldXAdmins and the contact email, and the tab title ends in "Liraspaces".
 - [ ] Open `/app`. Expect: the app, with its own addresses under `/app` (for example `/app/for-you`), and refresh keeps you on the same page. Click the logo. Expect: the "Still baking" page.
 - [ ] Open an address that does not exist, such as `/nothing`. Expect: the landing page.
@@ -357,7 +357,7 @@ Same way of running as A31 (`npm run hosted`, then http://localhost:5175).
 - [ ] Press the sun or moon button in the top bar. Expect: the page switches between light (Sorrel) and dark (Pace); in dark mode the button shows a sun, in light mode a moon; nothing else moves.
 - [ ] Click into the email field on the landing page and on `/signup`. Expect: the focus box goes around the whole bar (field and Sign up button together) with a small gap, not hard against the button.
 - [ ] Scroll the landing page. Expect, in order: the hero and sample space, "What is inside", "More than project management" (Search, Viva, Roadmaps and dashboards, each with a picture, alternating sides), "Liraspaces is better with documents and files" (with the Includes list and four example cards, one dark), the black band, "Discover the latest", "Your data", the black closing band, and the large grey footer.
-- [ ] Reach the black band. Expect: it is black in light mode too; "Liraspaces for the AI era" and a second line "> connect anywhere" that types itself once with a blinking block caret; "WORKS WITH" shows only "Any MCP agent" with a note that it is coming soon; three columns with dot icons, two of them marked COMING SOON.
+- [ ] Reach the black band. Expect: it is black in light mode too; "Liraspaces for the AI era" and a second line "> connect anywhere" whose word "anywhere" is typed letter by letter, again each time you scroll to the band, with a blinking block caret; "WORKS WITH" shows only "Any MCP agent" with a note that it is coming soon; three columns with dot icons, two of them marked COMING SOON.
 - [ ] Move the mouse over the black band. Expect: faint dots light up around the pointer and fade as it moves away. With "reduce motion" on in the system, or on a phone, the dots stay still.
 - [ ] Scroll to "Discover the latest". Expect: the cards slide in from the right once and stay. Use the arrows, the mouse wheel or a swipe: the row scrolls a card at a time, the left arrow is switched off at the start and the right arrow at the end. Six cards: four "UPDATE" and two "COMING SOON".
 - [ ] Read the closing band and the footer. Expect: "Plan, learn and deliver in Liraspaces" with two gold words, a "Get Liraspaces free" button to the sign-up page; the footer has Contact us, PRODUCT, RESOURCES and LEGAL columns, no Pricing, Careers or Press kit.
@@ -463,9 +463,78 @@ Needs the hosted app against the API (a cloud rehearsal). Use two browsers (or o
 - [ ] A new account (no invitation). Expect: no sample projects, roadmap or forms.
 - [ ] Known gaps (not bugs yet): buttons are not hidden for a person who may only view (the server refuses the change); stand-ups; email is not sent.
 
+### A37. Stand-up calls (21 Nov 2026)  ◐
+Needs the hosted app against the API, an owner and a second person who is a Member (see A36).
+- [ ] As the owner open the account menu, Calls. Expect: "No calls are scheduled for you." and a Schedule a call button.
+- [ ] Schedule one for the second person (or a team): title, a start time, 15 minutes, a Google Meet link, tick the guest. Expect: it appears under Upcoming with "Invited: ..." and a Join call button; a note says nobody was emailed because email is not connected.
+- [ ] Try a link on another site (for example https://example.com/x) and one starting with http://. Expect: refused before sending, with a message naming Google Meet and Microsoft Teams.
+- [ ] Try to schedule with nobody ticked. Expect: "Invite at least one person or team."
+- [ ] As the second person open Calls. Expect: the call, a Join call button that opens the link in a new tab, and no Schedule, Change or Delete buttons and no guest list.
+- [ ] A third person who is not invited. Expect: the page lists nothing.
+- [ ] As the owner Change the call (new time), then Delete it after the question. Expect: the second person sees the new time after a reload, and the call is gone after the delete.
+- [ ] A call in the past. Expect: it moves to Earlier, dimmed, with its Join link still shown.
+
+### A38. Repeating stand-ups, Google and the calendar (21 Nov 2026)  ◐
+Same set-up as A37. The Google lines need Google set up first (`docs/03-sop/google-setup.md`); everything else works with a pasted link.
+- [ ] Schedule "Every weekday" "For 1 month". Expect: the list shows one entry, "Next: ..." and "Every weekday until <date>"; the calendar shows a small dark chip with the time and title on each weekday of the series, and clicking a chip opens the Meet link in a new tab.
+- [ ] Try "For 1 week", "For a number of days" (10) and "Until a day I choose". Expect: the last day shown after saving matches (7 days counting the first; 10 days counting the first; the chosen day).
+- [ ] Change the series' last day. Expect: the calendar follows after a reload. Delete the series. Expect: the question mentions the whole series, and every chip is gone.
+- [ ] Owner: on the Calls page press Connect Google (needs Google set up: docs/03-sop/google-setup.md). Expect: Google's sign-in and permission page, then back with "Google is connected." and the account's email on the page; an Admin sees no connect button.
+- [ ] Schedule with the link left empty. Expect: a meet.google.com link on the call; each invited person gets an email from the connected account (time in the call's time zone, the link, and "It repeats ..." for a series), and the page says how many emails were sent.
+- [ ] Disconnect Google. Expect: scheduling without a link is refused with a message to paste one or connect Google.
+
+### A43. The call agenda lists every open ticket (21 Nov 2026)
+Use a space that has more than ten To do tickets and more than ten Backlog tickets (the LIRA space does), and its Stand-up button.
+- [ ] Open the Agenda tab, "By status". Expect: "Up next · To do" lists every To do ticket (its count in the heading equals the rows below it) and "Backlog" lists every backlog ticket, not only the first 8 and 6. Done tickets appear only under "Done in the last 24 hours".
+- [ ] Switch to "By person". Expect: each person's card lists all their To do tickets under "Next" and all their backlog tickets under "Backlog", not three.
+- [ ] Open a sprint call. Expect: the same lists, for the tickets of that sprint only; epics are never listed.
+- [ ] Press "Copy call notes" and paste. Expect: the notes still give the top of each list only (8 To do, 5 backlog); this is deliberate, the notes are a summary.
+
+### A42. Comment icon on the tickets of a call (21 Nov 2026)  ◐
+Open a sprint, project or space call from its Stand-up button (the Agenda tab).
+- [ ] Move the mouse over a ticket row. Expect: a small comment icon appears just before the note badge (for example "Overdue by 11d"); move the mouse away and it disappears.
+- [ ] Do this in "By status" for every group (needs an update, blocked, in progress, done, up next, backlog), and in "By person" on the tickets of a person's card. Expect: the same icon.
+- [ ] Press the icon. Expect: a box opens under the row, the ticket does not open, and the call stays open.
+- [ ] Type a comment and press Post (or Ctrl+Enter). Expect: the box closes; open the ticket and the comment is in its activity, by you.
+- [ ] Press the icon, then Cancel, or press Escape. Expect: the box closes and nothing is saved. Post is greyed out while the box is empty.
+- [ ] Click the title, key or badge of a row. Expect: the ticket still opens as before.
+- [ ] Use Tab to reach a row's icon. Expect: it becomes visible while it has the keyboard focus.
+- [ ] Open the Calls page (/calls) and the hosted call list. Expect: no ticket rows there, so no icon.
+
+### A41. Google sign-up connects Google for calls (21 Nov 2026)  ◐
+Needs the same set-up as A40. Use a Google account that has never been used here, and `https://test.liraspaces.com`.
+- [ ] On the landing page press **Google** in the sign-up bar. Expect: Google's page lists, besides your name and email, creating Meet links and sending email; agree to all of them.
+- [ ] Back in the app open the account menu, **Stand-up calls**, then **Manage calls**. Expect: the page says Google is connected as your address and does not offer **Connect Google**.
+- [ ] Schedule a call and leave the link empty. Expect: a `meet.google.com` link and an invitation email to the people invited.
+- [ ] Log out, open `/login` and press **Google**. Expect: Google asks only who you are; you are signed in; Calls still shows Google as connected.
+- [ ] Sign up with email and password instead. Expect: the Calls page offers **Connect Google**.
+- [ ] Sign up with Google but untick the Meet or email permission. Expect: you are signed in, and Calls offers **Connect Google**.
+
+### A40. Sign up and sign in with Google (21 Nov 2026)  ◐
+Needs Google set up (docs/03-sop/google-setup.md), both redirect URIs in the Google client, and your Google account listed as a test user while the app is in Testing. Use `https://test.liraspaces.com`.
+- [ ] Open `/login` and the landing page. Expect: the Google button, with the Google "G", is on (it says just "Google"). Without Google set up on the server it is greyed out.
+- [ ] Press it with a Google account that has never been used here. Expect: Google's account chooser, then the permission page asking only to see your name and email; then the app opens signed in, with an empty workspace. The account menu shows your Google name and email.
+- [ ] Log out and press Google again. Expect: the same account, no second workspace.
+- [ ] Try to log in with that email and any password. Expect: "The email or password is not correct."
+- [ ] Sign up with email and password for an address that you also own at Google, log out, then use Google with it. Expect: you are signed in to that account; the old password no longer works.
+- [ ] Press Google and then Cancel at Google's page. Expect: back on the log-in page with "Google sign-in did not work. Try again, or use your email and password."
+- [ ] Open `/api/auth/google/callback?code=x&state=y` directly. Expect: the log-in page with the same message, and nobody is signed in.
+
+### A39. Fixes after the first look at the hosted app (21 Nov 2026)  ◐
+Hosted app, a brand new account.
+- [ ] Open the landing page, then log in, then open the app. Expect: light theme on all of them. Switch to dark on the landing page, log in: the app is dark too. Log out and in again, in another browser: your choice is still there.
+- [ ] In the app press the logo at the top left. Expect: the For you page opens; you stay signed in and never land on the public pages.
+- [ ] A new account: open Projects, Sprints, Roadmaps, the board and Forms. Expect: nothing is there, no sample projects, no sprints, no roadmap, no forms.
+- [ ] Make a project. Expect: no letters badge before its name or in the sidebar; under the name it says "Owner:" with your own name; the project owner field starts with your own name.
+- [ ] Landing page in dark mode, the black band. Expect: the blinking cursor is the same gold as the word "anywhere", while the word is typed.
+- [ ] Scroll to "Discover the latest", away and back. Expect: the cards fly in quickly from the far right edge, one after another, each overshooting a little to the left before it settles.
+- [ ] Open a project, press its call button (Project sync). Expect: a popup with the calls of that project; the call button is one button, with no second button beside it. As Owner the popup has Schedule a project sync, Change and Delete on a call, and a Manage calls button. Schedule one from the popup, change it, delete it.
+- [ ] In the popup press Manage calls. Expect: the popup closes and the Calls page with every kind of call, filter buttons (All calls, Stand-ups, Project syncs, Sprint calls, Space calls), and Schedule a call with a choice of what it is for; a call made here shows in that project's popup.
+- [ ] As a member invited to a call: press the call button on that project. Expect: a popup with the call and Join, and no Manage calls button and nothing to schedule, change or delete.
+
 ### A34. Scroll animations, names and project page (20 Nov 2026)  ◐
-- [ ] On the landing page scroll to the black band, away, and back. Expect: each time, only the word "anywhere" is typed out (the words before it are already there) and the cursor blinks. With reduced motion on, it just appears.
-- [ ] Scroll the "Discover the latest" boxes into view, away and back. Expect: the row slides in from the right every time.
+- [ ] On the landing page scroll to the black band, away, and back. Expect: each time, only the word "anywhere" is typed out one letter at a time (the words before it are already there) and the cursor blinks. With reduced motion on, it just appears.
+- [ ] Scroll the "Discover the latest" boxes into view, away and back. Expect: the cards come in from the far right edge of the screen, fast, the first one first and each next one starting when the one before has arrived, like a train; again every time you scroll to the section. With reduced motion they simply appear.
 - [ ] Footer. Expect: "Operated by WorldXAdmins, India"; the legal pages name WorldXAdmins.
 - [ ] Open For you. Expect: no "Recent activity" panel.
 - [ ] Open a project. Expect: the project initials sit in a small badge right before the project name; under it the lead shows as "Lead:", then the avatar, then the name (the signed-in person's name when no lead is set).

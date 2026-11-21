@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { emailError } from '../../utils/authForm';
-import { BTN, BTN_DISABLED } from './styles';
+import { GoogleButton } from './GoogleButton';
+import { BTN } from './styles';
 
 const INPUT = 'flex-1 min-w-0 bg-transparent px-3 py-2 text-base text-lira-text placeholder:text-lira-muted outline-none';
 
@@ -26,7 +27,7 @@ export function EmailBar({ id, initial = '', onValid }: { id: string; initial?: 
           <button type="submit" className={`${BTN} rounded-lg`}>Sign up</button>
         </div>
         <span className="text-ui text-lira-muted">or</span>
-        <button type="button" disabled title="Google sign-in opens with the hosted service" className={`${BTN_DISABLED} rounded-xl`}>Google</button>
+        <GoogleButton intent="signup" className="rounded-xl" />
       </div>
       {error && <p id={`${id}-error`} role="alert" className="text-xs text-lira-blue-text self-start">{error}</p>}
     </form>

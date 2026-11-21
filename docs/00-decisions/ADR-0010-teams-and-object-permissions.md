@@ -1,6 +1,6 @@
 # ADR-0010: Teams and permissions on each object
 
-- **Status:** Accepted (20 Nov 2026) by the owner, with the proposals below. Build steps 1 to 4 are done; stand-ups (step 5) are not.
+- **Status:** Accepted (20 Nov 2026) by the owner, with the proposals below. Build steps 1 to 5 are done. Stand-ups can repeat, show in the calendar, and get a Google Meet link made for them and invitation emails sent from the Owner's connected Google account (`docs/03-sop/google-setup.md`); that part is written from Google's documentation and not yet run against a real Google project. A pasted Meet or Teams link always works.
 - **Date proposed:** 2026-11-20
 - **Decision owner:** product owner
 

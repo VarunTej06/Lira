@@ -1,7 +1,8 @@
+import { Link } from 'react-router-dom';
 import { LiraLogo } from '../common/LiraLogo';
 import { isHosted, type Edition } from '../../utils/edition';
 
-/** The logo and name at the left of the top bar. In the hosted edition the logo leads to the coming-soon page. */
+/** The logo and name at the left of the top bar. In the hosted edition they lead to For you, inside the app: never out to the public pages. */
 export function BrandMark({ edition }: { edition?: Edition }) {
   const mark = (
     <>
@@ -12,8 +13,7 @@ export function BrandMark({ edition }: { edition?: Edition }) {
     </>
   );
   const box = 'flex-1 basis-0 flex items-center gap-2 select-none';
-  // A plain link, not the router's: /coming-soon is outside the /app base path the router works under
   return isHosted(edition)
-    ? <a href="/coming-soon" aria-label="Liraspaces" className={box}>{mark}</a>
+    ? <Link to="/for-you" aria-label="Liraspaces" className={box}>{mark}</Link>
     : <div className={box}>{mark}</div>;
 }

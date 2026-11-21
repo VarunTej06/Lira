@@ -7,6 +7,7 @@ import { SpaceView } from './components/space/SpaceView';
 import { isHosted } from './utils/edition';
 
 // Every page except the board is fetched when it is first opened, so the first load stays small
+const StandupsPage = lazy(() => import('./components/standups/StandupsPage').then(m => ({ default: m.StandupsPage })));
 const TeamsPage = lazy(() => import('./components/teams/TeamsPage').then(m => ({ default: m.TeamsPage })));
 const DashboardsPage = lazy(() => import('./components/dashboards/DashboardsPage').then(m => ({ default: m.DashboardsPage })));
 const FiltersPage = lazy(() => import('./components/filter/FiltersPage').then(m => ({ default: m.FiltersPage })));
@@ -105,6 +106,7 @@ export function AppRoutes(p: AppRoutesProps) {
         />} />
 
       {isHosted() && <Route path="/teams" element={<TeamsPage />} />}
+      {isHosted() && <Route path="/calls" element={<StandupsPage />} />}
       <Route path="/dashboards" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={p.onOpenIssue} />} />
       <Route path="/dashboards/:dashboardId" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={p.onOpenIssue} />} />
 

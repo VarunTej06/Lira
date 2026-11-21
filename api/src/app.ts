@@ -4,7 +4,7 @@ import { json, type NextFunction, type Request, type Response } from 'express';
 import type { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import type { BlobStore } from './attachments/blob-store';
-import type { EmailSender } from './invitations/email';
+import type { AppOverrides } from './app.module';
 import type { Config } from './config';
 import { ErrorsFilter } from './observability/errors.filter';
 import { requestLogger } from './observability/log';
@@ -16,7 +16,7 @@ const LARGE_BODY_LIMIT = '512kb';
 const LARGE_BODY_ROUTES = /^\/api\/orgs\/[^/]+\/((spaces\/[^/]+\/)?tickets(\/|$)|kv$|objects\/)/;
 
 /** Builds the API. The tests use the same function, so they exercise the settings the real server runs with. */
-export async function createApp(config: Config, overrides: { blobStore?: BlobStore; emailSender?: EmailSender } = {}): Promise<NestExpressApplication> {
+export async function createApp(config: Config, overrides: AppOverrides = {}): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule.forRoot(config, overrides), { logger: ['error', 'warn'], bodyParser: false });
   app.disable('x-powered-by');
   app.set('trust proxy', config.trustProxyHops);

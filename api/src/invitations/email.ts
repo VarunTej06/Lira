@@ -1,4 +1,5 @@
-export interface EmailMessage { to: string; subject: string; text: string }
+/** `orgId` says whose connected email account sends it. */
+export interface EmailMessage { to: string; subject: string; text: string; orgId?: string }
 
 /** Sends one email. Resolves false when no email service is connected, so the caller can say so instead of pretending it was sent. */
 export interface EmailSender { send(message: EmailMessage): Promise<boolean> }

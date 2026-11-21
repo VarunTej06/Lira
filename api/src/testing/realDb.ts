@@ -4,6 +4,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import { Client } from 'pg';
 import { createApp } from '../app';
 import type { EmailMessage, EmailSender } from '../invitations/email';
+import type { FakeGoogle } from './fake-google';
 import { MemoryBlobStore } from './memory-blob-store';
 import { loadConfig } from '../config';
 import { applyMigrations, readMigrations } from '../db/migrate';
@@ -15,7 +16,7 @@ export const ORIGIN = 'https://test.liraspaces.com';
 /** A cloud database needs TLS. A throwaway container on this machine has none, and says so with TEST_DATABASE_SSL=disable. */
 export const testSsl = (): { rejectUnauthorized: true } | false => (process.env.TEST_DATABASE_SSL === 'disable' ? false : { rejectUnauthorized: true });
 
-export interface Reply { status: number; body: unknown; cookie: string | undefined }
+export interface Reply { status: number; body: unknown; cookie: string | undefined; location: string | null }
 
 /** Collects the emails the API would send, and says each was sent. */
 export class CapturingEmail implements EmailSender {
@@ -41,7 +42,7 @@ export interface RealDb {
  * Starts the real API on a schema of its own (dropped by stop) and connects as the application role, so its true permissions
  * are the ones tested. Shared by every test that needs the database.
  */
-export async function startRealDb(): Promise<RealDb> {
+export async function startRealDb(options: { google?: FakeGoogle } = {}): Promise<RealDb> {
   const schema = `t_${randomBytes(6).toString('hex')}`;
   const url = (extra?: string) => {
     const u = new URL(ADMIN_URL!);
@@ -61,22 +62,28 @@ export async function startRealDb(): Promise<RealDb> {
 
   const blobs = new MemoryBlobStore();
   const emails = new CapturingEmail();
+  const googleEnv = options.google ? {
+    GOOGLE_CLIENT_ID: 'client-id-123456', GOOGLE_CLIENT_SECRET: 'client-secret-123456', GOOGLE_REDIRECT_URI: `${ORIGIN}/api/google/callback`,
+    TOKEN_ENCRYPTION_KEY: Buffer.alloc(32, 7).toString('base64'),
+  } : {};
+  // With a fake Google the real Google sender is used (it talks to the fake); without one, emails are captured.
   const app: NestExpressApplication = await createApp(loadConfig({
-    DATABASE_URL: url(`-c search_path=${schema} -c role=lira_app`), ALLOWED_ORIGINS: ORIGIN, TRUST_PROXY_HOPS: '0', DATABASE_SSL: testSsl() ? 'require' : 'disable',
-  }), { blobStore: blobs, emailSender: emails });
+    DATABASE_URL: url(`-c search_path=${schema} -c role=lira_app`), ALLOWED_ORIGINS: ORIGIN, TRUST_PROXY_HOPS: '0', DATABASE_SSL: testSsl() ? 'require' : 'disable', ...googleEnv,
+  }), { blobStore: blobs, ...(options.google ? { googleHttp: options.google.fetch } : { emailSender: emails }) });
   await app.listen(0, '127.0.0.1');
   const base = `http://127.0.0.1:${(app.getHttpServer().address() as { port: number }).port}`;
 
   const call: RealDb['call'] = async (method, path, body, extra = {}) => {
     const res = await fetch(`${base}${path}`, {
       method,
+      redirect: 'manual', // a redirect is part of the answer being tested, never followed
       headers: { 'Content-Type': 'application/json', Origin: ORIGIN, 'X-Requested-With': 'liraspaces', ...extra },
       body: body === undefined ? undefined : typeof body === 'string' ? body : JSON.stringify(body),
     });
     const text = await res.text();
     let parsed: unknown = text;
     try { parsed = JSON.parse(text); } catch { /* plain text */ }
-    return { status: res.status, body: parsed, cookie: res.headers.getSetCookie()[0] };
+    return { status: res.status, body: parsed, cookie: res.headers.getSetCookie()[0], location: res.headers.get('location') };
   };
   const rows: RealDb['rows'] = async (sql, params = []) => (await admin.query(sql, params)).rows as never;
   const signUp: RealDb['signUp'] = async email => {

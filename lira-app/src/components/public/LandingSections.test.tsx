@@ -5,6 +5,7 @@ import { byText, click, cleanup, mount, q, qa, settle } from '../../test/render'
 import { BASE_ALPHA } from '../../utils/dotField';
 import { PointerDots } from './PointerDots';
 import { PublicSite } from './PublicSite';
+import { SLIDE_MS, STAGGER_MS } from './DiscoverCards';
 import { DISCOVER_CARDS } from './discoverContent';
 
 type Callback = (entries: { isIntersecting: boolean }[]) => void;
@@ -79,21 +80,25 @@ describe('black AI and MCP band', () => {
     const band = q('[aria-labelledby="ai-title"]')!;
     expect(band.className).toContain('bg-black');
     expect(q('#ai-title')!.textContent).toContain('Liraspaces for the AI era');
-    expect(q('#ai-title')!.textContent).toContain('connect anywhere');
+    expect(q('#ai-title')!.getAttribute('aria-label')).toContain('connect anywhere');
     expect(q('#ai-title .animate-caret')!.getAttribute('aria-hidden')).toBe('true');
   });
 
-  it('types only the word "anywhere", and types it again each time the band scrolls into view', async () => {
+  it('types only the word "anywhere", one letter at a time, and types it again each time the band scrolls into view', async () => {
     await landing();
-    const word = () => q('#ai-title [data-typing]')!;
-    expect(word().textContent).toBe('anywhere');
-    expect(word().className).not.toContain('animate-typing');
+    const word = () => q('#ai-title [data-typing]')!.textContent;
+    expect(q('#ai-title')!.textContent).toContain('connect');
+    expect(word()).toBe('');
     scrollTo(q('#ai-title')!, true);
-    expect(word().className).toContain('animate-typing');
+    expect(word()).toBe('');
+    await vi.waitFor(() => expect(word()!.length).toBeGreaterThan(0), { timeout: 2000 });
+    expect('anywhere'.startsWith(word()!)).toBe(true);
+    await vi.waitFor(() => expect(word()).toBe('anywhere'), { timeout: 4000 });
     scrollTo(q('#ai-title')!, false);
-    expect(word().className).not.toContain('animate-typing');
+    expect(word()).toBe('');
     scrollTo(q('#ai-title')!, true);
-    expect(word().className).toContain('animate-typing');
+    expect(word()).toBe('');
+    await vi.waitFor(() => expect(word()).toBe('anywhere'), { timeout: 4000 });
   });
 
   it('claims only what is true: one MCP chip marked coming soon, no other tool names, two columns marked coming soon', async () => {
@@ -168,18 +173,27 @@ describe('Discover the latest', () => {
     expect(list().textContent).not.toMatch(/VIDEO|EBOOK|REPORT/);
   });
 
-  it('slides in from the right every time the row comes into view, and resets when it leaves', async () => {
+  it('brings the cards in from the far right one after another, like a train, every time the row comes into view', async () => {
     await landing();
-    const row = () => list().parentElement!;
-    expect(row().className).toContain('translate-x-24');
-    expect(row().className).toContain('opacity-0');
-    scrollTo(row(), true);
-    expect(row().className).toContain('translate-x-0');
-    expect(row().className).toContain('opacity-100');
-    scrollTo(row(), false);
-    expect(row().className).toContain('translate-x-24');
-    scrollTo(row(), true);
-    expect(row().className).toContain('translate-x-0');
+    const cards = () => qa('li', list());
+    const delays = () => cards().map(c => c.style.animationDelay);
+    expect(cards().every(c => c.className.includes('opacity-0') && !c.className.includes('animate-card-in'))).toBe(true);
+    scrollTo(list().parentElement!, true);
+    expect(cards().every(c => c.className.includes('animate-card-in') && !c.className.includes('opacity-0'))).toBe(true);
+    expect(delays()).toEqual(DISCOVER_CARDS.map((_, i) => `${i * STAGGER_MS}ms`)); // each starts a moment after the one before
+    scrollTo(list().parentElement!, false);
+    expect(cards().every(c => c.className.includes('opacity-0') && !c.className.includes('animate-card-in'))).toBe(true);
+    expect(delays().every(d => d === '0ms')).toBe(true);
+    scrollTo(list().parentElement!, true);
+    expect(cards()[0].className).toContain('animate-card-in');
+  });
+
+  it('cannot be scrolled sideways while the cards are still travelling, and can once they have arrived', async () => {
+    await landing();
+    expect(list().className).toContain('overflow-x-hidden');
+    scrollTo(list().parentElement!, true);
+    expect(list().className).toContain('overflow-x-hidden');
+    await vi.waitFor(() => expect(list().className).toContain('overflow-x-auto'), { timeout: (DISCOVER_CARDS.length - 1) * STAGGER_MS + SLIDE_MS + 1500 });
   });
 
   it('scrolls a card at a time with the arrows, and switches each arrow off at its end', async () => {

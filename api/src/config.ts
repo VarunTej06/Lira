@@ -13,7 +13,14 @@ const schema = z.object({
   STORAGE_ACCOUNT: z.string().regex(/^[a-z0-9]{3,24}$/, 'STORAGE_ACCOUNT must be 3 to 24 lower-case letters or digits').optional(),
   STORAGE_KEY: z.string().min(20).optional(),
   STORAGE_CONTAINER: z.string().regex(/^[a-z0-9-]{3,63}$/).default('attachments'),
-}).refine(v => (v.STORAGE_ACCOUNT === undefined) === (v.STORAGE_KEY === undefined), { message: 'STORAGE_ACCOUNT and STORAGE_KEY must be set together', path: ['STORAGE_KEY'] });
+  // Google (Meet links and invitation emails). All four together, or none: without them the app asks people to paste a link and sends no email.
+  GOOGLE_CLIENT_ID: z.string().min(10).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().min(10).optional(),
+  GOOGLE_REDIRECT_URI: z.url().optional(),
+  TOKEN_ENCRYPTION_KEY: z.string().min(40).optional(),
+}).refine(v => (v.STORAGE_ACCOUNT === undefined) === (v.STORAGE_KEY === undefined), { message: 'STORAGE_ACCOUNT and STORAGE_KEY must be set together', path: ['STORAGE_KEY'] })
+  .refine(v => [v.GOOGLE_CLIENT_ID, v.GOOGLE_CLIENT_SECRET, v.GOOGLE_REDIRECT_URI, v.TOKEN_ENCRYPTION_KEY].every(x => x === undefined) || [v.GOOGLE_CLIENT_ID, v.GOOGLE_CLIENT_SECRET, v.GOOGLE_REDIRECT_URI, v.TOKEN_ENCRYPTION_KEY].every(x => x !== undefined),
+    { message: 'GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI and TOKEN_ENCRYPTION_KEY must be set together', path: ['GOOGLE_CLIENT_ID'] });
 
 export interface Config {
   databaseUrl: string;
@@ -28,6 +35,8 @@ export interface Config {
   rememberDays: number;
   /** Where attachments are kept; absent when no storage account is configured. */
   storage?: { account: string; key: string; container: string };
+  /** The Google client of this product and the key that protects the tokens it is given; absent when Google is not set up. */
+  google?: { clientId: string; clientSecret: string; redirectUri: string; tokenKey: string };
 }
 
 export const CONFIG = Symbol('CONFIG');
@@ -57,6 +66,8 @@ export function loadConfig(env: Record<string, string | undefined>): Config {
     trustProxyHops: v.TRUST_PROXY_HOPS,
     sessionHours: v.SESSION_HOURS,
     rememberDays: v.REMEMBER_DAYS,
+    ...(v.GOOGLE_CLIENT_ID && v.GOOGLE_CLIENT_SECRET && v.GOOGLE_REDIRECT_URI && v.TOKEN_ENCRYPTION_KEY
+      ? { google: { clientId: v.GOOGLE_CLIENT_ID, clientSecret: v.GOOGLE_CLIENT_SECRET, redirectUri: v.GOOGLE_REDIRECT_URI, tokenKey: v.TOKEN_ENCRYPTION_KEY } } : {}),
     ...(v.STORAGE_ACCOUNT && v.STORAGE_KEY ? { storage: { account: v.STORAGE_ACCOUNT, key: v.STORAGE_KEY, container: v.STORAGE_CONTAINER } } : {}),
   };
 }

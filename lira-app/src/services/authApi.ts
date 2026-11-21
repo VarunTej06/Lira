@@ -51,3 +51,5 @@ export const signup = (values: SignupValues) => send<Me>('POST', '/api/auth/sign
 export const login = (values: LoginValues) => send<Me>('POST', '/api/auth/login', values);
 export const logout = () => send<void>('POST', '/api/auth/logout');
 export const fetchMe = () => send<Me>('GET', '/api/me');
+/** Which ways of signing in the server offers. */
+export const fetchProviders = () => send<{ google: boolean }>('GET', '/api/auth/providers');

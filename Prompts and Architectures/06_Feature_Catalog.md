@@ -189,3 +189,7 @@
 | Safety | Local API guard, safe links and file names, security headers, audit log |
 
 **Editing.** The ticket popup is a draft saved with **Save changes** (it closes after saving and asks before discarding). Descriptions use a rich text editor: headings, bold, italic, underline, strikethrough, bullet, numbered and checkbox lists, quotes, code, links, text colour, highlight, @mentions, and files and pictures. Dates are chosen in a themed date picker. Lira dialogs replace the browser confirm, prompt and alert. Ticket types and priorities use icons, not emojis.
+
+## Update (21 November 2026, version 4.0.0)
+
+Hosted edition only: sign-up and log-in with email or Google; an organisation for every account; roles Owner, Admin, Member, Viewer and Guest; a Teams page; View, Edit and Manage on spaces, projects, roadmaps and dashboards for people and teams; invitations by email; calls (stand-up, sprint, project and space calls) with Google Meet links, repeating and shown in the calendar, and a Calls page; attachments in Blob Storage. Both editions: the call agenda lists every open ticket, and each ticket row has a comment icon (shown on hover) that posts a comment without leaving the call.

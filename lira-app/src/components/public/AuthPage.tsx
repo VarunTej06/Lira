@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { LiraLogo } from '../common/LiraLogo';
 import { login } from '../../services/authApi';
 import { validateAuth, type AuthErrors } from '../../utils/authForm';
@@ -7,7 +7,8 @@ import { goTo } from '../../utils/navigate';
 import { Field, FormError } from './AuthFields';
 import { BoardArt, BookArt } from './LoginArt';
 import { CONTACT_EMAIL } from './legalText';
-import { BTN, BTN_DISABLED, LINK } from './styles';
+import { GoogleButton } from './GoogleButton';
+import { BTN, LINK } from './styles';
 
 const FOOTER_LINKS = [['/privacy', 'Privacy Policy'], ['/notice', 'User Notice'], ['/terms', 'Terms of Service']] as const;
 const REMEMBER_HELP = 'Keeps you signed in on this device for 30 days';
@@ -20,6 +21,8 @@ export default function AuthPage() {
   const [errors, setErrors] = useState<AuthErrors>({});
   const [serverError, setServerError] = useState<string>();
   const [busy, setBusy] = useState(false);
+  const [params] = useSearchParams();
+  const googleFailed = params.get('error') === 'google';
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -42,6 +45,7 @@ export default function AuthPage() {
       <form onSubmit={submit} noValidate className="relative w-full max-w-sm bg-lira-surface border border-lira-border rounded-lg p-6 flex flex-col gap-3.5">
         <span className="inline-flex items-center justify-center gap-2.5 font-bold text-xl text-lira-text"><LiraLogo className="w-8 h-8" motion="none" />Liraspaces</span>
         <h1 className="text-base font-bold text-center mt-1">Log in to continue</h1>
+        {googleFailed && <FormError message="Google sign-in did not work. Try again, or use your email and password." />}
         {serverError && <FormError message={serverError} />}
         <Field id="email" label="Email" type="email" autoComplete="email" value={email} error={errors.email} onChange={setEmail} />
         <Field id="password" label="Password" type="password" autoComplete="current-password" value={password} error={errors.password} onChange={setPassword} />
@@ -52,7 +56,7 @@ export default function AuthPage() {
         </div>
         <button type="submit" disabled={busy} className={`${BTN} w-full ${busy ? 'opacity-70' : ''}`}>{busy ? 'Signing in' : 'Log in'}</button>
         <p className="text-ui text-lira-muted text-center mt-1">Or continue with:</p>
-        <button type="button" disabled title="Google sign-in is not available yet" className={`${BTN_DISABLED} w-full`}>Google</button>
+        <GoogleButton className="w-full" />
         <p className="text-ui text-center">
           <a href={`mailto:${CONTACT_EMAIL}?subject=Cannot%20log%20in`} className={LINK}>Can't log in?</a>
           <span aria-hidden="true" className="mx-2 text-lira-muted">•</span>

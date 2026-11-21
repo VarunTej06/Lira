@@ -8,9 +8,9 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8.svg)](https://tailwindcss.com/)
 [![Dexie.js](https://img.shields.io/badge/Dexie.js-IndexedDB-orange.svg)](https://dexie.org/)
 [![Storage](https://img.shields.io/badge/Storage-JSON_files_in_data/-emerald.svg)](./data/)
-[![Tests](https://img.shields.io/badge/tests-1990_passing-brightgreen.svg)](#-tests)
+[![Tests](https://img.shields.io/badge/tests-2074_passing-brightgreen.svg)](#-tests)
 
-**Next stage (decided 9 Nov 2026):** multi-user with SSO. Design, decisions, security standard, SOPs and a stakeholder deck are in [docs/](docs/README.md); rules for contributors and AI assistants are in [CLAUDE.md](CLAUDE.md). Everything below describes today's single-user app.
+**Version 4.0.0 (21 Nov 2026): two editions.** The **local edition** (everything below: one person, files in `data/`, works offline) is unchanged. The **hosted edition, Liraspaces**, is new: anyone signs up with email or Google and gets their own organisation, invites people by email, shares spaces, projects, roadmaps and dashboards as View, Edit or Manage with people and teams, schedules calls with Google Meet links, and keeps everything on the server (PostgreSQL and Blob Storage); the browser holds only a cache. It runs in a rehearsal on a temporary Azure sandbox. Design, decisions, security standard, SOPs and the rebuild script are in [docs/](docs/README.md), [api/README.md](api/README.md) and [infra/azure-playground/README.md](infra/azure-playground/README.md); rules for contributors and AI assistants are in [CLAUDE.md](CLAUDE.md). Where the text below says "everything is in files" or "single user", it means the local edition.
 
 **Documents:** [SETUP.md](SETUP.md) (install, run, data, URLs, tablet and phone) · [ROADMAP.md](ROADMAP.md) (what is done and what is next) · [SECURITY_REPORT.md](SECURITY_REPORT.md) (20-point security check) · [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (plan for a hosted, multi-user edition on Azure) · [Prompts and Architectures/](Prompts%20and%20Architectures/) (design documents)
 
@@ -20,6 +20,8 @@
 
 | Area | What you get |
 |---|---|
+| **Hosted edition (4.0.0)** | Accounts with email or Google (the Google sign-up button also connects Meet and email in one step), an organisation per account, Owner, Admin, Member, Viewer and Guest roles, Teams page, per-object View, Edit and Manage, invitations by email, calls (stand-ups and sprint, project and space calls) that repeat and appear in the calendar, a Calls page, attachments in Blob Storage. See [docs/01-architecture/HLD.md](docs/01-architecture/HLD.md) section 0. |
+| **Calls** | The agenda of a call lists every open ticket (needs an update, blocked, in progress, to do, backlog), by status or by person, and each ticket row shows a comment icon on hover so you can comment without leaving the call. |
 | **Sprints** | Every sprint can be **monthly, weekly, bi-weekly or a set number of days**. Choose which spaces work in each sprint. Sprint page has four views: **Sprint** (with a status and space filter), **Planning** (backlog on the left, sprint on the right, drag across, points against capacity with an over-commit warning), **Reports** (burnup, cumulative flow, scope changes, lead and cycle time, export to Markdown or PDF) and **Epics** (timeline across sprints). Closing a sprint carries unfinished tickets over and records a **retrospective**. |
 | **Roadmaps** | One JSON file per roadmap, timeline / Now-Next-Later / table / planner views. Every roadmap item is a real epic with a checklist task. |
 | **Viva AI** | **Confirm before changing anything, with Undo.** Sprint-aware prompts ("Plan next sprint from my backlog", "Summarise this sprint"), "Write my standup", a risk radar, suggestions while creating a ticket (duplicates, labels, priority, epic), and a choice of model: built-in engine, Gemini, or any OpenAI-compatible server such as Ollama. |
@@ -40,7 +42,7 @@
 | **Attachments** | **Add attachment** opens a window to choose the source: this computer (drag and drop or browse), a Google Drive, OneDrive or Dropbox share link, or any web link. |
 | **Dates** | A themed date picker everywhere a date is chosen. Click the month and year to jump to any month of any year. The month calendar has the same chooser and "+N more" days. |
 | **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
-| **Code health** | Large files split into small parts (no component over about 350 lines), 1990 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
+| **Code health** | Large files split into small parts (no component over about 350 lines), 2074 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
 
 ## Key Highlights
 
@@ -111,7 +113,7 @@ Other commands:
 | Command | What it does |
 |---|---|
 | `npm run dev:lan` | Same, and also opens Lira to your own Wi-Fi for a tablet or phone (private link and QR code in **Settings, Other devices**) |
-| `npm test` | 1990 automated tests (Vitest) |
+| `npm test` | 2074 automated tests (Vitest) |
 | `npm run test:health` | Read-only check of your `data/` folder (15 checks) |
 | `npm run test:all` | Type check, lint, all tests, data health |
 | `npm run build` | Type-check, then production build |

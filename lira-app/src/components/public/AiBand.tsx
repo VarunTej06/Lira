@@ -2,6 +2,7 @@ import { useInView } from '../../hooks/useInView';
 import { DotIcon } from './DotIcon';
 import { CHAT_ICON, LIST_ICON, PLUG_ICON } from './dotIcons';
 import { PointerDots } from './PointerDots';
+import { TypedText } from './TypedText';
 import { PAGE_WIDTH } from './styles';
 
 const COLUMNS = [
@@ -12,7 +13,7 @@ const COLUMNS = [
 
 /**
  * The black band about AI and MCP. It is black in light mode too, like the dark band of the reference. Only the word "anywhere" is typed,
- * and it is typed again every time the band scrolls into view; with reduced motion it simply appears.
+ * letter by letter, and it is typed again every time the band scrolls into view; with reduced motion it simply appears.
  */
 export function AiBand() {
   const [headline, inView] = useInView<HTMLHeadingElement>();
@@ -20,13 +21,13 @@ export function AiBand() {
     <section aria-labelledby="ai-title" className="relative overflow-hidden bg-black text-white">
       <PointerDots />
       <div className={`${PAGE_WIDTH} relative py-16 sm:py-20 flex flex-col gap-12`}>
-        <h2 id="ai-title" ref={headline} className="self-start max-w-full rounded-xl bg-white/10 border border-white/15 px-5 py-4 font-mono text-2xl sm:text-5xl leading-tight">
+        <h2 id="ai-title" ref={headline} aria-label="Liraspaces for the AI era, connect anywhere" className="self-start max-w-full rounded-xl bg-white/10 border border-white/15 px-5 py-4 font-mono text-2xl sm:text-5xl leading-tight">
           <span className="block">Liraspaces for the AI era</span>
           <span className="flex items-center">
             <span className="text-white/60 mr-3">&gt;</span>
             <span className="whitespace-pre">connect </span>
-            <span data-typing={inView} className={`overflow-hidden whitespace-nowrap text-logo-gold ${inView ? 'animate-typing' : 'w-0'} motion-reduce:animate-none motion-reduce:w-auto`}>anywhere</span>
-            <span aria-hidden="true" className="ml-1 w-3 sm:w-4 h-6 sm:h-10 bg-white animate-caret" />
+            <span data-typing={inView} className="whitespace-nowrap text-logo-gold">{inView && <TypedText text="anywhere" />}</span>
+            <span aria-hidden="true" className="ml-1 w-3 sm:w-4 h-6 sm:h-10 bg-logo-gold animate-caret" />
           </span>
         </h2>
 

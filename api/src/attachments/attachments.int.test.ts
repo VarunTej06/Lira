@@ -108,7 +108,9 @@ describe.skipIf(!ADMIN_URL)('attachments on a real database', () => {
 
   it('limits a ticket to 50 files', async () => {
     const { p, t } = await setup('many@example.com');
-    for (let i = 0; i < 50; i++) await ask(p, t, { ...png, name: `f${i}.png` });
+    // Fifty files already pending, put in directly: fifty requests one after another would only test how slow the network is
+    await db.admin.query(
+      `INSERT INTO attachments (org_id, ticket_id, name, size, content_type, blob_path) SELECT $1, $2, 'f' || n || '.png', 10, 'image/png', gen_random_uuid()::text FROM generate_series(1, 50) n`, [p.orgId, t]);
     const over = await ask(p, t);
     expect(over.status).toBe(409);
     expect((over.body as { error: { code: string } }).error.code).toBe('too_many_files');

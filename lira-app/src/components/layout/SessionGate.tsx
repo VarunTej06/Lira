@@ -4,6 +4,7 @@ import { fetchMe } from '../../services/authApi';
 import { startHostedKv } from '../../services/kvMirror';
 import { applyServerProfile } from '../../utils/hostedProfile';
 import { goTo } from '../../utils/navigate';
+import { paintTheme } from '../../utils/theme';
 
 type Phase = 'checking' | 'in' | 'out' | 'error';
 
@@ -25,6 +26,7 @@ export function SessionGate({ children }: { children: ReactNode }) {
         if (orgId && !(await startHostedKv(orgId))) { if (current) setPhase('error'); return; }
         if (!current) return;
         applyServerProfile(result.data);
+        paintTheme(); // the person's saved look, the same one the public pages showed
         setPhase('in');
         return;
       }

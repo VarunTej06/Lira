@@ -44,7 +44,7 @@ export class InvitationsService {
     });
     const link = `${this.config.allowedOrigins[0] ?? ''}/invite?token=${token}`;
     const emailed = await this.email.send({
-      to: input.email, subject: `You are invited to ${orgName} on Liraspaces`,
+      orgId, to: input.email, subject: `You are invited to ${orgName} on Liraspaces`,
       text: `You have been invited to join ${orgName} on Liraspaces as ${input.role}.\n\nOpen this link, signed in or signed up with ${input.email}:\n${link}\n\nIt works once and expires in ${VALID_DAYS} days.`,
     });
     this.metrics.inc('invitations_total', { emailed: String(emailed) });

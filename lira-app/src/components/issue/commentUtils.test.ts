@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { NO_COMMENT_DRAFT, hasCommentContent, newComment } from './commentUtils';
+import { NO_COMMENT_DRAFT, hasCommentContent, newComment, plainToCommentHtml } from './commentUtils';
 
 describe('a comment being written', () => {
   it('starts with no text and no files, and has nothing to save', () => {
@@ -22,5 +22,13 @@ describe('a comment being written', () => {
   it('has no length limit', () => {
     const long = '<p>' + 'word '.repeat(50000) + '</p>';
     expect(newComment({ html: long, files: [] }).content).toHaveLength(long.length);
+  });
+});
+
+describe('typed text becoming a comment', () => {
+  it('escapes markup so nothing typed can run, and keeps line breaks and paragraphs', () => {
+    expect(plainToCommentHtml('<img src=x onerror=alert(1)> & "q"')).toBe('<p>&lt;img src=x onerror=alert(1)&gt; &amp; &quot;q&quot;</p>');
+    expect(plainToCommentHtml('one\ntwo\r\n\r\nthree')).toBe('<p>one<br>two</p><p>three</p>');
+    expect(plainToCommentHtml('  hi  ')).toBe('<p>hi</p>');
   });
 });

@@ -1,5 +1,7 @@
 # Azure playground rehearsal
 
+> **Update 21 November 2026.** Everything below was first done by hand on 19 November. It is now a script: see [`infra/azure-playground/README.md`](../../infra/azure-playground/README.md) (`Setup-Playground.ps1`), which also deploys the API and the web app as Container Apps and puts Caddy in a Container Instance in front for the certificate. Use this page for the reasons and the limits; use the script to rebuild. The sandbox expires after a session and everything in it is deleted.
+
 A dress rehearsal on a temporary Azure sandbox (the KodeKloud playground), done by hand, to learn what works before the real subscription is bought. **Nothing here is the product.** The sandbox lasts about two hours, is in US regions, and everything in it is deleted afterwards.
 
 ## Rules
@@ -273,3 +275,15 @@ Tokens in a playground expire with the session, so treat them as practice keys: 
 | Custom domain `test.liraspaces.com`, DNS | Yes | CNAME `test` and TXT `asuid.test` in Hostinger. A typo (`suid.test`) delayed it; public resolvers kept the old "not found" for a few minutes. Hostname added to the app; plain HTTP redirects to HTTPS. |
 | Certificate for the custom domain | **No** | Managed certificate (CLI and portal) and an uploaded certificate were all denied by policy ("Non-compliant with policy standards for Azure_playground"). So HTTPS on the custom name cannot be shown in this sandbox. Test it on the real subscription. |
 | PostgreSQL, isolation tests, Key Vault | Not done in this session | |
+
+## What happened later (19 to 21 November 2026)
+
+| Step | Result |
+|---|---|
+| PostgreSQL, the schema, the nine isolation checks, Key Vault | Done, and now scripted (`-Step infra`, `database`, `isolation`) |
+| A Storage account for attachments | Allowed in the sandbox |
+| API and web as Container Apps | Done. The API has an internal address only; replicas 0 to 2 |
+| Certificate for the custom domain | Still denied, so Caddy runs in a Container Instance (`-Step edge`), gets a Let's Encrypt certificate itself, and Hostinger's `test` CNAME points at the instance (`liraedge….eastus.azurecontainer.io`). Caddy must be started after the DNS record is right, or it asks too early and fails; `-Step edge -EdgeDelaySeconds 5` repeats it |
+| Same image tag deployed again | Does not create a revision: use a new `-WebTag` and `-ApiTag` each time |
+| Google sign-up and sign-in on the real site | Worked (21 November), with an OAuth client in the owner's own Google Cloud project; a sandbox project could not enable APIs |
+| Sandbox lifetime | Expired on 21 November; a new session needs `az login` and `-Step all`, then `-Step google` and `-Step deploy` with the Google secret typed into the terminal |

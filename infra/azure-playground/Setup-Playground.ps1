@@ -7,6 +7,8 @@
                and a storage account with a private container for ticket attachments (Blob Storage, ADR-0011)
     database   the lira_app role and the tables (api/migrations), and optionally the API tests against the real database
     isolation  the nine tenant-isolation checks of docs/03-sop/rehearsal-isolation-test.sql
+    google     keeps the Google OAuth client (-GoogleClientId and the GOOGLE_CLIENT_SECRET variable) and a new encryption key in Key Vault, so
+               the API can make Meet links and send invitation emails. Optional: without it the app asks for a pasted link and sends no email
     build      builds the web and API Docker images in WSL (no Azure needed: do this any time)
     images     tags the built images with the registry's name and pushes them (builds first if needed)
     deploy     Container Apps environment, the API (internal) and the web app (public)
@@ -25,13 +27,14 @@
   - Needs: Azure CLI, Node 22, and Ubuntu on WSL with Docker (for the images and isolation steps).
 #>
 param(
-  [ValidateSet('check', 'build', 'infra', 'database', 'isolation', 'images', 'deploy', 'edge', 'status', 'all', 'show')]
+  [ValidateSet('check', 'build', 'infra', 'database', 'isolation', 'google', 'images', 'deploy', 'edge', 'status', 'all', 'show')]
   [string]$Step = 'check',
   [string]$PgLocation = 'centralus',        # PostgreSQL is refused in eastus for this offer; centralus worked
   [string]$Location = 'eastus',
   [string]$Domain = 'test.liraspaces.com',
   [string]$WebTag = 'v1',
   [string]$ApiTag = 'v1',
+  [string]$GoogleClientId = '',             # from the Google Cloud project's OAuth client; the secret is read from the GOOGLE_CLIENT_SECRET environment variable
   [int]$EdgeDelaySeconds = 600,             # Caddy waits this long, so there is time to change DNS before it asks Let's Encrypt
   [int]$ProxyHops = 3,                      # proxies in front of the API: Caddy, the web app's ingress, nginx. Check source_ip in audit_log.
   [switch]$RunTests
@@ -149,14 +152,36 @@ function Step-Database($state) {
     $env:ADMIN_DATABASE_URL = $adminUrl
     $env:APP_DB_PASSWORD = Get-KvSecret $state.vault 'pg-app-password'
     npm run migrate
-    if ($RunTests) { $env:TEST_DATABASE_URL = $adminUrl; npm test }
+    if ($RunTests) {
+      $env:TEST_DATABASE_URL = $adminUrl
+      $ErrorActionPreference = 'Continue'   # npm and Vite write warnings to the error stream; the exit code is what counts
+      npm test
+      if ($LASTEXITCODE -ne 0) { throw 'The API tests failed against the real database. Read the output above.' }
+    }
   } finally {
     Remove-Item Env:ADMIN_DATABASE_URL, Env:APP_DB_PASSWORD, Env:TEST_DATABASE_URL -ErrorAction SilentlyContinue
     Pop-Location
   }
 }
 
+# The Google settings (docs/03-sop/google-setup.md). The client secret is taken from an environment variable so it is never typed into a command line or a file.
+function Step-Google($state) {
+  Need $state 'vault' 'google'
+  if (-not $GoogleClientId) { throw 'Give the OAuth client id from your Google Cloud project: -GoogleClientId <id>' }
+  if (-not $env:GOOGLE_CLIENT_SECRET) { throw 'Set the GOOGLE_CLIENT_SECRET environment variable to the OAuth client secret first (it is not printed or saved to a file).' }
+  Az keyvault secret set --vault-name $state.vault --name 'google-client-secret' --value $env:GOOGLE_CLIENT_SECRET | Out-Null
+  if (-not (Az-Exists keyvault secret show --vault-name $state.vault --name 'token-encryption-key')) {       # only when absent: a new key could no longer read tokens already stored
+    $bytes = New-Object byte[] 32; [Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+    Az keyvault secret set --vault-name $state.vault --name 'token-encryption-key' --value ([Convert]::ToBase64String($bytes)) | Out-Null
+  }
+  Set-Field $state 'googleClientId' $GoogleClientId
+  Write-Host "Saved. In the Google Cloud console, add BOTH of these redirect URIs to the OAuth client:"
+  Write-Host "  https://$Domain/api/google/callback        (connecting the Google account: Meet links and emails)"
+  Write-Host "  https://$Domain/api/auth/google/callback   (people signing up and in with Google)"
+}
+
 function Step-Isolation($state) {
+  $ErrorActionPreference = 'Continue'   # Docker writes its progress to the error stream; Windows PowerShell would treat that as a failure, the exit code is what counts
   Need $state 'pgHost' 'isolation'
   $sql = Wsl-Path (Join-Path $Root 'docs\03-sop')
   # the password goes to WSL on standard input, not on a command line
@@ -165,12 +190,14 @@ function Step-Isolation($state) {
 }
 
 function Step-Build {
+  $ErrorActionPreference = 'Continue'   # Docker writes its progress to the error stream; Windows PowerShell would treat that as a failure, the exit code is what counts
   $repo = Wsl-Path $Root
   wsl -e bash -lc "set -e; cd '$repo'; docker build -t liraspaces-web:$WebTag lira-app; docker build -t liraspaces-api:$ApiTag api"
   if ($LASTEXITCODE -ne 0) { throw 'Building an image failed. Read the error above. Is Docker running in WSL?' }
 }
 
 function Step-Images($state) {
+  $ErrorActionPreference = 'Continue'   # Docker writes its progress to the error stream; Windows PowerShell would treat that as a failure, the exit code is what counts
   Need $state 'registry' 'images'
   $acr = "$($state.registry).azurecr.io"
   wsl -e bash -lc "docker image inspect liraspaces-web:$WebTag liraspaces-api:$ApiTag > /dev/null 2>&1"
@@ -202,10 +229,15 @@ function Step-Deploy($state) {
     $apiSecrets += "storage-key=$(Get-KvSecret $state.vault 'storage-key')"
     $apiEnv += @("STORAGE_ACCOUNT=$($state.storage)", 'STORAGE_KEY=secretref:storage-key')
   }
+  if ($state.googleClientId) {                # Meet links and invitation emails through the Owner's Google account; without it the app asks for a pasted link
+    $apiSecrets += @("google-client-secret=$(Get-KvSecret $state.vault 'google-client-secret')", "token-key=$(Get-KvSecret $state.vault 'token-encryption-key')")
+    $apiEnv += @("GOOGLE_CLIENT_ID=$($state.googleClientId)", 'GOOGLE_CLIENT_SECRET=secretref:google-client-secret', 'TOKEN_ENCRYPTION_KEY=secretref:token-key', "GOOGLE_REDIRECT_URI=https://$Domain/api/google/callback")
+  }
+  # An app that already exists must hold a secret before an environment variable may point at it, so set the secrets first
+  if (Az-Exists containerapp show -n liraspaces-api -g $rg) { Az containerapp secret set -n liraspaces-api -g $rg --secrets @apiSecrets | Out-Null }
   Ensure-App $rg 'liraspaces-api' `
     (@('--environment', 'container-app-env', '--image', $apiImage) + $reg + @('--ingress', 'internal', '--target-port', '8080', '--min-replicas', '1', '--max-replicas', '2', '--secrets') + $apiSecrets + @('--env-vars') + $apiEnv) `
     (@('--image', $apiImage, '--replace-env-vars') + $apiEnv)
-  if (Az-Exists containerapp show -n liraspaces-api -g $rg) { Az containerapp secret set -n liraspaces-api -g $rg --secrets @apiSecrets | Out-Null }
 
   Write-Host '== Web (public address)'
   $webImage = "$acr.azurecr.io/liraspaces-web:$WebTag"
@@ -266,6 +298,7 @@ switch ($Step) {
   'infra'     { Step-Infra $state; Write-Host 'Next: -Step database' }
   'database'  { Step-Database $state; Write-Host 'Next: -Step isolation (optional), then -Step images' }
   'isolation' { Step-Isolation $state }
+  'google'    { Step-Google $state; Write-Host 'Next: -Step deploy (again, so the API gets the settings)' }
   'images'    { Step-Images $state; Write-Host 'Next: -Step deploy' }
   'deploy'    { Step-Deploy $state; Write-Host 'Next: -Step edge' }
   'edge'      { Step-Edge $state }

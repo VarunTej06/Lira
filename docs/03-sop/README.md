@@ -4,6 +4,7 @@ Step-by-step procedures for running and supporting Lira. They are written for th
 
 | SOP | Title | Owner (to be named) | Review cycle |
 |---|---|---|---|
+| [Google](google-setup.md) | Connect Google (Meet links and invitation emails) | Product owner | When Google is set up or moved |
 | [01](SOP-01-release-and-rollback.md) | Release and rollback | Release manager | Each quarter |
 | [02](SOP-02-backup-and-restore.md) | Backup and restore drill | Platform owner | Each quarter (drill) |
 | [03](SOP-03-incident-response.md) | Incident and security response | Security lead | Twice a year |

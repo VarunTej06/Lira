@@ -12,7 +12,8 @@ Sign in first (PowerShell): `az login` with the playground account. Then, from t
 |---|---|---|
 | `.\Setup-Playground.ps1 -Step check` | Shows the account, the resource providers and the resource group the sandbox gave you | 1 min |
 | `-Step infra` | Container registry (admin user on), Key Vault with two generated passwords, PostgreSQL 16, firewall rules, a storage account (Standard LRS, no public access) with a private `attachments` container and its key in Key Vault (`storage-key`) | about 10 min |
-| `-Step database` | The `lira_app` role and the tables from `api/migrations`; add `-RunTests` to run the 130 API tests against the real database | 2 min |
+| `-Step database` | The `lira_app` role and the tables from `api/migrations`; add `-RunTests` to run the 195 API tests against the real database | 2 min |
+| `-Step google -GoogleClientId <id>` | Optional. Keeps the Google OAuth client secret (from the `GOOGLE_CLIENT_SECRET` variable) and a new encryption key in Key Vault, so the API can make Meet links and send emails. Then run `-Step deploy` again. See `docs/03-sop/google-setup.md` | 1 min |
 | `-Step isolation` | The nine tenant-isolation checks (`docs/03-sop/rehearsal-isolation-test.sql`), run through Docker in WSL | 1 min |
 | `-Step images` | Builds the web and API Docker images in WSL and pushes them to the registry | 5 to 10 min |
 | `-Step deploy` | Container Apps environment, the API (internal only) and the web app (public) | 5 min |
@@ -45,6 +46,10 @@ Every step can be run again: names are kept in `.state.json`, existing resources
 | Container Instances | Needs `--sku Standard`, 0.25 to 2 CPU, 0.5 to 4 GB; Docker Hub pulls can fail | `--sku Standard`; Caddy is copied into your registry first |
 
 If a policy text differs next time, read its **Reasons** line and change that one setting.
+
+## Deploying a new version
+
+Give each new build its own tag: `-Step build -WebTag g2 -ApiTag g2`, then `-Step images` and `-Step deploy` with the same two options. **A redeploy with the tag that is already running does nothing**: Azure only starts a new revision when something in the app's definition changes, and the same tag counts as the same image. If the site still behaves like the old version, this is the first thing to check (the API's `/api/auth/providers` answering 404 means an old API). Apply new database migrations with `-Step database` before deploying a version that needs them.
 
 ## Known limits of this rehearsal
 

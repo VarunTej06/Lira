@@ -1,7 +1,7 @@
 # CLAUDE.md — Lira engineering rules
 
 Lira is a work-tracking app (tickets, boards, sprints, roadmaps, dashboards, an AI copilot called Viva).
-**Today** it is a single-user, local app. **Next** it becomes a multi-user, enterprise app with SSO (decided 9 Nov 2026).
+It has two editions (version 4.0.0): the **local edition**, a single-user app with files in `data/`, and the **hosted edition (Liraspaces)**, a multi-user app with accounts, roles, teams, a NestJS API in `api/` and PostgreSQL, running in an Azure rehearsal (decided 9 Nov 2026; SSO is Google so far).
 Read `docs/README.md` first. Decisions that are not yet made are in `docs/00-decisions/`. Do not invent them: ask.
 
 ## How to work here
@@ -32,7 +32,7 @@ These are the owner's own standing requirements; they apply to every change.
 
 | Check | Command |
 |---|---|
-| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 1990 tests, data health) |
+| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 2074 tests, data health) |
 | Types | `npx tsc -b` |
 | Lint | `npm run lint` (must report 0 warnings) |
 | Tests | `npm test` (single file: `npx vitest run path/to/file.test.ts`) |

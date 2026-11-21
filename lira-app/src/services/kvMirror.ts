@@ -236,6 +236,9 @@ export async function initKvMirror(): Promise<void> {
 const SHARED_FILES: StoreFileName[] = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'dashboards']
 const MAX_ENTRIES_PER_REQUEST = 100
 
+/** The look the person chose, kept across sign-in: they may have picked it on the public pages before signing in, and it must not change. */
+const LOOK_KEYS = ['lira_theme', 'lira_light_palette', 'lira_dark_palette']
+
 let hostedOrg: string | null = null
 /** What the server holds, as it last confirmed. Changes are the difference between this and the browser's copy. */
 let serverHas: Record<string, string> = {}
@@ -259,6 +262,7 @@ export async function startHostedKv(orgId: string): Promise<boolean> {
   installStoragePatch()
   const r = await readKv(orgId)
   if (!r.ok) return false
+  const chosenLook = LOOK_KEYS.flatMap(k => { const v = localStorage.getItem(k); return v === null ? [] : [[k, v] as const] })
   syncedKeys().forEach(k => rawRemove!.call(localStorage, k))
   rawRemove!.call(localStorage, DIRTY_KEY)
   mayShare = r.data.shared !== null
@@ -273,6 +277,8 @@ export async function startHostedKv(orgId: string): Promise<boolean> {
   hostedOrg = orgId
   enabled = true
   ready = true
+  // a look chosen before signing in stays, unless the server already has the person's own; it is then saved for next time
+  for (const [k, v] of chosenLook) if (!(k in serverHas)) localStorage.setItem(k, v)
   changeListener?.()
   return true
 }

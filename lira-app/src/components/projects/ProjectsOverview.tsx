@@ -1,3 +1,4 @@
+import { isHosted } from '../../utils/edition';
 import { filterProjects, type ProjectSort } from '../../utils/projectFilter';
 import React, { useState, useMemo, useCallback } from 'react';
 import {
@@ -45,6 +46,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
     } catch (e) {
       console.error('Failed to parse lira_projects from localStorage', e);
     }
+    if (isHosted()) return []; // a new hosted account starts with no sample projects
     const def = DEFAULT_PROJECTS(spaces);
     try { appStorage.set('lira_projects', JSON.stringify(def)); } catch { /* storage unavailable */ }
     return def;

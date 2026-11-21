@@ -24,7 +24,7 @@ describe('log in', () => {
     await visit('/login');
     await click(byText('button', 'Log in'));
     expect(alerts()).toEqual(['Enter your email.', 'Enter your password.']);
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(fetchMock.mock.calls.filter(c => String(c[0]).includes('/auth/login'))).toHaveLength(0); // the page may ask which ways of signing in are offered, but never sends a log-in
   });
 
   it('sends the email and password, and opens the app on success', async () => {

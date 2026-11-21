@@ -53,11 +53,10 @@ describe('ProjectHeader', () => {
       expect(document.body.textContent).toContain('The core platform');
     });
 
-    it('draws the project icon in the button colour of the theme, not in a colour of its own', () => {
+    it('has no initials badge before the project name', () => {
       show();
-      const icon = qa('div').find(d => d.textContent === 'LC')!;
-      expect(icon.className).toContain('bg-lira-blue text-lira-on-blue');
-      expect(icon.getAttribute('style')).toBeNull();
+      expect(qa('div').find(d => d.textContent === 'LC')).toBeUndefined();
+      expect(q('h1')!.parentElement!.firstElementChild).toBe(q('h1'));
     });
 
     it('shows the category only when there is one', () => {
@@ -73,10 +72,11 @@ describe('ProjectHeader', () => {
       expect(document.body.textContent).toContain('Enterprise-grade technical project workspace.');
     });
 
-    it('shows the lead with the avatar next to the name, after the word Lead', () => {
+    it('shows the owner with the avatar next to the name, after the word Owner', () => {
       show();
-      const row = qa('div').find(d => d.firstElementChild?.textContent === 'Lead:')!;
-      expect([...row.children].map(c => c.textContent)).toEqual(['Lead:', 'VA', 'Varun Tej']);
+      const row = qa('div').find(d => d.firstElementChild?.textContent === 'Owner:')!;
+      expect([...row.children].map(c => c.textContent)).toEqual(['Owner:', 'VA', 'Varun Tej']);
+      expect(document.body.textContent).not.toContain('Lead:');
     });
 
     it('names the person using the app when the project has no lead, not a fixed name', () => {
@@ -85,14 +85,6 @@ describe('ProjectHeader', () => {
       expect(document.body.textContent).toContain('Test User');
       expect(document.body.textContent).not.toContain('Varun Tej');
       appStorage.remove('lira_user_profile');
-    });
-
-    it('puts the project initials in the title row, right before the project name, and not in a column of their own', () => {
-      show();
-      const heading = q('h1')!;
-      const row = heading.parentElement!;
-      expect([...row.children][0].textContent).toBe('LC');
-      expect([...row.children][1]).toBe(heading);
     });
 
     it('says when it was created, or "recently" without a date', () => {

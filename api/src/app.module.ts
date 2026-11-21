@@ -1,5 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { AccessService } from './access/access.service';
+import { GoogleLoginService } from './auth/google-login.service';
+import { GOOGLE_HTTP, GoogleService, type Http } from './google/google.service';
+import { GoogleController } from './google/google.controller';
 import { AttachmentsController } from './attachments/attachments.controller';
 import { AttachmentsService } from './attachments/attachments.service';
 import { AzureBlobStore, BLOB_STORE, type BlobStore } from './attachments/blob-store';
@@ -18,6 +21,8 @@ import { ObjectsController } from './objects/objects.controller';
 import { ObjectsService } from './objects/objects.service';
 import { PeopleController } from './people/people.controller';
 import { PeopleService } from './people/people.service';
+import { StandupsController } from './standups/standups.controller';
+import { StandupsService } from './standups/standups.service';
 import { SessionGuard } from './auth/session.guard';
 import { HealthController } from './health/health.controller';
 import { MetricsService } from './observability/metrics.service';
@@ -26,16 +31,20 @@ import { TicketsService } from './tickets/tickets.service';
 import { SpacesController } from './spaces/spaces.controller';
 import { SpacesService } from './spaces/spaces.service';
 
+/** Things a test replaces: file storage, email, and the way Google is reached. The real server uses none of these. */
+export interface AppOverrides { blobStore?: BlobStore; emailSender?: EmailSender; googleHttp?: Http }
+
 @Module({})
 export class AppModule {
   /** `blobStore` lets a test supply file storage in memory; the real server builds Azure Blob Storage from its settings, or none. */
-  static forRoot(config: Config, overrides: { blobStore?: BlobStore; emailSender?: EmailSender } = {}): DynamicModule {
+  static forRoot(config: Config, overrides: AppOverrides = {}): DynamicModule {
     const blobStore = overrides.blobStore ?? (config.storage ? new AzureBlobStore(config.storage.account, config.storage.key, config.storage.container) : null);
     return {
       module: AppModule,
-      controllers: [AuthController, SpacesController, TicketsController, AttachmentsController, KvController, PeopleController, ObjectsController, InvitationsController, HealthController],
-      providers: [{ provide: CONFIG, useValue: config }, DbService, AuditService, MetricsService, AuthService, ClientGuard, SessionGuard, SpacesService, TicketsService, AttachmentsService, KvService, AccessService, PeopleService, ObjectsService, InvitationsService,
-        { provide: BLOB_STORE, useValue: blobStore }, { provide: EMAIL_SENDER, useValue: overrides.emailSender ?? new NoEmailSender() }],
+      controllers: [AuthController, SpacesController, TicketsController, AttachmentsController, KvController, PeopleController, ObjectsController, InvitationsController, StandupsController, GoogleController, HealthController],
+      providers: [{ provide: CONFIG, useValue: config }, DbService, AuditService, MetricsService, AuthService, ClientGuard, SessionGuard, SpacesService, TicketsService, AttachmentsService, KvService, AccessService, PeopleService, ObjectsService, InvitationsService, StandupsService,
+        { provide: BLOB_STORE, useValue: blobStore }, GoogleService, GoogleLoginService, { provide: GOOGLE_HTTP, useValue: overrides.googleHttp ?? fetch },
+        { provide: EMAIL_SENDER, useFactory: (google: GoogleService) => overrides.emailSender ?? (config.google ? google : new NoEmailSender()), inject: [GoogleService] }],
     };
   }
 }

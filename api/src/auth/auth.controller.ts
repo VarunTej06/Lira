@@ -1,9 +1,10 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, Inject, Post, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpCode, Inject, Post, Query, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import type { ZodType } from 'zod';
 import { CONFIG, type Config } from '../config';
 import { AuthService, type SignedIn } from './auth.service';
 import { ClientGuard } from './client.guard';
+import { GoogleLoginService, LOGIN_COOKIE } from './google-login.service';
 import { fieldErrors, loginSchema, signupSchema } from './schemas';
 import { clearedCookie, sessionCookie, tokenFromCookieHeader } from './session';
 
@@ -20,7 +21,38 @@ const tokenOf = (req: Request) => tokenFromCookieHeader(req.headers.cookie);
 @Controller()
 @UseGuards(ClientGuard)
 export class AuthController {
-  constructor(@Inject(AuthService) private readonly auth: AuthService, @Inject(CONFIG) private readonly config: Config) {}
+  constructor(
+    @Inject(AuthService) private readonly auth: AuthService, @Inject(CONFIG) private readonly config: Config,
+    @Inject(GoogleLoginService) private readonly googleLogin: GoogleLoginService,
+  ) {}
+
+  private get origin(): string { return this.config.allowedOrigins[0] ?? ''; }
+  private loginCookie(value: string, maxAge: number): string { return `${LOGIN_COOKIE}=${value}; Max-Age=${maxAge}; Path=/api/auth/google; HttpOnly; SameSite=Lax${this.config.cookieSecure ? '; Secure' : ''}`; }
+
+  /** Which ways of signing in this server offers, so the page shows only buttons that work. */
+  @Get('auth/providers')
+  providers() { return { google: this.googleLogin.enabled }; }
+
+  /** Sends the browser to Google to sign in or sign up. */
+  @Get('auth/google/start')
+  googleStart(@Query('intent') intent: string | undefined, @Res() res: Response) {
+    if (!this.googleLogin.enabled) return res.redirect(302, `${this.origin}/login?error=google`);
+    const started = this.googleLogin.start(intent === 'signup' ? 'signup' : 'login');
+    res.setHeader('Set-Cookie', this.loginCookie(started.cookie, started.maxAgeSeconds));
+    return res.redirect(302, started.url);
+  }
+
+  /** Google sends the browser back here with a code. Every check passes, or the person is sent to the log-in page with a plain message. */
+  @Get('auth/google/callback')
+  async googleCallback(@Query('code') code: string | undefined, @Query('state') state: string | undefined, @Query('error') error: string | undefined, @Req() req: Request, @Res() res: Response) {
+    const cleared = this.loginCookie('', 0);
+    const failed = () => { res.setHeader('Set-Cookie', cleared); return res.redirect(302, `${this.origin}/login?error=google`); };
+    if (!this.googleLogin.enabled || error || !code || !state) return failed();
+    const signedIn = await this.googleLogin.finish(code, state, new RegExp(`(?:^|; )${LOGIN_COOKIE}=([^;]*)`).exec(req.headers.cookie ?? '')?.[1], address(req));
+    if (!signedIn) return failed();
+    res.setHeader('Set-Cookie', [sessionCookie(signedIn.token, signedIn.maxAgeSeconds, this.config.cookieSecure), cleared]);
+    return res.redirect(302, `${this.origin}/app`);
+  }
 
   @Post('auth/signup')
   async signup(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {

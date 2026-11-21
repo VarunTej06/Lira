@@ -37,10 +37,6 @@ export function ProjectsSection(s: SidebarState) {
                         active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
                       }`}
                     >
-                      <span
-                        className="w-5 h-5 rounded-md flex items-center justify-center text-4xs font-bold text-white bg-white/15 flex-shrink-0"                      >
-                        {p.key.slice(0, 2)}
-                      </span>
                       <span className="truncate flex-1">{p.name}</span>
                     </button>
                     <RowMenuButton

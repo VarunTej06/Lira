@@ -282,6 +282,22 @@ Good to know:
 
 ---
 
+## 13b. The hosted edition (Liraspaces, version 4.0.0)
+
+The local edition above is unchanged. The hosted edition is the same app built with `npm run hosted` (public pages at `/`, the app under `/app`, port 5175) plus the server in `api/`.
+
+```
+cd api
+npm install
+npm run build
+npm test          # the database tests run only when TEST_DATABASE_URL is set (throwaway schema only)
+```
+
+- A local test database: `docker run -d --rm --name lira-test-pg -e POSTGRES_PASSWORD=testonly -p 127.0.0.1:55432:5432 postgres:16-alpine`, then `TEST_DATABASE_URL=postgres://postgres:testonly@127.0.0.1:55432/postgres TEST_DATABASE_SSL=disable npm test`. Stop the container afterwards.
+- Migrations: the `migrate` script of the API, run as the server admin (see [api/README.md](api/README.md)).
+- Settings (environment variables) of the API are listed in [api/README.md](api/README.md); Google sign-in and Meet links need the four `GOOGLE_*` and `TOKEN_ENCRYPTION_KEY` settings ([docs/03-sop/google-setup.md](docs/03-sop/google-setup.md)).
+- Running it on Azure (the rehearsal): [infra/azure-playground/README.md](infra/azure-playground/README.md).
+
 ## 14. Security
 
 The local API only answers Lira itself, links are checked, and the packages are audited. The full 20-point check, what was fixed and what still applies is in [SECURITY_REPORT.md](SECURITY_REPORT.md). Run `npm audit` before releases and after adding any package.

@@ -60,11 +60,11 @@ export class AuthService {
       await this.audit.record({ action: 'auth.login', outcome: 'denied', sourceIp: ip, detail: { reason: 'locked' } });
       throw new HttpException('Too many wrong attempts. Wait a few minutes and try again.', HttpStatus.TOO_MANY_REQUESTS);
     }
-    const found = await this.db.query<{ id: string; email: string; name: string; password_hash: string }>(
+    const found = await this.db.query<{ id: string; email: string; name: string; password_hash: string | null }>(
       'SELECT id, email, name, password_hash FROM users WHERE lower(email) = $1', [input.email]);
     const user = found.rows[0];
-    if (!user) await spendCheckTime(input.password);
-    if (!user || !(await verifyPassword(user.password_hash, input.password))) {
+    if (!user?.password_hash) await spendCheckTime(input.password); // no such account, or one that signs in with Google only: same answer, same time
+    if (!user?.password_hash || !(await verifyPassword(user.password_hash, input.password))) {
       await this.recordAttempt(emailKey, addressKey, false);
       this.metrics.inc('auth_login_total', { outcome: 'wrong' });
       await this.audit.record({ actor: user?.id ?? null, action: 'auth.login', outcome: 'denied', sourceIp: ip, detail: { reason: 'wrong_credentials' } });
@@ -102,7 +102,8 @@ export class AuthService {
     return { user, organisations: await this.memberships(this.db, user.id) };
   }
 
-  private createSession(tx: PoolClient, userId: string, token: string, remember: boolean, maxAgeSeconds: number) {
+  /** Starts a session for a person: only a hash of the token is stored. Used by every way of signing in. */
+  createSession(tx: PoolClient, userId: string, token: string, remember: boolean, maxAgeSeconds: number) {
     return tx.query('INSERT INTO sessions (user_id, token_hash, remember, expires_at) VALUES ($1, $2, $3, now() + make_interval(secs => $4))',
       [userId, hashToken(token), remember, maxAgeSeconds]);
   }

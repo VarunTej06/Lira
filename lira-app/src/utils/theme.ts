@@ -1,4 +1,5 @@
 import { appStorage } from './appStorage';
+import { isHosted } from './edition';
 import type { ThemeName } from '../theme/palette';
 /**
  * The light / dark theme, and which palette each of them uses. It is changed in Settings and in System settings.
@@ -19,11 +20,15 @@ export const THEME_EVENT = 'lira-theme-changed';
 
 const belongs = (theme: Theme, palette: unknown): palette is ThemeName => (PALETTES[theme] as readonly unknown[]).includes(palette);
 
+/** Light until the person chooses dark in the hosted edition, on the public pages and in the app alike. The local edition keeps its own default. */
+const DEFAULT_THEME: Theme = isHosted() ? 'light' : 'dark';
+
 export function getTheme(): Theme {
   try {
-    return appStorage.get(THEME_KEY) === 'light' ? 'light' : 'dark'; // dark is the default
+    const saved = appStorage.get(THEME_KEY);
+    return saved === 'light' || saved === 'dark' ? saved : DEFAULT_THEME;
   } catch {
-    return 'dark';
+    return DEFAULT_THEME;
   }
 }
 

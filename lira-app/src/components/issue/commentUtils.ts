@@ -21,3 +21,11 @@ export function newComment(draft: CommentDraft, now = new Date()): Comment {
   const me = currentUser();
   return { id: uuidv4(), author: me.initials, authorInitials: me.initials, content: draft.html, attachments: draft.files, createdAt: now };
 }
+
+const ESCAPES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+
+/** Plain typed text as the HTML a comment stores: escaped, a blank line starts a paragraph, a new line is a line break. */
+export function plainToCommentHtml(text: string): string {
+  return text.trim().replace(/\r\n/g, '\n').split(/\n{2,}/)
+    .map(p => `<p>${p.replace(/[&<>"']/g, c => ESCAPES[c]).replace(/\n/g, '<br>')}</p>`).join('');
+}

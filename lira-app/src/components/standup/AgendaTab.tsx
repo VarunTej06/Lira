@@ -1,7 +1,7 @@
 import { Check, Copy, AlertTriangle, Clock, Ban, ListChecks } from 'lucide-react';
 import { Avatar } from '../common/Avatar';
 import type { Issue } from '../../types/issue';
-import { FIELD, LABEL, Section, TicketRow } from './parts';
+import { FIELD, LABEL, PersonTicket, Section, TicketRow } from './parts';
 import type { StandupState } from './useStandup';
 import { NO_ASSIGNEE_KEY } from '../../utils/standupUtils';
 
@@ -18,7 +18,7 @@ export function AgendaTab(s: StandupState) {
     { label: 'To do / backlog', value: agenda.upNext.length + agenda.backlog.length, color: 'text-lira-text' },
     { label: 'Done · 24h', value: agenda.doneRecently.length, color: 'text-emerald-600' },
   ];
-  const rows = (list: Issue[], limit = list.length) => list.slice(0, limit).map(i => <TicketRow key={i.id} issue={i} onOpen={openIssue} />);
+  const rows = (list: Issue[]) => list.map(i => <TicketRow key={i.id} issue={i} onOpen={openIssue} />);
 
   return (
     <>
@@ -54,8 +54,8 @@ export function AgendaTab(s: StandupState) {
           </Section>
           <Section title="In progress" icon={<Clock className="w-3.5 h-3.5 text-lira-blue" />} count={agenda.inProgress.length} empty="Nothing in progress.">{rows(agenda.inProgress)}</Section>
           <Section title="Done in the last 24 hours" icon={<Check className="w-3.5 h-3.5 text-emerald-500" />} count={agenda.doneRecently.length} empty="Nothing finished yet.">{rows(agenda.doneRecently)}</Section>
-          <Section title="Up next · To do" icon={<ListChecks className="w-3.5 h-3.5 text-lira-muted" />} count={agenda.upNext.length} empty="Nothing waiting.">{rows(agenda.upNext, 8)}</Section>
-          <Section title="Backlog (top)" icon={<ListChecks className="w-3.5 h-3.5 text-lira-muted" />} count={agenda.backlog.length} empty="Backlog is empty.">{rows(agenda.backlog, 6)}</Section>
+          <Section title="Up next · To do" icon={<ListChecks className="w-3.5 h-3.5 text-lira-muted" />} count={agenda.upNext.length} empty="Nothing waiting.">{rows(agenda.upNext)}</Section>
+          <Section title="Backlog" icon={<ListChecks className="w-3.5 h-3.5 text-lira-muted" />} count={agenda.backlog.length} empty="Backlog is empty.">{rows(agenda.backlog)}</Section>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 gap-3">
@@ -67,14 +67,10 @@ export function AgendaTab(s: StandupState) {
                 <span className="text-sm font-semibold text-lira-text">{p.name}</span>
                 {p.stale.length > 0 && <span className="ml-auto text-3xs px-2 py-0.5 rounded-full bg-red-100 text-red-700">{p.stale.length} need update</span>}
               </div>
-              {([['Yesterday', p.done], ['Today', p.doing], ['Next', p.next]] as const).map(([label, list]) => (
+              {([['Yesterday', p.done], ['Today', p.doing], ['Next', p.next], ['Backlog', p.backlog]] as const).map(([label, list]) => (
                 <div key={label} className="px-3 py-1.5 border-b border-lira-border last:border-0">
                   <div className="text-3xs font-semibold uppercase tracking-wide text-lira-muted mb-0.5">{label}</div>
-                  {list.length === 0 ? <div className="text-xs text-lira-muted">None</div> : list.map(i => (
-                    <button key={i.id} onClick={() => openIssue(i)} className="block w-full text-left text-xs text-lira-text truncate hover:text-lira-blue cursor-pointer py-0.5">
-                      <span className="font-mono text-lira-muted mr-1.5">{i.key}</span>{i.title}
-                    </button>
-                  ))}
+                  {list.length === 0 ? <div className="text-xs text-lira-muted">None</div> : list.map(i => <PersonTicket key={i.id} issue={i} onOpen={openIssue} />)}
                 </div>
               ))}
               {p.blocked.length > 0 && (

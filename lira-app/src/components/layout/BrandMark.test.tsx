@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { cleanup, mount, q } from '../../test/render';
 import { BrandMark } from './BrandMark';
 
@@ -12,8 +13,9 @@ describe('BrandMark', () => {
     expect(q('a')).toBeNull();
   });
 
-  it('leads to the coming-soon page in the hosted edition', () => {
-    mount(<BrandMark edition="hosted" />);
-    expect(q('a')!.getAttribute('href')).toBe('/coming-soon');
+  it('leads to For you, inside the app, in the hosted edition: never out to the public pages', () => {
+    mount(<MemoryRouter initialEntries={['/projects']}><BrandMark edition="hosted" /><Routes><Route path="*" element={null} /></Routes></MemoryRouter>);
+    expect(q('a')!.getAttribute('href')).toBe('/for-you');
+    expect(q('a')!.getAttribute('href')).not.toContain('coming-soon');
   });
 });

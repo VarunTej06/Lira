@@ -139,3 +139,25 @@ describe('projects, roadmaps and dashboards in the hosted edition', () => {
     expect(localStorage.getItem('lira_projects')).not.toBeNull();
   });
 });
+
+describe('the look the person chose', () => {
+  it('stays when they sign in with nothing saved for it, and is saved for next time', async () => {
+    localStorage.setItem('lira_theme', 'dark');
+    localStorage.setItem('lira_dark_palette', 'blackridge');
+    localStorage.setItem('lira_standups', 'left behind');
+    api.readKv.mockResolvedValue(ok({ shared: {}, mine: {} }));
+    await startHostedKv('org-1');
+    expect(localStorage.getItem('lira_theme')).toBe('dark');
+    expect(localStorage.getItem('lira_dark_palette')).toBe('blackridge');
+    expect(localStorage.getItem('lira_standups')).toBeNull(); // everything else of the earlier visit is gone
+    await flushKv();
+    expect(api.writeKv).toHaveBeenCalledWith('org-1', { mine: { lira_theme: 'dark', lira_dark_palette: 'blackridge' } });
+  });
+
+  it('is the one the server has for the person, when it has one, not the one this browser held', async () => {
+    localStorage.setItem('lira_theme', 'dark');
+    api.readKv.mockResolvedValue(ok({ shared: {}, mine: { lira_theme: 'light' } }));
+    await startHostedKv('org-1');
+    expect(localStorage.getItem('lira_theme')).toBe('light');
+  });
+});

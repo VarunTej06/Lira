@@ -185,7 +185,8 @@ export function useStandup(isOpen: boolean, scope: StandupScope, onClose: () => 
     const row = (key: string, name: string, mine: Issue[], done: Issue[], blocked: typeof agenda.blocked, stale: typeof agenda.needsUpdate) => ({
       key, name, done, blocked, stale,
       doing: mine.filter(i => isStatus(i, 'inprogress')),
-      next: mine.filter(i => isStatus(i, 'todo')).slice(0, 3),
+      next: mine.filter(i => isStatus(i, 'todo')),
+      backlog: mine.filter(i => isStatus(i, 'backlog')),
     });
     const keys = Array.from(new Set(scoped.map(personKey).filter((k): k is string => !!k))).sort();
     const rows = keys.map(k => row(

@@ -23,6 +23,9 @@ The hosted edition's server: sign-up, log-in, log-out and "who am I", on Postgre
 | `GET/POST/DELETE /api/orgs/:orgId/grants` | View, Edit or Manage for a person or team on a space, project, roadmap or dashboard (ADR-0010) |
 | `GET/PUT/DELETE /api/orgs/:orgId/objects/:kind/:id` | Projects, roadmaps and dashboards, one row each, with versions. The list holds only what the caller may view |
 | `GET/POST/DELETE /api/orgs/:orgId/invitations`, `POST /api/invitations/accept` | Invitations by email: single use, 7 days, for the invited address only; only a hash of the link is stored |
+| `GET/POST/PATCH/DELETE /api/orgs/:orgId/standups`, `GET .../standups/audience` | Calls, once or repeating (every day, weekday or week until a last day, at most a year, in a time zone), each for the whole organisation (a stand-up), a space, a project or a sprint (`scopeType`, `scopeId`, `scopeName`; fixed once made). The link is pasted (Google Meet or Microsoft Teams, https only, those hosts only) or, when none is given and Google is connected, made as a Meet link. Owner and Admin schedule, change and delete and see who is invited; everyone else sees only the calls they are invited to, directly or through a team. Each invited person is emailed once when the call is made |
+| `GET /api/orgs/:orgId/google`, `POST .../google/connect`, `DELETE .../google`, `GET /api/google/callback` | The organisation's connected Google account (the Owner connects it; Admins may see its status). Keeps only an encrypted refresh token. Makes Meet links and sends invitation emails. See `docs/03-sop/google-setup.md` |
+| `GET /api/auth/providers`, `GET /api/auth/google/start`, `GET /api/auth/google/callback` | Signing up and in with Google (OpenID Connect, code flow with PKCE, state and nonce in a short signed cookie; the ID token is checked for signature, issuer, audience, expiry, nonce and a verified email). Needs the `GOOGLE_*` settings. With `?intent=signup` (the landing page button) it also asks for the Meet and Gmail permissions and keeps the refresh token, encrypted, for the new owner's organisation; log-in asks only for identity. A new person gets an account and an organisation as owner; an earlier password account for the same address is taken over and its password removed |
 | `GET /health`, `GET /ready` | The process is up; the database answers |
 | `GET /metrics` | Counters as text. Not forwarded by the public web server |
 
@@ -41,6 +44,7 @@ Calls that change something must come from an allowed origin and carry `X-Reques
 | `PORT` | | `8080` |
 | `STORAGE_ACCOUNT`, `STORAGE_KEY` | Blob Storage account and key for attachments, set together. Without them the attachment routes answer 503 | none |
 | `STORAGE_CONTAINER` | Name of the private container | `attachments` |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `TOKEN_ENCRYPTION_KEY` | The Google OAuth client and the 32-byte (base64) key that protects stored tokens. All four together, or none: without them Google is off, a stand-up needs a pasted link and no email is sent | none |
 
 ## Database
 
@@ -55,8 +59,8 @@ It creates the `lira_app` role (which owns nothing) and applies what has not run
 ## Tests
 
 ```
-npm test                                   # 57 tests, no database needed
-TEST_DATABASE_URL=postgres://admin:...@host:5432/postgres npm test   # all 130
+npm test                                   # 83 tests, no database needed
+TEST_DATABASE_URL=postgres://admin:...@host:5432/postgres npm test   # all 195
 ```
 
 The database tests create a schema of their own and drop it at the end. They use the application role's real permissions through `role=lira_app` and never change its password. Point them only at a rehearsal or test server.
@@ -74,4 +78,4 @@ node dist/main.js
 
 ## Not done yet
 
-Email verification, password reset, Google sign-in, a schedule that deletes expired sessions, breach checking of passwords, sending email (an invitation shows its link to copy until a Gmail sender is connected), stand-ups, and rows of their own for sprint goals, stand-ups, the team directory and board settings (those stay in the shared settings, Owner and Admin only).
+Email verification, password reset, Google sign-in, a schedule that deletes expired sessions, breach checking of passwords, a Microsoft Teams link creator, reminders before a call, putting calls into the Google Calendar, changing one day of a series, and rows of their own for sprint goals, the team directory and board settings (those stay in the shared settings, Owner and Admin only).

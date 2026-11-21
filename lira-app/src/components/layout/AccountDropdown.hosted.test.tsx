@@ -33,4 +33,11 @@ describe('Teams and access in the hosted edition', () => {
     await click(byText('button', 'Teams and access'));
     expect(q('#where')!.textContent).toBe('/teams');
   });
+
+  it('has Calls in the account menu, which opens the Manage calls page', async () => {
+    open();
+    await click(q('button[title="Your account"]'));
+    await click(byText('button', 'Calls'));
+    expect(q('#where')!.textContent).toBe('/calls');
+  });
 });

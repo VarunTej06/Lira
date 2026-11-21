@@ -137,16 +137,21 @@ export default {
         'logo-settle': 'logoSettle 0.9s cubic-bezier(.2,.8,.3,1) both',
         'logo-settle-again': 'logoSettleAgain 0.9s cubic-bezier(.2,.8,.3,1) both',
         'logo-settle-loop': 'logoSettle 1.6s cubic-bezier(.2,.8,.3,1) infinite',
-        // The word "anywhere" in the landing page's black band is typed each time the band scrolls into view; the caret blinks
-        typing: 'typing 1.4s steps(8) 0.3s both',
+        // The caret after the typed word in the landing page's black band blinks
         caret: 'caret 1.1s steps(1) infinite',
+        // The Discover cards of the landing page: they fly in from the far right, overshoot a little to the left, and settle
+        'card-in': 'cardIn 0.6s cubic-bezier(.22,.9,.3,1) both',
         'chat-pop': 'chatPop 0.42s cubic-bezier(.22,1,.36,1) both',
         'chat-out': 'chatOut 0.3s cubic-bezier(.5,0,.75,0) forwards',
         'msg-in': 'msgIn 0.35s cubic-bezier(.2,.8,.3,1) both',
       },
       keyframes: {
-        typing: { from: { width: '0' } },
         caret: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '0' } },
+        cardIn: {
+          '0%': { transform: 'translateX(100vw) rotate(6deg)', opacity: '0' },
+          '70%': { transform: 'translateX(-18px) rotate(-1deg)', opacity: '1' },
+          '100%': { transform: 'translateX(0) rotate(0deg)', opacity: '1' },
+        },
         chatPop: {
           "0%": { opacity: "0", transform: "scale(0.04)", borderRadius: "9999px" },
           "55%": { opacity: "1" },

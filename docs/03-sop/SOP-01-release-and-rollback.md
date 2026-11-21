@@ -4,7 +4,7 @@
 
 ## Prerequisites
 - Pull request approved by a code owner (a second code owner if it touches auth, data access, validation, secrets or migrations).
-- From `lira-app/`: `npm run test:all` passes locally (typecheck, lint with 0 warnings, 1585+ tests, data health). **(manual until DevOps)**
+- From `lira-app/`: `npm run test:all` passes locally (typecheck, lint with 0 warnings, 2074+ app tests, and in `api/` `npm test` with `TEST_DATABASE_URL` pointing at a throwaway schema (195 tests), data health). **(manual until DevOps)**
 - `npm audit` shows no high or critical findings. **(manual until DevOps)**
 - Release notes drafted: what changed, any migration, any config change, how to roll back.
 
@@ -29,3 +29,14 @@ Trigger if: error rate above 2× baseline for 5 minutes, any data-integrity doub
 
 ## Records
 Release log entry: version, commit, date, approvers, migration yes/no, smoke result, rollback yes/no.
+
+## Until the pipeline exists: releasing to the Azure rehearsal
+
+Done by hand with [`infra/azure-playground/Setup-Playground.ps1`](../../infra/azure-playground/README.md), from a committed tag.
+1. Run the prerequisites above.
+2. A new migration (a new file in `api/migrations`, never an edited one): `-Step database` applies it. It must work with the previous API version.
+3. `-Step build`, then `-Step images -WebTag <new> -ApiTag <new>`. **Use a new tag every time**: deploying the same tag again does not start a new revision and the old code keeps running.
+4. `-Step deploy -WebTag <new> -ApiTag <new>`, then `-Step status` (health, readiness, and `/api/me` must answer 401).
+5. Smoke checks from step 3 above, in the browser.
+
+Rollback: `-Step deploy` with the previous tags. The images stay in the registry until the sandbox ends.

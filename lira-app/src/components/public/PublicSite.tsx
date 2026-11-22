@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { useRedirectIfSignedIn } from '../../hooks/useRedirectIfSignedIn';
 import { PublicLayout } from './PublicLayout';
 
 const LandingPage = lazy(() => import('./LandingPage'));
@@ -22,6 +23,7 @@ const PUBLIC_TITLES: Readonly<Record<string, string>> = {
 export function PublicSite() {
   const { pathname } = useLocation();
   useEffect(() => { if (PUBLIC_TITLES[pathname]) document.title = PUBLIC_TITLES[pathname]; }, [pathname]);
+  useRedirectIfSignedIn(pathname === '/' || pathname === '/login');
   return (
     <PublicLayout path={pathname}>
       <Suspense fallback={<p role="status" className="p-10 text-lira-muted">Loading</p>}>

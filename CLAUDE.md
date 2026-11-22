@@ -32,7 +32,7 @@ These are the owner's own standing requirements; they apply to every change.
 
 | Check | Command |
 |---|---|
-| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 2074 tests, data health) |
+| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 2078 tests, data health) |
 | Types | `npx tsc -b` |
 | Lint | `npm run lint` (must report 0 warnings) |
 | Tests | `npm test` (single file: `npx vitest run path/to/file.test.ts`) |

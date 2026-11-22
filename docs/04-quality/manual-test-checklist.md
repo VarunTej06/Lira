@@ -483,6 +483,16 @@ Same set-up as A37. The Google lines need Google set up first (`docs/03-sop/goog
 - [ ] Schedule with the link left empty. Expect: a meet.google.com link on the call; each invited person gets an email from the connected account (time in the call's time zone, the link, and "It repeats ..." for a series), and the page says how many emails were sent.
 - [ ] Disconnect Google. Expect: scheduling without a link is refused with a message to paste one or connect Google.
 
+### A44. Already signed in: the public pages open the app (21 Nov 2026)  ◐
+Hosted app, an account that is signed in.
+- [ ] Sign in, then close the tab (do not log out) and open the site address again. Expect: you land in your workspace, not on the landing page.
+- [ ] Close the whole browser, open it again and go to the site. Expect: the same.
+- [ ] While signed in open the landing page and then `/login` by typing the address. Expect: each sends you to the app.
+- [ ] Open `/signup`, `/terms` and `/privacy` while signed in. Expect: they show as normal, no redirect.
+- [ ] Log out, then open the site address. Expect: the landing page.
+- [ ] Sign in without **Remember me**, then leave the browser closed longer than the session hours. Expect: the landing page, and logging in asks for the password.
+- [ ] On a phone sign in, then turn on **Desktop site**. Expect: you land in the app and stay signed in.
+
 ### A43. The call agenda lists every open ticket (21 Nov 2026)
 Use a space that has more than ten To do tickets and more than ten Backlog tickets (the LIRA space does), and its Stand-up button.
 - [ ] Open the Agenda tab, "By status". Expect: "Up next · To do" lists every To do ticket (its count in the heading equals the rows below it) and "Backlog" lists every backlog ticket, not only the first 8 and 6. Done tickets appear only under "Done in the last 24 hours".

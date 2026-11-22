@@ -16,7 +16,11 @@ async function visit(path: string) {
   mount(<MemoryRouter initialEntries={[path]}><PublicSite /></MemoryRouter>);
   await settle(400);
 }
-const body = () => JSON.parse((fetchMock.mock.calls[0][1] as RequestInit).body as string);
+const callsTo = (path: string) => fetchMock.mock.calls.filter(c => c[0] === path);
+const logins = () => callsTo('/api/auth/login');
+const body = (path = '/api/auth/login') => JSON.parse((callsTo(path)[0][1] as RequestInit).body as string);
+/** Everything answers as the given reply except the page's own "is someone already signed in" question, which says no. */
+const answerAs = (reply: () => Response) => fetchMock.mockImplementation(async (url: string) => (url === '/api/me' ? json(401, { error: { message: 'Sign in.' } }) : reply()));
 const alerts = () => qa('[role="alert"]').map(a => a.textContent);
 
 describe('log in', () => {
@@ -28,20 +32,20 @@ describe('log in', () => {
   });
 
   it('sends the email and password, and opens the app on success', async () => {
-    fetchMock.mockResolvedValue(json(200, { user: { id: '1', email: 'asha@example.com', name: 'Asha' }, organisations: [] }));
+    answerAs(() => json(200, { user: { id: '1', email: 'asha@example.com', name: 'Asha' }, organisations: [] }));
     await visit('/login');
     await typeInto(q<HTMLInputElement>('#email'), 'asha@example.com');
     await typeInto(q<HTMLInputElement>('#password'), 'a-long-enough-password');
     await click(q('#remember'));
     await click(byText('button', 'Log in'));
     await settle(50);
-    expect(fetchMock.mock.calls[0][0]).toBe('/api/auth/login');
+    expect(logins()).toHaveLength(1);
     expect(body()).toEqual({ email: 'asha@example.com', password: 'a-long-enough-password', remember: true });
     expect(go).toHaveBeenCalledWith('/app');
   });
 
   it('shows the server message for a wrong password, stays on the page, and keeps the typing', async () => {
-    fetchMock.mockResolvedValue(json(401, { error: { code: 'unauthorised', message: 'The email or password is not correct.' } }));
+    answerAs(() => json(401, { error: { code: 'unauthorised', message: 'The email or password is not correct.' } }));
     await visit('/login');
     await typeInto(q<HTMLInputElement>('#email'), 'asha@example.com');
     await typeInto(q<HTMLInputElement>('#password'), 'wrong-password-here');
@@ -73,7 +77,7 @@ describe('log in', () => {
     const busy = byText<HTMLButtonElement>('button', 'Signing in')!;
     expect(busy.disabled).toBe(true);
     await click(busy);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(logins()).toHaveLength(1);
     finish(json(200, {}));
     await settle(50);
   });
@@ -100,8 +104,8 @@ describe('sign up', () => {
     await typeInto(q<HTMLInputElement>('#password'), 'a-long-enough-password');
     await click(byText('button', 'Create account'));
     await settle(50);
-    expect(fetchMock.mock.calls[0][0]).toBe('/api/auth/signup');
-    expect(body()).toEqual({ name: 'Asha Rao', email: 'asha@example.com', password: 'a-long-enough-password' });
+    expect(callsTo('/api/auth/signup')).toHaveLength(1);
+    expect(body('/api/auth/signup')).toEqual({ name: 'Asha Rao', email: 'asha@example.com', password: 'a-long-enough-password' });
     expect(go).toHaveBeenCalledWith('/app');
   });
 
@@ -125,5 +129,13 @@ describe('sign up', () => {
     await click(byText('button', 'Create account'));
     await settle(50);
     expect(q('#name-error')!.textContent).toBe('Use at most 100 characters.');
+  });
+});
+
+describe('a person who is already signed in', () => {
+  it('goes straight to the app from the landing page and from log in, and is not sent there from sign up or the legal pages', async () => {
+    fetchMock.mockResolvedValue(json(200, { user: { id: '1', email: 'asha@example.com', name: 'Asha' }, organisations: [] }));
+    for (const path of ['/', '/login']) { go.mockReset(); cleanup(); await visit(path); expect(go, path).toHaveBeenCalledWith('/app'); }
+    for (const path of ['/signup', '/terms']) { go.mockReset(); cleanup(); await visit(path); expect(go, path).not.toHaveBeenCalled(); }
   });
 });

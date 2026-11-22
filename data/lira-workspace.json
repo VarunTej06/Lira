@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "savedAt": "2026-11-21T08:01:51.231Z",
+  "savedAt": "2026-11-21T10:00:00.000Z",
   "filePath": "D:\\MLOps_LLMOps\\Lira\\data\\lira-workspace.json",
   "spaces": [
     {
@@ -71,8 +71,8 @@
       "color": "#0052CC",
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
-      "updatedAt": "2026-11-05T12:17:43.513Z",
-      "issueCount": 67,
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "issueCount": 98,
       "file": "spaces/LIRA.json"
     },
     {
@@ -688,7 +688,7 @@
       "title": "Containerization with Multi-Stage Dockerfile",
       "description": "## Task\nCreate a production-ready, highly optimized multi-stage Dockerfile for Lira.\n\n## Requirements\n- Build stage using node:20-alpine\n- Production stage using nginx:alpine with custom nginx.conf\n- Support SPA routing without 404s\n- Image size under 35MB",
       "type": "task",
-      "status": "inprogress",
+      "status": "done",
       "priority": "high",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -706,19 +706,19 @@
         {
           "id": "5abf868c-5e8a-401a-8f3d-050b32523793",
           "title": "Write multi-stage Dockerfile with Node.js build & Nginx alpine runner",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-10-27T08:15:46.633Z"
         },
         {
           "id": "a129bad8-dfc1-469f-92ce-30160847e400",
           "title": "Add .dockerignore file for clean lean context",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-10-27T08:15:46.633Z"
         },
         {
           "id": "c1bfec3b-ee71-467a-9378-093ecf82a6e9",
           "title": "Test Docker container build and local port 80 forwarding",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-10-28T08:15:46.633Z"
         }
       ],
@@ -761,6 +761,16 @@
           "oldValue": "December 2026 Sprint",
           "newValue": "November 2026 Sprint",
           "createdAt": "2026-11-21T05:11:26.764Z"
+        },
+        {
+          "id": "349ea62d-2952-4b8c-bc60-b9b98efc7766",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from inprogress to done (the web and API images are built and run in the Azure rehearsal)",
+          "oldValue": "inprogress",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
         }
       ],
       "attachments": [],
@@ -771,11 +781,19 @@
         "VY"
       ],
       "createdAt": "2026-10-27T08:15:46.633Z",
-      "updatedAt": "2026-11-21T05:11:26.764Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
       "sprint": "2026-11",
       "sprintHistory": [
         "2026-10",
         "2026-11"
+      ],
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "inprogress",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
       ]
     },
     {
@@ -1143,7 +1161,7 @@
       "title": "Comprehensive Unit & Integration Tests with Vitest",
       "description": "## Task\nEstablish automated testing framework using Vitest and React Testing Library.\n\n## Coverage Areas\n- Database models, hooks, and local disk synchronization\n- BoardColumn and IssueCard interaction testing\n- Issue detail modal actions",
       "type": "task",
-      "status": "todo",
+      "status": "done",
       "priority": "high",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -1161,19 +1179,19 @@
         {
           "id": "e5e72d23-3af5-4ff4-b8e2-8da2fbf00da3",
           "title": "Set up Vitest and React Testing Library",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-10-28T08:15:46.633Z"
         },
         {
           "id": "5b5c01b4-b5fc-4356-81c7-b61c92a5df10",
           "title": "Unit tests for Dexie sync and issue state mutations",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-10-28T08:15:46.633Z"
         },
         {
           "id": "a46749a8-8a95-47f6-8be3-898c7441a3f5",
           "title": "Component tests for BoardColumn and IssueCard drag interactions",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-10-28T08:15:46.633Z"
         }
       ],
@@ -1196,6 +1214,16 @@
           "oldValue": "October 2026 Sprint",
           "newValue": "November 2026 Sprint",
           "createdAt": "2026-11-05T15:08:26.844Z"
+        },
+        {
+          "id": "dc7acd7b-6468-402c-b6e3-728922c4a870",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from todo to done (app and API unit and integration tests run in the pipeline of checks)",
+          "oldValue": "todo",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
         }
       ],
       "attachments": [],
@@ -1206,10 +1234,18 @@
         "VY"
       ],
       "createdAt": "2026-10-28T08:15:46.633Z",
-      "updatedAt": "2026-11-05T15:08:26.843Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
       "sprint": "2026-11",
       "sprintHistory": [
         "2026-10"
+      ],
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "todo",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
       ]
     },
     {
@@ -9498,7 +9534,7 @@
       "title": "Phase 7: Decide on multi-user",
       "description": "Stay local and single-user, or add a backend (accounts, database, realtime). Must be decided before real invites in Phase 3.",
       "type": "epic",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -9519,18 +9555,36 @@
           "authorInitials": "VY",
           "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
           "createdAt": "2026-11-06T03:49:20.258Z"
+        },
+        {
+          "id": "aba239a9-fc42-4a42-b7bd-39be5e6dd55f",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (decided on 9 Nov 2026: hosted multi-user edition (ADR-0009))",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
         }
       ],
       "attachments": [],
       "linkedIssues": [],
       "rank": 1793936960258,
       "createdAt": "2026-11-06T03:49:20.258Z",
-      "updatedAt": "2026-11-06T04:18:30.215Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
       "watchers": [
         "VY"
       ],
       "id": 167,
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
     },
     {
       "spaceId": 6,
@@ -9538,7 +9592,7 @@
       "title": "Phase 3: Teams, real standup and invites",
       "description": "Named teams assigned to spaces and projects. Standup history, async standup, real calendar invites.",
       "type": "epic",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -9559,18 +9613,36 @@
           "authorInitials": "VY",
           "description": "created this epic from the roadmap \"Lira Platform Roadmap\"",
           "createdAt": "2026-11-06T03:49:20.303Z"
+        },
+        {
+          "id": "99085bc2-b790-47ec-8b48-90bf5fb2c734",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (teams, invitations and stand-up calls are built in the hosted edition)",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
         }
       ],
       "attachments": [],
       "linkedIssues": [],
       "rank": 1793936960303,
       "createdAt": "2026-11-06T03:49:20.303Z",
-      "updatedAt": "2026-11-06T04:18:30.344Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
       "watchers": [
         "VY"
       ],
       "id": 168,
-      "sprint": "2026-11"
+      "sprint": "2026-11",
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
     },
     {
       "spaceId": 6,
@@ -10033,7 +10105,7 @@
       "title": "Deliver: Phase 7: Decide on multi-user",
       "description": "Checklist for the roadmap item \"Phase 7: Decide on multi-user\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
       "type": "task",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -10048,19 +10120,19 @@
         {
           "id": "a1a",
           "title": "List what the team actually needs shared",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.139Z"
         },
         {
           "id": "a1b",
           "title": "Compare local + git sharing vs hosted backend",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.139Z"
         },
         {
           "id": "a1c",
           "title": "Record the decision",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.139Z"
         }
       ],
@@ -10073,6 +10145,16 @@
           "authorInitials": "VY",
           "description": "created this task from the roadmap \"Lira Platform Roadmap\"",
           "createdAt": "2026-11-06T03:56:04.139Z"
+        },
+        {
+          "id": "11fd96a5-b5ef-4b69-930e-efe407c9174d",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (decided on 9 Nov 2026: hosted multi-user edition (ADR-0009))",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
         }
       ],
       "attachments": [],
@@ -10080,11 +10162,19 @@
       "sprint": "2026-11",
       "rank": 1793937364139,
       "createdAt": "2026-11-06T03:56:04.139Z",
-      "updatedAt": "2026-11-06T04:18:30.276Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
       "watchers": [
         "VY"
       ],
-      "id": 176
+      "id": 176,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
     },
     {
       "spaceId": 6,
@@ -10095,7 +10185,7 @@
       "title": "Deliver: Phase 3: Teams, real standup and invites",
       "description": "Checklist for the roadmap item \"Phase 3: Teams, real standup and invites\" (Lira Platform Roadmap). Each subtask is a step on the roadmap.",
       "type": "task",
-      "status": "backlog",
+      "status": "done",
       "priority": "medium",
       "assignee": "VY",
       "assigneeInitials": "VY",
@@ -10110,25 +10200,25 @@
         {
           "id": "p3a",
           "title": "Team entity: members, roles, capacity",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.207Z"
         },
         {
           "id": "p3b",
           "title": "Assign teams to spaces and projects",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.207Z"
         },
         {
           "id": "p3c",
           "title": "Standup history and async updates",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.207Z"
         },
         {
           "id": "p3d",
           "title": "Real Google / Teams invites (depends on the decision)",
-          "completed": false,
+          "completed": true,
           "createdAt": "2026-11-06T03:56:04.207Z"
         }
       ],
@@ -10151,6 +10241,16 @@
           "oldValue": "December 2026 Sprint",
           "newValue": "November 2026 Sprint",
           "createdAt": "2026-11-06T04:18:30.502Z"
+        },
+        {
+          "id": "291520a4-64fb-4fe7-85fb-2ebf88fdca0c",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from backlog to done (teams, invitations and stand-up calls are built in the hosted edition)",
+          "oldValue": "backlog",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
         }
       ],
       "attachments": [],
@@ -10158,12 +10258,20 @@
       "sprint": "2026-11",
       "rank": 1793937364207,
       "createdAt": "2026-11-06T03:56:04.207Z",
-      "updatedAt": "2026-11-06T04:18:30.501Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
       "watchers": [
         "VY"
       ],
       "id": 177,
-      "sprintHistory": []
+      "sprintHistory": [],
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "backlog",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
     },
     {
       "spaceId": 6,
@@ -10797,6 +10905,1947 @@
         "VY"
       ],
       "id": 184
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-81",
+      "title": "Hosted API and database",
+      "description": "## Epic Goal\nThe server side of Liraspaces: a NestJS API on PostgreSQL where the server decides who may see and change what.\n\nCreated and closed in the 4.0.0 clean-up; dates are estimated from the git history.",
+      "type": "epic",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "epic",
+        "hosted",
+        "api",
+        "database"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "de3398de-24a1-4915-930f-97ee581e0374",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "72ca54c9-d4fc-4b31-ba60-ac7cfe0bbecc",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (all its tasks are delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3100,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 185,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-82",
+      "parentId": 185,
+      "epicId": 185,
+      "epicLink": "Hosted API and database",
+      "title": "NestJS API with validated requests",
+      "description": "## Task\nEvery request body is checked with a zod schema; unknown fields are refused; errors carry no stack traces.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "api",
+        "security"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "7772e16a-5fa4-4489-bdb5-fc35951cc14d",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "acb4211f-6eb9-4ba0-a502-364f3312aa0b",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3200,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 186,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-83",
+      "parentId": 185,
+      "epicId": 185,
+      "epicLink": "Hosted API and database",
+      "title": "PostgreSQL schema and migrations V1 to V13",
+      "description": "## Task\nTables, indexes and the migration runner, with every query scoped by organisation and tests that one organisation cannot read another.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "database",
+        "migrations"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "6a40abce-638b-4eca-ad95-30c4b4398055",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "7455fcc2-67ce-4430-b205-26c669a1cc14",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3300,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 187,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-84",
+      "parentId": 185,
+      "epicId": 185,
+      "epicLink": "Hosted API and database",
+      "title": "Health and readiness endpoints, logs and metrics",
+      "description": "## Task\n/health and /ready (which checks the database), structured logs without secrets or ticket text, and custom metrics.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "observability"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "575ef04a-4053-4ea7-8cdf-f4bbb317b01e",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "32fa551e-c14b-4595-8c92-f3836eadedaf",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3400,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 188,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-85",
+      "parentId": 185,
+      "epicId": 185,
+      "epicLink": "Hosted API and database",
+      "title": "Append-only audit log",
+      "description": "## Task\nWho did what and when for every create, update, delete and permission change, kept apart from the application logs.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "audit",
+        "security"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "95826aec-e560-4f35-a63c-3b66d7b80c68",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "0a9b6759-30a5-439a-922f-0d85bd655287",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3500,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 189,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-86",
+      "title": "Accounts, sessions and sign-in",
+      "description": "## Epic Goal\nPeople can sign up and log in with email and password or with Google, and stay signed in until they log out.\n\nCreated and closed in the 4.0.0 clean-up; dates are estimated from the git history.",
+      "type": "epic",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "epic",
+        "hosted",
+        "auth",
+        "google"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "fe4a43f5-6c0c-4d96-9c70-4aef6db412f7",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "96691676-e744-4e14-a6ff-9fc6f45791d3",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (all its tasks are delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3600,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 190,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-87",
+      "parentId": 190,
+      "epicId": 190,
+      "epicLink": "Accounts, sessions and sign-in",
+      "title": "Email and password accounts with cookie sessions",
+      "description": "## Task\nPasswords hashed with argon2; sessions in HttpOnly, SameSite, Secure cookies; Remember me sets the length.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "auth",
+        "security"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "f78fba70-8382-4859-8090-d564e5f5a4a1",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "18b70700-5aa1-4843-ad53-434365c2abf7",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3700,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 191,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-88",
+      "parentId": 190,
+      "epicId": 190,
+      "epicLink": "Accounts, sessions and sign-in",
+      "title": "Sign in with Google (OIDC with PKCE)",
+      "description": "## Task\nLog in and sign up with Google, with state, nonce and PKCE, and the same account when the email already exists.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "auth",
+        "google"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "9fbf33e8-9738-4f70-9b62-cbad8f431d9b",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "f8687b86-d71b-40a8-b151-d337dbbd8190",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3800,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 192,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-89",
+      "parentId": 190,
+      "epicId": 190,
+      "epicLink": "Accounts, sessions and sign-in",
+      "title": "Google sign-up connects Meet and Gmail",
+      "description": "## Task\nSigning up with Google asks once for the Meet and email permissions and keeps the encrypted refresh token, so Calls does not ask again.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "google",
+        "calls"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "3a08e529-451a-431f-8ae8-ac397c088a65",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "d928e95f-4f0b-4254-9e4e-65901275362b",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 3900,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 193,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-90",
+      "parentId": 190,
+      "epicId": 190,
+      "epicLink": "Accounts, sessions and sign-in",
+      "title": "Signed-in people skip the landing and log-in pages",
+      "description": "## Task\nThe landing page and /login open the app when the browser already holds a valid session.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "auth",
+        "ux"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "ef6c9b9a-a69c-490a-a461-fda1d4d2d822",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "123c5c78-6390-4749-9518-5512174ecd96",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4000,
+      "storyPoints": 2,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 194,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-91",
+      "title": "Organisations, teams, roles and invitations",
+      "description": "## Epic Goal\nWork is shared inside an organisation, with teams, roles and invitations, and the server checks every permission.\n\nCreated and closed in the 4.0.0 clean-up; dates are estimated from the git history.",
+      "type": "epic",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "epic",
+        "hosted",
+        "teams",
+        "permissions"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "3f128162-0913-48ca-9c7a-bc83e4f57a9e",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "94acb64e-c355-42e8-9dee-95ff956ce02b",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (all its tasks are delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4100,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 195,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-92",
+      "parentId": 195,
+      "epicId": 195,
+      "epicLink": "Organisations, teams, roles and invitations",
+      "title": "Organisations and six roles",
+      "description": "## Task\nEach account belongs to organisations with a role; every request is authorised on the server for the calling person.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "permissions",
+        "security"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "55616c64-b661-454b-9527-fa31be13d68f",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "36f1ff53-e711-4f6c-a746-f10775b8b890",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4200,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 196,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-93",
+      "parentId": 195,
+      "epicId": 195,
+      "epicLink": "Organisations, teams, roles and invitations",
+      "title": "Teams with View, Edit and Manage access",
+      "description": "## Task\nTeams of members, assigned to spaces and projects; no data lives only in the browser (ADR-0010).",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "teams"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "04c71f65-cb0e-485a-9e42-740c8a9db216",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "71c13a69-b8e1-4755-a76d-7375063093bf",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4300,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 197,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-94",
+      "parentId": 195,
+      "epicId": 195,
+      "epicLink": "Organisations, teams, roles and invitations",
+      "title": "Email invitations",
+      "description": "## Task\nInvite by email and accept the invite, with the person landing in the right organisation.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "invites"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "3b626a65-bb58-4d03-b908-33caff7a34a7",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "d9396649-df72-4313-ba0a-f9023d3ea387",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4400,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 198,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-95",
+      "title": "Calls: stand-ups, project and sprint syncs",
+      "description": "## Epic Goal\nTeams schedule and run calls from Liraspaces, with the tickets that need an update in front of them.\n\nCreated and closed in the 4.0.0 clean-up; dates are estimated from the git history.",
+      "type": "epic",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "epic",
+        "hosted",
+        "calls",
+        "standup"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "d52aa88c-35f4-40d9-85d2-9db3fe9f7233",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "e1f72212-f171-4562-9124-0546340795d2",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (all its tasks are delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4500,
+      "storyPoints": 26,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 199,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-96",
+      "parentId": 199,
+      "epicId": 199,
+      "epicLink": "Calls: stand-ups, project and sprint syncs",
+      "title": "Schedule calls with Google Meet links and invitations",
+      "description": "## Task\nMake a call, leave the link empty to get a Meet link, and invite people by email.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "calls",
+        "google"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "4b8ec5ec-b9e1-41d4-b590-20f193fd2f86",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "329d63bb-01fe-494e-87d1-d7e7d3a9f958",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4600,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 200,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-97",
+      "parentId": 199,
+      "epicId": 199,
+      "epicLink": "Calls: stand-ups, project and sprint syncs",
+      "title": "Calls page and call popups",
+      "description": "## Task\nOne call button per space, project or sprint, a popup with the calls and Join, and a Manage calls page with filters.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "calls",
+        "ui"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "cec58d5d-5bc8-4cc3-8928-40272f425eca",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "4a1ff12e-ad06-4321-b25d-bf35e21c09e2",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4700,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 201,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-98",
+      "parentId": 199,
+      "epicId": 199,
+      "epicLink": "Calls: stand-ups, project and sprint syncs",
+      "title": "Call agenda lists every open ticket",
+      "description": "## Task\nNeeds update, blocked, in progress, to do and backlog, with no cut-offs, and the backlog per person.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "calls",
+        "standup"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "279c4897-7b86-4239-a6a4-ae98cfada6cb",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "86059bcf-10cc-443b-9bec-c5f50c544f9a",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4800,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 202,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-99",
+      "parentId": 199,
+      "epicId": 199,
+      "epicLink": "Calls: stand-ups, project and sprint syncs",
+      "title": "Comment icon on ticket rows in calls",
+      "description": "## Task\nOn hover a comment icon before the overdue badge lets people add a comment from the call.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "calls",
+        "ui"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "fab16b96-79fa-4bce-9733-3dc5a10af5e6",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "8213cdd7-4638-4390-9808-f28898be57f2",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 4900,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 203,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-100",
+      "title": "Public website and legal pages",
+      "description": "## Epic Goal\nWhat a visitor sees before signing in: the landing page, the log-in and sign-up pages, and the legal pages.\n\nCreated and closed in the 4.0.0 clean-up; dates are estimated from the git history.",
+      "type": "epic",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "epic",
+        "hosted",
+        "website",
+        "legal"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "28f81c4e-7523-4f43-ad4a-ebb4f77d1b7a",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "71e4bc96-9019-400c-83f4-cecc479a17b5",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (all its tasks are delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5000,
+      "storyPoints": 16,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 204,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-101",
+      "parentId": 204,
+      "epicId": 204,
+      "epicLink": "Public website and legal pages",
+      "title": "Landing, log-in and sign-up pages",
+      "description": "## Task\nThe landing page with a sample board and scroll animations, the sign-up bar with a Google button, and log-in with Google offered only when set up.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "website",
+        "ui"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "9b83fcd3-70e0-45f3-8edf-81cc690ff62a",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "6e8d90e9-c91a-4110-bdd7-ef1ff33436d1",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5100,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 205,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-102",
+      "parentId": 204,
+      "epicId": 204,
+      "epicLink": "Public website and legal pages",
+      "title": "Terms, Privacy Policy and User Notice",
+      "description": "## Task\nThe three legal pages, linked in the footer of every page with the operator and contact.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "legal"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "9807b909-d095-499f-9026-7376b0fdf34c",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "fa8524d8-aa1e-4ab8-bbf1-76d9e3570157",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5200,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 206,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-103",
+      "parentId": 204,
+      "epicId": 204,
+      "epicLink": "Public website and legal pages",
+      "title": "Light and dark theme across public pages and app",
+      "description": "## Task\nOne chosen palette in light and dark, kept when moving from the landing page to the app.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-19T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "ui",
+        "theme"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "137c6f3b-b6b6-43e3-9339-26402573ab59",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-19T09:00:00.000Z"
+        },
+        {
+          "id": "5f2857dc-a33d-484c-a905-67121b91d617",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5300,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-19T09:00:00.000Z",
+      "id": 207,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-104",
+      "title": "Azure rehearsal and deployment",
+      "description": "## Epic Goal\nRun the hosted edition on Azure as a rehearsal, reachable at test.liraspaces.com with a trusted certificate.\n\nCreated and closed in the 4.0.0 clean-up; dates are estimated from the git history.",
+      "type": "epic",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "epic",
+        "hosted",
+        "azure",
+        "devops"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "f143d7cc-86f5-4d20-aa05-a2ad3b54fa38",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "e000b121-eb26-449c-80a4-72fa9529dbea",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (all its tasks are delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5400,
+      "storyPoints": 21,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 208,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-105",
+      "parentId": 208,
+      "epicId": 208,
+      "epicLink": "Azure rehearsal and deployment",
+      "title": "Azure playground setup script",
+      "description": "## Task\nOne script creates the resource group, database, storage, registry and the web and API container apps (web public, API internal).",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "azure",
+        "devops"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "ee8d06bf-3504-41a6-9b1a-827c6942ece1",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "49c32323-7e77-4052-92c1-09bc09783561",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5500,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 209,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-106",
+      "parentId": 208,
+      "epicId": 208,
+      "epicLink": "Azure rehearsal and deployment",
+      "title": "Custom domain with a Let's Encrypt certificate",
+      "description": "## Task\nCaddy in a Container Instance gets the certificate and forwards to the web app; the domain points at it with a Hostinger CNAME.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "azure",
+        "tls"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "2fb7fee7-ee2b-4284-98bd-90a96d66ff87",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "0cdb2e6a-bd46-47f6-ab99-662212a8093f",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5600,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 210,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-107",
+      "parentId": 208,
+      "epicId": 208,
+      "epicLink": "Azure rehearsal and deployment",
+      "title": "Release and rollback procedure",
+      "description": "## Task\nSOP-01: build, push with a new image tag, deploy, check, roll back; the same tag does not create a revision.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-20T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "sop",
+        "devops"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "aebf5549-73c3-4f15-b98d-0c553f43c769",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-20T09:00:00.000Z"
+        },
+        {
+          "id": "397bc834-7f1a-4fba-b46c-08ce6741d5ca",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5700,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-20T09:00:00.000Z",
+      "id": 211,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-108",
+      "title": "Documentation and quality for 4.0.0",
+      "description": "## Epic Goal\nThe documents and checks say the same thing as the code for version 4.0.0.\n\nCreated and closed in the 4.0.0 clean-up; dates are estimated from the git history.",
+      "type": "epic",
+      "status": "done",
+      "priority": "high",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-21T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "epic",
+        "docs",
+        "quality",
+        "testing"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "12f24d10-16cd-4dcf-a0db-fc25d8cc30be",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this epic",
+          "createdAt": "2026-11-21T09:00:00.000Z"
+        },
+        {
+          "id": "e5329021-e8b9-4729-86ff-7d269bba1c0d",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (all its tasks are delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5800,
+      "storyPoints": 16,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-21T09:00:00.000Z",
+      "id": 212,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-109",
+      "parentId": 212,
+      "epicId": 212,
+      "epicLink": "Documentation and quality for 4.0.0",
+      "title": "Architecture, READMEs, SOPs and threat model for 4.0.0",
+      "description": "## Task\nHLD and LLD \"as built\", the READMEs, the SOPs, the threat model, the roadmap and CLAUDE.md all describe the hosted edition.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-21T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "docs"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "62be6fd1-a56d-483d-aafa-f0c0a3f6f8fd",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-21T09:00:00.000Z"
+        },
+        {
+          "id": "79647854-c9b0-4704-b590-c3f433d6bfa5",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 5900,
+      "storyPoints": 8,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-21T09:00:00.000Z",
+      "id": 213,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-110",
+      "parentId": 212,
+      "epicId": 212,
+      "epicLink": "Documentation and quality for 4.0.0",
+      "title": "Manual test checklist and Excel",
+      "description": "## Task\nSections A34 to A44 for the hosted work, copied into Lira-manual-test-cases.xlsx.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-21T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "testing",
+        "docs"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "7426eea7-b6a6-4127-8db7-39fed4e00637",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-21T09:00:00.000Z"
+        },
+        {
+          "id": "e46a1e16-4b65-42bb-bd33-5e163924407a",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 6000,
+      "storyPoints": 3,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-21T09:00:00.000Z",
+      "id": 214,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "spaceId": 6,
+      "key": "LIRA-111",
+      "parentId": 212,
+      "epicId": 212,
+      "epicLink": "Documentation and quality for 4.0.0",
+      "title": "Test counts, hygiene and vibe-check ratchets",
+      "description": "## Task\n2078 app tests in 203 files and the API tests, with lint at 0 warnings and the vibe-check limits held.",
+      "type": "task",
+      "status": "done",
+      "priority": "medium",
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "startDate": "2026-11-21T09:00:00.000Z",
+      "dueDate": "2026-11-21T10:00:00.000Z",
+      "labels": [
+        "testing",
+        "quality"
+      ],
+      "subtasks": [],
+      "comments": [],
+      "attachments": [],
+      "linkedIssues": [],
+      "activity": [
+        {
+          "id": "7579bb9d-f671-4095-8ede-2a9534c21e20",
+          "type": "created",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "created this task",
+          "createdAt": "2026-11-21T09:00:00.000Z"
+        },
+        {
+          "id": "1de12ead-91d5-4657-9b20-22f4057aee7e",
+          "type": "status_change",
+          "author": "VY",
+          "authorInitials": "VY",
+          "description": "moved from done to done (delivered in 4.0.0)",
+          "oldValue": "done",
+          "newValue": "done",
+          "createdAt": "2026-11-21T10:00:00.000Z"
+        }
+      ],
+      "sprint": "2026-11",
+      "rank": 6100,
+      "storyPoints": 5,
+      "watchers": [
+        "VY"
+      ],
+      "createdAt": "2026-11-21T09:00:00.000Z",
+      "id": 215,
+      "resolvedAt": "2026-11-21T10:00:00.000Z",
+      "updatedAt": "2026-11-21T10:00:00.000Z",
+      "statusLog": [
+        {
+          "from": "done",
+          "to": "done",
+          "at": "2026-11-21T10:00:00.000Z"
+        }
+      ]
     }
   ]
 }

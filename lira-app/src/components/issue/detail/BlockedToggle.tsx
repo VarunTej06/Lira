@@ -87,7 +87,7 @@ export const BlockedToggle: React.FC<ToggleProps> = ({ issue, blocked, blockers,
         <motion.span
           aria-hidden
           data-testid="blocked-pill"
-          className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full bg-white shadow-sm ${blocked ? 'lira-fire' : ''}`}
+          className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full bg-white ${blocked ? 'lira-fire' : ''}`}
           initial={false}
           animate={{ left: blocked ? 'calc(50% + 0px)' : '4px' }}
           transition={{ type: 'spring', stiffness: 500, damping: 34 }}

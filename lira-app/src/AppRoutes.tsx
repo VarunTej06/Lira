@@ -1,19 +1,36 @@
+import { lazy, Suspense, useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import { DashboardsPage } from './components/dashboards/DashboardsPage';
-import { FiltersPage } from './components/filter/FiltersPage';
-import { ProjectsOverview } from './components/projects/ProjectsOverview';
-import { ProjectDetailView } from './components/projects/ProjectDetailView';
 import { NotFound, PageBoundary } from './components/common/PageBoundary';
-import { SprintsPage } from './components/sprints/SprintsPage';
-import { SprintsOverview } from './components/sprints/SprintsOverview';
-import { ForYouPage } from './components/foryou/ForYouPage';
-import { NoSpaces, RoadmapsRoute } from './components/common/AppPages';
-import { AllTicketsPage } from './components/sprints/AllTicketsPage';
+import { NoSpaces } from './components/common/AppPages';
+import { PageSkeleton } from './components/common/Skeleton';
 import { SpaceView } from './components/space/SpaceView';
+import { isHosted } from './utils/edition';
+
+// Every page except the board is fetched when it is first opened, so the first load stays small
+const StandupsPage = lazy(() => import('./components/standups/StandupsPage').then(m => ({ default: m.StandupsPage })));
+const TeamsPage = lazy(() => import('./components/teams/TeamsPage').then(m => ({ default: m.TeamsPage })));
+const DashboardsPage = lazy(() => import('./components/dashboards/DashboardsPage').then(m => ({ default: m.DashboardsPage })));
+const FiltersPage = lazy(() => import('./components/filter/FiltersPage').then(m => ({ default: m.FiltersPage })));
+const ProjectsOverview = lazy(() => import('./components/projects/ProjectsOverview').then(m => ({ default: m.ProjectsOverview })));
+const ProjectDetailView = lazy(() => import('./components/projects/ProjectDetailView').then(m => ({ default: m.ProjectDetailView })));
+const SprintsPage = lazy(() => import('./components/sprints/SprintsPage').then(m => ({ default: m.SprintsPage })));
+const SprintsOverview = lazy(() => import('./components/sprints/SprintsOverview').then(m => ({ default: m.SprintsOverview })));
+const ForYouPage = lazy(() => import('./components/foryou/ForYouPage').then(m => ({ default: m.ForYouPage })));
+const AllTicketsPage = lazy(() => import('./components/sprints/AllTicketsPage').then(m => ({ default: m.AllTicketsPage })));
+const RoadmapsRoute = lazy(() => import('./components/roadmap/RoadmapsRoute').then(m => ({ default: m.RoadmapsRoute })));
 import { spacePath, type AppRoute } from './routes';
 import type { Project } from './types/project';
 import type { Space } from './types/space';
 import type { Issue } from './types/issue';
+
+// Once the first screen is showing, the other pages are fetched quietly, so opening them one after another does not wait on the network
+const PAGE_LOADERS = [
+  () => import('./components/dashboards/DashboardsPage'), () => import('./components/filter/FiltersPage'),
+  () => import('./components/projects/ProjectsOverview'), () => import('./components/projects/ProjectDetailView'),
+  () => import('./components/sprints/SprintsPage'), () => import('./components/sprints/SprintsOverview'),
+  () => import('./components/foryou/ForYouPage'), () => import('./components/sprints/AllTicketsPage'),
+  () => import('./components/roadmap/RoadmapsRoute'),
+];
 
 type AddIssue = (status: string, opts?: { sprint?: string; spaceId?: number; chooseSpace?: boolean }) => void;
 
@@ -52,9 +69,14 @@ interface AppRoutesProps {
 /** Every page of the app and the address it lives at. */
 export function AppRoutes(p: AppRoutesProps) {
   const navigate = useNavigate();
+  useEffect(() => {
+    const id = window.setTimeout(() => PAGE_LOADERS.forEach(load => { void load(); }), 1200);
+    return () => window.clearTimeout(id);
+  }, []);
   const { route, spaceList, activeSpace, routeSpace, allIssues, everyIssue, issues, selectedProject } = p;
   return (
   <PageBoundary pageKey={p.pageKey}>
+    <Suspense fallback={<PageSkeleton />}>
     <Routes>
       <Route path="/" element={activeSpace
         ? <Navigate to={spacePath(activeSpace.key, 'Board')} replace />
@@ -83,6 +105,8 @@ export function AppRoutes(p: AppRoutesProps) {
           onCreateIssue={() => p.onAddIssue('todo', { chooseSpace: true })}
         />} />
 
+      {isHosted() && <Route path="/teams" element={<TeamsPage />} />}
+      {isHosted() && <Route path="/calls" element={<StandupsPage />} />}
       <Route path="/dashboards" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={p.onOpenIssue} />} />
       <Route path="/dashboards/:dashboardId" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={p.onOpenIssue} />} />
 
@@ -164,6 +188,7 @@ export function AppRoutes(p: AppRoutesProps) {
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   </PageBoundary>
   );
 }

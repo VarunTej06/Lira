@@ -1,6 +1,7 @@
 import { notifySaved } from '../../common/savedToastStore';
 import React, { useState, useRef } from 'react';
-import { applyTheme, getLightPalette, getTheme, isThemeChange, type LightPalette, type Theme } from '../../../utils/theme';
+import { applyTheme, getPalette, getTheme, isThemeChange, type Theme } from '../../../utils/theme';
+import type { ThemeName } from '../../../theme/palette';
 import { useBackupState } from './useBackupState';
 import { cleanProfile, loadLocale, loadNotificationPrefs, loadProfile, saveLocale, saveNotificationPrefs, saveProfile } from '../../../utils/userPrefs';
 import { useResetWhen } from '../../../hooks/useResetWhen';
@@ -27,22 +28,25 @@ export function useSettingsState(props: SettingsModalProps) {
   // ── Appearance State ────────────────────────────────────────────────────────
   // Both are drafts until Save is pressed (see handleSaveAppearance)
   const [theme, setTheme] = useState<Theme>(getTheme);
-  const [lightPalette, setLightPalette] = useState<LightPalette>(getLightPalette);
+  // one palette per theme, so switching between Dark and Light keeps what was picked for each
+  const savedPalettes = (): Record<Theme, ThemeName> => ({ dark: getPalette('dark'), light: getPalette('light') });
+  const [palettes, setPalettes] = useState(savedPalettes);
+  const choosePalette = (palette: ThemeName) => setPalettes(p => ({ ...p, [theme]: palette }));
 
   // Sync section and theme when the dialog opens
   useResetWhen([isOpen, initialSection], () => {
     if (isOpen) {
       setActiveSection(initialSection);
       setTheme(getTheme()); // an unsaved choice from last time is dropped
-      setLightPalette(getLightPalette());
+      setPalettes(savedPalettes());
     }
   });
 
-  const appearanceChanged = isThemeChange(theme, lightPalette);
+  const appearanceChanged = isThemeChange(theme, palettes[theme]);
 
   const handleSaveAppearance = () => {
     if (!appearanceChanged) { onClose(); return; }
-    applyTheme(theme, lightPalette);
+    applyTheme(theme, palettes[theme]);
     notifySaved('Appearance saved');
     onClose();
   };
@@ -107,8 +111,8 @@ export function useSettingsState(props: SettingsModalProps) {
     setActiveSection,
     theme,
     setTheme,
-    lightPalette,
-    setLightPalette,
+    palettes,
+    choosePalette,
     appearanceChanged,
     handleSaveAppearance,
     name,

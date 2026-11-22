@@ -6,6 +6,8 @@
  *   /projects                     all projects          /projects/<projectId>   one project
  *   /sprints                      all sprints           /sprints/2026-11        one sprint
  *   /tickets                      all tickets
+ *   /teams                        people, teams and access (hosted edition)
+ *   /calls                        manage calls: stand-ups, project syncs, sprint and space calls (hosted edition)
  *   /roadmaps                     all roadmaps          /roadmaps/<roadmapId>   one roadmap
  *   /dashboards                   all dashboards        /dashboards/new  the wizard        /dashboards/<id>  one dashboard
  *   /space/<KEY>/<tab>            a space: summary | board | list | calendar | sprints | capacity | forms | ...
@@ -23,6 +25,8 @@ export type AppRoute =
   | { kind: 'forYou' }
   | { kind: 'filters' }
   | { kind: 'tickets' }
+  | { kind: 'teams' }
+  | { kind: 'calls' }
   | { kind: 'projects'; projectId?: string }
   | { kind: 'sprints'; sprintKey?: string }
   | { kind: 'roadmaps'; roadmapId?: string }
@@ -47,6 +51,8 @@ export function parsePath(pathname: string): AppRoute {
     case 'for-you': return { kind: 'forYou' };
     case 'filters': return { kind: 'filters' };
     case 'tickets': return { kind: 'tickets' };
+    case 'teams': return { kind: 'teams' };
+    case 'calls': return { kind: 'calls' };
     case 'projects': return { kind: 'projects', projectId: b };
     case 'sprints': return sprintRoute(b);
     case 'roadmaps': return { kind: 'roadmaps', roadmapId: b };
@@ -66,6 +72,8 @@ export function pathFor(route: AppRoute): string {
     case 'forYou': return '/for-you';
     case 'filters': return '/filters';
     case 'tickets': return '/tickets';
+    case 'teams': return '/teams';
+    case 'calls': return '/calls';
     case 'projects': return itemPath('/projects', route.projectId);
     case 'sprints': return itemPath('/sprints', route.sprintKey, false);
     case 'roadmaps': return itemPath('/roadmaps', route.roadmapId);
@@ -83,6 +91,8 @@ export function tabOf(route: AppRoute): string {
     case 'forYou': return 'ForYou';
     case 'filters': return 'Filters';
     case 'tickets': return 'AllTickets';
+    case 'teams': return 'Teams';
+    case 'calls': return 'Calls';
     case 'projects': return 'Projects';
     case 'sprints': return route.sprintKey ? 'SprintDetail' : 'SprintsHub';
     case 'roadmaps': return 'Roadmaps';
@@ -106,7 +116,7 @@ export function titleOf(route: AppRoute): string {
     case 'roadmaps': return 'Roadmaps';
     case 'dashboards': return 'Dashboards';
     case 'space': return `${route.spaceKey} · ${route.tab}`;
-    default: return 'Lira';
+    default: return 'Liraspaces';
   }
 }
 

@@ -1,0 +1,32 @@
+# Builds the web container of the hosted edition on GitHub's runner and pushes it to an Azure Container Registry.
+# Run by hand: Actions, "Build web image", Run workflow. It needs three repository secrets (Settings, Secrets and variables, Actions):
+#   ACR_LOGIN_SERVER   for example liraacr12345.azurecr.io
+#   ACR_USERNAME       the registry's admin user name (rehearsal only; the real setup uses OIDC with no stored password)
+#   ACR_PASSWORD       the registry's admin password
+name: Build web image
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: lira-app
+          file: lira-app/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.ACR_LOGIN_SERVER }}/liraspaces-web:${{ github.sha }}
+            ${{ secrets.ACR_LOGIN_SERVER }}/liraspaces-web:latest

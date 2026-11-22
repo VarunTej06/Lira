@@ -10,7 +10,7 @@ const LINK_ICON: Record<AttachmentSource, React.ReactNode> = {
   file: <FileText className="w-5 h-5 text-lira-blue" />,
   drive: <HardDrive className="w-5 h-5 text-emerald-600" />,
   onedrive: <Cloud className="w-5 h-5 text-sky-600" />,
-  dropbox: <Package className="w-5 h-5 text-indigo-600" />,
+  dropbox: <Package className="w-5 h-5 text-lira-blue" />,
   link: <Link2 className="w-5 h-5 text-amber-600" />,
 };
 
@@ -40,7 +40,7 @@ export const IssueAttachments: React.FC<IssueAttachmentsProps> = ({ attachments,
 
     onUpdate([...attachments, ...newAttachments]);
     if (tooBig.length) {
-      await alertDialog({ title: 'File not stored', message: `${tooBig.join(', ')} ${tooBig.length === 1 ? 'is' : 'are'} bigger than 2 MB. The name is listed, but the file itself is not stored in Lira.` });
+      await alertDialog({ title: 'File not stored', message: `${tooBig.join(', ')} ${tooBig.length === 1 ? 'is' : 'are'} bigger than 2 MB. The name is listed, but the file itself is not stored in Liraspaces.` });
     }
   }, [attachments, onUpdate]);
 

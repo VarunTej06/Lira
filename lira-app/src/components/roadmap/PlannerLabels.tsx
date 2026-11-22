@@ -75,7 +75,7 @@ function EpicRow({ row: r, issues, today, adding, setAdding, submitAdd, toggleEp
       <button onClick={() => toggleEpic(r.item.id)} disabled={r.tickets.length === 0} className="p-0.5 text-lira-muted disabled:opacity-30 cursor-pointer" aria-label={r.expanded ? 'Collapse epic' : 'Expand epic'}>
         {r.expanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
       </button>
-      <span className="w-4 h-4 rounded flex items-center justify-center text-4xs bg-violet-500/20 text-violet-500 flex-shrink-0" title="Epic"><Zap className="w-3 h-3" /></span>
+      <span className="w-4 h-4 rounded flex items-center justify-center text-4xs bg-lira-blue-light text-lira-blue flex-shrink-0" title="Epic"><Zap className="w-3 h-3" /></span>
       {isAdding ? (
         <AddTaskInput epicKey={r.epic?.key} text={adding!.text} onText={text => setAdding({ id: r.item.id, text })} onSubmit={submitAdd} onCancel={() => setAdding(null)} />
       ) : (

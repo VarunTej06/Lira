@@ -1,14 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-// Inter is served from this app (no request to Google, works offline)
-import '@fontsource/inter/300.css'
-import '@fontsource/inter/400.css'
-import '@fontsource/inter/500.css'
-import '@fontsource/inter/600.css'
-import '@fontsource/inter/700.css'
-import '@fontsource/inter/800.css'
-import '@fontsource/inter/900.css'
 import './index.css'
 import './theme-dark.css'
 import App from './App.tsx'
@@ -16,20 +8,37 @@ import { MotionProvider } from './components/common/motion'
 import { Confetti } from './components/common/Confetti'
 import { initKvMirror, onKvChange } from './services/kvMirror'
 import { syncStructured } from './services/structuredStore'
-import { getLightPalette, getTheme, paintTheme } from './utils/theme'
+import { paintTheme } from './utils/theme'
+import { EDITION, appBasename, isHosted, showsPublicSite } from './utils/edition'
+import { SessionGate } from './components/layout/SessionGate'
+import { PublicSite } from './components/public/PublicSite'
 
-// Restore projects, sprints, teams, standups and preferences from data/*.json before anything reads them.
-onKvChange(() => { void syncStructured() })
-initKvMirror().finally(() => {
-  paintTheme(getTheme(), getLightPalette()) // the theme saved on disk, now that it has been restored (a new browser has none of its own)
-  createRoot(document.getElementById('root')!).render(
+const root = () => createRoot(document.getElementById('root')!)
+
+if (showsPublicSite(EDITION, window.location.pathname)) {
+  // The public pages of the hosted edition hold no workspace data, so there is nothing to restore first.
+  paintTheme()
+  root().render(
     <StrictMode>
-      <MotionProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-        <Confetti />
-      </MotionProvider>
+      <BrowserRouter>
+        <PublicSite />
+      </BrowserRouter>
     </StrictMode>,
   )
-})
+} else {
+  // Restore projects, sprints, teams, standups and preferences from data/*.json before anything reads them.
+  onKvChange(() => { void syncStructured() })
+  initKvMirror().finally(() => {
+    paintTheme() // the theme saved on disk, now that it has been restored (a new browser has none of its own)
+    root().render(
+      <StrictMode>
+        <MotionProvider>
+          <BrowserRouter basename={appBasename(EDITION)}>
+            {isHosted() ? <SessionGate><App /></SessionGate> : <App />}
+          </BrowserRouter>
+          <Confetti />
+        </MotionProvider>
+      </StrictMode>,
+    )
+  })
+}

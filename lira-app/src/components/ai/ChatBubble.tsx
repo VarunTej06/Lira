@@ -102,7 +102,7 @@ function SuggestedActions({ actions, onSend }: { actions: string[]; onSend: (tex
           initial={{ opacity: 0, y: 10, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ type: 'spring', stiffness: 460, damping: 28, delay: 0.12 + i * 0.07 }}
-          className="px-2.5 py-1 bg-white hover:bg-lira-blue-light text-lira-blue hover:text-lira-text border border-lira-border rounded-full text-3xs-plus font-medium transition-all hover:-translate-y-0.5 hover:shadow-md flex items-center gap-1 cursor-pointer"
+          className="px-2.5 py-1 bg-white hover:bg-lira-blue-light text-lira-blue hover:text-lira-text border border-lira-border rounded-full text-3xs-plus font-medium transition-all flex items-center gap-1 cursor-pointer"
         >
           <Zap className="w-3 h-3" /> {action}
         </motion.button>
@@ -111,8 +111,8 @@ function SuggestedActions({ actions, onSend }: { actions: string[]; onSend: (tex
   );
 }
 
-const BUBBLE_USER = 'bg-lira-blue text-lira-on-blue rounded-tr-md shadow-sm font-medium';
-const BUBBLE_VIVA = 'bg-white text-lira-text rounded-tl-md shadow-card border border-lira-border/80';
+const BUBBLE_USER = 'bg-lira-blue text-lira-on-blue rounded-tr-md font-medium';
+const BUBBLE_VIVA = 'bg-white text-lira-text rounded-tl-md border border-lira-border/80';
 
 /** What Viva attached to a message: confirm buttons, undo, a link to a dashboard, a ticket card. */
 function Attachments({ msg, onResolve, onUndo, onOpenDashboard, onSelectIssue }: Pick<Props, 'msg' | 'onResolve' | 'onUndo' | 'onOpenDashboard' | 'onSelectIssue'>) {
@@ -139,7 +139,7 @@ export function ChatBubble({ msg, maximized, onSend, onResolve, onUndo, onOpenDa
       className={`flex flex-col ${fromUser ? 'items-end' : 'items-start'}`}
     >
       <div className={`flex items-start gap-2 ${maximized ? 'max-w-[85%]' : 'max-w-[94%]'}`}>
-        {!fromUser && <div className="flex-shrink-0 mt-0.5"><LiraAIAvatar size={26} hasSparkles={false} /></div>}
+        {!fromUser && <div className="flex-shrink-0 mt-0.5"><LiraAIAvatar size={26} /></div>}
         <div className={`p-3 rounded-2xl leading-relaxed transition-[font-size] ${maximized ? 'text-sm' : 'text-xs'} ${fromUser ? BUBBLE_USER : BUBBLE_VIVA}`}>
           {msg.refinedPrompt && !fromUser && <RefinedGoal goal={msg.refinedPrompt.optimizedGoal} />}
           <ChatMarkdown text={msg.text} />

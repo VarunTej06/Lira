@@ -7,7 +7,7 @@ export function FiltersHeader(s: FiltersState) {
   return (
     <>
       {/* ── Top Header ── */}
-      <div className="bg-white border-b border-lira-border px-6 py-3.5 flex-shrink-0 shadow-2xs">
+      <div className="bg-white border-b border-lira-border px-6 py-3.5 flex-shrink-0">
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { THEME_EVENT, applyTheme, getLightPalette, getTheme, isThemeChange, paintTheme } from './theme';
+import { PALETTES, THEME_EVENT, applyTheme, getPalette, getTheme, isThemeChange, paintTheme } from './theme';
 import { THEMES, type ThemeName } from '../theme/palette';
 
 const root = document.documentElement;
@@ -32,56 +32,78 @@ describe('theme', () => {
   });
 });
 
-describe('light palette', () => {
-  it('is Sorrel until one has been saved, so a workspace saved as "light" before palettes existed opens in Sorrel', () => {
-    localStorage.setItem('lira_theme', 'light');
-    expect(getLightPalette()).toBe('sorrel');
+describe('palettes', () => {
+  it('offers two for dark mode and four for light mode, and every theme belongs to exactly one mode', () => {
+    expect(PALETTES.dark).toEqual(['pace', 'blackridge']);
+    expect(PALETTES.light).toEqual(['sorrel', 'fawn', 'mossgrove', 'tidewell']);
+    expect([...PALETTES.dark, ...PALETTES.light].sort()).toEqual(Object.keys(THEMES).sort());
   });
 
-  it('is saved with the theme and shown on the page', () => {
-    applyTheme('light', 'fawn');
-    expect(getLightPalette()).toBe('fawn');
-    expect(localStorage.getItem('lira_light_palette')).toBe('fawn');
-    expect(root.dataset.palette).toBe('fawn');
+  it('starts on the first of each mode: Pace for dark, Sorrel for light (also for a workspace saved before palettes existed)', () => {
+    localStorage.setItem('lira_theme', 'light');
+    expect(getPalette('dark')).toBe('pace');
+    expect(getPalette('light')).toBe('sorrel');
+  });
+
+  it('is saved with the theme, for that mode only, and shown on the page', () => {
+    applyTheme('light', 'mossgrove');
+    expect(getPalette('light')).toBe('mossgrove');
+    expect(localStorage.getItem('lira_light_palette')).toBe('mossgrove');
+    expect(localStorage.getItem('lira_dark_palette')).toBeNull();
+    expect(root.dataset.palette).toBe('mossgrove');
+    applyTheme('dark', 'blackridge');
+    expect(getPalette('dark')).toBe('blackridge');
+    expect(root.dataset.palette).toBe('blackridge');
+    expect(getPalette('light')).toBe('mossgrove'); // the light choice waits for the next time Light is used
   });
 
   it('is kept when the theme is saved without naming one', () => {
     applyTheme('light', 'fawn');
-    applyTheme('dark');
+    applyTheme('dark', 'blackridge');
     applyTheme('light');
     expect(root.dataset.palette).toBe('fawn');
-  });
-
-  it('never colours the dark theme: the page is marked dark, the saved light palette waits', () => {
-    applyTheme('light', 'fawn');
     applyTheme('dark');
-    expect(root.dataset.palette).toBe('dark');
-    expect(getLightPalette()).toBe('fawn');
+    expect(root.dataset.palette).toBe('blackridge');
   });
 
-  it('falls back to Sorrel when the saved value is not a palette', () => {
+  it('never puts a light palette on the dark theme or a dark one on the light theme', () => {
+    applyTheme('dark', 'fawn' as never);
+    expect(root.dataset.palette).toBe('pace');
+    expect(localStorage.getItem('lira_dark_palette')).toBe('pace');
+    applyTheme('light', 'blackridge' as never);
+    expect(root.dataset.palette).toBe('sorrel');
+  });
+
+  it('falls back to the first palette when the saved value is not one', () => {
     localStorage.setItem('lira_light_palette', '<script>');
-    expect(getLightPalette()).toBe('sorrel');
+    localStorage.setItem('lira_dark_palette', 'fawn'); // a light palette saved under dark
+    expect(getPalette('light')).toBe('sorrel');
+    expect(getPalette('dark')).toBe('pace');
   });
 
-  it('counts as a change to save only when the theme differs, or the palette differs in light mode', () => {
-    expect(isThemeChange('dark', 'sorrel')).toBe(false);
-    expect(isThemeChange('dark', 'fawn')).toBe(false); // the palette is not used in dark mode
+  it('counts as a change to save when the theme differs, or the palette of the chosen theme differs', () => {
+    expect(isThemeChange('dark', 'pace')).toBe(false);
+    expect(isThemeChange('dark', 'blackridge')).toBe(true);
     expect(isThemeChange('light', 'sorrel')).toBe(true);
     applyTheme('light', 'sorrel');
     expect(isThemeChange('light', 'sorrel')).toBe(false);
-    expect(isThemeChange('light', 'fawn')).toBe(true);
+    expect(isThemeChange('light', 'tidewell')).toBe(true);
   });
 
-  it('can be shown without being saved (startup)', () => {
+  it('can be shown without being saved (startup), from what is saved when nothing is named', () => {
     paintTheme('light', 'fawn');
     expect(root.dataset.palette).toBe('fawn');
     expect(localStorage.getItem('lira_light_palette')).toBeNull();
     expect(localStorage.getItem('lira_theme')).toBeNull();
+    localStorage.setItem('lira_theme', 'light');
+    localStorage.setItem('lira_light_palette', 'tidewell');
+    paintTheme();
+    expect(root.dataset.palette).toBe('tidewell');
+    expect(root.classList.contains('dark')).toBe(false);
   });
 });
 
-describe('the three themes', () => {
+describe('the six themes', () => {
   const css = fs.readFileSync(path.join(process.cwd(), 'src/index.css'), 'utf-8');
   /** The variables of one theme, as written in index.css. */
   const block = (selector: string) => {
@@ -89,7 +111,10 @@ describe('the three themes', () => {
     expect(start, `${selector} is missing in index.css`).toBeGreaterThanOrEqual(0);
     return css.slice(start, css.indexOf('}', start));
   };
-  const SELECTOR: Record<ThemeName, string> = { sorrel: ':root', fawn: "[data-palette='fawn']", dark: '.dark' };
+  const SELECTOR: Record<ThemeName, string> = {
+    sorrel: ':root', fawn: "[data-palette='fawn']", mossgrove: "[data-palette='mossgrove']", tidewell: "[data-palette='tidewell']",
+    pace: '.dark', blackridge: ".dark[data-palette='blackridge']",
+  };
   const triplet = (hex: string) => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(' ');
   const value = (theme: ThemeName, name: string) => {
     const m = new RegExp(`--${name}: (\\d+ \\d+ \\d+);`).exec(block(SELECTOR[theme]));
@@ -106,8 +131,9 @@ describe('the three themes', () => {
   };
   const names = Object.keys(THEMES) as ThemeName[];
 
-  it('are three colours each, written as plain hex', () => {
-    expect(names.sort()).toEqual(['dark', 'fawn', 'sorrel']);
+  it('are three colours each, written as plain hex, with a name of their own', () => {
+    expect(names).toHaveLength(6);
+    expect(new Set(names.map(n => THEMES[n].label)).size).toBe(6);
     for (const n of names) {
       expect(THEMES[n].swatches).toHaveLength(3);
       for (const s of THEMES[n].swatches) expect(s.hex, `${n} ${s.name}`).toMatch(/^#[0-9A-F]{6}$/);
@@ -120,16 +146,19 @@ describe('the three themes', () => {
     }
   });
 
-  it('use the yellow, tomato red and baby blue of the palette for buttons', () => {
-    expect(value('dark', 'lira-blue').join(' ')).toBe(triplet('#FFC93C'));
-    expect(value('sorrel', 'lira-blue').join(' ')).toBe(triplet('#E8412C'));
-    expect(value('fawn', 'lira-blue').join(' ')).toBe(triplet('#8EC5FF'));
+  it('use the accent of each palette for buttons', () => {
+    const accent: Record<ThemeName, string> = { pace: '#FFC93C', blackridge: '#C8102E', sorrel: '#E8412C', fawn: '#8EC5FF', mossgrove: '#F28C28', tidewell: '#FF5A4E' };
+    for (const n of names) expect(value(n, 'lira-blue').join(' '), n).toBe(triplet(accent[n]));
   });
 
   it('define every colour variable in every theme', () => {
     const defined = (n: ThemeName) => [...block(SELECTOR[n]).matchAll(/--([a-z0-9-]+):/g)].map(m => m[1]).sort();
-    expect(defined('fawn')).toEqual(defined('sorrel'));
-    expect(defined('dark')).toEqual(defined('sorrel'));
+    for (const n of names) expect(defined(n), n).toEqual(defined('sorrel'));
+  });
+
+  it('dark palettes are marked dark and light palettes light, so form controls and scroll bars follow', () => {
+    for (const n of PALETTES.dark) expect(block(SELECTOR[n]), n).toContain('color-scheme: dark');
+    for (const n of PALETTES.light) expect(block(SELECTOR[n]), n).toContain('color-scheme: light');
   });
 
   it.each(names)('%s: text, muted text and links read at 4.5 or better on every surface', n => {
@@ -141,7 +170,7 @@ describe('the three themes', () => {
   });
 
   it.each(names)('%s: button labels and the navigation read on their backgrounds', n => {
-    // 3 is the WCAG minimum for bold labels and controls; white on the owner's tomato red is 4.0
+    // 3 is the WCAG minimum for bold labels and controls; white on the owner's tomato red (Sorrel) is 4.0
     expect(contrast(value(n, 'lira-on-blue'), value(n, 'lira-blue'))).toBeGreaterThanOrEqual(n === 'sorrel' ? 3 : 4.5);
     expect(contrast(value(n, 'lira-on-blue'), value(n, 'lira-blue-hover'))).toBeGreaterThanOrEqual(3);
     expect(contrast([255, 255, 255], value(n, 'lira-nav'))).toBeGreaterThanOrEqual(4.5);

@@ -7,7 +7,7 @@ export function TechnicalTab(ctx: DetailCtx) {
   const { repoUrl, setRepoUrl, description, setDescription, lead, setLead, environments, newEnvInput, setNewEnvInput, techSavedToast, handleAddEnv, handleRemoveEnv, handleSaveTechnicalDetails } = ctx;
   return (
           <div className="flex-1 overflow-y-auto p-6 md:p-8 max-w-4xl mx-auto w-full">
-            <div className="bg-white rounded-xl border border-lira-border shadow-xs p-6 md:p-8 space-y-6">
+            <div className="bg-white rounded-xl border border-lira-border p-6 md:p-8 space-y-6">
               <div className="flex items-center justify-between border-b border-lira-border pb-4">
                 <div>
                   <h2 className="text-lg font-bold text-lira-text flex items-center gap-2">

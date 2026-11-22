@@ -17,7 +17,7 @@ const STAT_CARDS = [
   { title: 'Total Issues', note: 'In this project scope', value: (s: Stats) => s.total, valueClass: 'text-lira-text', iconBox: 'bg-lira-blue-light text-lira-blue', Icon: Layers },
   { title: 'Open Issues', note: 'Backlog + Todo + In Progress', value: (s: Stats) => s.open, valueClass: 'text-amber-600', iconBox: 'bg-amber-50 text-amber-600', Icon: AlertCircle },
   { title: 'Completed Issues', note: 'Done & verified', value: (s: Stats) => s.done, valueClass: 'text-emerald-600', iconBox: 'bg-emerald-50 text-emerald-600', Icon: CheckCircle2 },
-  { title: 'Completion %', note: null, value: (s: Stats) => s.percent, suffix: '%', valueClass: 'text-purple-600', iconBox: 'bg-purple-50 text-purple-600', Icon: TrendingUp },
+  { title: 'Completion %', note: null, value: (s: Stats) => s.percent, suffix: '%', valueClass: 'text-lira-blue', iconBox: 'bg-lira-blue-light text-lira-blue', Icon: TrendingUp },
 ] as const;
 
 /** The stacked bar, in the order the work flows. */
@@ -49,7 +49,7 @@ const percentOf = (n: number, total: number) => (total > 0 ? Math.round((n / tot
 
 function Card({ title, subtitle, action, children }: { title: string; subtitle: string; action?: ReactNode; children: ReactNode }) {
   return (
-    <div className="bg-white rounded-xl border border-lira-border p-6 shadow-xs space-y-4">
+    <div className="bg-white rounded-xl border border-lira-border p-6 space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-sm font-bold text-lira-text">{title}</h3>
@@ -74,7 +74,7 @@ export function OverviewTab(ctx: DetailCtx) {
   return (
     <div className="flex-1 overflow-y-auto p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6">
       {/* Quick actions */}
-      <div className="bg-white rounded-xl border border-lira-border p-4 shadow-xs flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white rounded-xl border border-lira-border p-4 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h3 className="text-xs font-bold uppercase tracking-wider text-lira-muted">Project Workspace Actions</h3>
           <p className="text-xs text-lira-text mt-0.5">Jump directly to issue authoring, Kanban execution, or project schema settings.</p>
@@ -89,7 +89,7 @@ export function OverviewTab(ctx: DetailCtx) {
       {/* At-a-glance numbers */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {STAT_CARDS.map(({ title, note, value, valueClass, iconBox, Icon, ...rest }) => (
-          <div key={title} className="bg-white rounded-xl border border-lira-border p-5 shadow-xs flex items-center justify-between">
+          <div key={title} className="bg-white rounded-xl border border-lira-border p-5 flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold text-lira-muted uppercase tracking-wider">{title}</p>
               <h4 className={`text-2xl font-black mt-1 ${valueClass}`}><CountUp value={value(stats)} suffix={'suffix' in rest ? rest.suffix : undefined} /></h4>
@@ -110,7 +110,7 @@ export function OverviewTab(ctx: DetailCtx) {
           <EmptyNote>No issues recorded yet for this project. Click <strong>Create Issue</strong> above to start.</EmptyNote>
         ) : (
           <div className="space-y-3.5">
-            <div className="h-7 w-full bg-gray-100 rounded-xl overflow-hidden flex shadow-inner border border-gray-200/80">
+            <div className="h-7 w-full bg-gray-100 rounded-xl overflow-hidden flex border border-gray-200/80">
               {BAR_SEGMENTS.filter(seg => counts[seg.key] > 0).map(seg => {
                 const pct = percentOf(counts[seg.key], stats.total);
                 const share = counts[seg.key] / stats.total;

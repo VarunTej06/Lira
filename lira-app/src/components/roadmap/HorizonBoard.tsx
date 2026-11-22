@@ -42,10 +42,9 @@ export const HorizonBoard: React.FC<Props> = ({ roadmap, items, issues, onOpenIt
                 <button
                   key={item.id}
                   onClick={() => onOpenItem(item.id)}
-                  className="w-full text-left rounded-xl border border-lira-border bg-lira-surface p-3 hover:shadow-card-hover hover:-translate-y-0.5 transition-all cursor-pointer"
-                  style={{ borderLeft: `4px solid ${laneColor(roadmap, item.lane)}` }}
+                  className="w-full text-left rounded-xl border border-lira-border bg-lira-surface p-3 transition-all cursor-pointer"
                 >
-                  <div className="text-3xs font-semibold uppercase tracking-wide" style={{ color: laneColor(roadmap, item.lane) }}>{item.lane}</div>
+                  <div className="flex items-center gap-1.5 text-3xs font-semibold uppercase tracking-wide text-lira-muted"><span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: laneColor(roadmap, item.lane) }} />{item.lane}</div>
                   <div className="text-sm font-medium text-lira-text mt-0.5 leading-snug">{item.title}</div>
                   <div className="flex items-center gap-1.5 mt-2 text-2xs text-lira-muted">
                     <CalendarRange className="w-3 h-3" /> {fmtShort(item.start)} → {fmtShort(item.end)}

@@ -1,3 +1,4 @@
+import { loadProfile } from '../../../utils/userPrefs';
 import { confirmDialog } from '../../common/dialogStore';
 import React, { useState } from 'react';
 import type { Project } from '../../../types/project';
@@ -53,7 +54,7 @@ export function useProjectForms(
       ...project,
       repoUrl: repoUrl.trim(),
       description: description.trim(),
-      lead: lead.trim() || 'Varun Tej',
+      lead: lead.trim() || loadProfile().name,
       environments,
       updatedAt: new Date().toISOString(),
     };

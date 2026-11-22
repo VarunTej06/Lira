@@ -32,15 +32,17 @@ export function SprintsSection(s: SidebarState) {
                     onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} {...sprintLink(k)}
                     title={sprintName(k)}
                     data-active={active ? 'true' : undefined}
-                    className={`w-full flex items-center gap-2.5 pl-2.5 pr-2.5 group-hover:pr-8 py-1.5 rounded-xl text-left text-xs transition-all duration-200 cursor-pointer ${
-                      active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06] hover:translate-x-0.5'
+                    className={`w-full flex items-center gap-3 px-3 group-hover:pr-9 min-h-8 py-1.5 rounded-xl text-left text-xs transition-colors duration-100 cursor-pointer ${
+                      active ? 'text-white font-medium' : 'text-white/70 hover:text-white hover:bg-white/[0.06]'
                     }`}
                   >
-                    <span
-                      className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                        phase === 'active' ? 'bg-green-400' : phase === 'upcoming' ? 'bg-sky-400' : 'bg-white/30'
-                      }`}
-                    />
+                    <span className="w-5 flex justify-center flex-shrink-0">
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          phase === 'active' ? 'bg-green-400' : phase === 'upcoming' ? 'bg-sky-400' : 'bg-white/30'
+                        }`}
+                      />
+                    </span>
                     <span className="truncate flex-1">{sprintLabel(k)}</span>
                     {phase === 'active' && <span className="text-4xs font-bold text-green-300">ACTIVE</span>}
                     <span className="text-3xs text-white/40 tabular-nums">{c.done}/{c.total}</span>

@@ -6,10 +6,12 @@ export function useSpaces() {
   return useLiveQuery(() => db.spaces.orderBy('createdAt').toArray(), [], []);
 }
 
+import { createSpaceHosted } from '../services/hostedSync';
 import { triggerDiskSync } from '../services/localDiskSync';
+import { isHosted } from '../utils/edition';
 
 export async function createSpace(space: Omit<Space, 'id'>): Promise<number> {
-  const id = await db.spaces.add(space);
+  const id = isHosted() ? await createSpaceHosted(space) : await db.spaces.add(space);
   triggerDiskSync();
   return id;
 }

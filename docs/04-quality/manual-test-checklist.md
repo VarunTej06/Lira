@@ -5,14 +5,14 @@ No behaviour was meant to change anywhere. **If anything looks or acts different
 
 How to run it
 - Use a **copy** of your workspace if you can (`LIRA_DATA_DIR`), or accept that testing edits `data/`.
-- Start with `npm run dev` in `lira-app/`. Test in **all three themes** (Dark, and the light palettes Sorrel and Fawn: Settings, Appearance) for sections marked ◐.
+- Start with `npm run dev` in `lira-app/`. Test in **dark and light mode** (Settings, Appearance) for sections marked ◐, and walk the main screens once in each of the six palettes (section A26).
 - Open the browser console once (F12): there should be **no red errors** while you work through the list.
 - Tick each box. "Expect" says what you should see.
 - The same cases are in `Lira-manual-test-cases.xlsx`. After adding a section here, copy it into the workbook with `python docs/04-quality/sync-manual-cases.py A25` (workbook closed in Excel).
 
 ---
 
-## A. The screens that were reworked (A1–A25)
+## A. The screens that were reworked (A1–A33)
 
 ### A1. Ticket popup (open any ticket)  ◐
 The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest change.
@@ -214,7 +214,7 @@ The popup keeps an unsaved copy ("draft") of the ticket. This is the riskiest ch
 - [ ] The board bar filters (search, "me", Priority, Status, Labels) also narrow this view; an overdue ticket is one that is not done with a due date in the past.
 - [ ] Group by **Status** (five columns, Blocked is the flag), **Priority** (low and lowest together), **Assignee** and **Epic / Parent** (progress per epic, an epic with no children shows 100 % when done, else 0 %); points and shares add up.
 
-### A21. Themes and light palettes (13 Nov 2026)  ◐
+### A21. Themes and light palettes (13 Nov 2026; more palettes were added later, see A26)  ◐
 Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Settings, Appearance. Expect: a Dark and a Light card, each showing its three colours; Dark is selected in a new workspace; there is no accent colour picker.
 - [ ] Choose **Light**. Expect: "Choose a light palette" appears with **Sorrel** (selected) and **Fawn**; the page behind does not change; "Not saved yet" shows.
@@ -222,7 +222,7 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Reopen, pick **Sorrel**, **Save**. Expect: off-white page, sage frame and navigation, tomato red buttons with white labels.
 - [ ] Choose **Dark**, **Save**. Expect: black page, silver text, yellow buttons with black labels.
 - [ ] Choose another theme or palette, then **Cancel**. Expect: nothing changes; reopening shows the saved choice.
-- [ ] Gear menu, System settings. Expect: choosing Light shows Sorrel and Fawn; Save applies the choice.
+- [ ] Gear menu, System settings. Expect: choosing Light shows the light palettes; Save applies the choice.
 - [ ] Reload the page, and open Lira in a browser that has never opened it (dev server running). Expect: the saved theme and palette are shown from the first moment.
 - [ ] In each theme walk the board, list, calendar, summary, sprints, roadmaps, dashboards, filters, projects, For you, a ticket popup and the Viva chat. Expect: no white label on a yellow or baby blue button, no leftover navy bars or purple gradients, every text readable.
 
@@ -232,10 +232,8 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Create space (sidebar +) and Create project with a new space. Expect: a grid of 24 line icons, the chosen one highlighted and shown in the preview; the new space appears with that icon.
 - [ ] Edit a space, change only its name, save. Expect: its icon is unchanged.
 - [ ] Space dropdowns (create ticket, sprint filter, all tickets) and Viva's answers. Expect: the space name without an emoji in front.
-- [ ] App switcher (nine dots, top left). Expect: a panel headed Lira with a v3.4 badge and five tiles; each opens what it names; Escape and a click outside close it.
 - [ ] Start-up screen and Settings, Plan. Expect: both say v3.4.
-- [ ] Hover the nine dots, then move away. Expect: the panel opens, then closes. Hover again and click the dots. Expect: it closes.
-- [ ] Logo (top bar, start-up screen, browser tab). Expect: a block L with an arrow; the arrow grows out of the corner on load and when the logo is hovered, and keeps growing while Lira starts. With "reduce motion" on in the system it stands still.
+- [ ] Logo (top bar, start-up screen, browser tab). Expect: a hexagon holding a gold open book; on load the left page settles with a small shake, then the right page; it does the same when the logo is hovered, and keeps moving while Liraspaces starts. With "reduce motion" on in the system it stands still.
 - [ ] Avatars (top right, board cards, ticket popup, filters, capacity). Expect: all in the button colour of the theme, with a readable label.
 - [ ] Collapse and expand the sidebar several times on a full board. Expect: it slides quickly, without stutter, and the rows do not jump or re-wrap while it moves.
 
@@ -288,6 +286,94 @@ Reference screens: `docs/04-quality/ui-references/`.
 - [ ] Planner. Expect: it fills the panel the same way; dragging an epic bar or a ticket chip lands on the day under the pointer.
 - [ ] Today button. Expect: today's line is in view.
 
+### A26. Six palettes (14 Nov 2026)  ◐
+Reference screens: `docs/04-quality/ui-references/`.
+- [ ] Settings, Appearance, Dark Mode. Expect: "Choose a dark palette" with Pace (selected in a new workspace) and Blackridge.
+- [ ] Pick **Blackridge**, Save. Expect: jet black page, smoke grey secondary text, cherry red buttons with white labels.
+- [ ] Choose Light Mode. Expect: four palettes: Sorrel, Fawn, Mossgrove, Tidewell.
+- [ ] Pick **Mossgrove**, Save. Expect: white cards on a pale green page, emerald navigation and links, tangerine buttons with dark green labels.
+- [ ] Pick **Tidewell**, Save. Expect: pearl white page, ink navy navigation and text, electric coral buttons with navy labels.
+- [ ] Pick Blackridge for dark, switch to Light and pick Tidewell, switch back to Dark without saving. Expect: Blackridge is still the one picked; each mode remembers its own choice.
+- [ ] Save in Light, later switch to Dark and save. Expect: Dark comes back in the dark palette you last saved, and Light later in the light one.
+- [ ] Gear menu, System settings. Expect: the palette pills are those of the chosen mode (two for dark, four for light) and Save applies the choice.
+- [ ] Reload the page in Blackridge, Mossgrove and Tidewell. Expect: each comes back as saved.
+- [ ] In each of the three new palettes walk the board, a ticket popup, sprints, roadmaps, dashboards, filters and the Viva chat. Expect: every label on a button is readable, links are readable, and no screen falls back to another palette's colours.
+
+### A27. Flat design pass (18 Nov 2026)  ◐
+- [ ] Open the board, a ticket popup, a dropdown, a dialog and Viva in any palette. Expect: no drop shadows anywhere; panels are separated by borders and surface steps; nothing glows.
+- [ ] Hover buttons, cards, icons and the Viva button. Expect: colour changes only; nothing grows, slides or tilts.
+- [ ] Look at dialog backdrops. Expect: a plain dim layer, no blur behind it.
+- [ ] Look at corners. Expect: small, even rounding everywhere; nothing pill-shaped except round avatars and dots.
+- [ ] Open Viva. Expect: a flat panel in the navigation colour, the product mark as its picture, no sparkle icon, no glow, no purple.
+- [ ] Look at epics, labels, categories and anything that used to be purple. Expect: the accent colour of the palette in use, or ochre for epics.
+- [ ] Look at status colours (red, green, amber, blue) in light and dark palettes. Expect: four muted hues only, readable on every page colour.
+- [ ] Calendar view and the roadmap Now/Next/Later board. Expect: no coloured stripe down the side of a card; a thin full outline or a small coloured dot instead.
+- [ ] A blocked ticket. Expect: the flames still rise, with a flat outline instead of a glow.
+- [ ] Read any message from Viva, the standup agenda and the sprint report. Expect: no em dashes.
+- [ ] Reload the page with a slow connection (browser tools, Slow 3G). Expect: a grey skeleton of the app while it starts, then the real screen; with "reduce motion" on, the skeleton does not pulse.
+- [ ] Open Dashboards, Roadmaps, Projects, Sprints and Filters for the first time. Expect: a grey page skeleton for a moment, then the page.
+- [ ] Open a ticket for the first time after loading, and Viva. Expect: both open correctly (they load when first used).
+
+### A28. Top bar and quick page changes (18 Nov 2026)  ◐
+- [ ] Look at the top bar. Expect: no nine-dot app switcher; the Lira mark and name sit alone at the left, on the page colour, not in the dark box.
+- [ ] Look at the dark box. Expect: it holds only Your work, Filters, the search field and Create, centred on the screen.
+- [ ] Look at the right side. Expect: the bell, the settings gear and your avatar sit outside the box, each in its own dark circle; PC Saved has no circle and is readable in every palette.
+- [ ] Open Your work, Filters, the bell and the account menu. Expect: each panel opens under its control and closes on Escape or a click outside.
+- [ ] Click Projects, Sprints, All tickets and Roadmaps one after another, quickly. Expect: the highlight in the sidebar keeps up (about a tenth of a second per step) and each page appears at once, without a long grey skeleton after the first second of use.
+- [ ] Narrow the window to phone width. Expect: the mark, the box (search and Create) and the three circles all fit with no sideways scroll.
+- [ ] Open Viva from its round button at the bottom right, and Backup from Settings. Expect: both still work now that the switcher is gone.
+
+### A29. Sidebar rows all the same size (18 Nov 2026)  ◐
+- [ ] Look down the left sidebar: For you, Projects, Sprints, All tickets, Roadmaps, then spaces, projects and sprints. Expect: every row has the same height, the same text size and weight, and the icons line up in one column.
+- [ ] Hover a space, a project and a sprint. Expect: the row keeps its size and the "..." button appears at the right without moving the name much.
+
+### A30. Name and logo: Liraspaces (19 Nov 2026)  ◐
+- [ ] Look at the browser tab on any page. Expect: the title ends in "Liraspaces" (for example "Board · Liraspaces"), and the icon is the hexagon with the gold book. In a dark browser theme the hexagon is cream; in a light one it is navy.
+- [ ] Look at the top bar, the empty home screen and the start-up screen. Expect: the hexagon logo, with the name "Liraspaces" next to it in the top bar and on the home screen, and "Initializing Liraspaces v..." at start-up. The top bar name still fits on one line at a narrow window.
+- [ ] Open Settings. Expect: the title "Liraspaces Settings & Administration" and, under About, "Liraspaces Community Edition v...".
+- [ ] Read the Share window, the account menu's Log out message, the Devices tab, the Dashboards, Roadmaps and attachment messages, and Viva's example prompt. Expect: they say "Liraspaces" where they mean the app.
+- [ ] Open the space, projects and roadmap that you named "Lira". Expect: they keep the name "Lira"; only the app name changed.
+- [ ] Add the site to the phone home screen (or look at `public/lira-icon.png`). Expect: a navy square with the hexagon and gold book, not the old L.
+
+### A31. Public pages of the hosted edition (19 Nov 2026)  ◐
+Run `npm run hosted` in a terminal (it builds the hosted edition, then serves it at http://localhost:5175 and does not touch `data/`). Leave it running, and run `npm run dev` in another terminal to see the local app at http://localhost:5173 beside it.
+- [ ] Open `/`. Expect: a fixed top bar (logo set in from the left edge, Features, Solutions, Guides, Templates, a search button, Sign in, Get it free), the headline "Everything you are working on and learning, in one place.", an email bar with Sign up and a Google button (greyed out until Google is set up on the server, A40), and the large sample space below. There is no Pricing anywhere. Light mode looks like Sorrel (off-white, sage frame, tomato red buttons); dark mode looks like Pace (black, silver text, yellow buttons).
+- [ ] Scroll down the landing page. Expect: the top bar stays at the top and the page moves beneath it.
+- [ ] Press "Light mode" or "Dark mode" in the top bar (wide windows). Expect: the page switches, and the choice is the same one the app uses.
+- [ ] Click Features, then Solutions, then Templates. Expect: each opens a list; Escape, a click elsewhere or scrolling closes it. Features items go to "What is inside"; the others go to the "Still baking" page.
+- [ ] Open `/signup`, `/terms`, `/privacy` and `/notice`. Expect: the top bar has no search button on any of them (only the landing page keeps it).
+- [ ] Click the search button and type "privacy", then "zzzz". Expect: the Privacy Policy is listed and opens when clicked; for "zzzz" it says "Nothing found".
+- [ ] In the email bar press Sign up empty, then with "abc", then with "asha@example.com". Expect: "Enter your email." then "Enter an email like you@example.com." then the get-started page with the email already filled in.
+- [ ] On the get-started page (`/signup`). Expect: a window titled "Get started with Liraspaces" over a grey drawing of the app, the email field, Sign up, a Google button (greyed out until Google is set up on the server, A40), "Already have an account? Log in", and a × that returns to the landing page. A valid email moves to a second step asking for a name and a password (10 characters or more) for that email, with "Use a different email".
+- [ ] Open `/login`. Expect: nothing but the card and the two scenes: no top bar, no footer, no search. A centred card (logo, "Log in to continue", Email, Password, Remember me with a small "i" whose tooltip says 30 days, Log in, Google (greyed out until Google is set up, A40), "Can't log in?" and "Create an account"). On a wide window two flat scenes sit in the bottom corners: a work board with a chart, tickets and a plant on the left, and an arched library window with books and a graduation cap on the right. Both stay visible in light and dark mode. Empty fields show "Enter your email." and "Enter your password.". With the API running (A33), a wrong password shows "The email or password is not correct." and a right one opens the app.
+- [ ] Open `/terms`, `/privacy` and `/notice` from the footer. Expect: each shows a draft notice, names WorldXAdmins and the contact email, and the tab title ends in "Liraspaces".
+- [ ] Open `/app`. Expect: the app, with its own addresses under `/app` (for example `/app/for-you`), and refresh keeps you on the same page. Click the logo. Expect: the "Still baking" page.
+- [ ] Open an address that does not exist, such as `/nothing`. Expect: the landing page.
+- [ ] Narrow the window to phone width. Expect: no sideways scrolling; the top bar keeps the logo mark, search, Get it free and a Menu button that lists the pages; the email bar stacks; the sample board becomes one column.
+- [ ] With `npm run dev` (local edition) open `/` and `/login`. Expect: the app as before and no landing page.
+
+### A32. Landing page, the rest of the sections (19 Nov 2026)  ◐
+Same way of running as A31 (`npm run hosted`, then http://localhost:5175).
+- [ ] Press the sun or moon button in the top bar. Expect: the page switches between light (Sorrel) and dark (Pace); in dark mode the button shows a sun, in light mode a moon; nothing else moves.
+- [ ] Click into the email field on the landing page and on `/signup`. Expect: the focus box goes around the whole bar (field and Sign up button together) with a small gap, not hard against the button.
+- [ ] Scroll the landing page. Expect, in order: the hero and sample space, "What is inside", "More than project management" (Search, Viva, Roadmaps and dashboards, each with a picture, alternating sides), "Liraspaces is better with documents and files" (with the Includes list and four example cards, one dark), the black band, "Discover the latest", "Your data", the black closing band, and the large grey footer.
+- [ ] Reach the black band. Expect: it is black in light mode too; "Liraspaces for the AI era" and a second line "> connect anywhere" whose word "anywhere" is typed letter by letter, again each time you scroll to the band, with a blinking block caret; "WORKS WITH" shows only "Any MCP agent" with a note that it is coming soon; three columns with dot icons, two of them marked COMING SOON.
+- [ ] Move the mouse over the black band. Expect: faint dots light up around the pointer and fade as it moves away. With "reduce motion" on in the system, or on a phone, the dots stay still.
+- [ ] Scroll to "Discover the latest". Expect: the cards slide in from the right once and stay. Use the arrows, the mouse wheel or a swipe: the row scrolls a card at a time, the left arrow is switched off at the start and the right arrow at the end. Six cards: four "UPDATE" and two "COMING SOON".
+- [ ] Read the closing band and the footer. Expect: "Plan, learn and deliver in Liraspaces" with two gold words, a "Get Liraspaces free" button to the sign-up page; the footer has Contact us, PRODUCT, RESOURCES and LEGAL columns, no Pricing, Careers or Press kit.
+- [ ] Narrow the window to phone width. Expect: no sideways scrolling of the page; the row of cards still scrolls sideways inside itself; the sections stack to one column.
+
+### A33. Sign-up, log-in and the app behind them (19 Nov 2026)
+Needs the API and a database: the rehearsal in `infra/azure-playground/`, or the API run locally (see `api/README.md`) behind the web container.
+- [ ] Open `/signup`, enter an email, press Sign up, then give a name and a password of at least 10 characters and press Create account. Expect: the app opens at `/app` with its own sample data. Refresh the page. Expect: you are still signed in.
+- [ ] Open `/signup` again with the same email in capitals. Expect: "An account with this email already exists." and a Log in link; nothing else changes.
+- [ ] Open `/login` in a private window and log in with a wrong password. Expect: "The email or password is not correct." The same message for an email that has no account.
+- [ ] Give five wrong passwords for one email, then the right one. Expect: "Too many wrong attempts. Wait a few minutes and try again."
+- [ ] Log in with "Remember me" ticked, then without. Expect: both work; with the tick the browser's cookie (developer tools, Application, Cookies) lasts about 30 days, without it about 12 hours. The cookie is marked HttpOnly and Secure.
+- [ ] Open `/app` in a private window without logging in. Expect: you are sent to `/login`, and the app never shows.
+- [ ] In the account menu (top right of the app) press Log out. Expect: you land on `/login`; pressing the browser's Back button does not show the app, and `/app` sends you to `/login` again.
+- [ ] Stop the API (or block `/api/`) and open `/app`. Expect: "Liraspaces could not check your session" with a Try again button, and the app does not show.
+- [ ] Open `https://<address>/api/me` directly. Expect: a plain JSON answer with `"code":"unauthorised"` when not signed in, and no stack trace anywhere.
 ---
 
 ## B. Things that changed everywhere (quick sweeps)
@@ -308,7 +394,7 @@ For each: open, type something, close, reopen. Expect: empty / reset, not the ol
 ### B3. Colours and text sizes (look only)  ◐
 - [ ] Ticket type icons, priority colours, status badges, avatars, charts, donuts: each keeps its own colour (green done, amber in progress, red blocked, purple epic) in all three themes.
 - [ ] Small text (badges, captions, dashboard labels, table headers) looks the same size as before; no text suddenly bigger or smaller.
-- [ ] All three themes: nothing unreadable. Button labels are black on yellow (Dark), white on tomato red (Sorrel), brown on baby blue (Fawn).
+- [ ] Every palette: nothing unreadable. Button labels are black on yellow (Dark), white on tomato red (Sorrel), brown on baby blue (Fawn).
 
 ### B4. Dates and "today"
 - [ ] **For you**: greeting and date line show today; "days left" correct.
@@ -346,3 +432,119 @@ For each: open, type something, close, reopen. Expect: empty / reset, not the ol
 ## D. Record the result
 - [ ] Note the date, browser, theme(s) tested and any failures in the pull request.
 - [ ] For each failure: screen, steps, expected, actual, a screenshot.
+
+### A35. Hosted edition: spaces and tickets live on the server (20 Nov 2026)  ◐
+Needs the hosted app running against the API (a cloud rehearsal, A33). Sign up with a new email.
+- [ ] Sign in with the new account. Expect: an empty workspace, no sample spaces or tickets.
+- [ ] Create a space, then a ticket in it. Expect: both appear, the ticket key starts with the space key and counts up (KEY-1, KEY-2), even if you create tickets in two browser tabs.
+- [ ] Reload the page, then open the site in another browser and sign in. Expect: the same space and tickets in both.
+- [ ] Change a ticket's status in one browser, wait a few seconds, reload the other. Expect: the new status.
+- [ ] Change the same ticket in both browsers, one after the other, without reloading the first. Expect: the later save does not silently overwrite: the first browser ends up showing the other's version.
+- [ ] Delete a ticket, then a space. Expect: gone after a reload, in both browsers.
+- [ ] Stop the API (or go offline), change a ticket, start it again. Expect: the change reaches the server within seconds.
+- [ ] Create a project and a roadmap, change the theme, sign out, then sign in again in a private window. Expect: the project and roadmap are there (shared with the organisation) and the theme is yours.
+- [ ] Sign in as a second person on the same browser. Expect: none of the first person's projects or settings show.
+- [ ] Open a ticket, Attachments section. Expect: a drop zone, "No files yet.", then after choosing a picture and a PDF both are listed with their size. Download opens a download (not a page); Remove deletes the file. A .html file is refused with a message. Paste a screenshot into the description: expect a message that says to add files in the Attachments section, and nothing is pasted.
+- [ ] Known gaps (not bugs yet): links to Drive, OneDrive or Dropbox and files while creating a ticket (add them afterwards); the Viva AI key is still only in the browser; two people saving the same roadmap at once: the later save wins.
+
+### A36. Teams, access and invitations (20 Nov 2026)  ◐
+Needs the hosted app against the API (a cloud rehearsal). Use two browsers (or one normal and one private window): the owner in one, the invited person in the other.
+- [ ] As the owner, open the account menu, Teams and access. Expect: People, Teams and Access tabs, and the owner listed as Owner.
+- [ ] People: invite an email with role Member. Expect: since email is not connected, a message with a link to copy, shown once; the invitation is listed under "Waiting to join".
+- [ ] In the other browser, sign up with that email (or log in), open the copied link, press Accept invitation. Expect: "You have joined" and the app opens with no spaces at all.
+- [ ] Try the same link again, and a link opened by a different account. Expect: "not valid any more", and "sent to a different email address".
+- [ ] Teams: make a team, tick the new person, Save people. Delete a second team. Expect: the card shows the count; deleting asks first.
+- [ ] Access: choose Space, then a space, give the team View. In the invited person's browser reload. Expect: that space is listed and its tickets can be read, but creating or changing a ticket is refused.
+- [ ] Change the team to Edit. Expect: after a reload the person can add, change and delete tickets and files, but cannot rename the space or create a new one.
+- [ ] Change it to Manage. Expect: they can rename the space; they still cannot create a new space.
+- [ ] Choose Project, Roadmap and Dashboard in Access. Expect: the list shows their names; a grant on one does not show the others to that person.
+- [ ] Owner: set the person's role to Viewer. Expect: even with Manage granted they can only view. Set Admin, then switch off "Can manage people and access": that Admin sees everything but the Teams page says they have no access.
+- [ ] Remove the person. Expect: they lose every space at once.
+- [ ] A new account (no invitation). Expect: no sample projects, roadmap or forms.
+- [ ] Known gaps (not bugs yet): buttons are not hidden for a person who may only view (the server refuses the change); stand-ups; email is not sent.
+
+### A37. Stand-up calls (21 Nov 2026)  ◐
+Needs the hosted app against the API, an owner and a second person who is a Member (see A36).
+- [ ] As the owner open the account menu, Calls. Expect: "No calls are scheduled for you." and a Schedule a call button.
+- [ ] Schedule one for the second person (or a team): title, a start time, 15 minutes, a Google Meet link, tick the guest. Expect: it appears under Upcoming with "Invited: ..." and a Join call button; a note says nobody was emailed because email is not connected.
+- [ ] Try a link on another site (for example https://example.com/x) and one starting with http://. Expect: refused before sending, with a message naming Google Meet and Microsoft Teams.
+- [ ] Try to schedule with nobody ticked. Expect: "Invite at least one person or team."
+- [ ] As the second person open Calls. Expect: the call, a Join call button that opens the link in a new tab, and no Schedule, Change or Delete buttons and no guest list.
+- [ ] A third person who is not invited. Expect: the page lists nothing.
+- [ ] As the owner Change the call (new time), then Delete it after the question. Expect: the second person sees the new time after a reload, and the call is gone after the delete.
+- [ ] A call in the past. Expect: it moves to Earlier, dimmed, with its Join link still shown.
+
+### A38. Repeating stand-ups, Google and the calendar (21 Nov 2026)  ◐
+Same set-up as A37. The Google lines need Google set up first (`docs/03-sop/google-setup.md`); everything else works with a pasted link.
+- [ ] Schedule "Every weekday" "For 1 month". Expect: the list shows one entry, "Next: ..." and "Every weekday until <date>"; the calendar shows a small dark chip with the time and title on each weekday of the series, and clicking a chip opens the Meet link in a new tab.
+- [ ] Try "For 1 week", "For a number of days" (10) and "Until a day I choose". Expect: the last day shown after saving matches (7 days counting the first; 10 days counting the first; the chosen day).
+- [ ] Change the series' last day. Expect: the calendar follows after a reload. Delete the series. Expect: the question mentions the whole series, and every chip is gone.
+- [ ] Owner: on the Calls page press Connect Google (needs Google set up: docs/03-sop/google-setup.md). Expect: Google's sign-in and permission page, then back with "Google is connected." and the account's email on the page; an Admin sees no connect button.
+- [ ] Schedule with the link left empty. Expect: a meet.google.com link on the call; each invited person gets an email from the connected account (time in the call's time zone, the link, and "It repeats ..." for a series), and the page says how many emails were sent.
+- [ ] Disconnect Google. Expect: scheduling without a link is refused with a message to paste one or connect Google.
+
+### A44. Already signed in: the public pages open the app (21 Nov 2026)  ◐
+Hosted app, an account that is signed in.
+- [ ] Sign in, then close the tab (do not log out) and open the site address again. Expect: you land in your workspace, not on the landing page.
+- [ ] Close the whole browser, open it again and go to the site. Expect: the same.
+- [ ] While signed in open the landing page and then `/login` by typing the address. Expect: each sends you to the app.
+- [ ] Open `/signup`, `/terms` and `/privacy` while signed in. Expect: they show as normal, no redirect.
+- [ ] Log out, then open the site address. Expect: the landing page.
+- [ ] Sign in without **Remember me**, then leave the browser closed longer than the session hours. Expect: the landing page, and logging in asks for the password.
+- [ ] On a phone sign in, then turn on **Desktop site**. Expect: you land in the app and stay signed in.
+
+### A43. The call agenda lists every open ticket (21 Nov 2026)
+Use a space that has more than ten To do tickets and more than ten Backlog tickets (the LIRA space does), and its Stand-up button.
+- [ ] Open the Agenda tab, "By status". Expect: "Up next · To do" lists every To do ticket (its count in the heading equals the rows below it) and "Backlog" lists every backlog ticket, not only the first 8 and 6. Done tickets appear only under "Done in the last 24 hours".
+- [ ] Switch to "By person". Expect: each person's card lists all their To do tickets under "Next" and all their backlog tickets under "Backlog", not three.
+- [ ] Open a sprint call. Expect: the same lists, for the tickets of that sprint only; epics are never listed.
+- [ ] Press "Copy call notes" and paste. Expect: the notes still give the top of each list only (8 To do, 5 backlog); this is deliberate, the notes are a summary.
+
+### A42. Comment icon on the tickets of a call (21 Nov 2026)  ◐
+Open a sprint, project or space call from its Stand-up button (the Agenda tab).
+- [ ] Move the mouse over a ticket row. Expect: a small comment icon appears just before the note badge (for example "Overdue by 11d"); move the mouse away and it disappears.
+- [ ] Do this in "By status" for every group (needs an update, blocked, in progress, done, up next, backlog), and in "By person" on the tickets of a person's card. Expect: the same icon.
+- [ ] Press the icon. Expect: a box opens under the row, the ticket does not open, and the call stays open.
+- [ ] Type a comment and press Post (or Ctrl+Enter). Expect: the box closes; open the ticket and the comment is in its activity, by you.
+- [ ] Press the icon, then Cancel, or press Escape. Expect: the box closes and nothing is saved. Post is greyed out while the box is empty.
+- [ ] Click the title, key or badge of a row. Expect: the ticket still opens as before.
+- [ ] Use Tab to reach a row's icon. Expect: it becomes visible while it has the keyboard focus.
+- [ ] Open the Calls page (/calls) and the hosted call list. Expect: no ticket rows there, so no icon.
+
+### A41. Google sign-up connects Google for calls (21 Nov 2026)  ◐
+Needs the same set-up as A40. Use a Google account that has never been used here, and `https://test.liraspaces.com`.
+- [ ] On the landing page press **Google** in the sign-up bar. Expect: Google's page lists, besides your name and email, creating Meet links and sending email; agree to all of them.
+- [ ] Back in the app open the account menu, **Stand-up calls**, then **Manage calls**. Expect: the page says Google is connected as your address and does not offer **Connect Google**.
+- [ ] Schedule a call and leave the link empty. Expect: a `meet.google.com` link and an invitation email to the people invited.
+- [ ] Log out, open `/login` and press **Google**. Expect: Google asks only who you are; you are signed in; Calls still shows Google as connected.
+- [ ] Sign up with email and password instead. Expect: the Calls page offers **Connect Google**.
+- [ ] Sign up with Google but untick the Meet or email permission. Expect: you are signed in, and Calls offers **Connect Google**.
+
+### A40. Sign up and sign in with Google (21 Nov 2026)  ◐
+Needs Google set up (docs/03-sop/google-setup.md), both redirect URIs in the Google client, and your Google account listed as a test user while the app is in Testing. Use `https://test.liraspaces.com`.
+- [ ] Open `/login` and the landing page. Expect: the Google button, with the Google "G", is on (it says just "Google"). Without Google set up on the server it is greyed out.
+- [ ] Press it with a Google account that has never been used here. Expect: Google's account chooser, then the permission page asking only to see your name and email; then the app opens signed in, with an empty workspace. The account menu shows your Google name and email.
+- [ ] Log out and press Google again. Expect: the same account, no second workspace.
+- [ ] Try to log in with that email and any password. Expect: "The email or password is not correct."
+- [ ] Sign up with email and password for an address that you also own at Google, log out, then use Google with it. Expect: you are signed in to that account; the old password no longer works.
+- [ ] Press Google and then Cancel at Google's page. Expect: back on the log-in page with "Google sign-in did not work. Try again, or use your email and password."
+- [ ] Open `/api/auth/google/callback?code=x&state=y` directly. Expect: the log-in page with the same message, and nobody is signed in.
+
+### A39. Fixes after the first look at the hosted app (21 Nov 2026)  ◐
+Hosted app, a brand new account.
+- [ ] Open the landing page, then log in, then open the app. Expect: light theme on all of them. Switch to dark on the landing page, log in: the app is dark too. Log out and in again, in another browser: your choice is still there.
+- [ ] In the app press the logo at the top left. Expect: the For you page opens; you stay signed in and never land on the public pages.
+- [ ] A new account: open Projects, Sprints, Roadmaps, the board and Forms. Expect: nothing is there, no sample projects, no sprints, no roadmap, no forms.
+- [ ] Make a project. Expect: no letters badge before its name or in the sidebar; under the name it says "Owner:" with your own name; the project owner field starts with your own name.
+- [ ] Landing page in dark mode, the black band. Expect: the blinking cursor is the same gold as the word "anywhere", while the word is typed.
+- [ ] Scroll to "Discover the latest", away and back. Expect: the cards fly in quickly from the far right edge, one after another, each overshooting a little to the left before it settles.
+- [ ] Open a project, press its call button (Project sync). Expect: a popup with the calls of that project; the call button is one button, with no second button beside it. As Owner the popup has Schedule a project sync, Change and Delete on a call, and a Manage calls button. Schedule one from the popup, change it, delete it.
+- [ ] In the popup press Manage calls. Expect: the popup closes and the Calls page with every kind of call, filter buttons (All calls, Stand-ups, Project syncs, Sprint calls, Space calls), and Schedule a call with a choice of what it is for; a call made here shows in that project's popup.
+- [ ] As a member invited to a call: press the call button on that project. Expect: a popup with the call and Join, and no Manage calls button and nothing to schedule, change or delete.
+
+### A34. Scroll animations, names and project page (20 Nov 2026)  ◐
+- [ ] On the landing page scroll to the black band, away, and back. Expect: each time, only the word "anywhere" is typed out one letter at a time (the words before it are already there) and the cursor blinks. With reduced motion on, it just appears.
+- [ ] Scroll the "Discover the latest" boxes into view, away and back. Expect: the cards come in from the far right edge of the screen, fast, the first one first and each next one starting when the one before has arrived, like a train; again every time you scroll to the section. With reduced motion they simply appear.
+- [ ] Footer. Expect: "Operated by WorldXAdmins, India"; the legal pages name WorldXAdmins.
+- [ ] Open For you. Expect: no "Recent activity" panel.
+- [ ] Open a project. Expect: the project initials sit in a small badge right before the project name; under it the lead shows as "Lead:", then the avatar, then the name (the signed-in person's name when no lead is set).

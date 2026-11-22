@@ -168,3 +168,7 @@ This seed data runs only once (guarded by `if (count > 0) return`).
 - **Tablet and phone mode (`npm run dev:lan`):** also accepts addresses from your own network (never web names). Devices other than this computer must arrive once with the private link (`?key=`), receive an HttpOnly cookie, and never receive or change the API key.
 - **Still no cloud and no accounts.** The dev server is the only server; `npm run preview` or a built copy cannot save to disk.
 - See [SECURITY_REPORT.md](../SECURITY_REPORT.md).
+
+## Update (21 November 2026, version 4.0.0): the hosted edition
+
+The "backend" above is the Vite dev-server plugin of the **local edition**. The hosted edition has a real server, `api/` (NestJS on Node 22): accounts, sessions, Google sign-in, roles and per-object permissions, tickets, attachments, invitations by email and calls, all authorised on the server per object and audited. It runs as a Container App behind the web app; setup and deployment are in [infra/azure-playground/README.md](../infra/azure-playground/README.md). Offline editing is not part of the hosted edition: the browser keeps only a cache for speed.

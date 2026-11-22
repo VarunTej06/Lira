@@ -231,14 +231,14 @@ npm run build     # must succeed
 npm run lint
 ```
 
-Tests (1732, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
+Tests (1772, see [TESTING.md](TESTING.md)) cover the sprint logic and reports, standup and invite builders, AI intent parsing and the confirm and undo flow, the disk-persistence layer (including a test that wipes the browser and restores from disk), the local API guard, routes, and the animation helpers.
 
 ---
 
 ## 11b. Editing, saving and dialogs
 
 - **The ticket popup is a draft.** Edit anything, then press **Save changes**: the ticket is saved and the popup closes. Closing (X, outside click, Escape) with unsaved changes asks "Discard changes?". Comments and new child tickets have their own buttons and are saved at once.
-- **Settings pages** (Appearance, Profile, General, Notifications) save with their **Save** button and close. The theme and the light palette (Sorrel or Fawn) only change when you press Save, in both places they can be set (Settings and System settings).
+- **Settings pages** (Appearance, Profile, General, Notifications) save with their **Save** button and close. The theme and its palette (two for dark, four for light) only change when you press Save, in both places they can be set (Settings and System settings).
 - **Dialogs:** confirm, prompt and alert boxes are Lira's own (call `confirmDialog`, `promptDialog` or `alertDialog` from `components/common/dialogStore.ts`; `dialogs.tsx` only draws them). Do not use `window.confirm`, `window.prompt` or `alert`.
 - **Dates:** use `components/common/DatePicker.tsx`, not `<input type="date">`.
 - **Descriptions** use the rich text editor (`components/common/richtext/`). They are stored as HTML written by the editor; Markdown from older tickets is converted when opened. Code that needs the text (search, Viva, suggestions) uses `descriptionToText` from `utils/richText.ts`.
@@ -281,6 +281,22 @@ Good to know:
 - On a phone or a tablet held upright the left panel becomes a menu: tap the round button at the bottom left. On a phone, search is the magnifier button in the top bar. Anything that only showed on hover (such as the "..." menus) is always visible on touch screens.
 
 ---
+
+## 13b. The hosted edition (Liraspaces, version 4.0.0)
+
+The local edition above is unchanged. The hosted edition is the same app built with `npm run hosted` (public pages at `/`, the app under `/app`, port 5175) plus the server in `api/`.
+
+```
+cd api
+npm install
+npm run build
+npm test          # the database tests run only when TEST_DATABASE_URL is set (throwaway schema only)
+```
+
+- A local test database: `docker run -d --rm --name lira-test-pg -e POSTGRES_PASSWORD=testonly -p 127.0.0.1:55432:5432 postgres:16-alpine`, then `TEST_DATABASE_URL=postgres://postgres:testonly@127.0.0.1:55432/postgres TEST_DATABASE_SSL=disable npm test`. Stop the container afterwards.
+- Migrations: the `migrate` script of the API, run as the server admin (see [api/README.md](api/README.md)).
+- Settings (environment variables) of the API are listed in [api/README.md](api/README.md); Google sign-in and Meet links need the four `GOOGLE_*` and `TOKEN_ENCRYPTION_KEY` settings ([docs/03-sop/google-setup.md](docs/03-sop/google-setup.md)).
+- Running it on Azure (the rehearsal): [infra/azure-playground/README.md](infra/azure-playground/README.md).
 
 ## 14. Security
 

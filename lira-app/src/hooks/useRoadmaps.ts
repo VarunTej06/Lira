@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { migrateLiraSchedule, seedLiraRoadmap, type Roadmap } from '../utils/roadmapUtils';
 import { appStorage } from '../utils/appStorage';
+import { isHosted } from '../utils/edition';
 
 const KEY = 'lira_roadmaps';
 const ROADMAPS_EVENT = 'lira-roadmaps-changed';
@@ -29,6 +30,7 @@ export function readRoadmaps(): Roadmap[] {
   } catch (e) {
     console.error('Failed to parse lira_roadmaps', e);
   }
+  if (isHosted()) return []; // a new hosted account starts with no sample roadmap
   const seeded = [seedLiraRoadmap()];
   writeRoadmaps(seeded);
   return seeded;

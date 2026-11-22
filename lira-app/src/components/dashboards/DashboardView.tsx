@@ -28,7 +28,7 @@ const Btn: React.FC<{ onClick: () => void; children: React.ReactNode; active?: b
   </button>
 );
 
-const MENU_PANEL = 'absolute right-0 top-full mt-1 bg-white border border-lira-border rounded-xl shadow-2xl z-30 py-1 text-sm';
+const MENU_PANEL = 'absolute right-0 top-full mt-1 bg-white border border-lira-border rounded-xl z-30 py-1 text-sm';
 const MENU_ITEM = 'w-full flex items-center gap-2.5 px-3 py-2 hover:bg-gray-50 cursor-pointer text-left';
 
 function MissingDashboard({ onBack }: { onBack: () => void }) {

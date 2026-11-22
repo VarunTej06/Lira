@@ -1,6 +1,6 @@
 # Threat model (STRIDE) for the multi-user edition
 
-**Status:** Proposed, review before implementation. Scope: browser SPA, API, database, object storage, identity provider, AI providers, secrets. Assets: ticket content (may include confidential work), user identities, attachments, audit log, AI provider keys.
+**Status:** Proposed; part of it is now built (see "What is built, 21 November 2026" at the end). Review again before real users sign up. Scope: browser SPA, API, database, object storage, identity provider, AI providers, secrets. Assets: ticket content (may include confidential work), user identities, attachments, audit log, AI provider keys.
 
 Actors: a legitimate user, a user of another organisation, an external guest, a malicious insider, an anonymous internet attacker, a malicious web page the user visits, a compromised dependency, a prompt-injecting author of a ticket.
 
@@ -38,3 +38,23 @@ Actors: a legitimate user, a user of another organisation, an external guest, a 
 
 ## Review
 Revisit when: a new route group is added, a new data type or external integration appears, or after any security incident. Owner: security lead (to be named).
+
+## What is built, 21 November 2026 (version 4.0.0)
+
+Checked against the code, not a pen test. "Built" means the control exists and has a test.
+
+| Threat | State |
+|---|---|
+| T1, T19 Another organisation's data | Built for tickets, spaces, objects, kv, attachments, teams, grants, invitations and calls: every route is scoped by organisation and authorised per object; row-level security applies a second time; tests use two organisations. Dashboards and search across data are only as safe as these routes, which they use |
+| T2 Stored XSS | Comments are stored as escaped or sanitised HTML and rendered sanitised; the new quick comment on a call row escapes what is typed. Not independently tested |
+| T3, T4 Sessions and CSRF | Built: `HttpOnly`, `Secure`, `SameSite` cookie; calls that change something need an allowed origin and the header `X-Requested-With` |
+| T5 Forged login response | Built for Google: state, nonce and PKCE in a signed cookie; the ID token is checked for signature, issuer, audience, expiry, nonce and verified email |
+| T8 Mass assignment | Built: zod schemas refuse unknown fields; ownership and `org_id` are set by the server |
+| T9 Privilege escalation | Built: only the Owner changes roles and the Admin's right to manage access; the owner cannot be changed or removed |
+| T11 Uploads | Partly: private container, short-lived addresses, size checked after upload, always a download. No virus scan, no content sniffing |
+| T12 Secrets | Partly: Key Vault in the rehearsal, a separate key encrypts Google refresh tokens. No secret scanning in a pipeline yet |
+| T14 Denial of service | Partly: body size limits, login attempt limits. No general rate limit |
+| T15 Audit | Built: `audit_log` is insert-only for the application role |
+| T6, T7, T10 | Not built or not applicable yet: AI runs in the browser, no organisation AI settings, no sign-out of leavers beyond removing the membership |
+
+New risks that came with the hosted edition and are accepted for the rehearsal: a person who signs up with a password for someone else's address (nothing proves the address) until that person signs in with Google, which takes the account over and removes the password (ADR-0009); no email verification and no password reset yet.

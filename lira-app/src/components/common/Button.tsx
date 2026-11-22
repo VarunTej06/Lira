@@ -9,10 +9,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANT_CLASSES = {
-  primary: 'bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover active:bg-lira-blue-hover shadow-sm',
-  secondary: 'bg-white text-lira-text border border-lira-border hover:bg-gray-50 shadow-sm',
+  primary: 'bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover active:bg-lira-blue-hover',
+  secondary: 'bg-white text-lira-text border border-lira-border hover:bg-gray-50',
   ghost: 'text-lira-text hover:bg-gray-100 active:bg-gray-200',
-  danger: 'bg-red-600 text-white hover:bg-red-700 shadow-sm',
+  danger: 'bg-red-600 text-white hover:bg-red-700',
   outline: 'border border-lira-blue text-lira-blue hover:bg-lira-blue-light',
 };
 

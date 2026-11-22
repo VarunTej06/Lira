@@ -34,8 +34,8 @@ interface ItemModalProps {
 /** Says which epic the item is, or lets the person create or link one. */
 function EpicBanner({ draft, set, hasEpic, space, issues, linkable, epicMode, setEpicMode, existingKey, setExistingKey, onOpenEpic }: { draft: RoadmapItem; set: (patch: Partial<RoadmapItem>) => void; hasEpic: boolean; space?: Space; issues: Issue[]; linkable: Issue[]; epicMode: 'new' | 'existing'; setEpicMode: (m: 'new' | 'existing') => void; existingKey: string; setExistingKey: (k: string) => void; onOpenEpic: (key: string) => void }) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-violet-300/50 bg-violet-500/10 px-3 py-2.5 text-xs">
-      <Layers className="w-4 h-4 text-violet-500 mt-0.5 flex-shrink-0" />
+    <div className="flex items-start gap-3 rounded-xl border border-lira-border bg-lira-blue-light px-3 py-2.5 text-xs">
+      <Layers className="w-4 h-4 text-lira-blue mt-0.5 flex-shrink-0" />
       <div className="flex-1 min-w-0">
         {hasEpic ? (
           <p>This item is the epic <strong>{draft.epicKey}</strong>. Title, description and dates stay in sync with it.</p>
@@ -60,7 +60,7 @@ function EpicBanner({ draft, set, hasEpic, space, issues, linkable, epicMode, se
           </>
         )}
       </div>
-      {hasEpic && <button onClick={() => onOpenEpic(draft.epicKey!)} className="flex items-center gap-1 text-violet-600 hover:underline cursor-pointer flex-shrink-0"><ExternalLink className="w-3.5 h-3.5" /> Open epic</button>}
+      {hasEpic && <button onClick={() => onOpenEpic(draft.epicKey!)} className="flex items-center gap-1 text-lira-blue hover:underline cursor-pointer flex-shrink-0"><ExternalLink className="w-3.5 h-3.5" /> Open epic</button>}
     </div>
   );
 }
@@ -111,7 +111,7 @@ function Checklist({ draft, set, hasChildren, childText, setChildText, addChild,
       <label className={label}>Checklist {hasChildren && `· ${draft.children.filter(c => c.done).length}/${draft.children.length} done`}</label>
       <p className="text-2xs text-lira-muted mb-1.5">
         {draft.taskKey
-          ? <>Saved as the subtasks of one task, <button type="button" onClick={() => onOpenEpic(draft.taskKey!)} className="font-mono text-violet-500 hover:underline cursor-pointer">{draft.taskKey}</button>, under this epic.</>
+          ? <>Saved as the subtasks of one task, <button type="button" onClick={() => onOpenEpic(draft.taskKey!)} className="font-mono text-lira-blue hover:underline cursor-pointer">{draft.taskKey}</button>, under this epic.</>
           : 'Saved as the subtasks of one new task under this epic (created when you save).'}
       </p>
       <div className="space-y-1">
@@ -156,7 +156,7 @@ function ItemFooter({ draft, isNew, valid, onDelete, onClose, save }: { draft: R
   return (
     <div className="flex items-center justify-between pt-3 border-t border-lira-border">
       {!isNew ? (
-        <button onClick={async () => { if (await confirmDialog({ title: 'Remove from roadmap', message: `Remove "${draft.title}" from the roadmap?${draft.epicKey ? `\n\nThe epic ${draft.epicKey} stays in Lira.` : ''}`, confirmLabel: 'Remove', tone: 'danger' })) onDelete(draft.id); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:bg-red-500/10 px-3 py-2 rounded-lg cursor-pointer">
+        <button onClick={async () => { if (await confirmDialog({ title: 'Remove from roadmap', message: `Remove "${draft.title}" from the roadmap?${draft.epicKey ? `\n\nThe epic ${draft.epicKey} stays in Liraspaces.` : ''}`, confirmLabel: 'Remove', tone: 'danger' })) onDelete(draft.id); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:bg-red-500/10 px-3 py-2 rounded-lg cursor-pointer">
           <Trash2 className="w-4 h-4" /> Remove
         </button>
       ) : <span />}

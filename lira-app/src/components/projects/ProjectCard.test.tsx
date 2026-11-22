@@ -1,3 +1,4 @@
+import { appStorage } from '../../utils/appStorage';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Issue } from '../../types/issue';
 import type { Project } from '../../types/project';
@@ -64,10 +65,13 @@ describe('ProjectCard', () => {
       expect(text()).toContain('VA');
       expect(text()).toContain('Varun Tej');
     });
-    it('falls back to VY / Varun Tej', () => {
+    it('falls back to the person using the app, not to a fixed name', () => {
+      appStorage.set('lira_user_profile', JSON.stringify({ name: 'Test User', email: 't@x.co', initials: 'TU', role: 'Owner' }));
       show(project({ lead: '' } as never), [space()]);
-      expect(text()).toContain('VY');
-      expect(text()).toContain('Varun Tej');
+      expect(text()).toContain('TE');
+      expect(text()).toContain('Test User');
+      expect(text()).not.toContain('Varun Tej');
+      appStorage.remove('lira_user_profile');
     });
   });
   describe('progress', () => {

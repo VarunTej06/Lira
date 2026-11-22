@@ -44,7 +44,7 @@ const Card: React.FC<{
       onDragOver={e => { if (!editing) return; e.preventDefault(); onDragOver(); }}
       onDrop={e => { if (!editing) return; e.preventDefault(); onDropHere(); }}
       aria-label={widget.title}
-      className={`${SPAN[widget.size]} ${MIN_H[widget.height]} relative flex flex-col rounded-xl border bg-white shadow-xs transition-all ${
+      className={`${SPAN[widget.size]} ${MIN_H[widget.height]} relative flex flex-col rounded-xl border bg-white transition-all ${
         editing ? 'border-dashed border-lira-blue/50' : 'border-lira-border'
       } ${dragging ? 'opacity-40' : ''} ${over ? 'ring-2 ring-lira-blue' : ''}`}
     >

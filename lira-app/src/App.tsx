@@ -2,16 +2,13 @@ import { DialogHost } from './components/common/dialogs';
 import { DashboardScheduler } from './components/dashboards/DashboardScheduler';
 import { SavedToastHost } from './components/common/SavedToast';
 import { LinkMenuHost } from './components/common/LinkMenu';
-import { getLightPalette, getTheme, paintTheme } from './utils/theme';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { paintTheme } from './utils/theme';
+import { lazy, Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoutes } from './AppRoutes';
 import { TopNavigation } from './components/layout/TopNavigation';
 import { LeftSidebar } from './components/layout/LeftSidebar';
-import { IssueDetailModal } from './components/issue/IssueDetailModal';
-import { CreateIssueModal } from './components/issue/CreateIssueModal';
 import { CreateSpaceModal } from './components/board/CreateSpaceModal';
-import { VivaAIChatbot } from './components/ai/VivaAIChatbot';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { useIssuePopup } from './hooks/useIssuePopup';
 import { CreateSprintModal } from './components/sprints/CreateSprintModal';
@@ -37,7 +34,12 @@ import { useResetWhen } from './hooks/useResetWhen';
 import { NO_ISSUES } from './utils/emptyLists';
 
 // Show the saved theme before the first render, so the page never flashes in the wrong colours
-if (typeof window !== 'undefined') paintTheme(getTheme(), getLightPalette());
+if (typeof window !== 'undefined') paintTheme();
+
+// The ticket popup, the create dialog and Viva hold the rich text editor and the chat: they load after the first screen
+const IssueDetailModal = lazy(() => import('./components/issue/IssueDetailModal').then(m => ({ default: m.IssueDetailModal })));
+const CreateIssueModal = lazy(() => import('./components/issue/CreateIssueModal').then(m => ({ default: m.CreateIssueModal })));
+const VivaAIChatbot = lazy(() => import('./components/ai/VivaAIChatbot').then(m => ({ default: m.VivaAIChatbot })));
 
 export default function App() {
   const navigate = useNavigate();
@@ -54,7 +56,7 @@ export default function App() {
   const { routeSpace, activeSpace } = useActiveSpace(route, spaces);
   const activeSpaceId = activeSpace?.id;
 
-  useEffect(() => { document.title = `${titleOf(route)} · Lira`; }, [route]);
+  useEffect(() => { document.title = `${titleOf(route)} · Liraspaces`; }, [route]);
 
   // Auto-collapse sidebar when on Filters page
   useResetWhen([route.kind], () => { if (route.kind === 'filters') setSidebarCollapsed(true); });
@@ -109,13 +111,11 @@ export default function App() {
     <div className="h-screen flex flex-col overflow-hidden bg-app-frame font-sans">
       <TopNavigation
         onCreateIssue={() => createIssue.open('todo', { chooseSpace: true })}
-        onToggleAI={() => setShowAIChatbot(v => !v)}
         issues={everyIssue}
         spaces={spaceList}
         onSelectIssue={openIssue}
         onApplyFilter={handleApplyFilter}
         onNavigateToFilters={() => navigate('/filters')}
-        onNavigateToProjects={() => navigate('/projects')}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -152,7 +152,7 @@ export default function App() {
           onEditSpace={(space) => { setEditingSpace(space); setShowCreateSpace(true); }}
         />
 
-        <main className="flex-1 min-w-0 flex flex-col overflow-hidden my-2 mr-2 ml-2 rounded-2xl border border-lira-border bg-lira-bg shadow-[0_4px_20px_rgba(0,0,0,0.10)]">
+        <main className="flex-1 min-w-0 flex flex-col overflow-hidden my-2 mr-2 ml-2 rounded-2xl border border-lira-border bg-lira-bg">
           <AppRoutes
             route={route} pageKey={pageKey} spaceList={spaceList} activeSpace={activeSpace} routeSpace={routeSpace}
             projects={projects} selectedProject={selectedProject} allIssues={allIssues} everyIssue={everyIssue} issues={issues}
@@ -172,6 +172,7 @@ export default function App() {
       <LinkMenuHost />
       <DashboardScheduler issues={allIssues} spaces={spaceList} />
 
+      <Suspense fallback={null}>
       {/* Issue detail modal */}
       <ErrorBoundary fallback={<IssueCrashFallback onClose={closeModal} />}>
         {selectedIssue && (
@@ -223,6 +224,7 @@ export default function App() {
         spaces={spaceList}
         onSelectIssue={openIssue}
       />
+      </Suspense>
     </div>
   );
 }

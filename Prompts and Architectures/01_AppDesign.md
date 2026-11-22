@@ -71,7 +71,7 @@ hosted service is down.
 ### 2.2 Design System
 Lira has its own consistent visual language:
 - **Spacing:** 4-point grid (Tailwind defaults).
-- **Typography:** Inter (bundled with the app) in weights 300 to 900.
+- **Typography:** the device's own interface font (San Francisco, Segoe UI, Roboto), nothing bundled.
 - **Colour tokens:** Tailwind extensions backed by CSS variables so they flip with
   the theme (see `tailwind.config.js` and `index.css`).
 - **Component patterns:** Status badges, priority icons, avatar circles, and

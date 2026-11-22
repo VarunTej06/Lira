@@ -6,15 +6,18 @@ Build order for the versions of Lira. Pick a phase number to start and it will b
 |---|---|---|---|---|
 | 1 | Persistence cleanup and core tests | Foundation | Medium | **Done** |
 | 2 | Routing and file splitting | Foundation | Medium | **Done** |
-| 3 | Teams feature, real standup and invites | Collaboration | Large | Deferred (starts after the multi-user and SSO foundation, Phase 7) |
+| 3 | Teams feature, real standup and invites | Collaboration | Large | **Mostly built in version 4.0.0 (hosted edition)**: teams, per-object permissions, invitations by email, calls with Google Meet links, repeating calls. Not built: Microsoft Teams links, reminders, Google Calendar events |
 | 4 | Sprint planning, rollover, retros, reports | Agile | Large | **Done** |
 | 5 | Command palette, bulk edit, saved filters | Productivity | Medium | Not started |
 | 6 | Viva AI: confirm-and-undo, sprint-aware prompts | AI | Medium | **Done** |
-| 7 | Multi-user with SSO | Architecture | Very large | **Decided 9 November 2026, starting within days.** Plan: see [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md) (one repo with a shared core and two editions, hosted on Azure) |
+| 7 | Multi-user with SSO | Architecture | Very large | **In progress: version 4.0.0 has the hosted edition (Liraspaces) running in a rehearsal.** Accounts, Google sign-up and sign-in, roles, teams and permissions, server storage, attachments in Blob Storage. Next: a real Azure subscription, email verification and password reset, Microsoft sign-in, realtime updates, Viva on the server, the data importer. Plan: [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md); decisions in [docs/00-decisions](docs/00-decisions/README.md) |
 
 Phases 1 and 2 make every later phase cheaper, so they came first.
 
 ### Also done, outside the phases
+
+- **Hosted edition, version 4.0.0 (19 to 21 Nov 2026):** the `api/` server (NestJS, PostgreSQL with row-level security, migrations V1 to V13), sign-up and log-in with email or Google, an organisation of one for each new account, Owner, Admin, Member, Viewer and Guest roles with View, Edit or Manage on spaces, projects, roadmaps and dashboards for people and teams, a Teams page, invitations by email through Gmail, calls (stand-ups, sprint, project and space calls) with Google Meet links and repeats, a Calls page, attachments in Blob Storage, all data on the server with the browser as a cache, a landing page, and the script that rebuilds the Azure rehearsal. Details: [docs/01-architecture/HLD.md](docs/01-architecture/HLD.md) section 0.
+- **Calls (21 Nov 2026):** the agenda lists every open ticket (no cut-off), and a comment icon on each ticket row, shown on hover, writes a comment without leaving the call.
 
 - **Sprint length and sprint spaces:** monthly, weekly, bi-weekly or N-day sprints, and a choice of which spaces work in each sprint (Phase 4 follow-up).
 - **Sprint page filter:** by status and by space.

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import type { Space } from '../../../types/space';
 import { useResetWhen } from '../../../hooks/useResetWhen';
 import { appStorage } from '../../../utils/appStorage';
+import { isHosted } from '../../../utils/edition';
 
 export type FormFieldType = 'text' | 'textarea' | 'number' | 'date' | 'select' | 'checkbox';
 
@@ -96,11 +97,11 @@ export function useFormsState(props: FormsModalProps) {
 
   // Load saved forms from localStorage
   useResetWhen([isOpen, storageKey], () => {
-    if (isOpen) setForms(savedForms(storageKey) ?? DEFAULT_SAMPLE_FORMS);
+    if (isOpen) setForms(savedForms(storageKey) ?? (isHosted() ? [] : DEFAULT_SAMPLE_FORMS));
   });
   // Seed the sample forms once, the first time the window opens
   useEffect(() => {
-    if (!isOpen || savedForms(storageKey)) return;
+    if (!isOpen || savedForms(storageKey) || isHosted()) return;
     try { appStorage.set(storageKey, JSON.stringify(DEFAULT_SAMPLE_FORMS)); } catch { /* storage unavailable */ }
   }, [isOpen, storageKey]);
 

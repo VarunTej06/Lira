@@ -11,6 +11,7 @@ import Image from '@tiptap/extension-image';
 import type { Attachment } from '../../../types/issue';
 import { toEditorHtml, toStoredHtml } from '../../../utils/richText';
 import { downloadAttachment, readAttachment } from '../../../utils/attachments';
+import { isHosted } from '../../../utils/edition';
 import { alertDialog } from '../dialogStore';
 import { mentionSuggestion } from './mentions';
 import { EditorToolbar } from './EditorToolbar';
@@ -76,7 +77,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     if (tooBig.length) {
       await alertDialog({
         title: 'File not stored',
-        message: `${tooBig.join(', ')} ${tooBig.length === 1 ? 'is' : 'are'} bigger than 2 MB. The name is kept in the text, but the file itself is not stored in Lira.`,
+        message: `${tooBig.join(', ')} ${tooBig.length === 1 ? 'is' : 'are'} bigger than 2 MB. The name is kept in the text, but the file itself is not stored in Liraspaces.`,
       });
     }
   }, [attachmentsRef, onAttachRef]);
@@ -84,6 +85,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   // files from a drop or a paste (a pasted screenshot is always called "image.png": give each one its own name)
   const addFiles = useCallback(async (files: File[], editor: Editor | null) => {
     if (!files.length || !editor) return;
+    if (isHosted()) {
+      // a file kept inside the text would only live in this browser; ticket files go to the server from the Attachments section
+      await alertDialog({ title: 'Add files as attachments', message: 'Files cannot be placed inside the text. Add them in the Attachments section of the ticket.' });
+      return;
+    }
     const items: Attachment[] = [];
     for (const f of files) {
       const named = screenshotName(f);
@@ -139,7 +145,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         event.preventDefault();
         const id = a.getAttribute('href')!.slice('#attachment-'.length);
         const att = attachmentsRef.current.find(x => x.id === id);
-        if (att && !downloadAttachment(att)) void alertDialog({ title: 'File not stored', message: `${att.name} was too big to store in Lira, so it cannot be downloaded.` });
+        if (att && !downloadAttachment(att)) void alertDialog({ title: 'File not stored', message: `${att.name} was too big to store in Liraspaces, so it cannot be downloaded.` });
         return true;
       },
     },

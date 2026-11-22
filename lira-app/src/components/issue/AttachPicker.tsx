@@ -16,7 +16,7 @@ const SOURCES: SourceDef[] = [
   { id: 'computer', label: 'My computer', hint: 'Upload from this device', icon: <Monitor className="w-4 h-4" />, tile: 'bg-slate-100 text-slate-700' },
   { id: 'drive', label: 'Google Drive', hint: 'Add a share link', icon: <HardDrive className="w-4 h-4" />, tile: 'bg-emerald-100 text-emerald-700' },
   { id: 'onedrive', label: 'OneDrive', hint: 'Add a share link', icon: <Cloud className="w-4 h-4" />, tile: 'bg-sky-100 text-sky-700' },
-  { id: 'dropbox', label: 'Dropbox', hint: 'Add a share link', icon: <Package className="w-4 h-4" />, tile: 'bg-indigo-100 text-indigo-700' },
+  { id: 'dropbox', label: 'Dropbox', hint: 'Add a share link', icon: <Package className="w-4 h-4" />, tile: 'bg-lira-blue-light text-lira-blue' },
   { id: 'link', label: 'Web link', hint: 'Any page or file online', icon: <Link2 className="w-4 h-4" />, tile: 'bg-amber-100 text-amber-700' },
 ];
 
@@ -97,13 +97,13 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
         <motion.div
           key="attach-picker"
           {...dialogBackdrop}
-          className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/60"
           onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}
         >
           <motion.div
             {...dialogPanel}
             role="dialog" aria-modal="true" aria-label="Add attachment" data-testid="attach-picker"
-            className="bg-white rounded-xl shadow-2xl border border-lira-border w-full max-w-2xl overflow-hidden flex flex-col max-h-[88vh]"
+            className="bg-white rounded-xl border border-lira-border w-full max-w-2xl overflow-hidden flex flex-col max-h-[88vh]"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-lira-border">
               <div>
@@ -120,7 +120,7 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
                     key={s.id}
                     onClick={() => setSource(s.id)}
                     aria-pressed={source === s.id}
-                    className={`flex items-center gap-3 px-2.5 py-2 rounded-lg text-left transition-colors cursor-pointer flex-shrink-0 ${source === s.id ? 'bg-white shadow-xs ring-1 ring-lira-border' : 'hover:bg-white/70'}`}
+                    className={`flex items-center gap-3 px-2.5 py-2 rounded-lg text-left transition-colors cursor-pointer flex-shrink-0 ${source === s.id ? 'bg-white ring-1 ring-lira-border' : 'hover:bg-white/70'}`}
                   >
                     <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${s.tile}`}>{s.icon}</span>
                     <span className="min-w-0">
@@ -140,12 +140,12 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
                       onDrop={e => { e.preventDefault(); setDragging(false); stage(e.dataTransfer.files); }}
                       className={`rounded-xl border-2 border-dashed px-6 py-9 text-center transition-colors ${dragging ? 'border-lira-blue bg-lira-blue-light' : 'border-lira-border bg-gray-50/60'}`}
                     >
-                      <span className="mx-auto mb-3 w-12 h-12 rounded-full bg-white shadow-xs ring-1 ring-lira-border flex items-center justify-center text-lira-blue"><UploadCloud className="w-6 h-6" /></span>
+                      <span className="mx-auto mb-3 w-12 h-12 rounded-full bg-white ring-1 ring-lira-border flex items-center justify-center text-lira-blue"><UploadCloud className="w-6 h-6" /></span>
                       <p className="text-sm font-medium text-lira-text">Drag files here</p>
                       <p className="text-xs text-lira-muted mt-1">or</p>
-                      <button onClick={() => fileInput.current?.click()} className="mt-2 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer">Choose files</button>
+                      <button onClick={() => fileInput.current?.click()} className="mt-2 px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer">Choose files</button>
                       <input ref={fileInput} type="file" multiple className="hidden" data-testid="attach-file-input" onChange={e => { stage(e.target.files); e.target.value = ''; }} />
-                      <p className="text-2xs text-lira-muted mt-4">Files up to {formatBytes(MAX_EMBED_BYTES)} are stored in Lira. Larger files are listed by name only.</p>
+                      <p className="text-2xs text-lira-muted mt-4">Files up to {formatBytes(MAX_EMBED_BYTES)} are stored in Liraspaces. Larger files are listed by name only.</p>
                     </div>
 
                     {staged.length > 0 && (
@@ -182,7 +182,7 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
                         placeholder="https://" inputMode="url"
                         className="w-full text-sm border border-lira-border rounded-lg px-3 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue bg-white text-lira-text"
                       />
-                      {linkUrl.trim() && !url && <p className="text-xs text-red-600 mt-1.5">That is not a web address Lira can open.</p>}
+                      {linkUrl.trim() && !url && <p className="text-xs text-red-600 mt-1.5">That is not a web address Liraspaces can open.</p>}
                     </div>
                     <div>
                       <label htmlFor="attach-name" className="block text-xs font-semibold text-lira-muted mb-1.5 uppercase tracking-wide">Name <span className="normal-case font-normal">(optional)</span></label>
@@ -204,7 +204,7 @@ export const AttachPicker: React.FC<Props> = ({ open, onClose, onAdd }) => {
               <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer">Cancel</button>
               <button
                 onClick={() => void attach()} disabled={!canAttach || busy} data-testid="attach-confirm"
-                className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm font-semibold text-lira-on-blue bg-lira-blue hover:bg-lira-blue-hover rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLinkSource ? 'Add link' : staged.length > 1 ? `Attach ${staged.length} files` : 'Attach'}
               </button>

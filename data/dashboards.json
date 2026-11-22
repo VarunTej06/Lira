@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-08T20:20:37.011Z",
+  "updatedAt": "2026-11-21T07:25:18.676Z",
   "entries": {
     "lira_dashboards": [
       {
@@ -11,7 +11,10 @@
           "priorities": [],
           "range": "all",
           "spaceIds": [
-            6
+            6,
+            1,
+            2,
+            3
           ],
           "sprint": "current",
           "types": []
@@ -21,7 +24,7 @@
         "name": "Sprint health",
         "scenario": "sprint-health",
         "starred": false,
-        "updatedAt": "2026-11-08T20:20:36.495Z",
+        "updatedAt": "2026-11-21T07:25:17.435Z",
         "widgets": [
           {
             "config": {

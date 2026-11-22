@@ -2,7 +2,7 @@
 
 How Lira is tested automatically, what each test protects, how to run them and how to add more.
 
-**Right now:** 1732 automated tests in 154 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
+**Right now:** 2078 automated tests in 203 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
 
 **Done by hand:** [`docs/04-quality/manual-test-checklist.md`](docs/04-quality/manual-test-checklist.md) lists every screen to click through after the refactor.
 
@@ -16,12 +16,14 @@ Run every command from the `lira-app` folder.
 
 | Command | What it does | Time |
 |---|---|---|
-| `npm test` | All 1732 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
+| `npm test` | All 2078 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
 | `npm run test:watch` | Re-runs the tests that matter each time you save a file | |
 | `npm run test:health` | **Data health check**: reads your real `data/` folder and checks it holds together. Changes nothing | about 3 s |
 | `npm run test:all` | Everything in one go: type check, lint, `npm test`, then the data health check | about 1 min |
 | `npm run lint` | Style and mistake checker (oxlint). It must report **0 warnings** | |
 | `npm run build` | Type check and the production build | |
+| `cd api && npm test` | The API's own tests: 83 that need nothing, and 106 more against a real PostgreSQL when `TEST_DATABASE_URL` is set (not part of `test:all`; see `api/README.md`) | about 30 s |
+| `npm run build:hosted` | The same, for the hosted edition (public pages at `/`, the app under `/app`). `npm run hosted` builds it and serves it at http://localhost:5175 | |
 | `npm audit` | Looks for known security problems in packages | |
 
 Run one file: `npx vitest run src/utils/helpers.test.ts`. Run tests whose name contains a word: `npx vitest run -t "Blocked"`.
@@ -92,9 +94,10 @@ Run one file: `npx vitest run src/utils/helpers.test.ts`. Run tests whose name c
 | **New tickets start in Backlog or To Do** | `src/utils/newIssue.test.ts`, `src/components/issue/CreateIssueModal.test.tsx`, `src/services/aiAgent.test.ts` (Viva too) |
 | **Typing is never a shortcut** | `src/utils/isEditable.test.ts` text boxes, dropdowns and the rich text editors |
 | **Roadmap calendar fits its panel** | `src/utils/roadmapUtils.test.ts` the range is trimmed to the work with four days of room, days widen to fill the panel and never go below the scale, header cells follow. `src/utils/roadmap/milestoneLabels.test.ts` milestone labels stack in as many rows as needed. `src/hooks/useElementWidth.test.tsx` the measured width |
-| **Logo** | `src/components/common/LiraLogo.test.tsx` drawn in the page (no image file), the arrow grows from the corner on load and on hover, loops while starting, takes its size and colour from the caller |
-| **App switcher and version** | `src/components/layout/topnav/AppLauncher.test.tsx` opens, shows the version and five destinations, runs the chosen one, closes on Escape. `src/utils/appVersion.test.ts` the version is written in one place |
-| **Theme and colours** | `src/utils/theme.test.ts` the dark theme and the two light palettes (Sorrel, Fawn): saved and applied only on Save, the stylesheet uses exactly the colours in `theme/palette.ts`, and text, links and button labels stay readable in all three. `src/components/layout/settings/AppearanceSection.test.tsx` and `src/components/layout/topnav/SystemSettingsModal.test.tsx` choosing Light asks which palette, nothing changes until Save |
+| **Flat design (the 30 tells)** | `src/theme/colorScales.test.ts` the four status colour scales: contrast of every text shade on every palette page, white labels on the dark shades, quiet tints, and that Tailwind's own palette is not used. `src/components/common/Skeleton.test.tsx` the loading skeletons and their reduced-motion rule. `scripts/vibe-check.mjs` counts the design tells (run it, not part of `npm test`) |
+| **Logo** | `src/components/common/LiraLogo.test.tsx` drawn in the page (no image file), the left page then the right settle on load and on hover, loop while starting, stand still for reduced motion, take their colour and size from the caller |
+| **Top bar and app version** | `src/components/layout/TopNavigation.test.tsx` no app switcher, the mark outside the dark box, in a circle, Create and search inside it, the bell, gear and account in circles outside it, PC Saved without a circle. `src/utils/appVersion.test.ts` the version is written in one place |
+| **Theme and colours** | `src/utils/theme.test.ts` the six palettes (two dark, four light): each theme remembers its own, saved and applied only on Save, the stylesheet uses exactly the colours in `theme/palette.ts`, and text, links and button labels stay readable in all six. `src/components/layout/settings/AppearanceSection.test.tsx` and `src/components/layout/topnav/SystemSettingsModal.test.tsx` each mode offers its own palettes, nothing changes until Save |
 
 ---
 
@@ -198,7 +201,7 @@ These click through the real app in a real browser and are the missing layer. Un
 2. **Blocked:** turning it on opens the picker; several tickets; chips with a cross; pressing Blocked again does nothing; the board card shows "Blocked by KEY +N"; the blocker lists what it blocks; flames burn while on.
 3. **Comments and descriptions:** paste a screenshot (Ctrl+V) into each; the picture stays where it was pasted; files show under "Added in comments"; edit your own comment (and cannot edit another's); Copy buttons; the paperclip opens the attach window, never the system dialog.
 4. **Attach window:** drag files; share link for Drive, OneDrive, Dropbox; bad addresses refused.
-5. **Settings and theme:** theme and light palette apply only on Save, everywhere they can be set; profile removed from the account menu; each Save closes its window.
+5. **Settings and theme:** theme and palette apply only on Save, everywhere they can be set; profile removed from the account menu; each Save closes its window.
 6. **Spaces:** tab bar in one rounded background with a sliding pill; filters (Priority, Status, Labels) with checkboxes, search, multi-select; dropdowns close on page scroll and stay inside the screen near the bottom.
 7. **Sprint page:** six stat boxes in one row; one ticket box with select-all (tick, untick, dash when partial), title that follows the Status filter, Status and Space filters in its heading; the page does not jump to the top when ticking, opening a ticket, filtering to nothing, collapsing, or switching sections; velocity bars grow again when switching sprints.
 8. **Animations:** numbers count up from 0 and bars fill on For you, Projects, a project's Overview, Sprints overview and table, a sprint's Reports, Roadmaps, a roadmap, a space Summary (including the completion ring and epic bars); the For you sprint bar fills green into blue as one movement; figures lower on a page start only when scrolled into view.

@@ -36,7 +36,7 @@ const SAMPLE_ATTACHMENTS: AttachmentItem[] = [
 ];
 
 function FileIcon({ type }: { type: string }) {
-  if (type.startsWith('image/')) return <ImageIcon className="w-5 h-5 text-indigo-500" />;
+  if (type.startsWith('image/')) return <ImageIcon className="w-5 h-5 text-lira-blue" />;
   if (type.includes('pdf') || type.includes('text') || type.includes('doc')) return <FileText className="w-5 h-5 text-amber-500" />;
   return <File className="w-5 h-5 text-lira-blue" />;
 }
@@ -44,7 +44,7 @@ function FileIcon({ type }: { type: string }) {
 /** One file in the list: thumbnail or icon, name, size and date, with open and delete. */
 function AttachmentRow({ att, onDelete }: { att: AttachmentItem; onDelete: (id: string) => void }) {
   return (
-    <div className="flex items-center justify-between p-3 border border-lira-border rounded-xl hover:border-lira-blue/40 hover:bg-gray-50/50 transition-all group bg-white shadow-2xs">
+    <div className="flex items-center justify-between p-3 border border-lira-border rounded-xl hover:border-lira-blue/40 hover:bg-gray-50/50 transition-all group bg-white">
       <div className="flex items-center gap-3 min-w-0 flex-1 pr-3">
         {att.previewUrl ? (
           <img src={att.previewUrl} alt={att.name} className="w-10 h-10 rounded-lg object-cover border border-lira-border flex-shrink-0" />
@@ -154,7 +154,7 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({ isOpen, onCl
             className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all select-none ${draggingOver ? 'border-lira-blue bg-lira-blue-light/80 ring-4 ring-lira-blue/15 scale-[1.01]' : 'border-lira-border bg-gray-50/60 hover:bg-gray-100/60 hover:border-lira-blue/60'}`}
           >
             <div className="flex flex-col items-center justify-center space-y-2">
-              <div className="p-3 bg-white rounded-full shadow-xs border border-lira-border text-lira-blue"><UploadCloud className="w-6 h-6 animate-pulse" /></div>
+              <div className="p-3 bg-white rounded-full border border-lira-border text-lira-blue"><UploadCloud className="w-6 h-6 animate-pulse" /></div>
               <div>
                 <p className="text-sm font-semibold text-lira-text">Drop files to upload or <span className="text-lira-blue hover:underline">browse</span></p>
                 <p className="text-xs text-lira-muted mt-0.5">Supports images, documents, PDFs, specifications (unlimited local storage)</p>
@@ -196,7 +196,7 @@ export const AttachmentsModal: React.FC<AttachmentsModalProps> = ({ isOpen, onCl
       </div>
 
       {savedToast && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg animate-fade-in pointer-events-none">
           <CheckCircle2 className="w-4 h-4 text-white" /><span>✓ Saved</span>
         </div>
       )}

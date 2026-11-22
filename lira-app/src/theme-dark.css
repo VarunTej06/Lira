@@ -66,11 +66,6 @@
 .dark .lira-board-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
 .dark .lira-board-scrollbar::-webkit-scrollbar-thumb { background: rgb(var(--gray-600)); background-clip: padding-box; }
 
-/* Elevation reads differently on dark surfaces */
-.dark .shadow-card,
-.dark .shadow-modal,
-.dark .shadow-dropdown { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); }
-
 .dark .hover\:bg-white\/80:hover,
 .dark .hover\:bg-white\/70:hover { background-color: rgb(255 255 255 / 0.08); }
 
@@ -84,14 +79,12 @@
 .dark [style*="background-color: rgb(227, 252, 239)"] { background-color: rgb(54 179 126 / 0.2) !important; }
 .dark [style*="background-color: rgb(255, 235, 230)"] { background-color: rgb(255 86 48 / 0.2) !important; }
 .dark [style*="background-color: rgb(255, 247, 214)"] { background-color: rgb(255 171 0 / 0.2) !important; }
-.dark [style*="background-color: rgb(234, 230, 255)"] { background-color: rgb(128 119 214 / 0.25) !important; }
 .dark [style*="background-color: rgb(230, 252, 255)"] { background-color: rgb(0 184 217 / 0.2) !important; }
 
 .dark [style*="color: rgb(43, 45, 49)"]:not([style*="background-color: rgb(43, 45, 49)"]) { color: rgb(var(--lira-text)) !important; }
 .dark [style*="color: rgb(0, 82, 204)"]:not([style*="background-color: rgb(0, 82, 204)"]) { color: #4c9aff !important; }
 .dark [style*="color: rgb(0, 102, 68)"]:not([style*="background-color: rgb(0, 102, 68)"]) { color: #57d9a3 !important; }
 .dark [style*="color: rgb(222, 53, 11)"]:not([style*="background-color: rgb(222, 53, 11)"]) { color: #ff8f73 !important; }
-.dark [style*="color: rgb(101, 84, 192)"]:not([style*="background-color: rgb(101, 84, 192)"]) { color: #b3a6ff !important; }
 .dark [style*="color: rgb(107, 111, 118)"]:not([style*="background-color: rgb(107, 111, 118)"]) { color: rgb(var(--gray-400)) !important; }
 
 /* ── Safety net: theme colours that survive an outdated Tailwind config ── */
@@ -168,12 +161,6 @@
 .dark .hover\:bg-lira-red-light:hover { background-color: rgb(var(--lira-red-light)); }
 .dark .hover\:text-lira-red-light:hover { color: rgb(var(--lira-red-light)); }
 .dark .hover\:border-lira-red-light:hover { border-color: rgb(var(--lira-red-light)); }
-.dark .bg-lira-purple-light { background-color: rgb(var(--lira-purple-light)); }
-.dark .text-lira-purple-light { color: rgb(var(--lira-purple-light)); }
-.dark .border-lira-purple-light { border-color: rgb(var(--lira-purple-light)); }
-.dark .hover\:bg-lira-purple-light:hover { background-color: rgb(var(--lira-purple-light)); }
-.dark .hover\:text-lira-purple-light:hover { color: rgb(var(--lira-purple-light)); }
-.dark .hover\:border-lira-purple-light:hover { border-color: rgb(var(--lira-purple-light)); }
 .dark .bg-lira-teal-light { background-color: rgb(var(--lira-teal-light)); }
 .dark .text-lira-teal-light { color: rgb(var(--lira-teal-light)); }
 .dark .border-lira-teal-light { border-color: rgb(var(--lira-teal-light)); }

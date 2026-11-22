@@ -1,3 +1,4 @@
+import { loadProfile } from '../../utils/userPrefs';
 import { SpaceIcon } from '../common/SpaceIcon';
 import { ChevronRight } from 'lucide-react';
 import { CountUp, GrowBar } from '../common/motion';
@@ -19,12 +20,13 @@ function SpaceTag({ space }: { space: Space | undefined }) {
   );
 }
 
-/** The lead's initials and name, with the owner as a fallback. */
+/** The owner's initials and name: the one who made the project, or the person using the app when none is set. */
 function Lead({ lead }: { lead: string | undefined }) {
+  const name = lead || loadProfile().name;
   return (
     <div className="flex items-center gap-1 text-2xs text-lira-muted font-medium">
-      <span className="w-5 h-5 rounded-full bg-lira-blue text-lira-on-blue text-4xs font-bold flex items-center justify-center">{lead?.slice(0, 2).toUpperCase() || 'VY'}</span>
-      <span className="truncate max-w-[80px]">{lead || 'Varun Tej'}</span>
+      <span className="w-5 h-5 rounded-full bg-lira-blue text-lira-on-blue text-4xs font-bold flex items-center justify-center">{name.slice(0, 2).toUpperCase()}</span>
+      <span className="truncate max-w-[80px]">{name}</span>
     </div>
   );
 }
@@ -50,12 +52,12 @@ export function ProjectCard({ project, spaces, issues, onOpen }: { project: Proj
   return (
     <div
       onClick={() => onOpen(project)} {...projectLink(project.id)}
-      className="bg-white rounded-xl border border-lira-border hover:border-lira-blue/60 p-5 shadow-xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between group"
+      className="bg-white rounded-xl border border-lira-border hover:border-lira-blue/60 p-5 transition-all duration-200 cursor-pointer flex flex-col justify-between group"
     >
       <div>
         <div className="flex items-start justify-between gap-3 mb-2.5">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg shadow-xs flex-shrink-0 bg-lira-blue-light text-lira-blue">
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-lira-blue-light text-lira-blue">
               <SpaceIcon icon={space?.icon} className="w-5 h-5" />
             </div>
             <div>

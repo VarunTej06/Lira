@@ -43,7 +43,7 @@ function GroupMenu({ s, menuRef }: { s: ActionBarState; menuRef: ActionBarState[
         <ChevronDown className="w-3 h-3" />
       </button>
       {s.showGroup && (
-        <div className="absolute top-full left-0 mt-1 bg-white border border-lira-border rounded-xl shadow-lg z-30 py-1 min-w-[180px]">
+        <div className="absolute top-full left-0 mt-1 bg-white border border-lira-border rounded-xl z-30 py-1 min-w-[180px]">
           <p className="text-xs font-semibold text-lira-muted uppercase tracking-wide px-3 pt-2 pb-1">Group by</p>
           {GROUP_OPTIONS.map(opt => (
             <button
@@ -124,7 +124,7 @@ function OverflowMenu({ s, menuRef }: { s: ActionBarState; menuRef: ActionBarSta
         <MoreHorizontal className="w-4 h-4" />
       </button>
       {s.showOverflow && (
-        <div className="absolute top-full right-0 mt-1 bg-white border border-lira-border rounded-xl shadow-lg z-30 py-1 min-w-[220px]">
+        <div className="absolute top-full right-0 mt-1 bg-white border border-lira-border rounded-xl z-30 py-1 min-w-[220px]">
           <MenuItem icon={Settings} onClick={s.handleBoardSettings}>Board settings</MenuItem>
           <SpaceItems s={s} />
           <Divider />

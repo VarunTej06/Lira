@@ -49,7 +49,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, allIssues = 
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`bg-white rounded-lg shadow-card border border-lira-border cursor-pointer group hover:shadow-card-hover overflow-hidden ${snapshot.isDragging ? 'shadow-modal rotate-1 opacity-90 scale-[1.02]' : ''}`}
+          className={`bg-white rounded-lg border border-lira-border cursor-pointer group overflow-hidden ${snapshot.isDragging ? ' rotate-1 opacity-90 scale-[1.02]' : ''}`}
         >
           {accentColor && <div className="h-1 w-full" style={{ backgroundColor: accentColor }} />}
 

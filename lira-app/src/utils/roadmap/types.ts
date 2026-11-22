@@ -58,6 +58,6 @@ export const STATUS_META: Record<RoadmapStatus, { label: string; color: string }
   blocked:    { label: 'Blocked',     color: PALETTE.criticalDeep },
 };
 
-const LANE_COLORS = [PALETTE.link, PALETTE.purple, PALETTE.successSoft, PALETTE.warning, PALETTE.info, PALETTE.criticalDeep, '#8F7EE7', '#B38600'];
+const LANE_COLORS = [PALETTE.link, PALETTE.epic, PALETTE.successSoft, PALETTE.warning, PALETTE.info, PALETTE.criticalDeep, '#B38600'];
 
 export const laneColor = (rm: Roadmap, lane: string) => LANE_COLORS[Math.max(0, rm.lanes.indexOf(lane)) % LANE_COLORS.length];

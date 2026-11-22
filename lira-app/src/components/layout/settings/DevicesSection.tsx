@@ -5,7 +5,7 @@ import type { SettingsState } from './useSettingsState';
 
 interface LanInfo { lan: boolean; urls: string[] }
 
-/** The private link (and a QR code) for opening Lira on a tablet or phone on the same Wi-Fi. Only the computer that runs Lira can see it. */
+/** The private link (and a QR code) for opening Liraspaces on a tablet or phone on the same Wi-Fi. Only the computer that runs Liraspaces can see it. */
 export function DevicesSection(s: SettingsState) {
   const { activeSection } = s;
   const [info, setInfo] = useState<LanInfo | null | 'error'>(null);
@@ -36,16 +36,16 @@ export function DevicesSection(s: SettingsState) {
         <div className="space-y-5" data-testid="devices-section">
           <div>
             <h3 className="text-base font-bold text-lira-text flex items-center gap-2"><Smartphone className="w-4 h-4" /> Other devices</h3>
-            <p className="text-xs text-lira-muted mt-1">Open Lira on a tablet or phone that is on the same Wi-Fi as this computer.</p>
+            <p className="text-xs text-lira-muted mt-1">Open Liraspaces on a tablet or phone that is on the same Wi-Fi as this computer.</p>
           </div>
 
           {info === null && <p className="text-xs text-lira-muted">Looking…</p>}
-          {info === 'error' && <p className="text-xs text-red-600">This page can only be opened on the computer that runs Lira.</p>}
+          {info === 'error' && <p className="text-xs text-red-600">This page can only be opened on the computer that runs Liraspaces.</p>}
 
           {info && info !== 'error' && !info.lan && (
             <div className="p-4 rounded-xl border border-lira-border bg-gray-50 text-sm text-lira-text space-y-2">
               <p><strong>Network access is off.</strong></p>
-              <p className="text-xs text-lira-muted">Stop Lira (Ctrl+C in the terminal) and start it again with <code className="px-1.5 py-0.5 rounded bg-white border border-lira-border">npm run dev:lan</code>. Then come back here for the link.</p>
+              <p className="text-xs text-lira-muted">Stop Liraspaces (Ctrl+C in the terminal) and start it again with <code className="px-1.5 py-0.5 rounded bg-white border border-lira-border">npm run dev:lan</code>. Then come back here for the link.</p>
             </div>
           )}
 
@@ -66,7 +66,7 @@ export function DevicesSection(s: SettingsState) {
               ))}
               <p className="text-2xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                 This link is a password: anyone with it on your Wi-Fi can read and change your tickets. Do not share it or use it on public Wi-Fi.
-                To cancel every device, delete <code>data/private/lan-token</code> and restart Lira.
+                To cancel every device, delete <code>data/private/lan-token</code> and restart Liraspaces.
               </p>
             </div>
           )}

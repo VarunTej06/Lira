@@ -99,10 +99,10 @@ export const TicketPicker: React.FC<TicketPickerProps> = (p) => {
   return createPortal(
     <AnimatePresence>
       {open && (
-        <motion.div key={`${testId}-picker`} {...dialogBackdrop} className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+        <motion.div key={`${testId}-picker`} {...dialogBackdrop} className="fixed inset-0 z-[160] flex items-center justify-center p-4 bg-black/60"
           onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}>
           <motion.div {...dialogPanel} role="dialog" aria-modal="true" aria-label={p.title} data-testid={`${testId}-picker`}
-            className="bg-white rounded-xl shadow-2xl border border-lira-border w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh]">
+            className="bg-white rounded-xl border border-lira-border w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh]">
             <div className="flex items-start justify-between px-5 py-4 border-b border-lira-border">
               <div className="flex items-start gap-3">
                 <span className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${tone.icon}`}>{p.icon}</span>
@@ -162,7 +162,7 @@ export const TicketPicker: React.FC<TicketPickerProps> = (p) => {
               <div className="flex gap-2 flex-shrink-0">
                 <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-lira-muted hover:text-lira-text rounded-lg cursor-pointer">Cancel</button>
                 <button disabled={picked.length === 0} data-testid={`${testId}-confirm`} onClick={() => p.onPick(picked.map(issue => ({ issue, relation: chosen[issue.id!] || undefined })))}
-                  className={`px-4 py-2 text-sm font-semibold rounded-lg shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${tone.confirm}`}>
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${tone.confirm}`}>
                   {p.confirmLabel}
                 </button>
               </div>

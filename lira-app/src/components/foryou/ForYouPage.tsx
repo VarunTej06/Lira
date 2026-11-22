@@ -1,14 +1,13 @@
 import { SpaceIcon } from '../common/SpaceIcon';
-import { issueLink, projectLink, sprintLink } from '../../utils/links';
+import { projectLink, sprintLink } from '../../utils/links';
 import React, { useMemo } from 'react';
-import { Sparkles, AlertTriangle, Clock, CheckCircle2, ListTodo, ArrowRight, FolderKanban, CalendarClock, Activity } from 'lucide-react';
+import { AlertTriangle, Clock, CheckCircle2, ListTodo, ArrowRight, FolderKanban, CalendarClock } from 'lucide-react';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import type { Project } from '../../types/project';
 import {
   allSprintKeys, currentSprintKey, daysLeft, isDone, issuesInSprint, sprintName, sprintStats,
 } from '../../utils/sprintUtils';
-import { formatRelativeDate } from '../../utils/dateUtils';
 import { TicketRow } from '../sprints/sprintParts';
 import { CountUp, SequenceBar } from '../common/motion';
 import { isMine } from '../../utils/currentUser';
@@ -72,15 +71,6 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
   );
 
   const curStats = sprintStats(issuesInSprint(issues, cur)); // one pass over the tickets: cheaper than keeping a memo in step
-  const activity = useMemo(() => {
-    const rows: { issue: Issue; text: string; at: Date }[] = [];
-    issues.forEach(i => (i.activity || []).forEach(a => {
-      if (a.type === 'comment') return;
-      rows.push({ issue: i, text: a.description, at: new Date(a.createdAt) });
-    }));
-    return rows.sort((a, b) => b.at.getTime() - a.at.getTime()).slice(0, 8);
-  }, [issues]);
-
   const hour = currentTime().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
@@ -100,7 +90,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-semibold text-lira-text flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-400" /> {greeting}, Varun
+              {greeting}, Varun
             </h1>
             <p className="text-sm text-lira-muted mt-0.5">
               {currentTime().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} · {sprintName(cur)} · {daysLeft(cur)} days left
@@ -128,7 +118,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
           <div className="lg:col-span-2 space-y-5">
             <Card title="Assigned to me" icon={<ListTodo className="w-4 h-4 text-lira-blue" />}
               action={<span className="text-xs text-lira-muted"><CountUp value={myOpen.length} suffix=" open" /></span>}>
-              {myOpen.length === 0 ? empty('Nothing assigned to you — enjoy the quiet.') :
+              {myOpen.length === 0 ? empty('Nothing assigned to you. Enjoy the quiet.') :
                 myOpen.slice(0, 8).map(i => (
                   <TicketRow key={i.id} issue={i} space={spaceById.get(i.spaceId)} showSpace showSprint sprintOptions={sprintKeys} onClick={onIssueClick} />
                 ))}
@@ -194,7 +184,7 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
               </div>
             </Card>
 
-            <Card title="Projects" icon={<FolderKanban className="w-4 h-4 text-violet-500" />}>
+            <Card title="Projects" icon={<FolderKanban className="w-4 h-4 text-lira-blue" />}>
               <div className="p-2">
                 {projects.length === 0 ? empty('No projects yet') : projects.map(p => (
                   <button key={p.id} onClick={() => onOpenProject(p)} {...projectLink(p.id)}
@@ -204,16 +194,6 @@ export const ForYouPage: React.FC<ForYouPageProps> = ({
                   </button>
                 ))}
               </div>
-            </Card>
-
-            <Card title="Recent activity" icon={<Activity className="w-4 h-4 text-lira-muted" />}>
-              {activity.length === 0 ? empty('No activity yet') : activity.map((a, idx) => (
-                <button key={idx} onClick={() => onIssueClick(a.issue)} {...issueLink(a.issue)}
-                  className="w-full text-left px-4 py-2 border-b border-lira-border last:border-0 hover:bg-gray-50 transition-colors cursor-pointer">
-                  <div className="text-xs text-lira-text truncate"><span className="font-mono text-lira-muted">{a.issue.key}</span> {a.text}</div>
-                  <div className="text-3xs text-lira-muted">{formatRelativeDate(a.at)}</div>
-                </button>
-              ))}
             </Card>
           </div>
         </div>

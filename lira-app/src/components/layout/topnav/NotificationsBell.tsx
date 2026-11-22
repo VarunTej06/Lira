@@ -75,8 +75,8 @@ export const NotificationsBell: React.FC<{
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(v => !v)}
-        className={`relative p-1.5 rounded hover:bg-white/10 transition-colors cursor-pointer ${
-          open ? 'bg-white/15 text-white' : 'text-white/70 hover:text-white'
+        className={`relative w-10 h-10 rounded-full flex items-center justify-center bg-lira-nav border border-white/10 hover:border-white/30 transition-colors cursor-pointer ${
+          open ? 'text-white ring-1 ring-white/40' : 'text-white/75 hover:text-white'
         }`}
         title="Notifications Center"
       >
@@ -85,7 +85,7 @@ export const NotificationsBell: React.FC<{
       </button>
 
       {open && (
-        <div className="absolute top-full right-0 mt-2 w-96 bg-lira-nav border border-white/10 rounded-xl shadow-2xl z-50 transition-all duration-150 animate-scale-in overflow-hidden">
+        <div className="absolute top-full right-0 mt-2 w-96 bg-lira-nav border border-white/10 rounded-xl z-50 transition-all duration-150 animate-scale-in overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-white/10 bg-white/5">
             <div className="flex items-center gap-2">

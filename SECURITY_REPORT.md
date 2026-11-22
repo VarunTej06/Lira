@@ -38,7 +38,7 @@ Lira is a **single-user app that runs on your own computer**. It has no accounts
 | 19 | Insecure deserialization | Pass |
 | 20 | Stack traces | Fixed |
 
-**Totals:** 6 pass, 8 fixed, 2 partial, 4 not applicable. After the fixes: `npm audit` reports 0 vulnerabilities, 1732 automated tests pass (including the security tests listed below), and the app was re-run in a real browser with the new policies and showed no violations.
+**Totals:** 6 pass, 8 fixed, 2 partial, 4 not applicable. After the fixes: `npm audit` reports 0 vulnerabilities, 2078 automated tests pass (including the security tests listed below), and the app was re-run in a real browser with the new policies and showed no violations.
 
 ## Re-check, 9 November 2026
 
@@ -50,7 +50,7 @@ The code was re-checked with independent tools. Nothing was changed by the check
 | `npm audit` | 0 vulnerabilities |
 | Semgrep (TypeScript, React and secrets rule sets; 110 rules, 321 files) | 0 findings |
 | Secret scan of tracked files and git history | No keys found |
-| Test suite | 1732 passing, plus the 15-check data health run |
+| Test suite | 2078 passing, plus the 15-check data health run |
 | Lint (oxlint) and import cycles (madge) | 0 warnings, 0 cycles (after the code-quality pass of 9 Nov 2026; before: 128 warnings, 3 cycles) |
 
 Observations carried forward to the multi-user and SSO work (none is exploitable on a single-user local app):
@@ -117,7 +117,7 @@ Tip: when an AI suggests a package, run `npm view <name>` first.
 `npm audit` found 2 moderate issues (both React Router: the open redirect above and an unrelated server-rendering issue). After upgrading, `npm audit` reports **0 vulnerabilities**.
 
 ### 13. SRI hashes: Fixed
-Lira loads no third-party scripts. The one outside resource was the Inter font from Google Fonts, loaded by a CSS `@import`, which cannot carry an SRI hash. It is now **served by Lira itself** (`@fontsource/inter`), which also removes a request to Google and lets the app work fully offline.
+Lira loads no third-party scripts. The one outside resource was the Inter font from Google Fonts, loaded by a CSS `@import`, which cannot carry an SRI hash. It is now **gone**: the app uses the device's own font, so no font file is loaded, no request goes to Google, and the app works fully offline.
 
 ### 14. CSP headers: Fixed
 Every response now carries a Content Security Policy: scripts, styles, fonts and images only from Lira itself; no plugins (`object-src 'none'`); `base-uri` and `form-action` limited to Lira; `frame-ancestors 'none'`. Also sent: `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, a `Permissions-Policy` that turns off camera, microphone and location, and `Cross-Origin-Resource-Policy: same-origin`. Tests: `server/guard.test.ts`; re-checked in a real browser with no violations.

@@ -1,6 +1,46 @@
 # Low-Level Design (LLD): multi-user Lira with SSO
 
-**Status: Proposed.** Companion to [`HLD.md`](HLD.md). Table and field names are proposals; entity fields marked *(today)* come from `lira-app/src/types/`.
+**Status: partly built (version 4.0.0, 21 November 2026).** Companion to [`HLD.md`](HLD.md). Section 0 describes what the code does today; sections 1 to 12 are the original proposal, and where they disagree with section 0, section 0 is right. Entity fields marked *(today)* come from `lira-app/src/types/`.
+
+## 0. As built
+
+**Layout.** One repository, three parts: `lira-app/` (the React app, both editions), `api/` (the hosted server) and `infra/azure-playground/` (the script that builds the rehearsal). There is no shared `core` package yet; the API does not import app code.
+
+**API** (`api/src`, NestJS modules, each with a controller, a service, zod schemas and integration tests):
+
+| Folder | What it does |
+|---|---|
+| `auth/` | Sign-up, log-in, log-out, sessions, login attempt limits; Google sign-up and log-in (`google-login.service.ts`, `google-id-token.ts`) |
+| `access/` | `AccessService`: the one place that decides what a person may do (role of the organisation, then View, Edit or Manage on the object) |
+| `people/` | Members, teams, grants |
+| `spaces/`, `tickets/`, `objects/`, `kv/` | Spaces and tickets as rows with versions; projects, roadmaps and dashboards as rows; the settings-style data |
+| `attachments/` | Upload and download addresses for Blob Storage, confirm and delete |
+| `invitations/` | Invitations by email (a hashed, single-use, seven-day link) |
+| `standups/` | Calls: once or repeating, scoped to the organisation, a space, a project or a sprint, with who is invited |
+| `google/` | The organisation's Google connection (encrypted refresh token), Meet links, sending email |
+| `audit/`, `observability/`, `health/` | Append-only audit records, metrics, structured logs, error filter, `/health` and `/ready` |
+
+Every request is authenticated, scoped to an organisation and authorised per object on the server; bodies are validated with zod and unknown fields are refused. The database role `lira_app` owns nothing, and row-level security applies a second time.
+
+**Tables and migrations** (`api/migrations`, applied in order, never edited after they ran):
+
+| Migration | Adds |
+|---|---|
+| V1, V2 | `organisations`, `users`, `memberships`, `sessions`, `login_attempts`, `audit_log`; the grants of the `lira_app` role |
+| V3, V4 | `spaces`, `tickets` (comments, activity and the rest of a ticket held as JSON in the row, with a `version`) |
+| V5 | `attachments` (the bytes are in Blob Storage) |
+| V6 | `kv_entries` (shared and personal settings) |
+| V7 | `teams`, `team_members`, `grants`, `memberships.manage_access` |
+| V8 | `objects` (projects, roadmaps, dashboards) |
+| V9 | `invitations` |
+| V10 | `standup_calls`, `standup_invitees` |
+| V11 | Repeating calls, `google_connections` |
+| V12 | The scope of a call |
+| V13 | Google sign-in: `users.google_sub`, `email_verified`, an optional password |
+
+**Differences from the proposal below:** tickets keep comments, subtasks and links inside the ticket row instead of separate tables; there are no `columns` or `space_members` tables (grants replace the latter); the audit log is the `audit_log` table in the same database but with insert-only rights; the API paths are `/api/orgs/:orgId/...`, not `/api/v1`; the full list is in [`api/README.md`](../../api/README.md). Settings are the variables in the same file.
+
+**App, hosted mode** (`lira-app/src`): `utils/edition.ts` (which edition), `components/layout/SessionGate.tsx` (sign-in gate), `services/authApi.ts`, `hostedSync.ts`, `hostedObjects.ts`, `kvMirror.ts` (hosted mode), `utils/hostedOrg.ts` (the active organisation), the public pages and sign-up in `components/public/`, Teams and access in `components/teams/`, calls in `components/standup/` and `components/standups/`.
 
 ## 1. Module layout (target monorepo `[ADR-0007]`)
 
@@ -61,7 +101,7 @@ erDiagram
 | `subtasks`, `issue_links`, `watchers` | normalised from the embedded arrays | `link_type`: relates_to, blocks, blocked_by, duplicates, cloned_by |
 | `attachments` | `id`, `issue_id`/`comment_id`, `name`, `size`, `mime_type`, `blob_key`, `source`, `url`, `scan_status`, `uploaded_by` | Bytes in Blob; link-type attachments keep only `url` |
 | `projects`, `sprints`, `teams`, `team_members`, `standups`, `roadmaps`, `roadmap_items`, `dashboards` | from today's JSON files and `structuredStore.ts` rows | Dashboard widget config as JSONB |
-| `user_preferences` | `user_id`, `key`, `value` | Theme, light palette, sidebar. Replaces per-browser `lira_*` keys that are personal |
+| `user_preferences` | `user_id`, `key`, `value` | Theme, the palette chosen for dark and for light, sidebar. Replaces per-browser `lira_*` keys that are personal |
 | `ai_settings` | `org_id`, `provider`, `base_url` (admin allow-listed), `model`, `secret_ref` | Key stored in Key Vault, not here |
 | `audit_log` | `id`, `org_id`, `actor_id`, `action`, `object_type`, `object_id`, `before`, `after`, `ip`, `request_id`, `at` | Append-only; no UPDATE/DELETE grant |
 

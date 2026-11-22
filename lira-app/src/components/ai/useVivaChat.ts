@@ -5,13 +5,13 @@ import { processUserMessage, confirmAndRun, undoAction, type ChatMessage } from 
 const welcomeMessage = (spaceCount: number): ChatMessage => ({
   id: 'welcome',
   sender: 'assistant',
-  text: `**Hi, I'm Viva AI.**\n\nI can **read and write** across all **${spaceCount} spaces** — search tickets, build status tables, create tickets, move them between statuses and sprints, and generate subtasks.\n\nTry one of these:`,
+  text: `**Hi, I'm Viva AI.**\n\nI can **read and write** across all **${spaceCount} spaces**: search tickets, build status tables, create tickets, move them between statuses and sprints, and generate subtasks.\n\nTry one of these:`,
   timestamp: new Date(),
   suggestedActions: [
     'Show all spaces with number of tickets in each To do, Backlog, In Progress and Done',
     'What is in progress across all spaces?',
     'Show all Epics across spaces',
-    'Create a task "Review sprint goals" in Lira',
+    'Create a task "Review sprint goals" in Liraspaces',
     'Plan next sprint from my backlog',
     'Write my standup',
     'Show the risk radar',

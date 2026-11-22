@@ -6,7 +6,7 @@ import { PALETTE } from '../../theme/palette';
 interface Piece { id: number; dx: number; rise: number; fall: number; spin: number; size: number; color: string; round: boolean; delay: number }
 interface Burst { id: number; x: number; y: number; pieces: Piece[] }
 
-const COLORS = ['#4C9AFF', PALETTE.success, PALETTE.amber, PALETTE.danger, PALETTE.purple, PALETTE.info];
+const COLORS = ['#4C9AFF', PALETTE.success, PALETTE.amber, PALETTE.danger, PALETTE.epic, PALETTE.info];
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
 function makeBurst(id: number, x: number, y: number, kind: CelebrateKind): Burst {

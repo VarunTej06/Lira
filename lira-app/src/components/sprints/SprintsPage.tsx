@@ -104,7 +104,7 @@ function ViewTabs({ view, onChange }: { view: View; onChange: (view: View) => vo
 /** Shown while tickets are ticked: move them to another sprint, or clear the selection. */
 function BulkMoveBar({ count, sprint, keys, onMove, onClear }: { count: number; sprint: string; keys: string[]; onMove: (target: string) => void; onClear: () => void }) {
   return (
-    <div className="sticky top-0 z-10 flex items-center gap-3 bg-lira-blue text-lira-on-blue rounded-lg px-4 py-2 shadow-md">
+    <div className="sticky top-0 z-10 flex items-center gap-3 bg-lira-blue text-lira-on-blue rounded-lg px-4 py-2">
       <span className="text-sm font-medium">{count} selected</span>
       <span className="text-xs opacity-80">Move to</span>
       <SprintSelect value="all" options={keys} onChange={v => v !== 'all' && onMove(v)} allLabel="Choose sprint…" className="text-lira-text" />

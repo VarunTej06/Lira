@@ -29,7 +29,7 @@ export interface DataCtx {
   me: string[];
 }
 
-const PALETTE = [BASE_COLORS.link, BASE_COLORS.successSoft, BASE_COLORS.warning, '#8F7EE7', BASE_COLORS.info, BASE_COLORS.criticalDeep, '#B38600', BASE_COLORS.textMuted, '#E774BB', '#2E7D6B'];
+const PALETTE = [BASE_COLORS.link, BASE_COLORS.successSoft, BASE_COLORS.warning, BASE_COLORS.epic, BASE_COLORS.info, BASE_COLORS.criticalDeep, '#B38600', BASE_COLORS.textMuted, '#E774BB', '#2E7D6B'];
 
 const toDate = (v: unknown): Date | undefined => {
   if (!v) return undefined;

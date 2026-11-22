@@ -46,7 +46,7 @@ function Facet({ id, open, onToggle, active, summary, icon, width, align = 'left
         <ChevronDown className="w-3 h-3 opacity-60 flex-shrink-0" />
       </button>
       {open === id && (
-        <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-full mt-1 ${width} bg-white border border-lira-border rounded-xl shadow-xl z-50 animate-scale-in ${panelClass}`}>
+        <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-full mt-1 ${width} bg-white border border-lira-border rounded-xl z-50 animate-scale-in ${panelClass}`}>
           {children}
         </div>
       )}
@@ -96,7 +96,7 @@ function PresetButtons({ active, counts, onApply }: { active: string; counts: Fi
           <button
             key={preset.id}
             onClick={() => onApply(preset.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${isActive ? 'bg-lira-blue text-lira-on-blue shadow-xs' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${isActive ? 'bg-lira-blue text-lira-on-blue' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
           >
             <span>{preset.icon}</span>
             <span>{preset.label}</span>
@@ -144,7 +144,7 @@ function TagsPanel({ s }: { s: FiltersState }) {
                 key={lbl}
                 type="button"
                 onClick={() => toggle(s.setSelectedLabels, lbl)}
-                className={`px-2 py-0.5 rounded text-2xs font-mono transition-colors cursor-pointer ${s.selectedLabels.includes(lbl) ? 'bg-indigo-600 text-white font-bold' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`}
+                className={`px-2 py-0.5 rounded text-2xs font-mono transition-colors cursor-pointer ${s.selectedLabels.includes(lbl) ? 'bg-lira-blue text-lira-on-blue font-bold' : 'bg-lira-blue-light text-lira-blue hover:bg-lira-blue-light'}`}
               >
                 #{lbl}
               </button>
@@ -222,7 +222,7 @@ function FacetRow({ s }: { s: FiltersState }) {
 /** Search box and the filter dropdowns. */
 export function FilterControls(s: FiltersState) {
   return (
-    <div className="bg-white border border-lira-border rounded-xl shadow-xs overflow-visible">
+    <div className="bg-white border border-lira-border rounded-xl overflow-visible">
       {/* Row 1: search, the quick filters, and the count */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center p-3.5 border-b border-lira-border">
         <SearchField value={s.searchQuery} onChange={s.setSearchQuery} />

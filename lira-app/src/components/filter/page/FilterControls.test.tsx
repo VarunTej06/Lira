@@ -143,8 +143,8 @@ describe('FilterControls', () => {
     });
     it('tags: marks chosen labels', () => {
       show({ openDropdown: 'tags', selectedLabels: ['ui'] });
-      expect(byText('button', '#ui')!.className).toContain('bg-indigo-600');
-      expect(byText('button', '#bug')!.className).toContain('bg-indigo-50');
+      expect(byText('button', '#ui')!.className).toContain('bg-lira-blue');
+      expect(byText('button', '#bug')!.className).toContain('bg-lira-blue-light');
     });
   });
 });

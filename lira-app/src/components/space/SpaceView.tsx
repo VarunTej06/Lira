@@ -136,7 +136,7 @@ export function SpaceView(p: SpaceViewProps) {
         <div className="flex-1 flex items-center justify-center bg-lira-bg">
           <div className="text-center space-y-3">
             <Construction className="w-12 h-12 mx-auto text-lira-muted" />
-            <p className="text-lira-muted text-sm font-medium">{tab} view — coming soon</p>
+            <p className="text-lira-muted text-sm font-medium">{tab} view coming soon</p>
             <Link to={spacePath(space.key, 'Board')} className="text-lira-blue text-sm hover:underline cursor-pointer">Back to Board</Link>
           </div>
         </div>

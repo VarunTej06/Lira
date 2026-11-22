@@ -1,6 +1,6 @@
 # Current state (single-user, local edition)
 
-Verified on 9 November 2026 at commit `4eb938e`, branch `v3.4.1`.
+Verified on 9 November 2026 at commit `4eb938e`, branch `v3.4.1`. **Update 21 November 2026 (version 4.0.0):** this page still describes the **local edition**, which is unchanged (files in `data/`, no login). The test count below is the 9 November figure; today it is 2078 in 203 files. The hosted edition, which has accounts and a server, is described in section 0 of [`HLD.md`](HLD.md) and [`LLD.md`](LLD.md); the seven "what this means for multi-user" points at the end of this page are now answered by it (except Viva on the server and the data importer).
 
 ## Shape
 
@@ -27,7 +27,7 @@ flowchart LR
 | Area | Today |
 |---|---|
 | Language / build | TypeScript 7, React 18.3.1, Vite 8, Tailwind 3.4, React Router 7 |
-| Size | ~360 source files; about 33.4k lines of non-test code; 1732 automated tests in 154 files plus a 15-check data health run |
+| Size | ~360 source files; about 33.4k lines of non-test code; 1772 automated tests in 156 files plus a 15-check data health run |
 | Users | None. UI assumes one user ("VY"). No login. |
 | Source of truth | JSON files under `data/`. Browser storage is a cache. |
 | Tickets | Dexie tables `spaces`, `issues`, `columns` (3 schema versions); saved to `data/spaces/<KEY>.json` by `localDiskSync.ts` |
@@ -37,7 +37,7 @@ flowchart LR
 | API protection | `guard.ts`: Host must be this computer (or a private network address in LAN mode), Origin must match, `Sec-Fetch-Site` must be same-origin, writes must be `application/json`, 50 MB body cap, reserved keys refused, safe file names, CSP and other security headers |
 | Network access | `npm run dev:lan` allows private-network addresses; other devices need a link with a secret token and then hold an HttpOnly cookie |
 | AI (Viva) | `src/services/ai/`: intent parser, read/write/sprint/dashboard handlers, preview → confirm → undo. Model providers: built-in engine (default), Gemini, OpenAI-compatible. Models never write tickets. |
-| Code seams | Browser settings go through `utils/appStorage.ts` (one place to clear or prefix per user later); the clock through `utils/clock.ts`; fixed colours and the three themes (Dark, Sorrel, Fawn) through `theme/palette.ts`, with each theme's shades as CSS variables in `index.css` and the saved choice in `utils/theme.ts`; screens that reset a draft use `hooks/useResetWhen.ts`. Rules enforced by `src/hygiene.test.ts` |
+| Code seams | Browser settings go through `utils/appStorage.ts` (one place to clear or prefix per user later); the clock through `utils/clock.ts`; fixed colours and the six palettes (dark: Pace, Blackridge; light: Sorrel, Fawn, Mossgrove, Tidewell) through `theme/palette.ts`, with each theme's shades as CSS variables in `index.css` and the saved choice in `utils/theme.ts`; screens that reset a draft use `hooks/useResetWhen.ts`. Rules enforced by `src/hygiene.test.ts` |
 | Routes | `/for-you`, `/filters`, `/projects[/id]`, `/sprints[/YYYY-MM]`, `/tickets`, `/roadmaps[/id]`, `/dashboards[/id]`, `/space/<KEY>/<tab>`, `?issue=KEY-n` (`src/routes.ts`) |
 
 ## Domain model (from `src/types/`)

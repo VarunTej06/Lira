@@ -96,7 +96,7 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
         </ol>
 
         <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,520px)] gap-6">
-          <div className="rounded-2xl border border-lira-border bg-white p-5 sm:p-6 shadow-xs space-y-6 self-start">
+          <div className="rounded-2xl border border-lira-border bg-white p-5 sm:p-6 space-y-6 self-start">
             {step === 0 && (
               <Section title="What do you want to see?" hint="Pick the closest goal. You can change everything in the next steps.">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -184,7 +184,7 @@ export const DashboardWizard: React.FC<{ issues: Issue[]; spaces: Space[] }> = (
           </div>
 
           {/* Live preview: the real widgets, shown small */}
-          <aside aria-label="Preview" className="self-start rounded-2xl border border-lira-border bg-white p-3 shadow-xs hidden md:block" data-testid="wizard-preview">
+          <aside aria-label="Preview" className="self-start rounded-2xl border border-lira-border bg-white p-3 hidden md:block" data-testid="wizard-preview">
             <h2 className="text-xs font-bold uppercase tracking-wider text-lira-muted px-1 pb-2">Preview</h2>
             <div className="overflow-hidden rounded-lg border border-lira-border bg-lira-bg" style={{ height: 520 }}>
               <div className="overflow-y-auto h-full">

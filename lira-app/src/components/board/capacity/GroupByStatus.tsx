@@ -12,7 +12,7 @@ export function GroupByStatus(s: CapacityState) {
           {statusGroups.map(stage => (
             <div
               key={stage.id}
-              className={`rounded-xl border ${stage.color} shadow-xs p-5 space-y-4 flex flex-col hover:border-lira-blue transition-all`}
+              className={`rounded-xl border ${stage.color} p-5 space-y-4 flex flex-col hover:border-lira-blue transition-all`}
             >
               <div className="flex items-center justify-between border-b border-lira-border pb-3">
                 <div className="flex items-center gap-2">

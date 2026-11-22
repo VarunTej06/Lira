@@ -14,7 +14,7 @@ const reply = (c: AgentContext, text: string, suggestedActions: string[], extra:
 export function describePlan(plan: SprintPlan): string {
   const src = { set: 'the capacity you set', history: 'the average of recent closed sprints', default: 'a default (no capacity set yet)' }[plan.capacitySource];
   const lines = [`**${sprintName(plan.target)}**: capacity ${plan.capacity} points (${src}), ${plan.alreadyPoints} already planned.`, ''];
-  plan.picked.forEach(i => lines.push(`- **${i.key}** ${i.title} — ${i.priority}, ${typeof i.storyPoints === 'number' ? `${i.storyPoints} pts` : 'not estimated (counted as 3)'}`));
+  plan.picked.forEach(i => lines.push(`- **${i.key}** ${i.title}, ${i.priority}, ${typeof i.storyPoints === 'number' ? `${i.storyPoints} pts` : 'not estimated (counted as 3)'}`));
   lines.push('', `**${plan.picked.length}** ticket${plan.picked.length === 1 ? '' : 's'}, ${plan.pickedPoints} points.`);
   if (plan.skipped.length) lines.push(`${plan.skipped.length} more did not fit: ${plan.skipped.slice(0, 5).map(i => i.key).join(', ')}${plan.skipped.length > 5 ? '…' : ''}`);
   return lines.join('\n');

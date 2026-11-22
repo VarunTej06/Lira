@@ -1,8 +1,8 @@
 # ADR-0003: Database
 
-- **Status:** Proposed
+- **Status:** Accepted (14 Nov 2026): **PostgreSQL**; migration tool **Flyway** (recommended, to be confirmed by the owner)
 - **Date proposed:** 2026-11-09
-- **Decision owner:** (to be named)
+- **Decision owner:** product owner
 
 ## Context
 Today data is JSON files under `data/` (one file per space, one per roadmap, plus `projects`, `sprints`, `teams`, `standups`, `dashboards`, `settings`), cached in IndexedDB (Dexie, 3 schema versions) and, for settings-style data, in `localStorage` keys prefixed `lira_` that a mirror writes to disk (`src/services/kvMirror.ts`). Tickets embed comments, activity, subtasks and attachments inside one record (`src/types/issue.ts`). Multi-user needs transactions, concurrent writes, querying and access control that files cannot give.
@@ -15,8 +15,8 @@ Today data is JSON files under `data/` (one file per space, one per roadmap, plu
 | **C. SQL Server / Azure SQL** | Strong Azure fit | Less flexible JSON; licence cost |
 | **D. Keep files** | None for multi-user | No concurrency control; rejected |
 
-## Recommendation
-Option A. Model tickets, comments, activity and attachments' metadata as **relational tables** (so reports and dashboards are queries, not full scans); keep truly free-form parts (dashboard widget config, user preferences) as JSONB. Attachments' bytes go to object storage (Azure Blob), not the database. Use a migration tool (for example Drizzle or Prisma Migrate) with versioned, reviewed migrations.
+## Decision
+Option A. Model tickets, comments, activity and attachments' metadata as **relational tables** (so reports and dashboards are queries, not full scans); keep truly free-form parts (dashboard widget config, user preferences) as JSONB. Attachments' bytes go to object storage (Azure Blob), not the database. Migrations are versioned, reviewed SQL files run by **Flyway**: the owner asked for an enterprise-grade tool in place of the first suggestion (Drizzle), and Flyway is independent of the backend language.
 
 ## Consequences
 - The embedded arrays in `Issue` become tables: `comments`, `activity`, `subtasks`, `attachments`, `issue_links`, `status_log`.

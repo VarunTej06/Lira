@@ -263,7 +263,7 @@ export const SnapshotModal: React.FC<{
   return (
     <Modal isOpen={open} onClose={onClose} title="Weekly snapshot" size="lg">
       <div className="p-5 space-y-5" data-testid="snapshot-dialog">
-        <p className="text-sm text-lira-muted">A snapshot saves this dashboard as a Markdown file in the <code className="font-mono text-xs bg-gray-100 px-1 rounded">data/snapshots</code> folder. While Lira is open, one is taken each week at the time you choose. If Lira was closed then, it is taken the next time you open it.</p>
+        <p className="text-sm text-lira-muted">A snapshot saves this dashboard as a Markdown file in the <code className="font-mono text-xs bg-gray-100 px-1 rounded">data/snapshots</code> folder. While Liraspaces is open, one is taken each week at the time you choose. If Liraspaces was closed then, it is taken the next time you open it.</p>
         <label className="flex items-center gap-2 text-sm font-medium text-lira-text cursor-pointer">
           <input type="checkbox" checked={s.enabled} onChange={e => onSchedule({ ...s, enabled: e.target.checked })} data-testid="snapshot-enabled" /> Take a snapshot every week
         </label>

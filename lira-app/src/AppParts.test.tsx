@@ -5,10 +5,10 @@ import { IssueCrashFallback, StartupScreen } from './AppParts';
 afterEach(cleanup);
 
 describe('StartupScreen', () => {
-  it('shows the logo and says Lira is starting', () => {
+  it('shows the logo and says Liraspaces is starting', () => {
     mount(<StartupScreen />);
-    expect(q('svg[aria-label="Lira"]')).not.toBeNull();
-    expect(document.body.textContent).toContain('Initializing Lira');
+    expect(q('svg[aria-label="Liraspaces"]')).not.toBeNull();
+    expect(document.body.textContent).toContain('Initializing Liraspaces');
   });
 });
 

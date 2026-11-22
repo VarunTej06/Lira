@@ -1,3 +1,4 @@
+import { loadProfile } from '../../utils/userPrefs';
 import { SPACE_COLOR } from '../../utils/spaceIcon';
 import { SpaceIconPicker } from '../common/SpaceIcon';
 import React, { useState, type ReactNode } from 'react';
@@ -19,7 +20,8 @@ interface CreateProjectModalProps {
   onProjectCreated: (project: Project) => void;
 }
 
-const DEFAULT_LEAD = 'Varun Tej';
+/** The owner of a new project is the person making it, unless they type another name. */
+const defaultOwner = (): string => loadProfile().name;
 
 const LABEL = 'block text-xs font-semibold text-lira-muted uppercase tracking-wider mb-1.5';
 const INPUT = 'w-full text-sm border border-lira-border rounded-lg px-3.5 py-2.5 focus:outline-none focus:border-lira-blue focus:ring-1 focus:ring-lira-blue transition-all';
@@ -34,7 +36,7 @@ const Field = ({ label, required, children }: { label: string; required?: boolea
 /** A selectable card for the two ways of choosing a space. */
 function ChoiceCard({ selected, onSelect, icon, title, text }: { selected: boolean; onSelect: () => void; icon: ReactNode; title: string; text: string }) {
   return (
-    <div onClick={onSelect} className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selected ? 'border-lira-blue bg-lira-blue-light/40 shadow-xs' : 'border-gray-200 hover:border-gray-300 bg-white'}`}>
+    <div onClick={onSelect} className={`p-3.5 rounded-xl border-2 cursor-pointer transition-all ${selected ? 'border-lira-blue bg-lira-blue-light/40' : 'border-gray-200 hover:border-gray-300 bg-white'}`}>
       <div className="flex items-center gap-2.5">
         <input type="radio" name="spaceAssociation" checked={selected} onChange={onSelect} className="w-4 h-4 text-lira-blue focus:ring-lira-blue cursor-pointer" />
         {icon}
@@ -55,7 +57,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   const [key, setKey] = useState('');
   const [keyEdited, setKeyEdited] = useState(false);
   const [description, setDescription] = useState('');
-  const [lead, setLead] = useState(DEFAULT_LEAD);
+  const [lead, setLead] = useState(defaultOwner);
   const [associationType, setAssociationType] = useState<'existing' | 'new'>('existing');
   const [selectedSpaceId, setSelectedSpaceId] = useState<number>(() => spaces[0]?.id || 1);
   const [newSpaceIcon, setNewSpaceIcon] = useState<string>('rocket');
@@ -75,7 +77,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
   const changeKey = (value: string) => { setKeyEdited(true); setKey(cleanProjectKey(value)); };
 
   const resetForm = () => {
-    setName(''); setKey(''); setKeyEdited(false); setDescription(''); setLead(DEFAULT_LEAD);
+    setName(''); setKey(''); setKeyEdited(false); setDescription(''); setLead(defaultOwner());
     setAssociationType('existing'); setSelectedSpaceId(spaces[0]?.id || 1);
     setNewSpaceIcon('rocket'); setError('');
   };
@@ -101,7 +103,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
       const now = new Date().toISOString();
       const project: Project = {
         id: `proj-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-        name: name.trim(), key: projectKey, description: description.trim(), lead: lead.trim() || DEFAULT_LEAD, spaceId,
+        name: name.trim(), key: projectKey, description: description.trim(), lead: lead.trim() || defaultOwner(), spaceId,
         repoUrl: '', environments: ['Development', 'Staging', 'Production'], category: 'Software Engineering',
         createdAt: now, updatedAt: now,
       };
@@ -142,8 +144,8 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Project Lead / Owner" required>
-            <input type="text" required value={lead} onChange={e => setLead(e.target.value)} placeholder="e.g. Varun Tej" className={INPUT} />
+          <Field label="Project owner" required>
+            <input type="text" required value={lead} onChange={e => setLead(e.target.value)} placeholder="The owner's name" className={INPUT} />
           </Field>
           <Field label="Project Category">
             <div className="flex items-center gap-2 h-[42px] px-3.5 bg-gray-50 border border-lira-border rounded-lg text-sm text-lira-text">
@@ -193,7 +195,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, 
       </form>
 
       {savedToast && (
-        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg shadow-xl animate-fade-in pointer-events-none">
+        <div className="fixed bottom-6 right-6 z-[100] flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-xs font-semibold rounded-lg animate-fade-in pointer-events-none">
           <Check className="w-4 h-4 text-white" /><span>✓ Saved</span>
         </div>
       )}

@@ -31,7 +31,7 @@ export const Toast: React.FC<{ message: string | null; className?: string }> = (
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 20, scale: 0.97 }}
         transition={pop}
-        className={`fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg shadow-lg z-50 ${className}`}
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg z-50 ${className}`}
       >
         {message}
       </motion.div>

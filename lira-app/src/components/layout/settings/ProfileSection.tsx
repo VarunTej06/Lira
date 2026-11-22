@@ -12,13 +12,13 @@ export function ProfileSection(s: SettingsState) {
               <div>
                 <h3 className="text-base font-bold text-lira-text">Personal Profile</h3>
                 <p className="text-xs text-lira-muted mt-1">
-                  Manage your display name, contact email, initials, and role across your Lira workspace.
+                  Manage your display name, contact email, initials, and role across your Liraspaces workspace.
                 </p>
               </div>
 
               {/* Avatar Preview */}
               <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-lira-border">
-                <div className="w-14 h-14 rounded-full bg-lira-blue text-lira-on-blue font-bold text-xl flex items-center justify-center shadow-xs">
+                <div className="w-14 h-14 rounded-full bg-lira-blue text-lira-on-blue font-bold text-xl flex items-center justify-center">
                   {initials || 'VY'}
                 </div>
                 <div>
@@ -86,7 +86,7 @@ export function ProfileSection(s: SettingsState) {
               <div className="flex justify-end gap-2 border-t border-lira-border pt-4">
                 <button
                   type="submit"
-                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors shadow-xs cursor-pointer"
+                  className="px-5 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover transition-colors cursor-pointer"
                 >
                   Save Changes
                 </button>

@@ -58,15 +58,15 @@ export const YourWorkDropdown: React.FC<{
     <div ref={ref} className="relative" {...hover}>
       <button
         onClick={() => setOpen(v => (canHoverDevice() ? true : !v))}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-ui font-medium transition-all duration-200 cursor-pointer ${
-          open ? 'bg-white/15 text-white shadow-inner' : 'text-white/80 hover:text-white hover:bg-white/10'
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-ui font-medium whitespace-nowrap transition-colors duration-100 cursor-pointer ${
+          open ? 'bg-white/15 text-white' : 'text-white/80 hover:text-white hover:bg-white/10'
         }`}
       >
         Your work <ChevronDown className={`w-3 h-3 opacity-60 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-2 w-80 bg-lira-nav border border-white/10 rounded-2xl shadow-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150">
+        <div className="absolute top-full left-0 mt-2 w-80 bg-lira-nav border border-white/10 rounded-2xl z-50 animate-scale-in origin-top-left overflow-hidden transition-all duration-150">
           <div className="flex border-b border-white/10 px-2 pt-2 gap-1 bg-white/5">
             {[
               { id: 'worked' as const, label: 'Worked on' },

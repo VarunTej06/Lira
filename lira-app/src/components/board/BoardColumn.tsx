@@ -120,7 +120,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             e.stopPropagation();
             onAddIssue(id);
           }}
-          className="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-lira-muted hover:text-lira-blue hover:bg-white/80 hover:shadow-2xs border border-transparent hover:border-lira-border transition-all cursor-pointer flex-shrink-0 group"
+          className="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-lira-muted hover:text-lira-blue hover:bg-white/80 border border-transparent hover:border-lira-border transition-all cursor-pointer flex-shrink-0 group"
           title={`Add issue to ${title}`}
           aria-label={`Add issue to ${title}`}
         >
@@ -139,7 +139,7 @@ export const BoardColumn: React.FC<BoardColumnProps> = ({
             className={`
               flex flex-col gap-2.5 p-2 rounded-xl transition-colors duration-150 flex-1 w-full
               ${snapshot.isDraggingOver
-                ? 'bg-lira-blue-light/95 border-2 border-dashed border-lira-blue/70 shadow-xs ring-2 ring-lira-blue/20'
+                ? 'bg-lira-blue-light/95 border-2 border-dashed border-lira-blue/70 ring-2 ring-lira-blue/20'
                 : 'bg-gray-100/50 hover:bg-gray-100 border-2 border-transparent'
               }
             `}

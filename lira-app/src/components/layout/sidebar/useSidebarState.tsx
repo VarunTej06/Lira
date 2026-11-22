@@ -170,11 +170,11 @@ export function useSidebarState(props: LeftSidebarProps) {
   // Navigation items (the order and visibility come from the sidebar settings)
   const navItemDefs: Record<string, { label: string; icon: React.ReactNode; tab?: string; action: () => void }> = {
     forYou: { label: 'For you', icon: <User className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'ForYou', action: () => onNavigateToForYou?.() },
-    projects: { label: 'Projects', icon: <FolderKanban className="w-3.5 h-3.5 text-violet-400" />, tab: 'Projects', action: () => onNavigateToProjects?.() },
+    projects: { label: 'Projects', icon: <FolderKanban className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'Projects', action: () => onNavigateToProjects?.() },
     sprints: { label: 'Sprints', icon: <CalendarClock className="w-3.5 h-3.5 text-teal-400" />, tab: 'SprintsHub', action: () => onNavigateToSprints?.() },
     allTickets: { label: 'All tickets', icon: <Ticket className="w-3.5 h-3.5 text-yellow-400" />, tab: 'AllTickets', action: () => onNavigateToAllTickets?.() },
     roadmaps: { label: 'Roadmaps', icon: <Map className="w-3.5 h-3.5 text-orange-400" />, tab: 'Roadmaps', action: () => onNavigateToRoadmaps?.() },
-    dashboards: { label: 'Dashboards', icon: <LayoutDashboard className="w-3.5 h-3.5 text-purple-400" />, tab: 'Dashboards', action: () => onNavigateToDashboards?.() },
+    dashboards: { label: 'Dashboards', icon: <LayoutDashboard className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'Dashboards', action: () => onNavigateToDashboards?.() },
   };
 
   const isKeyVisible = (key: string): boolean => sidebarConfig.visibility[key] !== false;

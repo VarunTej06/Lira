@@ -9,12 +9,16 @@ describe('spaceIconKey', () => {
 
   it('shows the matching icon for the emoji older spaces saved', () => {
     expect(spaceIconKey('\u{1F4CB}')).toBe('clipboard');
-    expect(spaceIconKey('\u{2728}')).toBe('sparkles');
+    expect(spaceIconKey('\u{2728}')).toBe('star');
     expect(spaceIconKey('\u{1F3C6}')).toBe('trophy');
     expect(spaceIconKey('\u{1F4DA}')).toBe('book');
     expect(spaceIconKey('\u{1F680}')).toBe('rocket');
     expect(spaceIconKey('\u{1F3AF}')).toBe('target');
     expect(spaceIconKey('\u{26A1}')).toBe('zap');
+  });
+
+  it('still understands names that earlier versions saved and later renamed', () => {
+    expect(spaceIconKey('sparkles')).toBe('star');
   });
 
   it('ignores the invisible mark some emoji carry', () => {

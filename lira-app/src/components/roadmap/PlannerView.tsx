@@ -145,7 +145,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
               ))}
               <div className="absolute top-0 bottom-0 w-px bg-red-500/80 z-10" style={{ left: todayX }} />
               {roadmap.milestones.map(m => (
-                <div key={m.id} className={`absolute top-0 bottom-0 border-l border-dashed ${m.kind === 'release' ? 'border-emerald-400/40' : 'border-violet-400/40'}`} style={{ left: xOf(range, parseDay(m.date), ppd) + ppd / 2 }} title={m.title} />
+                <div key={m.id} className={`absolute top-0 bottom-0 border-l border-dashed ${m.kind === 'release' ? 'border-emerald-400/40' : 'border-lira-border'}`} style={{ left: xOf(range, parseDay(m.date), ppd) + ppd / 2 }} title={m.title} />
               ))}
 
               {rows.map(r => {
@@ -159,7 +159,7 @@ export const PlannerView: React.FC<PlannerViewProps> = ({
       </div>
 
       {drag?.moved && tip && (
-        <div className="fixed z-[100] pointer-events-none px-2 py-1 rounded-md bg-lira-text text-lira-bg text-2xs font-semibold shadow-lg" style={{ left: drag.x + 14, top: drag.y + 14, background: PALETTE.textStrong, color: '#fff' }}>
+        <div className="fixed z-[100] pointer-events-none px-2 py-1 rounded-md bg-lira-text text-lira-bg text-2xs font-semibold" style={{ left: drag.x + 14, top: drag.y + 14, background: PALETTE.textStrong, color: '#fff' }}>
           {tip}
         </div>
       )}

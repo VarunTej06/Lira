@@ -22,7 +22,7 @@ const PRIORITY_COLUMNS: BoardColumnDef[] = [
   { id: 'lowest', title: 'Lowest', accentColor: PALETTE.info },
 ];
 
-const ASSIGNEE_COLORS = [PALETTE.brand, PALETTE.purple, PALETTE.info, PALETTE.success, PALETTE.orangeDeep, PALETTE.danger, '#8777D9'];
+const ASSIGNEE_COLORS = [PALETTE.brand, PALETTE.epic, PALETTE.info, PALETTE.success, PALETTE.orangeDeep, PALETTE.danger];
 const GREY = PALETTE.textMuted;
 
 /** The columns for "group by assignee": everyone with a ticket, you, and Unassigned. */
@@ -38,7 +38,7 @@ function assigneeColumns(issues: Issue[]): BoardColumnDef[] {
 /** One column per epic, plus one for tickets without an epic. */
 function epicColumns(issues: Issue[]): BoardColumnDef[] {
   return [
-    ...issues.filter(i => i.type === 'epic').map(e => ({ id: `epic-${e.id}`, title: `${e.key}: ${e.title}`, accentColor: PALETTE.purple })),
+    ...issues.filter(i => i.type === 'epic').map(e => ({ id: `epic-${e.id}`, title: `${e.key}: ${e.title}`, accentColor: PALETTE.epic })),
     { id: 'no-epic', title: 'No Epic / Standalone', accentColor: GREY },
   ];
 }

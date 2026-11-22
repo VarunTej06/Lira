@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { byText, cleanup, click, mount, q, qa } from '../../../test/render';
+import { appStorage } from '../../../utils/appStorage';
 import type { DetailCtx } from './detailContext';
 
 vi.mock('../../standup/StandupButton', () => ({ StandupButton: () => <button data-testid="standup">Standup</button> }));
@@ -52,11 +53,10 @@ describe('ProjectHeader', () => {
       expect(document.body.textContent).toContain('The core platform');
     });
 
-    it('draws the project icon in the button colour of the theme, not in a colour of its own', () => {
+    it('has no initials badge before the project name', () => {
       show();
-      const icon = qa('div').find(d => d.textContent === 'LC')!;
-      expect(icon.className).toContain('bg-lira-blue text-lira-on-blue');
-      expect(icon.getAttribute('style')).toBeNull();
+      expect(qa('div').find(d => d.textContent === 'LC')).toBeUndefined();
+      expect(q('h1')!.parentElement!.firstElementChild).toBe(q('h1'));
     });
 
     it('shows the category only when there is one', () => {
@@ -72,12 +72,19 @@ describe('ProjectHeader', () => {
       expect(document.body.textContent).toContain('Enterprise-grade technical project workspace.');
     });
 
-    it('shows the lead, with a fallback name', () => {
+    it('shows the owner with the avatar next to the name, after the word Owner', () => {
       show();
-      expect(document.body.textContent).toContain('Lead: Varun Tej');
-      cleanup();
+      const row = qa('div').find(d => d.firstElementChild?.textContent === 'Owner:')!;
+      expect([...row.children].map(c => c.textContent)).toEqual(['Owner:', 'VA', 'Varun Tej']);
+      expect(document.body.textContent).not.toContain('Lead:');
+    });
+
+    it('names the person using the app when the project has no lead, not a fixed name', () => {
+      appStorage.set('lira_user_profile', JSON.stringify({ name: 'Test User', email: 't@x.co', initials: 'TU', role: 'Owner' }));
       show({ project: { ...project, lead: '' } });
-      expect(document.body.textContent).toContain('Lead: Varun Tej');
+      expect(document.body.textContent).toContain('Test User');
+      expect(document.body.textContent).not.toContain('Varun Tej');
+      appStorage.remove('lira_user_profile');
     });
 
     it('says when it was created, or "recently" without a date', () => {

@@ -8,9 +8,14 @@ import { Avatar } from '../common/Avatar';
 import { Modal } from '../common/Modal';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { appStorage } from '../../utils/appStorage';
+import { useNavigate } from 'react-router-dom';
+import { isHosted } from '../../utils/edition';
+import { goTo } from '../../utils/navigate';
+import { logout } from '../../services/authApi';
 
 export const AccountDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   const [userName, setUserName] = useState(() => appStorage.get('lira_user_name') || 'Varuntej Yadla');
@@ -50,7 +55,7 @@ export const AccountDropdown: React.FC = () => {
       {/* Avatar Button Trigger */}
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center justify-center p-0.5 rounded-full hover:ring-2 hover:ring-white/60 transition-all cursor-pointer ml-1"
+        className="w-10 h-10 rounded-full flex items-center justify-center bg-lira-nav border border-white/10 hover:border-white/30 transition-colors cursor-pointer"
         title="Your account"
       >
         <Avatar initials={userInitials} size="sm" />
@@ -58,10 +63,10 @@ export const AccountDropdown: React.FC = () => {
 
       {/* Popover matching Account Opions screen.png */}
       {open && (
-        <div className="absolute top-full right-0 mt-2 w-72 bg-white text-lira-text border border-lira-border rounded-xl shadow-2xl z-50 overflow-hidden transition-all duration-150 animate-scale-in">
+        <div className="absolute top-full right-0 mt-2 w-72 bg-white text-lira-text border border-lira-border rounded-xl z-50 overflow-hidden transition-all duration-150 animate-scale-in">
           {/* Header */}
           <div className="p-4 flex items-center gap-3.5 bg-gray-50/70 border-b border-lira-border">
-            <div className="w-12 h-12 rounded-full bg-lira-blue text-lira-on-blue font-bold text-base flex items-center justify-center flex-shrink-0 shadow-2xs">
+            <div className="w-12 h-12 rounded-full bg-lira-blue text-lira-on-blue font-bold text-base flex items-center justify-center flex-shrink-0">
               {userInitials}
             </div>
             <div className="min-w-0 flex-1">
@@ -90,6 +95,19 @@ export const AccountDropdown: React.FC = () => {
 
             <div className="border-t border-lira-border my-1" />
 
+            {isHosted() && (
+              <button onClick={() => { setOpen(false); navigate('/teams'); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
+                <Users className="w-4 h-4 text-gray-500" />
+                <span>Teams and access</span>
+              </button>
+            )}
+            {isHosted() && (
+              <button onClick={() => { setOpen(false); navigate('/calls'); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
+                <Users className="w-4 h-4 text-gray-500" />
+                <span>Calls</span>
+              </button>
+            )}
+
             <button
               onClick={() => { setOpen(false); void alertDialog({ title: 'Switch account', message: 'The active user is the only configured local profile (Varuntej Yadla).' }); }}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left"
@@ -99,7 +117,11 @@ export const AccountDropdown: React.FC = () => {
             </button>
 
             <button
-              onClick={() => { setOpen(false); void alertDialog({ title: 'Log out', message: 'Offline session: Lira runs on your own computer and needs no cloud login.' }); }}
+              onClick={() => {
+                setOpen(false);
+                if (isHosted()) { void logout().then(() => goTo('/login')); return; }
+                void alertDialog({ title: 'Log out', message: 'Offline session: Liraspaces runs on your own computer and needs no cloud login.' });
+              }}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors cursor-pointer text-left"
             >
               <LogOut className="w-4 h-4 text-red-500" />
@@ -113,7 +135,7 @@ export const AccountDropdown: React.FC = () => {
       <Modal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} title="Profile & Account Settings" size="md">
         <div className="p-6 space-y-4 text-lira-text">
           <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-lira-border">
-            <div className="w-14 h-14 rounded-full bg-lira-blue text-lira-on-blue font-bold text-lg flex items-center justify-center shadow-xs">
+            <div className="w-14 h-14 rounded-full bg-lira-blue text-lira-on-blue font-bold text-lg flex items-center justify-center">
               {userInitials}
             </div>
             <div>
@@ -165,7 +187,7 @@ export const AccountDropdown: React.FC = () => {
             </button>
             <button
               onClick={saveProfile}
-              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover shadow-xs"
+              className="px-4 py-2 text-sm font-semibold bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover"
             >
               Save Profile
             </button>

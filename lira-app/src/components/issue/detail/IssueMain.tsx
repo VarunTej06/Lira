@@ -12,6 +12,8 @@ import { ISSUE_TYPE_CONFIG } from '../../../types/issue';
 import { childTypeOf } from '../../../utils/hierarchy';
 import { LINK_CHOICES, linkCandidates, type LinkType } from '../../../utils/ticketLinks';
 import { IssueSubtasks } from '../IssueSubtasks';
+import { isHosted } from '../../../utils/edition';
+import { HostedAttachments } from '../HostedAttachments';
 import { IssueAttachments } from '../IssueAttachments';
 import { IssueActivityFeed } from '../IssueActivityFeed';
 import { ChildIssues } from '../ChildIssues';
@@ -60,8 +62,8 @@ function ParentPill({ parent, onOpen }: { parent: NonNullable<IssueDetailState['
       <button
         type="button"
         onClick={onOpen}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-md text-lira-text font-normal transition-colors group/parent shadow-2xs"
-        title={`Parent: ${parent.key} — ${parent.title}. Click to open parent.`}
+        className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-md text-lira-text font-normal transition-colors group/parent"
+        title={`Parent: ${parent.key}: ${parent.title}. Click to open parent.`}
       >
         <TypeIcon type={parent.type} />
         <span className="font-semibold text-lira-text font-mono text-2xs">{parent.key}</span>
@@ -132,7 +134,9 @@ function AttachmentsSection({ s }: { s: IssueDetailState }) {
   return (
     <section>
       <SectionToggle title="Attachments" collapsed={s.attCollapsed} count={total > 0 ? `(${total})` : undefined} onToggle={el => keepPlace(el, () => s.setAttCollapsed(c => !c))} />
-      {!s.attCollapsed && <IssueAttachments attachments={own} onUpdate={a => s.patch({ attachments: a })} fromComments={fromComments} />}
+      {!s.attCollapsed && (isHosted() && s.local.id !== undefined
+        ? <HostedAttachments ticketId={s.local.id} />
+        : <IssueAttachments attachments={own} onUpdate={a => s.patch({ attachments: a })} fromComments={fromComments} />)}
     </section>
   );
 }

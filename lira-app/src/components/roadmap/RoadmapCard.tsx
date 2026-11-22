@@ -26,7 +26,7 @@ interface Props {
 /** The "..." menu of a card: rename, duplicate, archive or unarchive, delete. */
 function CardMenu({ archived, onRename, onDuplicate, onToggleArchive, onDelete }: { archived: boolean; onRename: () => void; onDuplicate: () => void; onToggleArchive: () => void; onDelete: () => void }) {
   return (
-    <div className="absolute right-0 mt-1 w-44 rounded-lg border border-lira-border bg-lira-surface shadow-dropdown z-30 py-1 text-xs" onClick={e => e.stopPropagation()}>
+    <div className="absolute right-0 mt-1 w-44 rounded-lg border border-lira-border bg-lira-surface z-30 py-1 text-xs" onClick={e => e.stopPropagation()}>
       <MenuItem icon={<Pencil className="w-3.5 h-3.5" />} label="Rename" onClick={onRename} />
       <MenuItem icon={<Copy className="w-3.5 h-3.5" />} label="Duplicate" onClick={onDuplicate} />
       <MenuItem icon={archived ? <ArchiveRestore className="w-3.5 h-3.5" /> : <Archive className="w-3.5 h-3.5" />} label={archived ? 'Unarchive' : 'Archive'} onClick={onToggleArchive} />
@@ -61,7 +61,7 @@ export function RoadmapCard({ card: { rm, summary, span }, space, menuOpen, onOp
       tabIndex={0}
       onClick={e => { e.stopPropagation(); onOpen(); }} {...roadmapLink(rm.id)}
       onKeyDown={e => { if (e.key === 'Enter') onOpen(); }}
-      className={`group relative rounded-2xl border border-lira-border bg-lira-surface p-4 cursor-pointer hover:shadow-card-hover hover:-translate-y-0.5 transition-all ${rm.archived ? 'opacity-75' : ''}`}
+      className={`group relative rounded-2xl border border-lira-border bg-lira-surface p-4 cursor-pointer transition-all ${rm.archived ? 'opacity-75' : ''}`}
     >
       <div className="flex items-start gap-2">
         <div className="w-9 h-9 rounded-xl bg-orange-500/15 text-orange-500 flex items-center justify-center flex-shrink-0"><Map className="w-4.5 h-4.5" /></div>

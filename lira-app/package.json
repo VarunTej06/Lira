@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "vite",
     "dev:lan": "vite --host",
+    "dev:hosted": "vite --mode hosted --port 5175 --strictPort",
+    "preview:hosted": "vite preview --mode hosted --port 5175 --strictPort",
+    "hosted": "npm run build:hosted && npm run preview:hosted",
     "build": "tsc -b && vite build",
+    "build:hosted": "tsc -b && vite build --mode hosted",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
@@ -15,7 +19,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@fontsource/inter": "^5.3.0",
     "@hello-pangea/dnd": "^18.0.1",
     "@tiptap/extension-highlight": "^3.33.0",
     "@tiptap/extension-image": "^3.33.0",

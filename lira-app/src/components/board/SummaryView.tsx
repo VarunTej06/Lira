@@ -47,11 +47,11 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
   return (
     <div className="flex-1 overflow-y-auto bg-gray-50/50 p-6 space-y-6">
       {/* Space Hero banner */}
-      <div className="flex items-center justify-between bg-white border border-lira-border rounded-xl p-5 shadow-xs">
+      <div className="flex items-center justify-between bg-white border border-lira-border rounded-xl p-5">
         <div className="flex items-center gap-4">
           {space && (
             <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold shadow-xs bg-lira-blue-light text-lira-blue"            >
+              className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl font-bold bg-lira-blue-light text-lira-blue"            >
               <SpaceIcon icon={space.icon} className="w-6 h-6" />
             </div>
           )}
@@ -93,7 +93,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
           { title: 'Completed', icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />, valueClass: 'text-emerald-600', value: stats.done, note: <><CountUp value={stats.completionRate} suffix="%" /> resolved successfully</> },
           { title: 'Overdue Issues', icon: <AlertTriangle className={`w-4 h-4 ${stats.overdue > 0 ? 'text-red-500' : 'text-gray-400'}`} />, valueClass: stats.overdue > 0 ? 'text-red-600' : 'text-gray-600', value: stats.overdue, note: <>Requires immediate attention</> },
         ].map(card => (
-          <div key={card.title} className="bg-white p-4 rounded-xl border border-lira-border shadow-xs hover:border-lira-blue transition-all">
+          <div key={card.title} className="bg-white p-4 rounded-xl border border-lira-border hover:border-lira-blue transition-all">
             <div className="flex items-center justify-between text-lira-muted mb-2">
               <span className="text-xs font-semibold uppercase tracking-wider">{card.title}</span>
               {card.icon}
@@ -107,7 +107,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
       {/* Row 2 — Status Breakdown & Priority Distribution */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Status Breakdown */}
-        <div className="bg-white p-5 rounded-xl border border-lira-border shadow-xs space-y-4">
+        <div className="bg-white p-5 rounded-xl border border-lira-border space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-lira-text flex items-center gap-2">
               <BarChart2 className="w-4 h-4 text-lira-blue" />
@@ -130,7 +130,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
         </div>
 
         {/* Priority Distribution */}
-        <div className="bg-white p-5 rounded-xl border border-lira-border shadow-xs space-y-4">
+        <div className="bg-white p-5 rounded-xl border border-lira-border space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-lira-text flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-orange-500" />
@@ -163,10 +163,10 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
 
       {/* Row 3 — Epic Roadmap Progress */}
       {stats.epicProgress.length > 0 && (
-        <div className="bg-white p-5 rounded-xl border border-lira-border shadow-xs space-y-4">
+        <div className="bg-white p-5 rounded-xl border border-lira-border space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold text-lira-text flex items-center gap-2">
-              <Zap className="w-4 h-4 text-purple-600" />
+              <Zap className="w-4 h-4 text-lira-blue" />
               Epic & Initiative Milestones
             </h2>
             <span className="text-xs text-lira-muted">{stats.epicProgress.length} active epics</span>
@@ -177,19 +177,19 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
               <div
                 key={epic.id}
                 onClick={() => onIssueClick(epic)} {...issueLink(epic)}
-                className="p-3.5 rounded-lg border border-lira-border hover:border-purple-300 hover:bg-purple-50/30 transition-all cursor-pointer group"
+                className="p-3.5 rounded-lg border border-lira-border hover:border-lira-blue hover:bg-lira-blue-light transition-all cursor-pointer group"
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded flex items-center gap-1">
+                  <span className="text-xs font-bold text-lira-blue bg-lira-blue-light px-2 py-0.5 rounded flex items-center gap-1">
                     <Zap className="w-3 h-3" /> {epic.key}
                   </span>
-                  <span className="text-xs font-semibold text-lira-muted group-hover:text-purple-700 transition-colors flex items-center gap-0.5">
+                  <span className="text-xs font-semibold text-lira-muted group-hover:text-lira-blue transition-colors flex items-center gap-0.5">
                     <CountUp value={progress} suffix="%" /> <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100" />
                   </span>
                 </div>
                 <div className="text-sm font-semibold text-lira-text truncate mb-2">{epic.title}</div>
                 <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden mb-1.5">
-                  <GrowBar className="h-full bg-purple-500 rounded-full" percent={progress} />
+                  <GrowBar className="h-full bg-lira-blue rounded-full" percent={progress} />
                 </div>
                 <div className="text-2xs text-lira-muted flex justify-between">
                   <span><CountUp value={completedChildren} /> of {totalChildren} work items done</span>
@@ -204,7 +204,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
       {/* Row 4 — High Priority Callouts & Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Urgent Action Callouts */}
-        <div className="bg-white p-5 rounded-xl border border-lira-border shadow-xs space-y-3">
+        <div className="bg-white p-5 rounded-xl border border-lira-border space-y-3">
           <h2 className="text-sm font-bold text-lira-text flex items-center gap-2">
             <AlertTriangle className="w-4 h-4 text-red-500" />
             High Priority & Urgent Issues
@@ -237,7 +237,7 @@ export const SummaryView: React.FC<SummaryViewProps> = ({
         </div>
 
         {/* Top Labels */}
-        <div className="bg-white p-5 rounded-xl border border-lira-border shadow-xs space-y-3">
+        <div className="bg-white p-5 rounded-xl border border-lira-border space-y-3">
           <h2 className="text-sm font-bold text-lira-text flex items-center gap-2">
             <Tag className="w-4 h-4 text-lira-blue" />
             Top Labels & Domains

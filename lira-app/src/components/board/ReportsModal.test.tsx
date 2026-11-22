@@ -15,7 +15,7 @@ function show(issues: Issue[], over: Record<string, unknown> = {}) {
   mount(<ReportsModal isOpen onClose={onClose} space={space} issues={issues} {...over} />);
   return onClose;
 }
-const kpis = () => qa('.shadow-xs').map(e => e.textContent);
+const kpis = () => qa('[data-testid="kpi"]').map(e => e.textContent);
 
 describe('ReportsModal', () => {
   it('is empty while closed', () => {

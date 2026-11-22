@@ -8,7 +8,8 @@ import { formatDateKey, monthGrid } from '../../utils/calendarGrid';
 import { useCalendarDrag } from './useCalendarDrag';
 import { currentTime } from '../../utils/clock';
 import { dayNumberTone, dayTone } from './calendarTones';
-import { IssueChip, MoreToggle, UnscheduledChip } from './CalendarParts';
+import { IssueChip, MoreToggle, StandupChip, UnscheduledChip } from './CalendarParts';
+import { useCalendarStandups, type CalendarStandup } from './useCalendarStandups';
 
 interface CalendarViewProps {
   issues: Issue[];
@@ -21,6 +22,7 @@ type Day = ReturnType<typeof monthGrid>[number];
 
 const DAYS_OF_WEEK = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const MAX_VISIBLE = 3;
+const NO_STANDUPS: CalendarStandup[] = [];
 
 /** The month and year as a button that opens a month chooser; it closes on an outside click or Escape. */
 function MonthYearPicker({ year, month, monthName, onPick }: { year: number; month: number; monthName: string; onPick: (year: number, month: number) => void }) {
@@ -48,7 +50,7 @@ function MonthYearPicker({ year, month, monthName, onPick }: { year: number; mon
         <ChevronDown className={`w-4 h-4 text-lira-muted transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div className="absolute left-0 top-full mt-2 z-30 w-[272px] bg-white border border-lira-border rounded-2xl shadow-2xl p-3 animate-scale-in">
+        <div className="absolute left-0 top-full mt-2 z-30 w-[272px] bg-white border border-lira-border rounded-2xl p-3 animate-scale-in">
           <MonthYearGrid year={year} month={month} onPick={(y, m) => { onPick(y, m); setOpen(false); }} />
         </div>
       )}
@@ -57,8 +59,8 @@ function MonthYearPicker({ year, month, monthName, onPick }: { year: number; mon
 }
 
 /** One day: its number, a drop hint while dragging over it, and up to three tickets (all of them when expanded). */
-function DayCell({ day, idx, todayKey, monthName, drag, expanded, onToggle, onSelect }: {
-  day: Day; idx: number; todayKey: string; monthName: string; drag: Drag; expanded: boolean; onToggle: () => void; onSelect: (issue: Issue) => void;
+function DayCell({ day, idx, todayKey, monthName, drag, standups, expanded, onToggle, onSelect }: {
+  day: Day; idx: number; todayKey: string; monthName: string; drag: Drag; standups: CalendarStandup[]; expanded: boolean; onToggle: () => void; onSelect: (issue: Issue) => void;
 }) {
   const { date, isCurrentMonth, key } = day;
   const isToday = key === todayKey;
@@ -74,7 +76,7 @@ function DayCell({ day, idx, todayKey, monthName, drag, expanded, onToggle, onSe
     >
       <div className="flex items-center justify-between select-none pointer-events-none">
         <span className={`text-xs w-7 h-7 flex items-center justify-center rounded-full ${dayNumberTone(isToday, isCurrentMonth)}`}>{date.getDate()}</span>
-        {dayIssues.length > 0 && <span className="text-3xs font-medium text-lira-muted">{dayIssues.length}</span>}
+        {dayIssues.length + standups.length > 0 && <span className="text-3xs font-medium text-lira-muted">{dayIssues.length + standups.length}</span>}
       </div>
       {isDragOver && (
         <div className="absolute inset-x-2 bottom-2 bg-lira-blue text-lira-on-blue rounded-md py-1 text-center text-3xs font-semibold flex items-center justify-center gap-1 pointer-events-none">
@@ -82,6 +84,7 @@ function DayCell({ day, idx, todayKey, monthName, drag, expanded, onToggle, onSe
         </div>
       )}
       <div className="flex-1 space-y-1 min-h-0">
+        {standups.map(call => <StandupChip key={`${call.id}:${call.at}`} call={call} />)}
         {shown.map(issue => <IssueChip key={issue.id || issue.key} issue={issue} drag={drag} onSelect={onSelect} />)}
         {(hidden > 0 || (expanded && dayIssues.length > MAX_VISIBLE)) && <MoreToggle expanded={expanded} hidden={hidden} onToggle={onToggle} />}
       </div>
@@ -140,6 +143,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ issues, space, onSel
   const monthName = currentDate.toLocaleString('default', { month: 'long' });
   const days = useMemo(() => monthGrid(year, month), [year, month]);
   const todayKey = formatDateKey(currentTime());
+  const standupsByDay = useCalendarStandups(days[0].date, days[days.length - 1].date);
 
   const thisMonth = days.filter(d => d.isCurrentMonth).flatMap(d => drag.byDay.get(d.key) ?? []);
   const toggleExpanded = (key: string) => setExpanded(prev => { const n = new Set(prev); if (!n.delete(key)) n.add(key); return n; });
@@ -177,14 +181,14 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ issues, space, onSel
       </div>
 
       <div className="flex-1 overflow-y-auto px-6 pb-4 min-h-0">
-        <div className="rounded-2xl border border-lira-border bg-white overflow-hidden shadow-xs">
+        <div className="rounded-2xl border border-lira-border bg-white overflow-hidden">
           <div className="grid grid-cols-7 bg-gray-50 border-b border-lira-border text-2xs font-semibold uppercase tracking-wider select-none">
             {DAYS_OF_WEEK.map(name => <div key={name} className="py-2.5 text-center text-lira-muted">{name}</div>)}
           </div>
           <div className="grid grid-cols-7">
             {days.map((day, idx) => (
               <DayCell
-                key={day.key} day={day} idx={idx} todayKey={todayKey} monthName={monthName} drag={drag}
+                key={day.key} day={day} idx={idx} todayKey={todayKey} monthName={monthName} drag={drag} standups={standupsByDay.get(day.key) ?? NO_STANDUPS}
                 expanded={expanded.has(day.key)} onToggle={() => toggleExpanded(day.key)} onSelect={onSelectIssue}
               />
             ))}

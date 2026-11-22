@@ -14,22 +14,22 @@ export function GroupByEpic(s: CapacityState) {
           {epicGroups.map(({ epic, children, done, progress, points }) => (
             <div
               key={epic.id}
-              className="bg-white rounded-xl border border-lira-border shadow-xs p-5 space-y-4 hover:border-lira-blue transition-all"
+              className="bg-white rounded-xl border border-lira-border p-5 space-y-4 hover:border-lira-blue transition-all"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded-lg flex items-center gap-1">
+                  <span className="text-xs font-bold text-lira-blue bg-lira-blue-light px-2.5 py-0.5 rounded-lg flex items-center gap-1">
                     <Zap className="w-3 h-3" /> {epic.key}
                   </span>
                   <h3 className="text-sm font-bold text-lira-text truncate max-w-sm">{epic.title}</h3>
                 </div>
-                <span className="text-xs font-bold text-purple-700">{progress}%</span>
+                <span className="text-xs font-bold text-lira-blue">{progress}%</span>
               </div>
 
               {/* Progress bar */}
               <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-purple-500 rounded-full transition-all duration-300"
+                  className="h-full bg-lira-blue rounded-full transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>

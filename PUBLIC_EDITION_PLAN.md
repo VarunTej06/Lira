@@ -1,6 +1,6 @@
 # Lira: Public Edition Plan
 
-**Status: draft for discussion. Nothing in this document is built yet.** *Update 9 November 2026: the product owner confirmed the target is a multi-user application with SSO, starting within two to three days, and that CI/CD is built in the DevOps step after that.* It records the strategy we talked through, the questions you need to answer before we plan in detail, and a proposed plan to take Lira from a single-user local app to an app that outside users can use, hosted on Azure.
+**Status: draft for discussion; the first version of the hosted edition (4.0.0, 21 November 2026) is built and runs in a rehearsal, see [docs/01-architecture/HLD.md](docs/01-architecture/HLD.md) section 0 for what exists and where it differs from this plan.** *Update 9 November 2026: the product owner confirmed the target is a multi-user application with SSO, starting within two to three days, and that CI/CD is built in the DevOps step after that.* It records the strategy we talked through, the questions you need to answer before we plan in detail, and a proposed plan to take Lira from a single-user local app to an app that outside users can use, hosted on Azure.
 
 Related documents: [README](README.md) · [SETUP](SETUP.md) · [ROADMAP](ROADMAP.md) (phases of the current app) · [SECURITY_REPORT](SECURITY_REPORT.md) (what is safe today, and what only applies once there are many users)
 

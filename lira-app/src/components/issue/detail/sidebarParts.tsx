@@ -22,7 +22,7 @@ export function StatusBlock(s: IssueDetailState) {
           <ChevronDown className="w-3.5 h-3.5 flex-shrink-0" />
         </button>
         {showStatusMenu && (
-          <div className="absolute left-0 right-0 top-full mt-1 z-20 bg-white border border-lira-border rounded-lg shadow-dropdown py-1 animate-scale-in">
+          <div className="absolute left-0 right-0 top-full mt-1 z-20 bg-white border border-lira-border rounded-lg py-1 animate-scale-in">
             {STATUS_OPTIONS.map(opt => (
               <button key={opt.value} onClick={() => { patch({ status: opt.value as IssueStatus }); setShowStatusMenu(false); }} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2">
                 <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ color: opt.color, backgroundColor: opt.bgColor }}>{opt.label}</span>
@@ -108,7 +108,7 @@ export function ActivityBox({ local }: Pick<IssueDetailState, 'local'>) {
         <div className="flex justify-between"><span>Created</span><span>{formatRelativeDate(local.createdAt)}</span></div>
         <div className="flex justify-between"><span>Updated</span><span>{formatRelativeDate(local.updatedAt)}</span></div>
         {local.resolvedAt && <div className="flex justify-between"><span>Resolved</span><span>{formatRelativeDate(local.resolvedAt)}</span></div>}
-        {local.epicLink && <div className="flex justify-between"><span>Epic</span><span className="text-purple-600 font-medium">{local.epicLink}</span></div>}
+        {local.epicLink && <div className="flex justify-between"><span>Epic</span><span className="text-lira-blue font-medium">{local.epicLink}</span></div>}
       </div>
     </div>
   );

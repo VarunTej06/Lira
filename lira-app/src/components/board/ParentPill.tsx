@@ -56,8 +56,8 @@ export function ParentPill({ issue, parent, eligibleParents, onOpen }: Props) {
         ref={button}
         type="button"
         onClick={toggle}
-        className="w-full flex items-center justify-between px-2.5 py-1 text-xs border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-md text-lira-text font-normal transition-colors text-left group/parent shadow-2xs"
-        title={`Parent: ${parent.key} — ${parent.title}`}
+        className="w-full flex items-center justify-between px-2.5 py-1 text-xs border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 rounded-md text-lira-text font-normal transition-colors text-left group/parent"
+        title={`Parent: ${parent.key}: ${parent.title}`}
       >
         <span className="truncate text-xs text-lira-text font-normal pr-1">{parent.title}</span>
         <ChevronDown className={`w-3.5 h-3.5 text-gray-500 flex-shrink-0 group-hover/parent:text-lira-blue transition-transform duration-150 ${open ? 'rotate-180 text-lira-blue' : ''}`} />
@@ -68,7 +68,7 @@ export function ParentPill({ issue, parent, eligibleParents, onOpen }: Props) {
           ref={menu}
           style={{ position: 'fixed', top: coords.top, left: coords.left, width: coords.width, zIndex: 9999 }}
           onClick={e => e.stopPropagation()}
-          className="bg-white border border-lira-border rounded-xl shadow-2xl py-1 max-h-60 overflow-y-auto animate-scale-in"
+          className="bg-white border border-lira-border rounded-xl py-1 max-h-60 overflow-y-auto animate-scale-in"
         >
           <div className="px-3 py-1.5 text-3xs font-semibold text-lira-muted uppercase tracking-wider border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
             <span>Linked Parent</span>

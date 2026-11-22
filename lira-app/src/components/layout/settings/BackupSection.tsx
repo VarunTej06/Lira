@@ -56,10 +56,10 @@ export function BackupSection(s: SettingsState) {
                   type="button"
                   onClick={handleBackupToDisk}
                   disabled={backupLoading}
-                  className="flex items-center justify-between p-3.5 bg-lira-blue-light hover:brightness-95 text-lira-blue border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
+                  className="flex items-center justify-between p-3.5 bg-lira-blue-light hover:brightness-95 text-lira-blue border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
-                    <Save className={`w-4 h-4 ${backupLoading ? 'animate-spin' : 'group-hover:scale-110 transition-transform'}`} />
+                    <Save className={`w-4 h-4 ${backupLoading ? 'animate-spin' : ' transition-transform'}`} />
                     <div>
                       <div className="text-sm font-bold">Backup Now</div>
                       <div className="text-2xs text-lira-blue font-normal">Sync database to PC disk</div>
@@ -74,10 +74,10 @@ export function BackupSection(s: SettingsState) {
                 <button
                   type="button"
                   onClick={handleExportBackupJson}
-                  className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-lira-text border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
+                  className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-lira-text border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
-                    <Download className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+                    <Download className="w-4 h-4 text-emerald-600 transition-transform" />
                     <div>
                       <div className="text-sm font-bold">Export Backup JSON</div>
                       <div className="text-2xs text-lira-muted font-normal">Download single backup file</div>
@@ -93,10 +93,10 @@ export function BackupSection(s: SettingsState) {
                   type="button"
                   onClick={handleRestoreFromDisk}
                   disabled={restoreLoading}
-                  className="flex items-center justify-between p-3.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
+                  className="flex items-center justify-between p-3.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 rounded-xl transition-all cursor-pointer font-semibold text-xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
-                    <RefreshCw className={`w-4 h-4 text-amber-700 ${restoreLoading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
+                    <RefreshCw className={`w-4 h-4 text-amber-700 ${restoreLoading ? 'animate-spin' : ' transition-transform duration-500'}`} />
                     <div>
                       <div className="text-sm font-bold">Restore From Disk</div>
                       <div className="text-2xs text-amber-700 font-normal">Reload IndexedDB from disk</div>
@@ -112,10 +112,10 @@ export function BackupSection(s: SettingsState) {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={restoreLoading}
-                  className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-lira-text border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs shadow-2xs group"
+                  className="flex items-center justify-between p-3.5 bg-gray-50 hover:bg-gray-100 text-lira-text border border-lira-border rounded-xl transition-all cursor-pointer font-semibold text-xs group"
                 >
                   <div className="flex items-center gap-2.5 text-left">
-                    <Upload className="w-4 h-4 text-lira-blue group-hover:scale-110 transition-transform" />
+                    <Upload className="w-4 h-4 text-lira-blue transition-transform" />
                     <div>
                       <div className="text-sm font-bold">Import Backup File</div>
                       <div className="text-2xs text-lira-muted font-normal">Restore &amp; overwrite data</div>

@@ -1,6 +1,38 @@
 # High-Level Design (HLD): multi-user Lira with SSO
 
-**Status: Proposed.** Choices that depend on a decision record are tagged `[ADR-000n]`. Nothing here is built yet. Baseline: [`current-state.md`](current-state.md).
+**Status: partly built.** Version 4.0.0 (branch `v4.0.0`, 21 November 2026) runs the hosted edition in a rehearsal on a temporary Azure sandbox at `test.liraspaces.com`. Section 0 says what exists today and where the build differs from the design; sections 1 to 10 are the design and still the target. Choices that depend on a decision record are tagged `[ADR-00nn]`. Baseline of the local edition: [`current-state.md`](current-state.md).
+
+## 0. As built (21 November 2026, version 4.0.0)
+
+```mermaid
+flowchart LR
+  B[Browser] -->|HTTPS| DNS[Hostinger DNS<br/>CNAME test]
+  DNS --> EDGE[Caddy<br/>Container Instance<br/>Let's Encrypt certificate]
+  EDGE --> WEB[Web app<br/>Container App, nginx]
+  WEB -->|/api/*| API[API<br/>Container App, internal address<br/>NestJS]
+  API --> PG[(PostgreSQL 16<br/>row-level security)]
+  API --> BLOB[(Blob Storage<br/>attachments, private)]
+  KV[Key Vault<br/>passwords and keys] -. given to the apps as secret settings .-> API
+  API -->|sign-in, Meet links, email| G[Google]
+```
+
+Why the Container Instance: the sandbox refuses every certificate resource, so Container Apps cannot serve a custom domain over HTTPS there. Caddy, in a container instance, obtains its own certificate and forwards to the web app. On a real subscription this is replaced by Front Door or a managed certificate. The step-by-step rebuild is [`infra/azure-playground/README.md`](../../infra/azure-playground/README.md).
+
+| Design in sections 1 to 10 | What is built |
+|---|---|
+| Fastify API | **NestJS 11** on Express 5, zod 4 schemas on every body, `pg` with parameterised SQL, argon2 passwords |
+| External identity provider, OIDC, BFF cookie `[ADR-0001]` | The API keeps its own accounts (email and password) and signs people up and in with **Google** (OpenID Connect, code flow with PKCE, ID token checked). The session is an `HttpOnly` cookie. Microsoft sign-in is not built `[ADR-0009]` |
+| Roles and per-space grants `[ADR-0004]` | Owner, Admin, Member, Viewer, Guest on the organisation, and View, Edit or Manage on a space, project, roadmap or dashboard for a person or a team `[ADR-0010]`. Everyone who signs up owns an organisation of one |
+| `DataStore` interface, `ApiStore` `[ADR-0005]` | The same React app; in hosted mode spaces and tickets are written through to the server (`services/hostedSync.ts`), projects, roadmaps and dashboards are rows (`services/hostedObjects.ts`), other settings go through `/kv` (`kvMirror.ts`). The browser database is a cache only |
+| Attachments in object storage | Done: upload and download straight to Blob Storage through addresses valid for minutes, size checked after upload `[ADR-0011]` |
+| Invitations, calendar and e-mail (later phase) | Done: invitations by email (Gmail), calls with Google Meet links, repeating, shown in the calendar. No Microsoft Teams link creation yet |
+| Realtime events (SSE) | Not built. Other people's changes appear when the page reloads |
+| Importer from `data/` `[ADR-0008]` | Not built. New hosted accounts start empty |
+| Viva on the server | Not built. Viva runs in the browser, as in the local edition |
+| Front Door, WAF, private networking | Not in the rehearsal |
+| Audit log, metrics, health | Done: append-only `audit_log` table, `/metrics` counters, structured logs, `/health` and `/ready` on both services |
+
+Tests: 2078 in the app and 195 in the API (83 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
 
 ## 1. Goals and non-goals
 
@@ -106,7 +138,7 @@ Organisation → Space → Ticket. Projects, Sprints, Roadmaps, Dashboards, Team
 | Performance | p95 board load < 1.5 s for 2,000 tickets in a space; p95 write < 300 ms | Load test in staging |
 | Durability | Point-in-time restore; RPO ≤ 15 min, RTO ≤ 4 h (to be confirmed) | Quarterly restore drill (SOP 02) |
 | Auditability | Every write and permission change recorded, retained per policy | Audit tests and sampling |
-| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 1732 tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
+| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 2078 app tests and 195 API tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
 | Accessibility | WCAG 2.1 AA for core flows | Axe checks, manual review |
 
 ## 7. Deployment view (target, built in the DevOps step)

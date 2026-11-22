@@ -51,7 +51,7 @@ function donutSlices(slices: Slice[], total: number) {
 
 function Kpi({ title, icon, value, valueClass, note, noteClass }: { title: string; icon: React.ReactNode; value: React.ReactNode; valueClass: string; note: string; noteClass: string }) {
   return (
-    <div className="bg-white p-3.5 rounded-xl border border-lira-border shadow-xs">
+    <div data-testid="kpi" className="bg-white p-3.5 rounded-xl border border-lira-border">
       <div className="flex items-center justify-between text-lira-muted mb-1">
         <span className="text-2xs font-bold uppercase tracking-wider">{title}</span>
         {icon}
@@ -88,7 +88,7 @@ function ChartTab({ active, onClick, icon, children }: { active: boolean; onClic
   return (
     <button
       onClick={onClick}
-      className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${active ? 'bg-lira-blue text-lira-on-blue shadow-xs' : 'text-lira-muted hover:text-lira-text hover:bg-gray-100'}`}
+      className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer flex items-center gap-1.5 ${active ? 'bg-lira-blue text-lira-on-blue' : 'text-lira-muted hover:text-lira-text hover:bg-gray-100'}`}
     >
       {icon}{children}
     </button>
@@ -108,9 +108,9 @@ function KpiRow({ m }: { m: Metrics }) {
       <Kpi title="Done" icon={<CheckCircle2 className="w-4 h-4 text-emerald-600" />} value={m.done} valueClass="text-emerald-600" note={`${m.completionRate}% completed`} noteClass="text-emerald-700 font-semibold" />
       <Kpi title="In Progress" icon={<Clock className="w-4 h-4 text-lira-blue" />} value={m.inProgress} valueClass="text-lira-blue" note={`${m.inFlightRate}% active in flight`} noteClass="text-lira-blue font-semibold" />
       <Kpi
-        title="Story Points" icon={<Award className="w-4 h-4 text-purple-600" />} valueClass="text-purple-700"
+        title="Story Points" icon={<Award className="w-4 h-4 text-lira-blue" />} valueClass="text-lira-blue"
         value={<>{m.donePoints} <span className="text-sm font-normal text-lira-muted">/ {m.totalPoints}</span></>}
-        note={`${m.pointsRate}% points delivered`} noteClass="text-purple-700 font-semibold"
+        note={`${m.pointsRate}% points delivered`} noteClass="text-lira-blue font-semibold"
       />
     </div>
   );

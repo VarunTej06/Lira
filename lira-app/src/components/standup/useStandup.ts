@@ -7,7 +7,7 @@ import {
   REPEAT_LABEL, CALL_EVENT, agendaText, buildAgenda, downloadText, googleCalendarUrl, icsFile,
   inviteDescription, issuesForScope, loadDirectory, loadNotes, loadStandups, mailtoUrl, personKey,
   saveDirectory, saveNotes, saveStandups, teamFromIssues, teamsUrl, defaultName, startEnd,
-  loadScopeExtras, addScopeExtra, removeScopeExtra,
+  loadScopeExtras, addScopeExtra, removeScopeExtra, NO_ASSIGNEE_KEY,
 } from '../../utils/standupUtils';
 import { useResetWhen } from '../../hooks/useResetWhen';
 import { NO_ISSUES } from '../../utils/emptyLists';
@@ -137,21 +137,21 @@ export function useStandup(isOpen: boolean, scope: StandupScope, onClose: () => 
     const s = { ...draft(), platform: 'meet' as Platform };
     persist(s);
     window.open(googleCalendarUrl(s, invitedEmails, description(s)), '_blank', 'noopener');
-    flash(`Google Calendar opened with ${plural(invitedEmails.length, 'guest')} — press Save to send the Meet invite.`);
+    flash(`Google Calendar opened with ${plural(invitedEmails.length, 'guest')}. Press Save to send the Meet invite.`);
   };
   const sendTeams = () => {
     if (!canInvite()) return;
     const s = { ...draft(), platform: 'teams' as Platform };
     persist(s);
     window.open(teamsUrl(s, invitedEmails, description(s)), '_blank', 'noopener');
-    flash(`Teams scheduler opened with ${plural(invitedEmails.length, 'attendee')} — press Send there.`);
+    flash(`Teams scheduler opened with ${plural(invitedEmails.length, 'attendee')}. Press Send there.`);
   };
   const downloadIcs = () => {
     if (!canInvite()) return;
     const s = draft();
     persist(s);
     downloadText(`${scope.name.replace(/\W+/g, '-')}-standup.ics`, icsFile(s, invited, description(s)));
-    flash('Calendar file downloaded — open it in Outlook, Apple Calendar or Google Calendar to send it.');
+    flash('Calendar file downloaded. Open it in Outlook, Apple Calendar or Google Calendar to send it.');
   };
   const emailTeam = () => {
     if (!canInvite()) return;
@@ -177,7 +177,7 @@ export function useStandup(isOpen: boolean, scope: StandupScope, onClose: () => 
       await navigator.clipboard.writeText(agendaText(scope.name, agenda, notes));
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
-    } catch { flash('Could not copy — select the text manually'); }
+    } catch { flash('Could not copy. Select the text manually'); }
   };
 
   // The "by person" view: what each person did, is doing, and does next
@@ -185,14 +185,15 @@ export function useStandup(isOpen: boolean, scope: StandupScope, onClose: () => 
     const row = (key: string, name: string, mine: Issue[], done: Issue[], blocked: typeof agenda.blocked, stale: typeof agenda.needsUpdate) => ({
       key, name, done, blocked, stale,
       doing: mine.filter(i => isStatus(i, 'inprogress')),
-      next: mine.filter(i => isStatus(i, 'todo')).slice(0, 3),
+      next: mine.filter(i => isStatus(i, 'todo')),
+      backlog: mine.filter(i => isStatus(i, 'backlog')),
     });
     const keys = Array.from(new Set(scoped.map(personKey).filter((k): k is string => !!k))).sort();
     const rows = keys.map(k => row(
       k, dir[k]?.name || defaultName(k), scoped.filter(i => personKey(i) === k),
       agenda.doneRecently.filter(i => personKey(i) === k), agenda.blocked.filter(b => personKey(b.issue) === k), agenda.needsUpdate.filter(n => personKey(n.issue) === k),
     ));
-    if (agenda.unassigned.length) rows.push(row('—', 'Unassigned', agenda.unassigned, [], [], agenda.needsUpdate.filter(n => !personKey(n.issue))));
+    if (agenda.unassigned.length) rows.push(row(NO_ASSIGNEE_KEY, 'Unassigned', agenda.unassigned, [], [], agenda.needsUpdate.filter(n => !personKey(n.issue))));
     return rows;
   }, [scoped, agenda, dir]);
 

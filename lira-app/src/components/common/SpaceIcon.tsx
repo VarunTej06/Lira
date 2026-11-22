@@ -1,11 +1,11 @@
 import {
   BookOpen, Brain, Briefcase, Building2, ClipboardList, CloudSun, Code, Database, FlaskConical, Folder, Globe, GraduationCap,
-  Lightbulb, Megaphone, Palette, Rocket, Server, Shield, Sparkles, Target, Trophy, Users, Wrench, Zap, type LucideIcon,
+  Lightbulb, Megaphone, Palette, Rocket, Server, Shield, Star, Target, Trophy, Users, Wrench, Zap, type LucideIcon,
 } from 'lucide-react';
 import { SPACE_ICON_KEYS, spaceIconKey, type SpaceIconKey } from '../../utils/spaceIcon';
 
 const ICONS: Record<SpaceIconKey, LucideIcon> = {
-  clipboard: ClipboardList, sparkles: Sparkles, trophy: Trophy, book: BookOpen, cloud: CloudSun, rocket: Rocket,
+  clipboard: ClipboardList, star: Star, trophy: Trophy, book: BookOpen, cloud: CloudSun, rocket: Rocket,
   lightbulb: Lightbulb, target: Target, wrench: Wrench, globe: Globe, brain: Brain, zap: Zap,
   folder: Folder, briefcase: Briefcase, code: Code, shield: Shield, users: Users, megaphone: Megaphone,
   flask: FlaskConical, palette: Palette, server: Server, graduation: GraduationCap, building: Building2, database: Database,

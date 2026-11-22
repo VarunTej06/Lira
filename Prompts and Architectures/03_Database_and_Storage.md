@@ -236,3 +236,7 @@ this.version(3).stores({ ... }).upgrade(tx => {
 - **Sprint data:** goals, capacity, retrospectives, closed state and the spaces working in a sprint are in `lira_sprint_meta`; custom sprint dates in `lira_sprint_defs`; both land in `data/sprints.json`.
 - **Writes** go to disk about half a second after a change; only changed files are rewritten and keys are sorted, so git diffs stay small. Each save is noted (file names only) in `data/private/audit.log`.
 - **Backups** include all of the above except API keys.
+
+## Update (21 November 2026, version 4.0.0): the hosted edition
+
+This note describes the **local edition**: IndexedDB (Dexie) and JSON files in `data/`. The hosted edition keeps its data on a server instead: PostgreSQL 16 with row-level security (tables for organisations, users, memberships, sessions, spaces, tickets, attachments, settings, teams, grants, objects, invitations, calls and Google connections; migrations V1 to V13 in `api/migrations`) and Azure Blob Storage for attachment bytes. In the browser the same Dexie tables are only a cache: spaces and tickets are written through to the server, projects, roadmaps and dashboards are server rows, other settings go through the `/kv` route. See [LLD.md section 0](../docs/01-architecture/LLD.md) and [api/README.md](../api/README.md).

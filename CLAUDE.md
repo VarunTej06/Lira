@@ -1,7 +1,7 @@
 # CLAUDE.md — Lira engineering rules
 
 Lira is a work-tracking app (tickets, boards, sprints, roadmaps, dashboards, an AI copilot called Viva).
-**Today** it is a single-user, local app. **Next** it becomes a multi-user, enterprise app with SSO (decided 9 Nov 2026).
+It has two editions (version 4.0.0): the **local edition**, a single-user app with files in `data/`, and the **hosted edition (Liraspaces)**, a multi-user app with accounts, roles, teams, a NestJS API in `api/` and PostgreSQL, running in an Azure rehearsal (decided 9 Nov 2026; SSO is Google so far).
 Read `docs/README.md` first. Decisions that are not yet made are in `docs/00-decisions/`. Do not invent them: ask.
 
 ## How to work here
@@ -32,12 +32,14 @@ These are the owner's own standing requirements; they apply to every change.
 
 | Check | Command |
 |---|---|
-| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 1732 tests, data health) |
+| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 2078 tests, data health) |
 | Types | `npx tsc -b` |
 | Lint | `npm run lint` (must report 0 warnings) |
 | Tests | `npm test` (single file: `npx vitest run path/to/file.test.ts`) |
 | Build | `npm run build` (typecheck, then the production bundle) |
 | Dev server | `npm run dev` (`dev:lan` opens it to the local network). It rewrites files under `data/`: do not run it against the real workspace |
+| API (hosted edition) | In `api/`: `npm run build`, `npm run migrate` (needs `ADMIN_DATABASE_URL` and `APP_DB_PASSWORD`), `npm test` (the database tests run only when `TEST_DATABASE_URL` is set; run it against a throwaway schema, never a real database) |
+| Hosted edition | `npm run hosted` builds the public pages at `/` with the app under `/app` and serves them at port 5175 (`build:hosted` and `preview:hosted` do the two steps; `dev:hosted` is the dev server on 5175 and, like `dev`, rewrites `data/`). The default build is the local edition |
 
 ## Protected paths
 
@@ -96,6 +98,7 @@ These are the habits that took the slop score from 36 to 26. Follow them for eve
 - **Fix the cause.** A lint warning is fixed in the logic (derive state, reset on key, use the hook), not silenced.
 - **Every new file with logic has a test file next to it**, and every UI change is listed in `docs/04-quality/manual-test-checklist.md` (and the Excel `Lira-manual-test-cases.xlsx`).
 - **Report the real numbers.** Run `npm run test:all` and `node scripts/vibe-check.mjs`; quote the output, including what did not improve.
+- **The 30 design tells.** `docs/04-quality/vibe-check.md` section 4 lists the 30 things that make a site look vibe-coded (stock icon set, harsh gradients, pure white pages, rainbow colours, drop shadows, three feature cards in a row, emoji, glass blur, em dashes, Inter or Geist, side stripes, fake testimonials, bento grids, terminal windows, "it's not X, it's Y", checkmark bullets, three pricing tiers, no real product demo, very round corners, purple and black, no skeleton loaders, radial orbs, dot grids, sparkle icons, animated arrows, no Terms, no Privacy Policy, hover animations, neon, basic pastels). Do not introduce any of them. Landing pages, forms and new screens are checked against all 30 before they are done. `node scripts/vibe-check.mjs` counts the ones a scan can see, with each limit at today's count; lower the limit when you remove some, never raise it.
 - **Criteria from outside.** `docs/04-quality/vibe-check.md` lists the rubric. When an external vibe or AI-code report points at something, add its criterion there and to `scripts/vibe-check.mjs`, then fix the findings.
 
 ## Docs

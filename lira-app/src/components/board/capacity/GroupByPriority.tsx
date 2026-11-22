@@ -14,7 +14,7 @@ export function GroupByPriority(s: CapacityState) {
           {priorityGroups.map(group => (
             <div
               key={group.id}
-              className={`rounded-xl border ${group.color} shadow-xs p-5 space-y-4 flex flex-col hover:border-lira-blue transition-all`}
+              className={`rounded-xl border ${group.color} p-5 space-y-4 flex flex-col hover:border-lira-blue transition-all`}
             >
               <div className="flex items-center justify-between border-b border-lira-border pb-3">
                 <div className="flex items-center gap-2">

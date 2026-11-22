@@ -42,7 +42,7 @@ export const SelectDropdown: React.FC<SelectDropdownProps> = ({
         <ChevronDown className="w-3.5 h-3.5 opacity-60 flex-shrink-0" />
       </button>
       {isOpen && (
-        <div className="absolute z-50 mt-1 bg-white rounded-md shadow-dropdown border border-lira-border min-w-full py-1 animate-scale-in left-0">
+        <div className="absolute z-50 mt-1 bg-white rounded-md border border-lira-border min-w-full py-1 animate-scale-in left-0">
           {options.map(opt => (
             <button
               key={opt.value}

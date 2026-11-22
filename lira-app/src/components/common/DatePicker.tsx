@@ -153,7 +153,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               role="dialog"
               aria-label="Choose a date"
               style={{ position: 'fixed', top: pos?.top ?? 0, left: pos?.left ?? 0, zIndex: 300, visibility: pos ? 'visible' : 'hidden', transformOrigin: 'top left' }}
-              className="w-[272px] bg-white border border-lira-border rounded-2xl shadow-2xl p-3 text-lira-text"
+              className="w-[272px] bg-white border border-lira-border rounded-2xl p-3 text-lira-text"
             >
               <CalendarHeader view={view} picking={picking} onShift={shift} onTogglePicking={() => setPicking(p => !p)} />
               {picking ? (

@@ -7,7 +7,7 @@
  */
 import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db/db';
-import { getNextIssueKey } from '../hooks/useIssues';
+import { createIssue, getNextIssueKey } from '../hooks/useIssues';
 import { readRoadmaps, writeRoadmaps } from '../hooks/useRoadmaps';
 import { triggerDiskSync } from './localDiskSync';
 import { moveIssuesToSprint, getIssueSprint, sprintKey } from '../utils/sprintUtils';
@@ -29,7 +29,7 @@ const created = (text: string) => ({
 export async function createEpicForItem(item: RoadmapItem, space: Space, roadmapName: string): Promise<string> {
   const key = await getNextIssueKey(space.key);
   const now = new Date();
-  await db.issues.add({
+  await createIssue({
     spaceId: space.id!,
     key,
     title: item.title,
@@ -70,7 +70,7 @@ async function createTaskForItem(item: RoadmapItem, epic: Issue, roadmapName: st
   if (!space) throw new Error('The epic’s space no longer exists.');
   const key = await getNextIssueKey(space.key);
   const now = new Date();
-  await db.issues.add({
+  await createIssue({
     spaceId: epic.spaceId,
     key,
     parentId: epic.id,
@@ -214,7 +214,7 @@ export async function addTicketToEpic(epic: Issue, title: string, date?: Date): 
   if (!space) return;
   const key = await getNextIssueKey(space.key);
   const now = new Date();
-  await db.issues.add({
+  await createIssue({
     spaceId: epic.spaceId, key, parentId: epic.id, epicId: epic.id, epicLink: epic.title,
     title: title.trim(), description: '', type: 'task', status: 'todo', priority: 'medium',
     assignee: ME(), assigneeInitials: ME(), reporter: ME(), reporterInitials: ME(),

@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
-import { CheckCircle2, GripVertical } from 'lucide-react';
+import { CheckCircle2, GripVertical, Video } from 'lucide-react';
 import { issueLink } from '../../utils/links';
 import { TypeIcon } from '../common/Icons';
 import type { Issue } from '../../types/issue';
 import { chipTone } from './calendarTones';
+import type { CalendarStandup } from './useCalendarStandups';
+import { isMeetingLink } from '../../services/standupsApi';
 
 interface DragHandlers {
   draggingId: number | null | undefined;
@@ -20,7 +22,7 @@ export function IssueChip({ issue, drag, onSelect }: { issue: Issue; drag: DragH
       onDragStart={e => drag.onDragStart(e, issue)}
       onDragEnd={drag.onDragEnd}
       onClick={() => onSelect(issue)} {...issueLink(issue)}
-      className={`text-2xs px-1.5 py-1 rounded-md border-l-[3px] leading-tight cursor-grab active:cursor-grabbing transition-all hover:shadow-sm hover:-translate-y-px group select-none ${chipTone(issue)} ${drag.draggingId === issue.id ? 'opacity-40 scale-95' : ''} ${isDone ? 'opacity-70' : ''}`}
+      className={`text-2xs px-1.5 py-1 rounded-md leading-tight cursor-grab active:cursor-grabbing transition-all group select-none ${chipTone(issue)} ${drag.draggingId === issue.id ? 'opacity-40 scale-95' : ''} ${isDone ? 'opacity-70' : ''}`}
       title={`${issue.key} · ${issue.title}. Drag to change the due date.`}
     >
       <div className="flex items-center gap-1 min-w-0">
@@ -33,6 +35,22 @@ export function IssueChip({ issue, drag, onSelect }: { issue: Issue; drag: DragH
   );
 }
 
+/** A stand-up call on a day: its time and title, and a click joins the call (the link opens in a new tab). */
+export function StandupChip({ call }: { call: CalendarStandup }) {
+  const time = new Date(call.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const body = (
+    <>
+      <Video className="w-3 h-3 flex-shrink-0" aria-hidden="true" />
+      <span className="font-semibold">{time}</span>
+      <span className="truncate">{call.title}</span>
+    </>
+  );
+  const style = 'flex items-center gap-1 min-w-0 text-3xs px-1.5 py-1 rounded-md leading-tight bg-lira-nav text-lira-bg select-none';
+  return isMeetingLink(call.link)
+    ? <a href={call.link} target="_blank" rel="noopener noreferrer" title={`Join ${call.title}`} data-testid="calendar-standup" className={`${style} hover:opacity-90`}>{body}</a>
+    : <div title={call.title} data-testid="calendar-standup" className={style}>{body}</div>;
+}
+
 /** A ticket with no due date, in the tray under the calendar. */
 export function UnscheduledChip({ issue, drag, onSelect }: { issue: Issue; drag: DragHandlers; onSelect: (issue: Issue) => void }) {
   return (
@@ -41,7 +59,7 @@ export function UnscheduledChip({ issue, drag, onSelect }: { issue: Issue; drag:
       onDragStart={e => drag.onDragStart(e, issue)}
       onDragEnd={drag.onDragEnd}
       onClick={() => onSelect(issue)} {...issueLink(issue)}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border rounded-lg text-xs transition-all cursor-grab active:cursor-grabbing select-none group ${drag.draggingId === issue.id ? 'opacity-40 border-dashed border-lira-blue scale-95' : 'border-lira-border hover:border-lira-blue hover:shadow-xs'}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white border rounded-lg text-xs transition-all cursor-grab active:cursor-grabbing select-none group ${drag.draggingId === issue.id ? 'opacity-40 border-dashed border-lira-blue scale-95' : 'border-lira-border hover:border-lira-blue'}`}
       title="Drag onto a day to set the due date, or click to open"
     >
       <GripVertical className="w-3 h-3 text-lira-muted group-hover:text-lira-blue" />

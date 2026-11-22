@@ -4,6 +4,7 @@ import type { Issue } from '../types/issue';
 import { v4 as uuidv4 } from 'uuid';
 import { currentUser } from './currentUser';
 import { appStorage } from './appStorage';
+import { isHosted } from './edition';
 
 /**
  * Sprints are calendar months. A sprint is identified by a "YYYY-MM" key.
@@ -22,7 +23,7 @@ export interface Retro {
 
 export interface SprintMeta {
   goal?: string;
-  completedAt?: string; // ISO — set when the sprint was formally closed
+  completedAt?: string; // ISO, set when the sprint was formally closed
   /** Story points the team can take on in this sprint. Planning warns when the sprint goes over it. */
   capacity?: number;
   retro?: Retro;
@@ -257,8 +258,9 @@ function setDeletedSprints(list: string[]) {
 /** All sprint keys that exist: every month with tickets, planned months, plus current and next — contiguous. */
 export function allSprintKeys(issues: Issue[], planned: string[] = getPlannedSprints()): string[] {
   const cur = currentSprintKey();
-  let min = cur;
-  let max = nextSprint(cur);
+  // the hosted edition lists only sprints that were made or have tickets: a new account has none
+  let min = isHosted() ? '9999-12' : cur;
+  let max = isHosted() ? '0000-01' : nextSprint(cur);
   planned.forEach(k => {
     if (k < min) min = k;
     if (k > max) max = k;
@@ -271,7 +273,7 @@ export function allSprintKeys(issues: Issue[], planned: string[] = getPlannedSpr
   });
   const deleted = new Set(getDeletedSprints());
   const keys: string[] = [];
-  for (let k = min; k <= max; k = nextSprint(k)) {
+  for (let k = min; k <= max; k = nextSprint(k)) { // nothing to list when min is after max
     // the current and next sprint always exist; a deleted month stays hidden unless a ticket is in it again
     if (deleted.has(k) && !used.has(k) && k !== cur && k !== nextSprint(cur)) continue;
     keys.push(k);

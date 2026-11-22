@@ -22,7 +22,7 @@ type Totals = ReturnType<typeof homeTotals>;
 function Tiles({ totals }: { totals: Totals }) {
   const tiles = [
     { label: 'Roadmaps', value: totals.roadmaps, sub: `${totals.counts.archived} archived`, icon: <Map className="w-4 h-4" />, tone: 'text-orange-600 bg-orange-50' },
-    { label: 'Epics planned', value: totals.items, sub: 'across all roadmaps', icon: <Layers className="w-4 h-4" />, tone: 'text-violet-600 bg-violet-50' },
+    { label: 'Epics planned', value: totals.items, sub: 'across all roadmaps', icon: <Layers className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Average progress', value: `${totals.percent}%`, sub: 'weighted by duration', icon: <Target className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
     { label: 'Needs attention', value: totals.attention, sub: 'late or blocked epics', icon: <AlertTriangle className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
   ];
@@ -75,7 +75,7 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
   };
   const askDelete = async (rm: Roadmap) => {
     setMenuFor(null);
-    if (await confirmDialog({ title: 'Delete roadmap', message: `Delete the roadmap "${rm.name}"? Its epics stay in Lira.`, confirmLabel: 'Delete roadmap', tone: 'danger' })) remove(rm.id);
+    if (await confirmDialog({ title: 'Delete roadmap', message: `Delete the roadmap "${rm.name}"? Its epics stay in Liraspaces.`, confirmLabel: 'Delete roadmap', tone: 'danger' })) remove(rm.id);
   };
 
   return (
@@ -84,7 +84,7 @@ export const RoadmapsHome: React.FC<Props> = ({ issues, spaces, onOpen }) => {
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h1 className="text-xl font-semibold text-lira-text flex items-center gap-2"><Map className="w-5 h-5 text-orange-500" /> Roadmaps</h1>
-            <p className="text-xs text-lira-muted mt-0.5">Plan work over time. Every item on a roadmap is an epic in Lira. Open a roadmap for the timeline, planner, Now/Next/Later and table views.</p>
+            <p className="text-xs text-lira-muted mt-0.5">Plan work over time. Every item on a roadmap is an epic in Liraspaces. Open a roadmap for the timeline, planner, Now/Next/Later and table views.</p>
           </div>
           <button onClick={() => setShowNew(true)} className="text-sm px-4 py-2 bg-lira-blue text-lira-on-blue rounded-lg hover:bg-lira-blue-hover cursor-pointer flex items-center gap-1.5 font-semibold"><Plus className="w-4 h-4" /> Create roadmap</button>
         </div>

@@ -14,7 +14,7 @@ type KnownStatus = (typeof STATUS_IDS)[number];
 interface StatusMeta { id: KnownStatus; label: string; color: string; bg: string }
 
 export const STATUS_META: Record<KnownStatus, StatusMeta> = {
-  backlog: { id: 'backlog', label: 'Backlog', color: '#5E6C84', bg: '#EBECF0' },
+  backlog: { id: 'backlog', label: 'Backlog', color: '#505F79', bg: '#EBECF0' },
   todo: { id: 'todo', label: 'To Do', color: PALETTE.textStrong, bg: PALETTE.border },
   inprogress: { id: 'inprogress', label: 'In Progress', color: PALETTE.brand, bg: PALETTE.brandBg },
   done: { id: 'done', label: 'Done', color: '#006644', bg: '#E3FCEF' },

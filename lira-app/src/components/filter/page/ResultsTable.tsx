@@ -157,7 +157,7 @@ export function ResultsTable(s: FiltersState) {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filteredIssues.map(issue => (
-                  <ResultRow key={issue.key} issue={issue} space={spaceMap[issue.spaceId]} onSelectIssue={onSelectIssue} onSelectSpace={onSelectSpace} />
+                  <ResultRow key={issue.id ?? issue.key} issue={issue} space={spaceMap[issue.spaceId]} onSelectIssue={onSelectIssue} onSelectSpace={onSelectSpace} />
                 ))}
               </tbody>
             </table>

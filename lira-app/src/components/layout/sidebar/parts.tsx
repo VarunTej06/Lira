@@ -80,7 +80,7 @@ function SpaceMenu({ space, starred, isHidden, isArchived, onMenuOpen, onStar, o
       )}
       <ContextItem icon={<Trash2 className="w-3.5 h-3.5" />} label="Delete space" onClick={onDelete} danger />
       <div className="px-3 py-2 border-t border-white/10 mt-1">
-        <div className="flex items-center gap-2 text-3xs text-white/30">
+        <div className="flex items-center gap-2 text-3xs text-white/60">
           <LiraLogo className="w-4 h-4" motion="none" />
           <span>Business space · Team-managed</span>
         </div>

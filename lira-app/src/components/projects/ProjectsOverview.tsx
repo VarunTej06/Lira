@@ -171,6 +171,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
             <div className="flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-lira-muted" />
               <select
+                aria-label="Filter by space"
                 value={selectedSpaceFilter}
                 onChange={e => setSelectedSpaceFilter(e.target.value)}
                 className="px-2.5 py-1.5 bg-white border border-lira-border rounded-lg text-lira-text cursor-pointer focus:outline-none focus:border-lira-blue"
@@ -188,6 +189,7 @@ export const ProjectsOverview: React.FC<ProjectsOverviewProps> = ({
             <div className="flex items-center gap-1.5">
               <SlidersHorizontal className="w-3.5 h-3.5 text-lira-muted" />
               <select
+                aria-label="Sort projects"
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value as ProjectSort)}
                 className="px-2.5 py-1.5 bg-white border border-lira-border rounded-lg text-lira-text cursor-pointer focus:outline-none focus:border-lira-blue"

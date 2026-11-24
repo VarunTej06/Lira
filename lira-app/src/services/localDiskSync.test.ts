@@ -20,6 +20,26 @@ beforeEach(async () => {
 })
 afterEach(() => vi.unstubAllGlobals())
 
+describe('starting twice at once on an empty data folder', () => {
+  it('seeds the sample spaces once, not twice (found by the browser smoke test)', async () => {
+    vi.stubGlobal('fetch', async (url: string, init?: RequestInit) => {
+      if (url === '/api/data') return new Response(JSON.stringify({ spaces: [], issues: [] }))
+      if (url === '/api/save') { posts.push(JSON.parse(init!.body as string)); return new Response(JSON.stringify({ savedAt: new Date().toISOString() })) }
+      return new Response('', { status: 404 })
+    })
+    await Promise.all([initLocalDiskSync(), initLocalDiskSync()])
+    const keys = (await db.spaces.toArray()).map(s => s.key)
+    expect(keys.length).toBeGreaterThan(0)
+    expect(new Set(keys).size).toBe(keys.length)
+  })
+
+  it('can start again after a start has finished', async () => {
+    await initLocalDiskSync()
+    await initLocalDiskSync()
+    expect((await db.issues.toArray()).map(i => i.title)).toEqual(['From disk'])
+  })
+})
+
 describe('ticket sync: which copy wins on load', () => {
   it('disk wins when the browser has no unsaved changes', async () => {
     await db.issues.add(makeIssue({ spaceId: 1, title: 'Old browser copy' }))

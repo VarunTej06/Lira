@@ -27,6 +27,14 @@ const rows = () => qa('tbody tr');
 const cells = (row: HTMLElement) => qa('td', row);
 
 describe('ResultsTable', () => {
+  it('shows every ticket even when two share a key, without a React key warning (found by the browser smoke test)', () => {
+    const warn = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    show([issue({ key: 'CERT-4' }), issue({ key: 'CERT-4' }), issue({ key: 'CERT-5' })]);
+    expect(rows()).toHaveLength(3);
+    expect(warn.mock.calls.flat().join(' ')).not.toContain('same key');
+    warn.mockRestore();
+  });
+
   it('counts what is shown against all work items', () => {
     show([issue(), issue()], 5);
     expect(document.body.textContent).toContain('Showing 2 of 5 work items');

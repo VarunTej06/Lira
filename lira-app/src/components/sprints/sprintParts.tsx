@@ -46,6 +46,7 @@ export const SprintSelect: React.FC<{
   return (
     <select
       title={title}
+      aria-label={title ?? "Sprint"}
       value={value}
       onChange={e => onChange(e.target.value)}
       onClick={e => e.stopPropagation()}

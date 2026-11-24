@@ -11,7 +11,7 @@ export function NavigationList(s: SidebarState) {
     <>
           {/* ── Navigation Section ── */}
           <div className="py-2.5 px-2 border-b border-white/10 space-y-0.5">
-            <div className="px-3 mb-1 text-white/30 text-3xs font-semibold uppercase tracking-wider flex items-center justify-between">
+            <div className="px-3 mb-1 text-white/60 text-3xs font-semibold uppercase tracking-wider flex items-center justify-between">
               <span>Navigation</span>
               <button
                 onClick={collapse}

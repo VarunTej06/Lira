@@ -22,7 +22,7 @@ export function ProjectsSection(s: SidebarState) {
         <Collapsible open={projectsExpanded}>
           <div className="mt-0.5 px-2 space-y-0.5">
             {projects.length === 0 ? (
-              <div className="px-2 py-1.5 text-2xs text-white/30 italic">No projects yet</div>
+              <div className="px-2 py-1.5 text-2xs text-white/60 italic">No projects yet</div>
             ) : (
               projects.map(p => {
                 const space = spaces.find(sp => sp.id === p.spaceId);

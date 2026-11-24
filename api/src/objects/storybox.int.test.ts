@@ -17,9 +17,12 @@ describe.skipIf(!ADMIN_URL)('story boxes and mind maps, on a real database', () 
     db.call('PUT', `/api/orgs/${orgId}/objects/${kind}/${id}`, { doc, ...(version ? { version } : {}) }, p.session);
   const ids = async (p: Person, orgId: string, kind: string) =>
     ((await db.call('GET', `/api/orgs/${orgId}/objects/${kind}`, undefined, p.session)).body as { id: string }[]).map(o => o.id).sort();
-  const votes = (p: Person, orgId: string, box: string) => db.call('GET', `/api/orgs/${orgId}/objects/storybox/${box}/votes`, undefined, p.session);
-  const vote = (p: Person, orgId: string, box: string, ticket: number, points: number | null) =>
-    db.call('PUT', `/api/orgs/${orgId}/objects/storybox/${box}/votes/${ticket}`, { points }, p.session);
+  const base = (orgId: string, box: string) => `/api/orgs/${orgId}/objects/storybox/${box}`;
+  type Room = { now: string; activeTicketId: number | null; rounds: { ticketId: number; phase: string; voted: number; finalPoints: number | null }[]; votes: { ticketId: number; userId: string; points: number }[]; people: { userId: string; voted: boolean }[] };
+  const room = async (p: Person, orgId: string, box: string) => (await db.call('GET', `${base(orgId, box)}/room`, undefined, p.session)).body as Room;
+  const vote = (p: Person, orgId: string, box: string, ticket: number, points: number | null) => db.call('PUT', `${base(orgId, box)}/votes/${ticket}`, { points }, p.session);
+  const round = (p: Person, orgId: string, box: string, ticket: number, action: 'start' | 'reveal' | 'revote' | 'confirm', body?: object) =>
+    db.call('POST', `${base(orgId, box)}/rounds/${ticket}/${action}`, body, p.session);
 
   /** An owner with two spaces and a ticket in each, a story box for the first, and a member who may view only the first. */
   async function setup() {
@@ -50,47 +53,114 @@ describe.skipIf(!ADMIN_URL)('story boxes and mind maps, on a real database', () 
     expect(await ids(member, owner.orgId, 'storybox')).toEqual(['box1', 'sprint1']);
   });
 
-  it('lets a person who may view the box give, change and take back their own points, and see everyone\'s', async () => {
+  it('lets only the people who run the box start, reveal, redo and confirm a round, and one ticket at a time', async () => {
+    const { owner, member, a, ta } = await setup();
+    const second = ((await db.call('POST', `/api/orgs/${owner.orgId}/spaces/${a}/tickets`, ticket, owner.session)).body as { id: number }).id;
+    for (const action of ['start', 'reveal', 'revote'] as const) expect((await round(member, owner.orgId, 'box1', ta, action)).status, action).toBe(403);
+    expect((await round(member, owner.orgId, 'box1', ta, 'confirm', { points: 3 })).status).toBe(403);
+    expect((await vote(member, owner.orgId, 'box1', ta, 3)).status).toBe(409); // nothing is being voted on yet
+    expect((await round(owner, owner.orgId, 'box1', ta, 'start')).status).toBe(204);
+    expect((await round(owner, owner.orgId, 'box1', second, 'start')).status).toBe(409); // another ticket is still open
+    expect((await round(owner, owner.orgId, 'box1', ta, 'confirm', { points: 3 })).status).toBe(409); // not revealed yet
+    await round(owner, owner.orgId, 'box1', ta, 'reveal');
+    expect((await round(owner, owner.orgId, 'box1', ta, 'confirm', { points: 5 })).status).toBe(204);
+    expect((await round(owner, owner.orgId, 'box1', ta, 'confirm', { points: 5 })).status).toBe(409); // already sized
+    expect((await round(owner, owner.orgId, 'box1', second, 'start')).status).toBe(204); // the next one may start
+    expect((await room(member, owner.orgId, 'box1')).rounds.find(r => r.ticketId === ta)).toMatchObject({ phase: 'confirmed', finalPoints: 5 });
+  });
+
+  it("keeps everyone's points hidden until the reveal, but lets each person change their own until then", async () => {
     const { owner, member, ta } = await setup();
+    await round(owner, owner.orgId, 'box1', ta, 'start');
     expect((await vote(member, owner.orgId, 'box1', ta, 5)).status).toBe(204);
+    expect((await vote(member, owner.orgId, 'box1', ta, 2)).status).toBe(204); // changed their mind before the time ran out
     expect((await vote(owner, owner.orgId, 'box1', ta, 8)).status).toBe(204);
-    expect((await vote(member, owner.orgId, 'box1', ta, 3)).status).toBe(204);
-    const seen = (await votes(member, owner.orgId, 'box1')).body as { ticketId: number; points: number; userId: string }[];
-    expect(seen.map(v => [v.userId === member.userId ? 'member' : 'owner', v.points]).sort()).toEqual([['member', 3], ['owner', 8]]);
-    expect((await vote(member, owner.orgId, 'box1', ta, null)).status).toBe(204);
-    expect(((await votes(owner, owner.orgId, 'box1')).body as unknown[]).length).toBe(1);
-    expect((await vote(member, owner.orgId, 'box1', ta, 0.5)).status).toBe(204);
+    const seenByMember = await room(member, owner.orgId, 'box1');
+    expect(seenByMember.votes.map(v => [v.userId === member.userId, v.points])).toEqual([[true, 2]]); // only their own
+    expect(seenByMember.rounds[0]).toMatchObject({ phase: 'voting', voted: 2 });
+    expect(seenByMember.people.filter(p => p.voted).length).toBe(2); // who has voted is known, not what
+    await round(owner, owner.orgId, 'box1', ta, 'reveal');
+    const after = await room(member, owner.orgId, 'box1');
+    expect(after.votes.map(v => [v.userId === member.userId ? 'member' : 'owner', v.points]).sort()).toEqual([['member', 2], ['owner', 8]]);
+    expect((await vote(member, owner.orgId, 'box1', ta, 3)).status).toBe(409); // no more changes once revealed
+  });
+
+  it('stops votes when the time is up, waits for the reveal, and starts again with new points on a revote', async () => {
+    const { owner, member, ta } = await setup();
+    await round(owner, owner.orgId, 'box1', ta, 'start');
+    await vote(member, owner.orgId, 'box1', ta, 5);
+    await db.rows("UPDATE story_rounds SET ends_at = now() - interval '1 second' WHERE org_id = $1 RETURNING 1 AS ok", [owner.orgId]);
+    const late = await vote(member, owner.orgId, 'box1', ta, 8);
+    expect(late.status).toBe(409);
+    expect((late.body as { error: { code: string } }).error.code).toBe('voting_closed');
+    expect((await room(owner, owner.orgId, 'box1')).rounds[0].phase).toBe('timeup');
+    expect((await room(member, owner.orgId, 'box1')).votes.length).toBe(1); // still hidden until someone reveals
+    await round(owner, owner.orgId, 'box1', ta, 'revote');
+    const fresh = await room(owner, owner.orgId, 'box1');
+    expect(fresh.rounds[0]).toMatchObject({ phase: 'voting', voted: 0 });
+    expect(fresh.votes).toEqual([]);
+    expect((await vote(member, owner.orgId, 'box1', ta, 8)).status).toBe(204);
+  });
+
+  it('gives the minutes the maker chose, 5 for a box made before that, and ignores anything outside 1 to 10', async () => {
+    const { owner, a, ta } = await setup();
+    const minutes = async (box: string) => (await db.rows<{ m: number }>('SELECT round(extract(epoch FROM ends_at - started_at) / 60)::int AS m FROM story_rounds WHERE org_id = $1 AND box_id = $2', [owner.orgId, box]))[0]?.m;
+    await put(owner, owner.orgId, 'storybox', 'two', { id: 'two', name: 'Two', status: 'open', votingMinutes: 2, scope: { type: 'space', spaceId: a } });
+    await round(owner, owner.orgId, 'two', ta, 'start');
+    expect(await minutes('two')).toBe(2);
+    await put(owner, owner.orgId, 'storybox', 'old', { id: 'old', name: 'Old', status: 'open', scope: { type: 'space', spaceId: a } });
+    await round(owner, owner.orgId, 'old', ta, 'start');
+    expect(await minutes('old')).toBe(5);
+    await put(owner, owner.orgId, 'storybox', 'wild', { id: 'wild', name: 'Wild', status: 'open', votingMinutes: 600, scope: { type: 'space', spaceId: a } });
+    await round(owner, owner.orgId, 'wild', ta, 'start');
+    expect(await minutes('wild')).toBe(5);
+  });
+
+  it('lists who may take part, and not a member with no access to the box', async () => {
+    const { owner, member, ta } = await setup();
+    const outsider = await db.addMember(owner, `sb-roster${n}@example.com`, 'member');
+    await round(owner, owner.orgId, 'box1', ta, 'start');
+    const ids = (await room(owner, owner.orgId, 'box1')).people.map(p => p.userId).sort();
+    expect(ids).toEqual([owner.userId, member.userId].sort());
+    expect(ids).not.toContain(outsider.userId);
   });
 
   it('refuses points that are not valid, a ticket the person may not see, a closed box, and anyone from another organisation', async () => {
     const { owner, member, a, ta, tb } = await setup();
-    for (const bad of [-1, 1001, 1.3, 'five', undefined]) expect((await db.call('PUT', `/api/orgs/${owner.orgId}/objects/storybox/box1/votes/${ta}`, { points: bad }, member.session)).status, String(bad)).toBe(400);
-    expect((await db.call('PUT', `/api/orgs/${owner.orgId}/objects/storybox/box1/votes/${ta}`, { points: 3, extra: 1 }, member.session)).status).toBe(400);
+    await round(owner, owner.orgId, 'box1', ta, 'start');
+    for (const bad of [-1, 1001, 1.3, 'five', undefined]) expect((await db.call('PUT', `${base(owner.orgId, 'box1')}/votes/${ta}`, { points: bad }, member.session)).status, String(bad)).toBe(400);
+    expect((await db.call('PUT', `${base(owner.orgId, 'box1')}/votes/${ta}`, { points: 3, extra: 1 }, member.session)).status).toBe(400);
+    expect((await round(owner, owner.orgId, 'box1', ta, 'confirm', { points: -2 })).status).toBe(400);
     expect((await vote(member, owner.orgId, 'box1', tb, 3)).status).toBe(404); // a ticket of a space they may not see
     expect((await vote(member, owner.orgId, 'box1', 999999, 3)).status).toBe(404);
     await put(owner, owner.orgId, 'storybox', 'box1', { id: 'box1', name: 'Alpha estimate', status: 'closed', scope: { type: 'space', spaceId: a } }, 1);
     expect((await vote(member, owner.orgId, 'box1', ta, 3)).status).toBe(409);
+    expect((await round(owner, owner.orgId, 'box1', ta, 'revote')).status).toBe(409);
     const stranger = await db.signUp(`sb-stranger${++n}@example.com`);
     expect((await vote(stranger, owner.orgId, 'box1', ta, 3)).status).toBe(404);
-    expect((await votes(stranger, owner.orgId, 'box1')).status).toBe(404);
-    expect((await db.call('PUT', `/api/orgs/${owner.orgId}/objects/storybox/box1/votes/${ta}`, { points: 3 })).status).toBe(401);
+    expect((await db.call('GET', `${base(owner.orgId, 'box1')}/room`, undefined, stranger.session)).status).toBe(404);
+    expect((await round(stranger, owner.orgId, 'box1', ta, 'reveal')).status).toBe(404);
+    expect((await db.call('PUT', `${base(owner.orgId, 'box1')}/votes/${ta}`, { points: 3 })).status).toBe(401);
   });
 
   it('keeps a person from seeing or voting in a box they have no access to', async () => {
-    const { owner, a } = await setup();
+    const { owner } = await setup();
     const outsider = await db.addMember(owner, `sb-out${n}@example.com`, 'member'); // a member with no grant at all
     expect(await ids(outsider, owner.orgId, 'storybox')).toEqual([]);
-    expect((await votes(outsider, owner.orgId, 'box1')).status).toBe(404);
+    expect((await db.call('GET', `${base(owner.orgId, 'box1')}/room`, undefined, outsider.session)).status).toBe(404);
     expect((await vote(outsider, owner.orgId, 'box1', 1, 3)).status).toBe(404);
-    void a;
   });
 
-  it('removes a box\'s votes with the box, and the audit log says who voted', async () => {
+  it("removes a box's votes and rounds with the box, and the audit log says who did what", async () => {
     const { owner, member, ta } = await setup();
+    await round(owner, owner.orgId, 'box1', ta, 'start');
     await vote(member, owner.orgId, 'box1', ta, 5);
-    expect((await db.rows('SELECT 1 FROM audit_log WHERE action = \'storybox.vote\' AND actor = $1', [member.userId])).length).toBe(1);
+    await round(owner, owner.orgId, 'box1', ta, 'reveal');
+    expect((await db.rows("SELECT 1 FROM audit_log WHERE action = 'storybox.vote' AND actor = $1", [member.userId])).length).toBe(1);
+    expect((await db.rows("SELECT 1 FROM audit_log WHERE action IN ('storybox.start', 'storybox.reveal') AND actor = $1", [owner.userId])).length).toBe(2);
     expect((await db.call('DELETE', `/api/orgs/${owner.orgId}/objects/storybox/box1`, { version: 1 }, owner.session)).status).toBe(204);
     expect((await db.rows('SELECT 1 FROM story_votes WHERE org_id = $1', [owner.orgId])).length).toBe(0);
+    expect((await db.rows('SELECT 1 FROM story_rounds WHERE org_id = $1', [owner.orgId])).length).toBe(0);
   });
 
   it('lets anyone who is not a Viewer or Guest make a mind map that is theirs alone until it is shared', async () => {

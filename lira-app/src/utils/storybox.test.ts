@@ -41,12 +41,12 @@ describe('what the points add up to', () => {
 });
 
 describe('boxes', () => {
-  const box = (id: string, over: Partial<StoryBox> = {}): StoryBox => ({ ...newBox(id, id, { type: 'space', spaceId: 1 }, `2026-11-0${id}T00:00:00Z`, 'Asha'), ...over });
+  const box = (id: string, over: Partial<StoryBox> = {}): StoryBox => ({ ...newBox(id, id, { type: 'space', spaceId: 1 }, `2026-11-0${id}T00:00:00Z`, 'Asha', 5), ...over });
   it('starts open with the usual scale, a trimmed name, and says who made it', () => {
-    const b = newBox('x', '  Sprint review  ', { type: 'sprint', sprintKey: '2026-11' }, 'now', 'Asha');
+    const b = newBox('x', '  Sprint review  ', { type: 'sprint', sprintKey: '2026-11' }, 'now', 'Asha', 5);
     expect(b).toMatchObject({ name: 'Sprint review', status: 'open', scale: [...DEFAULT_SCALE], createdBy: 'Asha' });
-    expect(newBox('x', '   ', { type: 'space', spaceId: 1 }, 'now', 'A').name).toBe('Story box');
-    expect(newBox('x', 'n'.repeat(300), { type: 'space', spaceId: 1 }, 'now', 'A').name).toHaveLength(100);
+    expect(newBox('x', '   ', { type: 'space', spaceId: 1 }, 'now', 'A', 5).name).toBe('Story box');
+    expect(newBox('x', 'n'.repeat(300), { type: 'space', spaceId: 1 }, 'now', 'A', 5).name).toHaveLength(100);
     expect(b.scale).not.toBe(DEFAULT_SCALE); // its own copy, so changing one never changes the default
   });
   it('shows the open boxes newest first, then the history with the latest closed first', () => {

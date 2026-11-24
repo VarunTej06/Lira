@@ -126,7 +126,7 @@ export class ObjectsService {
       if (version !== current.version) throw new ConflictException({ code: 'conflict', message: 'Someone changed this since you opened it. Reload it and try again.' });
       await tx.query('DELETE FROM objects WHERE org_id = $1 AND kind = $2 AND id = $3', [orgId, kind, id]);
       await tx.query('DELETE FROM grants WHERE org_id = $1 AND object_kind = $2 AND object_id = $3', [orgId, kind, id]);
-      if (kind === 'storybox') await tx.query('DELETE FROM story_votes WHERE org_id = $1 AND box_id = $2', [orgId, id]);
+      if (kind === 'storybox') { await tx.query('DELETE FROM story_votes WHERE org_id = $1 AND box_id = $2', [orgId, id]); await tx.query('DELETE FROM story_rounds WHERE org_id = $1 AND box_id = $2', [orgId, id]); }
       await this.audit.record({ actor: me.user.id, orgId, action: `${kind}.delete`, outcome: 'ok', sourceIp: ip, detail: { objectId: id } }, tx);
     });
     this.metrics.inc('object_writes_total', { kind });

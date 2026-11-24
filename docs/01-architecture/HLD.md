@@ -32,7 +32,7 @@ Why the Container Instance: the sandbox refuses every certificate resource, so C
 | Front Door, WAF, private networking | Not in the rehearsal |
 | Audit log, metrics, health | Done: append-only `audit_log` table, `/metrics` counters, structured logs, `/health` and `/ready` on both services |
 
-Tests: 2311 in the app and 292 in the API (121 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
+Tests: 2335 in the app and 299 in the API (121 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
 
 ## 1. Goals and non-goals
 
@@ -138,7 +138,7 @@ Organisation → Space → Ticket. Projects, Sprints, Roadmaps, Dashboards, Team
 | Performance | p95 board load < 1.5 s for 2,000 tickets in a space; p95 write < 300 ms | Load test in staging |
 | Durability | Point-in-time restore; RPO ≤ 15 min, RTO ≤ 4 h (to be confirmed) | Quarterly restore drill (SOP 02) |
 | Auditability | Every write and permission change recorded, retained per policy | Audit tests and sampling |
-| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 2311 app tests and 292 API tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
+| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 2335 app tests and 299 API tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
 | Accessibility | WCAG 2.1 AA for core flows | Axe checks, manual review |
 
 ## 7. Deployment view (target, built in the DevOps step)

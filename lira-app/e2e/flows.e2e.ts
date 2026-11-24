@@ -61,22 +61,36 @@ test('a mind map: an idea dragged onto another moves with its branch, and the ce
   await expect(canvas.locator('g[data-node-id]')).toHaveCount(3); // the central idea stayed, with One and Two
 });
 
-test('a story box: make one for a space, give points, see the votes, close it into the history', async ({ page }, info) => {
+test('a story box: make one with a voting time, put a ticket up, vote, reveal, confirm into Sized, close it into the history', async ({ page }, info) => {
   await page.goto('/storyboxes');
   await page.getByRole('button', { name: 'New story box' }).click();
   await page.getByLabel('Name').fill('Planning');
+  await expect(page.getByRole('button', { name: 'Make the box' })).toBeDisabled(); // the time to vote is asked every time
+  await page.locator('form[aria-label="New story box"] select').first().selectOption({ label: 'Lira' });
+  await page.getByLabel('Time to vote on each ticket').selectOption('2');
   await page.getByRole('button', { name: 'Make the box' }).click();
   await expect(page).toHaveURL(/\/storyboxes\/.+/);
-  const first = page.locator('tbody tr').first();
-  await expect(first).toBeVisible();
-  await first.getByRole('button', { name: '5', exact: true }).click();
-  await expect(first.getByRole('button', { name: '5', exact: true })).toHaveAttribute('aria-pressed', 'true');
-  await expect(first).toContainText('1 votes, average 5');
-  await page.screenshot({ path: info.outputPath('storybox.png') });
+
+  const sized = page.getByRole('region', { name: 'Sized', exact: true });
+  await page.getByRole('button', { name: /Start voting on/ }).first().click();
+  const stage = page.getByRole('region', { name: 'Voting stage' });
+  const key = (await stage.getByRole('heading').locator('span').first().innerText()).trim();
+  await expect(stage.getByRole('timer')).toContainText(/0[12]:\d\d/);
+  await stage.getByRole('button', { name: 'Vote 5', exact: true }).click();
+  await expect(stage.getByRole('button', { name: 'Vote 5', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('region', { name: 'Participants' })).toContainText('1 of 1 have voted');
+  await page.screenshot({ path: info.outputPath('storybox-voting.png') });
+
+  await stage.getByRole('button', { name: 'Reveal points' }).click();
+  await expect(stage).toContainText('Average 5');
+  await page.waitForTimeout(900); // the cards flip
+  await page.screenshot({ path: info.outputPath('storybox-revealed.png') });
+  await stage.getByRole('button', { name: 'Confirm' }).click();
+  await expect(sized.locator('li', { hasText: key })).toContainText('5 points');
+  await page.screenshot({ path: info.outputPath('storybox-sized.png') });
 
   await page.getByRole('button', { name: 'Close the box' }).click();
   await expect(page.getByRole('status')).toContainText('This box is closed');
-  await expect(first.getByRole('button', { name: '5', exact: true })).toBeDisabled();
   await expect(page.getByRole('region', { name: 'History' })).toContainText('Planning');
   await page.reload();
   await expect(page.getByRole('region', { name: 'History' })).toContainText('Planning'); // kept

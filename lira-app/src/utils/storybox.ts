@@ -7,10 +7,16 @@ export type BoxScope = { type: 'space'; spaceId: number } | { type: 'sprint'; sp
 export interface StoryBox {
   id: string; name: string; scope: BoxScope; status: 'open' | 'closed'; scale: number[];
   createdAt: string; createdBy: string; closedAt?: string;
+  /** How long each ticket is open for voting, in minutes (1 to 10). Asked every time a box is made; a box made before this existed counts as 5. */
+  votingMinutes?: number;
+  /** The local edition has no server, so its voting rounds are kept in the box: by ticket, when voting ends, whether the points were revealed, and the points once confirmed. */
+  localRounds?: Record<string, LocalRound>;
   /** The local edition has one person, so their own points are kept in the box itself. In the hosted edition votes are on the server. */
   localVotes?: Record<string, number>;
 }
-export interface Vote { ticketId: number; userId: string; name: string; points: number }
+export interface LocalRound { endsAt: string; revealed: boolean; finalPoints?: number }
+/** `mine` marks the signed-in person's own points, so the screen can show their card without knowing their id. */
+export interface Vote { ticketId: number; userId: string; name: string; points: number; mine?: boolean }
 export interface VoteStats { count: number; average: number | null; median: number | null; min: number | null; max: number | null }
 
 /** The usual Fibonacci-like scale of story points. */
@@ -49,8 +55,8 @@ export function scopeLabel(scope: BoxScope, spaces: readonly Space[]): string {
 }
 
 /** A box that was just made: open, with the default scale. */
-export const newBox = (id: string, name: string, scope: BoxScope, now: string, createdBy: string): StoryBox =>
-  ({ id, name: name.trim().slice(0, 100) || 'Story box', scope, status: 'open', scale: [...DEFAULT_SCALE], createdAt: now, createdBy });
+export const newBox = (id: string, name: string, scope: BoxScope, now: string, createdBy: string, votingMinutes: number): StoryBox =>
+  ({ id, name: name.trim().slice(0, 100) || 'Story box', scope, status: 'open', scale: [...DEFAULT_SCALE], createdAt: now, createdBy, votingMinutes });
 
 /** Open boxes first, newest first; then the closed ones as the history, newest closed first. */
 export function groupBoxes(boxes: readonly StoryBox[]): { open: StoryBox[]; history: StoryBox[] } {

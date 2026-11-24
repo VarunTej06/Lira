@@ -498,6 +498,23 @@ Both editions. Navigation, **Mind maps** (it can be hidden or moved in the sideb
 - [ ] **Import outline**: paste an indented list. Expect: the map is replaced by it and Undo brings the old one back. **MD**: a Markdown outline downloads. **JSON**, **SVG** and **PNG** also download, named after the map; the picture shows every idea.
 - [ ] Make a copy, delete one (it asks first). Reload the page. Expect: everything is as left. Local edition: the maps are in the data folder's `mindmaps.json`. Hosted: another member does not see your map until you share it (Access, kind Mind map); an Owner sees all.
 
+### A58. Story box planning room (24 Nov 2026)  ◐
+Both editions. Navigation, **Story boxes**. Hosted: an Owner or Admin plus a second person who may view the space (A46), each in their own browser. This replaces the table of points of A54.
+- [ ] **New story box**. Expect: **Make the box** stays off until a **Time to vote on each ticket** (1 to 10 minutes) is chosen; nothing is chosen for you, and the list is empty again each time a box is made.
+- [ ] Open the box. Expect: two lanes, **Yet to be sized** (tickets without points, no epics) and **Sized** (tickets with points and the total), and under them a dashed stage saying how many minutes each ticket is open.
+- [ ] Drag a ticket from Yet to be sized onto the stage. Expect: it leaves the lane, rises onto the stage with a countdown (for example 02:00) and a bar that shrinks, a row of cards, and your hand of cards. Press **Start voting** on another ticket while one is up: there is no such button.
+- [ ] Do the same with the keyboard (Tab to **Start voting** on a card, Enter). Expect: the same result.
+- [ ] Press a card. Expect: it lifts and your card on the table turns solid. Press another: it changes. Press the same again: it is taken back. Do this while the time still runs.
+- [ ] Hosted, second person: the stage appears within a few seconds with the same ticket and clock (within a second of the first person's). Give a card. Expect: the first person's table shows your card solid and the participants list says you voted and when, but not what; the points column says Hidden.
+- [ ] Hosted, second person: open the browser's network view. Expect: nothing in what the server sent shows the first person's points before the reveal.
+- [ ] Let the time run out. Expect: the clock goes, your cards are disabled, the stage says time is up and waiting for the facilitator; nobody's points are shown yet.
+- [ ] As the Owner press **Reveal points** (also before the time is up). Expect: the cards flip one after another showing each person's points; average, middle and range are shown with a suggested value; the participants list shows each person's points; the second person sees the flip too and no Confirm button.
+- [ ] Press **Vote again**. Expect: all points are cleared and the clock starts again. Vote, reveal again, choose the final points and press **Confirm**. Expect: the card drops down and out, then appears in **Sized** with a drop animation and its points; the ticket page shows the story points; the stage is empty again.
+- [ ] A second person, not an Admin: no **Start voting**, no dragging, no **Reveal points**, no **Confirm**, no **Close the box**; only the hand.
+- [ ] **Close the box** while nothing is up. Expect: it moves to History; there is no stage; a message says it is closed. A point sent anyway is refused.
+- [ ] Turn on "reduce motion" in the system settings. Expect: nothing flies or flips, the cards just change.
+- [ ] A box made before this change: it opens and starts rounds with 5 minutes.
+
 ### A57. Change many tickets at once (24 Nov 2026)  ◐
 Both editions. Filters page (All tickets).
 - [ ] Open Filters. Expect: a tick box beside each ticket's type and one in the Type heading; no bar yet.
@@ -533,7 +550,7 @@ Both editions, any page.
 - [ ] With a screen reader or the accessibility panel of the browser. Expect: a dialog named "Command palette", a search box that announces the chosen result, and result groups.
 
 ### A54. Story boxes (24 Nov 2026)  ◐
-Both editions. Navigation, **Story boxes**. Hosted: use an Owner or Admin and a second person invited to a space (A46).
+Superseded by A58 for voting: the table of points under **Your points** was replaced by the planning room. Creating, closing, history and deleting below still apply. Both editions. Navigation, **Story boxes**. Hosted: use an Owner or Admin and a second person invited to a space (A46).
 - [ ] As the Owner press **New story box**, choose **Space** and a space, give it a name, **Make the box**. Expect: it opens with every ticket of that space (no epics), and is listed under Open.
 - [ ] Make another by **Sprint**. Expect: the tickets of that sprint from every space, with a Space filter.
 - [ ] Press a number under **Your points** for a ticket. Expect: it is highlighted, "1 votes, average N" and your name with the points appear, a suggested value appears. Press it again: your points are taken back.

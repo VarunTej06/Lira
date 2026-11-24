@@ -60,6 +60,11 @@ export function LinkPanel({ link, onPatch, onRemove, readOnly }: { link: Link; o
     <aside aria-label="Selected line" className="w-72 shrink-0 bg-white border-l border-lira-border p-4 space-y-4 text-sm overflow-y-auto">
       <div className="text-xs font-semibold text-lira-muted uppercase tracking-wide">Line</div>
       <div className="space-y-2">{check('arrow', 'Arrowhead')}{check('dashed', 'Dashed')}</div>
+      <div>
+        <label className={LABEL} htmlFor="line-curve">Curve</label>
+        <input id="line-curve" type="range" min={-300} max={300} step={10} disabled={readOnly} value={link.bend ?? 0} onChange={e => onPatch({ bend: Number(e.target.value) || undefined })} className="w-full accent-lira-blue" />
+        <p className="text-2xs text-lira-muted mt-1">{link.bend ? 'Drag the middle dot on the board, or this slider. Double click the dot to straighten it.' : 'Straight. Drag the middle dot on the board, or use this slider, to curve it.'}</p>
+      </div>
       <div><div className={LABEL}>Colour</div><Swatches value={link.color} label="Line colour" readOnly={readOnly} onPick={color => onPatch({ color })} /></div>
       {!readOnly && <button type="button" onClick={onRemove} className={DELETE}><Trash2 className="w-3.5 h-3.5" />Delete the line</button>}
     </aside>

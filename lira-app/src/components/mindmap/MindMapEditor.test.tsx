@@ -351,3 +351,47 @@ describe('adding ideas and drawing', () => {
     expect(qa('g[data-shape-id]')).toHaveLength(0);
   });
 });
+
+describe('arranging by hand', () => {
+  it('has Tidy up off until an idea was moved or resized, then puts every idea back in its place, and undo brings the arrangement back', async () => {
+    open();
+    expect(tool('Tidy up the ideas').disabled).toBe(true);
+    await act(async () => { node('Alpha').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 10, clientY: 10 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointermove', { clientX: 90, clientY: 50 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointerup', { clientX: 90, clientY: 50 })); });
+    expect(saved()[0].nodes.find(n => n.id === 'a')).toMatchObject({ dx: 80, dy: 40 });
+    expect(tool('Tidy up the ideas').disabled).toBe(false);
+    await click(tool('Tidy up the ideas'));
+    expect(saved()[0].nodes.every(n => n.dx === undefined && n.dy === undefined)).toBe(true);
+    expect(tool('Tidy up the ideas').disabled).toBe(true);
+    await click(q('button[aria-label="Undo"]'));
+    expect(saved()[0].nodes.find(n => n.id === 'a')).toMatchObject({ dx: 80, dy: 40 });
+  });
+
+  it('bends a line with the slider in the panel, for people who do not drag, and straightens it at zero', async () => {
+    const free = { ...addShape(addShape(EMPTY_FREE, { ...newShape('box', 'sa', 100, 100), text: 'One' }), { ...newShape('box', 'sb', 400, 100), text: 'Two' }), links: [{ id: 'l1', from: 'sa', to: 'sb', arrow: true }] };
+    seedFree(free);
+    open();
+    await act(async () => { q('g[data-link-id]')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); });
+    const slider = q<HTMLInputElement>('#line-curve')!;
+    const set = async (v: string) => act(async () => { Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(slider, v); slider.dispatchEvent(new Event('input', { bubbles: true })); });
+    await set('120');
+    expect(saved()[0].links![0].bend).toBe(120);
+    await set('0');
+    expect(saved()[0].links![0].bend).toBeUndefined();
+  });
+
+  it('keeps what a template gave, so it can be moved and changed like anything else', async () => {
+    open();
+    await click(tool('Start from a template'));
+    await click(byText('button', /^Meeting notes/));
+    await settle(20);
+    const shapes = saved()[0].shapes!;
+    expect(shapes.length).toBeGreaterThan(8);
+    await act(async () => { qa('g[data-shape-id]')[4].dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 10, clientY: 10 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointermove', { clientX: 70, clientY: 10 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointerup', { clientX: 70, clientY: 10 })); });
+    expect(saved()[0].shapes![4].x).toBe(shapes[4].x + 60);
+    expect(q('aside[aria-label="Selected shape"]')).not.toBeNull(); // and it can be changed in the panel too
+  });
+});

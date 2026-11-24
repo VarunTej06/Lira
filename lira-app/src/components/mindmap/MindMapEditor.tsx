@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useStoredList } from '../../hooks/useStoredList';
 import type { Issue } from '../../types/issue';
 import { removeItem, updateLink, updateShape } from '../../utils/mindFree';
-import { addChild, addSibling, removeNode, rootOf, searchNodes, updateNode, type MindMap } from '../../utils/mindmap';
+import { addChild, addSibling, isArranged, removeNode, rootOf, searchNodes, tidy, updateNode, type MindMap } from '../../utils/mindmap';
 import { loadProfile } from '../../utils/userPrefs';
 import { confirmDialog } from '../common/dialogStore';
 import { Modal } from '../common/Modal';
@@ -82,7 +82,7 @@ export function MindMapEditor({ issues }: { issues: Issue[] }) {
             <div className="absolute left-4 top-1/2 -translate-y-1/2">
               <MindToolbar readOnly={false} hasSelection={!!node} isRoot={node?.parentId === null} tool={tool} onTool={setTool} style={styled ? style : NO_STYLE} canStyle={!!styled} onStyle={toggleStyle}
                 onAddChild={() => addUnder(addChild)} onAddSibling={() => addUnder(addSibling)} onEdit={() => (node ?? shape) && ed.setEditing((node ?? shape)!.id)} onColor={color => node && ed.commit(updateNode(doc.nodes, node.id, { color }))}
-                onNote={() => focusField('idea-note')} onTicket={() => focusField('idea-ticket')} onFold={ed.foldAll} onDelete={remove} onTemplate={id => { void template(id); }} />
+                onNote={() => focusField('idea-note')} onTicket={() => focusField('idea-ticket')} onFold={ed.foldAll} canTidy={isArranged(doc.nodes)} onTidy={() => ed.commit(tidy(doc.nodes))} onDelete={remove} onTemplate={id => { void template(id); }} />
             </div>
           )}
         </div>

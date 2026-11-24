@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MIND_COLORS } from '../theme/palette';
 import { boundsOf, colorOf, connector, layoutMap, neighbourOf, ROW_H, strokeOf } from './mindLayout';
-import { addChild, newMap, updateNode, type MindNode } from './mindmap';
+import { addChild, moveIdea, newMap, resizeIdea, tidy, updateNode, type MindNode } from './mindmap';
 
 const base = (): MindNode[] => newMap('m', 'Plan', '2026-11-24T00:00:00Z', 'r').nodes;
 /** r -> a, b, c; a -> a1, a2; b -> b1 */
@@ -51,6 +51,36 @@ describe('placing the ideas around the centre', () => {
     expect(bounds.w).toBeGreaterThan(0);
     expect(bounds.x).toBeLessThan(0);
     expect(boundsOf(new Map())).toEqual({ x: 0, y: 0, w: 0, h: 0 });
+  });
+});
+
+describe('ideas arranged by hand', () => {
+  it('keeps a move for the idea and everything under it, and for nothing else', () => {
+    const plain = layoutMap(tree()); const moved = layoutMap(moveIdea(tree(), 'a', 40, 60));
+    for (const id of ['a', 'a1', 'a2']) expect([moved.get(id)!.x - plain.get(id)!.x, moved.get(id)!.y - plain.get(id)!.y], id).toEqual([40, 60]);
+    for (const id of ['r', 'b', 'b1', 'c']) expect(moved.get(id), id).toEqual(plain.get(id));
+  });
+  it('adds moves of an idea and of the ones above it', () => {
+    const both = layoutMap(moveIdea(moveIdea(tree(), 'a', 10, 10), 'a1', 5, -5));
+    const plain = layoutMap(tree());
+    expect(both.get('a1')!.x - plain.get('a1')!.x).toBe(15);
+    expect(both.get('a2')!.x - plain.get('a2')!.x).toBe(10);
+  });
+  it('lets the central idea be moved, which moves the whole map', () => {
+    const moved = layoutMap(moveIdea(tree(), 'r', -100, 30));
+    const plain = layoutMap(tree());
+    for (const id of ['r', 'a', 'b', 'a1', 'b1', 'c']) expect(moved.get(id)!.x - plain.get(id)!.x, id).toBe(-100);
+  });
+  it('uses a width of the idea\'s own, and puts what is under it further out', () => {
+    const wide = layoutMap(resizeIdea(tree(), 'a', 300));
+    const plain = layoutMap(tree());
+    expect(wide.get('a')!.w).toBe(300);
+    expect(wide.get('a1')!.x).toBeGreaterThan(plain.get('a1')!.x);
+    expect(layoutMap(resizeIdea(tree(), 'r', 400)).get('r')!.w).toBe(400);
+  });
+  it('is back to the automatic places after tidy', () => {
+    const messy = moveIdea(resizeIdea(tree(), 'a', 300), 'b', 50, 50);
+    expect([...layoutMap(tidy(messy))]).toEqual([...layoutMap(tree())]);
   });
 });
 

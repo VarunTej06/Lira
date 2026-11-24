@@ -1,10 +1,30 @@
 import type { MindComment, Link, Shape, TextStyle } from './mindFree';
 
 /** One idea in a storyboard. The first node (no parent) is the central idea. */
-export interface MindNode extends TextStyle { id: string; parentId: string | null; text: string; collapsed?: boolean; color?: string; note?: string; ticketKey?: string }
+export interface MindNode extends TextStyle {
+  id: string; parentId: string | null; text: string; collapsed?: boolean; color?: string; note?: string; ticketKey?: string;
+  /** Where the person put it: how far it was moved from its automatic place, and a width of their own. Everything under it moves along. */
+  dx?: number; dy?: number; w?: number;
+}
 export interface MindMap { id: string; name: string; nodes: MindNode[]; createdAt: string; updatedAt: string; createdBy?: string; starred?: boolean; shapes?: Shape[]; links?: Link[]; comments?: MindComment[] }
 
 export const MAX_NODES = 2000;
+export const MIN_IDEA_W = 64;
+export const MAX_IDEA_W = 480;
+
+/** Moves an idea, and with it everything under it, by hand from where it was. */
+export const moveIdea = (nodes: readonly MindNode[], id: string, dx: number, dy: number): MindNode[] =>
+  nodes.map(n => (n.id === id ? { ...n, dx: Math.round((n.dx ?? 0) + dx), dy: Math.round((n.dy ?? 0) + dy) } : n));
+
+/** A width of the person's own for an idea, kept between a readable and a sensible size. */
+export const resizeIdea = (nodes: readonly MindNode[], id: string, w: number): MindNode[] =>
+  nodes.map(n => (n.id === id ? { ...n, w: Math.round(Math.min(MAX_IDEA_W, Math.max(MIN_IDEA_W, w))) } : n));
+
+/** Puts every idea back in its automatic place and its automatic width. */
+export const tidy = (nodes: readonly MindNode[]): MindNode[] => nodes.map(({ dx: _dx, dy: _dy, w: _w, ...rest }) => rest);
+
+/** True when any idea was moved or resized by hand, so there is something to tidy. */
+export const isArranged = (nodes: readonly MindNode[]): boolean => nodes.some(n => n.dx || n.dy || n.w !== undefined);
 
 export const rootOf = (nodes: readonly MindNode[]): MindNode | undefined => nodes.find(n => n.parentId === null);
 export const childrenOf = (nodes: readonly MindNode[], id: string): MindNode[] => nodes.filter(n => n.parentId === id);

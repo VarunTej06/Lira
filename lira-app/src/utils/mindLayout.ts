@@ -13,6 +13,7 @@ const ROOT_GAP = 72;
 
 /** The central idea is wider than the others, as it is the title of the map. */
 const rootWidth = (text: string): number => Math.min(320, Math.max(160, text.length * 11 + 48));
+const widthFor = (n: MindNode): number => n.w ?? widthOf(n.text);
 
 /**
  * Places the visible ideas around the central one: its branches alternate to the right and the left, each level a column further out,
@@ -31,11 +32,11 @@ export function layoutMap(nodes: readonly MindNode[]): Map<string, Placed> {
     height.set(n.id, Math.max(h, ROW_H));
     return height.get(n.id)!;
   };
-  const rw = rootWidth(root.text);
+  const rw = root.w ?? rootWidth(root.text);
   boxes.set(root.id, { x: -rw / 2, y: -ROOT_H / 2, w: rw, h: ROOT_H, side: 'root', depth: 0, branch: -1 });
 
   const place = (n: MindNode, x: number, top: number, side: 'left' | 'right', depth: number, branch: number) => {
-    const w = widthOf(n.text);
+    const w = widthFor(n);
     boxes.set(n.id, { x: side === 'right' ? x : x - w, y: top + height.get(n.id)! / 2 - ROW_H / 2, w, h: ROW_H, side, depth, branch });
     let y = top;
     for (const c of kids(n.id)) {
@@ -51,6 +52,14 @@ export function layoutMap(nodes: readonly MindNode[]): Map<string, Placed> {
     let y = -total / 2;
     for (const { m, i } of mine) { place(m, side === 'right' ? boxes.get(root.id)!.x + rw + ROOT_GAP : boxes.get(root.id)!.x - ROOT_GAP, y, side, 1, i); y += height.get(m.id)! + ROW_GAP; }
   }
+  // Ideas the person moved by hand: the move is kept for the idea and for everything under it.
+  const shift = (n: MindNode, ox: number, oy: number) => {
+    const sx = ox + (n.dx ?? 0); const sy = oy + (n.dy ?? 0);
+    const b = boxes.get(n.id);
+    if (b) boxes.set(n.id, { ...b, x: b.x + sx, y: b.y + sy });
+    for (const c of kids(n.id)) shift(c, sx, sy);
+  };
+  shift(root, 0, 0);
   return boxes;
 }
 

@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
 import { useElementSize } from '../../hooks/useElementSize';
 import { useLatest } from '../../hooks/useLatest';
 import { currentTime } from '../../utils/clock';
-import { editComment, freeBounds, mergeBounds, moveShape, removeItem, toggleResolved, updateShape, type FreeDoc, type Item } from '../../utils/mindFree';
+import { editComment, freeBounds, mergeBounds, moveShape, removeItem, toggleResolved, updateLink, updateShape, type FreeDoc, type Item } from '../../utils/mindFree';
 import { boundsOf, colorOf, connector, layoutMap, neighbourOf, strokeOf } from '../../utils/mindLayout';
-import { addChild, addSibling, childrenOf, moveNode, removeNode, searchNodes, subtreeIds, updateNode, visibleNodes, type MindNode } from '../../utils/mindmap';
+import { addChild, addSibling, childrenOf, moveIdea, moveNode, removeNode, resizeIdea, searchNodes, subtreeIds, updateNode, visibleNodes, type MindNode } from '../../utils/mindmap';
 import { CommentOverlay, CommentPins } from './MindComments';
 import { MindControls } from './MindControls';
 import { MindNodeView } from './MindNodeView';
@@ -54,20 +54,29 @@ export function MindMapCanvas({ nodes, onChange, free, onFree, tool, onTool, onU
   const wrap = useRef<HTMLDivElement>(null);
   const size = useElementSize(wrap);
   const { view, startPan, zoomBy, fit } = useMindView();
-  const [dragIdea, setDragIdea] = useState<{ id: string; x: number; y: number; over: string | null } | null>(null);
+  // An idea being dragged or resized shows where it will land while the pointer is still down; it is saved when the pointer is let go.
+  const [dragIdea, setDragIdea] = useState<{ id: string; x: number; y: number; dx: number; dy: number; over: string | null; shift: boolean } | null>(null);
+  const [sizing, setSizing] = useState<{ id: string; w: number } | null>(null);
   const settled = useRef(false); // the edit was already finished by Enter or Escape, so the box losing focus must not finish it again
   const originX = size.w / 2 + LEFT_INSET / 2;
   const originY = size.h / 2;
-  const boxes = layoutMap(nodes);
-  const shown = visibleNodes(nodes);
+  const liveNodes = useMemo(() => {
+    const moved = dragIdea ? moveIdea(nodes, dragIdea.id, dragIdea.dx, dragIdea.dy) : nodes;
+    return sizing ? resizeIdea(moved, sizing.id, sizing.w) : moved;
+  }, [nodes, dragIdea, sizing]);
+  const boxes = layoutMap(liveNodes);
+  const shown = visibleNodes(liveNodes);
   const found = searchNodes(nodes, query);
   const byId = new Map(nodes.map(n => [n.id, n]));
   const toPoint = (cx: number, cy: number) => { const r = wrap.current?.getBoundingClientRect(); return { x: (cx - (r?.left ?? 0) - originX - view.x) / view.k, y: (cy - (r?.top ?? 0) - originY - view.y) / view.k }; };
   const toScreen = (p: { x: number; y: number }) => ({ x: originX + view.x + p.x * view.k, y: originY + view.y + p.y * view.k });
-  const known = new Set([...nodes.map(n => n.id), ...free.shapes.map(s => s.id)]);
-  const tools = useFreeTools({ free, onFree, tool, onTool, onSelect, onEditing, scale: view.k, toPoint, known, author, readOnly });
-  const items = new Map<string, Item>([...boxes].map(([id, b]) => [id, b] as [string, Item]));
-  for (const s of tools.live) items.set(s.id, { x: s.x, y: s.y, w: s.w, h: s.h, ellipse: s.kind === 'ellipse' });
+  const itemsOf = (shapes: readonly { id: string; x: number; y: number; w: number; h: number; kind: string }[]) => {
+    const all = new Map<string, Item>([...boxes].map(([id, b]) => [id, b] as [string, Item]));
+    for (const s of shapes) all.set(s.id, { x: s.x, y: s.y, w: s.w, h: s.h, ellipse: s.kind === 'ellipse' });
+    return all;
+  };
+  const tools = useFreeTools({ free, onFree, tool, onTool, onSelect, onEditing, scale: view.k, toPoint, items: itemsOf(free.shapes), author, readOnly });
+  const items = itemsOf(tools.live);
 
   // The wheel and a pinch zoom the drawing only. React's own wheel handler is passive and cannot stop the page from zooming, so this is a plain listener.
   const latest = useLatest({ zoomBy, originX, originY });
@@ -122,24 +131,44 @@ export function MindMapCanvas({ nodes, onChange, free, onFree, tool, onTool, onU
     } else if (e.key === ' ') { e.preventDefault(); onChange(updateNode(nodes, id, { collapsed: !byId.get(id)?.collapsed })); }
   }
 
+  /** Moves an idea, and with it its branch, wherever the pointer takes it. With Shift held when it is let go over another idea, the branch goes under that idea instead. */
   function startDrag(e: PointerEvent, id: string) {
     e.stopPropagation();
     if (tools.onItem(id, e.clientX, e.clientY)) return;
     onSelect(id);
-    if (readOnly || byId.get(id)?.parentId === null || editing) return;
+    if (readOnly || editing) return;
     const origin = { x: e.clientX, y: e.clientY };
-    let moved = false; let target: string | null = null;
+    const blocked = new Set(subtreeIds(nodes, id));
+    let moved = false; let last: NonNullable<typeof dragIdea> | null = null;
+    const over = (m: globalThis.PointerEvent) => { for (const el of document.elementsFromPoint(m.clientX, m.clientY)) { const t = (el.closest('[data-node-id]') as HTMLElement | null)?.dataset.nodeId; if (t && !blocked.has(t)) return t; } return null; };
     const move = (m: globalThis.PointerEvent) => {
       if (!moved && Math.hypot(m.clientX - origin.x, m.clientY - origin.y) < 5) return;
       moved = true;
-      target = (document.elementFromPoint(m.clientX, m.clientY)?.closest('[data-node-id]') as HTMLElement | null)?.dataset.nodeId ?? null;
       const r = wrap.current?.getBoundingClientRect();
-      setDragIdea({ id, x: m.clientX - (r?.left ?? 0), y: m.clientY - (r?.top ?? 0), over: target });
+      last = { id, x: m.clientX - (r?.left ?? 0), y: m.clientY - (r?.top ?? 0), dx: (m.clientX - origin.x) / view.k, dy: (m.clientY - origin.y) / view.k, over: m.shiftKey ? over(m) : null, shift: m.shiftKey };
+      setDragIdea(last);
     };
     const up = () => {
       window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up);
-      if (moved && target && target !== id) onChange(moveNode(nodes, id, target));
       setDragIdea(null);
+      if (!moved || !last) return;
+      if (last.over && byId.get(id)?.parentId !== null) onChange(moveNode(nodes, id, last.over));
+      else onChange(moveIdea(nodes, id, last.dx, last.dy));
+    };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  }
+
+  /** Changes the width of an idea from the handle at its corner. */
+  function startIdeaResize(e: PointerEvent, id: string) {
+    e.stopPropagation();
+    if (readOnly) return;
+    const start = { x: e.clientX, w: boxes.get(id)?.w ?? 100 };
+    let width = start.w; let moved = false;
+    const move = (m: globalThis.PointerEvent) => { moved = true; width = start.w + (m.clientX - start.x) / view.k * (boxes.get(id)?.side === 'left' ? -1 : 1); setSizing({ id, w: width }); };
+    const up = () => {
+      window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up);
+      setSizing(null);
+      if (moved) onChange(resizeIdea(nodes, id, width));
     };
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
   }
@@ -156,7 +185,7 @@ export function MindMapCanvas({ nodes, onChange, free, onFree, tool, onTool, onU
   const folded = (id: string) => (byId.get(id)?.collapsed ? subtreeIds(nodes, id).size - 1 : childrenOf(nodes, id).length);
   const shapeDown = (e: PointerEvent, id: string) => { e.stopPropagation(); if (tools.onItem(id, e.clientX, e.clientY)) return; onSelect(id); tools.startMove(e, id); };
   const bounds = mergeBounds(boundsOf(boxes), freeBounds(free.shapes));
-  const hint = tools.linkFrom ? 'Now click the item the line should end at. Esc stops.' : tool === 'line' || tool === 'arrow' ? 'Click the item the line should start at. Esc stops.' : HINTS[tool];
+  const hint = tools.drawing ? 'Now click the item or the spot where the line should end. Esc stops.' : tool === 'line' || tool === 'arrow' ? 'Click the item or the spot where the line should start. Esc stops.' : HINTS[tool];
 
   return (
     <div ref={wrap} tabIndex={0} onKeyDown={key} aria-label="Storyboard" role="application" className={`relative flex-1 min-h-0 bg-lira-bg overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-lira-blue ${tool === 'select' ? '' : 'cursor-crosshair'}`}>
@@ -166,13 +195,14 @@ export function MindMapCanvas({ nodes, onChange, free, onFree, tool, onTool, onU
             const b = boxes.get(n.id); const p = n.parentId === null ? undefined : boxes.get(n.parentId);
             return b && p ? <path key={`l-${n.id}`} d={connector(p, b)} fill="none" strokeLinecap="round" strokeWidth={strokeOf(b.depth)} stroke={colorOf(nodes, n.id)} className={colorOf(nodes, n.id) ? undefined : 'stroke-lira-border'} /> : null;
           })}
-          <MindShapeLayer shapes={tools.live} links={free.links} items={items} selected={selected} editing={editing} linkFrom={tools.linkFrom} onShapeDown={shapeDown}
-            onLinkDown={(e, id) => { e.stopPropagation(); onSelect(id); }} onResizeDown={(e, id) => tools.startResize(e, id)} onEdit={id => { if (!readOnly) onEditing(id); }} onFinishEdit={finishEdit} />
+          <MindShapeLayer shapes={tools.live} links={tools.liveLinks} items={items} selected={selected} editing={editing} linkFrom={tools.linkFrom} onShapeDown={shapeDown}
+            onLinkDown={(e, id) => { e.stopPropagation(); onSelect(id); }} onResizeDown={tools.startResize} onLinkHandle={tools.startLinkHandle} onStraighten={id => onFree(updateLink(free, id, { bend: undefined }))}
+            onEdit={id => { if (!readOnly) onEditing(id); }} onFinishEdit={finishEdit} />
           {shown.map(n => {
             const b = boxes.get(n.id);
             return b && <MindNodeView key={n.id} node={n} box={b} color={colorOf(nodes, n.id)} selected={selected === n.id} over={dragIdea?.over === n.id || tools.linkFrom === n.id} found={found.has(n.id)} editing={editing === n.id} kids={folded(n.id)} readOnly={readOnly}
               onPointerDown={startDrag} onEdit={onEditing} onFinishEdit={finishEdit} onToggleFold={id => onChange(updateNode(nodes, id, { collapsed: !byId.get(id)?.collapsed }))}
-              onAdd={id => { onSelect(id); addUnder((list, n2) => addChild(list, id, n2), true); }} />;
+              onAdd={id => { onSelect(id); addUnder((list, n2) => addChild(list, id, n2), true); }} onResizeDown={startIdeaResize} />;
           })}
           <CommentPins comments={free.comments} items={items} selected={selected} onPin={(e, id) => { e.stopPropagation(); onSelect(id); }} />
         </g>
@@ -181,7 +211,7 @@ export function MindMapCanvas({ nodes, onChange, free, onFree, tool, onTool, onU
       <CommentOverlay comments={free.comments} selected={selected} composer={tools.composer} items={items} toScreen={toScreen} onSubmit={tools.submitComment} onCancel={tools.cancel}
         onEdit={(id, text) => onFree(editComment(free, id, text, currentTime().toISOString()))} onResolve={id => onFree(toggleResolved(free, id))} onDelete={id => { onFree(removeItem(free, id)); onSelect(null); }} onClose={() => onSelect(null)} />
       <MindControls zoom={view.k} canUndo={canUndo} canRedo={canRedo} onUndo={onUndo} onRedo={onRedo} onZoom={f => zoomBy(f)} onFit={() => fit(bounds, size)} />
-      {dragIdea && <span className="pointer-events-none absolute text-xs rounded-lg px-2 py-1 bg-white border border-lira-border text-lira-text" style={{ left: dragIdea.x + 12, top: dragIdea.y + 12 }}>{byId.get(dragIdea.id)?.text}</span>}
+      {dragIdea?.shift && <span className="pointer-events-none absolute text-xs rounded-lg px-2 py-1 bg-white border border-lira-border text-lira-text" style={{ left: dragIdea.x + 12, top: dragIdea.y + 12 }}>{dragIdea.over ? `Put under ${byId.get(dragIdea.over)?.text}` : 'Drop onto an idea to put this branch under it'}</span>}
     </div>
   );
 }

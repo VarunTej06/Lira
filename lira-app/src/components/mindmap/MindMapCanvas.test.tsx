@@ -262,7 +262,7 @@ describe('shapes on the board', () => {
     expect(shapeEl('Second').querySelector('ellipse')).not.toBeNull();
     expect(q('rect[data-resize]')).toBeNull();
     await pressShape('First box');
-    expect(q('rect[data-resize="sa"]')).not.toBeNull();
+    expect(qa('rect[data-resize]')).toHaveLength(8); // a handle at each corner and each side
   });
 
   it('writes in a shape on a double click, keeps the words when Ctrl+Enter or leaving, and keeps the old ones on Escape', async () => {
@@ -308,9 +308,9 @@ describe('lines and arrows', () => {
   it('joins two shapes with a line: the first click starts it, the second ends it, and the tool is done', async () => {
     const s = spy();
     mount(<Harness initialFree={withShapes()} initialTool="arrow" spy={s} />);
-    expect(q('[role="status"]')!.textContent).toContain('start at');
+    expect(q('[role="status"]')!.textContent).toContain('should start');
     await pressShape('First box');
-    expect(q('[role="status"]')!.textContent).toContain('should end at');
+    expect(q('[role="status"]')!.textContent).toContain('should end');
     await pressShape('Second');
     expect(s.frees.at(-1)!.links).toEqual([expect.objectContaining({ from: 'sa', to: 'sb', arrow: true })]);
     expect(q('[role="status"]')).toBeNull();
@@ -420,5 +420,198 @@ describe('bold, italic and underline from the keys', () => {
     expect([idea.getAttribute('font-weight'), idea.getAttribute('font-style'), idea.getAttribute('text-decoration')]).toEqual(['700', 'italic', 'underline']);
     const sh = shapeEl('First box').querySelector('text')!;
     expect([sh.getAttribute('font-weight'), sh.getAttribute('text-decoration')]).toEqual(['700', 'underline']);
+  });
+});
+
+/** A drag with the pointer: down on the element, moves on the window, up on the window, as the browser sends them. */
+const dragFrom = async (el: Element, from: [number, number], to: [number, number], init: PointerEventInit = {}) => {
+  await act(async () => { el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: from[0], clientY: from[1], ...init })); });
+  await act(async () => { window.dispatchEvent(new PointerEvent('pointermove', { clientX: to[0], clientY: to[1], ...init })); });
+  await act(async () => { window.dispatchEvent(new PointerEvent('pointerup', { clientX: to[0], clientY: to[1], ...init })); });
+};
+const stackAt = (...els: Element[]) => { (document as unknown as { elementsFromPoint: () => Element[] }).elementsFromPoint = () => els; };
+
+describe('moving and resizing shapes by hand', () => {
+  it('drags a shape to a new place, and saves it only when the pointer is let go', async () => {
+    const s = spy();
+    mount(<Harness initialFree={withShapes()} spy={s} />);
+    const x0 = withShapes().shapes[0].x; const y0 = withShapes().shapes[0].y;
+    await act(async () => { shapeEl('First box').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 10, clientY: 10 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointermove', { clientX: 70, clientY: 40 })); });
+    expect(s.frees).toEqual([]); // still being dragged
+    expect(shapeEl('First box').getAttribute('transform')).toBe(`translate(${x0 + 60} ${y0 + 30})`); // but it is already where the pointer took it
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointerup', { clientX: 70, clientY: 40 })); });
+    expect([s.frees.at(-1)!.shapes[0].x, s.frees.at(-1)!.shapes[0].y]).toEqual([x0 + 60, y0 + 30]);
+  });
+
+  it('does not save a press that did not move', async () => {
+    const s = spy();
+    mount(<Harness initialFree={withShapes()} spy={s} />);
+    await dragFrom(shapeEl('First box'), [10, 10], [11, 11]);
+    expect(s.frees).toEqual([]);
+  });
+
+  it('resizes from any corner or side: the held side moves and the opposite side stays', async () => {
+    const s = spy();
+    mount(<Harness initialFree={withShapes()} spy={s} />);
+    await pressShape('First box');
+    const first = withShapes().shapes[0];
+    await dragFrom(q('rect[data-resize="1,1"]')!, [0, 0], [30, 20]);
+    expect(s.frees.at(-1)!.shapes[0]).toMatchObject({ x: first.x, y: first.y, w: first.w + 30, h: first.h + 20 });
+    await pressShape('First box');
+    const now = s.frees.at(-1)!.shapes[0];
+    await dragFrom(q('rect[data-resize="-1,0"]')!, [0, 0], [-40, 99]);
+    expect(s.frees.at(-1)!.shapes[0]).toMatchObject({ x: now.x - 40, w: now.w + 40, h: now.h });
+  });
+
+  it('shows a shape being resized at its new size while the pointer is still down', async () => {
+    mount(<Harness initialFree={withShapes()} />);
+    await pressShape('First box');
+    await act(async () => { q('rect[data-resize="1,0"]')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 0, clientY: 0 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointermove', { clientX: 50, clientY: 0 })); });
+    expect(shapeEl('First box').querySelector('rect')!.getAttribute('width')).toBe(String(withShapes().shapes[0].w + 50));
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointerup', { clientX: 50, clientY: 0 })); });
+  });
+});
+
+describe('moving and resizing ideas by hand', () => {
+  it('drags an idea anywhere, with its branch, and keeps the place', async () => {
+    const s = spy();
+    mount(<Harness spy={s} />);
+    await dragFrom(box('Alpha'), [10, 10], [110, 60]);
+    const moved = s.changes.at(-1)!;
+    expect(moved.find(n => n.id === 'a')).toMatchObject({ dx: 100, dy: 50 });
+    expect(moved.find(n => n.id === 'a1')!.dx).toBeUndefined(); // the branch moves with it by the layout, without a move of its own
+    expect(moved.find(n => n.id === 'r')!.dx).toBeUndefined();
+  });
+
+  it('shows the idea where the pointer has taken it before it is let go', async () => {
+    const s = spy();
+    mount(<Harness spy={s} />);
+    const before = box('Alpha').getAttribute('transform');
+    await act(async () => { box('Alpha').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 10, clientY: 10 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointermove', { clientX: 210, clientY: 10 })); });
+    expect(box('Alpha').getAttribute('transform')).not.toBe(before);
+    expect(s.changes).toEqual([]);
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointerup', { clientX: 210, clientY: 10 })); });
+    expect(s.changes).toHaveLength(1);
+  });
+
+  it('can move the central idea, which takes the whole map with it', async () => {
+    const s = spy();
+    mount(<Harness spy={s} />);
+    await dragFrom(box('Plan'), [10, 10], [60, 10]);
+    expect(s.changes.at(-1)!.find(n => n.id === 'r')).toMatchObject({ dx: 50 });
+  });
+
+  it('puts a branch under another idea only when Shift is held as it is let go over it', async () => {
+    const s = spy();
+    mount(<Harness spy={s} />);
+    stackAt(box('Plan').querySelector('rect')!);
+    await dragFrom(box('Alpha one'), [10, 10], [60, 60], { shiftKey: true });
+    expect(s.changes.at(-1)!.find(n => n.id === 'a1')).toMatchObject({ parentId: 'r' });
+    cleanup();
+    const t = spy();
+    mount(<Harness spy={t} />);
+    stackAt(box('Plan').querySelector('rect')!);
+    await dragFrom(box('Alpha one'), [10, 10], [60, 60]); // no Shift: it is only moved
+    expect(t.changes.at(-1)!.find(n => n.id === 'a1')).toMatchObject({ parentId: 'a', dx: 50, dy: 50 });
+  });
+
+  it('does not put a branch under its own child or under the central idea\'s own parent, and an idea cannot be put under itself', async () => {
+    const s = spy();
+    mount(<Harness spy={s} />);
+    stackAt(box('Alpha one').querySelector('rect')!);
+    await dragFrom(box('Alpha'), [10, 10], [60, 60], { shiftKey: true }); // over its own child
+    expect(s.changes.at(-1)!.find(n => n.id === 'a')).toMatchObject({ parentId: 'r', dx: 50, dy: 50 });
+  });
+
+  it('changes the width of a selected idea from its handle, and shows it while dragging', async () => {
+    const s = spy();
+    mount(<Harness spy={s} />);
+    expect(q('[data-idea-resize]')).toBeNull();
+    await pick('Alpha');
+    const w0 = Number(box('Alpha').querySelector('rect')!.getAttribute('width'));
+    await act(async () => { q('[data-idea-resize="a"]')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 0, clientY: 0 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointermove', { clientX: 80, clientY: 0 })); });
+    expect(Number(box('Alpha').querySelector('rect')!.getAttribute('width'))).toBe(w0 + 80);
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointerup', { clientX: 80, clientY: 0 })); });
+    expect(s.changes.at(-1)!.find(n => n.id === 'a')!.w).toBe(w0 + 80);
+  });
+
+  it('cannot be moved or resized when it is read only', async () => {
+    const s = spy();
+    mount(<Harness readOnly spy={s} />);
+    await dragFrom(box('Alpha'), [10, 10], [110, 60]);
+    expect(s.changes).toEqual([]);
+    expect(q('[data-idea-resize]')).toBeNull();
+  });
+});
+
+describe('bending lines and moving their ends', () => {
+  const joined = (): FreeDoc => ({ ...withShapes(), links: [{ id: 'l1', from: 'sa', to: 'sb', arrow: true }] });
+  const select = async () => { await act(async () => { q('g[data-link-id]')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); }); };
+
+  it('shows a handle at each end and in the middle of the selected line only', async () => {
+    mount(<Harness initialFree={joined()} />);
+    expect(qa('[data-link-handle]')).toHaveLength(0);
+    await select();
+    expect(qa('[data-link-handle]').map(h => h.getAttribute('data-link-handle')).sort()).toEqual(['bend', 'from', 'to']);
+  });
+
+  it('bends the line by dragging its middle handle, shows the curve while dragging, and straightens it with a double click', async () => {
+    const s = spy();
+    mount(<Harness initialFree={joined()} spy={s} />);
+    await select();
+    expect(q('g[data-link-id] path:not([stroke="transparent"])')!.getAttribute('d')).not.toContain('Q');
+    await act(async () => { q('[data-link-handle="bend"]')!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: 0, clientY: 0 })); });
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointermove', { clientX: 0, clientY: -200 })); });
+    expect(q('g[data-link-id] path:not([stroke="transparent"])')!.getAttribute('d')).toContain('Q');
+    await act(async () => { window.dispatchEvent(new PointerEvent('pointerup', { clientX: 0, clientY: -200 })); });
+    expect(s.frees.at(-1)!.links[0].bend).toBeTruthy();
+    await act(async () => { q('[data-link-handle="bend"]')!.dispatchEvent(new MouseEvent('dblclick', { bubbles: true })); });
+    expect(s.frees.at(-1)!.links[0].bend).toBeUndefined();
+  });
+
+  it('moves an end of the line onto another item when let go over it', async () => {
+    const s = spy();
+    const free = addShape(joined(), { ...newShape('box', 'sc', 300, 500), text: 'Third' });
+    mount(<Harness initialFree={{ ...free, links: joined().links }} spy={s} />);
+    await select();
+    stackAt(shapeEl('Third'));
+    await dragFrom(q('[data-link-handle="to"]')!, [0, 0], [10, 10]);
+    expect(s.frees.at(-1)!.links[0]).toMatchObject({ from: 'sa', to: 'sc' });
+  });
+
+  it('leaves an end where it is let go when nothing is there, which changes the length of the line', async () => {
+    const s = spy();
+    mount(<Harness initialFree={joined()} spy={s} />);
+    await select();
+    stackAt();
+    await dragFrom(q('[data-link-handle="to"]')!, [0, 0], [10, 10]);
+    const l = s.frees.at(-1)!.links[0];
+    expect(l.to).toBe('');
+    expect(l.toAt).toBeTruthy();
+    expect(l.from).toBe('sa');
+  });
+
+  it('draws a line that starts and ends on empty board, with no item at either end', async () => {
+    const s = spy();
+    mount(<Harness initialTool="arrow" spy={s} />);
+    await onBoard(300, 300);
+    expect(q('[role="status"]')!.textContent).toContain('should end');
+    await onBoard(500, 380);
+    const l = s.frees.at(-1)!.links[0];
+    expect(l).toMatchObject({ from: '', to: '', arrow: true });
+    expect(l.fromAt && l.toAt).toBeTruthy();
+    expect(qa('g[data-link-id] polygon')).toHaveLength(1);
+  });
+
+  it('draws a line from an item to an empty spot', async () => {
+    const s = spy();
+    mount(<Harness initialFree={withShapes()} initialTool="line" spy={s} />);
+    await pressShape('First box');
+    await onBoard(600, 450);
+    expect(s.frees.at(-1)!.links[0]).toMatchObject({ from: 'sa', to: '' });
   });
 });

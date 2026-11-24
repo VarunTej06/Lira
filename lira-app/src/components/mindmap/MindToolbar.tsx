@@ -1,5 +1,5 @@
 import {
-  ArrowUpRight, Bold, ChevronsDownUp, ChevronsUpDown, Circle, CornerDownRight, FileText, Italic, LayoutTemplate, Link2, MessageSquare, MousePointer2, Palette, Pencil, Plus, Slash, Square, StickyNote, Trash2, Type, Underline,
+  ArrowUpRight, Bold, ChevronsDownUp, ChevronsUpDown, Circle, CornerDownRight, FileText, Italic, LayoutGrid, LayoutTemplate, Link2, MessageSquare, MousePointer2, Palette, Pencil, Plus, Slash, Square, StickyNote, Trash2, Type, Underline,
 } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { MIND_COLORS } from '../../theme/palette';
@@ -26,6 +26,9 @@ interface Props {
   onNote: () => void;
   onTicket: () => void;
   onFold: (collapsed: boolean) => void;
+  /** Puts the ideas back in their automatic places and widths; off when none was moved or resized. */
+  canTidy: boolean;
+  onTidy: () => void;
   onDelete: () => void;
   onTemplate: (id: string) => void;
 }
@@ -44,7 +47,7 @@ const DRAW: readonly { tool: Tool; label: string; icon: ReactNode }[] = [
 ];
 
 /** The dark strip of tools on the left of the board: pick or draw (boxes, ellipses, sticky notes, text, lines, arrows, comments), format text, and work on the ideas of the map. */
-export function MindToolbar({ readOnly, hasSelection, isRoot, tool, onTool, style, canStyle, onStyle, onAddChild, onAddSibling, onEdit, onColor, onNote, onTicket, onFold, onDelete, onTemplate }: Props) {
+export function MindToolbar({ readOnly, hasSelection, isRoot, tool, onTool, style, canStyle, onStyle, onAddChild, onAddSibling, onEdit, onColor, onNote, onTicket, onFold, canTidy, onTidy, onDelete, onTemplate }: Props) {
   const [menu, setMenu] = useState<'colour' | 'template' | null>(null);
   const toggle = (m: 'colour' | 'template') => setMenu(cur => (cur === m ? null : m));
   return (
@@ -66,6 +69,7 @@ export function MindToolbar({ readOnly, hasSelection, isRoot, tool, onTool, styl
         <Divider />
         <Tool_ label="Fold every branch" disabled={readOnly} onClick={() => onFold(true)}><ChevronsDownUp className="w-4 h-4" /></Tool_>
         <Tool_ label="Unfold every branch" disabled={readOnly} onClick={() => onFold(false)}><ChevronsUpDown className="w-4 h-4" /></Tool_>
+        <Tool_ label="Tidy up the ideas" hint="put the ideas back in their places" disabled={readOnly || !canTidy} onClick={onTidy}><LayoutGrid className="w-4 h-4" /></Tool_>
         <Tool_ label="Start from a template" disabled={readOnly} onClick={() => toggle('template')}><LayoutTemplate className="w-4 h-4" /></Tool_>
         <Divider />
         <Tool_ label="Delete" hint="Delete" disabled={readOnly || !hasSelection || isRoot} onClick={onDelete}><Trash2 className="w-4 h-4" /></Tool_>

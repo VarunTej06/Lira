@@ -75,8 +75,10 @@ test('a storyboard: an idea dragged onto another moves with its branch, and the 
   expect(a && b).toBeTruthy();
   await page.mouse.move(a!.x + a!.width / 2, a!.y + a!.height / 2);
   await page.mouse.down();
+  await page.keyboard.down('Shift'); // Shift and drop on an idea puts the branch under it
   await page.mouse.move(b!.x + b!.width / 2, b!.y + b!.height / 2, { steps: 8 });
   await page.mouse.up();
+  await page.keyboard.up('Shift');
   await page.getByRole('button', { name: 'Export' }).click();
   const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('menuitem', { name: 'Outline (Markdown)' }).click()]);
   const outline = readFileSync(await download.path(), 'utf8');

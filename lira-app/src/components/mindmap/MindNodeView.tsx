@@ -21,6 +21,8 @@ interface Props {
   onToggleFold: (id: string) => void;
   /** Adds an idea under this one, from the small plus at its end. */
   onAdd: (id: string) => void;
+  /** Starts changing its width, from the small handle at its corner. */
+  onResizeDown: (e: PointerEvent, id: string) => void;
 }
 
 const fit = (text: string, w: number, per: number): string => (text.length * per + 32 > w ? `${text.slice(0, Math.max(1, Math.floor((w - 40) / per)))}...` : text);
@@ -29,7 +31,7 @@ const fit = (text: string, w: number, per: number): string => (text.length * per
  * One idea. The central idea is a card in the middle; the others are plain text sitting at the end of their branch line, so the map reads
  * like a tree. A box appears around the one that is selected, found by a search, or being dropped on.
  */
-export function MindNodeView({ node, box, color, selected, over, found, editing, kids, readOnly, onPointerDown, onEdit, onFinishEdit, onToggleFold, onAdd }: Props) {
+export function MindNodeView({ node, box, color, selected, over, found, editing, kids, readOnly, onPointerDown, onEdit, onFinishEdit, onToggleFold, onAdd, onResizeDown }: Props) {
   const root = box.side === 'root';
   const right = box.side !== 'left';
   const anchor = root ? 'middle' : right ? 'start' : 'end';
@@ -46,6 +48,7 @@ export function MindNodeView({ node, box, color, selected, over, found, editing,
       {color && !root && <circle cx={right ? -4 : box.w + 4} cy={box.h / 2} r={3.5} fill={color} />}
       {node.ticketKey && <text x={right ? 8 : box.w - 8} y={-4} textAnchor={anchor} className="text-3xs fill-lira-muted">{node.ticketKey}</text>}
       {node.note && <circle cx={right ? box.w - 4 : 4} cy={4} r={3} className="fill-lira-blue"><title>Has a note</title></circle>}
+      {selected && !readOnly && !editing && <rect data-idea-resize={node.id} x={box.w - 5} y={box.h - 5} width={10} height={10} rx={3} className="fill-lira-blue stroke-lira-surface cursor-ew-resize" strokeWidth={1.5} onPointerDown={e => onResizeDown(e, node.id)}><title>Drag to change the width</title></rect>}
       {selected && !readOnly && !editing && (
         <g onPointerDown={e => { e.stopPropagation(); onAdd(node.id); }} role="button" aria-label="Add an idea under this one" className="cursor-pointer">
           <title>Add an idea under this one</title>

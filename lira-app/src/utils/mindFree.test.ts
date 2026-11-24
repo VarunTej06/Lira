@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  addComment, addLink, arrowHead, mergeBounds, pinAt, addShape, edgePoint, editComment, EMPTY_FREE, freeBounds, linkEnds, MAX_COMMENTS, MAX_LINKS, MAX_SHAPES, MIN_H, MIN_W, moveShape, newShape,
-  readFree, removeItem, toggleResolved, updateLink, updateShape, wrapLines, type FreeDoc, type Link, type MindComment,
+  addComment, addLink, arrowHead, mergeBounds, pinAt, addShape, bendFor, edgePoint, editComment, EMPTY_FREE, FREE, freeBounds, HANDLES, linkShape, MAX_COMMENTS, MAX_LINKS, MAX_SHAPES, MIN_H, MIN_W, moveShape, newShape,
+  readFree, removeItem, resizeFrom, setLinkEnd, toggleResolved, updateLink, updateShape, wrapLines, type FreeDoc, type Link, type MindComment,
 } from './mindFree';
 
 const comment = (id: string, over: Partial<MindComment> = {}): MindComment => ({ id, targetId: null, x: 0, y: 0, text: 'Hello', author: 'Asha', at: '2026-11-24T10:00:00Z', ...over });
@@ -55,12 +55,105 @@ describe('lines', () => {
   it('ends each line on the edge of the items it joins, not in their middle, and gives nothing for an item that is missing', () => {
     const f = addLink(two(), known, link('l1', 'a', 'b'));
     const items = new Map(f.shapes.map(s => [s.id, { x: s.x, y: s.y, w: s.w, h: s.h, ellipse: s.kind === 'ellipse' }]));
-    const ends = linkEnds(f.links[0], items)!;
+    const ends = linkShape(f.links[0], items)!;
     const a = items.get('a')!;
     expect(ends.a.x).toBeCloseTo(a.x + a.w, 5); // the right edge of the box, level with its middle
     expect(ends.a.y).toBeCloseTo(a.y + a.h / 2, 5);
     expect(ends.b.x).toBeLessThan(items.get('b')!.x + items.get('b')!.w / 2);
-    expect(linkEnds(link('x', 'a', 'gone'), items)).toBeNull();
+    expect(linkShape(link('x', 'a', 'gone'), items)).toBeNull();
+  });
+});
+
+describe('bent lines and lines with a free end', () => {
+  const items = new Map([['a', { x: 0, y: 0, w: 100, h: 50 }], ['b', { x: 400, y: 0, w: 100, h: 50 }]]);
+  const base = (over: Partial<Link> = {}): Link => ({ id: 'l', from: 'a', to: 'b', arrow: true, ...over });
+
+  it('is straight when it has no bend, with its middle halfway between its ends', () => {
+    const s = linkShape(base(), items)!;
+    expect(s.c).toBeNull();
+    expect(s.d).toMatch(/^M[\d. -]+L[\d. -]+$/);
+    expect(s.mid).toEqual({ x: (s.a.x + s.b.x) / 2, y: (s.a.y + s.b.y) / 2 });
+  });
+  it('is a curve when it has a bend: the middle is pushed to one side, the other way for a negative bend, and the ends turn towards the curve', () => {
+    const up = linkShape(base({ bend: 80 }), items)!;
+    const down = linkShape(base({ bend: -80 }), items)!;
+    expect(up.d).toContain('Q');
+    expect(Math.sign(up.mid.y - 25)).toBe(-Math.sign(down.mid.y - 25)); // either side of the straight line
+    expect(Math.abs(up.mid.y - 25)).toBeGreaterThan(50);
+    expect(up.a.y).not.toBe(25); // it leaves the item at an angle, towards the curve
+    expect(up.tail).toEqual(up.c); // and the arrowhead points along the end of the curve
+  });
+  it('finds the bend that sends the middle of the line through a point dragged to, and calls a small bend straight', () => {
+    const l = base();
+    const bend = bendFor(l, items, { x: 250, y: 25 - 100 });
+    expect(Math.abs(bend)).toBeCloseTo(100, 0);
+    const back = linkShape({ ...l, bend }, items)!;
+    expect(back.mid.y).toBeLessThan(25 - 60); // it now bulges the way it was dragged
+    expect(bendFor(l, items, { x: 250, y: 25 + 3 })).toBe(0);
+  });
+  it('lets an end rest on a place of its own, and joins an item to such a place', () => {
+    const l = base({ to: FREE, toAt: { x: 700, y: 25 } });
+    const s = linkShape(l, items)!;
+    expect(s.b).toEqual({ x: 700, y: 25 });
+    expect(s.a.x).toBeCloseTo(100, 5); // it leaves the right edge of the first item
+    const both = linkShape({ id: 'x', from: FREE, to: FREE, arrow: false, fromAt: { x: 0, y: 0 }, toAt: { x: 30, y: 40 } }, items)!;
+    expect([both.a, both.b]).toEqual([{ x: 0, y: 0 }, { x: 30, y: 40 }]);
+  });
+  it('gives nothing for a line whose item is gone, but keeps one whose end is a place of its own', () => {
+    expect(linkShape(base({ to: 'gone' }), items)).toBeNull();
+    expect(linkShape(base({ from: FREE, fromAt: { x: 5, y: 5 } }), items)).not.toBeNull();
+  });
+  it('adds a line that starts or ends on empty space, and still refuses an end that is not there or a pair joined already', () => {
+    const known = new Set(['a', 'b']);
+    const f = addLink(EMPTY_FREE, known, { id: 'l1', from: 'a', to: FREE, toAt: { x: 9, y: 9 }, arrow: true });
+    expect(f.links).toHaveLength(1);
+    expect(addLink(f, known, { id: 'l2', from: FREE, to: FREE, fromAt: { x: 1, y: 1 }, toAt: { x: 2, y: 2 }, arrow: false }).links).toHaveLength(2);
+    expect(addLink(f, known, { id: 'l3', from: FREE, to: 'b', arrow: false })).toBe(f); // a free end needs its place
+    expect(addLink(f, known, { id: 'l4', from: 'a', to: FREE, arrow: false })).toBe(f);
+    expect(addLink(f, known, { id: 'l5', from: 'ghost', to: FREE, toAt: { x: 0, y: 0 }, arrow: false })).toBe(f);
+  });
+  it('moves an end onto another item or to a place, keeps the other end, and refuses to join an item to itself', () => {
+    const known = new Set(['a', 'b', 'c']);
+    const f = addLink(EMPTY_FREE, known, base());
+    const onC = setLinkEnd(f, 'l', 'to', { id: 'c' });
+    expect(onC.links[0]).toMatchObject({ from: 'a', to: 'c' });
+    const free = setLinkEnd(f, 'l', 'to', { at: { x: 10.4, y: 20.6 } });
+    expect(free.links[0]).toMatchObject({ from: 'a', to: FREE, toAt: { x: 10, y: 21 } });
+    const back = setLinkEnd(free, 'l', 'to', { id: 'b' });
+    expect(back.links[0].toAt).toBeUndefined();
+    expect(setLinkEnd(f, 'l', 'to', { id: 'a' })).toEqual(f); // an item joined to itself
+    expect(setLinkEnd(f, 'nope', 'to', { id: 'c' })).toEqual(f);
+  });
+  it('reads a stored bend and free end back, and drops a free end with no place or a bend that is not a number', () => {
+    const f = readFree({ links: [
+      { id: 'a', from: 'x', to: 'y', arrow: true, bend: 40 }, { id: 'b', from: 'x', to: '', arrow: true, toAt: { x: 1, y: 2 } }, { id: 'c', from: 'x', to: '', arrow: true },
+      { id: 'd', from: 'x', to: 'y', arrow: true, bend: 'big' }, { id: 'e', from: 'x', to: 'y', arrow: true, bend: 99999 }, { id: 'f', from: '', to: '', arrow: false, fromAt: { x: 0, y: 0 }, toAt: { x: 5, y: 5 } },
+    ] });
+    expect(f.links.map(l => l.id)).toEqual(['a', 'b', 'd', 'e', 'f']);
+    expect(f.links[0].bend).toBe(40);
+    expect(f.links[2].bend).toBeUndefined();
+    expect(f.links[3].bend).toBe(1000);
+    expect(f.links[1].toAt).toEqual({ x: 1, y: 2 });
+  });
+});
+
+describe('resizing from a handle', () => {
+  const r = { x: 100, y: 100, w: 200, h: 100 };
+  it('moves the side that is held and keeps the opposite side where it is', () => {
+    expect(resizeFrom(r, { x: 1, y: 1 }, 30, 20)).toEqual({ x: 100, y: 100, w: 230, h: 120 });
+    expect(resizeFrom(r, { x: -1, y: -1 }, -30, -20)).toEqual({ x: 70, y: 80, w: 230, h: 120 }); // pulled up and to the left: bigger, and the far corner stays
+    expect(resizeFrom(r, { x: 0, y: 1 }, 99, 10)).toEqual({ x: 100, y: 100, w: 200, h: 110 }); // an edge handle changes one side only
+    expect(resizeFrom(r, { x: -1, y: 0 }, 50, 99)).toEqual({ x: 150, y: 100, w: 150, h: 100 });
+  });
+  it('never gets smaller than a readable size, and then the held side stops at the other', () => {
+    const small = resizeFrom(r, { x: -1, y: -1 }, 500, 500);
+    expect([small.w, small.h]).toEqual([48, 28]);
+    expect([small.x + small.w, small.y + small.h]).toEqual([300, 200]); // the far corner did not move
+  });
+  it('has eight handles, one for each corner and side', () => {
+    expect(HANDLES).toHaveLength(8);
+    expect(new Set(HANDLES.map(h => `${h.x},${h.y}`)).size).toBe(8);
+    expect(HANDLES.some(h => h.x === 0 && h.y === 0)).toBe(false);
   });
 });
 

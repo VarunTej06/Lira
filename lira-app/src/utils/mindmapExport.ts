@@ -1,4 +1,4 @@
-import { arrowHead, EMPTY_FREE, FONT_PX, freeBounds, linkEnds, wrapLines, type FreeDoc, type Item, type Shape, type TextStyle } from './mindFree';
+import { arrowHead, EMPTY_FREE, FONT_PX, freeBounds, linkShape, wrapLines, type FreeDoc, type Item, type Shape, type TextStyle } from './mindFree';
 import { boundsOf, colorOf, connector, layoutMap, strokeOf } from './mindLayout';
 import { visibleNodes, type MindNode } from './mindmap';
 
@@ -26,11 +26,11 @@ function shapeToSvg(s: Shape, colors: Colors): string {
 function freeToSvg(free: FreeDoc, items: ReadonlyMap<string, Item>, colors: Colors): string[] {
   const out: string[] = [];
   for (const l of free.links) {
-    const ends = linkEnds(l, items);
-    if (!ends) continue;
+    const shape = linkShape(l, items);
+    if (!shape) continue;
     const colour = esc(l.color ?? colors.line);
-    out.push(`<line x1="${ends.a.x}" y1="${ends.a.y}" x2="${ends.b.x}" y2="${ends.b.y}" stroke="${colour}" stroke-width="2" stroke-linecap="round"${l.dashed ? ' stroke-dasharray="6 4"' : ''}/>`);
-    if (l.arrow) out.push(`<polygon points="${arrowHead(ends.a, ends.b)}" fill="${colour}"/>`);
+    out.push(`<path d="${shape.d}" fill="none" stroke="${colour}" stroke-width="2" stroke-linecap="round"${l.dashed ? ' stroke-dasharray="6 4"' : ''}/>`);
+    if (l.arrow) out.push(`<polygon points="${arrowHead(shape.tail, shape.b)}" fill="${colour}"/>`);
   }
   for (const s of free.shapes) out.push(shapeToSvg(s, colors));
   return out;

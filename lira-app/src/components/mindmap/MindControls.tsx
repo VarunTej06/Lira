@@ -5,7 +5,7 @@ interface Props { zoom: number; canUndo: boolean; canRedo: boolean; onUndo: () =
 
 const SHORTCUTS: readonly (readonly [string, string])[] = [
   ['Tab', 'Add an idea under the selected one'], ['Enter', 'Add an idea next to it'], ['F2 or double click', 'Edit the text'], ['Delete', 'Remove it with its branch'],
-  ['Space', 'Fold or unfold its branch'], ['Arrow keys', 'Move about the board'], ['Ctrl+Z, Ctrl+Y', 'Undo and redo'], ['Wheel or pinch', 'Zoom the board, not the page'], ['Drag the background', 'Move the board'], ['Drag an idea onto another', 'Move its branch there'],
+  ['Space', 'Fold or unfold its branch'], ['Arrow keys', 'Move about the board'], ['Ctrl+Z, Ctrl+Y', 'Undo and redo'], ['Wheel or pinch', 'Zoom the board, not the page'], ['Drag the background', 'Move the board'], ['Drag an idea or a shape', 'Move it (an idea takes its branch along)'], ['Shift and drop on an idea', 'Put the branch under that idea'], ['Drag a handle', 'Resize a shape or an idea; drag the dots of a line to bend it or move its ends'],
 ];
 const BTN = 'w-8 h-8 flex items-center justify-center rounded-lg text-lira-text hover:bg-gray-100 disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer';
 

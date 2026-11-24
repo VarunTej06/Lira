@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addChild, addSibling, childrenOf, fromOutline, MAX_NODES, moveNode, newMap, removeNode, rootOf, searchNodes, setAllCollapsed, subtreeIds, toOutline, updateNode, visibleNodes, widthOf, type MindNode } from './mindmap';
+import { isArranged, MAX_IDEA_W, MIN_IDEA_W, moveIdea, resizeIdea, tidy, addChild, addSibling, childrenOf, fromOutline, MAX_NODES, moveNode, newMap, removeNode, rootOf, searchNodes, setAllCollapsed, subtreeIds, toOutline, updateNode, visibleNodes, widthOf, type MindNode } from './mindmap';
 
 const base = (): MindNode[] => newMap('m', 'Plan', '2026-11-24T00:00:00Z', 'r').nodes;
 const ids = (nodes: readonly MindNode[]) => nodes.map(n => n.id);
@@ -67,6 +67,30 @@ describe('changing a storyboard', () => {
   it('finds a branch', () => {
     expect([...subtreeIds(tree(), 'a')].sort()).toEqual(['a', 'a1', 'a2']);
     expect([...subtreeIds(tree(), 'b')]).toEqual(['b']);
+  });
+});
+
+describe('arranging ideas by hand', () => {
+  it('moves an idea from where it was, again and again, and leaves the others', () => {
+    const once = moveIdea(tree(), 'a', 10.4, -20);
+    const twice = moveIdea(once, 'a', 5, 5);
+    expect(once.find(n => n.id === 'a')).toMatchObject({ dx: 10, dy: -20 });
+    expect(twice.find(n => n.id === 'a')).toMatchObject({ dx: 15, dy: -15 });
+    expect(twice.find(n => n.id === 'b')!.dx).toBeUndefined();
+  });
+  it('gives an idea a width of its own within limits', () => {
+    expect(resizeIdea(tree(), 'a', 200).find(n => n.id === 'a')!.w).toBe(200);
+    expect(resizeIdea(tree(), 'a', 5).find(n => n.id === 'a')!.w).toBe(MIN_IDEA_W);
+    expect(resizeIdea(tree(), 'a', 5000).find(n => n.id === 'a')!.w).toBe(MAX_IDEA_W);
+  });
+  it('puts everything back with tidy, and says whether there is anything to put back', () => {
+    const messy = resizeIdea(moveIdea(moveIdea(tree(), 'a', 30, 30), 'b', -5, 0), 'a1', 150);
+    expect(isArranged(messy)).toBe(true);
+    const clean = tidy(messy);
+    expect(isArranged(clean)).toBe(false);
+    expect(clean.every(n => n.dx === undefined && n.dy === undefined && n.w === undefined)).toBe(true);
+    expect(clean.map(n => n.text)).toEqual(messy.map(n => n.text)); // the words are untouched
+    expect(isArranged(tree())).toBe(false);
   });
 });
 

@@ -125,6 +125,8 @@ export default function App() {
           onSpaceSelect={handleSelectSpace}
           onCreateSpace={() => setShowCreateSpace(true)}
           onNavigateToDashboards={() => navigate('/dashboards')}
+          onNavigateToMindMaps={() => navigate('/mindmaps')}
+          onNavigateToStoryBoxes={() => navigate('/storyboxes')}
           onNavigateToProjects={() => navigate('/projects')}
           onNavigateToSprints={() => navigate('/sprints')}
           onNavigateToRoadmaps={() => navigate('/roadmaps')}

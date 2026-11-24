@@ -4,7 +4,7 @@ import { deleteObject, listObjects, saveObject, type ObjectKind } from './worksp
  * Hosted edition: projects, roadmaps and dashboards are one row each on the server, so access can be given to one and not another
  * (ADR-0010). The app still holds each kind as one JSON list under its `lira_*` key; this turns that list into rows and back.
  */
-export const COLLECTIONS: Readonly<Record<string, ObjectKind>> = { lira_projects: 'project', lira_roadmaps: 'roadmap', lira_dashboards: 'dashboard' };
+export const COLLECTIONS: Readonly<Record<string, ObjectKind>> = { lira_projects: 'project', lira_roadmaps: 'roadmap', lira_dashboards: 'dashboard', lira_storyboxes: 'storybox', lira_mindmaps: 'mindmap' };
 export const isCollectionKey = (key: string): boolean => key in COLLECTIONS;
 
 interface Known { version: number; json: string }

@@ -65,7 +65,7 @@ export type KvChanges = Record<string, string | null>;
 export const readKv = (orgId: string) => send<KvData>('GET', `${org(orgId)}/kv`);
 export const writeKv = (orgId: string, changes: { shared?: KvChanges; mine?: KvChanges }) => send<void>('PUT', `${org(orgId)}/kv`, changes);
 
-export type ObjectKind = 'project' | 'roadmap' | 'dashboard';
+export type ObjectKind = 'project' | 'roadmap' | 'dashboard' | 'storybox' | 'mindmap';
 export interface ServerObject { id: string; position: number; doc: Record<string, unknown>; version: number; level: 'view' | 'edit' | 'manage' }
 /** Projects, roadmaps and dashboards, one row each, so access can be given to one and not another (ADR-0010). The list holds only what the person may view. */
 export const listObjects = (orgId: string, kind: ObjectKind) => send<ServerObject[]>('GET', `${org(orgId)}/objects/${kind}`);

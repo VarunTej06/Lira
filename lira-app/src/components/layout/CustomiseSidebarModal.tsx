@@ -2,7 +2,7 @@ import { notifySaved } from '../common/savedToastStore';
 import React, { useState, useEffect } from 'react';
 import {
   GripVertical, MoreHorizontal, User, Map, Folder, Ticket, CalendarClock, LayoutDashboard, EyeOff as HiddenIcon,
-  ChevronUp, ChevronDown, Check, ArrowUp, ArrowDown, Eye, EyeOff, RotateCcw, FolderKanban,
+  ChevronUp, ChevronDown, Check, ArrowUp, ArrowDown, Eye, EyeOff, RotateCcw, FolderKanban, Network, Layers,
 } from 'lucide-react';
 import { Modal } from '../common/Modal';
 import { type SidebarConfig, DEFAULT_NAV_ORDER, DEFAULT_SECTION_ORDER, loadSidebarConfig, CONFIG_VERSION, DEFAULT_VISIBILITY } from './sidebarConfig';
@@ -30,6 +30,8 @@ const NAV_ITEMS: Record<string, SidebarItemDef> = {
   allTickets: { key: 'allTickets', label: 'All tickets', icon: <Ticket className="w-4 h-4 text-yellow-500" /> },
   roadmaps: { key: 'roadmaps', label: 'Roadmaps', icon: <Map className="w-4 h-4 text-orange-500" /> },
   dashboards: { key: 'dashboards', label: 'Dashboards', icon: <LayoutDashboard className="w-4 h-4 text-lira-blue" /> },
+  mindMaps: { key: 'mindMaps', label: 'Mind maps', icon: <Network className="w-4 h-4 text-lira-blue" /> },
+  storyBoxes: { key: 'storyBoxes', label: 'Story boxes', icon: <Layers className="w-4 h-4 text-lira-blue" /> },
 };
 
 const SECTION_ITEMS: Record<string, SidebarItemDef> = {

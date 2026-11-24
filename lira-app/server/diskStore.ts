@@ -10,7 +10,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-const STORE_FILES = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'dashboards', 'settings', 'secrets'] as const
+const STORE_FILES = ['projects', 'roadmaps', 'sprints', 'teams', 'standups', 'board-config', 'dashboards', 'mindmaps', 'storyboxes', 'settings', 'secrets'] as const
 type StoreFile = (typeof STORE_FILES)[number]
 type StoreEntries = Record<string, unknown>
 

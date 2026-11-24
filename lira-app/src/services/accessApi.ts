@@ -3,7 +3,7 @@ import { send } from './authApi';
 /** Hosted edition: people, teams, access and invitations of the signed-in person's organisation (api/src/people, api/src/invitations). */
 export type Level = 'view' | 'edit' | 'manage';
 export type AssignableRole = 'admin' | 'member' | 'viewer' | 'guest';
-export type ObjectKind = 'space' | 'project' | 'roadmap' | 'dashboard';
+export type ObjectKind = 'space' | 'project' | 'roadmap' | 'dashboard' | 'storybox' | 'mindmap';
 
 export interface Member { userId: string; name: string; email: string; role: string; manageAccess: boolean; teamIds: string[] }
 export interface Team { id: string; name: string; memberIds: string[] }

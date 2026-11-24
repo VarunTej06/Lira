@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { activeOrg } from '../../utils/hostedOrg';
 import { Skeleton } from '../common/Skeleton';
 import { AccessTab } from './AccessTab';
+import { ImportTab } from './ImportTab';
 import { PeopleTab } from './PeopleTab';
 import { TeamsTab } from './TeamsTab';
 import { useTeamsData } from './useTeamsData';
 
-const TABS = [{ id: 'people', label: 'People' }, { id: 'teams', label: 'Teams' }, { id: 'access', label: 'Access' }] as const;
+const TABS = [{ id: 'people', label: 'People' }, { id: 'teams', label: 'Teams' }, { id: 'access', label: 'Access' }, { id: 'import', label: 'Import' }] as const;
 type TabId = (typeof TABS)[number]['id'];
 
 /**
@@ -40,6 +41,7 @@ export function TeamsPage() {
           <div role="tabpanel">
             {tab === 'people' && <PeopleTab org={org} role={data.role} members={data.members} teams={data.teams} invitations={data.invitations} reload={reload} />}
             {tab === 'teams' && <TeamsTab org={org} members={data.members} teams={data.teams} reload={reload} />}
+            {tab === 'import' && <ImportTab org={org} />}
             {tab === 'access' && <AccessTab org={org} members={data.members} teams={data.teams} />}
           </div>
         </>

@@ -13,11 +13,13 @@ import { isHosted } from '../../utils/edition';
 import { WORKSPACE_KEY, activeOrg, organisations, workspaceLabel } from '../../utils/hostedOrg';
 import { goTo } from '../../utils/navigate';
 import { logout } from '../../services/authApi';
+import { SecurityModal } from './SecurityModal';
 
 export const AccountDropdown: React.FC = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showSecurity, setShowSecurity] = useState(false);
 
   const [userName, setUserName] = useState(() => appStorage.get('lira_user_name') || 'Varuntej Yadla');
   const [userEmail, setUserEmail] = useState(() => appStorage.get('lira_user_email') || 'yvaruntej0612@gmail.com');
@@ -100,6 +102,12 @@ export const AccountDropdown: React.FC = () => {
               <button onClick={() => { setOpen(false); navigate('/teams'); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
                 <Users className="w-4 h-4 text-gray-500" />
                 <span>Teams and access</span>
+              </button>
+            )}
+            {isHosted() && (
+              <button onClick={() => { setOpen(false); setShowSecurity(true); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
+                <Settings className="w-4 h-4 text-gray-500" />
+                <span>Security</span>
               </button>
             )}
             {isHosted() && (
@@ -203,6 +211,7 @@ export const AccountDropdown: React.FC = () => {
           </div>
         </div>
       </Modal>
+      {isHosted() && <SecurityModal isOpen={showSecurity} onClose={() => setShowSecurity(false)} />}
     </div>
   );
 };

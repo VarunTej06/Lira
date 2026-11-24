@@ -27,6 +27,8 @@ export type AppRoute =
   | { kind: 'tickets' }
   | { kind: 'teams' }
   | { kind: 'calls' }
+  | { kind: 'mindmaps'; mapId?: string }
+  | { kind: 'storyboxes'; boxId?: string }
   | { kind: 'projects'; projectId?: string }
   | { kind: 'sprints'; sprintKey?: string }
   | { kind: 'roadmaps'; roadmapId?: string }
@@ -53,6 +55,8 @@ export function parsePath(pathname: string): AppRoute {
     case 'tickets': return { kind: 'tickets' };
     case 'teams': return { kind: 'teams' };
     case 'calls': return { kind: 'calls' };
+    case 'mindmaps': return { kind: 'mindmaps', mapId: b };
+    case 'storyboxes': return { kind: 'storyboxes', boxId: b };
     case 'projects': return { kind: 'projects', projectId: b };
     case 'sprints': return sprintRoute(b);
     case 'roadmaps': return { kind: 'roadmaps', roadmapId: b };
@@ -74,6 +78,8 @@ export function pathFor(route: AppRoute): string {
     case 'tickets': return '/tickets';
     case 'teams': return '/teams';
     case 'calls': return '/calls';
+    case 'mindmaps': return itemPath('/mindmaps', route.mapId);
+    case 'storyboxes': return itemPath('/storyboxes', route.boxId);
     case 'projects': return itemPath('/projects', route.projectId);
     case 'sprints': return itemPath('/sprints', route.sprintKey, false);
     case 'roadmaps': return itemPath('/roadmaps', route.roadmapId);
@@ -93,6 +99,8 @@ export function tabOf(route: AppRoute): string {
     case 'tickets': return 'AllTickets';
     case 'teams': return 'Teams';
     case 'calls': return 'Calls';
+    case 'mindmaps': return 'MindMaps';
+    case 'storyboxes': return 'StoryBoxes';
     case 'projects': return 'Projects';
     case 'sprints': return route.sprintKey ? 'SprintDetail' : 'SprintsHub';
     case 'roadmaps': return 'Roadmaps';
@@ -115,6 +123,8 @@ export function titleOf(route: AppRoute): string {
     case 'sprints': return route.sprintKey ? `Sprint ${route.sprintKey}` : 'Sprints';
     case 'roadmaps': return 'Roadmaps';
     case 'dashboards': return 'Dashboards';
+    case 'mindmaps': return 'Mind maps';
+    case 'storyboxes': return 'Story boxes';
     case 'space': return `${route.spaceKey} · ${route.tab}`;
     default: return 'Liraspaces';
   }

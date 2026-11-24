@@ -21,7 +21,7 @@ const DIRTY_KEY = 'lira__kv_dirty'
 const FLUSH_DELAY_MS = 500
 const BOOT_TIMEOUT_MS = 3000
 
-type StoreFileName = 'projects' | 'roadmaps' | 'sprints' | 'teams' | 'standups' | 'board-config' | 'dashboards' | 'settings' | 'secrets'
+type StoreFileName = 'projects' | 'roadmaps' | 'sprints' | 'teams' | 'standups' | 'board-config' | 'dashboards' | 'mindmaps' | 'storyboxes' | 'settings' | 'secrets'
 type FileEntries = Record<string, unknown>
 type FileMap = Record<string, FileEntries>
 
@@ -34,6 +34,8 @@ const FILE_RULES: { file: StoreFileName; exact?: string[]; prefix?: string[] }[]
   { file: 'projects', exact: ['lira_projects'], prefix: ['lira_project_settings_'] },
   { file: 'roadmaps', exact: ['lira_roadmaps'] },
   { file: 'dashboards', exact: ['lira_dashboards'] },
+  { file: 'mindmaps', exact: ['lira_mindmaps'] },
+  { file: 'storyboxes', exact: ['lira_storyboxes'] },
   { file: 'sprints', exact: ['lira_sprint_meta', 'lira_planned_sprints', 'lira_deleted_sprints', 'lira_sprint_defs'] },
   { file: 'teams', exact: ['lira_team_directory'], prefix: ['lira_scope_team:'] },
   { file: 'standups', exact: ['lira_standups', 'lira_standup_notes'] },
@@ -63,7 +65,7 @@ export const decodeValue = (v: unknown): string => (typeof v === 'string' ? v : 
 
 /** Groups every mirrored key of a Storage-like object into its file. Every known file is present (maybe empty). */
 export function buildFiles(storage: Pick<Storage, 'length' | 'key' | 'getItem'>): FileMap {
-  const files: FileMap = { projects: {}, roadmaps: {}, sprints: {}, teams: {}, standups: {}, 'board-config': {}, dashboards: {}, settings: {}, secrets: {} }
+  const files: FileMap = { projects: {}, roadmaps: {}, sprints: {}, teams: {}, standups: {}, 'board-config': {}, dashboards: {}, mindmaps: {}, storyboxes: {}, settings: {}, secrets: {} }
   for (let i = 0; i < storage.length; i++) {
     const k = storage.key(i)
     if (!k || !isMirroredKey(k)) continue

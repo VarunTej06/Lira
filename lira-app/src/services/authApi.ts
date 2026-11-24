@@ -51,7 +51,10 @@ export interface SignupValues { name: string; email: string; password: string; r
 export interface LoginValues { email: string; password: string; remember?: boolean }
 
 export const signup = (values: SignupValues) => send<Me>('POST', '/api/auth/signup', values);
-export const login = (values: LoginValues) => send<Me>('POST', '/api/auth/login', values);
+/** With two-step sign-in on, the password step answers with a challenge instead of the person. */
+export interface TwoStepNeeded { twoStep: true; challenge: string }
+export const login = (values: LoginValues) => send<Me | TwoStepNeeded>('POST', '/api/auth/login', values);
+export const loginTwoStep = (challenge: string, code: string) => send<Me>('POST', '/api/auth/login/two-step', { challenge, code });
 export const logout = () => send<void>('POST', '/api/auth/logout');
 export const fetchMe = () => send<Session>('GET', '/api/me');
 /** Which ways of signing in the server offers, and whether it can send email. */

@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { LiraLogo } from '../common/LiraLogo';
 import { login } from '../../services/authApi';
+import { TwoStepForm } from './TwoStepForm';
 import { validateAuth, type AuthErrors } from '../../utils/authForm';
 import { goTo } from '../../utils/navigate';
 import { nextAfterSignIn } from '../../utils/nextPath';
@@ -21,6 +22,7 @@ export default function AuthPage() {
   const [errors, setErrors] = useState<AuthErrors>({});
   const [serverError, setServerError] = useState<string>();
   const [busy, setBusy] = useState(false);
+  const [challenge, setChallenge] = useState<string>();
   const [params] = useSearchParams();
   const googleFailed = params.get('error') === 'google';
 
@@ -33,10 +35,14 @@ export default function AuthPage() {
     setBusy(true);
     const result = await login({ email: email.trim(), password, remember });
     setBusy(false);
-    if (result.ok) goTo(nextAfterSignIn(params.get('next')));
-    else setServerError(result.message);
+    if (!result.ok) setServerError(result.message);
+    else if ('twoStep' in result.data) setChallenge(result.data.challenge);
+    else goTo(nextAfterSignIn(params.get('next')));
   }
 
+  if (challenge) {
+    return <div className="min-h-screen flex items-center justify-center px-4 py-10"><TwoStepForm challenge={challenge} next={nextAfterSignIn(params.get('next'))} onBack={() => setChallenge(undefined)} /></div>;
+  }
   return (
     <div className="relative overflow-hidden min-h-screen flex items-center justify-center px-4 py-10">
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-5 bg-lira-border" />

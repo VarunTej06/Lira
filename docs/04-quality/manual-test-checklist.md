@@ -498,6 +498,17 @@ Both editions. Navigation, **Mind maps** (it can be hidden or moved in the sideb
 - [ ] **Import outline**: paste an indented list. Expect: the map is replaced by it and Undo brings the old one back. **MD**: a Markdown outline downloads. **JSON**, **SVG** and **PNG** also download, named after the map; the picture shows every idea.
 - [ ] Make a copy, delete one (it asks first). Reload the page. Expect: everything is as left. Local edition: the maps are in the data folder's `mindmaps.json`. Hosted: another member does not see your map until you share it (Access, kind Mind map); an Owner sees all.
 
+### A57. Change many tickets at once (24 Nov 2026)  ◐
+Both editions. Filters page (All tickets).
+- [ ] Open Filters. Expect: a tick box beside each ticket's type and one in the Type heading; no bar yet.
+- [ ] Tick one ticket. Expect: a bar "1 selected" with Status, Priority and Assignee lists (each "no change"), **Apply** (off) and **Clear**. Ticking does not open the ticket; clicking elsewhere on the row still does.
+- [ ] Tick the heading box. Expect: every shown ticket is ticked. Change a filter so some tickets leave the list. Expect: the count drops to the ones still shown.
+- [ ] Choose a priority and Apply. Expect: "Updated N tickets", the table shows the new priority, the ticks clear, and **Undo** is offered. Press Undo. Expect: each ticket has its old priority again.
+- [ ] Choose a status and an assignee together. Expect: both change and nothing else does. "Unassigned" clears the person.
+- [ ] Hosted edition, a person with View on a space and Edit on another. Expect: tickets of the View space have a greyed tick box with the tip "You can only view this space"; the heading tick and Apply skip them.
+- [ ] Hosted edition, a Viewer who can only view everything. Expect: no tick boxes at all.
+- [ ] Hosted edition: the same changes are seen by another person after a moment, and a change the server refuses is counted as "could not be changed".
+
 ### A56. Saved filters (24 Nov 2026)  ◐
 Both editions. Filters page.
 - [ ] Open Filters with nothing chosen. Expect: a row "Saved filters" that says none yet, and **Save current filter** is off with the tip "Choose some filters first".

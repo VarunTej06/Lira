@@ -53,6 +53,8 @@ describe.skipIf(!ADMIN_URL)('teams and access on a real database', () => {
     }
     const seen = async (p: Person) => ((await db.call('GET', `${org(p)}/spaces`, undefined, p.session)).body as { id: number }[]).map(s => s.id);
     expect(await seen(viewer)).toEqual([space]);
+    const level = async (p: Person) => ((await db.call('GET', `${org(p)}/spaces`, undefined, p.session)).body as { id: number; myLevel: string }[]).find(s => s.id === space)?.myLevel;
+    expect([await level(viewer), await level(editor), await level(manager), await level(owner)]).toEqual(['view', 'edit', 'manage', 'manage']); // the app hides what the server would refuse
     expect((await seen(owner)).sort((a, b) => a - b)).toEqual([space, other].sort((a, b) => a - b));
   });
 

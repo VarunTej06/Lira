@@ -17,7 +17,7 @@ The hosted edition's server: sign-up, log-in, log-out and "who am I", on Postgre
 | `POST /api/auth/forgot-password` | `{ email }`: always answers 204 whether or not the address has an account, and emails a reset link when it does; for an account that signs in with Google (which never has a password) it emails an explanation and no link (503 when email is not set up) |
 | `POST /api/auth/reset-password` | `{ token, password }`: sets the new password with a link that works once, for one hour, ends every session of the account and confirms the address |
 | `GET /api/me` | Who is signed in, and their organisations (401 when nobody is) |
-| `GET /api/orgs/:orgId/spaces`, `POST` | List, create spaces of an organisation (owner and admin only for now; everyone else gets 403, a stranger 404) |
+| `GET /api/orgs/:orgId/spaces`, `POST` | List, create spaces of an organisation. Each listed space carries `myLevel` (view, edit or manage): what the caller may do there, so the app can hide what the server would refuse; the server still checks every change. Creating is for the owner and admin; everyone else gets 403, a stranger 404 |
 | `PATCH`, `DELETE /api/orgs/:orgId/spaces/:id` | Change or delete a space. The body carries the `version` the caller saw; an older one gets 409 |
 | `GET`, `POST /api/orgs/:orgId/spaces/:spaceId/tickets` | List the tickets of a space, create one (the server gives the key, such as LIRA-12) |
 | `GET`, `PATCH`, `DELETE /api/orgs/:orgId/tickets/:id` | One ticket. Changes and deletes carry the `version`; a parent or epic must be in the same space. These routes accept bodies up to 512 KB, all others 16 KB |

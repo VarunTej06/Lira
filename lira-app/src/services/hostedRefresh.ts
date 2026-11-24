@@ -29,7 +29,7 @@ export async function refreshFromServer(spaceId: number | null): Promise<void> {
     const heldIssues = waitingIssues();
     const localSpaces = new Map<number, Space>((await db.spaces.toArray()).map(s => [s.id!, s]));
     for (const [id, row] of localSpaces) if (row.version && !kept.has(id) && !heldSpaces.has(id)) { await db.spaces.delete(id); await db.issues.where('spaceId').equals(id).delete(); }
-    await db.spaces.bulkPut(spaces.data.filter(s => !heldSpaces.has(s.id!) && newer(localSpaces, s)));
+    await db.spaces.bulkPut(spaces.data.filter(s => !heldSpaces.has(s.id!) && (newer(localSpaces, s) || localSpaces.get(s.id!)?.myLevel !== s.myLevel)));
     for (const [id, remote] of tickets) {
       const local = new Map<number, Issue>((await db.issues.where('spaceId').equals(id).toArray()).map(i => [i.id!, i]));
       const onServer = new Set(remote.map(i => i.id!));

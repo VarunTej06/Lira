@@ -16,7 +16,7 @@ const issue = (over: Partial<Issue> = {}): Issue => ({
 function show(filtered: Issue[], total = filtered.length) {
   const handlers = { onSelectIssue: vi.fn(), onSelectSpace: vi.fn(), clearAllFilters: vi.fn(), toggleSort: vi.fn() };
   const state = {
-    issues: Array.from({ length: total }, () => issue()), filteredIssues: filtered,
+    issues: Array.from({ length: total }, () => issue()), filteredIssues: filtered, spaces: [],
     spaceMap: { 1: { id: 1, key: 'LIRA', name: 'Lira', icon: 'L', color: '#336699' } },
     ...handlers,
   } as unknown as FiltersState;

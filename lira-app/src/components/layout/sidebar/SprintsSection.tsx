@@ -53,7 +53,7 @@ export function SprintsSection(s: SidebarState) {
                     label="Sprint actions"
                     menuKey={`sprint:${k}`}
                   >
-                    <ContextItem icon={<CalendarClock className="w-3.5 h-3.5 text-teal-400" />} label="Open sprint" onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} />
+                    <ContextItem icon={<CalendarClock className="w-3.5 h-3.5 text-lira-nav-accent" />} label="Open sprint" onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} />
                     <div className="border-t border-white/10 my-1" />
                     {canDeleteSprint(k) ? (
                       <ContextItem

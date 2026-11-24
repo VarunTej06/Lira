@@ -547,7 +547,8 @@ Hosted app, two browsers (or a normal and a private window) signed in as two peo
 - [ ] Switch the network off for the second person for a minute, change tickets as the first, switch it on again. Expect: within seconds everything is up to date.
 - [ ] Log the second person out in another tab. Expect: that window stops updating (it is asked to log in again on the next action).
 - [ ] Open the same app in seven tabs as one person. Expect: the app keeps working; the seventh tab shows no live updates until another is closed.
-- [ ] Note: projects, roadmaps, dashboards and settings are not live yet; they show after a reload.
+- [ ] In one browser rename a roadmap, add a project, make a mind map or a story box. Expect: the other browser shows it within a second or two without a reload (unless it has unsaved changes of its own, which are never overwritten).
+- [ ] Note: shared settings (sprint definitions, teams, stand-up notes) are not live yet; they show after a reload.
 
 ### A49. Lighter theme picker (24 Nov 2026)  ◐
 Open Account settings, Appearance.

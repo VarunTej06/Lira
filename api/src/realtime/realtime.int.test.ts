@@ -117,4 +117,22 @@ describe.skipIf(!ADMIN_URL)('live updates over a stream, on a real database', ()
     await seventh.body?.cancel();
     for (const o of open) await o.close();
   });
+  it('tells open pages when a project, roadmap, dashboard, mind map or story box is saved or deleted, with nothing about what it holds', async () => {
+    const o = await owner();
+    const other = await owner();
+    const colleague = await db.addMember(o, `obj-live${++n}@example.com`, 'admin');
+    const live = await listen(colleague, o.orgId);
+    const stranger = await listen(other);
+    const put = (kind: string, id: string, body: object, version?: number) => db.call('PUT', `/api/orgs/${o.orgId}/objects/${kind}/${id}`, { doc: { id, ...body }, ...(version ? { version } : {}) }, o.session);
+    await put('roadmap', 'rm1', { name: 'Secret roadmap name' });
+    await put('mindmap', 'mm1', { name: 'A map', nodes: [] });
+    await put('roadmap', 'rm1', { name: 'Renamed' }, 1);
+    await db.call('DELETE', `/api/orgs/${o.orgId}/objects/mindmap/mm1`, { version: 1 }, o.session);
+    const heard = await live.next(4);
+    expect(heard).toEqual([1, 2, 3, 4].map(() => ({ kind: 'object', spaceId: null })));
+    expect(live.seen.join('')).not.toContain('Secret roadmap name');
+    await quiet();
+    expect(stranger.seen.filter(l => l.startsWith('data:'))).toEqual([]); // another organisation hears nothing
+    await live.close(); await stranger.close();
+  });
 });

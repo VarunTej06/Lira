@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { diffForServer, flushKv, resetHostedKv, startHostedKv } from './kvMirror';
+import { diffForServer, flushKv, refreshCollections, resetHostedKv, startHostedKv } from './kvMirror';
 
 const api = vi.hoisted(() => ({ readKv: vi.fn(), writeKv: vi.fn(), listObjects: vi.fn(), saveObject: vi.fn(), deleteObject: vi.fn() }));
 vi.mock('./workspaceApi', () => api);
@@ -159,5 +159,42 @@ describe('the look the person chose', () => {
     api.readKv.mockResolvedValue(ok({ shared: {}, mine: { lira_theme: 'light' } }));
     await startHostedKv('org-1');
     expect(localStorage.getItem('lira_theme')).toBe('light');
+  });
+});
+
+describe('another person changes a project, roadmap, dashboard, mind map or story box', () => {
+  const row = (id: string, name: string, version = 1) => ({ id, position: 0, doc: { id, name }, version, level: 'manage' });
+  const started = async () => {
+    api.readKv.mockResolvedValue(ok({ shared: {}, mine: {} }));
+    api.listObjects.mockImplementation(async (_o: string, kind: string) => ok(kind === 'roadmap' ? [row('r1', 'Plan')] : []));
+    expect(await startHostedKv('org-1')).toBe(true);
+  };
+
+  it('reads each list again, puts the server\'s copy in the browser and tells the screens', async () => {
+    await started();
+    api.listObjects.mockImplementation(async (_o: string, kind: string) => ok(kind === 'roadmap' ? [row('r1', 'Renamed by someone', 2)] : kind === 'mindmap' ? [row('m1', 'New map')] : []));
+    const heard: (string | null)[] = [];
+    const listener = (e: Event) => heard.push((e as StorageEvent).key);
+    window.addEventListener('storage', listener);
+    await refreshCollections();
+    window.removeEventListener('storage', listener);
+    expect(JSON.parse(localStorage.getItem('lira_roadmaps')!)).toEqual([{ id: 'r1', name: 'Renamed by someone' }]);
+    expect(JSON.parse(localStorage.getItem('lira_mindmaps')!)).toEqual([{ id: 'm1', name: 'New map' }]);
+    expect(heard.sort()).toEqual(['lira_mindmaps', 'lira_roadmaps']); // only the lists that changed
+  });
+
+  it('does not touch a browser that still has changes it has not sent', async () => {
+    await started();
+    localStorage.setItem('lira_roadmaps', JSON.stringify([{ id: 'r1', name: 'My edit, not sent yet' }])); // marks the browser as having unsent changes
+    api.listObjects.mockClear();
+    await refreshCollections();
+    expect(api.listObjects).not.toHaveBeenCalled();
+    expect(JSON.parse(localStorage.getItem('lira_roadmaps')!)).toEqual([{ id: 'r1', name: 'My edit, not sent yet' }]);
+    await flushKv();
+  });
+
+  it('does nothing when nobody is signed in to an organisation', async () => {
+    await refreshCollections();
+    expect(api.listObjects).not.toHaveBeenCalled();
   });
 });

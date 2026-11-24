@@ -4,6 +4,7 @@ import type { Me } from '../auth/auth.service';
 import { AuditService } from '../audit/audit.service';
 import { DbService } from '../db/db.service';
 import { MetricsService } from '../observability/metrics.service';
+import { ChangesService } from '../realtime/changes.service';
 import { tiedSpace } from './tied-space';
 
 export type ObjectType = 'project' | 'roadmap' | 'dashboard' | 'storybox' | 'mindmap';
@@ -29,6 +30,7 @@ export class ObjectsService {
   constructor(
     @Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService,
     @Inject(MetricsService) private readonly metrics: MetricsService, @Inject(AccessService) private readonly access: AccessService,
+    @Inject(ChangesService) private readonly changes: ChangesService,
   ) {}
 
   /** What the person has on one object: their grants, full access to a dashboard they made, and what the space it is tied to gives them. */
@@ -110,6 +112,7 @@ export class ObjectsService {
       return changed.rows[0];
     });
     this.metrics.inc('object_writes_total', { kind });
+    await this.changes.publish(orgId, { kind: 'object', spaceId: null }); // no name or content: pages ask again for what they may see
     return { id: saved.id, position: saved.position, doc: saved.doc, version: saved.version, level: await this.level(me, orgId, kind, saved) };
   }
 
@@ -127,5 +130,6 @@ export class ObjectsService {
       await this.audit.record({ actor: me.user.id, orgId, action: `${kind}.delete`, outcome: 'ok', sourceIp: ip, detail: { objectId: id } }, tx);
     });
     this.metrics.inc('object_writes_total', { kind });
+    await this.changes.publish(orgId, { kind: 'object', spaceId: null });
   }
 }

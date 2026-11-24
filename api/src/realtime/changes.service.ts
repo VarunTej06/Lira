@@ -6,7 +6,7 @@ import { logLine } from '../observability/log';
 import { MetricsService } from '../observability/metrics.service';
 
 /** What changed, and where. It names no title, text or person: a page that hears it asks the API again, which checks access as always. */
-export interface Change { kind: 'ticket' | 'space'; spaceId: number | null }
+export interface Change { kind: 'ticket' | 'space' | 'object'; spaceId: number | null }
 
 interface Subscriber { orgId: string; userId: string; send: (change: Change) => void }
 
@@ -61,7 +61,7 @@ export class ChangesService implements OnApplicationBootstrap, OnModuleDestroy {
     let note: unknown;
     try { note = JSON.parse(payload ?? ''); } catch { return; }
     const n = note as { o?: unknown; k?: unknown; s?: unknown } | null;
-    if (typeof n?.o !== 'string' || (n.k !== 'ticket' && n.k !== 'space') || !(n.s === null || (typeof n.s === 'number' && Number.isInteger(n.s)))) return;
+    if (typeof n?.o !== 'string' || (n.k !== 'ticket' && n.k !== 'space' && n.k !== 'object') || !(n.s === null || (typeof n.s === 'number' && Number.isInteger(n.s)))) return;
     for (const sub of this.subscribers) if (sub.orgId === n.o) sub.send({ kind: n.k, spaceId: n.s });
   }
 

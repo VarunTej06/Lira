@@ -325,6 +325,19 @@ async function reloadCollection(key: string) {
   changeListener?.()
 }
 
+/**
+ * Another person changed a project, roadmap, dashboard, mind map or story box. Reads each list again and tells the screens. A browser that
+ * still has changes it has not sent is left alone, so a refresh never undoes them; the next note, or the next save, brings it up to date.
+ */
+export async function refreshCollections(): Promise<void> {
+  if (!hostedOrg || !ready || localStorage.getItem(DIRTY_KEY) !== null) return
+  for (const key of Object.keys(COLLECTIONS)) {
+    const before = localStorage.getItem(key)
+    await reloadCollection(key)
+    if (localStorage.getItem(key) !== before) window.dispatchEvent(new StorageEvent('storage', { key }))
+  }
+}
+
 /** For the tests: forgets the signed-in state. */
 export function resetHostedKv() { resetHostedObjects(); hostedOrg = null; serverHas = {}; mayShare = false; enabled = false; ready = false }
 

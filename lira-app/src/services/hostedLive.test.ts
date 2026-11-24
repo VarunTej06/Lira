@@ -1,8 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { spaceOfNote, startHostedLive, stopHostedLive } from './hostedLive';
+import { noteOf, startHostedLive, stopHostedLive } from './hostedLive';
 
 const refresh = vi.hoisted(() => vi.fn(async () => undefined));
 vi.mock('./hostedRefresh', () => ({ refreshFromServer: refresh }));
+const collections = vi.hoisted(() => vi.fn(async () => undefined));
+vi.mock('./kvMirror', () => ({ refreshCollections: collections }));
 
 class FakeSource {
   static all: FakeSource[] = [];
@@ -16,20 +18,21 @@ class FakeSource {
   say(data: unknown) { this.onmessage?.({ data }); }
 }
 
-beforeEach(() => { vi.useFakeTimers(); refresh.mockClear(); FakeSource.all = []; vi.stubGlobal('EventSource', FakeSource); });
+beforeEach(() => { vi.useFakeTimers(); refresh.mockClear(); collections.mockClear(); FakeSource.all = []; vi.stubGlobal('EventSource', FakeSource); });
 afterEach(() => { stopHostedLive(); vi.useRealTimers(); vi.unstubAllGlobals(); });
 
 const note = (kind: string, spaceId: number | null) => JSON.stringify({ kind, spaceId });
 
 describe('reading a note', () => {
-  it('gives the space a note is about, or null when it is about everything', () => {
-    expect(spaceOfNote(note('ticket', 4))).toBe(4);
-    expect(spaceOfNote(note('space', null))).toBeNull();
+  it('gives what a note is about, the space or null for everything', () => {
+    expect(noteOf(note('ticket', 4))).toEqual({ kind: 'ticket', spaceId: 4 });
+    expect(noteOf(note('space', null))).toEqual({ kind: 'space', spaceId: null });
+    expect(noteOf(note('object', null))).toEqual({ kind: 'object', spaceId: null });
   });
 
   it('ignores anything that is not a note', () => {
     for (const bad of [undefined, 5, '', 'nope', 'null', note('kv', 1), JSON.stringify({ kind: 'ticket', spaceId: '4' }), JSON.stringify({ kind: 'ticket', spaceId: 1.5 }), JSON.stringify({ kind: 'ticket' })]) {
-      expect(spaceOfNote(bad), String(bad)).toBeUndefined();
+      expect(noteOf(bad), String(bad)).toBeUndefined();
     }
   });
 });
@@ -89,6 +92,28 @@ describe('the live stream', () => {
     expect(refresh).not.toHaveBeenCalled();
     startHostedLive('o');
     expect(FakeSource.all).toHaveLength(2);
+  });
+
+  it('reads the projects, roadmaps, dashboards, mind maps and story boxes again when one changed, once for a burst, and not the tickets', async () => {
+    startHostedLive('o');
+    const s = FakeSource.all[0];
+    s.say(note('object', null)); s.say(note('object', null)); s.say(note('object', null));
+    await vi.advanceTimersByTimeAsync(300);
+    expect(collections).toHaveBeenCalledTimes(1);
+    expect(refresh).not.toHaveBeenCalled();
+  });
+
+  it('does both when a burst has tickets and objects, and reads everything after a break', async () => {
+    startHostedLive('o');
+    const s = FakeSource.all[0];
+    s.say(note('ticket', 4)); s.say(note('object', null));
+    await vi.advanceTimersByTimeAsync(300);
+    expect(refresh).toHaveBeenCalledWith(4);
+    expect(collections).toHaveBeenCalledTimes(1);
+    s.onerror?.(); s.onopen?.();
+    await vi.advanceTimersByTimeAsync(300);
+    expect(refresh).toHaveBeenLastCalledWith(null);
+    expect(collections).toHaveBeenCalledTimes(2);
   });
 
   it('does nothing in a browser that has no event streams', () => {

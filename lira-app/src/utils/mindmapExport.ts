@@ -1,29 +1,34 @@
-import { layout, NODE_H, visibleNodes, type MindNode } from './mindmap';
+import { boundsOf, colorOf, connector, layoutMap, strokeOf } from './mindLayout';
+import { visibleNodes, type MindNode } from './mindmap';
 
 const esc = (s: string): string => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
-const PAD = 24;
+const PAD = 32;
 
-/** The map as a stand-alone SVG picture. Text is escaped, so an idea can never put markup in the file. `colors` are the page's own colours. */
+/** The map as a stand-alone SVG picture, drawn the way it is on screen. Text is escaped, so an idea can never put markup in the file. `colors` are the page's own colours. */
 export function toSvg(nodes: readonly MindNode[], colors: { ink: string; paper: string; line: string; accent: string }): { svg: string; width: number; height: number } {
-  const boxes = layout(nodes);
+  const boxes = layoutMap(nodes);
   const shown = visibleNodes(nodes);
-  const all = [...boxes.values()];
-  const width = Math.max(...all.map(b => b.x + b.w), 0) + PAD * 2;
-  const height = Math.max(...all.map(b => b.y + b.h), 0) + PAD * 2;
-  const parts: string[] = [];
+  const bounds = boundsOf(boxes);
+  const width = Math.ceil(bounds.w + PAD * 2);
+  const height = Math.ceil(bounds.h + PAD * 2);
+  const dx = PAD - bounds.x; const dy = PAD - bounds.y;
+  const parts: string[] = [`<g transform="translate(${dx} ${dy})">`];
   for (const n of shown) {
     const box = boxes.get(n.id); const parent = n.parentId === null ? undefined : boxes.get(n.parentId);
     if (!box || !parent) continue;
-    const x1 = parent.x + parent.w + PAD, y1 = parent.y + NODE_H / 2 + PAD, x2 = box.x + PAD, y2 = box.y + NODE_H / 2 + PAD;
-    parts.push(`<path d="M${x1} ${y1}C${(x1 + x2) / 2} ${y1} ${(x1 + x2) / 2} ${y2} ${x2} ${y2}" fill="none" stroke="${esc(colors.line)}" stroke-width="2"/>`);
+    parts.push(`<path d="${connector(parent, box)}" fill="none" stroke="${esc(colorOf(nodes, n.id) ?? colors.line)}" stroke-width="${strokeOf(box.depth)}" stroke-linecap="round"/>`);
   }
   for (const n of shown) {
     const box = boxes.get(n.id);
     if (!box) continue;
-    const stroke = n.color ?? (n.parentId === null ? colors.accent : colors.line);
-    parts.push(`<rect x="${box.x + PAD}" y="${box.y + PAD}" width="${box.w}" height="${box.h}" rx="6" fill="${esc(colors.paper)}" stroke="${esc(stroke)}" stroke-width="2"/>`);
-    parts.push(`<text x="${box.x + PAD + 12}" y="${box.y + PAD + NODE_H / 2 + 4}" font-family="sans-serif" font-size="13" fill="${esc(colors.ink)}">${esc(n.text.slice(0, Math.floor((box.w - 20) / 7)))}</text>`);
+    const root = box.side === 'root';
+    const fit = Math.floor((box.w - 16) / (root ? 9 : 7));
+    const label = esc(n.text.length > fit ? `${n.text.slice(0, Math.max(1, fit - 1))}...` : n.text);
+    if (root) parts.push(`<rect x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" rx="12" fill="${esc(colors.paper)}" stroke="${esc(colors.accent)}" stroke-width="2"/>`);
+    const x = root ? box.x + box.w / 2 : box.side === 'right' ? box.x : box.x + box.w;
+    parts.push(`<text x="${x}" y="${box.y + box.h / 2 + 4}" text-anchor="${root ? 'middle' : box.side === 'right' ? 'start' : 'end'}" font-family="sans-serif" font-size="${root ? 16 : 13}" font-weight="${root || box.depth === 1 ? 600 : 400}" fill="${esc(colors.ink)}">${label}</text>`);
   }
+  parts.push('</g>');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="${esc(colors.paper)}"/>${parts.join('')}</svg>`;
   return { svg, width, height };
 }

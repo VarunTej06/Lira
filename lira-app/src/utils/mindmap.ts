@@ -1,11 +1,7 @@
 /** One idea in a mind map. The first node (no parent) is the central idea. */
 export interface MindNode { id: string; parentId: string | null; text: string; collapsed?: boolean; color?: string; note?: string; ticketKey?: string }
-export interface MindMap { id: string; name: string; nodes: MindNode[]; createdAt: string; updatedAt: string; createdBy?: string }
-export interface Box { x: number; y: number; w: number; h: number }
+export interface MindMap { id: string; name: string; nodes: MindNode[]; createdAt: string; updatedAt: string; createdBy?: string; starred?: boolean }
 
-export const NODE_H = 34;
-const X_GAP = 56;
-const Y_GAP = 12;
 export const MAX_NODES = 2000;
 
 export const rootOf = (nodes: readonly MindNode[]): MindNode | undefined => nodes.find(n => n.parentId === null);
@@ -70,33 +66,6 @@ export const setAllCollapsed = (nodes: readonly MindNode[], collapsed: boolean):
 
 export const widthOf = (text: string): number => Math.min(260, Math.max(96, text.length * 7 + 32));
 
-/**
- * Places the visible ideas: the central idea on the left, each level a column to its right, and every idea centred on its own branch,
- * so branches never overlap whatever their size.
- */
-export function layout(nodes: readonly MindNode[]): Map<string, Box> {
-  const shown = visibleNodes(nodes);
-  const kids = new Map<string, MindNode[]>();
-  for (const n of shown) if (n.parentId !== null) kids.set(n.parentId, [...(kids.get(n.parentId) ?? []), n]);
-  const height = new Map<string, number>();
-  const measure = (n: MindNode): number => {
-    const list = kids.get(n.id) ?? [];
-    const h = list.length ? list.reduce((sum, c) => sum + measure(c), 0) + Y_GAP * (list.length - 1) : NODE_H;
-    height.set(n.id, Math.max(h, NODE_H));
-    return height.get(n.id)!;
-  };
-  const boxes = new Map<string, Box>();
-  const place = (n: MindNode, x: number, top: number) => {
-    const w = widthOf(n.text);
-    boxes.set(n.id, { x, y: top + height.get(n.id)! / 2 - NODE_H / 2, w, h: NODE_H });
-    let y = top;
-    for (const c of kids.get(n.id) ?? []) { place(c, x + w + X_GAP, y); y += height.get(c.id)! + Y_GAP; }
-  };
-  const root = shown.find(n => n.parentId === null);
-  if (root) { measure(root); place(root, 0, 0); }
-  return boxes;
-}
-
 const clean = (s: string) => s.replace(/\s+/g, ' ').trim();
 
 /** The map as an indented Markdown list, with notes and the linked ticket after each idea. */
@@ -138,15 +107,4 @@ export function searchNodes(nodes: readonly MindNode[], query: string): Set<stri
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return new Set();
   return new Set(nodes.filter(n => { const hay = `${n.text} ${n.note ?? ''} ${n.ticketKey ?? ''}`.toLowerCase(); return words.every(w => hay.includes(w)); }).map(n => n.id));
-}
-
-/** The next idea to select with an arrow: the parent, the first child, or the neighbour above or below at the same level. */
-export function neighbour(nodes: readonly MindNode[], id: string, dir: 'left' | 'right' | 'up' | 'down'): string | null {
-  const at = nodes.find(n => n.id === id);
-  if (!at) return null;
-  if (dir === 'left') return at.parentId;
-  if (dir === 'right') return at.collapsed ? null : childrenOf(nodes, id)[0]?.id ?? null;
-  if (at.parentId === null) return null;
-  const sibs = childrenOf(nodes, at.parentId);
-  return sibs[sibs.indexOf(at) + (dir === 'up' ? -1 : 1)]?.id ?? null;
 }

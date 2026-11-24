@@ -5,10 +5,20 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('lira_onboarded', 'true'));
 });
 
+/** Makes a blank mind map from the list and opens its page. */
+async function makeMap(page: import('@playwright/test').Page, name: string, template?: string) {
+  await page.goto('/mindmaps');
+  await page.getByRole('button', { name: 'New mind map' }).first().click();
+  await page.getByLabel('Name').fill(name);
+  if (template) await page.getByText(template, { exact: true }).click();
+  await page.getByRole('button', { name: 'Make the map' }).click();
+  await expect(page).toHaveURL(/\/mindmaps\/.+/);
+}
+
 test('a mind map: make one, add ideas with the keyboard, undo, reload, and export it', async ({ page }, info) => {
   await page.goto('/mindmaps');
-  await page.locator('nav[aria-label="Mind maps"] > button').first().click();
-  await expect(page).toHaveURL(/\/mindmaps\/.+/);
+  await page.screenshot({ path: info.outputPath('mindmaps-empty.png') });
+  await makeMap(page, 'New mind map');
   const canvas = page.getByRole('application', { name: 'Mind map' });
   await expect(canvas).toBeVisible();
 
@@ -21,7 +31,6 @@ test('a mind map: make one, add ideas with the keyboard, undo, reload, and expor
   await page.keyboard.press('Enter');
   await expect(canvas.getByText('Research')).toBeVisible();
   await expect(canvas.getByText('Design')).toBeVisible();
-  await page.screenshot({ path: info.outputPath('mindmap.png') });
 
   await page.getByRole('button', { name: 'Undo' }).click();
   await expect(canvas.getByText('Design')).toHaveCount(0);
@@ -31,16 +40,32 @@ test('a mind map: make one, add ideas with the keyboard, undo, reload, and expor
   await page.reload();
   await expect(page.getByRole('application', { name: 'Mind map' }).getByText('Research')).toBeVisible(); // saved
 
-  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'md', exact: true }).click()]);
+  await page.getByRole('button', { name: 'Export' }).click();
+  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('menuitem', { name: 'Outline (Markdown)' }).click()]);
   expect(download.suggestedFilename()).toBe('new-mind-map.md');
   const text = readFileSync(await download.path(), 'utf8');
   expect(text).toContain('- Research');
   expect(text).toContain('- Design');
 });
 
+test('a mind map: a template fills the page with coloured branches on both sides, and the list shows it', async ({ page }, info) => {
+  await makeMap(page, 'Launch plan', 'Project plan');
+  const canvas = page.getByRole('application', { name: 'Mind map' });
+  await expect(canvas.getByText('Goals')).toBeVisible();
+  await page.getByRole('button', { name: 'Fit to screen' }).click();
+  await canvas.locator('g[data-node-id]', { hasText: 'Goals' }).click();
+  await expect(page.getByRole('complementary', { name: 'Selected idea' })).toBeVisible();
+  await page.screenshot({ path: info.outputPath('mindmap-editor.png') });
+  const strokes = await canvas.locator('svg.touch-none path').evaluateAll(els => new Set(els.map(e => e.getAttribute('stroke'))).size);
+  expect(strokes).toBeGreaterThan(3); // each main branch has its own colour
+
+  await page.getByRole('button', { name: 'All mind maps' }).click();
+  await expect(page.getByRole('article', { name: 'Launch plan' })).toBeVisible();
+  await page.screenshot({ path: info.outputPath('mindmaps-list.png') });
+});
+
 test('a mind map: an idea dragged onto another moves with its branch, and the central idea cannot be deleted', async ({ page }) => {
-  await page.goto('/mindmaps');
-  await page.locator('nav[aria-label="Mind maps"] > button').first().click();
+  await makeMap(page, 'Drag test');
   const canvas = page.getByRole('application', { name: 'Mind map' });
   await canvas.locator('g[data-node-id]').first().click();
   for (const name of ['One', 'Two']) { await page.keyboard.press('Tab'); await page.keyboard.type(name); await page.keyboard.press('Enter'); await canvas.locator('g[data-node-id]').first().click(); }
@@ -52,8 +77,8 @@ test('a mind map: an idea dragged onto another moves with its branch, and the ce
   await page.mouse.down();
   await page.mouse.move(b!.x + b!.width / 2, b!.y + b!.height / 2, { steps: 8 });
   await page.mouse.up();
-  await page.getByRole('button', { name: 'md', exact: true }).waitFor();
-  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'md', exact: true }).click()]);
+  await page.getByRole('button', { name: 'Export' }).click();
+  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('menuitem', { name: 'Outline (Markdown)' }).click()]);
   const outline = readFileSync(await download.path(), 'utf8');
   expect(outline).toMatch(/- Two\n {4}- One/); // One now sits under Two
   await canvas.locator('g[data-node-id]').first().click();

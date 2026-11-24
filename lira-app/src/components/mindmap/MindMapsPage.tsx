@@ -1,117 +1,115 @@
+import { Copy, Lightbulb, Link2, Network, Plus, Search, Star, Timer, Trash2 } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { PALETTE } from '../../theme/palette';
-import { useResetWhen } from '../../hooks/useResetWhen';
+import { useNavigate } from 'react-router-dom';
 import { useStoredList } from '../../hooks/useStoredList';
-import type { Issue } from '../../types/issue';
-import { currentTime } from '../../utils/clock';
-import { push, redo, start, undo, type History } from '../../utils/history';
-import { fromOutline, newMap, removeNode, setAllCollapsed, toOutline, updateNode, type MindMap, type MindNode } from '../../utils/mindmap';
-import { download, fileNameOf, svgToPng, toSvg } from '../../utils/mindmapExport';
+import { currentTime, currentTimeMs } from '../../utils/clock';
+import { copyOf, mindStats, visibleMaps, type MindSort, type MindTab } from '../../utils/mindOverview';
+import type { MindMap } from '../../utils/mindmap';
+import { AnimatedValue, CountUp } from '../common/motion';
 import { confirmDialog } from '../common/dialogStore';
-import { BUTTON, FIELD } from '../teams/teamsUi';
-import { MindMapCanvas } from './MindMapCanvas';
-import { MindMapPanel } from './MindMapPanel';
+import { MindThumb } from './MindThumb';
+import { NewMindMapModal } from './NewMindMapModal';
 
 const KEY = 'lira_mindmaps';
-/** The colours of an exported picture: the app's own palette, so it reads the same on any page. */
-const COLORS = { ink: PALETTE.ink, paper: PALETTE.surfaceMuted, line: PALETTE.textFaint, accent: PALETTE.brand };
-const uid = (): string => crypto.randomUUID();
+const dateOf = (iso: string): string => new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+const ICON_BTN = 'p-1.5 rounded-lg text-lira-muted hover:bg-gray-100 hover:text-lira-text cursor-pointer';
 
-/** Mind maps: a list of them, and the editor for the open one. */
-export function MindMapsPage({ issues }: { issues: Issue[] }) {
+function MapCard({ map, onOpen, onStar, onCopy, onDelete }: { map: MindMap; onOpen: () => void; onStar: () => void; onCopy: () => void; onDelete: () => void }) {
+  const tickets = map.nodes.filter(n => n.ticketKey).length;
+  return (
+    <article aria-label={map.name} className="bg-white border border-lira-border rounded-2xl overflow-hidden flex flex-col">
+      <button type="button" onClick={onOpen} aria-label={`Open ${map.name}`} className="h-36 bg-lira-bg border-b border-lira-border p-2 cursor-pointer hover:bg-gray-50"><MindThumb nodes={map.nodes} /></button>
+      <div className="p-4 space-y-2 flex-1">
+        <div className="flex items-start gap-2">
+          <button type="button" onClick={onOpen} className="flex-1 min-w-0 text-left text-sm font-semibold text-lira-text truncate cursor-pointer hover:text-lira-blue">{map.name}</button>
+          <button type="button" aria-pressed={!!map.starred} aria-label={map.starred ? `Remove the star from ${map.name}` : `Star ${map.name}`} onClick={onStar} className={ICON_BTN}><Star className={`w-4 h-4 ${map.starred ? 'fill-amber-400 text-amber-500' : ''}`} /></button>
+        </div>
+        <div className="flex flex-wrap gap-2 text-3xs">
+          <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">{map.nodes.length} ideas</span>
+          {tickets > 0 && <span className="px-2 py-0.5 rounded-full bg-lira-blue-light text-lira-blue font-medium">{tickets} linked to tickets</span>}
+        </div>
+      </div>
+      <footer className="flex items-center gap-1 px-4 py-2 border-t border-lira-border text-2xs text-lira-muted">
+        <span className="flex-1 truncate">Changed {dateOf(map.updatedAt)}{map.createdBy ? `, made by ${map.createdBy}` : ''}</span>
+        <button type="button" aria-label={`Copy ${map.name}`} title="Make a copy" onClick={onCopy} className={ICON_BTN}><Copy className="w-3.5 h-3.5" /></button>
+        <button type="button" aria-label={`Delete ${map.name}`} title="Delete" onClick={onDelete} className={ICON_BTN}><Trash2 className="w-3.5 h-3.5" /></button>
+      </footer>
+    </article>
+  );
+}
+
+/** Mind maps: the numbers, then every map as a card with a small picture of it. A map opens as its own page. */
+export function MindMapsPage() {
   const [maps, saveMaps] = useStoredList<MindMap>(KEY);
-  const { mapId } = useParams();
   const navigate = useNavigate();
-  const map = maps.find(m => m.id === mapId);
-  const [history, setHistory] = useState<History<MindNode[]>>(() => start(map?.nodes ?? []));
-  const [selected, setSelected] = useState<string | null>(null);
+  const [tab, setTab] = useState<MindTab>('all');
   const [query, setQuery] = useState('');
-  const [importing, setImporting] = useState<string | null>(null);
-  useResetWhen([map?.id], () => { setHistory(start(map?.nodes ?? [])); setSelected(null); setQuery(''); setImporting(null); });
+  const [sort, setSort] = useState<MindSort>('updated');
+  const [creating, setCreating] = useState(false);
+  const stats = mindStats(maps, currentTimeMs());
+  const shown = visibleMaps(maps, tab, query, sort);
+  const starred = maps.filter(m => m.starred).length;
+  const tiles = [
+    { label: 'Mind maps', value: stats.maps, sub: `${starred} starred`, icon: <Network className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
+    { label: 'Ideas', value: stats.ideas, sub: 'across every map', icon: <Lightbulb className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
+    { label: 'Linked to tickets', value: stats.tickets, sub: 'ideas that stand for a ticket', icon: <Link2 className="w-4 h-4" />, tone: 'text-emerald-600 bg-emerald-50' },
+    { label: 'Changed this week', value: stats.recent, sub: 'in the last seven days', icon: <Timer className="w-4 h-4" />, tone: 'text-teal-600 bg-teal-50' },
+  ];
 
-  const write = (id: string, patch: Partial<MindMap>) => saveMaps(maps.map(m => (m.id === id ? { ...m, ...patch, updatedAt: currentTime().toISOString() } : m)));
-  const commit = (nodes: MindNode[]) => { if (!map) return; setHistory(h => push(h, nodes)); write(map.id, { nodes }); };
-  const step = (move: typeof undo) => { if (!map) return; const next = move(history); setHistory(next); write(map.id, { nodes: next.present }); };
-  const create = () => {
-    const now = currentTime().toISOString();
-    const made = newMap(uid(), 'New mind map', now, uid());
-    saveMaps([...maps, made]);
-    navigate(`/mindmaps/${made.id}`);
-  };
-  const remove = async (m: MindMap) => {
+  async function remove(m: MindMap) {
     if (!(await confirmDialog({ title: `Delete "${m.name}"?`, message: 'The whole mind map is deleted. This cannot be undone.', confirmLabel: 'Delete', tone: 'danger' }))) return;
     saveMaps(maps.filter(x => x.id !== m.id));
-    if (m.id === mapId) navigate('/mindmaps');
-  };
-  const copy = (m: MindMap) => {
-    const ids = new Map(m.nodes.map(n => [n.id, uid()]));
-    const made: MindMap = { ...m, id: uid(), name: `${m.name} (copy)`, nodes: m.nodes.map(n => ({ ...n, id: ids.get(n.id)!, parentId: n.parentId === null ? null : ids.get(n.parentId)! })), createdAt: currentTime().toISOString(), updatedAt: currentTime().toISOString() };
-    saveMaps([...maps, made]);
-    navigate(`/mindmaps/${made.id}`);
-  };
-  const exportAs = async (kind: 'json' | 'md' | 'svg' | 'png') => {
-    if (!map) return;
-    if (kind === 'json') download(fileNameOf(map.name, 'json'), 'application/json', JSON.stringify(map, null, 2));
-    else if (kind === 'md') download(fileNameOf(map.name, 'md'), 'text/markdown', `# ${map.name}\n\n${toOutline(map.nodes)}\n`);
-    else {
-      const { svg, width, height } = toSvg(map.nodes, COLORS);
-      if (kind === 'svg') download(fileNameOf(map.name, 'svg'), 'image/svg+xml', svg);
-      else { const png = await svgToPng(svg, width, height); if (png) download(fileNameOf(map.name, 'png'), 'image/png', png); }
-    }
-  };
-  const importOutline = () => {
-    const nodes = fromOutline(importing ?? '', uid);
-    if (nodes.length > 0) { commit(nodes); setSelected(null); }
-    setImporting(null);
-  };
-  const node = map?.nodes.find(n => n.id === selected);
+  }
+  const copy = (m: MindMap) => { const made = copyOf(m, () => crypto.randomUUID(), currentTime().toISOString()); saveMaps([...maps, made]); navigate(`/mindmaps/${made.id}`); };
 
   return (
-    <div className="flex gap-4 p-4 h-full min-h-0">
-      <nav aria-label="Mind maps" className="w-56 shrink-0 space-y-2 overflow-y-auto">
-        <button type="button" onClick={create} className={`${BUTTON} w-full`}>New mind map</button>
-        {maps.length === 0 && <p className="text-ui text-lira-muted">No mind maps yet.</p>}
-        <ul className="space-y-1">
-          {maps.map(m => (
-            <li key={m.id} className={`flex items-center gap-1 rounded border px-2 py-1.5 text-ui ${m.id === mapId ? 'border-lira-blue bg-lira-blue-light' : 'border-lira-border'}`}>
-              <button type="button" className="flex-1 text-left truncate" onClick={() => navigate(`/mindmaps/${m.id}`)}>{m.name}</button>
-              <button type="button" aria-label={`Copy ${m.name}`} title="Make a copy" onClick={() => copy(m)} className="text-lira-muted">⧉</button>
-              <button type="button" aria-label={`Delete ${m.name}`} title="Delete" onClick={() => { void remove(m); }} className="text-lira-muted">×</button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <section className="flex-1 min-w-0 flex flex-col gap-3">
-        {!map ? <p className="text-ui text-lira-muted">{maps.length ? 'Choose a mind map, or make a new one.' : 'Make your first mind map to start.'}</p> : (
-          <>
-            <div className="flex flex-wrap items-center gap-2 text-ui">
-              <input aria-label="Mind map name" value={map.name} onChange={e => write(map.id, { name: e.target.value.slice(0, 100) })} className={`${FIELD} w-56 font-bold`} />
-              <button type="button" disabled={!history.past.length} onClick={() => step(undo)} className="rounded px-2 py-1 border border-lira-border disabled:opacity-40">Undo</button>
-              <button type="button" disabled={!history.future.length} onClick={() => step(redo)} className="rounded px-2 py-1 border border-lira-border disabled:opacity-40">Redo</button>
-              <button type="button" onClick={() => commit(setAllCollapsed(map.nodes, true))} className="rounded px-2 py-1 border border-lira-border">Fold all</button>
-              <button type="button" onClick={() => commit(setAllCollapsed(map.nodes, false))} className="rounded px-2 py-1 border border-lira-border">Unfold all</button>
-              <input type="search" aria-label="Search the map" placeholder="Search ideas" value={query} onChange={e => setQuery(e.target.value)} className={`${FIELD} w-44`} />
-              <span className="flex gap-1 ml-auto" role="group" aria-label="Export">
-                {(['json', 'md', 'svg', 'png'] as const).map(k => <button key={k} type="button" onClick={() => { void exportAs(k); }} className="rounded px-2 py-1 border border-lira-border uppercase">{k}</button>)}
-                <button type="button" onClick={() => setImporting('')} className="rounded px-2 py-1 border border-lira-border">Import outline</button>
-              </span>
-            </div>
-            {importing !== null && (
-              <div className="border border-lira-border rounded-lg p-3 space-y-2 text-ui">
-                <p className="text-lira-muted">Paste an indented list. The first line becomes the central idea and replaces this map's ideas.</p>
-                <textarea aria-label="Outline" rows={6} value={importing} onChange={e => setImporting(e.target.value)} className="w-full bg-lira-bg border border-lira-border rounded px-2 py-1 font-mono text-ui text-lira-text" />
-                <div className="flex gap-2"><button type="button" onClick={importOutline} className={BUTTON}>Replace the map</button><button type="button" onClick={() => setImporting(null)} className="rounded px-3 py-1.5 border border-lira-border">Cancel</button></div>
+    <div className="flex-1 overflow-y-auto bg-lira-bg">
+      <div className="max-w-6xl mx-auto p-6 space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="text-xl font-semibold text-lira-text flex items-center gap-2"><Network className="w-5 h-5 text-lira-blue" /> Mind maps</h1>
+            <p className="text-xs text-lira-muted mt-0.5">Think a topic through: a central idea, branches around it, and a ticket on any idea. Open a map to edit it on its own page.</p>
+          </div>
+          <button type="button" onClick={() => setCreating(true)} className="flex items-center gap-1 text-sm px-3 py-1.5 rounded-xl bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer"><Plus className="w-3.5 h-3.5" /> New mind map</button>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {tiles.map(t => (
+            <div key={t.label} className="bg-white border border-lira-border rounded-2xl px-4 py-3 flex items-center gap-3">
+              <span className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${t.tone}`}>{t.icon}</span>
+              <div className="min-w-0">
+                <div className="text-2xl font-semibold text-lira-text leading-none"><AnimatedValue value={<CountUp value={t.value} />} /></div>
+                <div className="text-2xs text-lira-muted mt-1">{t.label}</div>
+                <div className="text-3xs text-lira-muted truncate">{t.sub}</div>
               </div>
-            )}
-            <p className="text-ui text-lira-muted">Tab adds an idea under the selected one, Enter next to it, double click or F2 edits, Delete removes it with its branch, Space folds it. Drag an idea onto another to move it.</p>
-            <div className="flex-1 min-h-0 flex gap-3">
-              <MindMapCanvas nodes={map.nodes} onChange={commit} onUndo={() => step(undo)} onRedo={() => step(redo)} selected={selected} onSelect={setSelected} query={query} />
-              {node && <MindMapPanel node={node} issues={issues} readOnly={false} onPatch={patch => commit(updateNode(map.nodes, node.id, patch))} onRemove={() => { commit(removeNode(map.nodes, node.id)); setSelected(node.parentId); }} />}
             </div>
-          </>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <div role="group" aria-label="Show" className="inline-flex rounded-xl border border-lira-border overflow-hidden text-xs">
+            {([['all', `All ${maps.length}`], ['starred', `Starred ${starred}`]] as const).map(([v, label]) => (
+              <button key={v} type="button" aria-pressed={tab === v} onClick={() => setTab(v)} className={`px-3 py-1.5 cursor-pointer ${tab === v ? 'bg-lira-blue text-lira-on-blue' : 'bg-white text-lira-muted hover:text-lira-text'}`}>{label}</button>
+            ))}
+          </div>
+          <label className="relative"><Search className="w-3.5 h-3.5 text-lira-muted absolute left-2.5 top-1/2 -translate-y-1/2" />
+            <input type="search" aria-label="Search mind maps" placeholder="Search mind maps" value={query} onChange={e => setQuery(e.target.value)} className="w-56 text-sm border border-lira-border rounded-xl pl-8 pr-3 py-1.5 bg-white text-lira-text focus:outline-none focus:border-lira-blue" /></label>
+          <select aria-label="Sort" value={sort} onChange={e => setSort(e.target.value as MindSort)} className="ml-auto text-sm border border-lira-border rounded-xl px-3 py-1.5 bg-white text-lira-text">
+            <option value="updated">Recently changed</option><option value="name">Name</option><option value="ideas">Most ideas</option>
+          </select>
+        </div>
+
+        {shown.length === 0 ? (
+          <div className="bg-white border border-lira-border rounded-2xl px-4 py-12 text-center text-xs text-lira-muted">
+            {maps.length === 0 ? 'Make your first mind map to start.' : tab === 'starred' && !query ? 'Star a map to find it here.' : 'No mind map matches.'}
+          </div>
+        ) : (
+          <div aria-label="Mind maps" role="list" className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {shown.map(m => <div key={m.id} role="listitem"><MapCard map={m} onOpen={() => navigate(`/mindmaps/${m.id}`)} onStar={() => saveMaps(maps.map(x => (x.id === m.id ? { ...x, starred: !x.starred } : x)))} onCopy={() => copy(m)} onDelete={() => { void remove(m); }} /></div>)}
+          </div>
         )}
-      </section>
+      </div>
+      <NewMindMapModal isOpen={creating} onClose={() => setCreating(false)} onCreate={made => { saveMaps([...maps, made]); setCreating(false); navigate(`/mindmaps/${made.id}`); }} />
     </div>
   );
 }

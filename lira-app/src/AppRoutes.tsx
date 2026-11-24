@@ -8,6 +8,7 @@ import { isHosted } from './utils/edition';
 
 // Every page except the board is fetched when it is first opened, so the first load stays small
 const MindMapsPage = lazy(() => import('./components/mindmap/MindMapsPage').then(m => ({ default: m.MindMapsPage })));
+const MindMapEditor = lazy(() => import('./components/mindmap/MindMapEditor').then(m => ({ default: m.MindMapEditor })));
 const StoryBoxesPage = lazy(() => import('./components/storybox/StoryBoxesPage').then(m => ({ default: m.StoryBoxesPage })));
 const StandupsPage = lazy(() => import('./components/standups/StandupsPage').then(m => ({ default: m.StandupsPage })));
 const TeamsPage = lazy(() => import('./components/teams/TeamsPage').then(m => ({ default: m.TeamsPage })));
@@ -109,8 +110,8 @@ export function AppRoutes(p: AppRoutesProps) {
 
       {isHosted() && <Route path="/teams" element={<TeamsPage />} />}
       {isHosted() && <Route path="/calls" element={<StandupsPage />} />}
-      <Route path="/mindmaps" element={<MindMapsPage issues={allIssues} />} />
-      <Route path="/mindmaps/:mapId" element={<MindMapsPage issues={allIssues} />} />
+      <Route path="/mindmaps" element={<MindMapsPage />} />
+      <Route path="/mindmaps/:mapId" element={<MindMapEditor issues={allIssues} />} />
       <Route path="/storyboxes" element={<StoryBoxesPage issues={allIssues} spaces={spaceList} />} />
       <Route path="/storyboxes/:boxId" element={<StoryBoxesPage issues={allIssues} spaces={spaceList} />} />
       <Route path="/dashboards" element={<DashboardsPage issues={allIssues} spaces={spaceList} onOpenIssue={p.onOpenIssue} />} />

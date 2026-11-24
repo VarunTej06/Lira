@@ -484,19 +484,24 @@ Same set-up as A37. The Google lines need Google set up first (`docs/03-sop/goog
 - [ ] Disconnect Google. Expect: scheduling without a link is refused with a message to paste one or connect Google.
 
 ### A53. Mind maps (24 Nov 2026)  ◐
-Both editions. Navigation, **Mind maps** (it can be hidden or moved in the sidebar settings).
-- [ ] Press **New mind map**. Expect: a map with one central idea named like the map, opened on its own address; it is in the list at the left.
-- [ ] Click the central idea, press **Tab**, type a name, press Enter. Expect: a new idea under it, joined by a curve, the text saved. Press **Tab** again on it: a deeper level. Press **Enter** on a child: a sibling next to it.
-- [ ] Double click an idea, or press F2, change the text, press Escape. Expect: the old text stays. Change it again and press Enter: the new text stays.
-- [ ] Press Delete on an idea with children. Expect: it and its branch go; the central idea cannot be deleted.
-- [ ] Press Space on an idea, or the small round button on its right. Expect: its branch hides and shows a plus; again to unfold. **Fold all** and **Unfold all** do it for every branch.
+Both editions. Navigation, **Mind maps** (it can be hidden or moved in the sidebar settings). Rebuilt on 24 Nov 2026: a list page and a page of its own for each map.
+- [ ] Open **Mind maps**. Expect: a page like Roadmaps: four tiles (Mind maps, Ideas, Linked to tickets, Changed this week), **All** and **Starred** tabs, a search, a sort list, and a card for each map with a small coloured picture of it, its number of ideas and who made it.
+- [ ] Press **New mind map**. Expect: a dialog with a name and four starting points: Blank, Brainstorm, Project plan, Meeting notes. **Cancel** and Escape close it. Choose Project plan and **Make the map**. Expect: the map opens on its own page with the central idea in the middle and its branches on both sides.
+- [ ] Look at the page. Expect: a bar on top (back to Mind maps, the name you can edit, a star, Map and Outline, a search, Import outline, Export), a dark strip of tools on the left, the map filling the page, the controls bottom right (undo, redo, zoom out, the zoom in percent, zoom in, fit, keys), and nothing hidden behind the strip.
+- [ ] Look at the branches. Expect: each main branch has its own colour from the palette, its lines run from the central idea with rounded corners and get thinner towards the ends, and the twigs have the colour of their branch.
+- [ ] Click an idea. Expect: a panel on the right with its text, colour, note and ticket. Press **Tab**, type, Enter: a new idea under it. **Enter** on an idea adds one next to it (not on the central idea). The same with the **Add an idea** and **Add an idea next to it** tools.
+- [ ] Double click an idea, or press F2 or the pencil tool, change the text, press Escape. Expect: the old text stays. Again and press Enter: the new text stays.
+- [ ] Press Delete (or the bin tool, or the red button in the panel) on an idea with children. Expect: it and its branch go; the central idea cannot be deleted.
+- [ ] Press Space on an idea, or the small round button beside it. Expect: its branch hides and the button shows how many are inside; again to unfold. The two arrows tools fold and unfold every branch.
 - [ ] Drag an idea onto another. Expect: it moves, with its branch, under the other; dropping it onto its own child or onto nothing changes nothing.
-- [ ] Drag the empty background to pan, use the wheel and + and – to zoom, **Fit** to see it all. Expect: nothing overlaps whatever the size of the map.
-- [ ] Select an idea. Expect: a panel with colours, a note and a ticket key (try LIRA-1): a coloured edge, a note dot, the ticket key above the box and its title in the panel.
+- [ ] Drag the empty background to pan, use the wheel and the buttons to zoom, **Fit to screen** to see it all. Expect: nothing overlaps whatever the size of the map. The **?** button lists the keys.
+- [ ] Choose a colour with the palette tool or in the panel, write a note, type a ticket key (try LIRA-1). Expect: the branch changes colour, a dot shows the note, the key appears above the idea and its title in the panel. **Auto** goes back to the colour of its branch.
 - [ ] Type in **Search ideas**. Expect: matching ideas are ringed with a dashed line.
-- [ ] **Undo** and **Redo** (or Ctrl+Z, Ctrl+Y) after several changes. Expect: each goes back and forward.
-- [ ] **Import outline**: paste an indented list. Expect: the map is replaced by it and Undo brings the old one back. **MD**: a Markdown outline downloads. **JSON**, **SVG** and **PNG** also download, named after the map; the picture shows every idea.
-- [ ] Make a copy, delete one (it asks first). Reload the page. Expect: everything is as left. Local edition: the maps are in the data folder's `mindmaps.json`. Hosted: another member does not see your map until you share it (Access, kind Mind map); an Owner sees all.
+- [ ] Press **Outline**. Expect: the same ideas as an indented list with their colours; clicking one selects it and the panel opens; **Map** goes back.
+- [ ] **Undo** and **Redo** in the corner (or Ctrl+Z, Ctrl+Y) after several changes. Expect: each goes back and forward.
+- [ ] The template tool. Expect: a list of the four; choosing one asks first, then replaces the ideas, and Undo brings the old ones back.
+- [ ] **Import outline**: paste an indented list. Expect: the map is replaced by it and Undo brings the old one back; a text with no ideas changes nothing. **Export**: Picture (PNG), Drawing (SVG), Outline (Markdown) and Data (JSON) download, named after the map; the picture shows every idea in the colours of the branches.
+- [ ] Back on the list: star a map (it shows under Starred), make a copy, delete one. Expect: delete asks first; **Cancel**, Escape and **Delete** all work. Reload the page. Expect: everything is as left. Local edition: the maps are in the data folder's `mindmaps.json`. Hosted: another member does not see your map until you share it (Access, kind Mind map); an Owner sees all of them.
 
 ### A58. Story box planning room (24 Nov 2026)  ◐
 Both editions. Navigation, **Story boxes**. Hosted: an Owner or Admin plus a second person who may view the space (A46), each in their own browser. This replaces the table of points of A54.

@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, useState } from 'react';
 import { addChild, newMap, type MindNode } from '../../utils/mindmap';
 import { cleanup, mount, q, qa } from '../../test/render';
+import { MIND_COLORS } from '../../theme/palette';
 import { MindMapCanvas } from './MindMapCanvas';
 
 afterEach(cleanup);
@@ -9,10 +10,11 @@ afterEach(cleanup);
 const start = (): MindNode[] => addChild(addChild(newMap('m', 'Plan', 'now', 'r').nodes, 'r', 'a', 'Alpha'), 'a', 'a1', 'Alpha one');
 
 /** The canvas held by a small parent, as the page holds it, so that edits come back as the next nodes. */
-function Harness({ initial = start(), query = '', readOnly = false, spy }: { initial?: MindNode[]; query?: string; readOnly?: boolean; spy?: { changes: MindNode[][]; undo: () => void; redo: () => void; select: (id: string | null) => void } }) {
+function Harness({ initial = start(), query = '', readOnly = false, canUndo = true, canRedo = true, spy }: { initial?: MindNode[]; query?: string; readOnly?: boolean; canUndo?: boolean; canRedo?: boolean; spy?: { changes: MindNode[][]; undo: () => void; redo: () => void; select: (id: string | null) => void } }) {
   const [nodes, setNodes] = useState(initial);
   const [selected, setSelected] = useState<string | null>(null);
-  return <MindMapCanvas nodes={nodes} readOnly={readOnly} query={query} selected={selected}
+  const [editing, setEditing] = useState<string | null>(null);
+  return <MindMapCanvas nodes={nodes} readOnly={readOnly} query={query} selected={selected} editing={editing} onEditing={setEditing} canUndo={canUndo} canRedo={canRedo}
     onChange={n => { spy?.changes.push(n); setNodes(n); }} onSelect={id => { spy?.select(id); setSelected(id); }} onUndo={() => spy?.undo()} onRedo={() => spy?.redo()} />;
 }
 const spy = () => ({ changes: [] as MindNode[][], undo: vi.fn(), redo: vi.fn(), select: vi.fn() });
@@ -23,10 +25,10 @@ const pick = async (text: string) => { await act(async () => { box(text).dispatc
 const labels = () => qa('g[data-node-id] text').map(t => t.textContent);
 
 describe('the mind map drawing', () => {
-  it('draws every idea as a box, and a curve to each from its parent', () => {
+  it('draws every idea, and a line to each from its parent', () => {
     mount(<Harness />);
     expect(labels()).toEqual(expect.arrayContaining(['Plan', 'Alpha', 'Alpha one']));
-    expect(qa('path').length).toBe(2);
+    expect(qa('svg.touch-none path').length).toBe(2);
   });
 
   it('selects an idea on a click', async () => {
@@ -133,6 +135,43 @@ describe('the mind map drawing', () => {
     cleanup();
     mount(<Harness query="" />);
     expect(qa('rect[stroke-dasharray]').length).toBe(0);
+  });
+
+  it('draws each main branch in its own colour with its twigs in the same, and the central idea as a card', () => {
+    mount(<Harness initial={addChild(start(), 'r', 'b', 'Beta')} />);
+    const strokes = qa('svg.touch-none path').map(p => p.getAttribute('stroke'));
+    expect(strokes[0]).toBe(MIND_COLORS[0]); // Alpha
+    expect(strokes[1]).toBe(MIND_COLORS[0]); // Alpha one follows its branch
+    expect(strokes[2]).toBe(MIND_COLORS[1]); // Beta
+    expect(qa('g[data-node-id] rect').filter(r => r.getAttribute('rx') === '14')).toHaveLength(1);
+  });
+
+  it('puts the second branch on the left of the central idea', () => {
+    mount(<Harness initial={addChild(start(), 'r', 'b', 'Beta')} />);
+    const x = (text: string) => Number(/translate\(([-\d.]+)/.exec(box(text).getAttribute('transform')!)![1]);
+    expect(x('Alpha')).toBeGreaterThan(0);
+    expect(x('Beta')).toBeLessThan(0);
+  });
+
+  it('shows the zoom, and has undo and redo in the corner that ask the page and are off when there is nothing to undo or redo', async () => {
+    const s = spy();
+    mount(<Harness spy={s} />);
+    expect(q('[aria-label="Zoom"]')!.textContent).toBe('100%');
+    await act(async () => { q<HTMLButtonElement>('button[aria-label="Undo"]')!.click(); q<HTMLButtonElement>('button[aria-label="Redo"]')!.click(); });
+    expect(s.undo).toHaveBeenCalledTimes(1);
+    expect(s.redo).toHaveBeenCalledTimes(1);
+    cleanup();
+    mount(<Harness canUndo={false} canRedo={false} />);
+    expect(q<HTMLButtonElement>('button[aria-label="Undo"]')!.disabled).toBe(true);
+    expect(q<HTMLButtonElement>('button[aria-label="Redo"]')!.disabled).toBe(true);
+  });
+
+  it('opens a list of the keys from the help button, and closes it again', async () => {
+    mount(<Harness />);
+    await act(async () => { q<HTMLButtonElement>('button[aria-label="Keys and mouse"]')!.click(); });
+    expect(q('[role="dialog"][aria-label="Keys and mouse"]')!.textContent).toContain('Tab');
+    await act(async () => { q<HTMLButtonElement>('button[aria-label="Keys and mouse"]')!.click(); });
+    expect(q('[role="dialog"][aria-label="Keys and mouse"]')).toBeNull();
   });
 
   it('zooms and fits with its buttons without failing', async () => {

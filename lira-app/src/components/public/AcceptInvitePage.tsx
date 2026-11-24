@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { acceptInvitation } from '../../services/accessApi';
+import { appStorage } from '../../utils/appStorage';
+import { WORKSPACE_KEY } from '../../utils/hostedOrg';
 import { goTo } from '../../utils/navigate';
+import { withNext } from '../../utils/nextPath';
 import { BTN, BTN_GHOST, PAGE_WIDTH } from './styles';
 
-type Outcome = { state: 'idle' } | { state: 'busy' } | { state: 'joined'; orgName: string } | { state: 'failed'; status: number; message: string };
+type Outcome = { state: 'idle' } | { state: 'busy' } | { state: 'joined'; orgName: string; orgId: string } | { state: 'failed'; status: number; message: string };
 
 /**
  * Where the link in an invitation lands. The person must be signed in (or sign up) with the email the invitation was sent to; the
@@ -13,12 +16,13 @@ type Outcome = { state: 'idle' } | { state: 'busy' } | { state: 'joined'; orgNam
 export default function AcceptInvitePage() {
   const [params] = useSearchParams();
   const token = params.get('token') ?? '';
+  const back = `/invite?token=${token}`; // after logging in or signing up, the person comes back here to accept
   const [outcome, setOutcome] = useState<Outcome>({ state: 'idle' });
 
   const accept = async () => {
     setOutcome({ state: 'busy' });
     const r = await acceptInvitation(token);
-    setOutcome(r.ok ? { state: 'joined', orgName: r.data.orgName } : { state: 'failed', status: r.status, message: r.message });
+    setOutcome(r.ok ? { state: 'joined', orgName: r.data.orgName, orgId: r.data.orgId } : { state: 'failed', status: r.status, message: r.message });
   };
 
   return (
@@ -34,13 +38,17 @@ export default function AcceptInvitePage() {
       {outcome.state === 'failed' && (
         <div role="alert" className="flex flex-col items-center gap-3">
           <p>{outcome.status === 401 ? 'You are not signed in yet.' : outcome.message}</p>
-          {outcome.status === 401 && <div className="flex gap-3"><Link to="/login" className={BTN_GHOST}>Log in</Link><Link to="/signup" className={BTN_GHOST}>Create an account</Link></div>}
+          {outcome.status === 401 && <div className="flex gap-3"><Link to={withNext('/login', back)} className={BTN_GHOST}>Log in</Link><Link to={withNext('/signup', back)} className={BTN_GHOST}>Create an account</Link></div>}
         </div>
       )}
       {outcome.state === 'joined' && (
         <div role="status" className="flex flex-col items-center gap-3">
           <p>You have joined <strong>{outcome.orgName}</strong>.</p>
-          <button type="button" onClick={() => goTo('/app')} className={BTN}>Open Liraspaces</button>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button type="button" onClick={() => { appStorage.set(WORKSPACE_KEY, outcome.orgId); goTo('/app'); }} className={BTN}>Open the shared workspace</button>
+            <button type="button" onClick={() => goTo('/app')} className={BTN_GHOST}>Open my workspace</button>
+          </div>
+          <p className="text-ui text-lira-muted">You can switch between them any time from your account menu.</p>
         </div>
       )}
     </section>

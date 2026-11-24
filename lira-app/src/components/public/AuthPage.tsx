@@ -4,9 +4,9 @@ import { LiraLogo } from '../common/LiraLogo';
 import { login } from '../../services/authApi';
 import { validateAuth, type AuthErrors } from '../../utils/authForm';
 import { goTo } from '../../utils/navigate';
+import { nextAfterSignIn } from '../../utils/nextPath';
 import { Field, FormError } from './AuthFields';
 import { BoardArt, BookArt } from './LoginArt';
-import { CONTACT_EMAIL } from './legalText';
 import { GoogleButton } from './GoogleButton';
 import { BTN, LINK } from './styles';
 
@@ -33,7 +33,7 @@ export default function AuthPage() {
     setBusy(true);
     const result = await login({ email: email.trim(), password, remember });
     setBusy(false);
-    if (result.ok) goTo('/app');
+    if (result.ok) goTo(nextAfterSignIn(params.get('next')));
     else setServerError(result.message);
   }
 
@@ -58,7 +58,7 @@ export default function AuthPage() {
         <p className="text-ui text-lira-muted text-center mt-1">Or continue with:</p>
         <GoogleButton className="w-full" />
         <p className="text-ui text-center">
-          <a href={`mailto:${CONTACT_EMAIL}?subject=Cannot%20log%20in`} className={LINK}>Can't log in?</a>
+          <Link to="/forgot-password" className={LINK}>Forgot password?</Link>
           <span aria-hidden="true" className="mx-2 text-lira-muted">•</span>
           <Link to="/signup" className={LINK}>Create an account</Link>
         </p>

@@ -11,6 +11,7 @@ import { confirmDialog } from '../common/dialogStore';
 import { Skeleton } from '../common/Skeleton';
 import { BUTTON } from '../teams/teamsUi';
 import { GooglePanel } from './GooglePanel';
+import { ReminderSettings } from './ReminderSettings';
 import { StandupForm } from './StandupForm';
 import { useCallScopeChoices } from './useCallScopeChoices';
 
@@ -73,6 +74,8 @@ export function StandupsPage() {
         </div>
         {load.state === 'ready' && load.admin && load.audience && !form && <button type="button" onClick={() => { setNotice(''); setForm({ editing: null }); }} className={BUTTON}>Schedule a call</button>}
       </header>
+
+      <ReminderSettings />
 
       {!org && <p role="alert" className="text-ui text-red-600">You are not signed in to an organisation.</p>}
       {org && load.state === 'loading' && <div role="status" aria-label="Loading stand-ups" className="space-y-2"><Skeleton className="h-16" /><Skeleton className="h-16" /></div>}

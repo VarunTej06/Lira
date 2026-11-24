@@ -8,7 +8,10 @@ export type ObjectKind = 'space' | 'project' | 'roadmap' | 'dashboard';
 export interface Member { userId: string; name: string; email: string; role: string; manageAccess: boolean; teamIds: string[] }
 export interface Team { id: string; name: string; memberIds: string[] }
 export interface Grant { id: string; subjectType: 'user' | 'team'; subjectId: string; kind: ObjectKind; objectId: string; level: Level }
-export interface Invitation { id: string; email: string; role: string; teamId: string | null; expiresAt: string }
+/** What else of a space, besides its tickets, an invited person sees. */
+export interface Shares { projects: boolean; roadmaps: boolean; dashboards: boolean; sprints: boolean }
+export interface Invitation { id: string; email: string; role: string; teamId: string | null; spaceId: number | null; level: Level | null; shares: Shares | null; expiresAt: string }
+export interface SpaceShare extends Shares { userId: string; name: string; email: string }
 export interface CreatedInvitation extends Invitation { token: string; emailed: boolean }
 
 const org = (orgId: string) => `/api/orgs/${encodeURIComponent(orgId)}`;
@@ -30,7 +33,10 @@ export const setGrant = (orgId: string, grant: Omit<Grant, 'id'>) => send<Grant>
 export const revokeGrant = (orgId: string, grantId: string) => send<void>('DELETE', `${org(orgId)}/grants/${grantId}`);
 
 export const listInvitations = (orgId: string) => send<Invitation[]>('GET', `${org(orgId)}/invitations`);
-export const invite = (orgId: string, body: { email: string; role: AssignableRole; teamId?: string }) => send<CreatedInvitation>('POST', `${org(orgId)}/invitations`, body);
+export const invite = (orgId: string, body: { email: string; role: AssignableRole; teamId?: string; spaceId?: number; level?: Level; shares?: Partial<Shares> }) => send<CreatedInvitation>('POST', `${org(orgId)}/invitations`, body);
+export const listSpaceShares = (orgId: string, spaceId: string) => send<SpaceShare[]>('GET', `${org(orgId)}/spaces/${encodeURIComponent(spaceId)}/shares`);
+export const setSpaceShares = (orgId: string, spaceId: string, userId: string, changes: Partial<Shares>) =>
+  send<void>('PUT', `${org(orgId)}/spaces/${encodeURIComponent(spaceId)}/shares/${userId}`, changes);
 export const revokeInvitation = (orgId: string, id: string) => send<void>('DELETE', `${org(orgId)}/invitations/${id}`);
 export const acceptInvitation = (token: string) => send<{ orgId: string; orgName: string }>('POST', '/api/invitations/accept', { token });
 

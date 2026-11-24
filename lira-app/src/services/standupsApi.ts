@@ -13,7 +13,8 @@ export interface CreatedStandup extends Standup { emailed: { sent: number; total
 export interface Audience { people: { id: string; name: string; email: string }[]; teams: { id: string; name: string }[]; canMakeMeetLink: boolean }
 /** No `link` means: make a Google Meet link (when Google is connected). */
 export interface StandupInput { scopeType?: CallScopeType; scopeId?: string; scopeName?: string; title: string; startsAt: string; durationMinutes: number; timeZone: string; link?: string; repeat?: Repeat; repeatUntil?: string; invitees: Invitee[] }
-export interface GoogleStatus { configured: boolean; connected: boolean; email: string | null }
+/** `calendar` is false for a connection made before calls could go into the calendar: the Owner approves once more to turn it on. */
+export interface GoogleStatus { configured: boolean; connected: boolean; email: string | null; calendar?: boolean }
 
 /** The call services a link may point to; the server checks the same list. */
 const MEETING_HOSTS = ['meet.google.com', 'teams.microsoft.com', 'teams.live.com'];

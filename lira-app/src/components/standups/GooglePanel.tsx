@@ -25,9 +25,10 @@ export function GooglePanel({ org, status, reload }: { org: string; status: Goog
     <section aria-label="Google" className="border border-lira-border rounded-lg p-3 flex flex-wrap items-center gap-3">
       <p className="flex-1 min-w-60 text-ui">
         {status.connected
-          ? <>Google is connected as <strong>{status.email}</strong>. Meet links are made and invitation emails are sent from this account.</>
+          ? <>Google is connected as <strong>{status.email}</strong>. Meet links are made from this account, {status.calendar ? 'and each call goes into its calendar, so the people invited get a calendar invitation.' : 'and invitation emails are sent from it.'}</>
           : 'Connect a Google account so the app can make the Meet link for each stand-up and email everyone invited. You choose which account, and you can disconnect it at any time.'}
       </p>
+      {status.connected && !status.calendar && <button type="button" onClick={() => { void connect(); }} className={BUTTON}>Allow calendar invitations</button>}
       {status.connected
         ? <button type="button" onClick={() => { void disconnect(); }} className="rounded px-3 py-1.5 text-ui border border-lira-border">Disconnect Google</button>
         : <button type="button" onClick={() => { void connect(); }} className={BUTTON}>Connect Google</button>}

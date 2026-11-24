@@ -1,6 +1,7 @@
 import { LiraLogo } from '../../common/LiraLogo';
 import { SpaceIcon } from '../../common/SpaceIcon';
 import { spaceLink } from '../../../utils/links';
+import { isInvitedMember } from '../../../utils/hostedOrg';
 import { motion } from '../../common/motionPresets';
 import { menuPop } from '../../common/motionPresets';
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
@@ -45,6 +46,7 @@ function SpaceButton({ space, active, starred, isHidden, isArchived, onSelect }:
         <SpaceIcon icon={space.icon} className="w-3 h-3 text-white" />
       </div>
       <span className={`truncate flex-1 text-left ${nameClass(isHidden, isArchived)}`}>{space.name}</span>
+      {isInvitedMember() && <span title="You were invited to this space" className="flex-shrink-0 rounded border border-white/25 px-1 text-3xs leading-4 text-white/70">Invited</span>}
       {isHidden && <span title="Hidden space" className="flex items-center text-amber-400/80 mr-1 flex-shrink-0"><EyeOff className="w-3 h-3" /></span>}
       {isArchived && <span title="Archived space" className="flex items-center text-slate-400/80 mr-1 flex-shrink-0"><Archive className="w-3 h-3" /></span>}
       {starred && <Star className="w-3 h-3 text-yellow-400 flex-shrink-0" />}

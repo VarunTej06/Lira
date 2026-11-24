@@ -139,3 +139,32 @@ describe('a person who is already signed in', () => {
     for (const path of ['/signup', '/terms']) { go.mockReset(); cleanup(); await visit(path); expect(go, path).not.toHaveBeenCalled(); }
   });
 });
+
+describe('coming from an invitation', () => {
+  const TOKEN = 'B'.repeat(43);
+  const next = encodeURIComponent(`/invite?token=${TOKEN}`);
+
+  it('log-in goes back to the invitation after a correct password, and to the app when the address is anything else', async () => {
+    answerAs(() => json(200, { user: { id: '1', email: 'asha@example.com', name: 'Asha' }, organisations: [] }));
+    for (const [query, where] of [[next, `/invite?token=${TOKEN}`], [encodeURIComponent('https://evil.example/'), '/app'], ['', '/app']] as const) {
+      go.mockReset(); cleanup();
+      await visit(`/login${query ? `?next=${query}` : ''}`);
+      await typeInto(q<HTMLInputElement>('#email'), 'asha@example.com');
+      await typeInto(q<HTMLInputElement>('#password'), 'a-long-enough-password');
+      await click(byText('button', 'Log in'));
+      await settle(50);
+      expect(go, query).toHaveBeenCalledWith(where);
+    }
+  });
+
+  it('sign-up goes back to the invitation after the account is made', async () => {
+    answerAs(() => json(201, { user: { id: '1', email: 'asha@example.com', name: 'Asha Rao' }, organisations: [] }));
+    await visit(`/signup?email=asha%40example.com&next=${next}`);
+    await click(byText('button', 'Sign up'));
+    await typeInto(q<HTMLInputElement>('#name'), 'Asha Rao');
+    await typeInto(q<HTMLInputElement>('#password'), 'a-long-enough-password');
+    await click(byText('button', 'Create account'));
+    await settle(50);
+    expect(go).toHaveBeenCalledWith(`/invite?token=${TOKEN}`);
+  });
+});

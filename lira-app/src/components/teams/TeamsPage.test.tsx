@@ -105,13 +105,35 @@ describe('Teams and access page', () => {
     api.invite.mockResolvedValue(ok({ id: 'i1', email: 'new@x.co', role: 'viewer', teamId: 't1', expiresAt: '2026-11-27T00:00:00Z', token: 'T'.repeat(43), emailed: false }));
     await open();
     await type(q<HTMLInputElement>('form[aria-label="Invite someone"] input[type="email"]')!, 'new@x.co');
-    const [role, team] = qa<HTMLSelectElement>('form[aria-label="Invite someone"] select');
+    const [role, , team] = qa<HTMLSelectElement>('form[aria-label="Invite someone"] select'); // role, space, team
     await pick(role, 'viewer'); await pick(team, 't1');
     await click(byText('button', 'Invite'));
     await settle(30);
     expect(api.invite).toHaveBeenCalledWith('org-1', { email: 'new@x.co', role: 'viewer', teamId: 't1' });
     expect(q('[role="status"]')!.textContent).toContain('Email is not connected yet');
     expect(q<HTMLInputElement>('input[aria-label="Invitation link"]')!.value).toBe(`${window.location.origin}/invite?token=${'T'.repeat(43)}`);
+  });
+
+  it('invites to one space with an access level, leaves Admin out of the roles for it, and lists the pending invitation with the space', async () => {
+    api.invite.mockResolvedValue(ok({ id: 'i1', email: 'new@x.co', role: 'guest', teamId: null, spaceId: 4, level: 'edit', expiresAt: '', token: 'T'.repeat(43), emailed: true }));
+    api.listInvitations.mockResolvedValue(ok([{ id: 'i1', email: 'new@x.co', role: 'guest', teamId: null, spaceId: 4, level: 'edit', expiresAt: '' }]));
+    await open();
+    const form = 'form[aria-label="Invite someone"]';
+    expect([...qa<HTMLOptionElement>(`${form} select option`)].some(o => o.value === 'admin')).toBe(true);
+    await type(q<HTMLInputElement>(`${form} input[type="email"]`)!, 'new@x.co');
+    const [role, space] = qa<HTMLSelectElement>(`${form} select`);
+    await pick(space, '4');
+    expect([...role.options].map(o => o.value)).not.toContain('admin');
+    await pick(role, 'guest');
+    expect(q(form)!.textContent).toContain('Access to the space');
+    const switches = qa<HTMLInputElement>(`${form} fieldset input[type="checkbox"]`);
+    expect(switches).toHaveLength(4); // projects, roadmaps, dashboards, sprints: all on to begin with
+    expect(switches.every(c => c.checked)).toBe(true);
+    await act(async () => { switches[0].click(); switches[3].click(); });
+    await click(byText('button', 'Invite'));
+    await settle(30);
+    expect(api.invite).toHaveBeenCalledWith('org-1', { email: 'new@x.co', role: 'guest', spaceId: 4, level: 'edit', shares: { projects: false, roadmaps: true, dashboards: true, sprints: false } });
+    expect(q('section[aria-label="Pending invitations"]')!.textContent).toContain('Lira (edit)');
   });
 
   it('says the email was sent when it was, with no link shown', async () => {

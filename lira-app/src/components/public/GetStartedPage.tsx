@@ -4,6 +4,7 @@ import { AppSkeleton } from '../common/Skeleton';
 import { signup } from '../../services/authApi';
 import { MIN_PASSWORD, validateAuth, type AuthErrors } from '../../utils/authForm';
 import { goTo } from '../../utils/navigate';
+import { nextAfterSignIn } from '../../utils/nextPath';
 import { Field, FormError } from './AuthFields';
 import { EmailBar } from './EmailBar';
 import { BTN, LINK } from './styles';
@@ -20,7 +21,7 @@ function Underline() {
 }
 
 /** Step two of sign-up: the name and a password for the email already given. */
-function DetailsForm({ email, onChangeEmail }: { email: string; onChangeEmail: () => void }) {
+function DetailsForm({ email, next, onChangeEmail }: { email: string; next: string; onChangeEmail: () => void }) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<AuthErrors>({});
@@ -38,7 +39,7 @@ function DetailsForm({ email, onChangeEmail }: { email: string; onChangeEmail: (
     setBusy(true);
     const result = await signup({ name: name.trim(), email, password });
     setBusy(false);
-    if (result.ok) { goTo('/app'); return; }
+    if (result.ok) { goTo(next); return; }
     setErrors(result.fields ?? {});
     setExists(result.status === 409);
     setServerError(result.message);
@@ -81,7 +82,7 @@ export default function GetStartedPage() {
               <span className="text-ui font-medium">Email</span>
               <EmailBar id="start-email" initial={initial} onValid={setEmail} />
             </div>
-          ) : <DetailsForm email={email} onChangeEmail={() => setEmail(undefined)} />}
+          ) : <DetailsForm email={email} next={nextAfterSignIn(params.get('next'))} onChangeEmail={() => setEmail(undefined)} />}
           <p className="text-ui text-lira-muted">Already have an account? <Link to="/login" className={LINK}>Log in</Link></p>
         </div>
       </div>

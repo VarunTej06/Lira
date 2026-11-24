@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { listGrants, revokeGrant, setGrant, type Grant, type Level, type Member, type ObjectKind, type Team } from '../../services/accessApi';
 import { listObjects, listSpaces } from '../../services/workspaceApi';
 import { BUTTON, FIELD, LEVELS } from './teamsUi';
+import { SpaceSharesPanel } from './SpaceSharesPanel';
 
 const KINDS: { value: ObjectKind; label: string }[] = [{ value: 'space', label: 'Space' }, { value: 'project', label: 'Project' }, { value: 'roadmap', label: 'Roadmap' }, { value: 'dashboard', label: 'Dashboard' }];
 interface Choice { id: string; name: string }
@@ -51,6 +52,7 @@ export function AccessTab({ org, members, teams }: { org: string; members: Membe
         </select></label>
       </div>
       {choices && choices.length === 0 && <p className="text-ui text-lira-muted">There is nothing of this kind yet.</p>}
+      {kind === 'space' && objectId && <SpaceSharesPanel org={org} spaceId={objectId} />}
 
       {objectId && (
         <>

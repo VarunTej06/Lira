@@ -1,5 +1,6 @@
 import type { Me } from '../services/authApi';
-import { setActiveOrg } from './hostedOrg';
+import { appStorage } from './appStorage';
+import { WORKSPACE_KEY, chooseOrg, setActiveOrg, setOrganisations } from './hostedOrg';
 import { cleanProfile, saveProfile } from './userPrefs';
 
 /** Up to two capital letters from a name: "Asha Rao" gives "AR", "Asha" gives "A". */
@@ -11,8 +12,10 @@ export const initialsOf = (name: string): string =>
  * server, never the local default. It is written to the same places the local profile uses, every time the session is checked.
  */
 export function applyServerProfile(me: Me): void {
-  const role = me.organisations[0]?.role ?? 'member';
-  setActiveOrg(me.organisations[0]?.orgId ?? null);
+  const current = chooseOrg(me.organisations, appStorage.get(WORKSPACE_KEY));
+  const role = current?.role ?? 'member';
+  setOrganisations(me.organisations);
+  setActiveOrg(current?.orgId ?? null, current?.role ?? null, current?.hideSprints === true);
   saveProfile(cleanProfile({
     name: me.user.name,
     email: me.user.email,

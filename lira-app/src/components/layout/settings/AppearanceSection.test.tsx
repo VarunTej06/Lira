@@ -23,8 +23,8 @@ function open() {
 describe('Appearance settings', () => {
   it('opens on the saved theme (dark at first) with its two palettes, Pace chosen', () => {
     open();
-    expect(pressed(/^Dark Mode/)).toBe(true);
-    expect(pressed(/^Light Mode/)).toBe(false);
+    expect(pressed(/^Dark$/)).toBe(true);
+    expect(pressed(/^Light$/)).toBe(false);
     expect(byText('h4', 'Choose a dark palette')).toBeDefined();
     expect(offered()).toEqual(['Pace', 'Blackridge']);
     expect(pressed(/^Pace/)).toBe(true);
@@ -33,7 +33,7 @@ describe('Appearance settings', () => {
 
   it('asks which of the four light palettes when Light is chosen, with Sorrel picked first', async () => {
     open();
-    await click(card(/^Light Mode/));
+    await click(card(/^Light$/));
     expect(byText('h4', 'Choose a light palette')).toBeDefined();
     expect(offered()).toEqual(['Sorrel', 'Fawn', 'Mossgrove', 'Tidewell']);
     expect(pressed(/^Sorrel/)).toBe(true);
@@ -44,22 +44,46 @@ describe('Appearance settings', () => {
     const names = (title: RegExp) => Array.from(card(title).querySelectorAll('[title]')).map(e => e.getAttribute('title'));
     expect(names(/^Pace/)).toEqual(['Black', 'Silver', 'Yellow']);
     expect(names(/^Blackridge/)).toEqual(['Jet Black', 'Smoke Grey', 'Cherry Red']);
-    await click(card(/^Light Mode/));
+    await click(card(/^Light$/));
     expect(names(/^Sorrel/)).toEqual(['Sage', 'Off-White', 'Tomato Red']);
     expect(names(/^Fawn/)).toEqual(['Brown', 'Cream', 'Baby Blue']);
     expect(names(/^Mossgrove/)).toEqual(['Emerald', 'White', 'Tangerine']);
     expect(names(/^Tidewell/)).toEqual(['Ink Navy', 'Pearl White', 'Electric Coral']);
   });
 
+  it('shows each choice as one rectangle of its three colours with no gap or border between them, and the name beside it', () => {
+    open();
+    const strip = card(/^Pace/).querySelector('span[aria-hidden]')!;
+    expect(strip.children).toHaveLength(3);
+    expect(strip.className).toContain('overflow-hidden');
+    expect(strip.className).not.toMatch(/gap-|space-x/);
+    expect(Array.from(strip.children).every(c => !c.className.includes('border'))).toBe(true);
+    expect(card(/^Pace/).textContent).toBe('Pace'); // nothing but the name: no description in the card
+    expect(card(/^Dark$/).textContent).toBe('Dark');
+  });
+
+  it('says under the choices what each colour of the chosen palette paints, and follows the choice', async () => {
+    open();
+    const notes = () => Array.from(document.querySelectorAll('dl div')).map(r => r.textContent);
+    expect(document.querySelector('dl')!.getAttribute('aria-label')).toBe('What the Pace colours are used for');
+    expect(notes()).toEqual(['Blackthe page and the panels', 'Silvertext and thin lines', 'Yellowbuttons and the selected item']);
+    await click(card(/^Blackridge/));
+    expect(document.querySelector('dl')!.getAttribute('aria-label')).toBe('What the Blackridge colours are used for');
+    expect(notes()[2]).toBe('Cherry Redbuttons and the selected item');
+    await click(card(/^Light$/));
+    await click(card(/^Fawn/));
+    expect(notes()).toEqual(['Browntext and the navigation', 'Creamthe page and the cards', 'Baby Bluebuttons and the selected item']);
+  });
+
   it('the theme card shows the colours of the palette picked for it', async () => {
     open();
     await click(card(/^Blackridge/));
-    expect(Array.from(card(/^Dark Mode/).querySelectorAll('[title]')).map(e => e.getAttribute('title'))).toEqual(['Jet Black', 'Smoke Grey', 'Cherry Red']);
+    expect(Array.from(card(/^Dark$/).querySelectorAll('[title]')).map(e => e.getAttribute('title'))).toEqual(['Jet Black', 'Smoke Grey', 'Cherry Red']);
   });
 
   it('changes nothing until Save is pressed', async () => {
     open();
-    await click(card(/^Light Mode/));
+    await click(card(/^Light$/));
     await click(card(/^Fawn/));
     expect(getTheme()).toBe('dark');
     expect(root.dataset.palette).toBeUndefined();
@@ -68,7 +92,7 @@ describe('Appearance settings', () => {
 
   it('saves the theme and the palette, applies them and closes', async () => {
     const onClose = open();
-    await click(card(/^Light Mode/));
+    await click(card(/^Light$/));
     await click(card(/^Tidewell/));
     await click(save());
     expect(getTheme()).toBe('light');
@@ -92,11 +116,11 @@ describe('Appearance settings', () => {
   it('keeps the palette picked for each theme while switching between Dark and Light', async () => {
     open();
     await click(card(/^Blackridge/));
-    await click(card(/^Light Mode/));
+    await click(card(/^Light$/));
     await click(card(/^Mossgrove/));
-    await click(card(/^Dark Mode/));
+    await click(card(/^Dark$/));
     expect(pressed(/^Blackridge/)).toBe(true);
-    await click(card(/^Light Mode/));
+    await click(card(/^Light$/));
     expect(pressed(/^Mossgrove/)).toBe(true);
   });
 

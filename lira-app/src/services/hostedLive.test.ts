@@ -94,7 +94,7 @@ describe('the live stream', () => {
     expect(FakeSource.all).toHaveLength(2);
   });
 
-  it('reads the projects, roadmaps, dashboards, mind maps and story boxes again when one changed, once for a burst, and not the tickets', async () => {
+  it('reads the projects, roadmaps, dashboards, storyboards and story boxes again when one changed, once for a burst, and not the tickets', async () => {
     startHostedLive('o');
     const s = FakeSource.all[0];
     s.say(note('object', null)); s.say(note('object', null)); s.say(note('object', null));

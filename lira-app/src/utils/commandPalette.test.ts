@@ -21,7 +21,7 @@ describe('scoring a command for a search', () => {
     expect(scoreOf(cmd('Dashboards'), 'db')).toBe(0);
     expect(scoreOf(cmd('Dashboards'), '   ')).toBe(1);
     expect(scoreOf(cmd('Dashboards'), 'xyz')).toBe(0);
-    expect(scoreOf(cmd('Mind maps', { keywords: 'storyboard brainstorm' }), 'sbd')).toBe(0); // letters in order are tried on the label only, never on hidden keywords
+    expect(scoreOf(cmd('Storyboards', { keywords: 'storyboard brainstorm' }), 'brn')).toBe(0); // letters in order are tried on the label only, never on hidden keywords
     expect(scoreOf(cmd('Story boxes', { keywords: 'estimate points planning poker' }), 'mind')).toBe(0);
     expect(scoreOf(cmd('CRS-1 MLOps Specialization: DeepLearning.AI', { group: 'Tickets' }), 'mind')).toBe(0); // a long ticket title would match by chance
     expect(scoreOf(cmd('CRS-1 MLOps Specialization: DeepLearning.AI', { group: 'Tickets' }), 'deeplearning')).toBeGreaterThan(0);
@@ -49,7 +49,7 @@ describe('ranking', () => {
 describe('the commands', () => {
   it('has a page for each place, and Calls and Teams only in the hosted edition', () => {
     const labels = (hosted: boolean) => pageCommands(() => undefined, hosted).map(c => c.label);
-    expect(labels(false)).toEqual(expect.arrayContaining(['For you', 'Projects', 'Mind maps', 'Story boxes', 'Filters']));
+    expect(labels(false)).toEqual(expect.arrayContaining(['For you', 'Projects', 'Storyboards', 'Story boxes', 'Filters']));
     expect(labels(false)).not.toContain('Calls');
     expect(labels(true)).toEqual(expect.arrayContaining(['Calls', 'Teams and access']));
   });

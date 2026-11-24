@@ -24,7 +24,7 @@ test('a first start on an empty data folder shows each sample space once (found 
 test('the app opens on a board with the navigation and the two new pages in it', async ({ page }) => {
   const problems = watch(page);
   await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Mind maps' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Storyboards' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Story boxes' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Dashboards' })).toBeVisible();
   expect(problems()).toEqual([]);
@@ -32,7 +32,7 @@ test('the app opens on a board with the navigation and the two new pages in it',
 
 const PAGES: [string, string | RegExp][] = [
   ['/for-you', 'For you'], ['/projects', 'Projects'], ['/sprints', 'Sprints'], ['/tickets', 'All tickets'], ['/roadmaps', 'Roadmaps'],
-  ['/dashboards', 'Dashboards'], ['/mindmaps', 'New mind map'], ['/storyboxes', 'Story boxes'], ['/filters', 'Filters'],
+  ['/dashboards', 'Dashboards'], ['/mindmaps', 'New storyboard'], ['/storyboxes', 'Story boxes'], ['/filters', 'Filters'],
 ];
 for (const [path, marker] of PAGES) {
   test(`${path} opens without errors`, async ({ page }) => {

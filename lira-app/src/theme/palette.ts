@@ -32,7 +32,7 @@ const palette = {
 
 export const PALETTE: Readonly<Record<keyof typeof palette, string>> = Object.freeze(palette);
 
-/** The colours an idea in a mind map can be given. */
+/** The colours an idea in a storyboard can be given. */
 export const MIND_COLORS: readonly string[] = Object.freeze([PALETTE.brand, PALETTE.success, PALETTE.warning, PALETTE.danger, PALETTE.info, PALETTE.epic, PALETTE.amber, PALETTE.textMuted]);
 
 export type ThemeName = 'pace' | 'blackridge' | 'sorrel' | 'fawn' | 'mossgrove' | 'tidewell';

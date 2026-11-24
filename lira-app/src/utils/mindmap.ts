@@ -1,6 +1,8 @@
-/** One idea in a mind map. The first node (no parent) is the central idea. */
-export interface MindNode { id: string; parentId: string | null; text: string; collapsed?: boolean; color?: string; note?: string; ticketKey?: string }
-export interface MindMap { id: string; name: string; nodes: MindNode[]; createdAt: string; updatedAt: string; createdBy?: string; starred?: boolean }
+import type { MindComment, Link, Shape, TextStyle } from './mindFree';
+
+/** One idea in a storyboard. The first node (no parent) is the central idea. */
+export interface MindNode extends TextStyle { id: string; parentId: string | null; text: string; collapsed?: boolean; color?: string; note?: string; ticketKey?: string }
+export interface MindMap { id: string; name: string; nodes: MindNode[]; createdAt: string; updatedAt: string; createdBy?: string; starred?: boolean; shapes?: Shape[]; links?: Link[]; comments?: MindComment[] }
 
 export const MAX_NODES = 2000;
 

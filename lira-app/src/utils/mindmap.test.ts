@@ -6,7 +6,7 @@ const ids = (nodes: readonly MindNode[]) => nodes.map(n => n.id);
 /** r -> a, b; a -> a1, a2 */
 const tree = (): MindNode[] => addChild(addChild(addChild(addChild(base(), 'r', 'a', 'A'), 'r', 'b', 'B'), 'a', 'a1', 'A1'), 'a', 'a2', 'A2');
 
-describe('building a mind map', () => {
+describe('building a storyboard', () => {
   it('starts with one central idea named like the map', () => {
     const m = newMap('m', 'Plan', 'now', 'r', 'Asha');
     expect(m).toMatchObject({ id: 'm', name: 'Plan', createdBy: 'Asha', nodes: [{ id: 'r', parentId: null, text: 'Plan' }] });
@@ -36,7 +36,7 @@ describe('building a mind map', () => {
   });
 });
 
-describe('changing a mind map', () => {
+describe('changing a storyboard', () => {
   it('removes an idea with everything under it, and never the central idea', () => {
     expect(ids(removeNode(tree(), 'a'))).toEqual(['r', 'b']);
     expect(removeNode(tree(), 'r')).toHaveLength(tree().length);

@@ -18,7 +18,7 @@ export function writeList<T extends { id: string }>(key: string, list: T[]): voi
 
 /**
  * A list of items kept in the browser's saved settings (and so in the data files, or on the server in the hosted edition), live in every
- * place that shows it. Used by the lists that are not tickets: mind maps and story boxes.
+ * place that shows it. Used by the lists that are not tickets: storyboards and story boxes.
  */
 export function useStoredList<T extends { id: string }>(key: string): [T[], (next: T[]) => void] {
   const [list, setList] = useState<T[]>(() => readList<T>(key));

@@ -5,11 +5,13 @@ import type { Issue } from '../../types/issue';
 import { colorOf } from '../../utils/mindLayout';
 import type { MindNode } from '../../utils/mindmap';
 import { FIELD, LABEL } from '../standup/parts';
+import type { StyleKey } from './MindMapCanvas';
+import { StyleToggles } from './MindShapePanel';
 
-interface Props { node: MindNode; nodes: readonly MindNode[]; issues: Issue[]; onPatch: (patch: Partial<MindNode>) => void; onRemove: () => void; readOnly: boolean }
+interface Props { node: MindNode; nodes: readonly MindNode[]; issues: Issue[]; onPatch: (patch: Partial<MindNode>) => void; onRemove: () => void; onStyle: (key: StyleKey) => void; readOnly: boolean }
 
 /** What can be set on the selected idea: its text, colour, a note, and a ticket it stands for. */
-export const MindMapPanel = forwardRef<HTMLTextAreaElement, Props>(function MindMapPanel({ node, nodes, issues, onPatch, onRemove, readOnly }, noteRef) {
+export const MindMapPanel = forwardRef<HTMLTextAreaElement, Props>(function MindMapPanel({ node, nodes, issues, onPatch, onRemove, onStyle, readOnly }, noteRef) {
   const linked = node.ticketKey ? issues.find(i => i.key === node.ticketKey) : undefined;
   const root = node.parentId === null;
   const colour = colorOf(nodes, node.id);
@@ -19,6 +21,7 @@ export const MindMapPanel = forwardRef<HTMLTextAreaElement, Props>(function Mind
         <label className={LABEL} htmlFor="idea-text">Idea</label>
         <input id="idea-text" readOnly={readOnly} value={node.text} maxLength={200} onChange={e => { if (e.target.value.trim()) onPatch({ text: e.target.value }); }} className={FIELD} />
       </div>
+      <div><div className={LABEL}>Style</div><StyleToggles value={{ bold: !!node.bold, italic: !!node.italic, underline: !!node.underline }} readOnly={readOnly} onToggle={onStyle} /></div>
       {!root && (
         <div role="group" aria-label="Colour">
           <div className={LABEL}>Colour</div>

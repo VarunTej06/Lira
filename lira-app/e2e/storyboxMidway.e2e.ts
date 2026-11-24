@@ -33,14 +33,14 @@ test('a story box: participants show before a ticket, a ticket can be put back, 
   await expect(page.getByRole('timer')).toBeVisible();
 
   // leaving from the sidebar asks first
-  await page.getByText('Mind maps', { exact: true }).first().click();
+  await page.getByText('Storyboards', { exact: true }).first().click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toContainText('Leave this page?');
   await dialog.getByRole('button', { name: 'Stay' }).click();
   await expect(dialog).toHaveCount(0);
   await expect(page).toHaveURL(/\/storyboxes\/.+/);
   await page.keyboard.press('Escape'); // nothing to close, and nothing breaks
-  await page.getByText('Mind maps', { exact: true }).first().click();
+  await page.getByText('Storyboards', { exact: true }).first().click();
   await page.getByRole('dialog').getByRole('button', { name: 'Leave' }).click();
   await expect(page).toHaveURL(/\/mindmaps$/);
 });

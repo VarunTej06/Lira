@@ -18,11 +18,11 @@ const cards = () => qa('article').map(a => a.getAttribute('aria-label'));
 beforeEach(() => { localStorage.clear(); dialog.confirmDialog.mockReset(); dialog.confirmDialog.mockResolvedValue(true); });
 afterEach(cleanup);
 
-describe('the list of mind maps', () => {
+describe('the list of storyboards', () => {
   it('says there is nothing yet, and offers the first one', () => {
     page();
-    expect(document.body.textContent).toContain('Make your first mind map');
-    expect(byText('button', 'New mind map')).toBeDefined();
+    expect(document.body.textContent).toContain('Make your first storyboard');
+    expect(byText('button', 'New storyboard')).toBeDefined();
   });
 
   it('shows the numbers and a card for each map with its ideas and linked tickets', async () => {
@@ -32,7 +32,7 @@ describe('the list of mind maps', () => {
     page();
     await settle(1200); // the numbers count up
     const text = document.body.textContent!;
-    expect(text).toContain('Mind maps');
+    expect(text).toContain('Storyboards');
     expect(text).toContain('1 starred');
     expect(q('article[aria-label="Product ideas"]')!.textContent).toContain('3 ideas');
     expect(q('article[aria-label="Product ideas"]')!.textContent).toContain('1 linked to tickets');
@@ -59,10 +59,10 @@ describe('the list of mind maps', () => {
     await click(byText('button', 'Starred 1'));
     expect(cards()).toEqual(['Roadmap ideas']);
     await click(byText('button', 'All 2'));
-    await typeInto(q<HTMLInputElement>('input[aria-label="Search mind maps"]'), 'meeting');
+    await typeInto(q<HTMLInputElement>('input[aria-label="Search storyboards"]'), 'meeting');
     expect(cards()).toEqual(['Meeting notes']);
-    await typeInto(q<HTMLInputElement>('input[aria-label="Search mind maps"]'), 'zzz');
-    expect(document.body.textContent).toContain('No mind map matches');
+    await typeInto(q<HTMLInputElement>('input[aria-label="Search storyboards"]'), 'zzz');
+    expect(document.body.textContent).toContain('No storyboard matches');
   });
 
   it('stars and unstars a map from its card, and keeps it', async () => {
@@ -102,13 +102,13 @@ describe('the list of mind maps', () => {
   });
 });
 
-describe('making a mind map', () => {
+describe('making a storyboard', () => {
   it('asks for a name and a template, makes the map with the template\'s ideas, and opens it', async () => {
     page();
-    await click(byText('button', 'New mind map'));
-    await typeInto(q<HTMLInputElement>('form[aria-label="New mind map"] input[type="text"], form[aria-label="New mind map"] #mm-name'), 'Launch plan');
+    await click(byText('button', 'New storyboard'));
+    await typeInto(q<HTMLInputElement>('form[aria-label="New storyboard"] input[type="text"], form[aria-label="New storyboard"] #mm-name'), 'Launch plan');
     await click(q('input[name="template"]:not(:checked)')); // the first of the others
-    await click(byText('button', 'Make the map'));
+    await click(byText('button', 'Make the storyboard'));
     await settle(30);
     expect(saved()).toHaveLength(1);
     expect(saved()[0]).toMatchObject({ name: 'Launch plan' });
@@ -119,23 +119,23 @@ describe('making a mind map', () => {
 
   it('makes a blank map whose central idea is the name, and names an unnamed one', async () => {
     page();
-    await click(byText('button', 'New mind map'));
+    await click(byText('button', 'New storyboard'));
     await typeInto(q<HTMLInputElement>('#mm-name'), 'Just an idea');
-    await click(byText('button', 'Make the map'));
+    await click(byText('button', 'Make the storyboard'));
     await settle(30);
     expect(saved()[0].nodes).toHaveLength(1);
     expect(saved()[0].nodes[0].text).toBe('Just an idea');
     cleanup();
     page();
-    await click(byText('button', 'New mind map'));
-    await click(byText('button', 'Make the map'));
+    await click(byText('button', 'New storyboard'));
+    await click(byText('button', 'Make the storyboard'));
     await settle(30);
-    expect(saved()[1].name).toBe('New mind map');
+    expect(saved()[1].name).toBe('New storyboard');
   });
 
   it('cancels without making anything', async () => {
     page();
-    await click(byText('button', 'New mind map'));
+    await click(byText('button', 'New storyboard'));
     await click(byText('button', 'Cancel'));
     expect(saved()).toHaveLength(0);
   });

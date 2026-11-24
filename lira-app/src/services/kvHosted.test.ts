@@ -162,7 +162,7 @@ describe('the look the person chose', () => {
   });
 });
 
-describe('another person changes a project, roadmap, dashboard, mind map or story box', () => {
+describe('another person changes a project, roadmap, dashboard, storyboard or story box', () => {
   const row = (id: string, name: string, version = 1) => ({ id, position: 0, doc: { id, name }, version, level: 'manage' });
   const started = async () => {
     api.readKv.mockResolvedValue(ok({ shared: {}, mine: {} }));

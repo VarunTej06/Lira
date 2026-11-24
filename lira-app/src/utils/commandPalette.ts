@@ -49,7 +49,7 @@ export function rank(commands: readonly Command[], query: string, perGroup = 8):
 export function pageCommands(go: (path: string) => void, hosted: boolean): Command[] {
   const pages: [string, string, string][] = [
     ['For you', '/for-you', 'home start overview'], ['Projects', '/projects', ''], ['Sprints', '/sprints', 'iteration'], ['All tickets', '/tickets', 'work items issues'],
-    ['Roadmaps', '/roadmaps', 'plan timeline'], ['Dashboards', '/dashboards', 'charts reports'], ['Mind maps', '/mindmaps', 'storyboard brainstorm'], ['Story boxes', '/storyboxes', 'estimate points planning poker'],
+    ['Roadmaps', '/roadmaps', 'plan timeline'], ['Dashboards', '/dashboards', 'charts reports'], ['Storyboards', '/mindmaps', 'mind map storyboard brainstorm whiteboard sticky notes'], ['Story boxes', '/storyboxes', 'estimate points planning poker'],
     ['Filters', '/filters', 'search find'],
     ...(hosted ? [['Calls', '/calls', 'stand-up meeting'], ['Teams and access', '/teams', 'people invite import permissions']] as [string, string, string][] : []),
   ];

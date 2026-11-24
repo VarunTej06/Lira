@@ -6,7 +6,7 @@ import { loadProfile } from '../../utils/userPrefs';
 import { Modal } from '../common/Modal';
 import { FIELD, LABEL } from '../standup/parts';
 
-/** The form for a new mind map: its name and what to start from. */
+/** The form for a new storyboard: its name and what to start from. */
 export function NewMindMapModal({ isOpen, onClose, onCreate }: { isOpen: boolean; onClose: () => void; onCreate: (map: MindMap) => void }) {
   const [name, setName] = useState('');
   const [template, setTemplate] = useState('blank');
@@ -14,16 +14,16 @@ export function NewMindMapModal({ isOpen, onClose, onCreate }: { isOpen: boolean
   function submit(e: FormEvent) {
     e.preventDefault();
     const now = currentTime().toISOString();
-    const nodes = fromTemplate(template, () => crypto.randomUUID());
-    const title = name.trim().slice(0, 100) || 'New mind map';
+    const { nodes, free } = fromTemplate(template, () => crypto.randomUUID());
+    const title = name.trim().slice(0, 100) || 'New storyboard';
     if (nodes[0] && template === 'blank') nodes[0] = { ...nodes[0], text: title };
-    onCreate({ id: crypto.randomUUID(), name: title, nodes, createdAt: now, updatedAt: now, createdBy: loadProfile().name || undefined });
+    onCreate({ id: crypto.randomUUID(), name: title, nodes, shapes: free.shapes, links: free.links, createdAt: now, updatedAt: now, createdBy: loadProfile().name || undefined });
     setName(''); setTemplate('blank');
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="New mind map" size="md">
-      <form onSubmit={submit} aria-label="New mind map" className="p-6 space-y-4 text-lira-text">
+    <Modal isOpen={isOpen} onClose={onClose} title="New storyboard" size="md">
+      <form onSubmit={submit} aria-label="New storyboard" className="p-6 space-y-4 text-lira-text">
         <div><label className={LABEL} htmlFor="mm-name">Name</label><input id="mm-name" value={name} onChange={e => setName(e.target.value)} placeholder="Product ideas" maxLength={100} className={FIELD} /></div>
         <fieldset>
           <legend className={LABEL}>Start from</legend>
@@ -38,7 +38,7 @@ export function NewMindMapModal({ isOpen, onClose, onCreate }: { isOpen: boolean
         </fieldset>
         <div className="flex justify-end gap-2 pt-2">
           <button type="button" onClick={onClose} className="px-4 py-2 text-sm rounded-xl border border-lira-border bg-white text-lira-text hover:bg-gray-50 cursor-pointer">Cancel</button>
-          <button type="submit" className="px-4 py-2 text-sm font-semibold rounded-xl bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer">Make the map</button>
+          <button type="submit" className="px-4 py-2 text-sm font-semibold rounded-xl bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer">Make the storyboard</button>
         </div>
       </form>
     </Modal>

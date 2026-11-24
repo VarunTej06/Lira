@@ -326,7 +326,7 @@ async function reloadCollection(key: string) {
 }
 
 /**
- * Another person changed a project, roadmap, dashboard, mind map or story box. Reads each list again and tells the screens. A browser that
+ * Another person changed a project, roadmap, dashboard, storyboard or story box. Reads each list again and tells the screens. A browser that
  * still has changes it has not sent is left alone, so a refresh never undoes them; the next note, or the next save, brings it up to date.
  */
 export async function refreshCollections(): Promise<void> {

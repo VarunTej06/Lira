@@ -179,7 +179,7 @@ export function useSidebarState(props: LeftSidebarProps) {
     allTickets: { label: 'All tickets', icon: <Ticket className="w-3.5 h-3.5 text-yellow-400" />, tab: 'AllTickets', action: () => onNavigateToAllTickets?.() },
     roadmaps: { label: 'Roadmaps', icon: <Map className="w-3.5 h-3.5 text-orange-400" />, tab: 'Roadmaps', action: () => onNavigateToRoadmaps?.() },
     dashboards: { label: 'Dashboards', icon: <LayoutDashboard className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'Dashboards', action: () => onNavigateToDashboards?.() },
-    mindMaps: { label: 'Mind maps', icon: <Network className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'MindMaps', action: () => onNavigateToMindMaps?.() },
+    mindMaps: { label: 'Storyboards', icon: <Network className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'MindMaps', action: () => onNavigateToMindMaps?.() },
     storyBoxes: { label: 'Story boxes', icon: <Layers className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'StoryBoxes', action: () => onNavigateToStoryBoxes?.() },
   };
 

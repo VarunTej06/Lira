@@ -6,7 +6,7 @@ const NOW = Date.parse('2026-11-24T12:00:00Z');
 const make = (id: string, name: string, updatedAt: string, extra: Partial<MindMap> = {}): MindMap => ({ ...newMap(id, name, updatedAt, `${id}-root`), updatedAt, ...extra });
 const withIdeas = (m: MindMap, ...texts: string[]): MindMap => ({ ...m, nodes: texts.reduce((nodes, t, i) => addChild(nodes, `${m.id}-root`, `${m.id}-${i}`, t), m.nodes) });
 
-describe('the numbers of the mind maps', () => {
+describe('the numbers of the storyboards', () => {
   it('counts maps, ideas, ideas linked to a ticket, and maps changed in the last week', () => {
     const a = { ...withIdeas(make('a', 'A', '2026-11-23T00:00:00Z'), 'one', 'two') };
     a.nodes = updateNode(a.nodes, 'a-0', { ticketKey: 'LIRA-1' });

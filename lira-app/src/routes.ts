@@ -123,7 +123,7 @@ export function titleOf(route: AppRoute): string {
     case 'sprints': return route.sprintKey ? `Sprint ${route.sprintKey}` : 'Sprints';
     case 'roadmaps': return 'Roadmaps';
     case 'dashboards': return 'Dashboards';
-    case 'mindmaps': return 'Mind maps';
+    case 'mindmaps': return 'Storyboards';
     case 'storyboxes': return 'Story boxes';
     case 'space': return `${route.spaceKey} · ${route.tab}`;
     default: return 'Liraspaces';

@@ -30,7 +30,7 @@ const NAV_ITEMS: Record<string, SidebarItemDef> = {
   allTickets: { key: 'allTickets', label: 'All tickets', icon: <Ticket className="w-4 h-4 text-yellow-500" /> },
   roadmaps: { key: 'roadmaps', label: 'Roadmaps', icon: <Map className="w-4 h-4 text-orange-500" /> },
   dashboards: { key: 'dashboards', label: 'Dashboards', icon: <LayoutDashboard className="w-4 h-4 text-lira-blue" /> },
-  mindMaps: { key: 'mindMaps', label: 'Mind maps', icon: <Network className="w-4 h-4 text-lira-blue" /> },
+  mindMaps: { key: 'mindMaps', label: 'Storyboards', icon: <Network className="w-4 h-4 text-lira-blue" /> },
   storyBoxes: { key: 'storyBoxes', label: 'Story boxes', icon: <Layers className="w-4 h-4 text-lira-blue" /> },
 };
 

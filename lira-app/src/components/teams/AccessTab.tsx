@@ -4,7 +4,7 @@ import { listObjects, listSpaces } from '../../services/workspaceApi';
 import { BUTTON, FIELD, LEVELS } from './teamsUi';
 import { SpaceSharesPanel } from './SpaceSharesPanel';
 
-const KINDS: { value: ObjectKind; label: string }[] = [{ value: 'space', label: 'Space' }, { value: 'project', label: 'Project' }, { value: 'roadmap', label: 'Roadmap' }, { value: 'dashboard', label: 'Dashboard' }, { value: 'storybox', label: 'Story box' }, { value: 'mindmap', label: 'Mind map' }];
+const KINDS: { value: ObjectKind; label: string }[] = [{ value: 'space', label: 'Space' }, { value: 'project', label: 'Project' }, { value: 'roadmap', label: 'Roadmap' }, { value: 'dashboard', label: 'Dashboard' }, { value: 'storybox', label: 'Story box' }, { value: 'mindmap', label: 'Storyboard' }];
 interface Choice { id: string; name: string }
 
 /** Who may do what with one space, project, roadmap or dashboard. Owner and Admin always have everything and are not listed. */

@@ -4,6 +4,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import { Client } from 'pg';
 import { createApp } from '../app';
 import type { SystemMailer } from '../mail/mailer';
+import type { BreachHttp } from '../auth/breach.service';
 import type { EmailMessage, EmailSender } from '../invitations/email';
 import type { FakeGoogle } from './fake-google';
 import { MemoryBlobStore } from './memory-blob-store';
@@ -45,7 +46,7 @@ export interface RealDb {
  * Starts the real API on a schema of its own (dropped by stop) and connects as the application role, so its true permissions
  * are the ones tested. Shared by every test that needs the database.
  */
-export async function startRealDb(options: { google?: FakeGoogle; systemMailer?: SystemMailer } = {}): Promise<RealDb> {
+export async function startRealDb(options: { google?: FakeGoogle; systemMailer?: SystemMailer; breachHttp?: BreachHttp; env?: Record<string, string> } = {}): Promise<RealDb> {
   const schema = `t_${randomBytes(6).toString('hex')}`;
   const url = (extra?: string) => {
     const u = new URL(ADMIN_URL!);
@@ -71,8 +72,8 @@ export async function startRealDb(options: { google?: FakeGoogle; systemMailer?:
   } : {};
   // With a fake Google the real Google sender is used (it talks to the fake); without one, emails are captured.
   const app: NestExpressApplication = await createApp(loadConfig({
-    DATABASE_URL: url(`-c search_path=${schema} -c role=lira_app`), ALLOWED_ORIGINS: ORIGIN, TRUST_PROXY_HOPS: '0', DATABASE_SSL: testSsl() ? 'require' : 'disable', ...googleEnv,
-  }), { blobStore: blobs, ...(options.systemMailer ? { systemMailer: options.systemMailer } : {}), ...(options.google ? { googleHttp: options.google.fetch } : { emailSender: emails }) });
+    DATABASE_URL: url(`-c search_path=${schema} -c role=lira_app`), ALLOWED_ORIGINS: ORIGIN, TRUST_PROXY_HOPS: '0', DATABASE_SSL: testSsl() ? 'require' : 'disable', ...googleEnv, ...options.env,
+  }), { blobStore: blobs, ...(options.breachHttp ? { breachHttp: options.breachHttp } : {}), ...(options.systemMailer ? { systemMailer: options.systemMailer } : {}), ...(options.google ? { googleHttp: options.google.fetch } : { emailSender: emails }) });
   await app.listen(0, '127.0.0.1');
   const base = `http://127.0.0.1:${(app.getHttpServer().address() as { port: number }).port}`;
 

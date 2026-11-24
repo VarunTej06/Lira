@@ -4,7 +4,7 @@ import { DbService } from '../db/db.service';
 import { roleIn, type Role } from './org-access';
 
 export type Level = 'none' | 'view' | 'edit' | 'manage';
-export type ObjectKind = 'space' | 'project' | 'roadmap' | 'dashboard';
+export type ObjectKind = 'space' | 'project' | 'roadmap' | 'dashboard' | 'storybox' | 'mindmap';
 
 const RANK: Record<Level, number> = { none: 0, view: 1, edit: 2, manage: 3 };
 const BY_RANK: Level[] = ['none', 'view', 'edit', 'manage'];

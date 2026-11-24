@@ -4,9 +4,10 @@ import type { ZodType } from 'zod';
 import { CONFIG, type Config } from '../config';
 import { AuthService, type SignedIn } from './auth.service';
 import { RecoveryService } from './recovery.service';
+import { TwoStepService } from './two-step.service';
 import { ClientGuard } from './client.guard';
 import { GoogleLoginService, LOGIN_COOKIE } from './google-login.service';
-import { fieldErrors, forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, verifyEmailSchema } from './schemas';
+import { fieldErrors, forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, twoStepCodeSchema, twoStepLoginSchema, verifyEmailSchema } from './schemas';
 import { clearedCookie, sessionCookie, tokenFromCookieHeader } from './session';
 
 /** The body as the schema allows it, or a 400 that names each field that is wrong. */
@@ -25,6 +26,7 @@ export class AuthController {
   constructor(
     @Inject(AuthService) private readonly auth: AuthService, @Inject(CONFIG) private readonly config: Config,
     @Inject(GoogleLoginService) private readonly googleLogin: GoogleLoginService, @Inject(RecoveryService) private readonly recovery: RecoveryService,
+    @Inject(TwoStepService) private readonly twoStep: TwoStepService,
   ) {}
 
   private get origin(): string { return this.config.allowedOrigins[0] ?? ''; }
@@ -63,7 +65,42 @@ export class AuthController {
   @Post('auth/login')
   @HttpCode(200)
   async login(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.reply(res, await this.auth.login(parse(loginSchema, body), address(req)), 200);
+    const result = await this.auth.login(parse(loginSchema, body), address(req));
+    if ('challenge' in result) { res.setHeader('Cache-Control', 'no-store'); return { twoStep: true, challenge: result.challenge }; }
+    return this.reply(res, result, 200);
+  }
+
+  /** The second step of a log-in with two-step sign-in on. */
+  @Post('auth/login/two-step')
+  @HttpCode(200)
+  async loginTwoStep(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const input = parse(twoStepLoginSchema, body);
+    return this.reply(res, await this.auth.loginTwoStep(input.challenge, input.code, address(req)), 200);
+  }
+
+  @Get('me/two-step')
+  async twoStepStatus(@Req() req: Request) {
+    return this.twoStep.status(await this.userId(req));
+  }
+
+  @Post('me/two-step/begin')
+  @HttpCode(200)
+  async twoStepBegin(@Req() req: Request) {
+    const me = await this.auth.me(tokenOf(req));
+    if (!me) throw new UnauthorizedException('You are not signed in.');
+    return this.twoStep.begin(me.user.id, me.user.email);
+  }
+
+  @Post('me/two-step/confirm')
+  @HttpCode(200)
+  async twoStepConfirm(@Body() body: unknown, @Req() req: Request) {
+    return { recoveryCodes: await this.twoStep.confirm(await this.userId(req), parse(twoStepCodeSchema, body).code, address(req)) };
+  }
+
+  @Post('me/two-step/disable')
+  @HttpCode(204)
+  async twoStepDisable(@Body() body: unknown, @Req() req: Request) {
+    await this.twoStep.disable(await this.userId(req), parse(twoStepCodeSchema, body).code, address(req));
   }
 
   @Post('auth/logout')
@@ -109,6 +146,12 @@ export class AuthController {
     res.setHeader('Cache-Control', 'no-store');
     if (!me) throw new UnauthorizedException('You are not signed in.');
     return me;
+  }
+
+  private async userId(req: Request): Promise<string> {
+    const me = await this.auth.me(tokenOf(req));
+    if (!me) throw new UnauthorizedException('You are not signed in.');
+    return me.user.id;
   }
 
   private reply(res: Response, signedIn: SignedIn, status: number) {

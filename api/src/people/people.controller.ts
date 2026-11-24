@@ -14,7 +14,7 @@ function parse<T>(schema: ZodType<T>, body: unknown): T {
 }
 
 const address = (req: AuthedRequest): string => req.ip ?? 'unknown';
-const KINDS = ['space', 'project', 'roadmap', 'dashboard'];
+const KINDS = ['space', 'project', 'roadmap', 'dashboard', 'storybox', 'mindmap'];
 
 /** People, teams and access. Every call needs the right to manage access: the Owner, or an Admin the owner has not switched off. */
 @Controller('orgs/:orgId')

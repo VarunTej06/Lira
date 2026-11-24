@@ -5,6 +5,7 @@ import { DbService, type Queryable } from '../db/db.service';
 import { SYSTEM_MAILER, type SystemMail, type SystemMailer } from '../mail/mailer';
 import { logLine } from '../observability/log';
 import { MetricsService } from '../observability/metrics.service';
+import { BreachService } from './breach.service';
 import { hashPassword } from './password';
 import { EMAILS_PER_HOUR, RESET_ADDRESS_LIMIT, WINDOW_MINUTES, attemptKey } from './rate-limit';
 import { hashToken, newToken } from './session';
@@ -26,6 +27,7 @@ export class RecoveryService {
   constructor(
     @Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService, @Inject(MetricsService) private readonly metrics: MetricsService,
     @Inject(CONFIG) private readonly config: Config, @Inject(SYSTEM_MAILER) private readonly mailer: SystemMailer,
+    @Inject(BreachService) private readonly breach: BreachService,
   ) {}
 
   get enabled(): boolean { return this.mailer.enabled; }
@@ -83,6 +85,7 @@ export class RecoveryService {
 
   /** Sets the new password with a valid link, ends every session of the account, and tells the owner of the address. */
   async reset(token: string, password: string, ip: string): Promise<void> {
+    await this.breach.require(password);
     const hash = await hashPassword(password);
     const user = await this.db.transaction(async tx => {
       const id = await this.consume(tx, token, 'reset');

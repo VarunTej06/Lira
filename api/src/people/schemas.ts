@@ -15,7 +15,7 @@ export const teamMembersSchema = z.strictObject({ userIds: z.array(uuid).max(500
 export const grantSchema = z.strictObject({
   subjectType: z.enum(['user', 'team']),
   subjectId: uuid,
-  kind: z.enum(['space', 'project', 'roadmap', 'dashboard']),
+  kind: z.enum(['space', 'project', 'roadmap', 'dashboard', 'storybox', 'mindmap']),
   objectId: z.string().regex(/^[A-Za-z0-9_.:-]{1,80}$/, 'Not an object id.'),
   level: z.enum(['view', 'edit', 'manage']),
 });

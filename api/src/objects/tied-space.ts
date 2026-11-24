@@ -12,6 +12,9 @@ const isObject = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
  */
 export function tiedSpace(kind: ObjectType, doc: Record<string, unknown>): TiedSpace | null {
   if (kind === 'project') return Number.isInteger(doc.spaceId) && (doc.spaceId as number) > 0 ? { id: doc.spaceId as number } : null;
+  // A story box for one space is tied to it; one for a sprint crosses spaces, so it is shared by access only.
+  if (kind === 'storybox') return isObject(doc.scope) && doc.scope.type === 'space' && Number.isInteger(doc.scope.spaceId) && (doc.scope.spaceId as number) > 0 ? { id: doc.scope.spaceId as number } : null;
+  if (kind === 'mindmap') return null;
   if (kind === 'roadmap') return typeof doc.spaceKey === 'string' && doc.spaceKey ? { key: doc.spaceKey } : null;
   const ids = isObject(doc.filters) ? doc.filters.spaceIds : undefined;
   return Array.isArray(ids) && ids.length === 1 && Number.isInteger(ids[0]) && (ids[0] as number) > 0 ? { id: ids[0] as number } : null;

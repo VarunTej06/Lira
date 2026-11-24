@@ -23,6 +23,8 @@ const schema = z.object({
   MAIL_FROM: z.email().optional(),
   // Reminders by email need the email service above. Set to false to keep them off.
   REMINDERS: z.enum(['true', 'false']).default('true'),
+  // Refuse a password found in a list of leaked passwords (asks api.pwnedpasswords.com with five characters of its hash, never the password).
+  BREACH_CHECK: z.enum(['true', 'false']).default('false'),
 }).refine(v => (v.MAIL_CONNECTION_STRING === undefined) === (v.MAIL_FROM === undefined), { message: 'MAIL_CONNECTION_STRING and MAIL_FROM must be set together', path: ['MAIL_FROM'] })
   .refine(v => (v.STORAGE_ACCOUNT === undefined) === (v.STORAGE_KEY === undefined), { message: 'STORAGE_ACCOUNT and STORAGE_KEY must be set together', path: ['STORAGE_KEY'] })
   .refine(v => [v.GOOGLE_CLIENT_ID, v.GOOGLE_CLIENT_SECRET, v.GOOGLE_REDIRECT_URI, v.TOKEN_ENCRYPTION_KEY].every(x => x === undefined) || [v.GOOGLE_CLIENT_ID, v.GOOGLE_CLIENT_SECRET, v.GOOGLE_REDIRECT_URI, v.TOKEN_ENCRYPTION_KEY].every(x => x !== undefined),
@@ -47,6 +49,8 @@ export interface Config {
   mail?: { connectionString: string; from: string };
   /** Whether the clock that sends reminders runs (only with the email service set up). */
   reminders: boolean;
+  /** Whether a new password is checked against the list of leaked passwords. */
+  breachCheck: boolean;
 }
 
 export const CONFIG = Symbol('CONFIG');
@@ -79,6 +83,7 @@ export function loadConfig(env: Record<string, string | undefined>): Config {
     ...(v.GOOGLE_CLIENT_ID && v.GOOGLE_CLIENT_SECRET && v.GOOGLE_REDIRECT_URI && v.TOKEN_ENCRYPTION_KEY
       ? { google: { clientId: v.GOOGLE_CLIENT_ID, clientSecret: v.GOOGLE_CLIENT_SECRET, redirectUri: v.GOOGLE_REDIRECT_URI, tokenKey: v.TOKEN_ENCRYPTION_KEY } } : {}),
     reminders: v.REMINDERS === 'true',
+    breachCheck: v.BREACH_CHECK === 'true',
     ...(v.MAIL_CONNECTION_STRING && v.MAIL_FROM ? { mail: { connectionString: v.MAIL_CONNECTION_STRING, from: v.MAIL_FROM } } : {}),
     ...(v.STORAGE_ACCOUNT && v.STORAGE_KEY ? { storage: { account: v.STORAGE_ACCOUNT, key: v.STORAGE_KEY, container: v.STORAGE_CONTAINER } } : {}),
   };

@@ -5,7 +5,9 @@ import { CONFIG, type Config } from '../config';
 import { DbService, type Queryable } from '../db/db.service';
 import { MetricsService } from '../observability/metrics.service';
 import { hashPassword, spendCheckTime, verifyPassword } from './password';
+import { BreachService } from './breach.service';
 import { RecoveryService } from './recovery.service';
+import { TwoStepService } from './two-step.service';
 import { WINDOW_MINUTES, attemptKey, isLocked } from './rate-limit';
 import type { LoginInput, SignupInput } from './schemas';
 import { hashToken, newToken, sessionSeconds } from './session';
@@ -26,10 +28,12 @@ export class AuthService {
     @Inject(AuditService) private readonly audit: AuditService,
     @Inject(MetricsService) private readonly metrics: MetricsService,
     @Inject(CONFIG) private readonly config: Config, @Inject(RecoveryService) private readonly recovery: RecoveryService,
+    @Inject(BreachService) private readonly breach: BreachService, @Inject(TwoStepService) private readonly twoStep: TwoStepService,
   ) {}
 
   /** Creates the account, an organisation of one with the person as its owner, and a first session. */
   async signup(input: SignupInput, ip: string): Promise<SignedIn> {
+    await this.breach.require(input.password);
     const passwordHash = await hashPassword(input.password);
     const token = newToken();
     const maxAgeSeconds = sessionSeconds(input.remember ?? false, this.config.sessionHours, this.config.rememberDays);
@@ -55,7 +59,8 @@ export class AuthService {
     }
   }
 
-  async login(input: LoginInput, ip: string): Promise<SignedIn> {
+  /** A session, or when the person has two-step sign-in on, a challenge to answer with a code first. */
+  async login(input: LoginInput, ip: string): Promise<SignedIn | { challenge: string }> {
     const emailKey = attemptKey('email', input.email);
     const addressKey = attemptKey('address', ip);
     if (await this.locked(emailKey, addressKey)) {
@@ -73,8 +78,24 @@ export class AuthService {
       await this.audit.record({ actor: user?.id ?? null, action: 'auth.login', outcome: 'denied', sourceIp: ip, detail: { reason: 'wrong_credentials' } });
       throw new UnauthorizedException(WRONG_LOGIN);
     }
-    const token = newToken();
     const remember = input.remember ?? false;
+    await this.recordAttempt(emailKey, addressKey, true);
+    if ((await this.twoStep.status(user.id)).enabled) {
+      this.metrics.inc('auth_login_total', { outcome: 'two_step' });
+      return { challenge: await this.twoStep.challenge(user.id, remember) };
+    }
+    return this.openSession(user, remember, ip);
+  }
+
+  /** The second step: the app's code, or a recovery code, for the challenge the password step gave. */
+  async loginTwoStep(challenge: string, code: string, ip: string): Promise<SignedIn> {
+    const who = await this.twoStep.answer(challenge, code, ip);
+    const found = await this.db.query<PublicUser>('SELECT id, email, name FROM users WHERE id = $1', [who.userId]);
+    return this.openSession(found.rows[0], who.remember, ip);
+  }
+
+  private async openSession(user: PublicUser, remember: boolean, ip: string): Promise<SignedIn> {
+    const token = newToken();
     const maxAgeSeconds = sessionSeconds(remember, this.config.sessionHours, this.config.rememberDays);
     const organisations = await this.db.transaction(async tx => {
       await this.createSession(tx, user.id, token, remember, maxAgeSeconds);
@@ -82,7 +103,6 @@ export class AuthService {
       await this.audit.record({ actor: user.id, action: 'auth.login', outcome: 'ok', sourceIp: ip, detail: { remember } }, tx);
       return this.memberships(tx, user.id);
     });
-    await this.recordAttempt(emailKey, addressKey, true);
     this.metrics.inc('auth_login_total', { outcome: 'ok' });
     return { token, maxAgeSeconds, user: { id: user.id, email: user.email, name: user.name }, organisations };
   }

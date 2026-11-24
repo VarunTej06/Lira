@@ -43,7 +43,7 @@ export class VotesService {
       endsAt: r.ends_at.toISOString(), revealedAt: r.revealed_at?.toISOString() ?? null, finalPoints: r.final_points === null ? null : Number(r.final_points), voted: Number(r.voted),
     }));
     const active = out.find(r => r.phase !== 'confirmed') ?? null;
-    return { now: now.toISOString(), rounds: out, votes: await this.visibleVotes(me, orgId, boxId, out), people: active ? await this.people(orgId, boxId, box.doc, active.ticketId) : [], activeTicketId: active?.ticketId ?? null };
+    return { now: now.toISOString(), rounds: out, votes: await this.visibleVotes(me, orgId, boxId, out), people: await this.people(orgId, boxId, box.doc, active?.ticketId ?? -1), activeTicketId: active?.ticketId ?? null };
   }
 
   /** For the overview of story boxes: how many tickets each box the person may view has sized, and their points together. */
@@ -64,7 +64,7 @@ export class VotesService {
     return r.rows.map(x => ({ ticketId: Number(x.ticket_id), userId: x.user_id, name: x.name, points: Number(x.points), mine: x.user_id === me.user.id }));
   }
 
-  /** Who may take part (the Owner and Admins, and whoever was given the space or the box), and whether each has given points for the ticket. */
+  /** Who may take part (the Owner and Admins, and whoever was given the space or the box), and whether each has given points for the ticket being voted on (nobody has, when none is up). */
   private async people(orgId: string, boxId: string, doc: Record<string, unknown>, ticketId: number): Promise<PersonOut[]> {
     const scope = doc.scope as { type?: string; spaceId?: number } | undefined;
     const spaceId = scope?.type === 'space' && Number.isInteger(scope.spaceId) ? String(scope.spaceId) : null;
@@ -88,6 +88,18 @@ export class VotesService {
     if (busy.rowCount) throw new ConflictException({ code: 'round_active', message: 'Another ticket is being voted on. Finish it first.' });
     await this.restart(orgId, boxId, ticketId, me.user.id, minutesOf(box.doc));
     await this.done(me, orgId, boxId, ticketId, 'start', ip);
+  }
+
+  /** Puts the ticket back: the round and its points are dropped, so the ticket can be sized later and another one put up now. A ticket already sized is not touched. */
+  async cancel(me: Me, orgId: string, boxId: string, ticketId: number, ip: string): Promise<void> {
+    await this.objects.requireLevel(me, orgId, 'storybox', boxId, 'edit');
+    const r = await this.round(orgId, boxId, ticketId);
+    if (r.confirmed_at) throw new ConflictException({ code: 'round_done', message: 'This ticket was already sized.' });
+    await this.db.transaction(async tx => {
+      await tx.query('DELETE FROM story_votes WHERE org_id = $1 AND box_id = $2 AND ticket_id = $3', [orgId, boxId, ticketId]);
+      await tx.query('DELETE FROM story_rounds WHERE org_id = $1 AND box_id = $2 AND ticket_id = $3', [orgId, boxId, ticketId]);
+    });
+    await this.done(me, orgId, boxId, ticketId, 'cancel', ip);
   }
 
   /** Clears the points and starts the clock again, so the same people can give new ones. */

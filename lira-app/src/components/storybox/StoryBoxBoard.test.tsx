@@ -8,6 +8,8 @@ import { setActiveOrg } from '../../utils/hostedOrg';
 import type { StoryBox } from '../../utils/storybox';
 import { StoryBoxBoard } from './StoryBoxBoard';
 
+const dialog = vi.hoisted(() => ({ confirmDialog: vi.fn(async () => true) }));
+vi.mock('../common/dialogStore', () => dialog);
 const hosted = vi.hoisted(() => ({ on: false }));
 vi.mock('../../utils/edition', async importOriginal => ({ ...(await importOriginal<typeof import('../../utils/edition')>()), isHosted: () => hosted.on }));
 const api = vi.hoisted(() => ({ getRoom: vi.fn(), roundAction: vi.fn(), confirmRound: vi.fn(), putVote: vi.fn() }));
@@ -35,6 +37,7 @@ const start = (key: string) => click(q(`button[aria-label="Start voting on ${key
 const hand = (value: number) => q<HTMLButtonElement>(`button[aria-label="Vote ${value}"]`)!;
 
 beforeEach(async () => {
+  dialog.confirmDialog.mockReset(); dialog.confirmDialog.mockResolvedValue(true);
   hosted.on = false; setActiveOrg(null); localStorage.clear(); current = baseBox();
   Object.values(api).forEach(f => f.mockReset());
   await db.issues.clear(); await db.issues.bulkPut(issues);
@@ -151,6 +154,105 @@ describe('putting a ticket up for voting (local edition)', () => {
     show(baseBox());
     await start('AAA-2');
     expect(stage().textContent).toContain('AAA-2');
+  });
+});
+
+describe('before any ticket is put up', () => {
+  it('already lists who is taking part, ready to vote, and says voting starts when a ticket is put up', () => {
+    show(baseBox());
+    const table = q('section[aria-label="Participants"]')!;
+    expect(table.textContent).toContain('1 taking part');
+    expect(table.textContent).toContain('Voting starts when a ticket is put up');
+    expect(table.textContent).toContain('Ready');
+  });
+  it('does not list them in a closed box', () => {
+    show(baseBox({ status: 'closed' }));
+    expect(q('section[aria-label="Participants"]')).toBeNull();
+  });
+});
+
+describe('changing your mind about a ticket', () => {
+  it('puts the ticket back at once when nobody has voted, so another ticket can be put up first', async () => {
+    show(baseBox());
+    await start('AAA-1');
+    expect(q('button[aria-label="Start voting on AAA-3"]')).toBeNull();
+    await click(byText('button', 'Put the ticket back'));
+    expect(dialog.confirmDialog).not.toHaveBeenCalled();
+    expect(q('[role="timer"]')).toBeNull();
+    expect(lane('Yet to be sized').textContent).toContain('AAA-1');
+    await start('AAA-3');
+    expect(stage().textContent).toContain('AAA-3');
+  });
+  it('asks first when someone has voted, keeps the ticket on the stage when the answer is no, and drops the points when it is yes', async () => {
+    show(baseBox());
+    await start('AAA-1');
+    await click(hand(5));
+    dialog.confirmDialog.mockResolvedValueOnce(false);
+    await click(byText('button', 'Put the ticket back'));
+    expect(stage().textContent).toContain('AAA-1');
+    await click(byText('button', 'Put the ticket back'));
+    expect(dialog.confirmDialog).toHaveBeenCalledTimes(2);
+    expect(current.localVotes).toEqual({});
+    expect(current.localRounds).toEqual({});
+  });
+  it('can also be done after the points are revealed, before they are confirmed', async () => {
+    show(baseBox());
+    await start('AAA-1');
+    await click(byText('button', 'Reveal points'));
+    await click(byText('button', 'Put the ticket back'));
+    expect(current.localRounds).toEqual({});
+  });
+  it('is only for the people who run the box', () => {
+    show(baseBox({ localRounds: { 10: { endsAt: '2099-01-01T00:00:00Z', revealed: false } } }), false);
+    expect(byText('button', 'Put the ticket back')).toBeUndefined();
+  });
+});
+
+describe('the time to vote', () => {
+  it('is shown, and a small pencil changes it for the next tickets', async () => {
+    show(baseBox());
+    expect(document.body.textContent).toContain('3 min');
+    await click(q('button[aria-label="Change the time to vote"]'));
+    await choose(q<HTMLSelectElement>('select[aria-label="Time to vote on each ticket"]'), '8');
+    await click(q('button[aria-label="Save the time"]'));
+    expect(current.votingMinutes).toBe(8);
+    expect(document.body.textContent).toContain('8 min');
+    expect(stage().textContent).toContain('8 minutes');
+    await start('AAA-1');
+    expect(q('[role="timer"]')!.textContent).toMatch(/0[78]:\d\d/);
+  });
+  it('can be left as it was', async () => {
+    show(baseBox());
+    await click(q('button[aria-label="Change the time to vote"]'));
+    await click(q('button[aria-label="Cancel changing the time"]'));
+    expect(current.votingMinutes).toBe(3);
+    expect(q('select[aria-label="Time to vote on each ticket"]')).toBeNull();
+  });
+  it('has no pencil for someone who does not run the box, or in a closed box', () => {
+    show(baseBox(), false);
+    expect(q('button[aria-label="Change the time to vote"]')).toBeNull();
+    cleanup();
+    show(baseBox({ status: 'closed' }));
+    expect(q('button[aria-label="Change the time to vote"]')).toBeNull();
+  });
+});
+
+describe('leaving in the middle of voting', () => {
+  it('asks before leaving while a ticket is up, and not otherwise', async () => {
+    const { hasLeaveGuard } = await import('../../utils/leaveGuard');
+    show(baseBox());
+    expect(hasLeaveGuard()).toBe(false);
+    await start('AAA-1');
+    expect(hasLeaveGuard()).toBe(true);
+    await click(byText('button', 'Put the ticket back'));
+    expect(hasLeaveGuard()).toBe(false);
+  });
+  it('lets go of the guard when the page goes away', async () => {
+    const { hasLeaveGuard } = await import('../../utils/leaveGuard');
+    show(baseBox());
+    await start('AAA-1');
+    cleanup();
+    expect(hasLeaveGuard()).toBe(false);
   });
 });
 

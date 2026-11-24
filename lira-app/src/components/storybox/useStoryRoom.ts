@@ -4,7 +4,7 @@ import { currentTimeMs } from '../../utils/clock';
 import { isHosted } from '../../utils/edition';
 import { activeOrg } from '../../utils/hostedOrg';
 import type { StoryBox } from '../../utils/storybox';
-import { localConfirm, localReveal, localRevote, localRoom, localStart, localVote, type Room } from '../../utils/storyRound';
+import { localCancel, localConfirm, localReveal, localRevote, localRoom, localStart, localVote, type Room } from '../../utils/storyRound';
 import { loadProfile } from '../../utils/userPrefs';
 
 const POLL_OPEN_MS = 2_000;
@@ -58,6 +58,7 @@ export function useStoryRoom(box: StoryBox, onChange: (box: StoryBox) => void) {
   return {
     room, nowMs, problem,
     start: (t: number) => (hosted ? run(() => roundAction(org, id, t, 'start')) : Promise.resolve(keep(localStart(box, t, currentTimeMs())))),
+    cancel: (t: number) => (hosted ? run(() => roundAction(org, id, t, 'cancel')) : Promise.resolve(keep(localCancel(box, t)))),
     reveal: (t: number) => (hosted ? run(() => roundAction(org, id, t, 'reveal')) : Promise.resolve(keep(localReveal(box, t)))),
     revote: (t: number) => (hosted ? run(() => roundAction(org, id, t, 'revote')) : Promise.resolve(keep(localRevote(box, t, currentTimeMs())))),
     finalise: (t: number, points: number) => (hosted ? run(() => confirmRound(org, id, t, points)) : Promise.resolve(keep(localConfirm(box, t, points)))),

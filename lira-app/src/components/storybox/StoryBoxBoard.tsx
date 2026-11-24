@@ -1,16 +1,19 @@
-import { ArrowLeft, Layers, Search, Target, Timer, Trash2 } from 'lucide-react';
+import { ArrowLeft, Layers, Search, Target, Trash2 } from 'lucide-react';
 import { useState, type DragEvent } from 'react';
 import { db } from '../../db/db';
+import { useLeaveGuard } from '../../hooks/useLeaveGuard';
 import type { Issue } from '../../types/issue';
 import type { Space } from '../../types/space';
 import { currentTime } from '../../utils/clock';
 import { lanes, minutesOf, phaseNow } from '../../utils/storyRound';
 import { scopeLabel, votesFor, type StoryBox } from '../../utils/storybox';
+import { confirmDialog } from '../common/dialogStore';
 import { FIELD } from '../standup/parts';
 import { Participants } from './Participants';
 import { StoryLanes } from './StoryLanes';
 import { useStoryRoom } from './useStoryRoom';
 import { VotingStage } from './VotingStage';
+import { VotingTimeTile } from './VotingTimeTile';
 
 interface Props { box: StoryBox; issues: Issue[]; spaces: Space[]; canManage: boolean; onChange: (box: StoryBox) => void; onDelete: () => void; onBack: () => void }
 
@@ -39,6 +42,11 @@ export function StoryBoxBoard({ box, issues, spaces, canManage, onChange, onDele
   const points = new Map(votesFor(room.room.votes, room.room.activeTicketId ?? -1).map(v => [v.userId, v.points]));
   const sizedPoints = all.sized.reduce((sum, i) => sum + (i.storyPoints ?? 0), 0);
 
+  useLeaveGuard(open && round ? 'A ticket is being voted on in this story box. The voting carries on and you can come back to it, but anyone waiting for you will keep waiting.' : null);
+  async function putBack(ticketId: number) {
+    if (room.room.people.some(p => p.voted) && !(await confirmDialog({ title: 'Put the ticket back?', message: 'The points already given for it are dropped. You can put it up again later, or put another ticket up first.', confirmLabel: 'Put it back' }))) return;
+    await room.cancel(ticketId);
+  }
   const start = (ticketId: number) => { setLanded(null); void room.start(ticketId); };
   const drop = (e: DragEvent) => { e.preventDefault(); const id = Number(e.dataTransfer.getData('text/plain')); if (canRun && !round && Number.isInteger(id) && id > 0) start(id); };
   /** The ticket leaves the stage first, then the points are confirmed and put on it, so the move is seen before the lane changes. */
@@ -55,7 +63,6 @@ export function StoryBoxBoard({ box, issues, spaces, canManage, onChange, onDele
   const tiles = [
     { label: 'Tickets sized', value: `${all.sized.length + (round?.phase === 'confirmed' ? 1 : 0)} of ${all.pending.length + all.sized.length + (round ? 1 : 0)}`, icon: <Target className="w-4 h-4" />, tone: 'text-emerald-600 bg-emerald-50' },
     { label: 'Points boxed', value: String(sizedPoints), icon: <Layers className="w-4 h-4" />, tone: 'text-lira-blue bg-lira-blue-light' },
-    { label: 'Time to vote', value: `${minutes} min`, icon: <Timer className="w-4 h-4" />, tone: 'text-amber-600 bg-amber-50' },
   ];
 
   return (
@@ -88,6 +95,7 @@ export function StoryBoxBoard({ box, issues, spaces, canManage, onChange, onDele
               <div><div className="text-2xl font-semibold text-lira-text leading-none">{t.value}</div><div className="text-2xs text-lira-muted mt-1">{t.label}</div></div>
             </div>
           ))}
+          <VotingTimeTile minutes={minutes} canChange={canRun} onChange={m => onChange({ ...box, votingMinutes: m })} />
         </div>
 
         {!open && <p role="status" className="text-xs text-lira-muted bg-white border border-lira-border rounded-2xl px-4 py-3">This box is closed: points can no longer be given. It stays here as history.</p>}
@@ -95,13 +103,13 @@ export function StoryBoxBoard({ box, issues, spaces, canManage, onChange, onDele
         <StoryLanes pending={all.pending.filter(match)} sized={all.sized.filter(match)} spaceKey={spaceKey} canRun={canRun} idle={!round} landedId={landed} onStart={start} />
         {open && (round && phase ? (
           <VotingStage box={box} room={room.room} issue={activeIssue} round={round} phase={phase} nowMs={room.nowMs} minutes={minutes} canRun={canRun} leaving={leaving}
-            reveal={t => { void room.reveal(t); }} revote={t => { void room.revote(t); }} finalise={(t, p) => { void finalise(t, p); }} vote={(t, p) => { void room.vote(t, p); }} />
+            reveal={t => { void room.reveal(t); }} revote={t => { void room.revote(t); }} finalise={(t, p) => { void finalise(t, p); }} vote={(t, p) => { void room.vote(t, p); }} cancel={t => { void putBack(t); }} />
         ) : (
           <section aria-label="Voting stage" onDragOver={e => { if (canRun) e.preventDefault(); }} onDrop={drop} className="rounded-2xl border-2 border-dashed border-lira-border bg-white/60 px-6 py-10 text-center text-xs text-lira-muted">
             {canRun ? `Drag a ticket here, or press Start voting on a ticket, to ask everyone for points. Each ticket is open for ${minutes} minute${minutes === 1 ? '' : 's'}.` : 'Waiting for the facilitator to put a ticket up for voting.'}
           </section>
         ))}
-        {open && round && phase && <Participants people={room.room.people} points={points} revealed={phase === 'revealed'} />}
+        {open && <Participants people={room.room.people} points={points} revealed={phase === 'revealed'} waiting={!round} />}
       </section>
     </div>
   );

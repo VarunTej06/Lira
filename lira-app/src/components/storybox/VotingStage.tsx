@@ -12,6 +12,8 @@ export interface StageActions {
   revote: (ticketId: number) => void;
   finalise: (ticketId: number, points: number) => void;
   vote: (ticketId: number, points: number | null) => void;
+  /** Puts the ticket back so another one can be put up first. */
+  cancel: (ticketId: number) => void;
 }
 
 interface Props extends StageActions {
@@ -50,7 +52,7 @@ function Outcome({ box, room, ticket, canRun, onConfirm, onRevote }: { box: Stor
 }
 
 /** The ticket being voted on: the countdown, everyone's cards, your own hand, and what the facilitator can do next. */
-export function VotingStage({ box, room, issue, round, phase, nowMs, minutes, canRun, leaving, reveal, revote, finalise, vote }: Props) {
+export function VotingStage({ box, room, issue, round, phase, nowMs, minutes, canRun, leaving, reveal, revote, finalise, vote, cancel }: Props) {
   if (!round || !issue) return null;
   const left = msLeft(round.endsAt, nowMs, room.offsetMs);
   const points = new Map(votesFor(room.votes, round.ticketId).map(v => [v.userId, v.points]));
@@ -63,6 +65,7 @@ export function VotingStage({ box, room, issue, round, phase, nowMs, minutes, ca
         {phase === 'voting' && <span role="timer" aria-label="Time left to vote" className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-mono font-bold bg-lira-blue-light text-lira-blue">{clockText(left)}</span>}
         {phase === 'timeup' && <span className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold bg-amber-100 text-amber-700">Time is up</span>}
         {revealed && <span className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold bg-green-100 text-green-700">Revealed</span>}
+        {canRun && <button type="button" onClick={() => cancel(round.ticketId)} className="text-2xs font-medium px-2.5 py-1 rounded-lg border border-lira-border bg-white text-lira-text hover:bg-gray-50 cursor-pointer">Put the ticket back</button>}
       </header>
       <div className="p-4 space-y-3">
       <h4 className="text-base font-semibold text-lira-text"><span className="font-mono text-lira-muted text-sm mr-1">{issue.key}</span>{issue.title}</h4>

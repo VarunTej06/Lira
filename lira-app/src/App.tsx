@@ -4,7 +4,8 @@ import { SavedToastHost } from './components/common/SavedToast';
 import { LinkMenuHost } from './components/common/LinkMenu';
 import { paintTheme } from './utils/theme';
 import { lazy, Suspense, useState, useEffect, useCallback, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useGuardedNavigate } from './hooks/useGuardedNavigate';
 import { AppRoutes } from './AppRoutes';
 import { TopNavigation } from './components/layout/TopNavigation';
 import { LeftSidebar } from './components/layout/LeftSidebar';
@@ -44,7 +45,7 @@ const AppCommandPalette = lazy(() => import('./components/command/AppCommandPale
 const VivaAIChatbot = lazy(() => import('./components/ai/VivaAIChatbot').then(m => ({ default: m.VivaAIChatbot })));
 
 export default function App() {
-  const navigate = useNavigate();
+  const navigate = useGuardedNavigate();
   const location = useLocation();
   const route = useMemo(() => parsePath(location.pathname), [location.pathname]);
   const activeTab = tabOf(route);

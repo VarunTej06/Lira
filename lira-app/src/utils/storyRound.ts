@@ -47,7 +47,7 @@ export function localRoom(box: StoryBox, nowMs: number, name: string): Room {
   }));
   const active = rounds.find(r => r.phase !== 'confirmed');
   const votes: Vote[] = Object.entries(box.localVotes ?? {}).map(([ticket, points]) => ({ ticketId: Number(ticket), userId: 'me', name, points, mine: true }));
-  const people: Person[] = active ? [{ userId: 'me', name, role: 'owner', voted: box.localVotes?.[String(active.ticketId)] !== undefined, votedAt: null }] : [];
+  const people: Person[] = [{ userId: 'me', name, role: 'owner', voted: !!active && box.localVotes?.[String(active.ticketId)] !== undefined, votedAt: null }];
   return { rounds, votes, people, activeTicketId: active?.ticketId ?? null, offsetMs: 0 };
 }
 
@@ -58,6 +58,12 @@ const endsIn = (box: StoryBox, nowMs: number): string => new Date(nowMs + minute
 export function localStart(box: StoryBox, ticketId: number, nowMs: number): StoryBox | null {
   if (Object.entries(box.localRounds ?? {}).some(([id, r]) => id !== String(ticketId) && isActive(r))) return null;
   return { ...box, localRounds: { ...box.localRounds, [ticketId]: { endsAt: endsIn(box, nowMs), revealed: false } }, localVotes: without(box.localVotes, String(ticketId)) };
+}
+/** Puts a ticket back: its round and its points go, and nothing else changes. A ticket already sized stays sized. */
+export function localCancel(box: StoryBox, ticketId: number): StoryBox {
+  const r = box.localRounds?.[ticketId];
+  if (!r || r.finalPoints !== undefined) return box;
+  return { ...box, localRounds: without(box.localRounds, String(ticketId)), localVotes: without(box.localVotes, String(ticketId)) };
 }
 export const localReveal = (box: StoryBox, ticketId: number): StoryBox => {
   const r = box.localRounds?.[ticketId];

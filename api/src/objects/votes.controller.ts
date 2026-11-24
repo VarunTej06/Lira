@@ -52,6 +52,11 @@ export class VotesController {
     await this.votes.revote(req.me, orgId, this.box(boxId), t, req.ip ?? 'unknown');
   }
 
+  @Post('objects/storybox/:boxId/rounds/:ticketId/cancel') @HttpCode(204)
+  async cancel(@Param('orgId') orgId: string, @Param('boxId') boxId: string, @Param('ticketId', ParseIntPipe) t: number, @Req() req: AuthedRequest) {
+    await this.votes.cancel(req.me, orgId, this.box(boxId), t, req.ip ?? 'unknown');
+  }
+
   @Post('objects/storybox/:boxId/rounds/:ticketId/confirm') @HttpCode(204)
   async confirm(@Param('orgId') orgId: string, @Param('boxId') boxId: string, @Param('ticketId', ParseIntPipe) t: number, @Body() body: unknown, @Req() req: AuthedRequest) {
     await this.votes.confirm(req.me, orgId, this.box(boxId), t, this.parse(confirmSchema, body).points, req.ip ?? 'unknown');

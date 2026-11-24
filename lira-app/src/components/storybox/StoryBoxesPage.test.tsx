@@ -7,7 +7,11 @@ import { byText, choose, cleanup, click, mount, q, qa, settle, typeInto } from '
 import { setActiveOrg } from '../../utils/hostedOrg';
 import { StoryBoxesPage } from './StoryBoxesPage';
 
-const dialog = vi.hoisted(() => ({ confirmDialog: vi.fn(async () => true) }));
+const dialog = vi.hoisted(() => ({ confirmDialog: vi.fn(async () => true), alertDialog: vi.fn(async () => undefined) }));
+const access = vi.hoisted(() => ({ listTeams: vi.fn(), listMembers: vi.fn() }));
+vi.mock('../../services/accessApi', () => access);
+const invites = vi.hoisted(() => ({ inviteToBox: vi.fn(async () => ({ failed: 0, reason: '' })) }));
+vi.mock('../../services/storyInvites', () => invites);
 vi.mock('../common/dialogStore', () => dialog);
 const hosted = vi.hoisted(() => ({ on: false }));
 vi.mock('../../utils/edition', async importOriginal => ({ ...(await importOriginal<typeof import('../../utils/edition')>()), isHosted: () => hosted.on }));
@@ -28,7 +32,7 @@ const seed = (over: object = {}) => localStorage.setItem(KEY, JSON.stringify([{ 
 
 beforeEach(async () => {
   localStorage.clear(); hosted.on = false; setActiveOrg(null);
-  Object.values(votesApi).forEach(f => f.mockReset()); dialog.confirmDialog.mockReset(); dialog.confirmDialog.mockResolvedValue(true);
+  Object.values(votesApi).forEach(f => f.mockReset()); votesApi.getSummary.mockResolvedValue({ ok: true, data: [] }); access.listTeams.mockResolvedValue({ ok: true, data: [] }); access.listMembers.mockResolvedValue({ ok: true, data: [] }); dialog.confirmDialog.mockReset(); dialog.confirmDialog.mockResolvedValue(true);
   await db.issues.clear(); await db.issues.bulkPut(issues);
 });
 afterEach(cleanup);
@@ -65,6 +69,84 @@ describe('making story boxes', () => {
     expect(byText('button', 'New story box')).toBeUndefined();
     expect(byText('button', 'Close the box')).toBeUndefined();
     expect(byText('button', 'Delete')).toBeUndefined();
+  });
+});
+
+describe('inviting teams and people while making a box', () => {
+  const team = { id: 't1', name: 'Platform', memberIds: [] };
+  const members = [
+    { userId: 'u0', name: 'Owner Person', email: 'o@x.io', role: 'owner', manageAccess: true, teamIds: [] },
+    { userId: 'u1', name: 'Maya Rao', email: 'm@x.io', role: 'member', manageAccess: false, teamIds: [] },
+    { userId: 'u2', name: 'Ben Li', email: 'b@x.io', role: 'viewer', manageAccess: false, teamIds: [] },
+  ];
+  const fill = async () => {
+    await click(byText('button', 'New story box'));
+    await settle(30);
+    await choose(q<HTMLSelectElement>('#sb-minutes'), '4');
+  };
+  beforeEach(() => {
+    hosted.on = true; setActiveOrg('org-1', 'owner');
+    votesApi.getSummary.mockResolvedValue({ ok: true, data: [] });
+    votesApi.getRoom.mockResolvedValue({ ok: true, data: { now: new Date().toISOString(), rounds: [], votes: [], people: [], activeTicketId: null } }); // the new box opens its room
+    access.listTeams.mockResolvedValue({ ok: true, data: [team] }); access.listMembers.mockResolvedValue({ ok: true, data: members });
+    invites.inviteToBox.mockClear(); dialog.alertDialog.mockClear();
+  });
+
+  it('offers the teams and the people who are not Owners or Admins, who always take part', async () => {
+    page();
+    await fill();
+    const who = q('fieldset[aria-label="Who takes part"]')!;
+    expect(who.textContent).toContain('Owners and Admins always take part');
+    expect(q('[aria-label="Teams"]')!.textContent).toBe('Team Platform');
+    expect(q('[aria-label="People"]')!.textContent).toBe('Maya RaoBen Li');
+  });
+
+  it('invites the chosen teams and people into the new box in this organisation, and opens the box', async () => {
+    page();
+    await fill();
+    await click(byText('label', 'Team Platform'));
+    await click(byText('label', 'Maya Rao'));
+    await click(byText('button', 'Make the box'));
+    await settle(30);
+    const id = saved()[0].id;
+    expect(invites.inviteToBox).toHaveBeenCalledWith('org-1', id, { teams: ['t1'], users: ['u1'] });
+    expect(q('#where')!.textContent).toBe(`/storyboxes/${id}`);
+    expect(dialog.alertDialog).not.toHaveBeenCalled();
+  });
+
+  it('can take a choice back, and invites nobody when none is made', async () => {
+    page();
+    await fill();
+    await click(byText('label', 'Ben Li')); await click(byText('label', 'Ben Li'));
+    await click(byText('button', 'Make the box'));
+    await settle(30);
+    expect(invites.inviteToBox).not.toHaveBeenCalled();
+  });
+
+  it('says so when some could not be invited, and still makes the box', async () => {
+    invites.inviteToBox.mockResolvedValueOnce({ failed: 1, reason: 'You do not have access to this.' });
+    page();
+    await fill();
+    await click(byText('label', 'Ben Li'));
+    await click(byText('button', 'Make the box'));
+    await settle(30);
+    expect(saved()).toHaveLength(1);
+    expect(dialog.alertDialog).toHaveBeenCalledWith(expect.objectContaining({ title: 'Not everyone could be invited', message: expect.stringContaining('You do not have access to this.') }));
+  });
+
+  it('says there is nobody to invite yet when the organisation has no teams or other people', async () => {
+    access.listTeams.mockResolvedValue({ ok: true, data: [] }); access.listMembers.mockResolvedValue({ ok: true, data: [members[0]] });
+    page();
+    await fill();
+    expect(q('fieldset[aria-label="Who takes part"]')!.textContent).toContain('no teams or other people');
+  });
+
+  it('is not shown in the local edition, which has one person', async () => {
+    hosted.on = false; setActiveOrg(null);
+    page();
+    await click(byText('button', 'New story box'));
+    expect(q('fieldset[aria-label="Who takes part"]')).toBeNull();
+    expect(access.listTeams).not.toHaveBeenCalled();
   });
 });
 

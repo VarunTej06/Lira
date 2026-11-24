@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import type { Invitees } from '../../services/storyInvites';
 import type { Space } from '../../types/space';
 import { currentTime } from '../../utils/clock';
 import { MAX_MINUTES, MIN_MINUTES } from '../../utils/storyRound';
@@ -6,8 +7,9 @@ import { newBox, scopeLabel, type BoxScope, type StoryBox } from '../../utils/st
 import { loadProfile } from '../../utils/userPrefs';
 import { Modal } from '../common/Modal';
 import { FIELD, LABEL } from '../standup/parts';
+import { useBoxInvitees } from './useBoxInvitees';
 
-interface Props { isOpen: boolean; onClose: () => void; onCreate: (box: StoryBox) => void; spaces: readonly Space[]; sprints: readonly string[] }
+interface Props { isOpen: boolean; onClose: () => void; onCreate: (box: StoryBox, invite: Invitees) => void; spaces: readonly Space[]; sprints: readonly string[] }
 
 const MINUTES = Array.from({ length: MAX_MINUTES - MIN_MINUTES + 1 }, (_, i) => MIN_MINUTES + i);
 
@@ -18,6 +20,10 @@ export function NewStoryBoxModal({ isOpen, onClose, onCreate, spaces, sprints }:
   const [spaceId, setSpaceId] = useState('');
   const [sprintKey, setSprintKey] = useState('');
   const [minutes, setMinutes] = useState('');
+  const [teams, setTeams] = useState<string[]>([]);
+  const [users, setUsers] = useState<string[]>([]);
+  const invitable = useBoxInvitees(isOpen);
+  const flip = (list: string[], id: string) => (list.includes(id) ? list.filter(x => x !== id) : [...list, id]);
   const space = spaceId || String(spaces[0]?.id ?? '');
   const sprint = sprintKey || sprints[0] || '';
   const scope: BoxScope | null = by === 'space' ? (space ? { type: 'space', spaceId: Number(space) } : null) : sprint ? { type: 'sprint', sprintKey: sprint } : null;
@@ -25,8 +31,8 @@ export function NewStoryBoxModal({ isOpen, onClose, onCreate, spaces, sprints }:
   function submit(e: FormEvent) {
     e.preventDefault();
     if (!scope || !minutes) return;
-    onCreate(newBox(crypto.randomUUID(), name || scopeLabel(scope, spaces), scope, currentTime().toISOString(), loadProfile().name || 'Someone', Number(minutes)));
-    setName(''); setMinutes('');
+    onCreate(newBox(crypto.randomUUID(), name || scopeLabel(scope, spaces), scope, currentTime().toISOString(), loadProfile().name || 'Someone', Number(minutes)), { teams, users });
+    setName(''); setMinutes(''); setTeams([]); setUsers([]);
   }
 
   return (
@@ -53,6 +59,23 @@ export function NewStoryBoxModal({ isOpen, onClose, onCreate, spaces, sprints }:
           </select>
           <p className="text-3xs text-lira-muted mt-1">Everyone has this long to give their points once a ticket is put up. You choose it each time.</p>
         </div>
+        {invitable && (
+          <fieldset aria-label="Who takes part" className="space-y-2">
+            <legend className={LABEL}>Who takes part</legend>
+            <p className="text-3xs text-lira-muted">Owners and Admins always take part, and so does anyone who can see the space. Invite teams or people on top of that.</p>
+            {invitable.teams.length === 0 && invitable.people.length === 0 && <p className="text-xs text-lira-muted">There are no teams or other people to invite yet.</p>}
+            {invitable.teams.length > 0 && (
+              <div role="group" aria-label="Teams" className="flex flex-wrap gap-1.5">
+                {invitable.teams.map(t => <label key={t.id} className={`text-xs rounded-full border px-3 py-1 cursor-pointer ${teams.includes(t.id) ? 'border-lira-blue bg-lira-blue-light text-lira-text' : 'border-lira-border bg-white text-lira-muted'}`}><input type="checkbox" className="sr-only" checked={teams.includes(t.id)} onChange={() => setTeams(l => flip(l, t.id))} />Team {t.name}</label>)}
+              </div>
+            )}
+            {invitable.people.length > 0 && (
+              <div role="group" aria-label="People" className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto">
+                {invitable.people.map(m => <label key={m.userId} className={`text-xs rounded-full border px-3 py-1 cursor-pointer ${users.includes(m.userId) ? 'border-lira-blue bg-lira-blue-light text-lira-text' : 'border-lira-border bg-white text-lira-muted'}`}><input type="checkbox" className="sr-only" checked={users.includes(m.userId)} onChange={() => setUsers(l => flip(l, m.userId))} />{m.name}</label>)}
+              </div>
+            )}
+          </fieldset>
+        )}
         <div className="flex justify-end gap-2 pt-2">
           <button type="button" onClick={onClose} className="px-4 py-2 text-sm rounded-xl border border-lira-border bg-white text-lira-text hover:bg-gray-50 cursor-pointer">Cancel</button>
           <button type="submit" disabled={!scope || !minutes} className="px-4 py-2 text-sm font-semibold rounded-xl bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover disabled:opacity-50 cursor-pointer">Make the box</button>

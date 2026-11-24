@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { makeIssue } from '../test/factories';
 import { newBox, type StoryBox } from './storybox';
 import {
-  clockText, lanes, localConfirm, localReveal, localRevote, localRoom, localStart, localVote, minutesOf, msLeft, phaseNow, type Round,
+  clockText, lanes, localCancel, localConfirm, localReveal, localRevote, localRoom, localStart, localVote, minutesOf, msLeft, phaseNow, type Round,
 } from './storyRound';
 
 const NOW = Date.parse('2026-11-24T10:00:00Z');
@@ -69,15 +69,25 @@ describe('a round in the local edition', () => {
     const revealed = localReveal(b, 7);
     expect(localRoom(revealed, NOW, 'You').rounds[0].phase).toBe('revealed');
     const done = localConfirm(revealed, 7, 5);
-    expect(localRoom(done, NOW, 'You')).toMatchObject({ activeTicketId: null, rounds: [{ phase: 'confirmed', finalPoints: 5 }], people: [] });
+    expect(localRoom(done, NOW, 'You')).toMatchObject({ activeTicketId: null, rounds: [{ phase: 'confirmed', finalPoints: 5 }], people: [expect.objectContaining({ name: 'You', voted: false })] });
     const again = localRevote(revealed, 7, NOW + 5000);
     expect(again.localVotes).toEqual({});
     expect(again.localRounds![7].revealed).toBe(false);
+  });
+  it('puts a ticket back: its round and points go, another ticket can start, and a ticket already sized is left alone', () => {
+    const started = localVote(localStart(box(), 7, NOW)!, 7, 5, NOW);
+    const back = localCancel(started, 7);
+    expect(back.localRounds).toEqual({});
+    expect(back.localVotes).toEqual({});
+    expect(localStart(back, 8, NOW)).not.toBeNull();
+    const sized = localConfirm(localReveal(started, 7), 7, 5);
+    expect(localCancel(sized, 7)).toBe(sized);
+    expect(localCancel(box(), 7)).toEqual(box()); // nothing to put back
   });
   it('describes the room: the active ticket, the one person and whether they voted, and time-up after the clock runs out', () => {
     const b = localVote(localStart(box(), 7, NOW)!, 7, 5, NOW);
     expect(localRoom(b, NOW, 'Asha')).toMatchObject({ activeTicketId: 7, people: [{ name: 'Asha', voted: true }], votes: [{ ticketId: 7, name: 'Asha', points: 5 }] });
     expect(localRoom(b, NOW + 181_000, 'Asha').rounds[0].phase).toBe('timeup');
-    expect(localRoom(box(), NOW, 'A')).toMatchObject({ rounds: [], activeTicketId: null });
+    expect(localRoom(box(), NOW, 'A')).toMatchObject({ rounds: [], activeTicketId: null, people: [{ name: 'A', voted: false }] }); // the one person is listed even before a ticket is up
   });
 });

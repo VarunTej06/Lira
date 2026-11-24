@@ -21,7 +21,7 @@ describe.skipIf(!ADMIN_URL)('story boxes and mind maps, on a real database', () 
   type Room = { now: string; activeTicketId: number | null; rounds: { ticketId: number; phase: string; voted: number; finalPoints: number | null }[]; votes: { ticketId: number; userId: string; points: number }[]; people: { userId: string; voted: boolean }[] };
   const room = async (p: Person, orgId: string, box: string) => (await db.call('GET', `${base(orgId, box)}/room`, undefined, p.session)).body as Room;
   const vote = (p: Person, orgId: string, box: string, ticket: number, points: number | null) => db.call('PUT', `${base(orgId, box)}/votes/${ticket}`, { points }, p.session);
-  const round = (p: Person, orgId: string, box: string, ticket: number, action: 'start' | 'reveal' | 'revote' | 'confirm', body?: object) =>
+  const round = (p: Person, orgId: string, box: string, ticket: number, action: 'start' | 'reveal' | 'revote' | 'confirm' | 'cancel', body?: object) =>
     db.call('POST', `${base(orgId, box)}/rounds/${ticket}/${action}`, body, p.session);
 
   /** An owner with two spaces and a ticket in each, a story box for the first, and a member who may view only the first. */
@@ -114,6 +114,38 @@ describe.skipIf(!ADMIN_URL)('story boxes and mind maps, on a real database', () 
     await put(owner, owner.orgId, 'storybox', 'wild', { id: 'wild', name: 'Wild', status: 'open', votingMinutes: 600, scope: { type: 'space', spaceId: a } });
     await round(owner, owner.orgId, 'wild', ta, 'start');
     expect(await minutes('wild')).toBe(5);
+  });
+
+  it('lists who may take part before any ticket is put up, with nobody having voted, and not a member with no access to the box', async () => {
+    const { owner, member } = await setup();
+    const early = (await room(member, owner.orgId, 'box1')).people;
+    expect(early.map(p => p.userId).sort()).toEqual([owner.userId, member.userId].sort());
+    expect(early.every(p => !p.voted)).toBe(true);
+  });
+
+  it('puts a ticket back: its round and points are dropped, another ticket can be put up, and only those who run the box may do it', async () => {
+    const { owner, member, a, ta } = await setup();
+    const second = ((await db.call('POST', `/api/orgs/${owner.orgId}/spaces/${a}/tickets`, ticket, owner.session)).body as { id: number }).id;
+    await round(owner, owner.orgId, 'box1', ta, 'start');
+    await vote(member, owner.orgId, 'box1', ta, 5);
+    expect((await round(member, owner.orgId, 'box1', ta, 'cancel')).status).toBe(403);
+    expect((await round(owner, owner.orgId, 'box1', second, 'cancel')).status).toBe(409); // nothing is being voted on for that one
+    expect((await round(owner, owner.orgId, 'box1', ta, 'cancel')).status).toBe(204);
+    const after = await room(owner, owner.orgId, 'box1');
+    expect(after).toMatchObject({ activeTicketId: null, rounds: [], votes: [] });
+    expect((await db.rows('SELECT 1 FROM story_votes WHERE org_id = $1', [owner.orgId])).length).toBe(0);
+    expect((await round(owner, owner.orgId, 'box1', second, 'start')).status).toBe(204); // the other ticket goes first
+    expect((await db.rows("SELECT 1 FROM audit_log WHERE action = 'storybox.cancel' AND actor = $1", [owner.userId])).length).toBe(1);
+  });
+
+  it('does not put back a ticket that was already sized, or one in a closed box', async () => {
+    const { owner, a, ta } = await setup();
+    await round(owner, owner.orgId, 'box1', ta, 'start');
+    await round(owner, owner.orgId, 'box1', ta, 'reveal');
+    await round(owner, owner.orgId, 'box1', ta, 'confirm', { points: 5 });
+    expect((await round(owner, owner.orgId, 'box1', ta, 'cancel')).status).toBe(409);
+    expect((await room(owner, owner.orgId, 'box1')).rounds[0]).toMatchObject({ phase: 'confirmed', finalPoints: 5 });
+    void a;
   });
 
   it('lists who may take part, and not a member with no access to the box', async () => {

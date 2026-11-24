@@ -22,7 +22,7 @@ interface VivaAIChatbotProps {
   onClearInitialPrompt?: () => void;
 }
 
-const MODEL_LABEL = (provider: AiProvider, model: string) => ({ local: 'Local engine', gemini: 'Gemini-powered', openai: `Model: ${model}` }[provider]);
+const MODEL_LABEL = (provider: AiProvider, model: string) => ({ local: 'Local engine', gemini: 'Gemini-powered', server: 'Liraspaces server', openai: `Model: ${model}` }[provider]);
 
 const HeaderButton: React.FC<{ title: string; onClick: () => void; active?: boolean; children: React.ReactNode }> = ({ title, onClick, active, children }) => (
   <button

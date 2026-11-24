@@ -32,7 +32,7 @@ These are the owner's own standing requirements; they apply to every change.
 
 | Check | Command |
 |---|---|
-| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 2736 tests, data health) |
+| Everything | `npm run test:all` (typecheck, oxlint with **0 warnings**, 2741 tests, data health) |
 | Types | `npx tsc -b` |
 | Lint | `npm run lint` (must report 0 warnings) |
 | Browser tests (33) | `npm run e2e`: the real app in Chromium (Playwright) against a throwaway data folder in the system's temp directory, never `data/`; page smoke tests, the storyboard and story box flows, and an accessibility scan of every page (needs `npx playwright install chromium` once; not part of `test:all`) |

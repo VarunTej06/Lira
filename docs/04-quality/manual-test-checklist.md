@@ -749,3 +749,13 @@ Hosted app, a brand new account.
 - [ ] Footer. Expect: "Operated by WorldXAdmins, India"; the legal pages name WorldXAdmins.
 - [ ] Open For you. Expect: no "Recent activity" panel.
 - [ ] Open a project. Expect: the project initials sit in a small badge right before the project name; under it the lead shows as "Lead:", then the avatar, then the name (the signed-in person's name when no lead is set).
+
+### A61. Viva answering through the Liraspaces server (24 Nov 2026)  ◐
+Hosted edition only. Needs the server set up with `AI_PROVIDERS` and a key (see `api/README.md`). Try once with it not set up.
+- [ ] Open Viva's settings. Expect: the **Model** list offers the built-in engine and **Liraspaces server**, and no Gemini or OpenAI-compatible choice; the Gemini key box is not shown. In the local edition the old choices and the key box are still there.
+- [ ] Choose Liraspaces server, Save, and ask a question about tickets ("What is blocked?"). Expect: an answer that mentions only tickets you can see; the header says **Liraspaces server**.
+- [ ] As a member who has no access to one space, ask about everything. Expect: nothing from that space appears in the answer.
+- [ ] Ask Viva to create or move a ticket. Expect: the usual preview with Confirm and Undo, made by the built-in engine, not the model.
+- [ ] With the server not set up (or the provider down), ask a question. Expect: Viva still answers with the built-in engine and no error is shown.
+- [ ] Ask more than 30 questions in an hour (or lower the limit). Expect: the server answers are paused and the built-in engine answers instead.
+

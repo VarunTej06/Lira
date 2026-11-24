@@ -2,6 +2,7 @@ import { SpaceIcon } from '../common/SpaceIcon';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { Check, Cpu, Database, FileText, Key, RotateCcw, Shield } from 'lucide-react';
 import type { Space } from '../../types/space';
+import { isHosted } from '../../utils/edition';
 import {
   getSystemInstruction, setSystemInstruction, DEFAULT_SYSTEM_INSTRUCTION, getGeminiApiKey, setGeminiApiKey,
   setAiProvider, setOpenAiConfig, setConfirmWrites, type AiProvider, getOpenAiConfig,
@@ -31,6 +32,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
   const [apiKey, setApiKey] = useState(getGeminiApiKey());
   const [showKey, setShowKey] = useState(false);
   const [saved, setSaved] = useState(false);
+  const hosted = isHosted();
 
   const save = () => {
     setSystemInstruction(instruction);
@@ -80,8 +82,9 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
         <div className="flex items-center gap-1.5"><Cpu className="w-3.5 h-3.5 text-lira-blue" /><label htmlFor="viva-provider" className={HEADING}>Model</label></div>
         <select id="viva-provider" value={provider} onChange={e => setProvider(e.target.value as AiProvider)} className="w-full text-xs border border-gray-300 rounded-xl px-2.5 py-2 bg-white">
           <option value="local">Built-in engine (no network)</option>
-          <option value="gemini">Google Gemini</option>
-          <option value="openai">OpenAI-compatible server (Ollama, LM Studio, ...)</option>
+          {hosted && <option value="server">Liraspaces server (the model your administrator allowed)</option>}
+          {!hosted && <option value="gemini">Google Gemini</option>}
+          {!hosted && <option value="openai">OpenAI-compatible server (Ollama, LM Studio, ...)</option>}
         </select>
         {provider === 'openai' && (
           <div className="space-y-2">
@@ -93,6 +96,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
         <p className="text-3xs text-lira-muted">Changes to tickets are always made by the built-in engine, so they can be previewed and undone. The model answers questions.</p>
       </div>
 
+      {!hosted && (
       <div className={CARD}>
         <div className="flex items-center gap-1.5 mb-2"><Key className="w-3.5 h-3.5 text-amber-500" /><label className={HEADING}>Gemini API key (used when Google Gemini is the model)</label></div>
         <div className="relative">
@@ -106,6 +110,7 @@ export function VivaSettings({ spaces, activeSpace, maximized, onBack, provider,
           <button type="button" onClick={() => setShowKey(v => !v)} className="absolute right-2 top-2 text-3xs text-lira-muted hover:text-lira-text cursor-pointer">{showKey ? 'Hide' : 'Show'}</button>
         </div>
       </div>
+      )}
 
       <button type="button" onClick={save} className="w-full py-2.5 bg-lira-blue hover:bg-lira-blue-hover text-lira-on-blue font-semibold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer">
         {saved ? <><Check className="w-4 h-4 text-emerald-300" /> Saved</> : 'Save settings'}

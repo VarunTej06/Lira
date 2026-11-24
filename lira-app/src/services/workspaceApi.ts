@@ -80,6 +80,8 @@ export const updateSpaceOnServer = (orgId: string, id: number, version: number, 
 export const deleteSpaceOnServer = (orgId: string, id: number, version: number) => send<void>('DELETE', `${org(orgId)}/spaces/${id}`, { version });
 
 /** The people a ticket of a space may be given to (names only). */
+export const askVivaOnServer = (orgId: string, body: { question: string; spaceId?: number }) => send<{ answer: string; provider: string; model: string }>('POST', `${org(orgId)}/ai/ask`, body);
+
 export const listAssignable = (orgId: string, spaceId: number) => send<{ userId: string; name: string }[]>('GET', `${org(orgId)}/spaces/${spaceId}/assignable`);
 
 export const listTickets = (orgId: string, spaceId: number) => map(send<Raw[]>('GET', `${org(orgId)}/spaces/${spaceId}/tickets`), rows => rows.map(ticketFromServer));

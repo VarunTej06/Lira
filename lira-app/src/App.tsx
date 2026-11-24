@@ -20,6 +20,7 @@ import { useProjects } from './hooks/useProjects';
 import { removeProjectData } from './hooks/projectCleanup';
 import { useAppStartup } from './hooks/useAppStartup';
 import { useAppNavigation } from './hooks/useAppNavigation';
+import { useCommandPalette } from './components/command/useCommandPalette';
 import { useCreateIssueDialog } from './hooks/useCreateIssueDialog';
 import { usePlannedSprints } from './hooks/usePlannedSprints';
 import { IssueCrashFallback, StartupScreen } from './AppParts';
@@ -39,6 +40,7 @@ if (typeof window !== 'undefined') paintTheme();
 // The ticket popup, the create dialog and Viva hold the rich text editor and the chat: they load after the first screen
 const IssueDetailModal = lazy(() => import('./components/issue/IssueDetailModal').then(m => ({ default: m.IssueDetailModal })));
 const CreateIssueModal = lazy(() => import('./components/issue/CreateIssueModal').then(m => ({ default: m.CreateIssueModal })));
+const AppCommandPalette = lazy(() => import('./components/command/AppCommandPalette').then(m => ({ default: m.AppCommandPalette })));
 const VivaAIChatbot = lazy(() => import('./components/ai/VivaAIChatbot').then(m => ({ default: m.VivaAIChatbot })));
 
 export default function App() {
@@ -67,6 +69,12 @@ export default function App() {
   const { handleSelectSpace, openSpaceBoard, goTab } = useAppNavigation({ route, navigate, spaces, activeSpace, setSidebarCollapsed });
 
   const createIssue = useCreateIssueDialog();
+  const palette = useCommandPalette();
+  // Fetched quietly once the first screen is up, so the first Ctrl+K opens at once and a fast typist loses no letters
+  useEffect(() => {
+    const id = window.setTimeout(() => { void import('./components/command/AppCommandPalette'); }, 1500);
+    return () => window.clearTimeout(id);
+  }, []);
   const [showCreateSpace, setShowCreateSpace] = useState(false);
   const [showAIChatbot, setShowAIChatbot] = useState(false);
   const [filterPreset, setFilterPreset] = useState<string | null>(null);
@@ -175,6 +183,10 @@ export default function App() {
       <DashboardScheduler issues={allIssues} spaces={spaceList} />
 
       <Suspense fallback={null}>
+      {palette.open && (
+        <AppCommandPalette spaces={spaceList} issues={everyIssue} go={navigate} openIssue={openIssue} onClose={() => palette.setOpen(false)}
+          createTicket={() => createIssue.open('todo', { chooseSpace: true })} createSpace={() => setShowCreateSpace(true)} />
+      )}
       {/* Issue detail modal */}
       <ErrorBoundary fallback={<IssueCrashFallback onClose={closeModal} />}>
         {selectedIssue && (

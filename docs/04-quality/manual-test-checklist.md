@@ -498,6 +498,18 @@ Both editions. Navigation, **Mind maps** (it can be hidden or moved in the sideb
 - [ ] **Import outline**: paste an indented list. Expect: the map is replaced by it and Undo brings the old one back. **MD**: a Markdown outline downloads. **JSON**, **SVG** and **PNG** also download, named after the map; the picture shows every idea.
 - [ ] Make a copy, delete one (it asks first). Reload the page. Expect: everything is as left. Local edition: the maps are in the data folder's `mindmaps.json`. Hosted: another member does not see your map until you share it (Access, kind Mind map); an Owner sees all.
 
+### A55. Command palette (24 Nov 2026)  ◐
+Both editions, any page.
+- [ ] Press **Ctrl+K** (Cmd+K on a Mac), also while typing in a field. Expect: a box opens in the upper middle with the cursor in the search field and the pages listed under "Go to", then your spaces and the two actions (scroll down). Press Ctrl+K again: it closes.
+- [ ] Type `mind`. Expect: only "Mind maps". Press Enter. Expect: the Mind maps page opens and the box closes.
+- [ ] Type part of a ticket's key or title (for example `LIRA-3` or `homelab`). Expect: a "Tickets" group with matches and each ticket's status on the right. Press Enter. Expect: the ticket opens in its popup and Escape closes the popup, without having to click first.
+- [ ] Type something that matches nothing. Expect: "Nothing matches ..." and Enter does nothing.
+- [ ] Use the arrow keys, Home and End. Expect: the highlighted row moves and wraps round; moving the mouse over a row highlights it; a click opens it. Tab keeps the cursor in the box.
+- [ ] Press Escape, or click outside the box. Expect: it closes and the cursor goes back to where it was.
+- [ ] Choose **Create a ticket** and **Create a space**. Expect: the usual dialogs open.
+- [ ] Hosted edition: **Calls** and **Teams and access** are listed under Go to; the local edition does not list them.
+- [ ] With a screen reader or the accessibility panel of the browser. Expect: a dialog named "Command palette", a search box that announces the chosen result, and result groups.
+
 ### A54. Story boxes (24 Nov 2026)  ◐
 Both editions. Navigation, **Story boxes**. Hosted: use an Owner or Admin and a second person invited to a space (A46).
 - [ ] As the Owner press **New story box**, choose **Space** and a space, give it a name, **Make the box**. Expect: it opens with every ticket of that space (no epics), and is listed under Open.

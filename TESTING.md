@@ -2,7 +2,7 @@
 
 How Lira is tested automatically, what each test protects, how to run them and how to add more.
 
-**Right now:** 2255 automated tests in 228 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
+**Right now:** 2276 automated tests in 230 files, plus a 15-check data health run. All pass. They need **no extra tools or services**: everything runs on what `npm install` already installs (Vitest, a fake browser called jsdom, and a fake database).
 
 **Done by hand:** [`docs/04-quality/manual-test-checklist.md`](docs/04-quality/manual-test-checklist.md) lists every screen to click through after the refactor.
 
@@ -16,13 +16,13 @@ Run every command from the `lira-app` folder.
 
 | Command | What it does | Time |
 |---|---|---|
-| `npm test` | All 2255 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
+| `npm test` | All 2276 automated tests (code, screens in a fake browser, server, rules about the source, documents) | about 40 s |
 | `npm run test:watch` | Re-runs the tests that matter each time you save a file | |
 | `npm run test:health` | **Data health check**: reads your real `data/` folder and checks it holds together. Changes nothing | about 3 s |
 | `npm run test:all` | Everything in one go: type check, lint, `npm test`, then the data health check | about 1 min |
 | `npm run lint` | Style and mistake checker (oxlint). It must report **0 warnings** | |
 | `npm run build` | Type check and the production build | |
-| `npm run e2e` | The browser tests: 23 tests in real Chromium (Playwright 1.64.1, with axe-core for accessibility). Every main page opens without a console error; the mind map and story box flows are driven by keyboard and mouse; every page is scanned against WCAG 2.1 A and AA with no critical problem allowed and a limit on serious ones that may only go down (today: roadmaps 2, filters 1; the other pages none). They start the dev server on port 5199 with `LIRA_DATA_DIR` in the system's temp folder, so `data/` is never touched. Needs `npx playwright install chromium` once; not part of `test:all` |
+| `npm run e2e` | The browser tests: 24 tests in real Chromium (Playwright 1.64.1, with axe-core for accessibility). Every main page opens without a console error; the mind map and story box flows are driven by keyboard and mouse; every page is scanned against WCAG 2.1 A and AA with no critical problem allowed and a limit on serious ones that may only go down (today: roadmaps 2, filters 1; the other pages none). They start the dev server on port 5199 with `LIRA_DATA_DIR` in the system's temp folder, so `data/` is never touched. Needs `npx playwright install chromium` once; not part of `test:all` |
 | `cd api && npm test` | The API's own tests: 121 that need nothing, and 171 more against a real PostgreSQL when `TEST_DATABASE_URL` is set (not part of `test:all`; see `api/README.md`) | about 30 s |
 | `npm run build:hosted` | The same, for the hosted edition (public pages at `/`, the app under `/app`). `npm run hosted` builds it and serves it at http://localhost:5175 | |
 | `npm audit` | Looks for known security problems in packages | |

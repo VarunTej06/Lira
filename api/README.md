@@ -71,7 +71,7 @@ It creates the `lira_app` role (which owns nothing) and applies what has not run
 ## Tests
 
 ```
-npm test                                   # 121 tests, no database needed
+npm test                                   # 124 tests, no database needed
 TEST_DATABASE_URL=postgres://admin:...@host:5432/postgres npm test   # all 299
 ```
 

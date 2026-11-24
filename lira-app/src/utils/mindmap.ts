@@ -86,7 +86,31 @@ export function visibleNodes(nodes: readonly MindNode[]): MindNode[] {
 export const setAllCollapsed = (nodes: readonly MindNode[], collapsed: boolean): MindNode[] =>
   nodes.map(n => (n.parentId !== null && childrenOf(nodes, n.id).length > 0 ? { ...n, collapsed } : n));
 
-export const widthOf = (text: string): number => Math.min(260, Math.max(96, text.length * 7 + 32));
+let canvas: CanvasRenderingContext2D | null | undefined;
+/** How wide a text is when drawn, as the browser measures it; without a browser to measure with, a width worked out from the letters. */
+function textWidth(text: string): number {
+  if (canvas === undefined) {
+    const real = typeof document !== 'undefined' && typeof navigator !== 'undefined' && !/jsdom/i.test(navigator.userAgent);
+    canvas = real ? document.createElement('canvas').getContext('2d') : null;
+  }
+  if (!canvas) return text.length * 7.4;
+  canvas.font = '600 14px system-ui, sans-serif'; // the heavier weight, so a bold idea fits too
+  return canvas.measureText(text).width;
+}
+
+const PAD = 16;
+export const MIN_BOX_W = 40;
+export const MAX_BOX_W = 260;
+/** The width of the box of an idea: the width of its text and a little room either side, so a short word has a short box and its line does not stop short of it. */
+export const widthOf = (text: string): number => Math.min(MAX_BOX_W, Math.max(MIN_BOX_W, Math.ceil(textWidth(text)) + PAD));
+
+/** The text cut, with dots, so that it fits a box of the given width. */
+export function fitText(text: string, width: number): string {
+  const full = textWidth(text);
+  if (full + PAD <= width) return text;
+  const room = Math.max(0, width - PAD - 14); // the dots take some room
+  return `${text.slice(0, Math.max(1, Math.floor(text.length * (room / (full || 1)))))}...`;
+}
 
 const clean = (s: string) => s.replace(/\s+/g, ' ').trim();
 

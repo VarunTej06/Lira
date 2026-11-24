@@ -59,9 +59,9 @@ export function VotingStage({ box, room, issue, round, phase, nowMs, minutes, ca
   const mine = votesFor(room.votes, round.ticketId).find(v => v.mine)?.points;
   const revealed = phase === 'revealed';
   return (
-    <section aria-label="Voting stage" className={`border border-lira-blue ring-1 ring-lira-blue rounded-2xl overflow-hidden bg-white text-sm ${leaving ? 'animate-card-leave motion-reduce:animate-none' : 'animate-card-rise motion-reduce:animate-none'}`}>
+    <section aria-label="Estimation window" className={`border border-lira-blue ring-1 ring-lira-blue rounded-2xl overflow-hidden bg-white text-sm ${leaving ? 'animate-card-leave motion-reduce:animate-none' : 'animate-card-rise motion-reduce:animate-none'}`}>
       <header className="flex flex-wrap items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
-        <Vote className="w-3.5 h-3.5 text-lira-blue" /><h3 className="text-xs font-semibold text-lira-text uppercase tracking-wide">Voting stage</h3>
+        <Vote className="w-3.5 h-3.5 text-lira-blue" /><h3 className="text-xs font-semibold text-lira-text uppercase tracking-wide">Estimation window</h3>
         {phase === 'voting' && <span role="timer" aria-label="Time left to vote" className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-mono font-bold bg-lira-blue-light text-lira-blue">{clockText(left)}</span>}
         {phase === 'timeup' && <span className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold bg-amber-100 text-amber-700">Time is up</span>}
         {revealed && <span className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold bg-green-100 text-green-700">Revealed</span>}

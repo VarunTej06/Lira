@@ -21,7 +21,7 @@ const LEAVE_MS = 450;
 const BUTTON = 'text-sm px-3 py-1.5 rounded-xl border border-lira-border bg-white text-lira-text hover:bg-gray-50 cursor-pointer';
 
 /**
- * One story box as a planning room: the tickets still to be sized and those sized, and below them a voting stage. The people who run the
+ * One story box as a planning room: the tickets still to be sized and those sized, and below them a estimation window. The people who run the
  * box drag a ticket onto the stage (or press its button) to ask everyone for points; everyone gives theirs within the time, the facilitator
  * reveals them, picks the final points and confirms, and the ticket moves to the sized lane.
  */
@@ -105,7 +105,7 @@ export function StoryBoxBoard({ box, issues, spaces, canManage, onChange, onDele
           <VotingStage box={box} room={room.room} issue={activeIssue} round={round} phase={phase} nowMs={room.nowMs} minutes={minutes} canRun={canRun} leaving={leaving}
             reveal={t => { void room.reveal(t); }} revote={t => { void room.revote(t); }} finalise={(t, p) => { void finalise(t, p); }} vote={(t, p) => { void room.vote(t, p); }} cancel={t => { void putBack(t); }} />
         ) : (
-          <section aria-label="Voting stage" onDragOver={e => { if (canRun) e.preventDefault(); }} onDrop={drop} className="rounded-2xl border-2 border-dashed border-lira-border bg-white/60 px-6 py-10 text-center text-xs text-lira-muted">
+          <section aria-label="Estimation window" onDragOver={e => { if (canRun) e.preventDefault(); }} onDrop={drop} className="rounded-2xl border-2 border-dashed border-lira-border bg-white/60 px-6 py-10 text-center text-xs text-lira-muted">
             {canRun ? `Drag a ticket here, or press Start voting on a ticket, to ask everyone for points. Each ticket is open for ${minutes} minute${minutes === 1 ? '' : 's'}.` : 'Waiting for the facilitator to put a ticket up for voting.'}
           </section>
         ))}

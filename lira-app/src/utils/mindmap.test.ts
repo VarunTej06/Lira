@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isArranged, MAX_IDEA_W, MIN_IDEA_W, moveIdea, resizeIdea, tidy, addChild, addSibling, childrenOf, fromOutline, MAX_NODES, moveNode, newMap, removeNode, rootOf, searchNodes, setAllCollapsed, subtreeIds, toOutline, updateNode, visibleNodes, widthOf, type MindNode } from './mindmap';
+import { fitText, MAX_BOX_W, MIN_BOX_W, isArranged, MAX_IDEA_W, MIN_IDEA_W, moveIdea, resizeIdea, tidy, addChild, addSibling, childrenOf, fromOutline, MAX_NODES, moveNode, newMap, removeNode, rootOf, searchNodes, setAllCollapsed, subtreeIds, toOutline, updateNode, visibleNodes, widthOf, type MindNode } from './mindmap';
 
 const base = (): MindNode[] => newMap('m', 'Plan', '2026-11-24T00:00:00Z', 'r').nodes;
 const ids = (nodes: readonly MindNode[]) => nodes.map(n => n.id);
@@ -96,9 +96,19 @@ describe('arranging ideas by hand', () => {
 
 describe('sizing', () => {
   it('sizes a box to its text within limits', () => {
-    expect(widthOf('')).toBe(96);
-    expect(widthOf('x'.repeat(100))).toBe(260);
-    expect(widthOf('x'.repeat(20))).toBeGreaterThan(96);
+    expect(widthOf('')).toBe(MIN_BOX_W);
+    expect(widthOf('x'.repeat(100))).toBe(MAX_BOX_W);
+    expect(widthOf('x'.repeat(20))).toBeGreaterThan(widthOf('x'.repeat(5)));
+  });
+  it('gives a short word a short box, so that the line of its branch reaches the word', () => {
+    expect(widthOf('Ideas')).toBeLessThan(70);
+    expect(widthOf('Ideas')).toBeGreaterThanOrEqual(MIN_BOX_W);
+  });
+  it('cuts a text with dots only when it does not fit, and keeps what fits', () => {
+    expect(fitText('Ideas', widthOf('Ideas'))).toBe('Ideas');
+    expect(fitText('A much longer idea than the box allows', 90).endsWith('...')).toBe(true);
+    expect(fitText('A much longer idea than the box allows', 90).length).toBeLessThan(38);
+    expect(fitText('x', 10).length).toBeGreaterThan(1);
   });
 });
 

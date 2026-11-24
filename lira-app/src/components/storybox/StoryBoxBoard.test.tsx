@@ -32,7 +32,7 @@ function show(box: StoryBox, canManage = true) {
   rerender = next => handle.rerender(render(next));
 }
 const lane = (name: string) => q(`section[aria-label="${name}"]`)!;
-const stage = () => q('section[aria-label="Voting stage"]')!;
+const stage = () => q('section[aria-label="Estimation window"]')!;
 const start = (key: string) => click(q(`button[aria-label="Start voting on ${key}"]`));
 const hand = (value: number) => q<HTMLButtonElement>(`button[aria-label="Vote ${value}"]`)!;
 

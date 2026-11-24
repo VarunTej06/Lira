@@ -101,7 +101,7 @@ test('a story box: make one with a voting time, put a ticket up, vote, reveal, c
 
   const sized = page.getByRole('region', { name: 'Sized', exact: true });
   await page.getByRole('button', { name: /Start voting on/ }).first().click();
-  const stage = page.getByRole('region', { name: 'Voting stage' });
+  const stage = page.getByRole('region', { name: 'Estimation window' });
   const key = (await stage.getByRole('heading', { level: 4 }).locator('span').first().innerText()).trim();
   await expect(stage.getByRole('timer')).toContainText(/0[12]:\d\d/);
   await stage.getByRole('button', { name: 'Vote 5', exact: true }).click();

@@ -212,11 +212,11 @@ describe('closing and history', () => {
     expect(q('section[aria-label="All story boxes"]')!.textContent).toContain('Closed');
     expect(q('section[aria-label="Current story boxes"]')!.textContent).toContain('No story box is open');
     await click(byText('button', 'Alpha estimate'));
-    expect(q('section[aria-label="Voting stage"]')).toBeNull(); // nothing can be put up for voting
+    expect(q('section[aria-label="Estimation window"]')).toBeNull(); // nothing can be put up for voting
     expect(document.body.textContent).toContain('This box is closed');
     await click(byText('button', 'Reopen'));
     expect(saved()[0].status).toBe('open');
-    expect(q('section[aria-label="Voting stage"]')).not.toBeNull();
+    expect(q('section[aria-label="Estimation window"]')).not.toBeNull();
   });
 
   it('deletes a box only after asking, and goes back to the list', async () => {

@@ -23,7 +23,7 @@ test('a story box: participants show before a ticket, a ticket can be put back, 
 
   // put a ticket up, then change your mind
   await page.getByRole('button', { name: /Start voting on/ }).first().click();
-  const stage = page.getByRole('region', { name: 'Voting stage' });
+  const stage = page.getByRole('region', { name: 'Estimation window' });
   await expect(stage.getByRole('timer')).toContainText(/0[67]:\d\d/);
   await page.screenshot({ path: info.outputPath('storybox-midway.png') });
   await stage.getByRole('button', { name: 'Put the ticket back' }).click();

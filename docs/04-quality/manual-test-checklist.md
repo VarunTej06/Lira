@@ -505,6 +505,15 @@ Both editions. Navigation, **Storyboards** (it can be hidden or moved in the sid
 - [ ] **Tidy up the ideas** (left strip). Expect: off until an idea was moved or resized; then it puts every idea back in its automatic place and width, and Undo brings your arrangement back. Shapes are not touched.
 - [ ] Change a template. Make Meeting notes, then move a sticky note, resize a column heading, bend an arrow of the Flowchart, add and delete notes. Expect: nothing in a template is fixed; it is all ideas and shapes like any you draw.
 
+### A60. Giving tickets to people, one by one or from an epic (24 Nov 2026)  ◐
+Both editions. Hosted: an Owner, a member who was given a space, a viewer of that space, a team member and a person with no access to it.
+- [ ] Open a ticket and look at **Assignee**. Expect: a list that starts with Unassigned. Hosted: it holds the Owner, the Admins and the people who were given this space (directly or through a team), and not people who may only look, not people with no access, and not the sample names (Alex Morgan, Sarah Connor, Dev Team). Local edition: you, and the sample team.
+- [ ] Choose a person. Expect: their picture appears and the ticket is saved with them. Choose Unassigned: the picture goes. A ticket that is already given to someone who is no longer in the list still shows them.
+- [ ] Open an epic that has several tasks (or a task with subtasks that are tickets). Expect: the list of its work has an **Assigned to** column with a list on each row.
+- [ ] Split the work: give the first task to one person, the second to another, the third to a third, from the list itself, without opening any of them. Expect: each is saved at once and the row does not open the ticket; the same people are on the tickets when you open them; a status can still be changed in place.
+- [ ] Hosted, as a person who may only view the space. Expect: the lists on the rows are greyed and cannot be changed.
+- [ ] Hosted, ask for the list of people of a space you have no access to (for example from another browser session). Expect: it is refused as not found; and the list never shows emails or roles.
+
 ### A59. Story box: leaving, inviting, putting a ticket back, the time (24 Nov 2026)  ◐
 Both editions, inside a story box (A58). Hosted: an Owner or Admin, one team with a member, and one other person.
 - [ ] With a ticket on the estimation window, click **Storyboards** (or any other item) in the left sidebar, or a space, or the top bar. Expect: a dialog "Leave this page?" with **Stay** and **Leave**. **Stay** and Escape keep you in the box; **Leave** goes where you clicked. The same when you press the browser's back button or reload: the browser asks too.

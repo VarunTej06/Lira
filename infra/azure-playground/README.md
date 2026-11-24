@@ -12,7 +12,7 @@ Sign in first (PowerShell): `az login` with the playground account. Then, from t
 |---|---|---|
 | `.\Setup-Playground.ps1 -Step check` | Shows the account, the resource providers and the resource group the sandbox gave you | 1 min |
 | `-Step infra` | Container registry (admin user on), Key Vault with two generated passwords, PostgreSQL 16, firewall rules, a storage account (Standard LRS, no public access) with a private `attachments` container and its key in Key Vault (`storage-key`) | about 10 min |
-| `-Step database` | The `lira_app` role and the tables from `api/migrations`; add `-RunTests` to run the 303 API tests against the real database | 2 min |
+| `-Step database` | The `lira_app` role and the tables from `api/migrations`; add `-RunTests` to run the 304 API tests against the real database | 2 min |
 | `-Step google -GoogleClientId <id>` | Optional. Keeps the Google OAuth client secret (from the `GOOGLE_CLIENT_SECRET` variable) and a new encryption key in Key Vault, so the API can make Meet links and send emails. Then run `-Step deploy` again. See `docs/03-sop/google-setup.md` | 1 min |
 | `-Step mail -MailFrom <address>` | Optional. Keeps the Azure Communication Services Email connection string (from the `MAIL_CONNECTION_STRING` variable) in Key Vault and the sender address in the state, so the API can send confirm-your-email and password-reset mail. Create the Communication Services and Email resources, with an Azure-managed or your own verified domain, in the portal first (`docs/03-sop/email-setup.md`). Then run `-Step deploy` again | 1 min |
 | `-Step isolation` | The nine tenant-isolation checks (`docs/03-sop/rehearsal-isolation-test.sql`), run through Docker in WSL | 1 min |

@@ -79,6 +79,9 @@ export const updateSpaceOnServer = (orgId: string, id: number, version: number, 
   map(send<Raw>('PATCH', `${org(orgId)}/spaces/${id}`, { version, ...changes }), spaceFromServer);
 export const deleteSpaceOnServer = (orgId: string, id: number, version: number) => send<void>('DELETE', `${org(orgId)}/spaces/${id}`, { version });
 
+/** The people a ticket of a space may be given to (names only). */
+export const listAssignable = (orgId: string, spaceId: number) => send<{ userId: string; name: string }[]>('GET', `${org(orgId)}/spaces/${spaceId}/assignable`);
+
 export const listTickets = (orgId: string, spaceId: number) => map(send<Raw[]>('GET', `${org(orgId)}/spaces/${spaceId}/tickets`), rows => rows.map(ticketFromServer));
 export const createTicketOnServer = (orgId: string, spaceId: number, issue: Partial<Issue>) =>
   map(send<Raw>('POST', `${org(orgId)}/spaces/${spaceId}/tickets`, ticketToServer(issue)), ticketFromServer);

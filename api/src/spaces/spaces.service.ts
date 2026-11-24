@@ -31,6 +31,20 @@ export class SpacesService {
     return rows.rows.map(r => out(r, levels === 'all' ? 'manage' : levels.get(r.id) ?? 'view'));
   }
 
+  /**
+   * The people a ticket of this space may be given to: the Owner and Admins, and everyone who was given the space (directly or through a team),
+   * except people who may only look. Names and ids only, so that every member who can see the space can use the list.
+   */
+  async assignable(orgId: string, spaceId: number): Promise<{ userId: string; name: string }[]> {
+    const r = await this.db.query<{ id: string; name: string }>(
+      `SELECT u.id, u.name FROM memberships m JOIN users u ON u.id = m.user_id
+        WHERE m.org_id = $1 AND m.role <> 'viewer' AND (m.role IN ('owner', 'admin') OR EXISTS (
+          SELECT 1 FROM grants g WHERE g.org_id = m.org_id AND g.object_kind = 'space' AND g.object_id = $2::text
+            AND ((g.subject_type = 'user' AND g.subject_id = u.id) OR (g.subject_type = 'team' AND g.subject_id IN (SELECT team_id FROM team_members WHERE user_id = u.id)))))
+        ORDER BY u.name`, [orgId, String(spaceId)]);
+    return r.rows.map(x => ({ userId: x.id, name: x.name }));
+  }
+
   async create(orgId: string, actor: string, input: CreateSpace, ip: string): Promise<SpaceOut> {
     try {
       const row = await this.db.transaction(async tx => {

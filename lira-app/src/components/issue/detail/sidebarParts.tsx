@@ -1,14 +1,13 @@
 import { ChevronDown, ExternalLink, Target, Users } from 'lucide-react';
 import type { IssueStatus } from '../../../types/issue';
-import { Avatar } from '../../common/Avatar';
 import { formatRelativeDate, formatTimeTracking } from '../../../utils/dateUtils';
 import { BlockedToggle } from './BlockedToggle';
 import { DetailRow } from './detailParts';
-import { ASSIGNEE_OPTIONS, STATUS_OPTIONS } from './issueOptions';
+import { STATUS_OPTIONS } from './issueOptions';
+import { AssigneeSelect } from '../AssigneeSelect';
 import type { IssueDetailState } from './useIssueDetail';
 
 const FIELD = 'w-full text-xs text-lira-text bg-white border border-lira-border hover:border-gray-400 rounded px-2 py-1 outline-none focus:border-lira-blue transition-colors cursor-pointer';
-const KNOWN_ASSIGNEES = ['', 'VY', 'Varuntej Yadla', 'Alex Morgan', 'Sarah Connor', 'Dev Team'];
 
 /** The status button and its menu, with the Blocked switch under it. */
 export function StatusBlock(s: IssueDetailState) {
@@ -66,21 +65,11 @@ export function ParentRow(s: IssueDetailState) {
   );
 }
 
-/** Who the ticket is assigned to. */
+/** Who the ticket is assigned to, chosen from the people of its space. */
 export function AssigneeRow({ local, patch }: Pick<IssueDetailState, 'local' | 'patch'>) {
-  const change = (value: string) => {
-    const match = ASSIGNEE_OPTIONS.find(o => o.value === value);
-    patch({ assignee: value || undefined, assigneeInitials: match?.initials || (value ? value.slice(0, 2).toUpperCase() : undefined) });
-  };
   return (
     <DetailRow icon={<Users className="w-3.5 h-3.5" />} label="Assignee">
-      <div className="flex items-center gap-2 w-full">
-        {local.assigneeInitials ? <Avatar initials={local.assigneeInitials} size="xs" /> : null}
-        <select value={local.assignee === 'VY' ? 'Varuntej Yadla' : (local.assignee || '')} onChange={e => change(e.target.value)} className={FIELD}>
-          {ASSIGNEE_OPTIONS.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
-          {local.assignee && !KNOWN_ASSIGNEES.includes(local.assignee) && <option value={local.assignee}>{local.assignee} ({local.assigneeInitials || 'User'})</option>}
-        </select>
-      </div>
+      <AssigneeSelect spaceId={local.spaceId} assignee={local.assignee} initials={local.assigneeInitials} label="Assignee" onChange={patch} />
     </DetailRow>
   );
 }

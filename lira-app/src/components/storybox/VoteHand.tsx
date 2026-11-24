@@ -6,7 +6,7 @@ export function VoteHand({ scale, mine, disabled, onPick }: { scale: readonly nu
         const chosen = mine === p;
         return (
           <button key={p} type="button" disabled={disabled} aria-pressed={chosen} aria-label={`Vote ${p}`} onClick={() => onPick(chosen ? null : p)}
-            className={`w-12 h-20 rounded-lg border-2 text-lg font-bold transition-transform duration-200 disabled:opacity-50 motion-reduce:transition-none ${chosen ? '-translate-y-2 border-lira-blue bg-lira-blue-light text-lira-text' : 'border-lira-border bg-lira-surface text-lira-text enabled:hover:-translate-y-1'}`}>
+            className={`w-12 h-20 rounded-xl border-2 text-lg font-bold transition-transform duration-200 disabled:opacity-50 motion-reduce:transition-none ${chosen ? '-translate-y-2 border-lira-blue bg-lira-blue-light text-lira-text' : 'border-lira-border bg-white text-lira-text enabled:hover:-translate-y-1'}`}>
             {p}
           </button>
         );

@@ -1,3 +1,4 @@
+import { Vote } from 'lucide-react';
 import { useState } from 'react';
 import type { Issue } from '../../types/issue';
 import { clockText, msLeft, type Phase, type Room, type Round } from '../../utils/storyRound';
@@ -40,8 +41,8 @@ function Outcome({ box, room, ticket, canRun, onConfirm, onRevote }: { box: Stor
           <label className="flex items-center gap-2">Final points
             <select aria-label="Final points" value={choice} onChange={e => setChoice(e.target.value)} className={FIELD}><option value="">Choose</option>{box.scale.map(p => <option key={p} value={p}>{p}</option>)}</select>
           </label>
-          <button type="button" disabled={choice === ''} onClick={() => onConfirm(Number(choice))} className="rounded px-3 py-1.5 font-bold bg-lira-blue text-lira-on-blue disabled:opacity-50">Confirm</button>
-          <button type="button" onClick={onRevote} className="rounded px-3 py-1.5 border border-lira-border">Vote again</button>
+          <button type="button" disabled={choice === ''} onClick={() => onConfirm(Number(choice))} className="rounded-xl px-3 py-1.5 text-sm font-semibold bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover disabled:opacity-50 cursor-pointer">Confirm</button>
+          <button type="button" onClick={onRevote} className="rounded-xl px-3 py-1.5 text-sm border border-lira-border bg-white text-lira-text hover:bg-gray-50 cursor-pointer">Vote again</button>
         </div>
       ) : <p className="text-lira-muted">The facilitator is choosing the final points.</p>}
     </div>
@@ -56,22 +57,26 @@ export function VotingStage({ box, room, issue, round, phase, nowMs, minutes, ca
   const mine = votesFor(room.votes, round.ticketId).find(v => v.mine)?.points;
   const revealed = phase === 'revealed';
   return (
-    <section aria-label="Voting stage" className={`rounded-lg border-2 border-lira-blue bg-lira-surface p-4 space-y-3 text-ui ${leaving ? 'animate-card-leave motion-reduce:animate-none' : 'animate-card-rise motion-reduce:animate-none'}`}>
-      <header className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-base font-bold"><span className="font-mono">{issue.key}</span> {issue.title}</h3>
-        {phase === 'voting' && <span role="timer" aria-label="Time left to vote" className="rounded px-2 py-1 font-mono font-bold bg-lira-blue-light">{clockText(left)}</span>}
-        {phase === 'timeup' && <span className="rounded px-2 py-1 font-bold bg-lira-blue-light">Time is up</span>}
+    <section aria-label="Voting stage" className={`border border-lira-blue ring-1 ring-lira-blue rounded-2xl overflow-hidden bg-white text-sm ${leaving ? 'animate-card-leave motion-reduce:animate-none' : 'animate-card-rise motion-reduce:animate-none'}`}>
+      <header className="flex flex-wrap items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
+        <Vote className="w-3.5 h-3.5 text-lira-blue" /><h3 className="text-xs font-semibold text-lira-text uppercase tracking-wide">Voting stage</h3>
+        {phase === 'voting' && <span role="timer" aria-label="Time left to vote" className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-mono font-bold bg-lira-blue-light text-lira-blue">{clockText(left)}</span>}
+        {phase === 'timeup' && <span className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold bg-amber-100 text-amber-700">Time is up</span>}
+        {revealed && <span className="ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold bg-green-100 text-green-700">Revealed</span>}
       </header>
+      <div className="p-4 space-y-3">
+      <h4 className="text-base font-semibold text-lira-text"><span className="font-mono text-lira-muted text-sm mr-1">{issue.key}</span>{issue.title}</h4>
       {phase === 'voting' && <progress aria-hidden="true" className="w-full h-1.5 accent-lira-blue" max={minutes * 60_000} value={left} />}
       <PeopleCards people={room.people} points={points} reveal={revealed} />
       {!revealed && (
         <>
           <VoteHand scale={box.scale} mine={mine} disabled={phase !== 'voting'} onPick={p => vote(round.ticketId, p)} />
           <p className="text-lira-muted">{phase === 'voting' ? (mine === undefined ? 'Pick a card. You can change it until the timer ends.' : `You voted ${mine}. You can change it until the timer ends.`) : 'Voting has ended. Waiting for the facilitator to reveal.'}</p>
-          {canRun && <button type="button" onClick={() => reveal(round.ticketId)} className="rounded px-3 py-1.5 font-bold bg-lira-blue text-lira-on-blue">Reveal points</button>}
+          {canRun && <button type="button" onClick={() => reveal(round.ticketId)} className="rounded-xl px-3 py-1.5 text-sm font-semibold bg-lira-blue text-lira-on-blue hover:bg-lira-blue-hover cursor-pointer">Reveal points</button>}
         </>
       )}
       {revealed && <Outcome key={round.ticketId} box={box} room={room} ticket={round.ticketId} canRun={canRun} onConfirm={p => finalise(round.ticketId, p)} onRevote={() => revote(round.ticketId)} />}
+      </div>
     </section>
   );
 }

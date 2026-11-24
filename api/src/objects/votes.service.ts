@@ -11,6 +11,7 @@ import { minutesOf, phaseOf, type Phase } from './rounds';
 export interface VoteOut { ticketId: number; userId: string; name: string; points: number; mine: boolean }
 export interface RoundOut { ticketId: number; phase: Phase; startedAt: string; endsAt: string; revealedAt: string | null; finalPoints: number | null; voted: number }
 export interface PersonOut { userId: string; name: string; role: string; voted: boolean; votedAt: string | null }
+export interface SummaryOut { boxId: string; sized: number; points: number }
 export interface RoomOut { now: string; rounds: RoundOut[]; votes: VoteOut[]; people: PersonOut[]; activeTicketId: number | null }
 
 interface RoundRow { ticket_id: string; started_at: Date; ends_at: Date; revealed_at: Date | null; confirmed_at: Date | null; final_points: string | null; voted: string }
@@ -43,6 +44,15 @@ export class VotesService {
     }));
     const active = out.find(r => r.phase !== 'confirmed') ?? null;
     return { now: now.toISOString(), rounds: out, votes: await this.visibleVotes(me, orgId, boxId, out), people: active ? await this.people(orgId, boxId, box.doc, active.ticketId) : [], activeTicketId: active?.ticketId ?? null };
+  }
+
+  /** For the overview of story boxes: how many tickets each box the person may view has sized, and their points together. */
+  async summary(me: Me, orgId: string): Promise<SummaryOut[]> {
+    const boxes = (await this.objects.list(me, orgId, 'storybox')).map(b => b.id);
+    const r = await this.db.query<{ box_id: string; sized: string; points: string }>(
+      `SELECT box_id, count(*) AS sized, COALESCE(sum(final_points), 0) AS points FROM story_rounds
+        WHERE org_id = $1 AND box_id = ANY($2::text[]) AND confirmed_at IS NOT NULL GROUP BY box_id`, [orgId, boxes]);
+    return r.rows.map(x => ({ boxId: x.box_id, sized: Number(x.sized), points: Number(x.points) }));
   }
 
   /** Points of tickets that were revealed (or that never had a round, from before rounds existed), and the person's own for the rest. */

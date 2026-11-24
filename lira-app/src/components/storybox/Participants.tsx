@@ -1,3 +1,4 @@
+import { Users } from 'lucide-react';
 import type { Person } from '../../utils/storyRound';
 
 const timeOf = (iso: string): string => new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -8,17 +9,20 @@ export function Participants({ people, points, revealed }: { people: readonly Pe
   if (people.length === 0) return null;
   const voted = people.filter(p => p.voted).length;
   return (
-    <section aria-label="Participants" className="text-ui">
-      <h3 className="font-bold mb-1">Participants <span className="font-normal text-lira-muted">{voted} of {people.length} have voted</span></h3>
-      <table className="w-full text-left">
-        <thead className="text-lira-muted"><tr><th className="py-1 pr-3 font-medium">Person</th><th className="py-1 pr-3 font-medium">Role</th><th className="py-1 pr-3 font-medium">Status</th><th className="py-1 font-medium">Points</th></tr></thead>
-        <tbody>
+    <section aria-label="Participants" className="border border-lira-border rounded-2xl overflow-hidden bg-white">
+      <header className="flex items-center gap-2 px-3 py-2 bg-gray-50 border-b border-lira-border">
+        <Users className="w-3.5 h-3.5 text-lira-muted" /><h3 className="text-xs font-semibold text-lira-text uppercase tracking-wide">Participants</h3>
+        <span className="text-2xs text-lira-muted">{voted} of {people.length} have voted</span>
+      </header>
+      <table className="w-full text-left text-xs">
+        <thead className="bg-gray-50 text-lira-muted"><tr><th className="px-3 py-2 font-semibold">Person</th><th className="px-3 py-2 font-semibold">Role</th><th className="px-3 py-2 font-semibold">Status</th><th className="px-3 py-2 font-semibold">Points</th></tr></thead>
+        <tbody className="divide-y divide-lira-border">
           {people.map(p => (
-            <tr key={p.userId} className="border-t border-lira-border">
-              <td className="py-1.5 pr-3 font-medium">{p.name}</td>
-              <td className="py-1.5 pr-3 text-lira-muted">{roleOf(p.role)}</td>
-              <td className="py-1.5 pr-3">{p.voted ? `Voted${p.votedAt ? ` at ${timeOf(p.votedAt)}` : ''}` : revealed ? 'Did not vote' : 'Waiting'}</td>
-              <td className="py-1.5">{revealed ? (points.get(p.userId) ?? '–') : 'Hidden'}</td>
+            <tr key={p.userId}>
+              <td className="px-3 py-2 font-medium">{p.name}</td>
+              <td className="px-3 py-2 text-lira-muted">{roleOf(p.role)}</td>
+              <td className="px-3 py-2">{p.voted ? `Voted${p.votedAt ? ` at ${timeOf(p.votedAt)}` : ''}` : revealed ? 'Did not vote' : 'Waiting'}</td>
+              <td className="px-3 py-2 font-semibold">{revealed ? (points.get(p.userId) ?? '–') : 'Hidden'}</td>
             </tr>
           ))}
         </tbody>

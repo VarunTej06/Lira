@@ -500,8 +500,9 @@ Both editions. Navigation, **Mind maps** (it can be hidden or moved in the sideb
 
 ### A58. Story box planning room (24 Nov 2026)  ◐
 Both editions. Navigation, **Story boxes**. Hosted: an Owner or Admin plus a second person who may view the space (A46), each in their own browser. This replaces the table of points of A54.
-- [ ] **New story box**. Expect: **Make the box** stays off until a **Time to vote on each ticket** (1 to 10 minutes) is chosen; nothing is chosen for you, and the list is empty again each time a box is made.
-- [ ] Open the box. Expect: two lanes, **Yet to be sized** (tickets without points, no epics) and **Sized** (tickets with points and the total), and under them a dashed stage saying how many minutes each ticket is open.
+- [ ] Open **Story boxes**. Expect: an overview page like Sprints: four tiles (Open boxes, Closed boxes, Tickets sized, Points boxed), a chart of points boxed in the last boxes, **Current story boxes** as cards with a progress bar, and **All story boxes** as a table (status, about, made by, date, vote time, sized x/y, progress, points) with the closed ones as history. Clicking a card or a row opens the box; **All story boxes** (top left) comes back.
+- [ ] **New story box** (a dialog). Expect: **Make the box** stays off until a **Time to vote on each ticket** (1 to 10 minutes) is chosen; nothing is chosen for you, and the list is empty again each time a box is made. Cancel and Escape close the dialog.
+- [ ] Open the box. Expect: a heading with three tiles (tickets sized, points boxed, time to vote); two boxes side by side, **Yet to be sized** (tickets without points, no epics) and **Sized** (with the total points), each ticket on a line like in the stand-up (type, key, title, space), scrolling up and down inside its box when there are many; under them a dashed stage saying how many minutes each ticket is open.
 - [ ] Drag a ticket from Yet to be sized onto the stage. Expect: it leaves the lane, rises onto the stage with a countdown (for example 02:00) and a bar that shrinks, a row of cards, and your hand of cards. Press **Start voting** on another ticket while one is up: there is no such button.
 - [ ] Do the same with the keyboard (Tab to **Start voting** on a card, Enter). Expect: the same result.
 - [ ] Press a card. Expect: it lifts and your card on the table turns solid. Press another: it changes. Press the same again: it is taken back. Do this while the time still runs.
@@ -511,7 +512,8 @@ Both editions. Navigation, **Story boxes**. Hosted: an Owner or Admin plus a sec
 - [ ] As the Owner press **Reveal points** (also before the time is up). Expect: the cards flip one after another showing each person's points; average, middle and range are shown with a suggested value; the participants list shows each person's points; the second person sees the flip too and no Confirm button.
 - [ ] Press **Vote again**. Expect: all points are cleared and the clock starts again. Vote, reveal again, choose the final points and press **Confirm**. Expect: the card drops down and out, then appears in **Sized** with a drop animation and its points; the ticket page shows the story points; the stage is empty again.
 - [ ] A second person, not an Admin: no **Start voting**, no dragging, no **Reveal points**, no **Confirm**, no **Close the box**; only the hand.
-- [ ] **Close the box** while nothing is up. Expect: it moves to History; there is no stage; a message says it is closed. A point sent anyway is refused.
+- [ ] **Close the box** while nothing is up. Expect: a message says it is closed and there is no stage; back on the overview it is listed as Closed in **All story boxes** and no longer under Current. A point sent anyway is refused.
+- [ ] **Delete** (red, top right of a box). Expect: a dialog asks first. **Cancel** closes it and keeps the box; **Escape** closes it and keeps the box; **Delete** removes the box and goes back to the overview. The same for every other dialog in the app.
 - [ ] Turn on "reduce motion" in the system settings. Expect: nothing flies or flips, the cards just change.
 - [ ] A box made before this change: it opens and starts rounds with 5 minutes.
 

@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { db } from '../../db/db';
 import { makeIssue, makeSpace } from '../../test/factories';
-import { byText, choose, cleanup, click, mount, q, settle, typeInto } from '../../test/render';
+import { byText, choose, cleanup, click, mount, q, qa, settle, typeInto } from '../../test/render';
 import { setActiveOrg } from '../../utils/hostedOrg';
 import { StoryBoxesPage } from './StoryBoxesPage';
 
@@ -11,7 +11,7 @@ const dialog = vi.hoisted(() => ({ confirmDialog: vi.fn(async () => true) }));
 vi.mock('../common/dialogStore', () => dialog);
 const hosted = vi.hoisted(() => ({ on: false }));
 vi.mock('../../utils/edition', async importOriginal => ({ ...(await importOriginal<typeof import('../../utils/edition')>()), isHosted: () => hosted.on }));
-const votesApi = vi.hoisted(() => ({ getRoom: vi.fn(), roundAction: vi.fn(), confirmRound: vi.fn(), putVote: vi.fn() }));
+const votesApi = vi.hoisted(() => ({ getRoom: vi.fn(), roundAction: vi.fn(), confirmRound: vi.fn(), putVote: vi.fn(), getSummary: vi.fn() }));
 vi.mock('../../services/storyVotesApi', () => votesApi);
 
 const KEY = 'lira_storyboxes';
@@ -44,7 +44,7 @@ describe('making story boxes', () => {
     await settle(30);
     expect(saved()).toMatchObject([{ name: 'Alpha planning', status: 'open', votingMinutes: 4, scope: { type: 'space', spaceId: 1 } }]);
     expect(q('#where')!.textContent).toBe(`/storyboxes/${saved()[0].id}`);
-    expect(q('section[aria-label="Open boxes"]')!.textContent).toContain('Alpha planning');
+    expect(q('section[aria-label="Alpha planning"]')).not.toBeNull(); // the planning room of the new box
   });
 
   it('makes a box for a sprint across every space', async () => {
@@ -68,14 +68,68 @@ describe('making story boxes', () => {
   });
 });
 
+describe('the overview', () => {
+  const done = { 10: { endsAt: 'x', revealed: true, finalPoints: 5 }, 11: { endsAt: 'x', revealed: true, finalPoints: 3 } };
+
+  it('says there is nothing yet, and offers to make a box to the people who run the workspace only', () => {
+    page();
+    expect(q('section[aria-label="Current story boxes"]')!.textContent).toContain('Make a story box to start');
+    expect(byText('button', 'New story box')).toBeDefined();
+    expect(q('section[aria-label="All story boxes"]')).toBeNull();
+    cleanup();
+    hosted.on = true; setActiveOrg('o', 'member'); votesApi.getSummary.mockResolvedValue({ ok: true, data: [] });
+    page();
+    expect(byText('button', 'New story box')).toBeUndefined();
+    expect(q('section[aria-label="Current story boxes"]')!.textContent).toContain('Nobody has made a story box');
+  });
+
+  it('shows the headline numbers, the current box with its progress, and every box in a table with the older ones', async () => {
+    localStorage.setItem(KEY, JSON.stringify([
+      { id: 'open1', name: 'Alpha estimate', scope: { type: 'space', spaceId: 1 }, status: 'open', scale: [1, 2, 3], createdAt: '2026-11-20T00:00:00Z', createdBy: 'Asha', votingMinutes: 4, localRounds: done },
+      { id: 'old1', name: 'October planning', scope: { type: 'space', spaceId: 2 }, status: 'closed', scale: [1, 2, 3], createdAt: '2026-10-05T00:00:00Z', closedAt: '2026-10-09T00:00:00Z', createdBy: 'Asha', localRounds: { 20: { endsAt: 'x', revealed: true, finalPoints: 8 } } },
+    ]));
+    page();
+    await settle(1200); // the numbers count up
+    const text = document.body.textContent!;
+    expect(text).toContain('Open boxes');
+    expect(text).toContain('Points boxed');
+    const current = q('section[aria-label="Current story boxes"]')!.textContent!;
+    expect(current).toContain('Alpha estimate');
+    expect(current).toContain('2 of 2 tickets sized'); // the two non-epic tickets of the space
+    expect(current).toContain('8 points boxed');
+    expect(current).toContain('4 min to vote');
+    expect(current).not.toContain('October planning'); // it is closed
+    const table = qa('section[aria-label="All story boxes"] tbody tr');
+    expect(table.map(r => r.textContent)).toEqual([expect.stringContaining('Alpha estimate'), expect.stringContaining('October planning')]); // newest first
+    expect(table[1].textContent).toContain('Closed');
+    expect(table[1].textContent).toContain('1/1'); // BBB-1 is the one ticket of that space
+    expect(q('section[aria-label="Points boxed per story box"]')!.textContent).toContain('8 pts');
+  });
+
+  it('opens a box from its card and from its row in the table', async () => {
+    seed();
+    page();
+    await click(q('section[aria-label="Current story boxes"] button'));
+    expect(q('#where')!.textContent).toBe('/storyboxes/b1');
+    cleanup();
+    seed();
+    page();
+    await click(q('section[aria-label="All story boxes"] tbody tr'));
+    expect(q('#where')!.textContent).toBe('/storyboxes/b1');
+  });
+});
+
 describe('closing and history', () => {
   it('closes a box: it moves to the history, points can no longer be given, and it can be reopened', async () => {
     seed();
     page('/storyboxes/b1');
     await click(byText('button', 'Close the box'));
     expect(saved()[0].status).toBe('closed');
-    expect(q('section[aria-label="History"]')!.textContent).toContain('Alpha estimate');
-    expect(q('section[aria-label="Open boxes"]')!.textContent).toContain('None open');
+    await click(byText('button', 'All story boxes'));
+    expect(q('section[aria-label="All story boxes"]')!.textContent).toContain('Alpha estimate');
+    expect(q('section[aria-label="All story boxes"]')!.textContent).toContain('Closed');
+    expect(q('section[aria-label="Current story boxes"]')!.textContent).toContain('No story box is open');
+    await click(byText('button', 'Alpha estimate'));
     expect(q('section[aria-label="Voting stage"]')).toBeNull(); // nothing can be put up for voting
     expect(document.body.textContent).toContain('This box is closed');
     await click(byText('button', 'Reopen'));

@@ -13,3 +13,6 @@ export const roundAction = (org: string, box: string, ticketId: number, action: 
 export const confirmRound = (org: string, box: string, ticketId: number, points: number) => send<void>('POST', `${base(org, box)}/rounds/${ticketId}/confirm`, { points });
 /** The person's own points for the ticket being voted on; `null` takes them back. The server refuses it once the time is up or the points are revealed. */
 export const putVote = (org: string, box: string, ticketId: number, points: number | null) => send<void>('PUT', `${base(org, box)}/votes/${ticketId}`, { points });
+
+/** How many tickets each story box the person may view has sized, and their points together, for the overview. */
+export const getSummary = (org: string) => send<{ boxId: string; sized: number; points: number }[]>('GET', `/api/orgs/${encodeURIComponent(org)}/storybox-summary`);

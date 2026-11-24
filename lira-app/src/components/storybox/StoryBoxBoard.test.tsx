@@ -25,7 +25,7 @@ let current = baseBox();
 let rerender: (b: StoryBox) => void = () => undefined;
 function show(box: StoryBox, canManage = true) {
   current = box;
-  const render = (b: StoryBox) => <StoryBoxBoard box={b} issues={issues} spaces={spaces} canManage={canManage} onChange={next => { current = next; rerender(next); }} onDelete={vi.fn()} />;
+  const render = (b: StoryBox) => <StoryBoxBoard box={b} issues={issues} spaces={spaces} canManage={canManage} onChange={next => { current = next; rerender(next); }} onDelete={vi.fn()} onBack={vi.fn()} />;
   const handle = mount(render(box));
   rerender = next => handle.rerender(render(next));
 }

@@ -4,7 +4,7 @@
 
 ## Prerequisites
 - Pull request approved by a code owner (a second code owner if it touches auth, data access, validation, secrets or migrations).
-- From `lira-app/`: `npm run test:all` passes locally (typecheck, lint with 0 warnings, 2335+ app tests, and in `api/` `npm test` with `TEST_DATABASE_URL` pointing at a throwaway schema (195 tests), data health). **(manual until DevOps)**
+- From `lira-app/`: `npm run test:all` passes locally (typecheck, lint with 0 warnings, 2346+ app tests, and in `api/` `npm test` with `TEST_DATABASE_URL` pointing at a throwaway schema (195 tests), data health). **(manual until DevOps)**
 - `npm audit` shows no high or critical findings. **(manual until DevOps)**
 - Release notes drafted: what changed, any migration, any config change, how to roll back.
 

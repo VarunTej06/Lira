@@ -11,7 +11,7 @@ const confirmSchema = z.strictObject({ points });
 const ID = /^[A-Za-z0-9_.:-]{1,80}$/;
 
 /** The planning-poker room of one story box: the state, one ticket's round, and each person's own points. */
-@Controller('orgs/:orgId/objects/storybox/:boxId')
+@Controller('orgs/:orgId')
 @UseGuards(ClientGuard, SessionGuard)
 export class VotesController {
   constructor(@Inject(VotesService) private readonly votes: VotesService) {}
@@ -26,33 +26,39 @@ export class VotesController {
     return r.data;
   }
 
-  @Get('room')
+  /** Sized tickets and points of every story box the person may view, for the overview. */
+  @Get('storybox-summary')
+  summary(@Param('orgId') orgId: string, @Req() req: AuthedRequest) {
+    return this.votes.summary(req.me, orgId);
+  }
+
+  @Get('objects/storybox/:boxId/room')
   room(@Param('orgId') orgId: string, @Param('boxId') boxId: string, @Req() req: AuthedRequest) {
     return this.votes.room(req.me, orgId, this.box(boxId));
   }
 
-  @Post('rounds/:ticketId/start') @HttpCode(204)
+  @Post('objects/storybox/:boxId/rounds/:ticketId/start') @HttpCode(204)
   async start(@Param('orgId') orgId: string, @Param('boxId') boxId: string, @Param('ticketId', ParseIntPipe) t: number, @Req() req: AuthedRequest) {
     await this.votes.start(req.me, orgId, this.box(boxId), t, req.ip ?? 'unknown');
   }
 
-  @Post('rounds/:ticketId/reveal') @HttpCode(204)
+  @Post('objects/storybox/:boxId/rounds/:ticketId/reveal') @HttpCode(204)
   async reveal(@Param('orgId') orgId: string, @Param('boxId') boxId: string, @Param('ticketId', ParseIntPipe) t: number, @Req() req: AuthedRequest) {
     await this.votes.reveal(req.me, orgId, this.box(boxId), t, req.ip ?? 'unknown');
   }
 
-  @Post('rounds/:ticketId/revote') @HttpCode(204)
+  @Post('objects/storybox/:boxId/rounds/:ticketId/revote') @HttpCode(204)
   async revote(@Param('orgId') orgId: string, @Param('boxId') boxId: string, @Param('ticketId', ParseIntPipe) t: number, @Req() req: AuthedRequest) {
     await this.votes.revote(req.me, orgId, this.box(boxId), t, req.ip ?? 'unknown');
   }
 
-  @Post('rounds/:ticketId/confirm') @HttpCode(204)
+  @Post('objects/storybox/:boxId/rounds/:ticketId/confirm') @HttpCode(204)
   async confirm(@Param('orgId') orgId: string, @Param('boxId') boxId: string, @Param('ticketId', ParseIntPipe) t: number, @Body() body: unknown, @Req() req: AuthedRequest) {
     await this.votes.confirm(req.me, orgId, this.box(boxId), t, this.parse(confirmSchema, body).points, req.ip ?? 'unknown');
   }
 
   /** The person's own points for a ticket; `null` takes them back. */
-  @Put('votes/:ticketId') @HttpCode(204)
+  @Put('objects/storybox/:boxId/votes/:ticketId') @HttpCode(204)
   async vote(@Param('orgId') orgId: string, @Param('boxId') boxId: string, @Param('ticketId', ParseIntPipe) t: number, @Body() body: unknown, @Req() req: AuthedRequest) {
     await this.votes.vote(req.me, orgId, this.box(boxId), t, this.parse(voteSchema, body).points, req.ip ?? 'unknown');
   }

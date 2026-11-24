@@ -151,6 +151,26 @@ describe.skipIf(!ADMIN_URL)('story boxes and mind maps, on a real database', () 
     expect((await vote(outsider, owner.orgId, 'box1', 1, 3)).status).toBe(404);
   });
 
+  it('sums up the sized tickets and points of each box the person may view, and only of those', async () => {
+    const { owner, member, a, ta } = await setup();
+    const second = ((await db.call('POST', `/api/orgs/${owner.orgId}/spaces/${a}/tickets`, ticket, owner.session)).body as { id: number }).id;
+    for (const [t, p] of [[ta, 5], [second, 3]] as const) {
+      await round(owner, owner.orgId, 'box1', t, 'start');
+      await round(owner, owner.orgId, 'box1', t, 'reveal');
+      await round(owner, owner.orgId, 'box1', t, 'confirm', { points: p });
+    }
+    await put(owner, owner.orgId, 'storybox', 'sprint1', { id: 'sprint1', name: 'Sprint', status: 'open', scope: { type: 'sprint', sprintKey: '2026-11' } });
+    await round(owner, owner.orgId, 'sprint1', ta, 'start');
+    await round(owner, owner.orgId, 'sprint1', ta, 'reveal');
+    await round(owner, owner.orgId, 'sprint1', ta, 'confirm', { points: 8 });
+    const sums = async (p: Person) => ((await db.call('GET', `/api/orgs/${owner.orgId}/storybox-summary`, undefined, p.session)).body as { boxId: string; sized: number; points: number }[]).sort((x, y) => x.boxId.localeCompare(y.boxId));
+    expect(await sums(owner)).toEqual([{ boxId: 'box1', sized: 2, points: 8 }, { boxId: 'sprint1', sized: 1, points: 8 }]);
+    expect(await sums(member)).toEqual([{ boxId: 'box1', sized: 2, points: 8 }]); // the sprint box is not shared with them
+    const stranger = await db.signUp(`sb-sum${++n}@example.com`);
+    expect((await db.call('GET', `/api/orgs/${owner.orgId}/storybox-summary`, undefined, stranger.session)).status).toBe(404);
+    expect((await db.call('GET', `/api/orgs/${owner.orgId}/storybox-summary`)).status).toBe(401);
+  });
+
   it("removes a box's votes and rounds with the box, and the audit log says who did what", async () => {
     const { owner, member, ta } = await setup();
     await round(owner, owner.orgId, 'box1', ta, 'start');

@@ -483,6 +483,59 @@ Same set-up as A37. The Google lines need Google set up first (`docs/03-sop/goog
 - [ ] Schedule with the link left empty. Expect: a meet.google.com link on the call; each invited person gets an email from the connected account (time in the call's time zone, the link, and "It repeats ..." for a series), and the page says how many emails were sent.
 - [ ] Disconnect Google. Expect: scheduling without a link is refused with a message to paste one or connect Google.
 
+### A53. Mind maps (24 Nov 2026)  ◐
+Both editions. Navigation, **Mind maps** (it can be hidden or moved in the sidebar settings).
+- [ ] Press **New mind map**. Expect: a map with one central idea named like the map, opened on its own address; it is in the list at the left.
+- [ ] Click the central idea, press **Tab**, type a name, press Enter. Expect: a new idea under it, joined by a curve, the text saved. Press **Tab** again on it: a deeper level. Press **Enter** on a child: a sibling next to it.
+- [ ] Double click an idea, or press F2, change the text, press Escape. Expect: the old text stays. Change it again and press Enter: the new text stays.
+- [ ] Press Delete on an idea with children. Expect: it and its branch go; the central idea cannot be deleted.
+- [ ] Press Space on an idea, or the small round button on its right. Expect: its branch hides and shows a plus; again to unfold. **Fold all** and **Unfold all** do it for every branch.
+- [ ] Drag an idea onto another. Expect: it moves, with its branch, under the other; dropping it onto its own child or onto nothing changes nothing.
+- [ ] Drag the empty background to pan, use the wheel and + and – to zoom, **Fit** to see it all. Expect: nothing overlaps whatever the size of the map.
+- [ ] Select an idea. Expect: a panel with colours, a note and a ticket key (try LIRA-1): a coloured edge, a note dot, the ticket key above the box and its title in the panel.
+- [ ] Type in **Search ideas**. Expect: matching ideas are ringed with a dashed line.
+- [ ] **Undo** and **Redo** (or Ctrl+Z, Ctrl+Y) after several changes. Expect: each goes back and forward.
+- [ ] **Import outline**: paste an indented list. Expect: the map is replaced by it and Undo brings the old one back. **MD**: a Markdown outline downloads. **JSON**, **SVG** and **PNG** also download, named after the map; the picture shows every idea.
+- [ ] Make a copy, delete one (it asks first). Reload the page. Expect: everything is as left. Local edition: the maps are in the data folder's `mindmaps.json`. Hosted: another member does not see your map until you share it (Access, kind Mind map); an Owner sees all.
+
+### A54. Story boxes (24 Nov 2026)  ◐
+Both editions. Navigation, **Story boxes**. Hosted: use an Owner or Admin and a second person invited to a space (A46).
+- [ ] As the Owner press **New story box**, choose **Space** and a space, give it a name, **Make the box**. Expect: it opens with every ticket of that space (no epics), and is listed under Open.
+- [ ] Make another by **Sprint**. Expect: the tickets of that sprint from every space, with a Space filter.
+- [ ] Press a number under **Your points** for a ticket. Expect: it is highlighted, "1 votes, average N" and your name with the points appear, a suggested value appears. Press it again: your points are taken back.
+- [ ] Hosted, as the second person (view access to the space): open the box. Expect: the same tickets; you can press your own points and see the Owner's; you cannot close, delete, apply or change the final points; no **New story box** button.
+- [ ] As the Owner, wait about ten seconds. Expect: the second person's points appear without a reload.
+- [ ] Press **Use** next to a suggested value, then **Apply suggested points**. Expect: tickets without points get them (ticket pages show the story points); tickets that had points keep them. Change a ticket's points from its dropdown.
+- [ ] Search tickets, tick **Without points only**. Expect: the list narrows.
+- [ ] **Close the box**. Expect: it moves to History, the point buttons are disabled for everyone, a message says it is closed; a point sent anyway is refused. **Reopen** brings it back.
+- [ ] Hosted: a sprint box is not visible to the second person until it is shared with them (Access, kind Story box). A person with no access to a space cannot vote on its tickets.
+- [ ] **Delete** asks first, removes the box and its votes; points already on tickets stay.
+
+### A52. Import a local workspace (24 Nov 2026)  ◐
+Hosted app, signed in as the Owner. Use a copy of the local data folder (never the real one), for example copy `data/` to a temporary folder first and leave `private` out.
+- [ ] Teams and access, tab **Import**. Expect: a short explanation and two file choices (Files, and a data folder); nothing is shown yet.
+- [ ] Choose the copy's `lira-workspace.json`. Expect: "Found N spaces, N tickets, ..." and an Import button; nothing has been sent (the sidebar is unchanged).
+- [ ] Choose the whole data folder copy instead (including `projects.json`, `dashboards.json`, `roadmaps` and `private`). Expect: spaces and tickets found, plus projects, roadmaps and dashboards; the secrets folder is never read; files it does not use are listed under "Not used".
+- [ ] Press Import. Expect: "Importing x of y", then "Imported N spaces, N tickets, ...". The new spaces appear in the sidebar with their tickets.
+- [ ] Open an imported epic. Expect: its children are under it, links and blockers point at the right tickets, comments and labels are there, and ticket keys are new (the space's own counter).
+- [ ] Import the same files again. Expect: spaces whose key exists come in with a new key (for example AI2), and the report says what was left out and why.
+- [ ] Projects, roadmaps and dashboards. Expect: they point at the new spaces; a dashboard filtered on a space shows that space's tickets.
+- [ ] Files attached to tickets. Expect: they are not imported (stated on the page).
+- [ ] Sign in as a member who is not an Owner or Admin. Expect: the Teams page is not offered, so there is no import.
+
+### A51. Two-step sign-in and leaked passwords (24 Nov 2026)  ◐
+Hosted app with the Google key set (Security shows the Turn on button), a phone with an authenticator app, and `BREACH_CHECK=true`.
+- [ ] Sign up with the password `password123`. Expect: refused with a message that the password appears in a list of leaked passwords. A long unusual password is accepted.
+- [ ] Use Forgot password and choose `password123` as the new one. Expect: the same refusal, and the old password still works.
+- [ ] Account menu, **Security**. Expect: "Off" and **Turn on**. Press it. Expect: a key to type into the app and a link; type the key into the authenticator app, type its six digits, press **Turn on**. Expect: ten recovery codes, shown once.
+- [ ] Start again and type a wrong code. Expect: a message and nothing switched on; log out and in still works without a code.
+- [ ] Log out, log in with the password. Expect: a page "Enter your code", no app behind it. Type the six digits. Expect: you are in. Type the same code again at a later login within the same 30 seconds. Expect: refused, wait for the next code.
+- [ ] Log in and type five wrong codes. Expect: after the fifth the login must be started again.
+- [ ] Log in and use a recovery code (with or without the dash). Expect: it works once; the second time it is refused.
+- [ ] Security, **Turn off**: with no code the button is off; with a wrong code a message; with the right code it turns off and the next login has no second step.
+- [ ] Sign in with Google. Expect: no code page (Google has its own). For a Google-only account, Security refuses to turn it on and says to use Google's.
+- [ ] Leave a login on the code page for more than ten minutes. Expect: the code is refused with a message to log in again.
+
 ### A50. Live updates between people (24 Nov 2026)  ◐
 Hosted app, two browsers (or a normal and a private window) signed in as two people who can both see the same space, for example the Owner and a person invited with Can edit (A46).
 - [ ] Both open the same space's board. In one, create a ticket. Expect: it appears in the other within a second or two without reloading.

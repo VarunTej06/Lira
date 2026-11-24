@@ -233,7 +233,7 @@ function Step-Deploy($state) {
   $origins = "https://$Domain,https://liraspaces-web.$domainOfEnv"
   Write-Host '== API (internal address only)'
   $apiImage = "$acr.azurecr.io/liraspaces-api:$ApiTag"
-  $apiEnv = @('DATABASE_URL=secretref:db-url', "ALLOWED_ORIGINS=$origins", 'COOKIE_SECURE=true', "TRUST_PROXY_HOPS=$ProxyHops")
+  $apiEnv = @('DATABASE_URL=secretref:db-url', "ALLOWED_ORIGINS=$origins", 'COOKIE_SECURE=true', "TRUST_PROXY_HOPS=$ProxyHops", 'BREACH_CHECK=true')
   $apiSecrets = @("db-url=$dbUrl")
   if ($state.storage) {                       # file storage for ticket attachments (ADR-0011); without it the attachment routes answer 503
     $apiSecrets += "storage-key=$(Get-KvSecret $state.vault 'storage-key')"

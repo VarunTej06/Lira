@@ -27,7 +27,8 @@ The owner asked for it. It is OpenID Connect with the authorisation code and PKC
 
 ## Consequences
 - **Email confirmation and password reset (done, 24 Nov 2026):** sign-up emails a link (24 hours, once); "Forgot password?" emails a reset link (1 hour, once; the same answer whether or not the account exists; three per account an hour and ten per address per 15 minutes); resetting ends every session and confirms the address; joining an organisation by invitation needs a confirmed address, but only where email works, so a server without email stays usable. Email is sent by the product through Azure Communication Services Email (`docs/03-sop/email-setup.md`).
-- **Not yet done, and needed before real customers:** password-breach checking, two-step sign-in, a lock for the whole account after many different addresses fail, deleting expired sessions on a schedule, and the privacy notice entry for the address stored in the audit log.
+- **Password-breach checking, two-step sign-in and clean-up (done, 24 Nov 2026):** a new password (sign-up and reset) is refused when it is in the Have I Been Pwned list of leaked passwords (only five characters of its SHA-1 are sent; unreachable means accepted; `BREACH_CHECK=true`, on in the Azure script); two-step sign-in with an authenticator app and ten recovery codes (V18); an hourly clean-up deletes expired sessions, old attempts, email links and invitations.
+- **Not yet done, and needed before real customers:** a lock for the whole account after many different addresses fail, deleting expired sessions on a schedule, and the privacy notice entry for the address stored in the audit log.
 - Anyone can register any email address until verification exists. Acceptable for the rehearsal only.
 - The count of proxies in front of the API (`TRUST_PROXY_HOPS`) must match the real chain, or the per-address limit reads the wrong address.
 

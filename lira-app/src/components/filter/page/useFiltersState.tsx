@@ -4,6 +4,7 @@ import type { Issue } from '../../../types/issue';
 import type { Space } from '../../../types/space';
 import { useClickOutside } from '../../../hooks/useClickOutside';
 import { useResetWhen } from '../../../hooks/useResetWhen';
+import type { FilterSpec } from '../../../utils/savedFilters';
 
 export interface FiltersPageProps {
   issues: Issue[];
@@ -57,6 +58,17 @@ export function useFiltersState(props: FiltersPageProps) {
     setSelectedLabels([]);
     setSelectedTeam('all');
     setIsRecentOnly(false);
+    setActivePreset('all');
+  };
+
+  /** Everything chosen on the page, as one value, so it can be saved and put back. */
+  const currentSpec = useMemo<FilterSpec>(() => ({
+    query: searchQuery, spaces: selectedSpaces, statuses: selectedStatuses, priorities: selectedPriorities, types: selectedTypes, assignees: selectedAssignees,
+    labels: selectedLabels, team: selectedTeam, recentOnly: isRecentOnly, sort: sortField, ascending: sortAsc,
+  }), [searchQuery, selectedSpaces, selectedStatuses, selectedPriorities, selectedTypes, selectedAssignees, selectedLabels, selectedTeam, isRecentOnly, sortField, sortAsc]);
+  const applySpec = (spec: FilterSpec) => {
+    setSearchQuery(spec.query); setSelectedSpaces(spec.spaces); setSelectedStatuses(spec.statuses); setSelectedPriorities(spec.priorities); setSelectedTypes(spec.types);
+    setSelectedAssignees(spec.assignees); setSelectedLabels(spec.labels); setSelectedTeam(spec.team); setIsRecentOnly(spec.recentOnly); setSortField(spec.sort); setSortAsc(spec.ascending);
     setActivePreset('all');
   };
 
@@ -195,6 +207,8 @@ export function useFiltersState(props: FiltersPageProps) {
     setSortAsc,
     clearAllFilters,
     applyPreset,
+    currentSpec,
+    applySpec,
     spaceMap,
     allLabels,
     allAssignees,

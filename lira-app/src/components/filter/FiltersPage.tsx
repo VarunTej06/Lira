@@ -2,6 +2,7 @@ import React from 'react';
 import { useFiltersState, type FiltersPageProps } from './page/useFiltersState';
 import { FiltersHeader } from './page/FiltersHeader';
 import { FilterControls } from './page/FilterControls';
+import { SavedFilters } from './page/SavedFilters';
 import { ActiveFilterChips } from './page/ActiveFilterChips';
 import { ResultsTable } from './page/ResultsTable';
 
@@ -13,6 +14,7 @@ export const FiltersPage: React.FC<FiltersPageProps> = (props) => {
     <div className="flex-1 flex flex-col overflow-hidden bg-gray-50/50">
       <FiltersHeader {...s} />
       <div className="px-6 pt-4 pb-2 flex-shrink-0" ref={dropdownRef}>
+        <SavedFilters currentSpec={s.currentSpec} applySpec={s.applySpec} spaces={s.spaces} />
         <FilterControls {...s} />
         <ActiveFilterChips {...s} />
       </div>

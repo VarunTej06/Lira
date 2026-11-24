@@ -498,6 +498,17 @@ Both editions. Navigation, **Mind maps** (it can be hidden or moved in the sideb
 - [ ] **Import outline**: paste an indented list. Expect: the map is replaced by it and Undo brings the old one back. **MD**: a Markdown outline downloads. **JSON**, **SVG** and **PNG** also download, named after the map; the picture shows every idea.
 - [ ] Make a copy, delete one (it asks first). Reload the page. Expect: everything is as left. Local edition: the maps are in the data folder's `mindmaps.json`. Hosted: another member does not see your map until you share it (Access, kind Mind map); an Owner sees all.
 
+### A56. Saved filters (24 Nov 2026)  ◐
+Both editions. Filters page.
+- [ ] Open Filters with nothing chosen. Expect: a row "Saved filters" that says none yet, and **Save current filter** is off with the tip "Choose some filters first".
+- [ ] Type a search, or choose a status, space or assignee. Expect: **Save current filter** turns on. Press it, type a name, press Save. Expect: a button with that name appears and looks selected, and **Save current filter** is off again with the tip "These filters are already saved".
+- [ ] Try a blank name, a name that is already used (in capitals too) and a very long name. Expect: a message each time and the form stays open; the message goes when you change the name. Escape or Cancel closes the form without saving.
+- [ ] Clear the filters, then press the saved button. Expect: the same search and choices come back, the same tickets are listed, and the sort is as it was; the button looks selected. Hover it: a line says what it does, for example "Alpha · bug".
+- [ ] Change one choice. Expect: the saved button is no longer selected.
+- [ ] Reload the page. Expect: the saved filters are still there. Local edition: they are in `data/settings.json`. Hosted edition: they are yours only; another person does not see them.
+- [ ] Press the small cross on one. Expect: it asks first; No keeps it, Delete removes it. Tickets are not touched.
+- [ ] Save 50 filters. Expect: the 51st is refused with a message to delete one.
+
 ### A55. Command palette (24 Nov 2026)  ◐
 Both editions, any page.
 - [ ] Press **Ctrl+K** (Cmd+K on a Mac), also while typing in a field. Expect: a box opens in the upper middle with the cursor in the search field and the pages listed under "Go to", then your spaces and the two actions (scroll down). Press Ctrl+K again: it closes.

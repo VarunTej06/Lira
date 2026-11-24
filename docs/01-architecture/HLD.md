@@ -32,7 +32,7 @@ Why the Container Instance: the sandbox refuses every certificate resource, so C
 | Front Door, WAF, private networking | Not in the rehearsal |
 | Audit log, metrics, health | Done: append-only `audit_log` table, `/metrics` counters, structured logs, `/health` and `/ready` on both services |
 
-Tests: 2335 in the app and 299 in the API (121 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
+Tests: 2335 in the app and 299 in the API (124 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
 
 ## 1. Goals and non-goals
 

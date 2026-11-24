@@ -9,12 +9,13 @@ Google's console changes its labels from time to time. If a name below does not 
 ## 1. In the Google Cloud console
 
 1. Create or choose a project.
-2. Enable two APIs: the **Google Meet REST API** and the **Gmail API**.
+2. Enable three APIs: the **Google Meet REST API**, the **Gmail API** and the **Google Calendar API**.
 3. Configure the **OAuth consent screen**. While you test, keep it in testing mode and add the Google accounts that will sign in as **test users** (the owner's account). A public product later needs Google's verification for the two sensitive permissions below; plan time for it.
 4. Add the permissions (scopes) the app asks for, and no others:
    - `openid` and `email` (to learn which account was connected)
    - `https://www.googleapis.com/auth/meetings.space.created` (make a Meet link)
    - `https://www.googleapis.com/auth/gmail.send` (send the invitation emails)
+   - `https://www.googleapis.com/auth/calendar.events` (put each call in the connected account's calendar, so the people invited get a calendar invitation and it stays up to date). Also enable the **Google Calendar API** in step 2 above. Without this permission calls still work and the invitations go by Gmail
 5. Create an **OAuth client ID** of type **Web application**. Add **two** authorised redirect URIs, exactly (for the rehearsal the domain is `test.liraspaces.com`):
    - `https://<your domain>/api/google/callback` (the owner connecting a Google account: Meet links and emails)
    - `https://<your domain>/api/auth/google/callback` (people signing up and in with Google)

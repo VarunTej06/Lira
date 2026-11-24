@@ -57,4 +57,8 @@ Checked against the code, not a pen test. "Built" means the control exists and h
 | T15 Audit | Built: `audit_log` is insert-only for the application role |
 | T6, T7, T10 | Not built or not applicable yet: AI runs in the browser, no organisation AI settings, no sign-out of leavers beyond removing the membership |
 
-New risks that came with the hosted edition and are accepted for the rehearsal: a person who signs up with a password for someone else's address (nothing proves the address) until that person signs in with Google, which takes the account over and removes the password (ADR-0009); no email verification and no password reset yet.
+Reminder emails go only to a person the system can identify without guessing: a call's invitees, or the assignee of a ticket when exactly one member of the organisation has that name and may see its space (a ticket stores a name, not an account, so an ambiguous name gets no email). Emails carry a ticket key and title, never its description or comments.
+
+Live updates (server-sent events) carry only a kind and a space number, never ticket text. A note reaches a person only when they may view that space, and the session and membership are checked again for every note, so a person who is removed or logs out stops hearing at once. Streams are capped per person and last at most 55 minutes.
+
+New risks that came with the hosted edition and are accepted for the rehearsal: a person who signs up with a password for someone else's address (the address stays unconfirmed until its owner opens the emailed link; joining an organisation needs a confirmed address where email works), until that person signs in with Google or resets the password, either of which takes the account over (ADR-0009). Password-reset links are single-use, expire in one hour, are stored only as hashes, are never confirmed to exist for an address, are rate limited, and end every session when used.

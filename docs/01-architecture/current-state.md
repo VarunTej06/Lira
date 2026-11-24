@@ -1,6 +1,6 @@
 # Current state (single-user, local edition)
 
-Verified on 9 November 2026 at commit `4eb938e`, branch `v3.4.1`. **Update 21 November 2026 (version 4.0.0):** this page still describes the **local edition**, which is unchanged (files in `data/`, no login). The test count below is the 9 November figure; today it is 2078 in 203 files. The hosted edition, which has accounts and a server, is described in section 0 of [`HLD.md`](HLD.md) and [`LLD.md`](LLD.md); the seven "what this means for multi-user" points at the end of this page are now answered by it (except Viva on the server and the data importer).
+Verified on 9 November 2026 at commit `4eb938e`, branch `v3.4.1`. **Update 21 November 2026 (version 4.0.0):** this page still describes the **local edition**, which is unchanged (files in `data/`, no login). The test count below is the 9 November figure; today it is 2134 in 212 files. The hosted edition, which has accounts and a server, is described in section 0 of [`HLD.md`](HLD.md) and [`LLD.md`](LLD.md); the seven "what this means for multi-user" points at the end of this page are now answered by it (except Viva on the server and the data importer).
 
 ## Shape
 

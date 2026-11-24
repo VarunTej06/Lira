@@ -483,6 +483,75 @@ Same set-up as A37. The Google lines need Google set up first (`docs/03-sop/goog
 - [ ] Schedule with the link left empty. Expect: a meet.google.com link on the call; each invited person gets an email from the connected account (time in the call's time zone, the link, and "It repeats ..." for a series), and the page says how many emails were sent.
 - [ ] Disconnect Google. Expect: scheduling without a link is refused with a message to paste one or connect Google.
 
+### A50. Live updates between people (24 Nov 2026)  ◐
+Hosted app, two browsers (or a normal and a private window) signed in as two people who can both see the same space, for example the Owner and a person invited with Can edit (A46).
+- [ ] Both open the same space's board. In one, create a ticket. Expect: it appears in the other within a second or two without reloading.
+- [ ] In one, drag a ticket to another column, rename it, change its assignee. Expect: the other shows each change within a second or two.
+- [ ] In one, delete a ticket. Expect: it disappears in the other.
+- [ ] While one person is typing a change that has not been saved yet, the other saves a change to a different ticket. Expect: the typing is not lost and the other ticket updates.
+- [ ] The Owner creates a new space and shares it with the second person (Access tab, give access). Expect: the space appears in the second person's sidebar without reloading. Take the access away. Expect: it disappears.
+- [ ] The second person has no access to a space where the Owner creates tickets. Expect: nothing changes for them, and nothing about that space is visible anywhere.
+- [ ] Switch the network off for the second person for a minute, change tickets as the first, switch it on again. Expect: within seconds everything is up to date.
+- [ ] Log the second person out in another tab. Expect: that window stops updating (it is asked to log in again on the next action).
+- [ ] Open the same app in seven tabs as one person. Expect: the app keeps working; the seventh tab shows no live updates until another is closed.
+- [ ] Note: projects, roadmaps, dashboards and settings are not live yet; they show after a reload.
+
+### A49. Lighter theme picker (24 Nov 2026)  ◐
+Open Account settings, Appearance.
+- [ ] Look at the choices. Expect: two options, **Dark** and **Light**, each one a single rectangle of three colours with no gap or line between them and its name beside it; no description text, no tick circle, no big boxes.
+- [ ] Under them. Expect: the heading "Choose a dark palette" (or light) and one rectangle with a name for each palette: Pace and Blackridge for dark; Sorrel, Fawn, Mossgrove and Tidewell for light.
+- [ ] Under those. Expect: a short list for the chosen palette: each of its three colours with its name and what it paints (for Pace: Black, the page and the panels; Silver, text and thin lines; Yellow, buttons and the selected item).
+- [ ] Pick another palette, then Light and another palette. Expect: the list changes at once to match; the Dark and Light rectangles show the colours of the palette chosen for each; the selected option has a coloured border.
+- [ ] Press Save and reopen. Expect: the saved choices are selected. Check both modes and every palette, on a narrow window too.
+
+### A48. Calls in the Google calendar (24 Nov 2026)  ◐
+Needs Google set up with the Calendar API enabled and the calendar.events permission on the consent screen (docs/03-sop/google-setup.md), and a second person with a mailbox.
+- [ ] As the Owner open Calls. If Google was connected before this version, Expect: the panel says invitation emails are sent from the account and shows **Allow calendar invitations**. Press it, agree at Google. Expect: back on Calls, the panel now says each call goes into the calendar, and the button is gone.
+- [ ] Schedule a call for the second person with no link. Expect: an event with the Meet link appears in the Owner's Google Calendar, the second person gets Google's calendar invitation (not a second email from the app), and Calls lists it as before.
+- [ ] Change the time and the title of the call. Expect: the same event moves in the calendar and the second person is told of the change.
+- [ ] Make a daily call with a last day, then change its last day. Expect: one repeating event that ends on the last day (at the call's own time of day), not a separate event for each day.
+- [ ] Delete the event in Google Calendar, then change the call in Liraspaces. Expect: the event is made again.
+- [ ] Delete the call in Liraspaces. Expect: the event disappears from the calendar and the second person is told it is cancelled.
+- [ ] Disconnect Google and connect again without ticking the Calendar permission. Expect: calls still work, the panel offers **Allow calendar invitations**, and new calls email the invitation from Gmail as before.
+
+### A47. Reminders by email (24 Nov 2026)  ◐
+Needs email set up (docs/03-sop/email-setup.md) and two people with mailboxes you can read.
+- [ ] Calls page. Expect: a box "Reminders by email" with two switches, both on. Without email set up Expect: both are disabled and the box says email is not set up.
+- [ ] Schedule a call that starts in about 20 minutes and invite the second person. Wait until it is 15 minutes away. Expect: within a minute the second person gets "Reminder: ... starts in 15 minutes" with the time and the link; the person who scheduled it (not invited) gets nothing.
+- [ ] Wait another few minutes. Expect: no second email for the same call.
+- [ ] Make a repeating call (daily) and invite a team. Expect: each member gets one reminder per day.
+- [ ] The second person switches off the call reminder and a new call comes up. Expect: they get nothing; the other invited people still do.
+- [ ] Give a ticket to the second person (their exact name as assignee) with a due date of tomorrow. Expect: after 07:00 UTC they get "Due tomorrow: KEY" once; none for a done ticket, and none when two people in the organisation have the same name.
+- [ ] The same person has no access to the ticket's space. Expect: no email.
+
+### A46. Invite someone to one space (24 Nov 2026)  ◐
+Hosted app. You are the Owner with at least two spaces that have tickets, and a project, a roadmap and a dashboard tied to the first space (plus ones tied to the other, and a dashboard across both). Use a second address you can open (or copy the link when email is not connected).
+- [ ] People tab, **Invite**: type the address, choose the space, the access (Can view, Can edit or Can manage) and a role. Expect: choosing a space removes Admin from the roles and shows four switches (Linked projects, Linked roadmaps, Dashboards of this space only, Sprints), all on; the pending list says the space and the access.
+- [ ] Open the invitation link in a private window, press **Create an account** and sign up with that address. Expect: after signing up you come back to the invitation and can press **Accept invitation** (confirm the address first when email is set up, A45).
+- [ ] After accepting. Expect: "Open the shared workspace" and "Open my workspace"; press **Open my workspace**: you land in your own, empty workspace, never in the inviter's.
+- [ ] Open the account menu. Expect: two entries, **My workspace** (in bold) and the inviter's workspace with "(invited)". Press the second. Expect: the app reloads in the shared workspace and stays there until you log out; after logging out and in you are in your own again.
+- [ ] In the shared workspace. Expect: only the invited space in the sidebar, with a small **Invited** tag after its name; no other space; no Teams page content. Open the space: every ticket of it is listed.
+- [ ] Projects, roadmaps, dashboards. Expect: only the project and roadmap tied to the invited space and the dashboard that uses only that space; nothing tied to the other space, none for a dashboard across both spaces.
+- [ ] As the Owner, People tab, **Access**, kind **Space**, the invited space. Expect: a list "People invited to this space" with four switches per person. Switch off **Projects**; the person reloads. Expect: the projects are gone and roadmaps and dashboards stay. Switch off **Sprints**. Expect: the Sprints section and pages are gone for them, tickets still show.
+- [ ] Invite someone with all switches off. Expect: they see the space's tickets and comments and no project, roadmap or dashboard.
+- [ ] With **Can edit**: create a ticket, change one, comment, add a project and a roadmap for that space. Expect: it works; a project for another space is refused. With **Can view**: Expect: you can read everything but cannot create or change anything. With role **Viewer** and access Can edit: Expect: view only.
+- [ ] As the invited person try to invite someone, rename or delete the space. Expect: not possible.
+- [ ] As the Owner open the same space. Expect: no **Invited** tag for you, and you see what they created.
+- [ ] Try to open another space of that organisation by its address while invited to one. Expect: not found, nothing leaks.
+- [ ] Sign up with Google, then use Forgot password for that address. Expect: an email saying to use the Google button, no reset link; no password is ever asked for a Google account.
+
+### A45. Confirm your email and reset your password (24 Nov 2026)  ◐
+Needs email set up (docs/03-sop/email-setup.md) and a mailbox you can read. Without email set up only the last three lines apply.
+- [ ] Sign up with email and password using your own address. Expect: an email "Confirm your email for Liraspaces" with a link to the site; in the app a small box at the bottom left asks you to confirm.
+- [ ] Press **Send it again** in that box, then once more, then a third time. Expect: new emails the first times; then a message that a link was sent a moment ago.
+- [ ] Open the link. Expect: "Your email is confirmed" and **Open Liraspaces**; the box is gone after you reload the app. Open the same link again: "This link did not work".
+- [ ] On the log-in page press **Forgot password?**, enter your address. Expect: "Check your email", the same text for an address that has no account, and an email only for the real one.
+- [ ] Open the reset link, type 5 characters and save. Expect: "Use at least 10 characters." Then a new password. Expect: "Password changed"; the old password no longer logs in, the new one does; an email says the password was changed.
+- [ ] Use the reset link a second time, and one older than an hour. Expect: "expired or was already used" with a link to ask again.
+- [ ] Be logged in on a phone, reset the password on the laptop. Expect: the phone is logged out.
+- [ ] Invite a second address to your organisation; sign that person up but do not confirm; open the invitation. Expect: it asks them to confirm the address first. After confirming it works.
+- [ ] Without email set up: open **Forgot password?** and send. Expect: a message that email is not set up; no confirm box in the app.
+
 ### A44. Already signed in: the public pages open the app (21 Nov 2026)  ◐
 Hosted app, an account that is signed in.
 - [ ] Sign in, then close the tab (do not log out) and open the site address again. Expect: you land in your workspace, not on the landing page.

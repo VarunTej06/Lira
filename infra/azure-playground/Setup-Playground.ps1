@@ -27,7 +27,7 @@
   - Needs: Azure CLI, Node 22, and Ubuntu on WSL with Docker (for the images and isolation steps).
 #>
 param(
-  [ValidateSet('check', 'build', 'infra', 'database', 'isolation', 'google', 'images', 'deploy', 'edge', 'status', 'all', 'show')]
+  [ValidateSet('check', 'build', 'infra', 'database', 'isolation', 'google', 'mail', 'images', 'deploy', 'edge', 'status', 'all', 'show')]
   [string]$Step = 'check',
   [string]$PgLocation = 'centralus',        # PostgreSQL is refused in eastus for this offer; centralus worked
   [string]$Location = 'eastus',
@@ -35,6 +35,7 @@ param(
   [string]$WebTag = 'v1',
   [string]$ApiTag = 'v1',
   [string]$GoogleClientId = '',             # from the Google Cloud project's OAuth client; the secret is read from the GOOGLE_CLIENT_SECRET environment variable
+  [string]$MailFrom = '',                   # the sender address of the Azure Communication Services Email domain, for -Step mail; the connection string is read from the MAIL_CONNECTION_STRING environment variable
   [int]$EdgeDelaySeconds = 600,             # Caddy waits this long, so there is time to change DNS before it asks Let's Encrypt
   [int]$ProxyHops = 3,                      # proxies in front of the API: Caddy, the web app's ingress, nginx. Check source_ip in audit_log.
   [switch]$RunTests
@@ -180,6 +181,15 @@ function Step-Google($state) {
   Write-Host "  https://$Domain/api/auth/google/callback   (people signing up and in with Google)"
 }
 
+function Step-Mail($state) {
+  Need $state 'vault' 'mail'
+  if (-not $MailFrom) { throw 'Give the sender address of your Azure Communication Services Email domain: -MailFrom DoNotReply@<your-domain>' }
+  if (-not $env:MAIL_CONNECTION_STRING) { throw 'Set the MAIL_CONNECTION_STRING environment variable to the Communication Services connection string first (it is not printed or saved to a file).' }
+  Az keyvault secret set --vault-name $state.vault --name 'mail-connection-string' --value $env:MAIL_CONNECTION_STRING | Out-Null
+  Set-Field $state 'mailFrom' $MailFrom
+  Write-Host 'Saved. The API will send "confirm your email" and "reset your password" mail from this address after: -Step deploy (again).'
+}
+
 function Step-Isolation($state) {
   $ErrorActionPreference = 'Continue'   # Docker writes its progress to the error stream; Windows PowerShell would treat that as a failure, the exit code is what counts
   Need $state 'pgHost' 'isolation'
@@ -232,6 +242,10 @@ function Step-Deploy($state) {
   if ($state.googleClientId) {                # Meet links and invitation emails through the Owner's Google account; without it the app asks for a pasted link
     $apiSecrets += @("google-client-secret=$(Get-KvSecret $state.vault 'google-client-secret')", "token-key=$(Get-KvSecret $state.vault 'token-encryption-key')")
     $apiEnv += @("GOOGLE_CLIENT_ID=$($state.googleClientId)", 'GOOGLE_CLIENT_SECRET=secretref:google-client-secret', 'TOKEN_ENCRYPTION_KEY=secretref:token-key', "GOOGLE_REDIRECT_URI=https://$Domain/api/google/callback")
+  }
+  if ($state.mailFrom) {                      # confirm-your-email and password-reset mail; without it the pages say email is not set up
+    $apiSecrets += "mail-connection-string=$(Get-KvSecret $state.vault 'mail-connection-string')"
+    $apiEnv += @('MAIL_CONNECTION_STRING=secretref:mail-connection-string', "MAIL_FROM=$($state.mailFrom)")
   }
   # An app that already exists must hold a secret before an environment variable may point at it, so set the secrets first
   if (Az-Exists containerapp show -n liraspaces-api -g $rg) { Az containerapp secret set -n liraspaces-api -g $rg --secrets @apiSecrets | Out-Null }
@@ -299,6 +313,7 @@ switch ($Step) {
   'database'  { Step-Database $state; Write-Host 'Next: -Step isolation (optional), then -Step images' }
   'isolation' { Step-Isolation $state }
   'google'    { Step-Google $state; Write-Host 'Next: -Step deploy (again, so the API gets the settings)' }
+  'mail'      { Step-Mail $state }
   'images'    { Step-Images $state; Write-Host 'Next: -Step deploy' }
   'deploy'    { Step-Deploy $state; Write-Host 'Next: -Step edge' }
   'edge'      { Step-Edge $state }

@@ -3,9 +3,10 @@ import type { Request, Response } from 'express';
 import type { ZodType } from 'zod';
 import { CONFIG, type Config } from '../config';
 import { AuthService, type SignedIn } from './auth.service';
+import { RecoveryService } from './recovery.service';
 import { ClientGuard } from './client.guard';
 import { GoogleLoginService, LOGIN_COOKIE } from './google-login.service';
-import { fieldErrors, loginSchema, signupSchema } from './schemas';
+import { fieldErrors, forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, verifyEmailSchema } from './schemas';
 import { clearedCookie, sessionCookie, tokenFromCookieHeader } from './session';
 
 /** The body as the schema allows it, or a 400 that names each field that is wrong. */
@@ -23,7 +24,7 @@ const tokenOf = (req: Request) => tokenFromCookieHeader(req.headers.cookie);
 export class AuthController {
   constructor(
     @Inject(AuthService) private readonly auth: AuthService, @Inject(CONFIG) private readonly config: Config,
-    @Inject(GoogleLoginService) private readonly googleLogin: GoogleLoginService,
+    @Inject(GoogleLoginService) private readonly googleLogin: GoogleLoginService, @Inject(RecoveryService) private readonly recovery: RecoveryService,
   ) {}
 
   private get origin(): string { return this.config.allowedOrigins[0] ?? ''; }
@@ -31,7 +32,7 @@ export class AuthController {
 
   /** Which ways of signing in this server offers, so the page shows only buttons that work. */
   @Get('auth/providers')
-  providers() { return { google: this.googleLogin.enabled }; }
+  providers() { return { google: this.googleLogin.enabled, email: this.recovery.enabled }; }
 
   /** Sends the browser to Google to sign in or sign up. */
   @Get('auth/google/start')
@@ -70,6 +71,36 @@ export class AuthController {
   async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.auth.logout(tokenOf(req), address(req));
     res.setHeader('Set-Cookie', clearedCookie(this.config.cookieSecure));
+  }
+
+  /** Confirms the address the link was sent to. */
+  @Post('auth/verify-email')
+  @HttpCode(204)
+  async verifyEmail(@Body() body: unknown, @Req() req: Request) {
+    await this.recovery.verify(parse(verifyEmailSchema, body).token, address(req));
+  }
+
+  /** The signed-in person asks for a new confirmation link. */
+  @Post('auth/resend-verification')
+  @HttpCode(204)
+  async resendVerification(@Req() req: Request) {
+    const me = await this.auth.me(tokenOf(req));
+    if (!me) throw new UnauthorizedException('You are not signed in.');
+    await this.recovery.resendVerification(me.user);
+  }
+
+  /** Same answer whether or not the address has an account. */
+  @Post('auth/forgot-password')
+  @HttpCode(204)
+  async forgotPassword(@Body() body: unknown, @Req() req: Request) {
+    await this.recovery.forgot(parse(forgotPasswordSchema, body).email, address(req));
+  }
+
+  @Post('auth/reset-password')
+  @HttpCode(204)
+  async resetPassword(@Body() body: unknown, @Req() req: Request) {
+    const input = parse(resetPasswordSchema, body);
+    await this.recovery.reset(input.token, input.password, address(req));
   }
 
   @Get('me')

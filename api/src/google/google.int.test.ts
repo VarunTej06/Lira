@@ -23,11 +23,11 @@ describe.skipIf(!ADMIN_URL)('Google connection, Meet links and invitation emails
 
   it('starts the sign-in with exactly the permissions it needs, a signed state, and no secret in the address', async () => {
     const owner = await db.signUp('g-start@example.com');
-    expect((await db.call('GET', base(owner), undefined, owner.session)).body).toEqual({ configured: true, connected: false, email: null });
+    expect((await db.call('GET', base(owner), undefined, owner.session)).body).toEqual({ configured: true, connected: false, email: null, calendar: false });
     const started = await db.call('POST', `${base(owner)}/connect`, undefined, owner.session);
     const url = new URL((started.body as { url: string }).url);
     expect(url.origin + url.pathname).toBe('https://accounts.google.com/o/oauth2/v2/auth');
-    expect(url.searchParams.get('scope')!.split(' ').sort()).toEqual(['email', 'https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/meetings.space.created', 'openid']);
+    expect(url.searchParams.get('scope')!.split(' ').sort()).toEqual(['email', 'https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/meetings.space.created', 'openid']);
     expect(url.searchParams.get('access_type')).toBe('offline');
     expect(url.searchParams.get('redirect_uri')).toContain('/api/google/callback');
     expect(url.toString()).not.toContain('client-secret');
@@ -38,7 +38,7 @@ describe.skipIf(!ADMIN_URL)('Google connection, Meet links and invitation emails
     const { back } = await connect(owner);
     expect(back.status).toBe(302);
     expect(back.location).toBe('https://test.liraspaces.com/app/calls?google=connected');
-    expect((await db.call('GET', base(owner), undefined, owner.session)).body).toEqual({ configured: true, connected: true, email: 'owner@gmail.com' });
+    expect((await db.call('GET', base(owner), undefined, owner.session)).body).toEqual({ configured: true, connected: true, email: 'owner@gmail.com', calendar: false });
     const stored = await db.rows<{ refresh_token: string }>('SELECT refresh_token FROM google_connections WHERE org_id = $1', [owner.orgId]);
     expect(stored[0].refresh_token).toMatch(/^v1\./);
     expect(stored[0].refresh_token).not.toContain('refresh-secret-1');

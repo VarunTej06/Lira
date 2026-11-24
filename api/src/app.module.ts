@@ -9,6 +9,13 @@ import { AzureBlobStore, BLOB_STORE, type BlobStore } from './attachments/blob-s
 import { AuditService } from './audit/audit.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
+import { RecoveryService } from './auth/recovery.service';
+import { AcsMailer } from './mail/acs-mailer';
+import { ChangesService } from './realtime/changes.service';
+import { EventsController } from './realtime/events.controller';
+import { RemindersController } from './reminders/reminders.controller';
+import { RemindersService } from './reminders/reminders.service';
+import { NoSystemMailer, SYSTEM_MAILER, type SystemMailer } from './mail/mailer';
 import { ClientGuard } from './auth/client.guard';
 import { CONFIG, type Config } from './config';
 import { DbService } from './db/db.service';
@@ -32,7 +39,7 @@ import { SpacesController } from './spaces/spaces.controller';
 import { SpacesService } from './spaces/spaces.service';
 
 /** Things a test replaces: file storage, email, and the way Google is reached. The real server uses none of these. */
-export interface AppOverrides { blobStore?: BlobStore; emailSender?: EmailSender; googleHttp?: Http }
+export interface AppOverrides { blobStore?: BlobStore; emailSender?: EmailSender; systemMailer?: SystemMailer; googleHttp?: Http }
 
 @Module({})
 export class AppModule {
@@ -41,9 +48,10 @@ export class AppModule {
     const blobStore = overrides.blobStore ?? (config.storage ? new AzureBlobStore(config.storage.account, config.storage.key, config.storage.container) : null);
     return {
       module: AppModule,
-      controllers: [AuthController, SpacesController, TicketsController, AttachmentsController, KvController, PeopleController, ObjectsController, InvitationsController, StandupsController, GoogleController, HealthController],
-      providers: [{ provide: CONFIG, useValue: config }, DbService, AuditService, MetricsService, AuthService, ClientGuard, SessionGuard, SpacesService, TicketsService, AttachmentsService, KvService, AccessService, PeopleService, ObjectsService, InvitationsService, StandupsService,
+      controllers: [AuthController, RemindersController, EventsController, SpacesController, TicketsController, AttachmentsController, KvController, PeopleController, ObjectsController, InvitationsController, StandupsController, GoogleController, HealthController],
+      providers: [{ provide: CONFIG, useValue: config }, DbService, AuditService, MetricsService, AuthService, RecoveryService, RemindersService, ChangesService, ClientGuard, SessionGuard, SpacesService, TicketsService, AttachmentsService, KvService, AccessService, PeopleService, ObjectsService, InvitationsService, StandupsService,
         { provide: BLOB_STORE, useValue: blobStore }, GoogleService, GoogleLoginService, { provide: GOOGLE_HTTP, useValue: overrides.googleHttp ?? fetch },
+        { provide: SYSTEM_MAILER, useValue: overrides.systemMailer ?? (config.mail ? new AcsMailer(config.mail.connectionString, config.mail.from) : new NoSystemMailer()) },
         { provide: EMAIL_SENDER, useFactory: (google: GoogleService) => overrides.emailSender ?? (config.google ? google : new NoEmailSender()), inject: [GoogleService] }],
     };
   }

@@ -16,6 +16,11 @@ export class FakeGoogle {
   /** The permissions Google says were granted when the code is exchanged. */
   grantedScope = 'openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/meetings.space.created https://www.googleapis.com/auth/gmail.send';
   omitRefreshToken = false;
+  /** Google refuses calendar calls when set. */
+  failCalendar = false;
+  /** Events held in the fake calendar, by id. */
+  readonly events = new Map<string, Record<string, unknown>>();
+  private eventNo = 0;
   private readonly pair = generateKeyPairSync('rsa', { modulusLength: 2048 });
   private readonly other = generateKeyPairSync('rsa', { modulusLength: 2048 });
   readonly keyId = 'test-key-1';
@@ -47,8 +52,18 @@ export class FakeGoogle {
     if (url === 'https://meet.googleapis.com/v2/spaces') return this.failMeet ? json({ error: 'denied' }, 403) : json({ name: `spaces/${++this.meetings}`, meetingUri: `https://meet.google.com/abc-defg-h${String(this.meetings).padStart(2, '0')}` });
     if (url === 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send') return this.failGmail ? json({ error: 'quota' }, 429) : json({ id: 'm1' });
     if (url.startsWith('https://oauth2.googleapis.com/revoke')) return json({});
+    if (url.startsWith('https://www.googleapis.com/calendar/v3/calendars/primary/events')) return this.calendar(url, init?.method ?? 'GET', body, json);
     return json({ error: 'unexpected address' }, 404);
   };
+
+  private calendar(url: string, method: string, body: string, json: (data: unknown, status?: number) => Response): Response {
+    if (this.failCalendar) return json({ error: 'denied' }, 403);
+    const id = decodeURIComponent(new URL(url).pathname.split('/events/')[1] ?? '');
+    if (method === 'POST') { const made = `evt-${++this.eventNo}`; this.events.set(made, JSON.parse(body)); return json({ id: made }); }
+    if (method === 'PATCH') { if (!this.events.has(id)) return json({ error: 'gone' }, 404); this.events.set(id, { ...this.events.get(id), ...JSON.parse(body) }); return json({ id }); }
+    if (method === 'DELETE') { this.events.delete(id); return new Response(null, { status: 204 }); }
+    return json({ error: 'unexpected' }, 405);
+  }
 
   /** The emails sent, decoded back to what a person would read. */
   sentEmails(): { to: string; from: string; subject: string; text: string }[] {

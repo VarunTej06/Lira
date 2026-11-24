@@ -2,6 +2,7 @@ import { ConflictException, Inject, Injectable, NotFoundException } from '@nestj
 import { AuditService } from '../audit/audit.service';
 import { AttachmentsService } from '../attachments/attachments.service';
 import { DbService, type Queryable } from '../db/db.service';
+import { ChangesService } from '../realtime/changes.service';
 import { MetricsService } from '../observability/metrics.service';
 import type { CreateSpace, UpdateSpace } from './schemas';
 
@@ -17,7 +18,7 @@ const UNIQUE_VIOLATION = '23505';
 /** Spaces of one organisation. Every query carries the organisation, so one organisation can never reach another's rows. */
 @Injectable()
 export class SpacesService {
-  constructor(@Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService, @Inject(MetricsService) private readonly metrics: MetricsService, @Inject(AttachmentsService) private readonly files: AttachmentsService) {}
+  constructor(@Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService, @Inject(MetricsService) private readonly metrics: MetricsService, @Inject(AttachmentsService) private readonly files: AttachmentsService, @Inject(ChangesService) private readonly changes: ChangesService) {}
 
   /** `ids` limits the list to the spaces a person may view; null means every space of the organisation. */
   async list(orgId: string, ids: number[] | null): Promise<SpaceOut[]> {
@@ -37,6 +38,7 @@ export class SpacesService {
         return made.rows[0];
       });
       this.metrics.inc('space_writes_total', { action: 'create' });
+      await this.changes.publish(orgId, { kind: 'space', spaceId: Number(row.id) });
       return out(row);
     } catch (error) {
       if ((error as { code?: string }).code === UNIQUE_VIOLATION) throw new ConflictException({ code: 'key_taken', message: 'A space with this key already exists.' });
@@ -56,6 +58,7 @@ export class SpacesService {
       return changed.rows[0];
     });
     this.metrics.inc('space_writes_total', { action: 'update' });
+    await this.changes.publish(orgId, { kind: 'space', spaceId: id });
     return out(row);
   }
 
@@ -69,6 +72,7 @@ export class SpacesService {
     });
     await this.files.removeFiles(paths);
     this.metrics.inc('space_writes_total', { action: 'delete' });
+    await this.changes.publish(orgId, { kind: 'space', spaceId: null }); // the space is gone, so nobody may be told which one
   }
 
   /** No row changed: either the space is not in this organisation, or someone changed it since the caller read it. */

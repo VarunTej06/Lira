@@ -2,10 +2,13 @@ import { BadRequestException, ConflictException, ForbiddenException, Inject, Inj
 import type { ObjectKind } from '../access/access.service';
 import { AuditService } from '../audit/audit.service';
 import { DbService, type Queryable } from '../db/db.service';
+import { ChangesService } from '../realtime/changes.service';
 
 export interface MemberOut { userId: string; name: string; email: string; role: string; manageAccess: boolean; teamIds: string[] }
 export interface TeamOut { id: string; name: string; memberIds: string[] }
 export interface GrantOut { id: string; subjectType: 'user' | 'team'; subjectId: string; kind: ObjectKind; objectId: string; level: 'view' | 'edit' | 'manage' }
+
+export interface ShareOut { userId: string; name: string; email: string; projects: boolean; roadmaps: boolean; dashboards: boolean; sprints: boolean }
 
 const UNIQUE_VIOLATION = '23505';
 const invalid = (field: string, message: string) => new BadRequestException({ code: 'invalid_input', message, fields: { [field]: message } });
@@ -13,7 +16,7 @@ const invalid = (field: string, message: string) => new BadRequestException({ co
 /** People, teams and grants of one organisation. Every query carries the organisation, so one organisation never reaches another's. */
 @Injectable()
 export class PeopleService {
-  constructor(@Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService) {}
+  constructor(@Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService, @Inject(ChangesService) private readonly changes: ChangesService) {}
 
   async members(orgId: string): Promise<MemberOut[]> {
     const rows = await this.db.query<{ user_id: string; name: string; email: string; role: string; manage_access: boolean; team_ids: string[] }>(
@@ -21,6 +24,26 @@ export class PeopleService {
               COALESCE((SELECT array_agg(tm.team_id::text) FROM team_members tm JOIN teams t ON t.id = tm.team_id WHERE tm.user_id = m.user_id AND t.org_id = m.org_id), '{}') AS team_ids
          FROM memberships m JOIN users u ON u.id = m.user_id WHERE m.org_id = $1 ORDER BY u.name`, [orgId]);
     return rows.rows.map(r => ({ userId: r.user_id, name: r.name, email: r.email, role: r.role, manageAccess: r.manage_access, teamIds: r.team_ids }));
+  }
+
+  /** Who was invited to the space and what else of it each of them sees. */
+  async shares(orgId: string, spaceId: number): Promise<ShareOut[]> {
+    const rows = await this.db.query<{ user_id: string; name: string; email: string; projects: boolean; roadmaps: boolean; dashboards: boolean; sprints: boolean }>(
+      `SELECT s.user_id, u.name, u.email, s.projects, s.roadmaps, s.dashboards, s.sprints FROM space_shares s JOIN users u ON u.id = s.user_id
+        WHERE s.org_id = $1 AND s.space_id = $2 ORDER BY u.name`, [orgId, spaceId]);
+    return rows.rows.map(r => ({ userId: r.user_id, name: r.name, email: r.email, projects: r.projects, roadmaps: r.roadmaps, dashboards: r.dashboards, sprints: r.sprints }));
+  }
+
+  /** Changes the switches of a person who was invited to the space. Only someone with a row can be changed, so this never gives access. */
+  async setShares(orgId: string, actor: string, spaceId: number, userId: string, changes: Partial<Omit<ShareOut, 'userId' | 'name' | 'email'>>, ip: string): Promise<void> {
+    await this.db.transaction(async tx => {
+      const r = await tx.query(
+        `UPDATE space_shares SET projects = COALESCE($4, projects), roadmaps = COALESCE($5, roadmaps), dashboards = COALESCE($6, dashboards), sprints = COALESCE($7, sprints)
+          WHERE org_id = $1 AND space_id = $2 AND user_id = $3`,
+        [orgId, spaceId, userId, changes.projects ?? null, changes.roadmaps ?? null, changes.dashboards ?? null, changes.sprints ?? null]);
+      if (r.rowCount === 0) throw new NotFoundException('Not found.');
+      await this.audit.record({ actor, orgId, action: 'space.shares', outcome: 'ok', sourceIp: ip, detail: { spaceId, userId, ...changes } }, tx);
+    });
   }
 
   async updateMember(orgId: string, actor: string, userId: string, changes: { role?: string; manageAccess?: boolean }, ip: string): Promise<void> {
@@ -111,7 +134,7 @@ export class PeopleService {
 
   /** Gives, or changes, one level for one person or team on one object. The person, team and object must all be in this organisation. */
   async grant(orgId: string, actor: string, input: { subjectType: 'user' | 'team'; subjectId: string; kind: ObjectKind; objectId: string; level: GrantOut['level'] }, ip: string): Promise<GrantOut> {
-    return this.db.transaction(async tx => {
+    const made = await this.db.transaction(async tx => {
       await this.requireSubject(tx, orgId, input.subjectType, input.subjectId);
       await this.requireObject(tx, orgId, input.kind, input.objectId);
       const r = await tx.query<{ id: string }>(
@@ -121,6 +144,8 @@ export class PeopleService {
       await this.audit.record({ actor, orgId, action: 'grant.set', outcome: 'ok', sourceIp: ip, detail: { ...input } }, tx);
       return { id: r.rows[0].id, ...input };
     });
+    await this.changes.publish(orgId, { kind: 'space', spaceId: null }); // who sees which space changed
+    return made;
   }
 
   async revoke(orgId: string, actor: string, grantId: string, ip: string): Promise<void> {
@@ -129,6 +154,7 @@ export class PeopleService {
       if (!r.rows[0]) throw new NotFoundException('Not found.');
       await this.audit.record({ actor, orgId, action: 'grant.revoke', outcome: 'ok', sourceIp: ip, detail: { grantId, kind: r.rows[0].object_kind, objectId: r.rows[0].object_id } }, tx);
     });
+    await this.changes.publish(orgId, { kind: 'space', spaceId: null });
   }
 
   private async requireSubject(at: Queryable, orgId: string, type: 'user' | 'team', id: string): Promise<void> {

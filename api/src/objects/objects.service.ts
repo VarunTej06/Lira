@@ -4,11 +4,16 @@ import type { Me } from '../auth/auth.service';
 import { AuditService } from '../audit/audit.service';
 import { DbService } from '../db/db.service';
 import { MetricsService } from '../observability/metrics.service';
+import { tiedSpace } from './tied-space';
 
 export type ObjectType = 'project' | 'roadmap' | 'dashboard';
 export interface ObjectOut { id: string; position: number; doc: Record<string, unknown>; version: number; level: Level }
 
 interface Row { id: string; position: number; doc: Record<string, unknown>; version: number; created_by: string | null }
+
+/** What a person with limited access knows about the spaces: the level they hold on each, the keys, and their sharing switches. */
+interface SpaceContext { levels: Map<string, Level>; ids: Map<string, string>; off: Map<string, Set<ObjectType>> }
+const SWITCH: Record<ObjectType, 'projects' | 'roadmaps' | 'dashboards'> = { project: 'projects', roadmap: 'roadmaps', dashboard: 'dashboards' };
 
 const COLUMNS = 'id, position, doc, version, created_by';
 
@@ -24,19 +29,41 @@ export class ObjectsService {
     @Inject(MetricsService) private readonly metrics: MetricsService, @Inject(AccessService) private readonly access: AccessService,
   ) {}
 
-  /** What the person has on one object: their grants, and full access to a dashboard they made. */
-  private async level(me: Me, orgId: string, kind: ObjectType, row: Pick<Row, 'id' | 'created_by'>): Promise<Level> {
-    const granted = await this.access.levelOn(me, orgId, kind, row.id);
+  /** What the person has on one object: their grants, full access to a dashboard they made, and what the space it is tied to gives them. */
+  private async level(me: Me, orgId: string, kind: ObjectType, row: Pick<Row, 'id' | 'created_by' | 'doc'>): Promise<Level> {
+    const granted = higher(await this.access.levelOn(me, orgId, kind, row.id), this.viaSpace(kind, row.doc, await this.spaceContext(me, orgId)));
     return kind === 'dashboard' && row.created_by === me.user.id ? higher(granted, 'manage') : granted;
+  }
+
+  /** Null for an Owner or Admin, who have everything anyway. */
+  private async spaceContext(me: Me, orgId: string): Promise<SpaceContext | null> {
+    const visible = await this.access.visible(me, orgId, 'space');
+    if (visible === 'all') return null;
+    const spaces = await this.db.query<{ id: string; key: string }>('SELECT id, key FROM spaces WHERE org_id = $1', [orgId]);
+    const shares = await this.db.query<{ space_id: string; projects: boolean; roadmaps: boolean; dashboards: boolean }>(
+      'SELECT space_id, projects, roadmaps, dashboards FROM space_shares WHERE org_id = $1 AND user_id = $2', [orgId, me.user.id]);
+    const off = new Map<string, Set<ObjectType>>();
+    for (const s of shares.rows) off.set(String(s.space_id), new Set((['project', 'roadmap', 'dashboard'] as const).filter(k => !s[SWITCH[k]])));
+    return { levels: visible, ids: new Map(spaces.rows.map(s => [s.key, String(s.id)])), off };
+  }
+
+  /** The access a space gives to what is tied to it: what the person has on the space, at most Edit, unless they were told not to see this kind. */
+  private viaSpace(kind: ObjectType, doc: Record<string, unknown>, ctx: SpaceContext | null): Level {
+    const tied = tiedSpace(kind, doc);
+    const id = tied === null || ctx === null ? undefined : tied.id !== undefined ? String(tied.id) : ctx.ids.get(tied.key ?? '');
+    if (id === undefined || ctx === null || ctx.off.get(id)?.has(kind)) return 'none';
+    const have = ctx.levels.get(id) ?? 'none';
+    return atLeast(have, 'edit') ? 'edit' : have;
   }
 
   async list(me: Me, orgId: string, kind: ObjectType): Promise<ObjectOut[]> {
     const visible = await this.access.visible(me, orgId, kind);
+    const spaces = await this.spaceContext(me, orgId);
     const rows = await this.db.query<Row>(`SELECT ${COLUMNS} FROM objects WHERE org_id = $1 AND kind = $2 ORDER BY position, created_at, id`, [orgId, kind]);
     const out: ObjectOut[] = [];
     for (const r of rows.rows) {
       const own = kind === 'dashboard' && r.created_by === me.user.id;
-      const level: Level = visible === 'all' || own ? 'manage' : visible.get(r.id) ?? 'none';
+      const level: Level = visible === 'all' || own ? 'manage' : higher(visible.get(r.id) ?? 'none', this.viaSpace(kind, r.doc, spaces));
       if (level !== 'none') out.push({ id: r.id, position: r.position, doc: r.doc, version: r.version, level });
     }
     return out;
@@ -50,7 +77,8 @@ export class ObjectsService {
       const current = found.rows[0];
       if (!current) {
         if (input.version !== undefined) throw new NotFoundException('Not found.');
-        const mayCreate = kind === 'dashboard' ? role !== 'viewer' && role !== 'guest' : isAdminRole(role);
+        const inSpace = atLeast(this.viaSpace(kind, input.doc, await this.spaceContext(me, orgId)), 'edit'); // a project or roadmap of a space the person may edit
+        const mayCreate = kind === 'dashboard' ? role !== 'viewer' && role !== 'guest' : isAdminRole(role) || inSpace;
         if (!mayCreate) throw new ForbiddenException('You do not have access to this.');
         const made = await tx.query<Row>(
           `INSERT INTO objects (org_id, kind, id, position, doc, created_by) VALUES ($1, $2, $3, $4, $5::jsonb, $6) RETURNING ${COLUMNS}`,

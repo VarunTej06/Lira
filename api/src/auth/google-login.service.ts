@@ -100,7 +100,7 @@ export class GoogleLoginService {
     // Everything for calls is kept only when the person was asked at sign-up, and agreed to every permission (Google lets them tick each one)
     const granted = typeof tokens.scope === 'string' ? tokens.scope.split(' ') : [];
     const connection = started.i === 'signup' && typeof tokens.refresh_token === 'string' && granted.includes(MEET_SCOPE) && granted.includes(GMAIL_SCOPE) ? tokens.refresh_token : null;
-    return this.signIn(claims, ip, connection);
+    return this.signIn(claims, ip, connection, granted.join(' '));
   }
 
   private async refused(ip: string, reason: string): Promise<null> {
@@ -114,7 +114,7 @@ export class GoogleLoginService {
    * by the person who has just proven they own the address with Google, and its password is removed and its sessions ended, because
    * nobody had proven the address when the password was set. A new person gets an account and an organisation of one, as owner.
    */
-  private async signIn(claims: GoogleClaims, ip: string, refreshToken: string | null): Promise<GoogleDone> {
+  private async signIn(claims: GoogleClaims, ip: string, refreshToken: string | null, scopes: string): Promise<GoogleDone> {
     const token = newToken();
     const maxAgeSeconds = sessionSeconds(false, this.config.sessionHours, this.config.rememberDays);
     const outcome = await this.db.transaction(async tx => {
@@ -138,7 +138,7 @@ export class GoogleLoginService {
       }
       await this.auth.createSession(tx, userId, token, false, maxAgeSeconds);
       await tx.query('UPDATE users SET last_login_at = now() WHERE id = $1', [userId]);
-      if (refreshToken) await this.keepConnection(tx, userId, claims.email, refreshToken, ip);
+      if (refreshToken) await this.keepConnection(tx, userId, claims.email, refreshToken, ip, scopes);
       await this.audit.record({ actor: userId, action, outcome: 'ok', sourceIp: ip }, tx);
       return action;
     });
@@ -147,14 +147,14 @@ export class GoogleLoginService {
   }
 
   /** The person's own organisation (the one they own) gets this Google account for Meet links and email, as if they had pressed Connect Google. */
-  private async keepConnection(tx: Queryable, userId: string, email: string, refreshToken: string, ip: string): Promise<void> {
+  private async keepConnection(tx: Queryable, userId: string, email: string, refreshToken: string, ip: string, scopes: string): Promise<void> {
     const owned = await tx.query<{ org_id: string }>("SELECT org_id FROM memberships WHERE user_id = $1 AND role = 'owner' ORDER BY created_at LIMIT 1", [userId]);
     const orgId = owned.rows[0]?.org_id;
     if (!orgId) return;
     await tx.query(
-      `INSERT INTO google_connections (org_id, google_email, refresh_token, connected_by) VALUES ($1, $2, $3, $4)
-       ON CONFLICT (org_id) DO UPDATE SET google_email = EXCLUDED.google_email, refresh_token = EXCLUDED.refresh_token, connected_by = EXCLUDED.connected_by, connected_at = now()`,
-      [orgId, email, encryptToken(refreshToken, parseKey(this.config.google!.tokenKey)), userId]);
+      `INSERT INTO google_connections (org_id, google_email, refresh_token, connected_by, scopes) VALUES ($1, $2, $3, $4, $5)
+       ON CONFLICT (org_id) DO UPDATE SET google_email = EXCLUDED.google_email, refresh_token = EXCLUDED.refresh_token, connected_by = EXCLUDED.connected_by, scopes = EXCLUDED.scopes, connected_at = now()`,
+      [orgId, email, encryptToken(refreshToken, parseKey(this.config.google!.tokenKey)), userId, scopes]);
     await this.audit.record({ actor: userId, orgId, action: 'google.connect', outcome: 'ok', sourceIp: ip, detail: { via: 'sign-up' } }, tx);
   }
 }

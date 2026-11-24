@@ -1,10 +1,10 @@
-import { BadRequestException, Body, Controller, Delete, ForbiddenException, Get, HttpCode, Inject, Param, ParseUUIDPipe, Patch, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, ForbiddenException, Get, HttpCode, Inject, Param, ParseIntPipe, ParseUUIDPipe, Patch, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
 import type { ZodType } from 'zod';
 import { AccessService, type ObjectKind } from '../access/access.service';
 import { ClientGuard } from '../auth/client.guard';
 import { fieldErrors } from '../auth/schemas';
 import { SessionGuard, type AuthedRequest } from '../auth/session.guard';
-import { grantSchema, teamMembersSchema, teamSchema, updateMemberSchema } from './schemas';
+import { grantSchema, shareSchema, teamMembersSchema, teamSchema, updateMemberSchema } from './schemas';
 import { PeopleService } from './people.service';
 
 function parse<T>(schema: ZodType<T>, body: unknown): T {
@@ -26,6 +26,22 @@ export class PeopleController {
   @Get('access')
   async mine(@Param('orgId') orgId: string, @Req() req: AuthedRequest) {
     return { role: this.access.role(req.me, orgId), canManageAccess: await this.access.canManageAccess(req.me, orgId) };
+  }
+
+  /** Who was invited to a space and what else of it they see. */
+  @Get('spaces/:spaceId/shares')
+  async shares(@Param('orgId') orgId: string, @Param('spaceId', ParseIntPipe) spaceId: number, @Req() req: AuthedRequest) {
+    await this.admin(req, orgId);
+    return this.people.shares(orgId, spaceId);
+  }
+
+  @Put('spaces/:spaceId/shares/:userId')
+  @HttpCode(204)
+  async setShares(@Param('orgId') orgId: string, @Param('spaceId', ParseIntPipe) spaceId: number, @Param('userId', ParseUUIDPipe) userId: string, @Body() body: unknown, @Req() req: AuthedRequest) {
+    const actor = await this.admin(req, orgId);
+    const changes = parse(shareSchema.partial(), body);
+    if (Object.keys(changes).length === 0) throw new BadRequestException({ code: 'invalid_input', message: 'Nothing to change.' });
+    await this.people.setShares(orgId, actor, spaceId, userId, changes, address(req));
   }
 
   private async admin(req: AuthedRequest, orgId: string): Promise<string> {

@@ -5,14 +5,16 @@ import { CONFIG, type Config } from '../config';
 import { DbService, type Queryable } from '../db/db.service';
 import { MetricsService } from '../observability/metrics.service';
 import { hashPassword, spendCheckTime, verifyPassword } from './password';
+import { RecoveryService } from './recovery.service';
 import { WINDOW_MINUTES, attemptKey, isLocked } from './rate-limit';
 import type { LoginInput, SignupInput } from './schemas';
 import { hashToken, newToken, sessionSeconds } from './session';
 
 export interface PublicUser { id: string; email: string; name: string }
-export interface Membership { orgId: string; orgName: string; role: string }
+/** `hideSprints`: the person is in the organisation only through spaces whose owner switched sprints off for them. */
+export interface Membership { orgId: string; orgName: string; role: string; hideSprints: boolean }
 export interface SignedIn { token: string; maxAgeSeconds: number; user: PublicUser; organisations: Membership[] }
-export interface Me { user: PublicUser; organisations: Membership[] }
+export interface Me { user: PublicUser & { emailVerified: boolean }; organisations: Membership[] }
 
 const WRONG_LOGIN = 'The email or password is not correct.';
 const UNIQUE_VIOLATION = '23505';
@@ -23,7 +25,7 @@ export class AuthService {
     @Inject(DbService) private readonly db: DbService,
     @Inject(AuditService) private readonly audit: AuditService,
     @Inject(MetricsService) private readonly metrics: MetricsService,
-    @Inject(CONFIG) private readonly config: Config,
+    @Inject(CONFIG) private readonly config: Config, @Inject(RecoveryService) private readonly recovery: RecoveryService,
   ) {}
 
   /** Creates the account, an organisation of one with the person as its owner, and a first session. */
@@ -38,9 +40,10 @@ export class AuthService {
         await tx.query("INSERT INTO memberships (org_id, user_id, role) VALUES ($1, $2, 'owner')", [org.rows[0].id, user.rows[0].id]);
         await this.createSession(tx, user.rows[0].id, token, input.remember ?? false, maxAgeSeconds);
         await this.audit.record({ actor: user.rows[0].id, orgId: org.rows[0].id, action: 'auth.signup', outcome: 'ok', sourceIp: ip }, tx);
-        return { user: user.rows[0], organisations: [{ orgId: org.rows[0].id, orgName: `${input.name}'s space`, role: 'owner' }] };
+        return { user: user.rows[0], organisations: [{ orgId: org.rows[0].id, orgName: `${input.name}'s space`, role: 'owner', hideSprints: false }] };
       });
       this.metrics.inc('auth_signup_total', { outcome: 'ok' });
+      await this.recovery.sendVerification(signedIn.user);
       return { token, maxAgeSeconds, ...signedIn };
     } catch (error) {
       if ((error as { code?: string }).code === UNIQUE_VIOLATION) {
@@ -94,8 +97,8 @@ export class AuthService {
   async me(token: string | undefined): Promise<Me | null> {
     if (!token) return null;
     const hash = hashToken(token);
-    const found = await this.db.query<PublicUser>(
-      'SELECT u.id, u.email, u.name FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = $1 AND s.expires_at > now()', [hash]);
+    const found = await this.db.query<Me['user']>(
+      'SELECT u.id, u.email, u.name, u.email_verified AS "emailVerified" FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = $1 AND s.expires_at > now()', [hash]);
     const user = found.rows[0];
     if (!user) return null;
     await this.db.query("UPDATE sessions SET last_seen_at = now() WHERE token_hash = $1 AND last_seen_at < now() - interval '1 minute'", [hash]);
@@ -109,9 +112,12 @@ export class AuthService {
   }
 
   private async memberships(at: Queryable, userId: string): Promise<Membership[]> {
-    const rows = await at.query<{ org_id: string; name: string; role: string }>(
-      'SELECT o.id AS org_id, o.name, m.role FROM memberships m JOIN organisations o ON o.id = m.org_id WHERE m.user_id = $1 ORDER BY o.created_at', [userId]);
-    return rows.rows.map(r => ({ orgId: r.org_id, orgName: r.name, role: r.role }));
+    const rows = await at.query<{ org_id: string; name: string; role: string; hide_sprints: boolean }>(
+      `SELECT o.id AS org_id, o.name, m.role,
+              (m.role NOT IN ('owner', 'admin') AND EXISTS (SELECT 1 FROM space_shares s WHERE s.org_id = m.org_id AND s.user_id = m.user_id)
+                 AND NOT EXISTS (SELECT 1 FROM space_shares s WHERE s.org_id = m.org_id AND s.user_id = m.user_id AND s.sprints)) AS hide_sprints
+         FROM memberships m JOIN organisations o ON o.id = m.org_id WHERE m.user_id = $1 ORDER BY (m.role = 'owner') DESC, m.created_at`, [userId]); // their own workspace first, then the ones shared with them
+    return rows.rows.map(r => ({ orgId: r.org_id, orgName: r.name, role: r.role, hideSprints: r.hide_sprints }));
   }
 
   private async locked(emailKey: string, addressKey: string): Promise<boolean> {

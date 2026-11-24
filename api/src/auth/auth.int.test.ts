@@ -75,7 +75,7 @@ describe.skipIf(!ADMIN_URL)('sign-up, log-in and sessions on a real database', (
   });
 
   it('says Google sign-in is not offered when Google is not set up, and sends anyone who tries it to the log-in page', async () => {
-    expect((await call('GET', '/api/auth/providers')).body).toEqual({ google: false });
+    expect((await call('GET', '/api/auth/providers')).body).toEqual({ google: false, email: false });
     const started = await fetch(`${base}/api/auth/google/start`, { redirect: 'manual' });
     expect([started.status, started.headers.get('location')]).toEqual([302, `${ORIGIN}/login?error=google`]);
     const back = await fetch(`${base}/api/auth/google/callback?code=abc&state=x`, { redirect: 'manual' });

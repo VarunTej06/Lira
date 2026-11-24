@@ -28,11 +28,11 @@ Why the Container Instance: the sandbox refuses every certificate resource, so C
 | Invitations, calendar and e-mail (later phase) | Done: invitations by email (Gmail), calls with Google Meet links, repeating, shown in the calendar. No Microsoft Teams link creation yet |
 | Realtime events (SSE) | Not built. Other people's changes appear when the page reloads |
 | Importer from `data/` `[ADR-0008]` | Not built. New hosted accounts start empty |
-| Viva on the server | Not built. Viva runs in the browser, as in the local edition |
+| Viva on the server | First step built (24 Nov 2026): `POST /ai/ask` answers questions from the tickets the caller may see, with OpenAI, Anthropic or Gemini, on an administrator's allow-list; it reads and explains only. Previews, confirm and undo for changes, and the screen in the app that uses it, are not built; the app's own Viva still runs in the browser |
 | Front Door, WAF, private networking | Not in the rehearsal |
 | Audit log, metrics, health | Done: append-only `audit_log` table, `/metrics` counters, structured logs, `/health` and `/ready` on both services |
 
-Tests: 2736 in the app and 304 in the API (124 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
+Tests: 2736 in the app and 327 in the API (138 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
 
 ## 1. Goals and non-goals
 
@@ -138,7 +138,7 @@ Organisation → Space → Ticket. Projects, Sprints, Roadmaps, Dashboards, Team
 | Performance | p95 board load < 1.5 s for 2,000 tickets in a space; p95 write < 303 ms | Load test in staging |
 | Durability | Point-in-time restore; RPO ≤ 15 min, RTO ≤ 4 h (to be confirmed) | Quarterly restore drill (SOP 02) |
 | Auditability | Every write and permission change recorded, retained per policy | Audit tests and sampling |
-| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 2736 app tests and 304 API tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
+| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 2736 app tests and 327 API tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
 | Accessibility | WCAG 2.1 AA for core flows | Axe checks, manual review |
 
 ## 7. Deployment view (target, built in the DevOps step)

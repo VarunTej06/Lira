@@ -1,5 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { AccessService } from './access/access.service';
+import { AiController } from './ai/ai.controller';
+import { AiService } from './ai/ai.service';
+import { AI_HTTP, type AiHttp } from './ai/providers';
 import { GoogleLoginService } from './auth/google-login.service';
 import { GOOGLE_HTTP, GoogleService, type Http } from './google/google.service';
 import { GoogleController } from './google/google.controller';
@@ -44,7 +47,7 @@ import { SpacesController } from './spaces/spaces.controller';
 import { SpacesService } from './spaces/spaces.service';
 
 /** Things a test replaces: file storage, email, and the way Google is reached. The real server uses none of these. */
-export interface AppOverrides { blobStore?: BlobStore; emailSender?: EmailSender; systemMailer?: SystemMailer; googleHttp?: Http; breachHttp?: BreachHttp }
+export interface AppOverrides { blobStore?: BlobStore; emailSender?: EmailSender; systemMailer?: SystemMailer; googleHttp?: Http; breachHttp?: BreachHttp; aiHttp?: AiHttp }
 
 @Module({})
 export class AppModule {
@@ -53,8 +56,9 @@ export class AppModule {
     const blobStore = overrides.blobStore ?? (config.storage ? new AzureBlobStore(config.storage.account, config.storage.key, config.storage.container) : null);
     return {
       module: AppModule,
-      controllers: [VotesController, AuthController, RemindersController, EventsController, SpacesController, TicketsController, AttachmentsController, KvController, PeopleController, ObjectsController, InvitationsController, StandupsController, GoogleController, HealthController],
-      providers: [{ provide: CONFIG, useValue: config }, DbService, AuditService, MetricsService, VotesService, AuthService, RecoveryService, TwoStepService, BreachService, MaintenanceService, RemindersService, ChangesService, ClientGuard, SessionGuard, SpacesService, TicketsService, AttachmentsService, KvService, AccessService, PeopleService, ObjectsService, InvitationsService, StandupsService,
+      controllers: [AiController, VotesController, AuthController, RemindersController, EventsController, SpacesController, TicketsController, AttachmentsController, KvController, PeopleController, ObjectsController, InvitationsController, StandupsController, GoogleController, HealthController],
+      providers: [{ provide: CONFIG, useValue: config }, DbService, AuditService, MetricsService, VotesService, AuthService, RecoveryService, TwoStepService, BreachService, MaintenanceService, RemindersService, ChangesService, ClientGuard, SessionGuard, SpacesService, TicketsService, AttachmentsService, KvService, AccessService, PeopleService, ObjectsService, InvitationsService, StandupsService, AiService,
+        { provide: AI_HTTP, useValue: overrides.aiHttp ?? fetch },
         { provide: BLOB_STORE, useValue: blobStore }, GoogleService, GoogleLoginService, { provide: GOOGLE_HTTP, useValue: overrides.googleHttp ?? fetch },
         { provide: BREACH_HTTP, useValue: overrides.breachHttp ?? fetch },
         { provide: SYSTEM_MAILER, useValue: overrides.systemMailer ?? (config.mail ? new AcsMailer(config.mail.connectionString, config.mail.from) : new NoSystemMailer()) },

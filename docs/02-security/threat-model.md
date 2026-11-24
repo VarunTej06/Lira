@@ -55,7 +55,9 @@ Checked against the code, not a pen test. "Built" means the control exists and h
 | T12 Secrets | Partly: Key Vault in the rehearsal, a separate key encrypts Google refresh tokens. No secret scanning in a pipeline yet |
 | T14 Denial of service | Partly: body size limits, login attempt limits. No general rate limit |
 | T15 Audit | Built: `audit_log` is insert-only for the application role |
-| T6, T7, T10 | Not built or not applicable yet: AI runs in the browser, no organisation AI settings, no sign-out of leavers beyond removing the membership |
+| T6 Outbound calls | Built for Viva on the server: the three provider addresses are fixed in code, the allow-list is the administrator's `AI_PROVIDERS`, nothing from a request reaches an address, model names are restricted to plain characters |
+| T7 Prompt injection | Built for Viva on the server: ticket text is flattened, marked as data and kept apart from the question; the model has no way to write; the context holds only what the caller may view; negative tests cover a hidden space and another organisation |
+| T10 | Not built: no sign-out of leavers beyond removing the membership |
 
 Reminder emails go only to a person the system can identify without guessing: a call's invitees, or the assignee of a ticket when exactly one member of the organisation has that name and may see its space (a ticket stores a name, not an account, so an ambiguous name gets no email). Emails carry a ticket key and title, never its description or comments.
 

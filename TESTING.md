@@ -23,7 +23,7 @@ Run every command from the `lira-app` folder.
 | `npm run lint` | Style and mistake checker (oxlint). It must report **0 warnings** | |
 | `npm run build` | Type check and the production build | |
 | `npm run e2e` | The browser tests: 33 tests in real Chromium (Playwright 1.64.1, with axe-core for accessibility). Every main page opens without a console error; the storyboard and story box flows are driven by keyboard and mouse; every page is scanned against WCAG 2.1 A and AA with no critical or serious problem allowed (every page is clean today; the scan lists where to look when one appears). They start the dev server on port 5199 with `LIRA_DATA_DIR` in the system's temp folder, so `data/` is never touched. Needs `npx playwright install chromium` once; not part of `test:all` |
-| `cd api && npm test` | The API's own tests: 124 that need nothing, and 180 more against a real PostgreSQL when `TEST_DATABASE_URL` is set (not part of `test:all`; see `api/README.md`) | about 30 s |
+| `cd api && npm test` | The API's own tests: 138 that need nothing, and 189 more against a real PostgreSQL when `TEST_DATABASE_URL` is set (not part of `test:all`; see `api/README.md`) | about 30 s |
 | `npm run build:hosted` | The same, for the hosted edition (public pages at `/`, the app under `/app`). `npm run hosted` builds it and serves it at http://localhost:5175 | |
 | `npm audit` | Looks for known security problems in packages | |
 

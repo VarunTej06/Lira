@@ -7,6 +7,7 @@ The hosted edition's server: sign-up, log-in, log-out and "who am I", on Postgre
 | `POST /api/auth/signup` | Creates the account, an organisation of one (the person is its owner) and a session |
 | `POST /api/auth/login` | Checks the password and starts a session (`remember` makes it last 30 days) |
 | `POST /api/auth/logout` | Ends the session |
+| `GET /api/orgs/:orgId/ai/providers`, `POST /api/orgs/:orgId/ai/ask` | Viva on the server (a read-and-answer first step). `providers` lists the allowed model providers (name and model, never a key). `ask` takes `{ question, spaceId?, provider? }`, builds the context from only the tickets the caller may view (title, type, status, priority, assignee; at most 75, newest changes first, text flattened and marked as data), asks one provider and returns `{ answer, provider, model }`. A model never changes a record. A space the caller may not view is 404; no provider allowed is 503; a provider failure is 502 with no provider text; more than `AI_PER_USER_PER_HOUR` questions an hour is 429. The audit log keeps provider, model, token counts, ticket count and question length, never the question, the answer or ticket text |
 | `GET/PUT /api/me/reminders` | The signed-in person's own switches for reminder emails (`calls`, `due`; `available` says whether the server can send email). A clock inside the API (every minute, only when `MAIL_CONNECTION_STRING` is set and `REMINDERS` is not `false`) emails the people invited to a call 15 minutes before it starts, and the assignee of a ticket the day before it is due (from 07:00 UTC). A reminder is claimed in `reminders_sent` before it is sent, so two copies of the API never send it twice. A ticket's assignee is a name, so the email goes only when exactly one member of the organisation has that name and may see the space |
 | `GET /api/orgs/:orgId/google` | Whether Google is set up and connected, and `calendar`: whether the connection has the Calendar permission. A call then becomes an event in the connected account's calendar (`sendUpdates=all`, so Google emails the invitations and any change or cancellation; a repeating call is one repeating event ending with its last start) and `standup_calls.calendar_event_id` remembers it; an event the owner deleted in Google is made again on the next change. Without the permission the invitations go by Gmail as before. An owner who connected before is asked to approve once more ("Allow calendar invitations") |
 | `GET /api/orgs/:orgId/events` | A stream of server-sent events: `{ kind: 'ticket' | 'space' | 'object', spaceId }` each time a ticket or space of the organisation is made, changed or deleted, access to a space changes, or a project, roadmap, dashboard, storyboard or story box is saved or deleted (`object`, with no space: pages ask again for the ones they may see). A note names no title or text; the page asks the API again, which checks access as always. Each note is passed on only to people who may see that space, the session is checked again for each note and the stream ends when it is gone or after 55 minutes (the page reconnects), a comment every 25 seconds keeps proxies from closing it, and one person may hold 6 open. It works with several copies of the API: a write publishes through PostgreSQL `NOTIFY` and every copy `LISTEN`s. Shared settings (sprint definitions, teams, stand-up notes) do not push yet |
@@ -57,6 +58,10 @@ Calls that change something must come from an allowed origin and carry `X-Reques
 | `SESSION_HOURS`, `REMEMBER_DAYS` | Session lengths | `12`, `30` |
 | `PORT` | | `8080` |
 | `STORAGE_ACCOUNT`, `STORAGE_KEY` | Blob Storage account and key for attachments, set together. Without them the attachment routes answer 503 | none |
+| `AI_PROVIDERS` | Which model providers Viva may use, from `openai`, `anthropic`, `gemini`, comma-separated (the administrator's allow-list). Each listed one needs its key below, or the server does not start. Empty: Viva on the server is off | none |
+| `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY` | The provider keys, from the secret store (Key Vault), never from a file in the repository | none |
+| `OPENAI_MODEL`, `ANTHROPIC_MODEL`, `GEMINI_MODEL` | Model names (letters, digits, `.`, `_`, `-` only, because the Gemini name goes into its address). Check the defaults against what your key can use | `gpt-4o-mini`, `claude-sonnet-5-5`, `gemini-2.0-flash` |
+| `AI_PER_USER_PER_HOUR` | Questions one person may ask Viva in an hour, counted from the audit log so it holds across servers | `30` |
 | `STORAGE_CONTAINER` | Name of the private container | `attachments` |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `TOKEN_ENCRYPTION_KEY` | The Google OAuth client and the 32-byte (base64) key that protects stored tokens. All four together, or none: without them Google is off, a stand-up needs a pasted link and no email is sent | none |
 
@@ -73,8 +78,8 @@ It creates the `lira_app` role (which owns nothing) and applies what has not run
 ## Tests
 
 ```
-npm test                                   # 124 tests, no database needed
-TEST_DATABASE_URL=postgres://admin:...@host:5432/postgres npm test   # all 304
+npm test                                   # 138 tests, no database needed
+TEST_DATABASE_URL=postgres://admin:...@host:5432/postgres npm test   # all 327
 ```
 
 The database tests create a schema of their own and drop it at the end. They use the application role's real permissions through `role=lira_app` and never change its password. Point them only at a rehearsal or test server.

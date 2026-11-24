@@ -42,7 +42,7 @@
 | **Attachments** | **Add attachment** opens a window to choose the source: this computer (drag and drop or browse), a Google Drive, OneDrive or Dropbox share link, or any web link. |
 | **Dates** | A themed date picker everywhere a date is chosen. Click the month and year to jump to any month of any year. The month calendar has the same chooser and "+N more" days. |
 | **Security** | The 20-point check is in [SECURITY_REPORT.md](SECURITY_REPORT.md): the local API only answers Lira itself, safe file names, safe links, security headers, audit log, 0 known vulnerable packages. |
-| **Code health** | Large files split into small parts (no component over about 350 lines), 2535 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
+| **Code health** | Large files split into small parts (no component over about 350 lines), 2536 automated tests, zero lint warnings, no `any` types, no import cycles, and a data health check. Rules in [CLAUDE.md](CLAUDE.md). |
 
 ## Key Highlights
 
@@ -113,7 +113,7 @@ Other commands:
 | Command | What it does |
 |---|---|
 | `npm run dev:lan` | Same, and also opens Lira to your own Wi-Fi for a tablet or phone (private link and QR code in **Settings, Other devices**) |
-| `npm test` | 2535 automated tests (Vitest) |
+| `npm test` | 2536 automated tests (Vitest) |
 | `npm run test:health` | Read-only check of your `data/` folder (15 checks) |
 | `npm run test:all` | Type check, lint, all tests, data health |
 | `npm run build` | Type-check, then production build |

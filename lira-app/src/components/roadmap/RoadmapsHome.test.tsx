@@ -32,7 +32,7 @@ function show(list: Roadmap[]) {
   mount(<RoadmapsHome issues={[]} spaces={SPACES} onOpen={onOpen} />);
   return onOpen;
 }
-const cards = () => qa('[role="button"][tabindex="0"]');
+const cards = () => qa('[data-href]').filter(c => q('h3', c)); // a card is a plain box that holds buttons; its name is the button for the keyboard
 const names = () => cards().map(c => q('h3', c)!.textContent);
 const tab = (t: string) => byText('button', new RegExp(`^${t}`))!;
 
@@ -125,10 +125,18 @@ describe('RoadmapsHome', () => {
       show([rm('a', { milestones: [{ id: 'm', title: 'Launch', date: '2026-11-15', kind: 'milestone' }] as never })]);
       expect(document.body.textContent).toContain('5d: Launch');
     });
-    it('opens on click and on Enter', async () => {
+    it('opens on a click on the card, and from the keyboard by its name, which is a button', async () => {
       const onOpen = show([rm('a')]);
       await click(cards()[0]);
       expect(onOpen).toHaveBeenCalledWith('a');
+      onOpen.mockClear();
+      await click(q('h3 button', cards()[0]));
+      expect(onOpen).toHaveBeenCalledTimes(1); // once, not once for the name and once for the card
+    });
+    it('is not itself a button, because it holds buttons (a button inside a button cannot be used with a keyboard or a screen reader)', () => {
+      show([rm('a')]);
+      expect(cards()[0].getAttribute('role')).toBeNull();
+      expect(cards()[0].getAttribute('tabindex')).toBeNull();
     });
     it('stars and unstars without opening', async () => {
       const onOpen = show([rm('a')]);

@@ -45,7 +45,7 @@ function Progress({ summary }: { summary: HomeCard['summary'] }) {
       </div>
       <div className="flex flex-wrap gap-1.5 mt-3">
         {(Object.keys(STATUS_META) as RoadmapStatus[]).filter(s => summary.byStatus[s] > 0).map(s => (
-          <span key={s} className="text-3xs font-semibold px-1.5 py-0.5 rounded-full" style={{ background: STATUS_META[s].color + '22', color: STATUS_META[s].color }}><CountUp value={summary.byStatus[s]} suffix={` ${STATUS_META[s].label.toLowerCase()}`} /></span>
+          <span key={s} className="text-3xs font-semibold px-1.5 py-0.5 rounded-full text-lira-text inline-flex items-center gap-1" style={{ background: STATUS_META[s].color + '33' }}><span aria-hidden="true" className="w-1.5 h-1.5 rounded-full" style={{ background: STATUS_META[s].color }} /><CountUp value={summary.byStatus[s]} suffix={` ${STATUS_META[s].label.toLowerCase()}`} /></span>
         ))}
         {summary.total === 0 && <span className="text-3xs text-lira-muted">Empty roadmap</span>}
       </div>
@@ -57,16 +57,13 @@ function Progress({ summary }: { summary: HomeCard['summary'] }) {
 export function RoadmapCard({ card: { rm, summary, span }, space, menuOpen, onOpen, onToggleStar, onToggleMenu, onRename, onDuplicate, onToggleArchive, onDelete }: Props) {
   return (
     <div
-      role="button"
-      tabIndex={0}
       onClick={e => { e.stopPropagation(); onOpen(); }} {...roadmapLink(rm.id)}
-      onKeyDown={e => { if (e.key === 'Enter') onOpen(); }}
       className={`group relative rounded-2xl border border-lira-border bg-lira-surface p-4 cursor-pointer transition-all ${rm.archived ? 'opacity-75' : ''}`}
     >
       <div className="flex items-start gap-2">
         <div className="w-9 h-9 rounded-xl bg-orange-500/15 text-orange-500 flex items-center justify-center flex-shrink-0"><Map className="w-4.5 h-4.5" /></div>
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-lira-text truncate">{rm.name}</h3>
+          <h3 className="text-sm font-semibold text-lira-text truncate"><button type="button" onClick={e => { e.stopPropagation(); onOpen(); }} className="max-w-full truncate text-left cursor-pointer focus-visible:outline-none focus-visible:underline">{rm.name}</button></h3>
           <div className="text-2xs text-lira-muted flex items-center gap-1.5 mt-0.5">
             {space ? <span className="flex items-center gap-1"><Layers className="w-3 h-3" />{space.name}</span> : <span>No space</span>}
             {rm.archived && <span className="px-1.5 rounded-full bg-lira-border/60">Archived</span>}

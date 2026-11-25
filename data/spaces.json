@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "savedAt": "2026-11-13T09:32:21.542Z",
   "spaceCount": 8,
-  "totalIssueCount": 155,
+  "totalIssueCount": 161,
   "spaces": [
     {
       "id": 1,
@@ -72,8 +72,8 @@
       "color": "#0052CC",
       "description": "Lira product roadmap, feature development, DevOps and AI assistant",
       "createdAt": "2026-10-18T08:15:46.633Z",
-      "updatedAt": "2026-11-21T10:00:00.000Z",
-      "issueCount": 98,
+      "updatedAt": "2026-11-25T12:00:00.000Z",
+      "issueCount": 104,
       "file": "spaces/LIRA.json"
     },
     {

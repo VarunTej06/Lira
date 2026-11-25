@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-24T14:32:26.541Z",
+  "updatedAt": "2026-11-25T09:41:32.866Z",
   "entries": {
     "lira_accent": "#0C66E4",
-    "lira_active_space_id": "4",
+    "lira_active_space_id": "6",
     "lira_ai_base_url": "https://api.ai.kodekloud.com/v1",
     "lira_ai_confirm_writes": "1",
     "lira_ai_model": "google/gemini-4-hydrogen",

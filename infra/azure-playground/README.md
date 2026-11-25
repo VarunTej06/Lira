@@ -40,6 +40,8 @@ Every step can be run again: names are kept in `.state.json`, existing resources
 | `az acr build`, `containerapp up --source` | `scheduleRun` denied | Build with Docker in WSL and push |
 | Container Apps environment | Name must be `container-app-env`; Log Analytics workspace denied | That name, `--logs-destination none` |
 | Container app replicas | Min 0 or 1, max 0 to 2 | 0/2 for web, 1/2 for the API |
+| Container Apps environment stuck | On 24 Nov 2026 `container-app-env` stayed in provisioning state `Waiting` for 20+ minutes after the CLI lost its connection while polling | Check `az containerapp env show ... --query properties.provisioningState`; if it is still `Waiting` after about 10 minutes, delete it and run `-Step deploy` again |
+| API tests against the rehearsal database | From far away (India to central US) many tests pass the 10 s limit and fail on time, not on logic | Run the tests on a local PostgreSQL (see `api/README.md`); use `-RunTests` only from a machine near the database |
 | Any certificate (managed or uploaded) | `RequestDisallowedByPolicy` | Caddy gets a Let's Encrypt certificate itself |
 | Key Vault | Standard tier, 7-day soft delete, purge protection cannot be switched off | Those settings |
 | PostgreSQL | Not in `eastus`; needs Burstable B1ms or B2s, 32 GB, P4 tier, no HA, no zone, 7-day backup, no geo backup, no autogrow | `centralus` and those settings; no `--high-availability` option on this CLI |

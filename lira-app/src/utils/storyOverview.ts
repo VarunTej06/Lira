@@ -32,3 +32,9 @@ export function headline(rows: readonly BoxRow[]): Headline {
 /** The boxes that have sized something, oldest first, up to six, for the chart of points per box. */
 export const chartRows = (rows: readonly BoxRow[]): BoxRow[] =>
   rows.filter(r => r.points > 0).sort((a, b) => a.box.createdAt.localeCompare(b.box.createdAt)).slice(-6);
+
+/** The grid cell of the nth current box card: three to a row, two rows, and the next page of six starts to the right of the last. */
+export const cardSlot = (index: number): { column: number; row: number } => ({
+  column: Math.floor(index / 6) * 3 + (index % 3) + 1,
+  row: Math.floor((index % 6) / 3) + 1,
+});

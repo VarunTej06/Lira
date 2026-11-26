@@ -1,6 +1,6 @@
 import { ArrowRight, Boxes, CheckCheck, Layers, Plus, Target, Timer } from 'lucide-react';
 import type { Space } from '../../types/space';
-import { chartRows, headline, type BoxRow } from '../../utils/storyOverview';
+import { cardSlot, chartRows, headline, type BoxRow } from '../../utils/storyOverview';
 import { minutesOf } from '../../utils/storyRound';
 import { scopeLabel } from '../../utils/storybox';
 import { AnimatedValue, CountUp, GrowBar, GrowColumn } from '../common/motion';
@@ -15,10 +15,10 @@ function StatusBadge({ open }: { open: boolean }) {
 }
 
 /** One current box as a card: where it is, how far along, and what it has sized. */
-function BoxCard({ row, spaces, onOpen }: { row: BoxRow; spaces: readonly Space[]; onOpen: (id: string) => void }) {
+function BoxCard({ row, spaces, onOpen, slot }: { row: BoxRow; spaces: readonly Space[]; onOpen: (id: string) => void; slot: { column: number; row: number } }) {
   const minutes = minutesOf(row.box);
   return (
-    <button type="button" onClick={() => onOpen(row.box.id)} className="text-left bg-white border border-lira-border rounded-2xl p-4 space-y-3 hover:border-lira-blue transition-colors cursor-pointer">
+    <button type="button" onClick={() => onOpen(row.box.id)} style={{ gridColumn: slot.column, gridRow: slot.row }} className="text-left bg-white border border-lira-border rounded-2xl p-4 space-y-3 hover:border-lira-blue transition-colors cursor-pointer">
       <div className="flex items-start gap-3">
         <span className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-lira-blue-light text-lira-blue"><Layers className="w-5 h-5" /></span>
         <div className="min-w-0 flex-1">
@@ -149,7 +149,7 @@ export function StoryBoxesOverview({ rows, spaces, canManage, onOpen, onCreate }
             <div className="bg-white border border-lira-border rounded-2xl px-4 py-8 text-center text-xs text-lira-muted">
               {rows.length === 0 ? (canManage ? 'Make a story box to start estimating together.' : 'Nobody has made a story box you can see yet.') : 'No story box is open. Make a new one, or reopen one from the list below.'}
             </div>
-          ) : <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">{current.map(r => <BoxCard key={r.box.id} row={r} spaces={spaces} onOpen={onOpen} />)}</div>}
+          ) : <div className="bg-white border border-lira-border rounded-2xl p-3"><div className="grid grid-rows-2 auto-cols-[85%] md:auto-cols-[calc((100%-1.5rem)/3)] gap-3 overflow-x-auto pb-3">{current.map((r, i) => <BoxCard key={r.box.id} row={r} spaces={spaces} onOpen={onOpen} slot={cardSlot(i)} />)}</div></div>}
         </section>
 
         {rows.length > 0 && <BoxTable rows={[...rows].sort(newest)} spaces={spaces} onOpen={onOpen} />}

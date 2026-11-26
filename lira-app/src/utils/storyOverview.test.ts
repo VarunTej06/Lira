@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { makeIssue } from '../test/factories';
 import { newBox, type StoryBox } from './storybox';
-import { boxRows, chartRows, headline, localSummary } from './storyOverview';
+import { boxRows, cardSlot, chartRows, headline, localSummary } from './storyOverview';
 
 const box = (id: string, over: Partial<StoryBox> = {}): StoryBox => ({ ...newBox(id, id, { type: 'space', spaceId: 1 }, `2026-11-0${id}T00:00:00Z`, 'A', 5), ...over });
 const issues = [makeIssue({ id: 1, spaceId: 1 }), makeIssue({ id: 2, spaceId: 1 }), makeIssue({ id: 3, spaceId: 1, type: 'epic' }), makeIssue({ id: 4, spaceId: 2 })];
@@ -40,5 +40,12 @@ describe('the chart of points per box', () => {
     const sums = new Map(boxes.map((b, i) => [b.id, { sized: 1, points: i === 0 ? 0 : i }]));
     const rows = chartRows(boxRows(boxes, issues, sums));
     expect(rows.map(r => r.box.id)).toEqual(['3', '4', '5', '6', '7', '8']);
+  });
+});
+
+describe('where a current box card sits', () => {
+  it('fills two rows of three, then continues to the right in the same two rows', () => {
+    expect([0, 1, 2, 3, 4, 5].map(cardSlot)).toEqual([{ column: 1, row: 1 }, { column: 2, row: 1 }, { column: 3, row: 1 }, { column: 1, row: 2 }, { column: 2, row: 2 }, { column: 3, row: 2 }]);
+    expect([6, 7, 8, 9].map(cardSlot)).toEqual([{ column: 4, row: 1 }, { column: 5, row: 1 }, { column: 6, row: 1 }, { column: 4, row: 2 }]);
   });
 });

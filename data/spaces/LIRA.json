@@ -6337,7 +6337,7 @@
           "author": "VY",
           "authorInitials": "VY",
           "createdAt": "2026-11-25T12:00:00.000Z",
-          "description": "created this story",
+          "description": "created this task",
           "id": "f07b3b2c-2192-457c-ae5e-645242dcea83",
           "type": "created"
         },
@@ -6388,7 +6388,7 @@
       "storyPoints": 3,
       "subtasks": [],
       "title": "Ticket assignee list uses real teammates, and tickets can be assigned from an epic",
-      "type": "story",
+      "type": "task",
       "updatedAt": "2026-11-25T12:00:00.000Z",
       "watchers": [
         "VY"
@@ -6463,7 +6463,7 @@
           "author": "VY",
           "authorInitials": "VY",
           "createdAt": "2026-11-25T12:00:00.000Z",
-          "description": "created this story",
+          "description": "created this task",
           "id": "3cc483d9-e654-4d03-8c59-541700789253",
           "type": "created"
         },
@@ -6515,7 +6515,7 @@
       "storyPoints": 8,
       "subtasks": [],
       "title": "Viva on the server with OpenAI, Anthropic and Gemini",
-      "type": "story",
+      "type": "task",
       "updatedAt": "2026-11-25T12:00:00.000Z",
       "watchers": [
         "VY"

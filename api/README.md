@@ -67,7 +67,7 @@ Calls that change something must come from an allowed origin and carry `X-Reques
 
 ## Database
 
-Migrations are the numbered files in `migrations/`. As the server admin:
+Migrations are the numbered files in `migrations/`. After adding one, run `npm run build` and `npm run schema-doc` to rewrite `../database/SCHEMA.md` (a test fails when it is out of date); `../database/README.md` explains the rules. As the server admin:
 
 ```
 ADMIN_DATABASE_URL=postgres://admin:...@host:5432/postgres APP_DB_PASSWORD=... npm run migrate

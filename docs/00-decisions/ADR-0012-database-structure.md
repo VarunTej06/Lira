@@ -1,6 +1,6 @@
 # ADR-0012: How the hosted database is structured
 
-- **Status:** Proposed (27 Nov 2026). Not decided. Nothing in the database changes until the owner accepts a part of it.
+- **Status:** Option 1 done (28 Nov 2026). Option 2 proposed, not decided: nothing in the database changes until the owner accepts a part of it, and it needs a real PostgreSQL to test against.
 - **Date proposed:** 2026-11-27
 - **Decision owner:** product owner
 
@@ -32,4 +32,6 @@ Do 1 now, then 2 in this order, one migration each, each with its tests: schemas
 - `docs/02-security/secure-coding-standard.md` and `docs/01-architecture/LLD.md` are updated with the new layout.
 
 ## Decision
-Open. Please choose: 1 only, 1 then 2 in full, or 1 then only some parts of 2.
+Option 1 was approved on 28 Nov 2026 and built: `database/README.md`, `database/SCHEMA.md` (generated from the migrations by `npm run schema-doc` in `api/`, kept true by a test), and the `database/` folder as the home of the description. The migrations stay in `api/migrations/`.
+
+Option 2 is open. Its changes (schemas, row-level security, views, functions) cannot be verified without a PostgreSQL to run the API tests against, which this development machine does not have (no Docker, no local PostgreSQL). Do it in a session that has one, one migration at a time.

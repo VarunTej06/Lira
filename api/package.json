@@ -7,6 +7,7 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/main.js",
     "migrate": "node dist/db/migrate-cli.js",
+    "schema-doc": "node dist/db/schema-doc-cli.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },

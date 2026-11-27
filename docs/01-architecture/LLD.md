@@ -40,7 +40,7 @@ Every request is authenticated, scoped to an organisation and authorised per obj
 
 **Differences from the proposal below:** tickets keep comments, subtasks and links inside the ticket row instead of separate tables; there are no `columns` or `space_members` tables (grants replace the latter); the audit log is the `audit_log` table in the same database but with insert-only rights; the API paths are `/api/orgs/:orgId/...`, not `/api/v1`; the full list is in [`api/README.md`](../../api/README.md). Settings are the variables in the same file.
 
-**App, hosted mode** (`lira-app/src`): `utils/edition.ts` (which edition), `components/layout/SessionGate.tsx` (sign-in gate), `services/authApi.ts`, `hostedSync.ts`, `hostedObjects.ts`, `kvMirror.ts` (hosted mode), `utils/hostedOrg.ts` (the active organisation), the public pages and sign-up in `components/public/`, Teams and access in `components/teams/`, calls in `components/standup/` and `components/standups/`.
+**App, hosted mode** (`lira-app/src`): `utils/edition.ts` (which edition), `components/layout/SessionGate.tsx` (sign-in gate), `services/authApi.ts`, `hostedSync.ts`, `hostedObjects.ts`, `kvMirror.ts` (hosted mode), `utils/hostedOrg.ts` (the active organisation), the public pages and sign-up in `components/public/`, Settings in `components/settings/` (the rail and its pages: users, teams, access, account, security, calls, notifications, import; a person's or team's page lists what they can reach from `GET /api/orgs/:orgId/grants`), the people, team, access and import panels they reuse in `components/teams/`, calls in `components/standup/` and `components/standups/`.
 
 ## 1. Module layout (target monorepo `[ADR-0007]`)
 

@@ -449,7 +449,7 @@ Needs the hosted app running against the API (a cloud rehearsal, A33). Sign up w
 
 ### A36. Teams, access and invitations (20 Nov 2026)  ◐
 Needs the hosted app against the API (a cloud rehearsal). Use two browsers (or one normal and one private window): the owner in one, the invited person in the other.
-- [ ] As the owner, open the account menu, Teams and access. Expect: People, Teams and Access tabs, and the owner listed as Owner.
+- [ ] As the owner, open the account menu, **Settings**, then **Users** in the rail. Expect: the owner listed as Owner (the People, Teams and Access tabs are now the pages Users, Teams and Access, A62).
 - [ ] People: invite an email with role Member. Expect: since email is not connected, a message with a link to copy, shown once; the invitation is listed under "Waiting to join".
 - [ ] In the other browser, sign up with that email (or log in), open the copied link, press Accept invitation. Expect: "You have joined" and the app opens with no spaces at all.
 - [ ] Try the same link again, and a link opened by a different account. Expect: "not valid any more", and "sent to a different email address".
@@ -465,7 +465,7 @@ Needs the hosted app against the API (a cloud rehearsal). Use two browsers (or o
 
 ### A37. Stand-up calls (21 Nov 2026)  ◐
 Needs the hosted app against the API, an owner and a second person who is a Member (see A36).
-- [ ] As the owner open the account menu, Calls. Expect: "No calls are scheduled for you." and a Schedule a call button.
+- [ ] As the owner open the account menu, **Settings**, then **Calls** in the rail. Expect: "No calls are scheduled for you." and a Schedule a call button.
 - [ ] Schedule one for the second person (or a team): title, a start time, 15 minutes, a Google Meet link, tick the guest. Expect: it appears under Upcoming with "Invited: ..." and a Join call button; a note says nobody was emailed because email is not connected.
 - [ ] Try a link on another site (for example https://example.com/x) and one starting with http://. Expect: refused before sending, with a message naming Google Meet and Microsoft Teams.
 - [ ] Try to schedule with nobody ticked. Expect: "Invite at least one person or team."
@@ -573,7 +573,7 @@ Both editions, any page.
 - [ ] Use the arrow keys, Home and End. Expect: the highlighted row moves and wraps round; moving the mouse over a row highlights it; a click opens it. Tab keeps the cursor in the box.
 - [ ] Press Escape, or click outside the box. Expect: it closes and the cursor goes back to where it was.
 - [ ] Choose **Create a ticket** and **Create a space**. Expect: the usual dialogs open.
-- [ ] Hosted edition: **Calls** and **Teams and access** are listed under Go to; the local edition does not list them.
+- [ ] Hosted edition: **Settings**, **Calls** and **Users and teams** are listed under Go to; the local edition does not list them.
 - [ ] With a screen reader or the accessibility panel of the browser. Expect: a dialog named "Command palette", a search box that announces the chosen result, and result groups.
 
 ### A54. Story boxes (24 Nov 2026)  ◐
@@ -591,7 +591,7 @@ Superseded by A58 for voting: the table of points under **Your points** was repl
 
 ### A52. Import a local workspace (24 Nov 2026)  ◐
 Hosted app, signed in as the Owner. Use a copy of the local data folder (never the real one), for example copy `data/` to a temporary folder first and leave `private` out.
-- [ ] Teams and access, tab **Import**. Expect: a short explanation and two file choices (Files, and a data folder); nothing is shown yet.
+- [ ] Settings, **Import** (rail, under Workspace). Expect: a short explanation and two file choices (Files, and a data folder); nothing is shown yet.
 - [ ] Choose the copy's `lira-workspace.json`. Expect: "Found N spaces, N tickets, ..." and an Import button; nothing has been sent (the sidebar is unchanged).
 - [ ] Choose the whole data folder copy instead (including `projects.json`, `dashboards.json`, `roadmaps` and `private`). Expect: spaces and tickets found, plus projects, roadmaps and dashboards; the secrets folder is never read; files it does not use are listed under "Not used".
 - [ ] Press Import. Expect: "Importing x of y", then "Imported N spaces, N tickets, ...". The new spaces appear in the sidebar with their tickets.
@@ -605,7 +605,7 @@ Hosted app, signed in as the Owner. Use a copy of the local data folder (never t
 Hosted app with the Google key set (Security shows the Turn on button), a phone with an authenticator app, and `BREACH_CHECK=true`.
 - [ ] Sign up with the password `password123`. Expect: refused with a message that the password appears in a list of leaked passwords. A long unusual password is accepted.
 - [ ] Use Forgot password and choose `password123` as the new one. Expect: the same refusal, and the old password still works.
-- [ ] Account menu, **Security**. Expect: "Off" and **Turn on**. Press it. Expect: a key to type into the app and a link; type the key into the authenticator app, type its six digits, press **Turn on**. Expect: ten recovery codes, shown once.
+- [ ] Settings, **Security** (rail, under Account). Expect: "Off" and **Turn on**. Press it. Expect: a key to type into the app and a link; type the key into the authenticator app, type its six digits, press **Turn on**. Expect: ten recovery codes, shown once.
 - [ ] Start again and type a wrong code. Expect: a message and nothing switched on; log out and in still works without a code.
 - [ ] Log out, log in with the password. Expect: a page "Enter your code", no app behind it. Type the six digits. Expect: you are in. Type the same code again at a later login within the same 30 seconds. Expect: refused, wait for the next code.
 - [ ] Log in and type five wrong codes. Expect: after the fifth the login must be started again.
@@ -710,7 +710,7 @@ Open a sprint, project or space call from its Stand-up button (the Agenda tab).
 - [ ] Press the icon, then Cancel, or press Escape. Expect: the box closes and nothing is saved. Post is greyed out while the box is empty.
 - [ ] Click the title, key or badge of a row. Expect: the ticket still opens as before.
 - [ ] Use Tab to reach a row's icon. Expect: it becomes visible while it has the keyboard focus.
-- [ ] Open the Calls page (/calls) and the hosted call list. Expect: no ticket rows there, so no icon.
+- [ ] Open the Calls page (Settings, Calls) and the hosted call list. Expect: no ticket rows there, so no icon.
 
 ### A41. Google sign-up connects Google for calls (21 Nov 2026)  ◐
 Needs the same set-up as A40. Use a Google account that has never been used here, and `https://test.liraspaces.com`.
@@ -759,3 +759,14 @@ Hosted edition only. Needs the server set up with `AI_PROVIDERS` and a key (see 
 - [ ] With the server not set up (or the provider down), ask a question. Expect: Viva still answers with the built-in engine and no error is shown.
 - [ ] Ask more than 30 questions in an hour (or lower the limit). Expect: the server answers are paused and the built-in engine answers instead.
 
+### A62. Settings: users, teams and what each can reach (27 Nov 2026)  ◐
+Hosted edition. Sign in as the owner, with at least one member invited, one team, and something shared with them (A46, A56).
+- [ ] Open the account menu. Expect: **Profile**, **Settings** and **Log out**; Teams and access, Security and Calls are no longer listed there. Press **Settings**. Expect: a page with a rail on the left in three groups (Identity and management: Users, Teams, Access; Account: Account settings, Security; Workspace: Calls, Notifications, Import) and **Account settings** open.
+- [ ] Press **Users**. Expect: the invite form and the people list. Press a person's name. Expect: their own page with their role, their teams and an **Access** table (name, type, level, and "Directly" or "Team <name>").
+- [ ] On that page change a level and press **Remove** on a direct row. Expect: the table updates. A row that comes through a team has no Remove and no level box. Under **Give access** choose a kind, a thing and a level, press **Give access**. Expect: the row appears.
+- [ ] Open the owner or an Admin. Expect: no table, only a line saying they can always reach everything.
+- [ ] Press **Teams**, then a team's name. Expect: its members and its own Access table, changed the same way. **All teams** goes back.
+- [ ] Press **Access**, **Import**, **Calls**, **Notifications** and **Security** in turn. Expect: each opens inside Settings with the rail still on the left, and does what it did before (A46, A56, A59, Account menu items).
+- [ ] Sign in as a Member who may not manage access and open Settings. Expect: the rail shows only Account settings, Security, Calls and Notifications; typing `/settings/users` shows "You do not have access to manage people and teams here."
+- [ ] Open the old addresses `/teams` and `/calls`. Expect: they land on Users and Calls inside Settings.
+- [ ] Open the command palette (Ctrl+K) and type "settings". Expect: Settings, Calls and Users and teams are listed in the hosted edition only.

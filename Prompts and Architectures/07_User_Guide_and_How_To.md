@@ -267,7 +267,7 @@ Your study notes, tickets, and progress are precious. Back them up in seconds:
 
 **Sign up.** On the landing page press **Google** (it also connects Meet links and email for your calls), or enter your email and choose a password. You get your own organisation and you are its Owner; it starts empty. **Log in** at `/login`.
 
-**Invite people.** Account menu, **Teams**: invite by email, put people in teams, and give a person or a team View, Edit or Manage on a space, project, roadmap or dashboard. A new member sees nothing until you give access.
+**Invite people.** Account menu, **Settings**, then **Users** and **Teams**: invite by email, put people in teams, and give a person or a team View, Edit or Manage on a space, project, roadmap or dashboard. Open a person or a team to see everything they can reach. A new member sees nothing until you give access.
 
 **Calls.** Open the **Stand-up** button of the organisation, a space, a project or a sprint. Owners and Admins schedule calls (once or repeating, with a Google Meet link made for you); everyone else sees the calls they are invited to and can join. **Manage calls** inside that window opens the Calls page. The Agenda tab lists every open ticket; point at a ticket and press the comment icon to comment without leaving the call.
 

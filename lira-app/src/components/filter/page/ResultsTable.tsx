@@ -5,7 +5,9 @@ import { TypeIcon, PriorityLabel } from '../../common/Icons';
 import { Filter, ArrowUpDown } from 'lucide-react';
 import { Avatar } from '../../common/Avatar';
 import type { Issue } from '../../../types/issue';
+import { BulkBar } from './BulkBar';
 import type { FiltersState } from './useFiltersState';
+import { useBulkSelection, type BulkSelection } from './useBulkSelection';
 
 type SortField = Parameters<FiltersState['toggleSort']>[0];
 type SpaceInfo = FiltersState['spaceMap'][number] | undefined;
@@ -106,11 +108,18 @@ function AssigneeCell({ issue }: { issue: Issue }) {
   );
 }
 
-function ResultRow({ issue, space, onSelectIssue, onSelectSpace }: { issue: Issue; space: SpaceInfo; onSelectIssue: (issue: Issue) => void; onSelectSpace?: (spaceId: number) => void }) {
+/** The tick box of a row, beside its type. A ticket the person may only view cannot be ticked, and says why. */
+function TickBox({ issue, bulk }: { issue: Issue; bulk: BulkSelection }) {
+  const locked = bulk.lockedIds.has(issue.id!);
+  return <input type="checkbox" className="mr-2 align-middle" aria-label={`Select ${issue.key}`} checked={bulk.picked.has(issue.id!) && !locked} disabled={locked} title={locked ? 'You can only view this space' : undefined} onClick={e => e.stopPropagation()} onChange={() => bulk.toggle(issue.id!)} />;
+}
+
+function ResultRow({ issue, space, bulk, onSelectIssue, onSelectSpace }: { issue: Issue; space: SpaceInfo; bulk: BulkSelection; onSelectIssue: (issue: Issue) => void; onSelectSpace?: (spaceId: number) => void }) {
   return (
-    <tr onClick={() => onSelectIssue(issue)} {...issueLink(issue)} className="hover:bg-lira-blue-light/40 transition-colors cursor-pointer group">
+    <tr onClick={() => onSelectIssue(issue)} {...issueLink(issue)} className={`hover:bg-lira-blue-light/40 transition-colors cursor-pointer group${bulk.picked.has(issue.id!) && !bulk.lockedIds.has(issue.id!) ? ' bg-lira-blue-light/60' : ''}`}>
       <td className="py-3 px-4 text-center font-bold text-sm">
-        <span className="inline-flex"><TypeIcon type={issue.type} className="w-4 h-4" /></span>
+        {bulk.hasEditable && <TickBox issue={issue} bulk={bulk} />}
+        <span className="inline-flex align-middle"><TypeIcon type={issue.type} className="w-4 h-4" /></span>
       </td>
       <td className="py-3 px-4 font-mono font-semibold text-lira-blue group-hover:underline">{issue.key}</td>
       <td className="py-3 px-4">
@@ -128,7 +137,8 @@ function ResultRow({ issue, space, onSelectIssue, onSelectSpace }: { issue: Issu
 
 /** The matching tickets. */
 export function ResultsTable(s: FiltersState) {
-  const { issues, onSelectIssue, onSelectSpace, clearAllFilters, spaceMap, filteredIssues, toggleSort } = s;
+  const { issues, onSelectIssue, onSelectSpace, clearAllFilters, spaceMap, filteredIssues, toggleSort, spaces } = s;
+  const bulk = useBulkSelection(filteredIssues, spaces);
   return (
     <div className="flex-1 overflow-y-auto px-6 pb-6">
       <div className="bg-white border border-lira-border rounded-xl overflow-hidden">
@@ -140,12 +150,13 @@ export function ResultsTable(s: FiltersState) {
           <span className="text-gray-400">Click any ticket to open details</span>
         </div>
 
+        <BulkBar bulk={bulk} issues={issues} />
         {filteredIssues.length === 0 ? <EmptyResults onReset={clearAllFilters} /> : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-lira-border bg-gray-50/60 text-lira-muted uppercase tracking-wider text-3xs">
-                  <th className="py-2.5 px-4 w-12">Type</th>
+                  <th className="py-2.5 px-4 w-20">{bulk.hasEditable && <input type="checkbox" className="mr-2 align-middle" aria-label="Select all shown" checked={bulk.allPicked} onChange={bulk.toggleAll} />}Type</th>
                   <SortHeading label="Key" field="key" width="w-28" onSort={toggleSort} />
                   <SortHeading label="Summary" field="title" onSort={toggleSort} />
                   <th className="py-2.5 px-4 w-36">Space</th>
@@ -157,7 +168,7 @@ export function ResultsTable(s: FiltersState) {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filteredIssues.map(issue => (
-                  <ResultRow key={issue.key} issue={issue} space={spaceMap[issue.spaceId]} onSelectIssue={onSelectIssue} onSelectSpace={onSelectSpace} />
+                  <ResultRow key={issue.id ?? issue.key} issue={issue} space={spaceMap[issue.spaceId]} bulk={bulk} onSelectIssue={onSelectIssue} onSelectSpace={onSelectSpace} />
                 ))}
               </tbody>
             </table>

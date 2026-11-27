@@ -3,8 +3,11 @@
  * browser keeps and sends by itself, so nothing here reads, stores or logs a token or a password.
  */
 export interface AuthUser { id: string; email: string; name: string }
-export interface Organisation { orgId: string; orgName: string; role: string }
+export interface Organisation { orgId: string; orgName: string; role: string; hideSprints?: boolean }
+/** Who is signed in: what the sign-up and log-in answers carry. */
 export interface Me { user: AuthUser; organisations: Organisation[] }
+/** The "who am I" answer also says whether the address was confirmed. */
+export interface Session { user: AuthUser & { emailVerified?: boolean }; organisations: Organisation[] }
 
 export type AuthResult<T> =
   | { ok: true; data: T }
@@ -48,8 +51,15 @@ export interface SignupValues { name: string; email: string; password: string; r
 export interface LoginValues { email: string; password: string; remember?: boolean }
 
 export const signup = (values: SignupValues) => send<Me>('POST', '/api/auth/signup', values);
-export const login = (values: LoginValues) => send<Me>('POST', '/api/auth/login', values);
+/** With two-step sign-in on, the password step answers with a challenge instead of the person. */
+export interface TwoStepNeeded { twoStep: true; challenge: string }
+export const login = (values: LoginValues) => send<Me | TwoStepNeeded>('POST', '/api/auth/login', values);
+export const loginTwoStep = (challenge: string, code: string) => send<Me>('POST', '/api/auth/login/two-step', { challenge, code });
 export const logout = () => send<void>('POST', '/api/auth/logout');
-export const fetchMe = () => send<Me>('GET', '/api/me');
-/** Which ways of signing in the server offers. */
-export const fetchProviders = () => send<{ google: boolean }>('GET', '/api/auth/providers');
+export const fetchMe = () => send<Session>('GET', '/api/me');
+/** Which ways of signing in the server offers, and whether it can send email. */
+export const fetchProviders = () => send<{ google: boolean; email?: boolean }>('GET', '/api/auth/providers');
+export const verifyEmail = (token: string) => send<void>('POST', '/api/auth/verify-email', { token });
+export const resendVerification = () => send<void>('POST', '/api/auth/resend-verification');
+export const forgotPassword = (email: string) => send<void>('POST', '/api/auth/forgot-password', { email });
+export const resetPassword = (token: string, password: string) => send<void>('POST', '/api/auth/reset-password', { token, password });

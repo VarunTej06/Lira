@@ -51,7 +51,7 @@ export function HostedCallsModal({ scope, canManage, onClose }: Props) {
     const r = await deleteStandup(org!, call.id);
     if (r.ok) reload(); else setProblem(r.message);
   };
-  const manage = () => { onClose(); navigate('/calls'); };
+  const manage = () => { onClose(); navigate('/settings/calls'); };
 
   return (
     <Modal isOpen onClose={onClose} title={`${label}: ${scope.name}`} size="lg">

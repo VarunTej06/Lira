@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { PALETTES, THEME_EVENT, applyTheme, getPalette, getTheme, isThemeChange, paintTheme } from './theme';
+import { PALETTES, THEME_EVENT, palettesFor, applyTheme, getPalette, getTheme, isThemeChange, paintTheme } from './theme';
 import { THEMES, type ThemeName } from '../theme/palette';
 
 const root = document.documentElement;
@@ -175,5 +175,14 @@ describe('the six themes', () => {
     expect(contrast(value(n, 'lira-on-blue'), value(n, 'lira-blue-hover'))).toBeGreaterThanOrEqual(3);
     expect(contrast([255, 255, 255], value(n, 'lira-nav'))).toBeGreaterThanOrEqual(4.5);
     expect(contrast(value(n, 'lira-nav-accent'), value(n, 'lira-nav'))).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+describe('the palettes of each edition', () => {
+  it('has Pace for dark and Mossgrove for light and nothing else in the hosted edition', () => {
+    expect(palettesFor('hosted')).toEqual({ dark: ['pace'], light: ['mossgrove'] });
+  });
+  it('keeps all six palettes in the local edition', () => {
+    expect(palettesFor('local')).toEqual({ dark: ['pace', 'blackridge'], light: ['sorrel', 'fawn', 'mossgrove', 'tidewell'] });
   });
 });

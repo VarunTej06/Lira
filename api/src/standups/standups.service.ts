@@ -7,6 +7,7 @@ import { DbService, type Queryable } from '../db/db.service';
 import { GoogleService } from '../google/google.service';
 import { EMAIL_SENDER, type EmailSender } from '../invitations/email';
 import { MetricsService } from '../observability/metrics.service';
+import { recurrenceOf } from '../reminders/occurrences';
 import type { CreateStandup, UpdateStandup } from './schemas';
 
 export interface Invitee { type: 'user' | 'team'; id: string }
@@ -79,7 +80,9 @@ export class StandupsService {
       return r.rows[0];
     });
     this.metrics.inc('standup_writes_total', { action: 'create' });
-    return { ...out(made), invitees: input.invitees, emailed: await this.sendInvitations(orgId, actor, made, input.invitees) };
+    // With Calendar approved, Google emails the invitations itself (and keeps them up to date); otherwise they go from the connected Gmail.
+    const invited = await this.syncCalendar(orgId, made.id);
+    return { ...out(made), invitees: input.invitees, emailed: invited === null ? await this.sendInvitations(orgId, actor, made, input.invitees) : { sent: invited, total: invited } };
   }
 
   async update(orgId: string, actor: string, id: string, input: UpdateStandup, ip: string): Promise<StandupOut> {
@@ -101,17 +104,54 @@ export class StandupsService {
       return r.rows[0];
     });
     this.metrics.inc('standup_writes_total', { action: 'update' });
+    await this.syncCalendar(orgId, id);
     const guests = await this.db.query<{ subject_type: 'user' | 'team'; subject_id: string }>('SELECT subject_type, subject_id FROM standup_invitees WHERE call_id = $1', [id]);
     return { ...out(row), invitees: guests.rows.map(g => ({ type: g.subject_type, id: g.subject_id })) };
   }
 
   async remove(orgId: string, actor: string, id: string, ip: string): Promise<void> {
-    await this.db.transaction(async tx => {
-      const r = await tx.query('DELETE FROM standup_calls WHERE org_id = $1 AND id = $2', [orgId, id]);
+    const eventId = await this.db.transaction(async tx => {
+      const r = await tx.query<{ calendar_event_id: string | null }>('DELETE FROM standup_calls WHERE org_id = $1 AND id = $2 RETURNING calendar_event_id', [orgId, id]);
       if (r.rowCount === 0) throw new NotFoundException('Not found.');
       await this.audit.record({ actor, orgId, action: 'standup.delete', outcome: 'ok', sourceIp: ip, detail: { callId: id } }, tx);
+      return r.rows[0].calendar_event_id;
     });
     this.metrics.inc('standup_writes_total', { action: 'delete' });
+    if (eventId) await this.google.deleteEvent(orgId, eventId);
+  }
+
+  /**
+   * Puts the call in the connected Google account's calendar, or brings its event up to date, so the invited people get a calendar
+   * invitation. Resolves how many people are invited through it, or null when there is no calendar to put it in (the caller then emails).
+   */
+  private async syncCalendar(orgId: string, id: string): Promise<number | null> {
+    const found = await this.db.query<Row & { calendar_event_id: string | null }>(`SELECT ${RETURNING}, calendar_event_id FROM standup_calls WHERE org_id = $1 AND id = $2`, [orgId, id]);
+    const call = found.rows[0];
+    if (!call) return null;
+    const guests = await this.db.query<{ subject_type: 'user' | 'team'; subject_id: string }>('SELECT subject_type, subject_id FROM standup_invitees WHERE call_id = $1', [id]);
+    const emails = await this.emailsOf(orgId, guests.rows.map(g => ({ type: g.subject_type, id: g.subject_id })), null);
+    const where = call.scope_type === 'org' ? 'Stand-up' : call.scope_name || 'Call';
+    const eventId = await this.google.saveEvent(orgId, call.calendar_event_id, {
+      summary: call.title, description: `${where}
+Join: ${call.link}
+
+Also in Liraspaces, under Calls.`, location: call.link, startsAt: call.starts_at,
+      durationMinutes: call.duration_minutes, timeZone: call.time_zone, attendees: emails, recurrence: recurrenceOf({ startsAt: call.starts_at, repeat: call.repeat, repeatUntil: call.repeat_until, timeZone: call.time_zone }),
+    });
+    this.metrics.inc('calendar_events_total', { outcome: eventId ? 'ok' : 'none' });
+    if (!eventId) return null;
+    if (eventId !== call.calendar_event_id) await this.db.query('UPDATE standup_calls SET calendar_event_id = $3 WHERE org_id = $1 AND id = $2', [orgId, id, eventId]);
+    return emails.length;
+  }
+
+  /** The addresses of the people named, teams expanded, without `except` (the person who made the call) when given. */
+  private async emailsOf(orgId: string, list: Invitee[], except: string | null): Promise<string[]> {
+    const users = list.filter(i => i.type === 'user').map(i => i.id);
+    const teams = list.filter(i => i.type === 'team').map(i => i.id);
+    const rows = await this.db.query<{ email: string }>(
+      `SELECT DISTINCT lower(u.email) AS email FROM users u JOIN memberships m ON m.user_id = u.id AND m.org_id = $1
+        WHERE ($2::uuid IS NULL OR u.id <> $2) AND (u.id = ANY($3::uuid[]) OR u.id IN (SELECT user_id FROM team_members WHERE team_id = ANY($4::uuid[])))`, [orgId, except, users, teams]);
+    return rows.rows.map(r => r.email);
   }
 
   /** The pasted link, or a new Meet link when none was given. Without either the call cannot be made. */
@@ -139,22 +179,18 @@ export class StandupsService {
 
   /** Emails every invited person once (teams are expanded; the maker is left out). Resolves how many went out; none when no email account is connected. */
   private async sendInvitations(orgId: string, actor: string, call: Row, list: Invitee[]): Promise<{ sent: number; total: number }> {
-    const users = list.filter(i => i.type === 'user').map(i => i.id);
-    const teams = list.filter(i => i.type === 'team').map(i => i.id);
-    const rows = await this.db.query<{ email: string }>(
-      `SELECT DISTINCT lower(u.email) AS email FROM users u JOIN memberships m ON m.user_id = u.id AND m.org_id = $1
-        WHERE u.id <> $2 AND (u.id = ANY($3::uuid[]) OR u.id IN (SELECT user_id FROM team_members WHERE team_id = ANY($4::uuid[])))`, [orgId, actor, users, teams]);
+    const addresses = await this.emailsOf(orgId, list, actor);
     const when = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short', timeZone: call.time_zone }).format(call.starts_at);
     const series = call.repeat === 'none' ? '' : `\nIt repeats ${REPEAT_WORDS[call.repeat]} until ${call.repeat_until}.`;
     let sent = 0;
-    for (const { email } of rows.rows) {
+    for (const email of addresses) {
       const ok = await this.email.send({
         orgId, to: email, subject: `${call.scope_type === 'org' ? 'Stand-up' : call.scope_name || 'Call'}: ${call.title}`,
         text: `You are invited to "${call.title}" on ${when} (${call.time_zone}), ${call.duration_minutes} minutes.${series}\n\nJoin here: ${call.link}\n\nYou can also see it in Liraspaces, under Stand-up calls and in the calendar.`,
       });
       if (ok) sent += 1;
     }
-    return { sent, total: rows.rows.length };
+    return { sent, total: addresses.length };
   }
 }
 

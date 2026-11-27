@@ -1,0 +1,12 @@
+﻿{
+    "resourceGroup":  "kml_rg_main-056043a565054d88",
+    "registry":  "liraacr33130",
+    "vault":  "kvlira71724",
+    "storage":  "liraspaces98654",
+    "pgServer":  "lirapg69170",
+    "pgHost":  "lirapg69170.postgres.database.azure.com",
+    "edgeLabel":  "liraedge46441",
+    "googleClientId":  "258895473399-ppfpe00ptve9kd0jntv2ssj0tuio6gmv.apps.googleusercontent.com",
+    "edgeFqdn":  "liraedge46441.eastus.azurecontainer.io",
+    "webFqdn":  "liraspaces-web.thankfuldesert-69586bd7.eastus.azurecontainerapps.io"
+}

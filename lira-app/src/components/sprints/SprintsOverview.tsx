@@ -189,7 +189,7 @@ export const SprintsOverview: React.FC<SprintsOverviewProps> = ({ spaces, issues
                       const d = l.filter(isDone).length;
                       return (
                         <td key={r.key} className="px-3 py-2 text-center">
-                          {l.length === 0 ? <span className="text-lira-muted opacity-50">None</span> : (
+                          {l.length === 0 ? <span className="text-lira-muted">None</span> : (
                             <span className={d === l.length ? 'text-emerald-600 font-semibold' : 'text-lira-text'}>{d}/{l.length}</span>
                           )}
                         </td>

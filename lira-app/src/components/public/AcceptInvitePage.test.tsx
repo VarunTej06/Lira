@@ -8,7 +8,7 @@ vi.mock('../../services/accessApi', () => ({ acceptInvitation: accept }));
 const go = vi.hoisted(() => vi.fn());
 vi.mock('../../utils/navigate', () => ({ goTo: go }));
 
-beforeEach(() => { accept.mockReset(); go.mockReset(); });
+beforeEach(() => { accept.mockReset(); go.mockReset(); localStorage.removeItem('lira_workspace'); });
 afterEach(cleanup);
 
 const open = (search: string) => mount(<MemoryRouter initialEntries={[`/invite${search}`]}><AcceptInvitePage /></MemoryRouter>);
@@ -23,8 +23,12 @@ describe('accepting an invitation', () => {
     await click(byText('button', 'Accept invitation'));
     expect(accept).toHaveBeenCalledWith(TOKEN);
     expect(q('[role="status"]')!.textContent).toContain('You have joined Acme');
-    await click(byText('button', 'Open Liraspaces'));
+    await click(byText('button', 'Open my workspace'));
     expect(go).toHaveBeenCalledWith('/app');
+    expect(localStorage.getItem('lira_workspace')).toBeNull(); // their own workspace stays the default
+    await click(byText('button', 'Open the shared workspace'));
+    expect(localStorage.getItem('lira_workspace')).toBe('o'); // this time the one they just joined
+    expect(go).toHaveBeenCalledTimes(2);
   });
 
   it('asks someone who is not signed in to log in or sign up first', async () => {
@@ -32,8 +36,9 @@ describe('accepting an invitation', () => {
     open(`?token=${TOKEN}`);
     await click(byText('button', 'Accept invitation'));
     expect(q('[role="alert"]')!.textContent).toContain('not signed in yet');
-    expect(q('a[href="/login"]')).not.toBeNull();
-    expect(q('a[href="/signup"]')).not.toBeNull();
+    const back = encodeURIComponent(`/invite?token=${TOKEN}`);
+    expect(q(`a[href="/login?next=${back}"]`)).not.toBeNull(); // after logging in the person comes back to accept
+    expect(q(`a[href="/signup?next=${back}"]`)).not.toBeNull();
   });
 
   it('shows the server\'s reason when the link was meant for another address, or is used up or expired', async () => {
@@ -41,7 +46,7 @@ describe('accepting an invitation', () => {
     open(`?token=${TOKEN}`);
     await click(byText('button', 'Accept invitation'));
     expect(q('[role="alert"]')!.textContent).toContain('different email address');
-    expect(q('a[href="/login"]')).toBeNull();
+    expect(q('a[href^="/login"]')).toBeNull();
   });
 
   it('says the link is not complete when there is no token, and offers no button', () => {

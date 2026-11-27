@@ -8,7 +8,7 @@ import { isGlobalTab } from '../../../routes';
 import { loadSidebarConfig, type SidebarConfig } from '../sidebarConfig';
 import { prevOf, useSectionState } from './sectionState';
 import { useActiveIndicator } from './useActiveIndicator';
-import { User, FolderKanban, CalendarClock, Ticket, Map, LayoutDashboard } from 'lucide-react';
+import { User, FolderKanban, CalendarClock, Ticket, Map, LayoutDashboard, Network, Layers } from 'lucide-react';
 import { appStorage } from '../../../utils/appStorage';
 
 export interface LeftSidebarProps {
@@ -19,6 +19,8 @@ export interface LeftSidebarProps {
   onEditSpace?: (space: Space) => void;
   onNavigateToFilters?: () => void;
   onNavigateToDashboards?: () => void;
+  onNavigateToMindMaps?: () => void;
+  onNavigateToStoryBoxes?: () => void;
   onNavigateToRoadmaps?: () => void;
   onNavigateToTeams?: () => void;
   onNavigateToList?: () => void;
@@ -56,6 +58,8 @@ export function useSidebarState(props: LeftSidebarProps) {
     onSpaceSelect,
     
     onNavigateToDashboards,
+    onNavigateToMindMaps,
+    onNavigateToStoryBoxes,
     onNavigateToRoadmaps,
     onNavigateToProjects,
     onNavigateToSprints,
@@ -171,10 +175,12 @@ export function useSidebarState(props: LeftSidebarProps) {
   const navItemDefs: Record<string, { label: string; icon: React.ReactNode; tab?: string; action: () => void }> = {
     forYou: { label: 'For you', icon: <User className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'ForYou', action: () => onNavigateToForYou?.() },
     projects: { label: 'Projects', icon: <FolderKanban className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'Projects', action: () => onNavigateToProjects?.() },
-    sprints: { label: 'Sprints', icon: <CalendarClock className="w-3.5 h-3.5 text-teal-400" />, tab: 'SprintsHub', action: () => onNavigateToSprints?.() },
-    allTickets: { label: 'All tickets', icon: <Ticket className="w-3.5 h-3.5 text-yellow-400" />, tab: 'AllTickets', action: () => onNavigateToAllTickets?.() },
-    roadmaps: { label: 'Roadmaps', icon: <Map className="w-3.5 h-3.5 text-orange-400" />, tab: 'Roadmaps', action: () => onNavigateToRoadmaps?.() },
+    sprints: { label: 'Sprints', icon: <CalendarClock className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'SprintsHub', action: () => onNavigateToSprints?.() },
+    allTickets: { label: 'All tickets', icon: <Ticket className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'AllTickets', action: () => onNavigateToAllTickets?.() },
+    roadmaps: { label: 'Roadmaps', icon: <Map className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'Roadmaps', action: () => onNavigateToRoadmaps?.() },
     dashboards: { label: 'Dashboards', icon: <LayoutDashboard className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'Dashboards', action: () => onNavigateToDashboards?.() },
+    mindMaps: { label: 'Storyboards', icon: <Network className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'MindMaps', action: () => onNavigateToMindMaps?.() },
+    storyBoxes: { label: 'Story boxes', icon: <Layers className="w-3.5 h-3.5 text-lira-nav-accent" />, tab: 'StoryBoxes', action: () => onNavigateToStoryBoxes?.() },
   };
 
   const isKeyVisible = (key: string): boolean => sidebarConfig.visibility[key] !== false;

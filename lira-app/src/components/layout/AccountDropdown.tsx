@@ -10,6 +10,7 @@ import { useClickOutside } from '../../hooks/useClickOutside';
 import { appStorage } from '../../utils/appStorage';
 import { useNavigate } from 'react-router-dom';
 import { isHosted } from '../../utils/edition';
+import { WORKSPACE_KEY, activeOrg, organisations, workspaceLabel } from '../../utils/hostedOrg';
 import { goTo } from '../../utils/navigate';
 import { logout } from '../../services/authApi';
 
@@ -86,40 +87,35 @@ export const AccountDropdown: React.FC = () => {
             </button>
 
             <button
-              onClick={() => { setOpen(false); setShowProfileModal(true); }}
+              onClick={() => { setOpen(false); if (isHosted()) navigate('/settings'); else setShowProfileModal(true); }}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left"
             >
               <Settings className="w-4 h-4 text-gray-500" />
-              <span>Account settings</span>
+              <span>{isHosted() ? 'Settings' : 'Account settings'}</span>
             </button>
 
             <div className="border-t border-lira-border my-1" />
 
-            {isHosted() && (
-              <button onClick={() => { setOpen(false); navigate('/teams'); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
+            {isHosted() && organisations().length > 1 && organisations().map(o => (
+              <button key={o.orgId} aria-current={o.orgId === activeOrg() ? 'true' : undefined} onClick={() => { setOpen(false); if (o.orgId !== activeOrg()) { appStorage.set(WORKSPACE_KEY, o.orgId); goTo('/app'); } }}
+                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
                 <Users className="w-4 h-4 text-gray-500" />
-                <span>Teams and access</span>
+                <span className={`truncate ${o.orgId === activeOrg() ? 'font-bold' : ''}`}>{workspaceLabel(o)}</span>
               </button>
-            )}
-            {isHosted() && (
-              <button onClick={() => { setOpen(false); navigate('/calls'); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left">
-                <Users className="w-4 h-4 text-gray-500" />
-                <span>Calls</span>
-              </button>
-            )}
+            ))}
 
-            <button
+            {!isHosted() && <button
               onClick={() => { setOpen(false); void alertDialog({ title: 'Switch account', message: 'The active user is the only configured local profile (Varuntej Yadla).' }); }}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 text-lira-text transition-colors cursor-pointer text-left"
             >
               <Users className="w-4 h-4 text-gray-500" />
               <span>Switch account</span>
-            </button>
+            </button>}
 
             <button
               onClick={() => {
                 setOpen(false);
-                if (isHosted()) { void logout().then(() => goTo('/login')); return; }
+                if (isHosted()) { void logout().then(() => { appStorage.remove(WORKSPACE_KEY); goTo('/login'); }); return; }
                 void alertDialog({ title: 'Log out', message: 'Offline session: Liraspaces runs on your own computer and needs no cloud login.' });
               }}
               className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors cursor-pointer text-left"

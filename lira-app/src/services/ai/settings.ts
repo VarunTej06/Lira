@@ -1,4 +1,5 @@
 import { appStorage } from '../../utils/appStorage';
+import { isHosted } from '../../utils/edition';
 export const DEFAULT_SYSTEM_INSTRUCTION = `You are the Viva AI Autonomous Agent & Chief Agile Copilot, an intelligent project manager and engineering assistant embedded directly inside LIRA.
 
 ### Core Directives:
@@ -38,7 +39,8 @@ export function setGeminiApiKey(key: string): void {
 // 'local'  built-in rules, no network (the default)
 // 'gemini' Google Gemini with an API key
 // 'openai' any OpenAI-compatible server: Ollama, LM Studio, vLLM or a hosted one (set the base URL)
-export type AiProvider = 'local' | 'gemini' | 'openai';
+// 'server' Liraspaces' own server asks the provider the administrator allowed (hosted edition; no key in the browser)
+export type AiProvider = 'local' | 'gemini' | 'openai' | 'server';
 
 interface OpenAiConfig { baseUrl: string; model: string; apiKey: string }
 
@@ -47,7 +49,8 @@ const DEFAULT_OPENAI_MODEL = 'llama3.1';
 
 export function getAiProvider(): AiProvider {
   const v = appStorage.get('lira_ai_provider');
-  if (v === 'local' || v === 'gemini' || v === 'openai') return v;
+  if (v === 'local' || v === 'openai' || (v === 'server' && isHosted()) || (v === 'gemini' && !isHosted())) return v;
+  if (isHosted()) return 'server'; // keys never live in the browser of the hosted edition
   return getGeminiApiKey() ? 'gemini' : 'local'; // before this setting existed, a key meant Gemini
 }
 

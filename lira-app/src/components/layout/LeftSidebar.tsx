@@ -10,6 +10,7 @@ import { StarredSection } from './sidebar/StarredSection';
 import { SpacesSection } from './sidebar/SpacesSection';
 import { ProjectsSection } from './sidebar/ProjectsSection';
 import { SprintsSection } from './sidebar/SprintsSection';
+import { sprintsHidden } from '../../utils/hostedOrg';
 import { HiddenSpacesSection } from './sidebar/HiddenSpacesSection';
 import { ArchivedSection } from './sidebar/ArchivedSection';
 import { SidebarFooter } from './sidebar/SidebarFooter';
@@ -36,7 +37,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
   const sections: Record<string, React.ReactNode> = {
     sec_spaces: <SpacesSection {...s} />,
     sec_projects: <ProjectsSection {...s} />,
-    sec_sprints: <SprintsSection {...s} />,
+    sec_sprints: sprintsHidden() ? null : <SprintsSection {...s} />, // switched off for a person invited to a space
     sec_hidden: <HiddenSpacesSection {...s} />,
   };
 

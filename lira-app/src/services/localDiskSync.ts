@@ -3,6 +3,8 @@ import type { Space } from '../types/space';
 import type { Issue } from '../types/issue';
 import { seedDatabase } from '../db/seedData';
 import { isHosted } from '../utils/edition';
+import { activeOrg } from '../utils/hostedOrg';
+import { startHostedLive } from './hostedLive';
 import { flushHostedSync, initHostedSync } from './hostedSync';
 
 type SyncStatus = 'synced' | 'saving' | 'offline' | 'error';
@@ -45,8 +47,22 @@ let saveVersion = 0;
  * If disk file has data, it hydrates IndexedDB with persistent disk data.
  * If disk file doesn't exist yet, it seeds default data and writes it to disk.
  */
-export async function initLocalDiskSync(): Promise<void> {
-  if (isHosted()) { await initHostedSync().catch(error => console.warn('[Sync] Could not load the workspace from the server:', error)); return; }
+let starting: Promise<void> | null = null;
+
+/**
+ * Runs the start-up once at a time. The development server starts the app twice in a row (React's strict mode); two starts on a fresh data
+ * folder would both find it empty and both seed the sample spaces, so every space would appear twice and be saved that way.
+ */
+export function initLocalDiskSync(): Promise<void> {
+  starting ??= startUp().finally(() => { starting = null; });
+  return starting;
+}
+
+async function startUp(): Promise<void> {
+  if (isHosted()) {
+    await initHostedSync().then(() => { const org = activeOrg(); if (org) startHostedLive(org); }).catch(error => console.warn('[Sync] Could not load the workspace from the server:', error));
+    return;
+  }
   try {
     const unsaved = localStorage.getItem(ISSUES_DIRTY_KEY) !== null && (await db.issues.count()) > 0;
     if (unsaved) {

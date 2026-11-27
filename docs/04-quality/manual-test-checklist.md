@@ -357,7 +357,7 @@ Same way of running as A31 (`npm run hosted`, then http://localhost:5175).
 - [ ] Press the sun or moon button in the top bar. Expect: the page switches between light (Sorrel) and dark (Pace); in dark mode the button shows a sun, in light mode a moon; nothing else moves.
 - [ ] Click into the email field on the landing page and on `/signup`. Expect: the focus box goes around the whole bar (field and Sign up button together) with a small gap, not hard against the button.
 - [ ] Scroll the landing page. Expect, in order: the hero and sample space, "What is inside", "More than project management" (Search, Viva, Roadmaps and dashboards, each with a picture, alternating sides), "Liraspaces is better with documents and files" (with the Includes list and four example cards, one dark), the black band, "Discover the latest", "Your data", the black closing band, and the large grey footer.
-- [ ] Reach the black band. Expect: it is black in light mode too; "Liraspaces for the AI era" and a second line "> connect anywhere" whose word "anywhere" is typed letter by letter, again each time you scroll to the band, with a blinking block caret; "WORKS WITH" shows only "Any MCP agent" with a note that it is coming soon; three columns with dot icons, two of them marked COMING SOON.
+- [ ] Reach the black band. Expect: it is black in light mode too; "Liraspaces for the AI era" and a second line "> connect anywhere" whose word "anywhere" is typed letter by letter, stays for two seconds, then clears and is typed again, and again each time you scroll to the band, with a blinking block caret; "WORKS WITH" shows only "Any MCP agent" with a note that it is coming soon; three columns with dot icons, two of them marked COMING SOON.
 - [ ] Move the mouse over the black band. Expect: faint dots light up around the pointer and fade as it moves away. With "reduce motion" on in the system, or on a phone, the dots stay still.
 - [ ] Scroll to "Discover the latest". Expect: the cards slide in from the right once and stay. Use the arrows, the mouse wheel or a swipe: the row scrolls a card at a time, the left arrow is switched off at the start and the right arrow at the end. Six cards: four "UPDATE" and two "COMING SOON".
 - [ ] Read the closing band and the footer. Expect: "Plan, learn and deliver in Liraspaces" with two gold words, a "Get Liraspaces free" button to the sign-up page; the footer has Contact us, PRODUCT, RESOURCES and LEGAL columns, no Pricing, Careers or Press kit.
@@ -449,7 +449,7 @@ Needs the hosted app running against the API (a cloud rehearsal, A33). Sign up w
 
 ### A36. Teams, access and invitations (20 Nov 2026)  ◐
 Needs the hosted app against the API (a cloud rehearsal). Use two browsers (or one normal and one private window): the owner in one, the invited person in the other.
-- [ ] As the owner, open the account menu, Teams and access. Expect: People, Teams and Access tabs, and the owner listed as Owner.
+- [ ] As the owner, open the account menu, **Settings**, then **Users** in the rail. Expect: the owner listed as Owner (the People, Teams and Access tabs are now the pages Users, Teams and Access, A62).
 - [ ] People: invite an email with role Member. Expect: since email is not connected, a message with a link to copy, shown once; the invitation is listed under "Waiting to join".
 - [ ] In the other browser, sign up with that email (or log in), open the copied link, press Accept invitation. Expect: "You have joined" and the app opens with no spaces at all.
 - [ ] Try the same link again, and a link opened by a different account. Expect: "not valid any more", and "sent to a different email address".
@@ -465,7 +465,7 @@ Needs the hosted app against the API (a cloud rehearsal). Use two browsers (or o
 
 ### A37. Stand-up calls (21 Nov 2026)  ◐
 Needs the hosted app against the API, an owner and a second person who is a Member (see A36).
-- [ ] As the owner open the account menu, Calls. Expect: "No calls are scheduled for you." and a Schedule a call button.
+- [ ] As the owner open the account menu, **Settings**, then **Calls** in the rail. Expect: "No calls are scheduled for you." and a Schedule a call button.
 - [ ] Schedule one for the second person (or a team): title, a start time, 15 minutes, a Google Meet link, tick the guest. Expect: it appears under Upcoming with "Invited: ..." and a Join call button; a note says nobody was emailed because email is not connected.
 - [ ] Try a link on another site (for example https://example.com/x) and one starting with http://. Expect: refused before sending, with a message naming Google Meet and Microsoft Teams.
 - [ ] Try to schedule with nobody ticked. Expect: "Invite at least one person or team."
@@ -482,6 +482,207 @@ Same set-up as A37. The Google lines need Google set up first (`docs/03-sop/goog
 - [ ] Owner: on the Calls page press Connect Google (needs Google set up: docs/03-sop/google-setup.md). Expect: Google's sign-in and permission page, then back with "Google is connected." and the account's email on the page; an Admin sees no connect button.
 - [ ] Schedule with the link left empty. Expect: a meet.google.com link on the call; each invited person gets an email from the connected account (time in the call's time zone, the link, and "It repeats ..." for a series), and the page says how many emails were sent.
 - [ ] Disconnect Google. Expect: scheduling without a link is refused with a message to paste one or connect Google.
+
+### A53. Storyboards (24 Nov 2026)  ◐
+Both editions. Navigation, **Storyboards** (it can be hidden or moved in the sidebar settings). A storyboard is a board for thinking and planning: a map of ideas in the middle, and over it boxes, ellipses, sticky notes, text, lines, arrows and comments, as in a drawing program. Its page and URL stay `/mindmaps`.
+- [ ] Open **Storyboards**. Expect: four tiles (Storyboards, Ideas, Linked to tickets, Changed this week), **All** and **Starred** tabs, a search, a sort list, and a card for each storyboard with a small coloured picture of it (shapes included), its number of ideas and who made it.
+- [ ] **New storyboard**. Expect: a dialog with a name and seven starting points that are different boards, not one tree with other words: Blank; Mind map (a topic with branches); Brainstorm (a wall of sticky notes and the top picks as a map); Meeting notes (columns of sticky notes for Agenda, Notes, Decisions and Actions, with a small map of decisions under them); Retrospective (went well, to improve and actions in three colours of notes); Decision (the question, the options as a map, criteria and risks as notes, and the decision); Flowchart (steps, a yes and a no, joined by arrows). **Cancel** and Escape close it. Make one of each and open it. Expect: nothing overlaps anything.
+- [ ] Look at the page. Expect: a bar on top (back, the name you can edit, a star, Board and Outline, search, Import outline, Export), a dark strip of tools on the left, the board filling the page, the controls bottom right (undo, redo, zoom, fit, keys), a panel on the right when something is selected, and nothing hidden behind the strip.
+- [ ] Zoom. Expect: with the pointer on the board, the wheel, a trackpad pinch, or Ctrl and the wheel zoom the board only (the percentage changes); the rest of Lira does not get bigger or smaller and the page does not scroll. With the pointer outside the board, the page behaves as usual. Fit to screen shows everything, shapes included.
+- [ ] Ideas. With **nothing selected** press **Add an idea**. Expect: a new branch of the central idea, open for typing. Select an idea: a small plus at its end adds an idea under it. **Tab** adds under, **Enter** next to it, F2 or double click edits, Delete removes with its branch (never the central idea), Space folds. Add several branches and several levels to a template. Drag an idea anywhere: it moves with its branch and stays there (the central idea moves the whole map); drag the small square at its corner to change its width. Hold Shift and drop it on another idea to put its branch under that idea instead.
+- [ ] Shapes. Press **Box**, **Ellipse**, **Sticky note** or **Text**, then click the board. Expect: the shape appears where you clicked, open for typing (Ctrl+Enter or clicking away keeps the words, Escape keeps the old ones), and the tool is done. Drag a shape to move it; select it and drag any of its eight handles (corners and sides) to resize it, the opposite side staying put; use the arrow keys to nudge it (Shift for small steps), double click to edit it again, Delete to remove it. Place many of them.
+- [ ] Lines. Press **Line** or **Arrow**, click one item, then another (a shape or an idea of the map, in any mix). Expect: a line from edge to edge (an arrowhead for Arrow); a line can also start or end on empty board (click the spot instead of an item); Esc stops. Click a line: it shows a dot at each end and one in the middle. Drag the middle dot to bend it into a curve (double click it to straighten); drag an end dot onto another item to join it there, or onto empty board to leave it free, which makes the line longer or shorter. The panel offers Arrowhead, Dashed, a Curve slider, a colour and Delete. Delete a shape: its lines and comments go too.
+- [ ] Text style. Select an idea or a shape and press **Bold**, **Italic** and **Underline** in the toolbar or the panel, or Ctrl+B, Ctrl+I, Ctrl+U. Expect: the whole text changes and the buttons show what is on; a shape also has Small, Medium and Large and a colour.
+- [ ] Comments. Press **Comment** and click an idea, a shape or an empty spot. Expect: a small box to write in, with Comment and Cancel; the comment appears as a numbered pin at the corner of what it is about, with who wrote it and when. Click a pin: the box shows with a pencil (edit; the box then says "(edited)"), a tick (resolve; the pin goes grey, and again to open it), and a bin. Delete an idea: its comments go too.
+- [ ] Boxes fit their words. Expect: a short idea ("Ideas") has a short box and its branch line reaches the word with only a small gap, a long idea has a wider box up to a limit and is cut with dots after that; a width you set yourself is kept.
+- [ ] Colour of branches. Expect: each main branch has its own colour, its lines bend with rounded corners and thin out, and twigs follow. Choose a colour with the palette tool or in the panel; **Auto** goes back.
+- [ ] Notes and tickets. Type a ticket key (try LIRA-1) and a note on an idea. Expect: the key above the idea, a dot for the note, and the title in the panel.
+- [ ] Search ideas rings matches with a dashed line. **Outline** lists the ideas indented; clicking one selects it; **Board** goes back.
+- [ ] **Undo** and **Redo** (corner or Ctrl+Z, Ctrl+Y) after drawing, moving, styling, commenting and editing the map. Expect: each goes back and forward, shapes and comments included.
+- [ ] The template tool (left strip). Expect: a list of the seven; choosing one asks first, then replaces everything (shapes too), and Undo brings the old board back.
+- [ ] **Import outline** replaces the ideas (a text with none changes nothing). **Export**: Picture (PNG), Drawing (SVG), Outline (Markdown) and Data (JSON) download; the picture shows the map, shapes, lines and arrows in their colours (comments are not drawn); the data holds everything.
+- [ ] Back on the list: star one (it shows under Starred), copy one (the copy has its own shapes), delete one. Expect: delete asks first; **Cancel**, Escape and **Delete** all work. Reload the page. Expect: everything is as left. Local edition: the storyboards are in the data folder's `mindmaps.json`; an older one opens as before. Hosted: another member does not see yours until you share it (Access, kind storyboard); an Owner sees all of them.
+- [ ] **Tidy up the ideas** (left strip). Expect: off until an idea was moved or resized; then it puts every idea back in its automatic place and width, and Undo brings your arrangement back. Shapes are not touched.
+- [ ] Change a template. Make Meeting notes, then move a sticky note, resize a column heading, bend an arrow of the Flowchart, add and delete notes. Expect: nothing in a template is fixed; it is all ideas and shapes like any you draw.
+
+### A60. Giving tickets to people, one by one or from an epic (24 Nov 2026)  ◐
+Both editions. Hosted: an Owner, a member who was given a space, a viewer of that space, a team member and a person with no access to it.
+- [ ] Open a ticket and look at **Assignee**. Expect: a list that starts with Unassigned. Hosted: it holds the Owner, the Admins and the people who were given this space (directly or through a team), and not people who may only look, not people with no access, and not the sample names (Alex Morgan, Sarah Connor, Dev Team). Local edition: you, and the sample team.
+- [ ] Choose a person. Expect: their picture appears and the ticket is saved with them. Choose Unassigned: the picture goes. A ticket that is already given to someone who is no longer in the list still shows them.
+- [ ] Open an epic that has several tasks (or a task with subtasks that are tickets). Expect: the list of its work has an **Assigned to** column with a list on each row.
+- [ ] Split the work: give the first task to one person, the second to another, the third to a third, from the list itself, without opening any of them. Expect: each is saved at once and the row does not open the ticket; the same people are on the tickets when you open them; a status can still be changed in place.
+- [ ] Hosted, as a person who may only view the space. Expect: the lists on the rows are greyed and cannot be changed.
+- [ ] Hosted, ask for the list of people of a space you have no access to (for example from another browser session). Expect: it is refused as not found; and the list never shows emails or roles.
+
+### A59. Story box: leaving, inviting, putting a ticket back, the time (24 Nov 2026)  ◐
+Both editions, inside a story box (A58). Hosted: an Owner or Admin, one team with a member, and one other person.
+- [ ] With a ticket on the estimation window, click **Storyboards** (or any other item) in the left sidebar, or a space, or the top bar. Expect: a dialog "Leave this page?" with **Stay** and **Leave**. **Stay** and Escape keep you in the box; **Leave** goes where you clicked. The same when you press the browser's back button or reload: the browser asks too.
+- [ ] With no ticket on the stage, click the sidebar. Expect: you leave at once, nothing is asked.
+- [ ] Hosted: press **New story box**. Expect: **Who takes part** lists the teams and the people who are not Owners or Admins (who always take part), and says so. Choose a team and a person and make the box. Expect: the box opens; a moment later both appear under **Participants**; the person sees the box in their list and can vote. If the invitation fails, a message says how many and why. Local edition: there is no such list.
+- [ ] Open a box before any ticket is put up. Expect: **Participants** is already below the two boxes with everyone listed, status Ready, points "–", and "Voting starts when a ticket is put up".
+- [ ] Put a ticket on the stage, then press **Put the ticket back**. Expect: with no votes it goes back at once; with votes it asks first ("The points already given for it are dropped"). Then put another ticket up first. The button works in every phase until the points are confirmed, and only people who run the box see it. A ticket already sized cannot be put back.
+- [ ] Next to **Time to vote on each ticket** press the small pencil. Expect: a list of 1 to 10 minutes with a tick and a cross; the tick saves, the cross leaves it as it was. The new time applies to the tickets put up from then on (check the clock of the next one); the one already on the stage keeps its time. No pencil in a closed box or for someone who does not run the box.
+
+### A58. Story box planning room (24 Nov 2026)  ◐
+Both editions. Navigation, **Story boxes**. Hosted: an Owner or Admin plus a second person who may view the space (A46), each in their own browser. This replaces the table of points of A54.
+- [ ] Open **Story boxes**. Expect: an overview page like Sprints: four tiles (Open boxes, Closed boxes, Tickets sized, Points boxed), a chart of points boxed in the last boxes, **Current story boxes** as cards with a progress bar, three to a row in two rows inside one box, and any more boxes continue to the right under a scroll bar at the bottom of the box, and **All story boxes** as a table (status, about, made by, date, vote time, sized x/y, progress, points) with the closed ones as history. Clicking a card or a row opens the box; **All story boxes** (top left) comes back.
+- [ ] **New story box** (a dialog). Expect: **Make the box** stays off until a **Time to vote on each ticket** (1 to 10 minutes) is chosen; nothing is chosen for you, and the list is empty again each time a box is made. Cancel and Escape close the dialog.
+- [ ] Open the box. Expect: a heading with three tiles (tickets sized, points boxed, time to vote); two boxes side by side, **Yet to be sized** (tickets without points, no epics) and **Sized** (with the total points), each ticket on a line like in the stand-up (type, key, title, space), scrolling up and down inside its box when there are many; under them a dashed stage saying how many minutes each ticket is open.
+- [ ] Drag a ticket from Yet to be sized onto the stage. Expect: it leaves the lane, rises onto the stage with a countdown (for example 02:00) and a bar that shrinks, a row of cards, and your hand of cards. Press **Start voting** on another ticket while one is up: there is no such button.
+- [ ] Do the same with the keyboard (Tab to **Start voting** on a card, Enter). Expect: the same result.
+- [ ] Press a card. Expect: it lifts and your card on the table turns solid. Press another: it changes. Press the same again: it is taken back. Do this while the time still runs.
+- [ ] Hosted, second person: the stage appears within a few seconds with the same ticket and clock (within a second of the first person's). Give a card. Expect: the first person's table shows your card solid and the participants list says you voted and when, but not what; the points column says Hidden.
+- [ ] Hosted, second person: open the browser's network view. Expect: nothing in what the server sent shows the first person's points before the reveal.
+- [ ] Let the time run out. Expect: the clock goes, your cards are disabled, the stage says time is up and waiting for the facilitator; nobody's points are shown yet.
+- [ ] As the Owner press **Reveal points** (also before the time is up). Expect: the cards flip one after another showing each person's points; average, middle and range are shown with a suggested value; the participants list shows each person's points; the second person sees the flip too and no Confirm button.
+- [ ] Press **Vote again**. Expect: all points are cleared and the clock starts again. Vote, reveal again, choose the final points and press **Confirm**. Expect: the card drops down and out, then appears in **Sized** with a drop animation and its points; the ticket page shows the story points; the stage is empty again.
+- [ ] A second person, not an Admin: no **Start voting**, no dragging, no **Reveal points**, no **Confirm**, no **Close the box**; only the hand.
+- [ ] **Close the box** while nothing is up. Expect: a message says it is closed and there is no stage; back on the overview it is listed as Closed in **All story boxes** and no longer under Current. A point sent anyway is refused.
+- [ ] **Delete** (red, top right of a box). Expect: a dialog asks first. **Cancel** closes it and keeps the box; **Escape** closes it and keeps the box; **Delete** removes the box and goes back to the overview. The same for every other dialog in the app.
+- [ ] Turn on "reduce motion" in the system settings. Expect: nothing flies or flips, the cards just change.
+- [ ] A box made before this change: it opens and starts rounds with 5 minutes.
+
+### A57. Change many tickets at once (24 Nov 2026)  ◐
+Both editions. Filters page (All tickets).
+- [ ] Open Filters. Expect: a tick box beside each ticket's type and one in the Type heading; no bar yet.
+- [ ] Tick one ticket. Expect: a bar "1 selected" with Status, Priority and Assignee lists (each "no change"), **Apply** (off) and **Clear**. Ticking does not open the ticket; clicking elsewhere on the row still does.
+- [ ] Tick the heading box. Expect: every shown ticket is ticked. Change a filter so some tickets leave the list. Expect: the count drops to the ones still shown.
+- [ ] Choose a priority and Apply. Expect: "Updated N tickets", the table shows the new priority, the ticks clear, and **Undo** is offered. Press Undo. Expect: each ticket has its old priority again.
+- [ ] Choose a status and an assignee together. Expect: both change and nothing else does. "Unassigned" clears the person.
+- [ ] Hosted edition, a person with View on a space and Edit on another. Expect: tickets of the View space have a greyed tick box with the tip "You can only view this space"; the heading tick and Apply skip them.
+- [ ] Hosted edition, a Viewer who can only view everything. Expect: no tick boxes at all.
+- [ ] Hosted edition: the same changes are seen by another person after a moment, and a change the server refuses is counted as "could not be changed".
+
+### A56. Saved filters (24 Nov 2026)  ◐
+Both editions. Filters page.
+- [ ] Open Filters with nothing chosen. Expect: a row "Saved filters" that says none yet, and **Save current filter** is off with the tip "Choose some filters first".
+- [ ] Type a search, or choose a status, space or assignee. Expect: **Save current filter** turns on. Press it, type a name, press Save. Expect: a button with that name appears and looks selected, and **Save current filter** is off again with the tip "These filters are already saved".
+- [ ] Try a blank name, a name that is already used (in capitals too) and a very long name. Expect: a message each time and the form stays open; the message goes when you change the name. Escape or Cancel closes the form without saving.
+- [ ] Clear the filters, then press the saved button. Expect: the same search and choices come back, the same tickets are listed, and the sort is as it was; the button looks selected. Hover it: a line says what it does, for example "Alpha · bug".
+- [ ] Change one choice. Expect: the saved button is no longer selected.
+- [ ] Reload the page. Expect: the saved filters are still there. Local edition: they are in `data/settings.json`. Hosted edition: they are yours only; another person does not see them.
+- [ ] Press the small cross on one. Expect: it asks first; No keeps it, Delete removes it. Tickets are not touched.
+- [ ] Save 50 filters. Expect: the 51st is refused with a message to delete one.
+
+### A55. Command palette (24 Nov 2026)  ◐
+Both editions, any page.
+- [ ] Press **Ctrl+K** (Cmd+K on a Mac), also while typing in a field. Expect: a box opens in the upper middle with the cursor in the search field and the pages listed under "Go to", then your spaces and the two actions (scroll down). Press Ctrl+K again: it closes.
+- [ ] Type `mind`. Expect: only "Storyboards". Press Enter. Expect: the Storyboards page opens and the box closes.
+- [ ] Type part of a ticket's key or title (for example `LIRA-3` or `homelab`). Expect: a "Tickets" group with matches and each ticket's status on the right. Press Enter. Expect: the ticket opens in its popup and Escape closes the popup, without having to click first.
+- [ ] Type something that matches nothing. Expect: "Nothing matches ..." and Enter does nothing.
+- [ ] Use the arrow keys, Home and End. Expect: the highlighted row moves and wraps round; moving the mouse over a row highlights it; a click opens it. Tab keeps the cursor in the box.
+- [ ] Press Escape, or click outside the box. Expect: it closes and the cursor goes back to where it was.
+- [ ] Choose **Create a ticket** and **Create a space**. Expect: the usual dialogs open.
+- [ ] Hosted edition: **Settings**, **Calls** and **Users and teams** are listed under Go to; the local edition does not list them.
+- [ ] With a screen reader or the accessibility panel of the browser. Expect: a dialog named "Command palette", a search box that announces the chosen result, and result groups.
+
+### A54. Story boxes (24 Nov 2026)  ◐
+Superseded by A58 for voting: the table of points under **Your points** was replaced by the planning room. Creating, closing, history and deleting below still apply. Both editions. Navigation, **Story boxes**. Hosted: use an Owner or Admin and a second person invited to a space (A46).
+- [ ] As the Owner press **New story box**, choose **Space** and a space, give it a name, **Make the box**. Expect: it opens with every ticket of that space (no epics), and is listed under Open.
+- [ ] Make another by **Sprint**. Expect: the tickets of that sprint from every space, with a Space filter.
+- [ ] Press a number under **Your points** for a ticket. Expect: it is highlighted, "1 votes, average N" and your name with the points appear, a suggested value appears. Press it again: your points are taken back.
+- [ ] Hosted, as the second person (view access to the space): open the box. Expect: the same tickets; you can press your own points and see the Owner's; you cannot close, delete, apply or change the final points; no **New story box** button.
+- [ ] As the Owner, wait about ten seconds. Expect: the second person's points appear without a reload.
+- [ ] Press **Use** next to a suggested value, then **Apply suggested points**. Expect: tickets without points get them (ticket pages show the story points); tickets that had points keep them. Change a ticket's points from its dropdown.
+- [ ] Search tickets, tick **Without points only**. Expect: the list narrows.
+- [ ] **Close the box**. Expect: it moves to History, the point buttons are disabled for everyone, a message says it is closed; a point sent anyway is refused. **Reopen** brings it back.
+- [ ] Hosted: a sprint box is not visible to the second person until it is shared with them (Access, kind Story box). A person with no access to a space cannot vote on its tickets.
+- [ ] **Delete** asks first, removes the box and its votes; points already on tickets stay.
+
+### A52. Import a local workspace (24 Nov 2026)  ◐
+Hosted app, signed in as the Owner. Use a copy of the local data folder (never the real one), for example copy `data/` to a temporary folder first and leave `private` out.
+- [ ] Settings, **Import** (rail, under Workspace). Expect: a short explanation and two file choices (Files, and a data folder); nothing is shown yet.
+- [ ] Choose the copy's `lira-workspace.json`. Expect: "Found N spaces, N tickets, ..." and an Import button; nothing has been sent (the sidebar is unchanged).
+- [ ] Choose the whole data folder copy instead (including `projects.json`, `dashboards.json`, `roadmaps` and `private`). Expect: spaces and tickets found, plus projects, roadmaps and dashboards; the secrets folder is never read; files it does not use are listed under "Not used".
+- [ ] Press Import. Expect: "Importing x of y", then "Imported N spaces, N tickets, ...". The new spaces appear in the sidebar with their tickets.
+- [ ] Open an imported epic. Expect: its children are under it, links and blockers point at the right tickets, comments and labels are there, and ticket keys are new (the space's own counter).
+- [ ] Import the same files again. Expect: spaces whose key exists come in with a new key (for example AI2), and the report says what was left out and why.
+- [ ] Projects, roadmaps and dashboards. Expect: they point at the new spaces; a dashboard filtered on a space shows that space's tickets.
+- [ ] Files attached to tickets. Expect: they are not imported (stated on the page).
+- [ ] Sign in as a member who is not an Owner or Admin. Expect: the Teams page is not offered, so there is no import.
+
+### A51. Two-step sign-in and leaked passwords (24 Nov 2026)  ◐
+Hosted app with the Google key set (Security shows the Turn on button), a phone with an authenticator app, and `BREACH_CHECK=true`.
+- [ ] Sign up with the password `password123`. Expect: refused with a message that the password appears in a list of leaked passwords. A long unusual password is accepted.
+- [ ] Use Forgot password and choose `password123` as the new one. Expect: the same refusal, and the old password still works.
+- [ ] Settings, **Security** (rail, under Account). Expect: "Off" and **Turn on**. Press it. Expect: a key to type into the app and a link; type the key into the authenticator app, type its six digits, press **Turn on**. Expect: ten recovery codes, shown once.
+- [ ] Start again and type a wrong code. Expect: a message and nothing switched on; log out and in still works without a code.
+- [ ] Log out, log in with the password. Expect: a page "Enter your code", no app behind it. Type the six digits. Expect: you are in. Type the same code again at a later login within the same 30 seconds. Expect: refused, wait for the next code.
+- [ ] Log in and type five wrong codes. Expect: after the fifth the login must be started again.
+- [ ] Log in and use a recovery code (with or without the dash). Expect: it works once; the second time it is refused.
+- [ ] Security, **Turn off**: with no code the button is off; with a wrong code a message; with the right code it turns off and the next login has no second step.
+- [ ] Sign in with Google. Expect: no code page (Google has its own). For a Google-only account, Security refuses to turn it on and says to use Google's.
+- [ ] Leave a login on the code page for more than ten minutes. Expect: the code is refused with a message to log in again.
+
+### A50. Live updates between people (24 Nov 2026)  ◐
+Hosted app, two browsers (or a normal and a private window) signed in as two people who can both see the same space, for example the Owner and a person invited with Can edit (A46).
+- [ ] Both open the same space's board. In one, create a ticket. Expect: it appears in the other within a second or two without reloading.
+- [ ] In one, drag a ticket to another column, rename it, change its assignee. Expect: the other shows each change within a second or two.
+- [ ] In one, delete a ticket. Expect: it disappears in the other.
+- [ ] While one person is typing a change that has not been saved yet, the other saves a change to a different ticket. Expect: the typing is not lost and the other ticket updates.
+- [ ] The Owner creates a new space and shares it with the second person (Access tab, give access). Expect: the space appears in the second person's sidebar without reloading. Take the access away. Expect: it disappears.
+- [ ] The second person has no access to a space where the Owner creates tickets. Expect: nothing changes for them, and nothing about that space is visible anywhere.
+- [ ] Switch the network off for the second person for a minute, change tickets as the first, switch it on again. Expect: within seconds everything is up to date.
+- [ ] Log the second person out in another tab. Expect: that window stops updating (it is asked to log in again on the next action).
+- [ ] Open the same app in seven tabs as one person. Expect: the app keeps working; the seventh tab shows no live updates until another is closed.
+- [ ] In one browser rename a roadmap, add a project, make a storyboard or a story box. Expect: the other browser shows it within a second or two without a reload (unless it has unsaved changes of its own, which are never overwritten).
+- [ ] Note: shared settings (sprint definitions, teams, stand-up notes) are not live yet; they show after a reload.
+
+### A49. Lighter theme picker (24 Nov 2026)  ◐
+Open Account settings, Appearance.
+- [ ] Look at the choices. Expect: two options, **Dark** and **Light**, each one a single rectangle of three colours with no gap or line between them and its name beside it; no description text, no tick circle, no big boxes.
+- [ ] Under them. Expect: the heading "Choose a dark palette" (or light) and one rectangle with a name for each palette: Pace and Blackridge for dark; Sorrel, Fawn, Mossgrove and Tidewell for light.
+- [ ] Under those. Expect: a short list for the chosen palette: each of its three colours with its name and what it paints (for Pace: Black, the page and the panels; Silver, text and thin lines; Yellow, buttons and the selected item).
+- [ ] Pick another palette, then Light and another palette. Expect: the list changes at once to match; the Dark and Light rectangles show the colours of the palette chosen for each; the selected option has a coloured border.
+- [ ] Press Save and reopen. Expect: the saved choices are selected. Check both modes and every palette, on a narrow window too.
+
+### A48. Calls in the Google calendar (24 Nov 2026)  ◐
+Needs Google set up with the Calendar API enabled and the calendar.events permission on the consent screen (docs/03-sop/google-setup.md), and a second person with a mailbox.
+- [ ] As the Owner open Calls. If Google was connected before this version, Expect: the panel says invitation emails are sent from the account and shows **Allow calendar invitations**. Press it, agree at Google. Expect: back on Calls, the panel now says each call goes into the calendar, and the button is gone.
+- [ ] Schedule a call for the second person with no link. Expect: an event with the Meet link appears in the Owner's Google Calendar, the second person gets Google's calendar invitation (not a second email from the app), and Calls lists it as before.
+- [ ] Change the time and the title of the call. Expect: the same event moves in the calendar and the second person is told of the change.
+- [ ] Make a daily call with a last day, then change its last day. Expect: one repeating event that ends on the last day (at the call's own time of day), not a separate event for each day.
+- [ ] Delete the event in Google Calendar, then change the call in Liraspaces. Expect: the event is made again.
+- [ ] Delete the call in Liraspaces. Expect: the event disappears from the calendar and the second person is told it is cancelled.
+- [ ] Disconnect Google and connect again without ticking the Calendar permission. Expect: calls still work, the panel offers **Allow calendar invitations**, and new calls email the invitation from Gmail as before.
+
+### A47. Reminders by email (24 Nov 2026)  ◐
+Needs email set up (docs/03-sop/email-setup.md) and two people with mailboxes you can read.
+- [ ] Calls page. Expect: a box "Reminders by email" with two switches, both on. Without email set up Expect: both are disabled and the box says email is not set up.
+- [ ] Schedule a call that starts in about 20 minutes and invite the second person. Wait until it is 15 minutes away. Expect: within a minute the second person gets "Reminder: ... starts in 15 minutes" with the time and the link; the person who scheduled it (not invited) gets nothing.
+- [ ] Wait another few minutes. Expect: no second email for the same call.
+- [ ] Make a repeating call (daily) and invite a team. Expect: each member gets one reminder per day.
+- [ ] The second person switches off the call reminder and a new call comes up. Expect: they get nothing; the other invited people still do.
+- [ ] Give a ticket to the second person (their exact name as assignee) with a due date of tomorrow. Expect: after 07:00 UTC they get "Due tomorrow: KEY" once; none for a done ticket, and none when two people in the organisation have the same name.
+- [ ] The same person has no access to the ticket's space. Expect: no email.
+
+### A46. Invite someone to one space (24 Nov 2026)  ◐
+Hosted app. You are the Owner with at least two spaces that have tickets, and a project, a roadmap and a dashboard tied to the first space (plus ones tied to the other, and a dashboard across both). Use a second address you can open (or copy the link when email is not connected).
+- [ ] People tab, **Invite**: type the address, choose the space, the access (Can view, Can edit or Can manage) and a role. Expect: choosing a space removes Admin from the roles and shows four switches (Linked projects, Linked roadmaps, Dashboards of this space only, Sprints), all on; the pending list says the space and the access.
+- [ ] Open the invitation link in a private window, press **Create an account** and sign up with that address. Expect: after signing up you come back to the invitation and can press **Accept invitation** (confirm the address first when email is set up, A45).
+- [ ] After accepting. Expect: "Open the shared workspace" and "Open my workspace"; press **Open my workspace**: you land in your own, empty workspace, never in the inviter's.
+- [ ] Open the account menu. Expect: two entries, **My workspace** (in bold) and the inviter's workspace with "(invited)". Press the second. Expect: the app reloads in the shared workspace and stays there until you log out; after logging out and in you are in your own again.
+- [ ] In the shared workspace. Expect: only the invited space in the sidebar, with a small **Invited** tag after its name; no other space; no Teams page content. Open the space: every ticket of it is listed.
+- [ ] Projects, roadmaps, dashboards. Expect: only the project and roadmap tied to the invited space and the dashboard that uses only that space; nothing tied to the other space, none for a dashboard across both spaces.
+- [ ] As the Owner, People tab, **Access**, kind **Space**, the invited space. Expect: a list "People invited to this space" with four switches per person. Switch off **Projects**; the person reloads. Expect: the projects are gone and roadmaps and dashboards stay. Switch off **Sprints**. Expect: the Sprints section and pages are gone for them, tickets still show.
+- [ ] Invite someone with all switches off. Expect: they see the space's tickets and comments and no project, roadmap or dashboard.
+- [ ] With **Can edit**: create a ticket, change one, comment, add a project and a roadmap for that space. Expect: it works; a project for another space is refused. With **Can view**: Expect: you can read everything but cannot create or change anything. With role **Viewer** and access Can edit: Expect: view only.
+- [ ] As the invited person try to invite someone, rename or delete the space. Expect: not possible.
+- [ ] As the Owner open the same space. Expect: no **Invited** tag for you, and you see what they created.
+- [ ] Try to open another space of that organisation by its address while invited to one. Expect: not found, nothing leaks.
+- [ ] Sign up with Google, then use Forgot password for that address. Expect: an email saying to use the Google button, no reset link; no password is ever asked for a Google account.
+
+### A45. Confirm your email and reset your password (24 Nov 2026)  ◐
+Needs email set up (docs/03-sop/email-setup.md) and a mailbox you can read. Without email set up only the last three lines apply.
+- [ ] Sign up with email and password using your own address. Expect: an email "Confirm your email for Liraspaces" with a link to the site; in the app a small box at the bottom left asks you to confirm.
+- [ ] Press **Send it again** in that box, then once more, then a third time. Expect: new emails the first times; then a message that a link was sent a moment ago.
+- [ ] Open the link. Expect: "Your email is confirmed" and **Open Liraspaces**; the box is gone after you reload the app. Open the same link again: "This link did not work".
+- [ ] On the log-in page press **Forgot password?**, enter your address. Expect: "Check your email", the same text for an address that has no account, and an email only for the real one.
+- [ ] Open the reset link, type 5 characters and save. Expect: "Use at least 10 characters." Then a new password. Expect: "Password changed"; the old password no longer logs in, the new one does; an email says the password was changed.
+- [ ] Use the reset link a second time, and one older than an hour. Expect: "expired or was already used" with a link to ask again.
+- [ ] Be logged in on a phone, reset the password on the laptop. Expect: the phone is logged out.
+- [ ] Invite a second address to your organisation; sign that person up but do not confirm; open the invitation. Expect: it asks them to confirm the address first. After confirming it works.
+- [ ] Without email set up: open **Forgot password?** and send. Expect: a message that email is not set up; no confirm box in the app.
 
 ### A44. Already signed in: the public pages open the app (21 Nov 2026)  ◐
 Hosted app, an account that is signed in.
@@ -509,7 +710,7 @@ Open a sprint, project or space call from its Stand-up button (the Agenda tab).
 - [ ] Press the icon, then Cancel, or press Escape. Expect: the box closes and nothing is saved. Post is greyed out while the box is empty.
 - [ ] Click the title, key or badge of a row. Expect: the ticket still opens as before.
 - [ ] Use Tab to reach a row's icon. Expect: it becomes visible while it has the keyboard focus.
-- [ ] Open the Calls page (/calls) and the hosted call list. Expect: no ticket rows there, so no icon.
+- [ ] Open the Calls page (Settings, Calls) and the hosted call list. Expect: no ticket rows there, so no icon.
 
 ### A41. Google sign-up connects Google for calls (21 Nov 2026)  ◐
 Needs the same set-up as A40. Use a Google account that has never been used here, and `https://test.liraspaces.com`.
@@ -548,3 +749,33 @@ Hosted app, a brand new account.
 - [ ] Footer. Expect: "Operated by WorldXAdmins, India"; the legal pages name WorldXAdmins.
 - [ ] Open For you. Expect: no "Recent activity" panel.
 - [ ] Open a project. Expect: the project initials sit in a small badge right before the project name; under it the lead shows as "Lead:", then the avatar, then the name (the signed-in person's name when no lead is set).
+
+### A61. Viva answering through the Liraspaces server (24 Nov 2026)  ◐
+Hosted edition only. Needs the server set up with `AI_PROVIDERS` and a key (see `api/README.md`). Try once with it not set up.
+- [ ] Open Viva's settings. Expect: the **Model** list offers the built-in engine and **Liraspaces server**, and no Gemini or OpenAI-compatible choice; the Gemini key box is not shown. In the local edition the old choices and the key box are still there.
+- [ ] Choose Liraspaces server, Save, and ask a question about tickets ("What is blocked?"). Expect: an answer that mentions only tickets you can see; the header says **Liraspaces server**.
+- [ ] As a member who has no access to one space, ask about everything. Expect: nothing from that space appears in the answer.
+- [ ] Ask Viva to create or move a ticket. Expect: the usual preview with Confirm and Undo, made by the built-in engine, not the model.
+- [ ] With the server not set up (or the provider down), ask a question. Expect: Viva still answers with the built-in engine and no error is shown.
+- [ ] Ask more than 30 questions in an hour (or lower the limit). Expect: the server answers are paused and the built-in engine answers instead.
+
+### A62. Settings: users, teams and what each can reach (27 Nov 2026)  ◐
+Hosted edition. Sign in as the owner, with at least one member invited, one team, and something shared with them (A46, A56).
+- [ ] Open the account menu. Expect: **Profile**, **Settings** and **Log out**; Teams and access, Security and Calls are no longer listed there. Press **Settings**. Expect: a page with a rail on the left in three groups (Identity and management: Users, Teams, Access; Account: Account settings, Security; Workspace: Calls, Notifications, Import) and **Account settings** open.
+- [ ] Press **Users**. Expect: the heading "Your people", three counts (people, teams, waiting to join), the invite form and the people list, each person with a round face, their teams and one line of what they reach ("2 spaces, 1 project", or "Everything" for the Owner and Admins). Press a person's name. Expect: the row is highlighted and a panel opens beside the list (below it on a narrow screen) with their name, role, teams and **Access** grouped by Spaces, Projects, Roadmaps and so on, each line with "Directly" or "Team <name>" and the level.
+- [ ] In that panel change a level and press **Remove** on a direct line. Expect: the list updates. A line that comes through a team shows its level as a label, with no Remove and no level box. **Close** shuts the panel. Under **Give access** choose a kind, a thing and a level, press **Give access**. Expect: the row appears.
+- [ ] Open the owner or an Admin. Expect: no table, only a line saying they can always reach everything.
+- [ ] Press **Teams**, then a team's name. Expect: its members and its own Access table, changed the same way. **All teams** goes back.
+- [ ] Press **Access**. Expect: "Who can reach what": a table with teams and people in rows and the things of the chosen kind in columns; the buttons Spaces, Projects, Roadmaps, Dashboards, Story boxes and Storyboards switch the columns. The Owner and Admins show one line, "Reaches everything". Change a cell. Expect: the level is saved; set it to **None**. Expect: the access is taken away. A person in a team that has access shows "Can edit via <team>" under their own cell. Under it, **Work on one thing in detail** opens the older per-thing editor, including what else of a space an invited person sees.
+- [ ] Press **Import**, **Calls**, **Notifications** and **Security** in turn. Expect: each opens inside Settings with the rail still on the left, and does what it did before (A46, A56, A59, Account menu items).
+- [ ] Sign in as a Member who may not manage access and open Settings. Expect: the rail shows only Account settings, Security, Calls and Notifications; typing `/settings/users` shows "You do not have access to manage people and teams here."
+- [ ] Open the old addresses `/teams` and `/calls`. Expect: they land on Users and Calls inside Settings.
+- [ ] Open the command palette (Ctrl+K) and type "settings". Expect: Settings, Calls and Users and teams are listed in the hosted edition only.
+
+### A63. Hosted edition: Pace in dark, Mossgrove in light, one button (27 Nov 2026)  ◐
+Hosted edition. The local edition is unchanged (all six palettes, Appearance in its Settings dialog).
+- [ ] Open the app. Expect: a round sun or moon button on the top bar, just left of the notification bell, styled like the other round buttons on the bar.
+- [ ] Press it in light mode. Expect: the whole app turns dark with the Pace palette; the button now shows the sun. Press it again. Expect: light with the Mossgrove palette. Reload. Expect: the choice is remembered.
+- [ ] Press the gear on the top bar. Expect: the dialog opens on General; the list on the left has no **Appearance**, and there is no way to pick another palette anywhere.
+- [ ] If this browser once saved another palette (for example Sorrel), reload. Expect: light is Mossgrove and dark is Pace.
+- [ ] Open the local edition (`npm run dev`). Expect: no button on the bar, the gear opens on Appearance, and all six palettes can still be chosen.

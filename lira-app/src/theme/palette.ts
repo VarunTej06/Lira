@@ -32,9 +32,13 @@ const palette = {
 
 export const PALETTE: Readonly<Record<keyof typeof palette, string>> = Object.freeze(palette);
 
+/** The colours an idea in a storyboard can be given. */
+export const MIND_COLORS: readonly string[] = Object.freeze([PALETTE.brand, PALETTE.success, PALETTE.warning, PALETTE.danger, PALETTE.info, PALETTE.epic, PALETTE.amber, PALETTE.textMuted]);
+
 export type ThemeName = 'pace' | 'blackridge' | 'sorrel' | 'fawn' | 'mossgrove' | 'tidewell';
 
-interface ThemeSwatches { label: string; note: string; swatches: readonly { name: string; hex: string }[] }
+/** `use` says what the colour paints on the screen, in a few words, for the explanation under the picker. */
+interface ThemeSwatches { label: string; note: string; swatches: readonly { name: string; hex: string; use: string }[] }
 
 /**
  * The six palettes (two for dark mode, four for light mode) and the three colours each is built from. The owner's reference
@@ -45,31 +49,31 @@ export const THEMES: Readonly<Record<ThemeName, ThemeSwatches>> = Object.freeze(
   pace: {
     label: 'Pace',
     note: 'Black page, silver text, yellow buttons.',
-    swatches: [{ name: 'Black', hex: '#0A0A0A' }, { name: 'Silver', hex: '#D9DADC' }, { name: 'Yellow', hex: '#FFC93C' }],
+    swatches: [{ name: 'Black', hex: '#0A0A0A', use: 'the page and the panels' }, { name: 'Silver', hex: '#D9DADC', use: 'text and thin lines' }, { name: 'Yellow', hex: '#FFC93C', use: 'buttons and the selected item' }],
   },
   blackridge: {
     label: 'Blackridge',
     note: 'Jet black page, smoke grey text, cherry red buttons.',
-    swatches: [{ name: 'Jet Black', hex: '#0B0B0C' }, { name: 'Smoke Grey', hex: '#8A8D93' }, { name: 'Cherry Red', hex: '#C8102E' }],
+    swatches: [{ name: 'Jet Black', hex: '#0B0B0C', use: 'the page and the panels' }, { name: 'Smoke Grey', hex: '#8A8D93', use: 'text and thin lines' }, { name: 'Cherry Red', hex: '#C8102E', use: 'buttons and the selected item' }],
   },
   sorrel: {
     label: 'Sorrel',
     note: 'Off-white page, sage frame, tomato red buttons.',
-    swatches: [{ name: 'Sage', hex: '#9CAF88' }, { name: 'Off-White', hex: '#F7F5EF' }, { name: 'Tomato Red', hex: '#E8412C' }],
+    swatches: [{ name: 'Sage', hex: '#9CAF88', use: 'the frame around the app' }, { name: 'Off-White', hex: '#F7F5EF', use: 'the page and the cards' }, { name: 'Tomato Red', hex: '#E8412C', use: 'buttons and the selected item' }],
   },
   fawn: {
     label: 'Fawn',
     note: 'Cream page, brown text, baby blue buttons.',
-    swatches: [{ name: 'Brown', hex: '#3B2418' }, { name: 'Cream', hex: '#F2E8DA' }, { name: 'Baby Blue', hex: '#8EC5FF' }],
+    swatches: [{ name: 'Brown', hex: '#3B2418', use: 'text and the navigation' }, { name: 'Cream', hex: '#F2E8DA', use: 'the page and the cards' }, { name: 'Baby Blue', hex: '#8EC5FF', use: 'buttons and the selected item' }],
   },
   mossgrove: {
     label: 'Mossgrove',
     note: 'White cards, emerald navigation and links, tangerine buttons.',
-    swatches: [{ name: 'Emerald', hex: '#0F5C45' }, { name: 'White', hex: '#FFFFFF' }, { name: 'Tangerine', hex: '#F28C28' }],
+    swatches: [{ name: 'Emerald', hex: '#0F5C45', use: 'the navigation and links' }, { name: 'White', hex: '#FFFFFF', use: 'the cards and panels' }, { name: 'Tangerine', hex: '#F28C28', use: 'buttons and the selected item' }],
   },
   tidewell: {
     label: 'Tidewell',
     note: 'Pearl white page, ink navy text and navigation, electric coral buttons.',
-    swatches: [{ name: 'Ink Navy', hex: '#141B2D' }, { name: 'Pearl White', hex: '#F4F1EA' }, { name: 'Electric Coral', hex: '#FF5A4E' }],
+    swatches: [{ name: 'Ink Navy', hex: '#141B2D', use: 'text and the navigation' }, { name: 'Pearl White', hex: '#F4F1EA', use: 'the page and the cards' }, { name: 'Electric Coral', hex: '#FF5A4E', use: 'buttons and the selected item' }],
   },
 });

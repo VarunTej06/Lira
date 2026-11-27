@@ -146,7 +146,7 @@ describe('log-in page', () => {
     expect(q<HTMLInputElement>('#remember')!.type).toBe('checkbox');
     expect(q('[role="img"][aria-label*="30 days"]')).not.toBeNull();
     expect(q('form a[href="/signup"]')!.textContent).toBe('Create an account');
-    expect(q('form a[href^="mailto:"]')!.textContent).toBe("Can't log in?");
+    expect(q('form a[href="/forgot-password"]')!.textContent).toBe('Forgot password?');
     for (const href of ['/privacy', '/notice', '/terms']) expect(q(`form a[href="${href}"]`), href).not.toBeNull();
   });
 

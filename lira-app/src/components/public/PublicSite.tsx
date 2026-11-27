@@ -9,6 +9,9 @@ const GetStartedPage = lazy(() => import('./GetStartedPage'));
 const LegalPage = lazy(() => import('./LegalPage'));
 const AcceptInvitePage = lazy(() => import('./AcceptInvitePage'));
 const ComingSoonPage = lazy(() => import('./ComingSoonPage'));
+const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('./ResetPasswordPage'));
+const VerifyEmailPage = lazy(() => import('./VerifyEmailPage'));
 
 /** The tab title of each public address. The legal pages set their own from their text. */
 const PUBLIC_TITLES: Readonly<Record<string, string>> = {
@@ -17,6 +20,9 @@ const PUBLIC_TITLES: Readonly<Record<string, string>> = {
   '/signup': 'Get started · Liraspaces',
   '/invite': 'Join an organisation · Liraspaces',
   '/coming-soon': 'Coming soon · Liraspaces',
+  '/forgot-password': 'Reset your password · Liraspaces',
+  '/reset-password': 'Choose a new password · Liraspaces',
+  '/verify-email': 'Confirm your email · Liraspaces',
 };
 
 /** The public pages of the hosted edition: landing, log in, sign up, the legal pages, and the coming-soon page. */
@@ -31,6 +37,9 @@ export function PublicSite() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<AuthPage />} />
           <Route path="/signup" element={<GetStartedPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/terms" element={<LegalPage doc="terms" />} />
           <Route path="/privacy" element={<LegalPage doc="privacy" />} />
           <Route path="/notice" element={<LegalPage doc="notice" />} />

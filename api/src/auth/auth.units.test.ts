@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { loadConfig } from '../config';
 import { hashPassword, spendCheckTime, verifyPassword } from './password';
 import { ADDRESS_LIMIT, EMAIL_LIMIT, attemptKey, isLocked } from './rate-limit';
-import { loginSchema, signupSchema, fieldErrors } from './schemas';
+import { forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, verifyEmailSchema, fieldErrors } from './schemas';
 import { CLIENT_HEADER, CLIENT_VALUE, checkRequest } from './csrf';
 import { COOKIE_NAME, clearedCookie, hashToken, newToken, sessionCookie, sessionSeconds, tokenFromCookieHeader } from './session';
 
@@ -158,5 +158,39 @@ describe('cross-site request check', () => {
 
   it('does not accept an origin that only starts like an allowed one', () => {
     expect(checkRequest('POST', { origin: `${ORIGIN}.evil.example`, [CLIENT_HEADER]: CLIENT_VALUE }, allowed)).toBe('bad_origin');
+  });
+});
+
+describe('email link settings and schemas', () => {
+  const base = { DATABASE_URL: 'postgres://x', ALLOWED_ORIGINS: ORIGIN };
+  const token = 'A'.repeat(43);
+
+  it('reads the email service settings only when both are given, and refuses one without the other', () => {
+    expect(loadConfig(base).mail).toBeUndefined();
+    const both = loadConfig({ ...base, MAIL_CONNECTION_STRING: 'endpoint=https://x.communication.azure.com/;accesskey=abc', MAIL_FROM: 'DoNotReply@mail.example.com' });
+    expect(both.mail).toEqual({ connectionString: 'endpoint=https://x.communication.azure.com/;accesskey=abc', from: 'DoNotReply@mail.example.com' });
+    expect(() => loadConfig({ ...base, MAIL_FROM: 'DoNotReply@mail.example.com' })).toThrow(/MAIL_CONNECTION_STRING and MAIL_FROM/);
+    expect(() => loadConfig({ ...base, MAIL_CONNECTION_STRING: 'endpoint=https://x.communication.azure.com/;accesskey=abc' })).toThrow(/MAIL_CONNECTION_STRING and MAIL_FROM/);
+    expect(() => loadConfig({ ...base, MAIL_CONNECTION_STRING: 'endpoint=https://x.communication.azure.com/;accesskey=abc', MAIL_FROM: 'not-an-address' })).toThrow(/MAIL_FROM/);
+  });
+
+  it('accepts a link token only in the shape this server makes, and nothing else in the body', () => {
+    expect(verifyEmailSchema.safeParse({ token }).success).toBe(true);
+    for (const bad of ['', 'short', `${token}x`, `${token.slice(1)}!`, 5, undefined]) expect(verifyEmailSchema.safeParse({ token: bad }).success).toBe(false);
+    expect(verifyEmailSchema.safeParse({ token, role: 'owner' }).success).toBe(false);
+  });
+
+  it('checks the new password with the same length rules as sign-up, and lower-cases the email to reset', () => {
+    expect(resetPasswordSchema.safeParse({ token, password: 'a-brand-new-password' }).success).toBe(true);
+    expect(resetPasswordSchema.safeParse({ token, password: 'short' }).success).toBe(false);
+    expect(resetPasswordSchema.safeParse({ token, password: 'x'.repeat(129) }).success).toBe(false);
+    expect(resetPasswordSchema.safeParse({ token, password: 'a-brand-new-password', email: 'a@b.co' }).success).toBe(false);
+    const parsed = forgotPasswordSchema.parse({ email: ' Asha@Example.COM ' });
+    expect(parsed.email).toBe('asha@example.com');
+    expect(forgotPasswordSchema.safeParse({ email: 'nope' }).success).toBe(false);
+  });
+
+  it('keeps reset requests from one address apart from log-in attempts', () => {
+    expect(attemptKey('reset', '1.2.3.4')).not.toBe(attemptKey('address', '1.2.3.4'));
   });
 });

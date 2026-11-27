@@ -36,6 +36,12 @@ function quietly<T>(write: () => Promise<T>): Promise<T> {
   return db.transaction('rw', db.spaces, db.issues, async () => { fromServer.add(Dexie.currentTransaction); return write(); });
 }
 
+/** What is still waiting to be sent to the server, so that bringing in other people's changes never overwrites it. */
+export const waitingIssues = (): ReadonlySet<number> => new Set([...dirtyIssues, ...deletedIssues.keys()]);
+export const waitingSpaces = (): ReadonlySet<number> => new Set([...dirtySpaces, ...deletedSpaces.keys()]);
+/** Writes the server's answer to the cache without sending it back. */
+export const writeFromServer = quietly;
+
 /** Fills the cache from the server. The cache is replaced, not merged: whatever it held before is not the truth. */
 export async function initHostedSync(): Promise<void> {
   const org = orgOrThrow();

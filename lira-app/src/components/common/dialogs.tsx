@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AlertTriangle, Info, Pencil } from 'lucide-react';
 import { AnimatePresence, motion } from './motionPresets';
@@ -32,7 +32,14 @@ function PromptField({ req, text, onChange, inputRef }: { req: Extract<Request, 
 }
 
 export const DialogHost: React.FC = () => {
-  const req = useSyncExternalStore(subscribe, currentRequest, currentRequest);
+  // Plain state fed by the store. useSyncExternalStore did not re-render this host after a dialog was answered, which left every
+  // dialog (Cancel, Escape, Delete) stuck on screen.
+  const [req, setReq] = useState<Request | undefined>(currentRequest);
+  useEffect(() => {
+    const sync = () => setReq(currentRequest());
+    queueMicrotask(sync); // a dialog asked for between the first render and now
+    return subscribe(sync);
+  }, []);
   const [text, setText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);

@@ -12,18 +12,19 @@ Sign in first (PowerShell): `az login` with the playground account. Then, from t
 |---|---|---|
 | `.\Setup-Playground.ps1 -Step check` | Shows the account, the resource providers and the resource group the sandbox gave you | 1 min |
 | `-Step infra` | Container registry (admin user on), Key Vault with two generated passwords, PostgreSQL 16, firewall rules, a storage account (Standard LRS, no public access) with a private `attachments` container and its key in Key Vault (`storage-key`) | about 10 min |
-| `-Step database` | The `lira_app` role and the tables from `api/migrations`; add `-RunTests` to run the 195 API tests against the real database | 2 min |
+| `-Step database` | The `lira_app` role and the tables from `api/migrations`; add `-RunTests` to run the 327 API tests against the real database | 2 min |
 | `-Step google -GoogleClientId <id>` | Optional. Keeps the Google OAuth client secret (from the `GOOGLE_CLIENT_SECRET` variable) and a new encryption key in Key Vault, so the API can make Meet links and send emails. Then run `-Step deploy` again. See `docs/03-sop/google-setup.md` | 1 min |
+| `-Step mail -MailFrom <address>` | Optional. Keeps the Azure Communication Services Email connection string (from the `MAIL_CONNECTION_STRING` variable) in Key Vault and the sender address in the state, so the API can send confirm-your-email and password-reset mail. Create the Communication Services and Email resources, with an Azure-managed or your own verified domain, in the portal first (`docs/03-sop/email-setup.md`). Then run `-Step deploy` again | 1 min |
 | `-Step isolation` | The nine tenant-isolation checks (`docs/03-sop/rehearsal-isolation-test.sql`), run through Docker in WSL | 1 min |
 | `-Step images` | Builds the web and API Docker images in WSL and pushes them to the registry | 5 to 10 min |
 | `-Step deploy` | Container Apps environment, the API (internal only) and the web app (public) | 5 min |
 | `-Step edge` | Caddy in a container, for the Let's Encrypt certificate; prints the DNS record to add | 2 min |
 | `-Step status` | Calls `/health`, `/ready`, `/`, `/login` and `/api/me` (must answer **401**) on both addresses | 1 min |
-| `-Step all` | `check`, `infra`, `database`, `images`, `deploy`, `edge` in order | about 30 min |
+| `-Step all` | `check`, `infra`, `database`, `google` (only when `-GoogleClientId` is given and `GOOGLE_CLIENT_SECRET` is set; otherwise it ends with a PENDING line), `images`, `deploy`, `edge` in order | about 30 min |
 
 Every step can be run again: names are kept in `.state.json`, existing resources are reused, and the Key Vault passwords are only created when missing.
 
-**The one manual part, in Hostinger:** when `edge` finishes it prints a CNAME for `test` (delete any older `test` CNAME first), TTL 300. Caddy waits 10 minutes before asking Let's Encrypt, so there is time. Check with `nslookup -type=CNAME test.liraspaces.com horizon.dns-parking.com`, then `-Step status`.
+**The one manual part, in Hostinger:** when `edge` finishes it prints a CNAME for `test` (delete any older `test` CNAME first), TTL 303. Caddy waits 10 minutes before asking Let's Encrypt, so there is time. Check with `nslookup -type=CNAME test.liraspaces.com horizon.dns-parking.com`, then `-Step status`.
 
 **Then try it:** open `https://test.liraspaces.com/signup`, create an account with a password you type yourself, and log in at `/login`.
 
@@ -39,6 +40,9 @@ Every step can be run again: names are kept in `.state.json`, existing resources
 | `az acr build`, `containerapp up --source` | `scheduleRun` denied | Build with Docker in WSL and push |
 | Container Apps environment | Name must be `container-app-env`; Log Analytics workspace denied | That name, `--logs-destination none` |
 | Container app replicas | Min 0 or 1, max 0 to 2 | 0/2 for web, 1/2 for the API |
+| Container Apps environment stuck | On 24 Nov 2026 `container-app-env` stayed in provisioning state `Waiting` for 20+ minutes after the CLI lost its connection while polling | Check `az containerapp env show ... --query properties.provisioningState`; if it is still `Waiting` after about 10 minutes, delete it and run `-Step deploy` again |
+| Email Communication Services | `az communication email create` stops with `RequestDisallowedByPolicy` (policy `Azure_playground_allowed_services-tpm`, tried 27 Nov 2026), so `-Step mail` cannot be used in this sandbox | Leave email off here (the app stays usable; no confirm or reset mail). Test email on a real Azure subscription |
+| API tests against the rehearsal database | From far away (India to central US) many tests pass the 10 s limit and fail on time, not on logic | Run the tests on a local PostgreSQL (see `api/README.md`); use `-RunTests` only from a machine near the database |
 | Any certificate (managed or uploaded) | `RequestDisallowedByPolicy` | Caddy gets a Let's Encrypt certificate itself |
 | Key Vault | Standard tier, 7-day soft delete, purge protection cannot be switched off | Those settings |
 | PostgreSQL | Not in `eastus`; needs Burstable B1ms or B2s, 32 GB, P4 tier, no HA, no zone, 7-day backup, no geo backup, no autogrow | `centralus` and those settings; no `--high-availability` option on this CLI |
@@ -111,4 +115,4 @@ Log history is not kept in this sandbox (no Log Analytics), so read the logs whi
 
 - Done and tested: the API (`api/`), the sign-up and log-in screens connected to it, the `/app` session check, Log out, the web container with `/api/` forwarding, both Dockerfiles (built once in WSL, not yet run), and this script (syntax-checked only, never run end to end).
 - First run in the cloud: expect to meet a few of the symptoms in the table above. They are the point of the exercise.
-- Not done: email checking of addresses, password reset, Google sign-in, expired-session clean-up, and the organisation, role and ticket endpoints.
+- Not done here: expired-session clean-up.

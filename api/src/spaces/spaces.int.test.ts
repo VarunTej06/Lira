@@ -11,6 +11,32 @@ describe.skipIf(!ADMIN_URL)('spaces on a real database', () => {
   const spacesPath = (orgId: string, id?: number) => `/api/orgs/${orgId}/spaces${id === undefined ? '' : `/${id}`}`;
   const code = (r: { body: unknown }) => (r.body as { error: { code: string } }).error.code;
 
+  it('lists who a ticket of a space may be given to: Owner, Admins and whoever was given the space, never people who may only look or have no access, to any member who can see it', async () => {
+    const owner = await db.signUp('assign-owner@example.com');
+    const id = ((await db.call('POST', spacesPath(owner.orgId), space, owner.session)).body as { id: number }).id;
+    const other = ((await db.call('POST', spacesPath(owner.orgId), { ...space, key: 'OTHR' }, owner.session)).body as { id: number }).id;
+    const asked = async (p: { session: string }, space: number) => db.call('GET', `${spacesPath(owner.orgId, space)}/assignable`, undefined, p.session);
+    const worker = await db.addMember(owner, 'assign-worker@example.com', 'member');
+    const watcher = await db.addMember(owner, 'assign-watcher@example.com', 'viewer');
+    const stranger = await db.addMember(owner, 'assign-stranger@example.com', 'member');
+    const admin = await db.addMember(owner, 'assign-admin@example.com', 'admin');
+    for (const [who, level] of [[worker, 'edit'], [watcher, 'view']] as const) {
+      await db.call('POST', `/api/orgs/${owner.orgId}/grants`, { subjectType: 'user', subjectId: who.userId, kind: 'space', objectId: String(id), level }, owner.session);
+    }
+    const team = ((await db.call('POST', `/api/orgs/${owner.orgId}/teams`, { name: 'Builders' }, owner.session)).body as { id: string }).id;
+    const viaTeam = await db.addMember(owner, 'assign-team@example.com', 'member');
+    await db.call('PUT', `/api/orgs/${owner.orgId}/teams/${team}/members`, { userIds: [viaTeam.userId] }, owner.session);
+    await db.call('POST', `/api/orgs/${owner.orgId}/grants`, { subjectType: 'team', subjectId: team, kind: 'space', objectId: String(id), level: 'edit' }, owner.session);
+
+    const people = (await asked(worker, id)).body as { userId: string; name: string }[]; // a member with access, not only an admin, may ask
+    expect(people.map(p => p.userId).sort()).toEqual([owner.userId, admin.userId, worker.userId, viaTeam.userId].sort());
+    expect(people.every(p => Object.keys(p).sort().join() === 'name,userId')).toBe(true); // no emails, no roles
+    expect((await asked(stranger, id)).status).toBe(404); // no access to the space: it does not even exist for them
+    expect((await asked(watcher, id)).status).toBe(200); // a viewer may look at the list but is not in it
+    expect(((await asked(owner, other)).body as unknown[]).map(p => (p as { userId: string }).userId).sort()).toEqual([owner.userId, admin.userId].sort()); // another space: its own people
+    expect((await db.call('GET', `${spacesPath(owner.orgId, id)}/assignable`)).status).toBe(401);
+  });
+
   it('lets the owner create, list, change and delete a space, and writes an audit row for each change', async () => {
     const owner = await db.signUp('owner@example.com');
     const created = await db.call('POST', spacesPath(owner.orgId), { ...space, description: 'The product' }, owner.session);

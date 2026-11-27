@@ -28,7 +28,7 @@ describe.skipIf(!ADMIN_URL)('signing up and in with Google, on a real database',
   const session = (setCookie: string | undefined) => ({ Cookie: `lira_session=${/lira_session=([^;]*)/.exec(setCookie ?? '')?.[1] ?? ''}` });
 
   it('says Google is offered, and starts the sign-in with the right request: code flow, PKCE, a state and a nonce, and a signed cookie', async () => {
-    expect((await db.call('GET', '/api/auth/providers')).body).toEqual({ google: true });
+    expect((await db.call('GET', '/api/auth/providers')).body).toEqual({ google: true, email: false });
     const s = await start();
     expect(s.r.status).toBe(302);
     expect(s.url.startsWith('https://accounts.google.com/o/oauth2/v2/auth?')).toBe(true);
@@ -155,7 +155,7 @@ describe.skipIf(!ADMIN_URL)('signing up and in with Google, on a real database',
 
     it('asks for the Meet and email permissions, and offline access, only on the sign-up button; the log-in button asks only who the person is', async () => {
       const signup = await start('signup');
-      expect(signup.p.get('scope')!.split(' ').sort()).toEqual(['email', 'https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/meetings.space.created', 'openid', 'profile']);
+      expect(signup.p.get('scope')!.split(' ').sort()).toEqual(['email', 'https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/gmail.send', 'https://www.googleapis.com/auth/meetings.space.created', 'openid', 'profile']);
       expect(signup.p.get('access_type')).toBe('offline');
       expect(signup.p.get('prompt')).toBe('consent select_account');
       const login = await start();
@@ -175,7 +175,7 @@ describe.skipIf(!ADMIN_URL)('signing up and in with Google, on a real database',
       expect(conn.google_email).toBe('owner.su@gmail.com');
       expect(conn.refresh_token).toMatch(/^v1\./);
       expect(conn.refresh_token).not.toContain('refresh-secret-1');
-      expect((await db.call('GET', `/api/orgs/${orgId}/google`, undefined, session(back.cookie))).body).toEqual({ configured: true, connected: true, email: 'owner.su@gmail.com' });
+      expect((await db.call('GET', `/api/orgs/${orgId}/google`, undefined, session(back.cookie))).body).toEqual({ configured: true, connected: true, email: 'owner.su@gmail.com', calendar: false });
       const call = await db.call('POST', `/api/orgs/${orgId}/standups`, { title: 'Daily', startsAt: '2026-11-23T04:30:00Z', durationMinutes: 15, timeZone: 'UTC', invitees: [{ type: 'user', id: ((await db.call('GET', '/api/me', undefined, session(back.cookie))).body as { user: { id: string } }).user.id }] }, session(back.cookie));
       expect(call.status).toBe(201);
       expect(call.body).toMatchObject({ linkSource: 'meet' });

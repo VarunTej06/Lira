@@ -4,7 +4,8 @@ import { SavedToastHost } from './components/common/SavedToast';
 import { LinkMenuHost } from './components/common/LinkMenu';
 import { paintTheme } from './utils/theme';
 import { lazy, Suspense, useState, useEffect, useCallback, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useGuardedNavigate } from './hooks/useGuardedNavigate';
 import { AppRoutes } from './AppRoutes';
 import { TopNavigation } from './components/layout/TopNavigation';
 import { LeftSidebar } from './components/layout/LeftSidebar';
@@ -20,6 +21,7 @@ import { useProjects } from './hooks/useProjects';
 import { removeProjectData } from './hooks/projectCleanup';
 import { useAppStartup } from './hooks/useAppStartup';
 import { useAppNavigation } from './hooks/useAppNavigation';
+import { useCommandPalette } from './components/command/useCommandPalette';
 import { useCreateIssueDialog } from './hooks/useCreateIssueDialog';
 import { usePlannedSprints } from './hooks/usePlannedSprints';
 import { IssueCrashFallback, StartupScreen } from './AppParts';
@@ -39,10 +41,11 @@ if (typeof window !== 'undefined') paintTheme();
 // The ticket popup, the create dialog and Viva hold the rich text editor and the chat: they load after the first screen
 const IssueDetailModal = lazy(() => import('./components/issue/IssueDetailModal').then(m => ({ default: m.IssueDetailModal })));
 const CreateIssueModal = lazy(() => import('./components/issue/CreateIssueModal').then(m => ({ default: m.CreateIssueModal })));
+const AppCommandPalette = lazy(() => import('./components/command/AppCommandPalette').then(m => ({ default: m.AppCommandPalette })));
 const VivaAIChatbot = lazy(() => import('./components/ai/VivaAIChatbot').then(m => ({ default: m.VivaAIChatbot })));
 
 export default function App() {
-  const navigate = useNavigate();
+  const navigate = useGuardedNavigate();
   const location = useLocation();
   const route = useMemo(() => parsePath(location.pathname), [location.pathname]);
   const activeTab = tabOf(route);
@@ -67,6 +70,12 @@ export default function App() {
   const { handleSelectSpace, openSpaceBoard, goTab } = useAppNavigation({ route, navigate, spaces, activeSpace, setSidebarCollapsed });
 
   const createIssue = useCreateIssueDialog();
+  const palette = useCommandPalette();
+  // Fetched quietly once the first screen is up, so the first Ctrl+K opens at once and a fast typist loses no letters
+  useEffect(() => {
+    const id = window.setTimeout(() => { void import('./components/command/AppCommandPalette'); }, 1500);
+    return () => window.clearTimeout(id);
+  }, []);
   const [showCreateSpace, setShowCreateSpace] = useState(false);
   const [showAIChatbot, setShowAIChatbot] = useState(false);
   const [filterPreset, setFilterPreset] = useState<string | null>(null);
@@ -125,6 +134,8 @@ export default function App() {
           onSpaceSelect={handleSelectSpace}
           onCreateSpace={() => setShowCreateSpace(true)}
           onNavigateToDashboards={() => navigate('/dashboards')}
+          onNavigateToMindMaps={() => navigate('/mindmaps')}
+          onNavigateToStoryBoxes={() => navigate('/storyboxes')}
           onNavigateToProjects={() => navigate('/projects')}
           onNavigateToSprints={() => navigate('/sprints')}
           onNavigateToRoadmaps={() => navigate('/roadmaps')}
@@ -173,6 +184,10 @@ export default function App() {
       <DashboardScheduler issues={allIssues} spaces={spaceList} />
 
       <Suspense fallback={null}>
+      {palette.open && (
+        <AppCommandPalette spaces={spaceList} issues={everyIssue} go={navigate} openIssue={openIssue} onClose={() => palette.setOpen(false)}
+          createTicket={() => createIssue.open('todo', { chooseSpace: true })} createSpace={() => setShowCreateSpace(true)} />
+      )}
       {/* Issue detail modal */}
       <ErrorBoundary fallback={<IssueCrashFallback onClose={closeModal} />}>
         {selectedIssue && (

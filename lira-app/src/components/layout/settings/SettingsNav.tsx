@@ -1,4 +1,5 @@
 import { Sun, HardDrive, User, Bell, Monitor, Smartphone } from 'lucide-react';
+import { isHosted } from '../../../utils/edition';
 import type { SettingsState } from './useSettingsState';
 
 /** The list of settings pages on the left. */
@@ -12,7 +13,7 @@ export function SettingsNav(s: SettingsState) {
             Workspace Settings
           </div>
 
-          <button
+          {!isHosted() && <button
             onClick={() => setActiveSection('appearance')}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer text-left whitespace-nowrap ${
               activeSection === 'appearance'
@@ -22,7 +23,7 @@ export function SettingsNav(s: SettingsState) {
           >
             <Sun className="w-4 h-4 flex-shrink-0" />
             <span>Appearance</span>
-          </button>
+          </button>}
 
           <button
             onClick={() => setActiveSection('backup')}

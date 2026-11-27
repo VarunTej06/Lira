@@ -1,18 +1,27 @@
 import { useState } from 'react';
-import { invite, removeMember, revokeInvitation, updateMember, inviteLink, type AssignableRole, type CreatedInvitation, type Invitation, type Member, type Team } from '../../services/accessApi';
+import { invite, removeMember, revokeInvitation, updateMember, inviteLink, type AssignableRole, type CreatedInvitation, type Invitation, type Level, type Member, type Shares, type Team } from '../../services/accessApi';
+import { useSpaceChoices } from '../../hooks/useSpaceChoices';
+import { initialsOf } from '../../utils/accessRows';
+import { Avatar } from '../common/Avatar';
 import { confirmDialog } from '../common/dialogStore';
-import { BUTTON, FIELD, ROLES } from './teamsUi';
+import { BUTTON, FIELD, LEVELS, ROLES } from './teamsUi';
 
+const SHARE_SWITCHES: readonly [keyof Shares, string][] = [['projects', 'Linked projects'], ['roadmaps', 'Linked roadmaps'], ['dashboards', 'Dashboards of this space only'], ['sprints', 'Sprints']];
 const QUIET = 'rounded px-2 py-1 text-ui border border-lira-border text-lira-text hover:bg-gray-50';
 
-interface Props { org: string; role: string; members: Member[]; teams: Team[]; invitations: Invitation[]; reload: () => void }
+interface Props { org: string; role: string; members: Member[]; teams: Team[]; invitations: Invitation[]; reload: () => void; /** When given, a person's name opens their own page. */ onOpen?: (userId: string) => void; /** A line about how much each person reaches, by user id. */ reach?: Record<string, string>; selectedId?: string }
 
 /** Who is in the organisation, and who has been invited. The owner changes roles; the Owner and permitted Admins invite and remove. */
-export function PeopleTab({ org, role, members, teams, invitations, reload }: Props) {
+export function PeopleTab({ org, role, members, teams, invitations, reload, onOpen, reach, selectedId }: Props) {
   const isOwner = role === 'owner';
   const [email, setEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<AssignableRole>('member');
   const [teamId, setTeamId] = useState('');
+  const [spaceId, setSpaceId] = useState('');
+  const [level, setLevel] = useState<Level>('edit');
+  const [shares, setShares] = useState<Shares>({ projects: true, roadmaps: true, dashboards: true, sprints: true });
+  const spaces = useSpaceChoices(org);
+  const roles = spaceId ? ROLES.filter(r => r.value !== 'admin') : ROLES; // an Admin has every space already
   const [created, setCreated] = useState<CreatedInvitation | null>(null);
   const [problem, setProblem] = useState('');
   const [busy, setBusy] = useState(false);
@@ -26,7 +35,7 @@ export function PeopleTab({ org, role, members, teams, invitations, reload }: Pr
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true); setProblem(''); setCreated(null);
-    const r = await invite(org, { email: email.trim(), role: inviteRole, ...(teamId ? { teamId } : {}) });
+    const r = await invite(org, { email: email.trim(), role: inviteRole, ...(teamId ? { teamId } : {}), ...(spaceId ? { spaceId: Number(spaceId), level, shares } : {}) });
     setBusy(false);
     if (!r.ok) { setProblem(r.fields?.email ?? r.message); return; }
     setCreated(r.data); setEmail(''); reload();
@@ -41,8 +50,26 @@ export function PeopleTab({ org, role, members, teams, invitations, reload }: Pr
       <form onSubmit={e => { void send(e); }} className="flex flex-wrap items-end gap-2" aria-label="Invite someone">
         <label className="flex flex-col gap-1 text-ui">Email<input type="email" required value={email} onChange={e => setEmail(e.target.value)} className={`${FIELD} w-64`} /></label>
         <label className="flex flex-col gap-1 text-ui">Role
-          <select value={inviteRole} onChange={e => setInviteRole(e.target.value as AssignableRole)} className={FIELD}>{ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}</select>
+          <select value={inviteRole} onChange={e => setInviteRole(e.target.value as AssignableRole)} className={FIELD}>{roles.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}</select>
         </label>
+        <label className="flex flex-col gap-1 text-ui">Space (optional)
+          <select value={spaceId} onChange={e => { setSpaceId(e.target.value); if (e.target.value && inviteRole === 'admin') setInviteRole('member'); }} className={FIELD}>
+            <option value="">Whole organisation</option>{spaces.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+          </select>
+        </label>
+        {spaceId && (
+          <label className="flex flex-col gap-1 text-ui">Access to the space
+            <select value={level} onChange={e => setLevel(e.target.value as Level)} className={FIELD}>{LEVELS.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}</select>
+          </label>
+        )}
+        {spaceId && (
+          <fieldset className="flex flex-wrap items-center gap-x-4 gap-y-1 text-ui w-full border border-lira-border rounded px-3 py-2">
+            <legend className="px-1 text-lira-muted">Besides its tickets and comments, they also see</legend>
+            {SHARE_SWITCHES.map(([key, label]) => (
+              <label key={key} className="flex items-center gap-1.5"><input type="checkbox" checked={shares[key]} onChange={e => setShares({ ...shares, [key]: e.target.checked })} />{label}</label>
+            ))}
+          </fieldset>
+        )}
         <label className="flex flex-col gap-1 text-ui">Team (optional)
           <select value={teamId} onChange={e => setTeamId(e.target.value)} className={FIELD}><option value="">No team</option>{teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}</select>
         </label>
@@ -66,7 +93,8 @@ export function PeopleTab({ org, role, members, teams, invitations, reload }: Pr
           <ul className="divide-y divide-lira-border border border-lira-border rounded-lg">
             {invitations.map(i => (
               <li key={i.id} className="flex items-center gap-3 px-3 py-2 text-ui">
-                <span className="flex-1">{i.email}</span><span className="text-lira-muted capitalize">{i.role}</span>
+                <span className="flex-1">{i.email}</span>
+                <span className="text-lira-muted capitalize">{i.role}{i.spaceId !== null && ` · ${spaces.find(s => s.id === i.spaceId)?.name ?? 'a space'} (${i.level})`}</span>
                 <button type="button" onClick={() => { void act(() => revokeInvitation(org, i.id)); }} className={QUIET}>Cancel invitation</button>
               </li>
             ))}
@@ -78,8 +106,9 @@ export function PeopleTab({ org, role, members, teams, invitations, reload }: Pr
         <h3 className="text-sm font-bold mb-2">People ({members.length})</h3>
         <ul className="divide-y divide-lira-border border border-lira-border rounded-lg">
           {members.map(m => (
-            <li key={m.userId} className="flex flex-wrap items-center gap-3 px-3 py-2 text-ui">
-              <span className="flex-1 min-w-40"><strong>{m.name}</strong><br /><span className="text-lira-muted">{m.email}</span></span>
+            <li key={m.userId} aria-current={m.userId === selectedId ? 'true' : undefined} className={`flex flex-wrap items-center gap-3 px-3 py-2.5 text-ui ${m.userId === selectedId ? 'bg-lira-blue-light' : ''}`}>
+              <Avatar initials={initialsOf(m.name, m.email)} size="lg" />
+              <span className="flex-1 min-w-40">{onOpen ? <button type="button" onClick={() => onOpen(m.userId)} className="underline text-left font-bold">{m.name}</button> : <strong>{m.name}</strong>}<br /><span className="text-lira-muted">{m.email}</span>{reach && <><br /><span className="text-2xs text-lira-muted">{[...teams.filter(t => m.teamIds.includes(t.id)).map(t => t.name), reach[m.userId]].filter(Boolean).join(' · ')}</span></>}</span>
               {m.role === 'owner' ? <span className="font-bold">Owner</span> : isOwner ? (
                 <select aria-label={`Role of ${m.name}`} value={m.role} onChange={e => { void act(() => updateMember(org, m.userId, { role: e.target.value as AssignableRole })); }} className={FIELD}>
                   {ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}

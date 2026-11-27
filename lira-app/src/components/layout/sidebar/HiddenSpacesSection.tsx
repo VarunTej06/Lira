@@ -66,7 +66,7 @@ export function HiddenSpacesSection(s: SidebarState) {
         {hiddenSpacesExpanded && (
           <div className="mt-0.5">
             {hiddenSpaces.length === 0 ? (
-              <div className="px-3 py-1.5 text-2xs text-white/30 italic">
+              <div className="px-3 py-1.5 text-2xs text-white/60 italic">
                 No hidden spaces
               </div>
             ) : (

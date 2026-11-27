@@ -45,7 +45,7 @@ export function SprintsSection(s: SidebarState) {
                     </span>
                     <span className="truncate flex-1">{sprintLabel(k)}</span>
                     {phase === 'active' && <span className="text-4xs font-bold text-green-300">ACTIVE</span>}
-                    <span className="text-3xs text-white/40 tabular-nums">{c.done}/{c.total}</span>
+                    <span className="text-3xs text-white/60 tabular-nums">{c.done}/{c.total}</span>
                   </button>
                   <RowMenuButton
                     open={rowMenu === `sprint:${k}`}
@@ -53,7 +53,7 @@ export function SprintsSection(s: SidebarState) {
                     label="Sprint actions"
                     menuKey={`sprint:${k}`}
                   >
-                    <ContextItem icon={<CalendarClock className="w-3.5 h-3.5 text-teal-400" />} label="Open sprint" onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} />
+                    <ContextItem icon={<CalendarClock className="w-3.5 h-3.5 text-lira-nav-accent" />} label="Open sprint" onClick={() => { setRowMenu(null); onSelectSprint?.(k); }} />
                     <div className="border-t border-white/10 my-1" />
                     {canDeleteSprint(k) ? (
                       <ContextItem
@@ -69,7 +69,7 @@ export function SprintsSection(s: SidebarState) {
                         }}
                       />
                     ) : (
-                      <div className="px-3 py-2 text-2xs text-white/40 leading-snug max-w-[200px]">The current and next sprints always exist, so they cannot be deleted.</div>
+                      <div className="px-3 py-2 text-2xs text-white/60 leading-snug max-w-[200px]">The current and next sprints always exist, so they cannot be deleted.</div>
                     )}
                   </RowMenuButton>
                 </div>
@@ -78,7 +78,7 @@ export function SprintsSection(s: SidebarState) {
             {sprintKeys.length > visibleSprintKeys.length || showAllSprints ? (
               <button
                 onClick={() => setShowAllSprints(v => !v)}
-                className="w-full text-left px-2.5 py-1 text-2xs text-white/40 hover:text-white/70 cursor-pointer"
+                className="w-full text-left px-2.5 py-1 text-2xs text-white/60 hover:text-white cursor-pointer"
               >
                 {showAllSprints ? 'Show fewer' : `Show all ${sprintKeys.length} sprints`}
               </button>

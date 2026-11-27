@@ -21,6 +21,18 @@ export const loginSchema = z.strictObject({
   remember: z.boolean().optional(),
 });
 
+const linkToken = z.string().regex(/^[A-Za-z0-9_-]{43}$/, 'This link is not valid.');
+
+export const verifyEmailSchema = z.strictObject({ token: linkToken });
+export const forgotPasswordSchema = z.strictObject({ email });
+export const resetPasswordSchema = z.strictObject({
+  token: linkToken,
+  password: z.string().min(MIN_PASSWORD, `Use at least ${MIN_PASSWORD} characters.`).max(MAX_PASSWORD, `Use at most ${MAX_PASSWORD} characters.`),
+});
+
+export const twoStepLoginSchema = z.strictObject({ challenge: linkToken, code: z.string().trim().min(6, 'Enter the code.').max(12, 'That code is too long.') });
+export const twoStepCodeSchema = z.strictObject({ code: z.string().trim().min(6, 'Enter the code.').max(12, 'That code is too long.') });
+
 export type SignupInput = z.infer<typeof signupSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 

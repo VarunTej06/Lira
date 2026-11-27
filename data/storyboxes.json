@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-27T17:51:32.230Z",
+  "entries": {
+    "lira_storyboxes": [
+      {
+        "createdAt": "2026-11-24T08:53:35.417Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "04350dd2-1845-4872-8da5-3d4fdcbc032d",
+        "localRounds": {
+          "97": {
+            "endsAt": "2026-11-24T11:44:03.332Z",
+            "revealed": true
+          }
+        },
+        "localVotes": {},
+        "name": "Space Courses",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "spaceId": 4,
+          "type": "space"
+        },
+        "status": "open"
+      },
+      {
+        "createdAt": "2026-11-24T11:00:35.478Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "8da5a10e-f975-4b99-92dc-c7a4e51ad18b",
+        "localVotes": {
+          "119": 3
+        },
+        "name": "Space General Tasks",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "spaceId": 1,
+          "type": "space"
+        },
+        "status": "open"
+      },
+      {
+        "createdAt": "2026-11-24T11:12:36.483Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "5528f5a1-3db0-420f-a1b3-51fc0018323d",
+        "localRounds": {
+          "119": {
+            "endsAt": "2026-11-24T11:46:27.211Z",
+            "revealed": false
+          }
+        },
+        "localVotes": {},
+        "name": "Space General Tasks",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "spaceId": 1,
+          "type": "space"
+        },
+        "status": "open"
+      },
+      {
+        "createdAt": "2026-11-24T12:33:44.985Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "5ed49259-2f51-453b-b9b2-5fca06e20987",
+        "localRounds": {
+          "176": {
+            "endsAt": "2026-11-24T12:37:48.047Z",
+            "finalPoints": 2,
+            "revealed": true
+          },
+          "178": {
+            "endsAt": "2026-11-27T17:53:20.076Z",
+            "finalPoints": 3,
+            "revealed": true
+          }
+        },
+        "localVotes": {
+          "178": 3
+        },
+        "name": "lira",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "spaceId": 6,
+          "type": "space"
+        },
+        "status": "open",
+        "votingMinutes": 2
+      },
+      {
+        "createdAt": "2026-11-24T14:06:20.745Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "18bb23fc-e67a-4a4a-8e39-34987d4b905f",
+        "name": "Space Atmos - Weather App",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "spaceId": 5,
+          "type": "space"
+        },
+        "status": "open",
+        "votingMinutes": 2
+      },
+      {
+        "createdAt": "2026-11-26T12:12:31.243Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "843489e1-1681-41e4-b880-05bee2fd8f28",
+        "name": "Space Courses",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "spaceId": 4,
+          "type": "space"
+        },
+        "status": "open",
+        "votingMinutes": 1
+      },
+      {
+        "createdAt": "2026-11-26T12:12:48.013Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "75a42dfa-69dc-48ae-b144-83a978f8cfbd",
+        "name": "Sprint 2026-11, all spaces",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "sprintKey": "2026-11",
+          "type": "sprint"
+        },
+        "status": "open",
+        "votingMinutes": 2
+      }
+    ]
+  }
+}

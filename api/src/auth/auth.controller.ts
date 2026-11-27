@@ -3,9 +3,11 @@ import type { Request, Response } from 'express';
 import type { ZodType } from 'zod';
 import { CONFIG, type Config } from '../config';
 import { AuthService, type SignedIn } from './auth.service';
+import { RecoveryService } from './recovery.service';
+import { TwoStepService } from './two-step.service';
 import { ClientGuard } from './client.guard';
 import { GoogleLoginService, LOGIN_COOKIE } from './google-login.service';
-import { fieldErrors, loginSchema, signupSchema } from './schemas';
+import { fieldErrors, forgotPasswordSchema, loginSchema, resetPasswordSchema, signupSchema, twoStepCodeSchema, twoStepLoginSchema, verifyEmailSchema } from './schemas';
 import { clearedCookie, sessionCookie, tokenFromCookieHeader } from './session';
 
 /** The body as the schema allows it, or a 400 that names each field that is wrong. */
@@ -23,7 +25,8 @@ const tokenOf = (req: Request) => tokenFromCookieHeader(req.headers.cookie);
 export class AuthController {
   constructor(
     @Inject(AuthService) private readonly auth: AuthService, @Inject(CONFIG) private readonly config: Config,
-    @Inject(GoogleLoginService) private readonly googleLogin: GoogleLoginService,
+    @Inject(GoogleLoginService) private readonly googleLogin: GoogleLoginService, @Inject(RecoveryService) private readonly recovery: RecoveryService,
+    @Inject(TwoStepService) private readonly twoStep: TwoStepService,
   ) {}
 
   private get origin(): string { return this.config.allowedOrigins[0] ?? ''; }
@@ -31,7 +34,7 @@ export class AuthController {
 
   /** Which ways of signing in this server offers, so the page shows only buttons that work. */
   @Get('auth/providers')
-  providers() { return { google: this.googleLogin.enabled }; }
+  providers() { return { google: this.googleLogin.enabled, email: this.recovery.enabled }; }
 
   /** Sends the browser to Google to sign in or sign up. */
   @Get('auth/google/start')
@@ -62,7 +65,42 @@ export class AuthController {
   @Post('auth/login')
   @HttpCode(200)
   async login(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.reply(res, await this.auth.login(parse(loginSchema, body), address(req)), 200);
+    const result = await this.auth.login(parse(loginSchema, body), address(req));
+    if ('challenge' in result) { res.setHeader('Cache-Control', 'no-store'); return { twoStep: true, challenge: result.challenge }; }
+    return this.reply(res, result, 200);
+  }
+
+  /** The second step of a log-in with two-step sign-in on. */
+  @Post('auth/login/two-step')
+  @HttpCode(200)
+  async loginTwoStep(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const input = parse(twoStepLoginSchema, body);
+    return this.reply(res, await this.auth.loginTwoStep(input.challenge, input.code, address(req)), 200);
+  }
+
+  @Get('me/two-step')
+  async twoStepStatus(@Req() req: Request) {
+    return this.twoStep.status(await this.userId(req));
+  }
+
+  @Post('me/two-step/begin')
+  @HttpCode(200)
+  async twoStepBegin(@Req() req: Request) {
+    const me = await this.auth.me(tokenOf(req));
+    if (!me) throw new UnauthorizedException('You are not signed in.');
+    return this.twoStep.begin(me.user.id, me.user.email);
+  }
+
+  @Post('me/two-step/confirm')
+  @HttpCode(200)
+  async twoStepConfirm(@Body() body: unknown, @Req() req: Request) {
+    return { recoveryCodes: await this.twoStep.confirm(await this.userId(req), parse(twoStepCodeSchema, body).code, address(req)) };
+  }
+
+  @Post('me/two-step/disable')
+  @HttpCode(204)
+  async twoStepDisable(@Body() body: unknown, @Req() req: Request) {
+    await this.twoStep.disable(await this.userId(req), parse(twoStepCodeSchema, body).code, address(req));
   }
 
   @Post('auth/logout')
@@ -72,12 +110,48 @@ export class AuthController {
     res.setHeader('Set-Cookie', clearedCookie(this.config.cookieSecure));
   }
 
+  /** Confirms the address the link was sent to. */
+  @Post('auth/verify-email')
+  @HttpCode(204)
+  async verifyEmail(@Body() body: unknown, @Req() req: Request) {
+    await this.recovery.verify(parse(verifyEmailSchema, body).token, address(req));
+  }
+
+  /** The signed-in person asks for a new confirmation link. */
+  @Post('auth/resend-verification')
+  @HttpCode(204)
+  async resendVerification(@Req() req: Request) {
+    const me = await this.auth.me(tokenOf(req));
+    if (!me) throw new UnauthorizedException('You are not signed in.');
+    await this.recovery.resendVerification(me.user);
+  }
+
+  /** Same answer whether or not the address has an account. */
+  @Post('auth/forgot-password')
+  @HttpCode(204)
+  async forgotPassword(@Body() body: unknown, @Req() req: Request) {
+    await this.recovery.forgot(parse(forgotPasswordSchema, body).email, address(req));
+  }
+
+  @Post('auth/reset-password')
+  @HttpCode(204)
+  async resetPassword(@Body() body: unknown, @Req() req: Request) {
+    const input = parse(resetPasswordSchema, body);
+    await this.recovery.reset(input.token, input.password, address(req));
+  }
+
   @Get('me')
   async me(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const me = await this.auth.me(tokenOf(req));
     res.setHeader('Cache-Control', 'no-store');
     if (!me) throw new UnauthorizedException('You are not signed in.');
     return me;
+  }
+
+  private async userId(req: Request): Promise<string> {
+    const me = await this.auth.me(tokenOf(req));
+    if (!me) throw new UnauthorizedException('You are not signed in.');
+    return me.user.id;
   }
 
   private reply(res: Response, signedIn: SignedIn, status: number) {

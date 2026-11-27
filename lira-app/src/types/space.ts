@@ -7,6 +7,8 @@ export interface Space {
   description?: string;
   /** Hosted edition: the version the server last gave this space. A change is sent with it so a stale one is refused. */
   version?: number;
+  /** Hosted edition: what the signed-in person may do here. The server checks every change anyway; this lets the screen hide what would be refused. */
+  myLevel?: 'view' | 'edit' | 'manage';
   createdAt: Date;
   updatedAt: Date;
 }

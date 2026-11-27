@@ -10,7 +10,7 @@ Build order for the versions of Lira. Pick a phase number to start and it will b
 | 4 | Sprint planning, rollover, retros, reports | Agile | Large | **Done** |
 | 5 | Command palette, bulk edit, saved filters | Productivity | Medium | Not started |
 | 6 | Viva AI: confirm-and-undo, sprint-aware prompts | AI | Medium | **Done** |
-| 7 | Multi-user with SSO | Architecture | Very large | **In progress: version 4.0.0 has the hosted edition (Liraspaces) running in a rehearsal.** Accounts, Google sign-up and sign-in, roles, teams and permissions, server storage, attachments in Blob Storage. Next: a real Azure subscription, email verification and password reset, Microsoft sign-in, realtime updates, Viva on the server, the data importer. Plan: [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md); decisions in [docs/00-decisions](docs/00-decisions/README.md) |
+| 7 | Multi-user with SSO | Architecture | Very large | **In progress: version 4.0.0 has the hosted edition (Liraspaces) running in a rehearsal.** Accounts, Google sign-up and sign-in, roles, teams and permissions, server storage, attachments in Blob Storage. Email confirmation and password reset are built (24 Nov 2026). Next: a real Azure subscription, Microsoft sign-in, realtime updates, Viva on the server, the data importer. Plan: [PUBLIC_EDITION_PLAN.md](PUBLIC_EDITION_PLAN.md); decisions in [docs/00-decisions](docs/00-decisions/README.md) |
 
 Phases 1 and 2 make every later phase cheaper, so they came first.
 

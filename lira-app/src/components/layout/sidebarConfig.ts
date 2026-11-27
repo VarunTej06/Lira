@@ -10,7 +10,7 @@ export interface SidebarConfig {
 
 export const CONFIG_VERSION = 2;
 
-export const DEFAULT_NAV_ORDER = ['forYou', 'projects', 'sprints', 'allTickets', 'roadmaps', 'dashboards'];
+export const DEFAULT_NAV_ORDER = ['forYou', 'projects', 'sprints', 'allTickets', 'roadmaps', 'dashboards', 'mindMaps', 'storyBoxes'];
 export const DEFAULT_SECTION_ORDER = ['sec_spaces', 'sec_projects', 'sec_sprints', 'sec_hidden'];
 
 export const DEFAULT_VISIBILITY: Record<string, boolean> = Object.fromEntries(

@@ -65,7 +65,7 @@ export type KvChanges = Record<string, string | null>;
 export const readKv = (orgId: string) => send<KvData>('GET', `${org(orgId)}/kv`);
 export const writeKv = (orgId: string, changes: { shared?: KvChanges; mine?: KvChanges }) => send<void>('PUT', `${org(orgId)}/kv`, changes);
 
-export type ObjectKind = 'project' | 'roadmap' | 'dashboard';
+export type ObjectKind = 'project' | 'roadmap' | 'dashboard' | 'storybox' | 'mindmap';
 export interface ServerObject { id: string; position: number; doc: Record<string, unknown>; version: number; level: 'view' | 'edit' | 'manage' }
 /** Projects, roadmaps and dashboards, one row each, so access can be given to one and not another (ADR-0010). The list holds only what the person may view. */
 export const listObjects = (orgId: string, kind: ObjectKind) => send<ServerObject[]>('GET', `${org(orgId)}/objects/${kind}`);
@@ -78,6 +78,11 @@ export const createSpaceOnServer = (orgId: string, space: Parameters<typeof spac
 export const updateSpaceOnServer = (orgId: string, id: number, version: number, changes: Partial<Pick<Space, 'name' | 'icon' | 'color' | 'description'>>) =>
   map(send<Raw>('PATCH', `${org(orgId)}/spaces/${id}`, { version, ...changes }), spaceFromServer);
 export const deleteSpaceOnServer = (orgId: string, id: number, version: number) => send<void>('DELETE', `${org(orgId)}/spaces/${id}`, { version });
+
+/** The people a ticket of a space may be given to (names only). */
+export const askVivaOnServer = (orgId: string, body: { question: string; spaceId?: number }) => send<{ answer: string; provider: string; model: string }>('POST', `${org(orgId)}/ai/ask`, body);
+
+export const listAssignable = (orgId: string, spaceId: number) => send<{ userId: string; name: string }[]>('GET', `${org(orgId)}/spaces/${spaceId}/assignable`);
 
 export const listTickets = (orgId: string, spaceId: number) => map(send<Raw[]>('GET', `${org(orgId)}/spaces/${spaceId}/tickets`), rows => rows.map(ticketFromServer));
 export const createTicketOnServer = (orgId: string, spaceId: number, issue: Partial<Issue>) =>

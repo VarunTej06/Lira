@@ -11,16 +11,27 @@ const letters = async (n: number) => { for (let i = 0; i < n; i++) await act(asy
 const Probe = ({ text }: { text: string }) => <p id="t"><TypedText text={text} letterMs={100} /></p>;
 
 describe('TypedText', () => {
-  it('starts empty and adds one letter at a time until the whole word is there, then stops', async () => {
+  it('starts empty and adds one letter at a time until the whole word is there', async () => {
     mount(<Probe text="anywhere" />);
     expect(q('#t')!.textContent).toBe('');
     await letters(1);
     expect(q('#t')!.textContent).toBe('a');
     await letters(3);
     expect(q('#t')!.textContent).toBe('anyw');
-    await letters(10);
+    await letters(4);
     expect(q('#t')!.textContent).toBe('anywhere');
-    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('holds the whole word for two seconds, then empties and types it again', async () => {
+    mount(<Probe text="hi" />);
+    await letters(2);
+    expect(q('#t')!.textContent).toBe('hi');
+    await act(async () => { await vi.advanceTimersByTimeAsync(1900); });
+    expect(q('#t')!.textContent).toBe('hi');
+    await act(async () => { await vi.advanceTimersByTimeAsync(200); });
+    expect(q('#t')!.textContent).toBe('');
+    await letters(1);
+    expect(q('#t')!.textContent).toBe('h');
   });
 
   it('starts again from nothing when it is mounted again', async () => {
@@ -36,5 +47,6 @@ describe('TypedText', () => {
     vi.stubGlobal('matchMedia', (query: string) => ({ matches: query.includes('reduce'), media: query }));
     mount(<Probe text="anywhere" />);
     expect(q('#t')!.textContent).toBe('anywhere');
+    expect(vi.getTimerCount()).toBe(0);
   });
 });

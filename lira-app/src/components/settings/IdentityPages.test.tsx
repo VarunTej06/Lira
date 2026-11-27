@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act } from 'react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { byText, cleanup, click, mount, q, qa, settle } from '../../test/render';
 import { setActiveOrg } from '../../utils/hostedOrg';
-import { TeamsPage } from './TeamsPage';
+import { SettingsRoutes } from './SettingsRoutes';
 
 const api = vi.hoisted(() => ({
   myAccess: vi.fn(), listMembers: vi.fn(), listTeams: vi.fn(), listInvitations: vi.fn(), invite: vi.fn(), updateMember: vi.fn(), removeMember: vi.fn(),
@@ -35,7 +36,9 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); setActiveOrg(null); });
 
-const open = async () => { mount(<TeamsPage />); await settle(40); };
+const page = (path = '/settings/users') => <MemoryRouter initialEntries={[path]}><Routes><Route path="/settings/*" element={<SettingsRoutes />} /></Routes></MemoryRouter>;
+const open = async (path?: string) => { mount(page(path)); await settle(40); };
+const rail = (label: string) => byText('nav[aria-label="Settings"] a', label);
 const type = async (el: HTMLInputElement, value: string) => {
   await act(async () => {
     Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(el, value);
@@ -49,10 +52,10 @@ const pick = async (el: HTMLSelectElement, value: string) => {
   });
 };
 
-describe('Teams and access page', () => {
+describe('Settings: users, teams and access', () => {
   it('shows a loading state, then the people with their roles', async () => {
     api.myAccess.mockReturnValue(new Promise(() => undefined));
-    mount(<TeamsPage />);
+    mount(page());
     expect(q('[aria-label="Loading people and teams"]')).not.toBeNull();
     cleanup();
     api.myAccess.mockResolvedValue(ok({ role: 'owner', canManageAccess: true }));
@@ -75,7 +78,7 @@ describe('Teams and access page', () => {
     expect(q('[role="alert"]')!.textContent).toContain('Could not reach the server.');
     await click(byText('button', 'Try again'));
     await settle(40);
-    expect(q('[role="tablist"]')).not.toBeNull();
+    expect(q('[aria-label="People"]')).not.toBeNull();
   });
 
   it('lets the owner change a role and an Admin\'s access to manage people, and nobody else', async () => {
@@ -95,9 +98,9 @@ describe('Teams and access page', () => {
   it('asks before removing someone, and does not remove them when the owner says no', async () => {
     await open();
     dialog.confirmDialog.mockResolvedValueOnce(false);
-    await click(qa('[aria-label="People"] li')[1].querySelector('button')!);
+    await click(byText('button', 'Remove', qa('[aria-label="People"] li')[1])!);
     expect(api.removeMember).not.toHaveBeenCalled();
-    await click(qa('[aria-label="People"] li')[1].querySelector('button')!);
+    await click(byText('button', 'Remove', qa('[aria-label="People"] li')[1])!);
     expect(api.removeMember).toHaveBeenCalledWith('org-1', 'u1');
   });
 
@@ -105,13 +108,35 @@ describe('Teams and access page', () => {
     api.invite.mockResolvedValue(ok({ id: 'i1', email: 'new@x.co', role: 'viewer', teamId: 't1', expiresAt: '2026-11-27T00:00:00Z', token: 'T'.repeat(43), emailed: false }));
     await open();
     await type(q<HTMLInputElement>('form[aria-label="Invite someone"] input[type="email"]')!, 'new@x.co');
-    const [role, team] = qa<HTMLSelectElement>('form[aria-label="Invite someone"] select');
+    const [role, , team] = qa<HTMLSelectElement>('form[aria-label="Invite someone"] select'); // role, space, team
     await pick(role, 'viewer'); await pick(team, 't1');
     await click(byText('button', 'Invite'));
     await settle(30);
     expect(api.invite).toHaveBeenCalledWith('org-1', { email: 'new@x.co', role: 'viewer', teamId: 't1' });
     expect(q('[role="status"]')!.textContent).toContain('Email is not connected yet');
     expect(q<HTMLInputElement>('input[aria-label="Invitation link"]')!.value).toBe(`${window.location.origin}/invite?token=${'T'.repeat(43)}`);
+  });
+
+  it('invites to one space with an access level, leaves Admin out of the roles for it, and lists the pending invitation with the space', async () => {
+    api.invite.mockResolvedValue(ok({ id: 'i1', email: 'new@x.co', role: 'guest', teamId: null, spaceId: 4, level: 'edit', expiresAt: '', token: 'T'.repeat(43), emailed: true }));
+    api.listInvitations.mockResolvedValue(ok([{ id: 'i1', email: 'new@x.co', role: 'guest', teamId: null, spaceId: 4, level: 'edit', expiresAt: '' }]));
+    await open();
+    const form = 'form[aria-label="Invite someone"]';
+    expect([...qa<HTMLOptionElement>(`${form} select option`)].some(o => o.value === 'admin')).toBe(true);
+    await type(q<HTMLInputElement>(`${form} input[type="email"]`)!, 'new@x.co');
+    const [role, space] = qa<HTMLSelectElement>(`${form} select`);
+    await pick(space, '4');
+    expect([...role.options].map(o => o.value)).not.toContain('admin');
+    await pick(role, 'guest');
+    expect(q(form)!.textContent).toContain('Access to the space');
+    const switches = qa<HTMLInputElement>(`${form} fieldset input[type="checkbox"]`);
+    expect(switches).toHaveLength(4); // projects, roadmaps, dashboards, sprints: all on to begin with
+    expect(switches.every(c => c.checked)).toBe(true);
+    await act(async () => { switches[0].click(); switches[3].click(); });
+    await click(byText('button', 'Invite'));
+    await settle(30);
+    expect(api.invite).toHaveBeenCalledWith('org-1', { email: 'new@x.co', role: 'guest', spaceId: 4, level: 'edit', shares: { projects: false, roadmaps: true, dashboards: true, sprints: false } });
+    expect(q('section[aria-label="Pending invitations"]')!.textContent).toContain('Lira (edit)');
   });
 
   it('says the email was sent when it was, with no link shown', async () => {
@@ -140,7 +165,7 @@ describe('Teams and access page', () => {
   it('makes teams, saves who is in one, and deletes one after asking', async () => {
     api.createTeam.mockResolvedValue(ok({ id: 't2', name: 'Design', memberIds: [] }));
     await open();
-    await click(byText('[role="tab"]', 'Teams'));
+    await click(rail('Teams'));
     expect(q('section[aria-label="QA"]')!.textContent).toContain('1 person');
     await type(q<HTMLInputElement>('form[aria-label="Create a team"] input')!, 'Design');
     await click(byText('button', 'Create team'));
@@ -158,7 +183,7 @@ describe('Teams and access page', () => {
   it('shows why a team name was refused', async () => {
     api.createTeam.mockResolvedValue(refused('A team with this name already exists.'));
     await open();
-    await click(byText('[role="tab"]', 'Teams'));
+    await click(rail('Teams'));
     await type(q<HTMLInputElement>('form[aria-label="Create a team"] input')!, 'QA');
     await click(byText('button', 'Create team'));
     expect(q('[role="alert"]')!.textContent).toContain('already exists');
@@ -168,7 +193,7 @@ describe('Teams and access page', () => {
     api.listGrants.mockResolvedValue(ok([{ id: 'g1', subjectType: 'team', subjectId: 't1', kind: 'space', objectId: '4', level: 'edit' }]));
     api.setGrant.mockResolvedValue(ok({}));
     await open();
-    await click(byText('[role="tab"]', 'Access'));
+    await click(rail('Access'));
     await settle(40);
     expect(api.listGrants).toHaveBeenCalledWith('org-1', 'space', '4');
     expect(q('[aria-label="Who has access"]')!.textContent).toContain('Team: QA');
@@ -187,7 +212,7 @@ describe('Teams and access page', () => {
 
   it('lists projects, roadmaps and dashboards by name when another kind is chosen', async () => {
     await open();
-    await click(byText('[role="tab"]', 'Access'));
+    await click(rail('Access'));
     await settle(40);
     await pick(q<HTMLSelectElement>('select[aria-label="Kind"]')!, 'project');
     await settle(40);
@@ -199,9 +224,9 @@ describe('Teams and access page', () => {
   it('says there is nothing to give access to when there is none', async () => {
     work.listSpaces.mockResolvedValue(ok([]));
     await open();
-    await click(byText('[role="tab"]', 'Access'));
+    await click(rail('Access'));
     await settle(40);
-    expect(q('[role="tabpanel"]')!.textContent).toContain('There is nothing of this kind yet.');
+    expect(q('main')!.textContent).toContain('There is nothing of this kind yet.');
     expect(q('form[aria-label="Give access"]')).toBeNull();
   });
 });

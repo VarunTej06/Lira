@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Inject, Injectable, NotFoundExc
 import { AuditService } from '../audit/audit.service';
 import { AttachmentsService } from '../attachments/attachments.service';
 import { DbService, type Queryable } from '../db/db.service';
+import { ChangesService } from '../realtime/changes.service';
 import { MetricsService } from '../observability/metrics.service';
 import { COLUMN_FIELDS, type CreateTicket, type UpdateTicket } from './schemas';
 
@@ -27,7 +28,7 @@ const out = (r: Row): TicketOut => ({
 /** Tickets of one organisation. Every query carries the organisation, so one organisation can never reach another's tickets. */
 @Injectable()
 export class TicketsService {
-  constructor(@Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService, @Inject(MetricsService) private readonly metrics: MetricsService, @Inject(AttachmentsService) private readonly files: AttachmentsService) {}
+  constructor(@Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService, @Inject(MetricsService) private readonly metrics: MetricsService, @Inject(AttachmentsService) private readonly files: AttachmentsService, @Inject(ChangesService) private readonly changes: ChangesService) {}
 
   async list(orgId: string, spaceId: number): Promise<TicketOut[]> {
     if ((await this.db.query('SELECT 1 FROM spaces WHERE org_id = $1 AND id = $2', [orgId, spaceId])).rowCount === 0) throw new NotFoundException('Not found.');
@@ -64,6 +65,7 @@ export class TicketsService {
       return made.rows[0];
     });
     this.metrics.inc('ticket_writes_total', { action: 'create' });
+    await this.changes.publish(orgId, { kind: 'ticket', spaceId });
     return out(row);
   }
 
@@ -84,12 +86,15 @@ export class TicketsService {
       return changed.rows[0];
     });
     this.metrics.inc('ticket_writes_total', { action: 'update' });
+    await this.changes.publish(orgId, { kind: 'ticket', spaceId: Number(row.space_id) });
     return out(row);
   }
 
   async remove(orgId: string, id: number, actor: string, version: number, ip: string): Promise<void> {
+    let spaceId: number | null = null;
     const paths = await this.db.transaction(async tx => {
       const stored = await this.files.pathsOf(tx, orgId, { ticketId: id });
+      spaceId = Number((await tx.query<{ space_id: string }>('SELECT space_id FROM tickets WHERE org_id = $1 AND id = $2', [orgId, id])).rows[0]?.space_id ?? NaN) || null;
       const gone = await tx.query('DELETE FROM tickets WHERE org_id = $1 AND id = $2 AND version = $3', [orgId, id, version]);
       if (gone.rowCount === 0) {
         if ((await tx.query('SELECT 1 FROM tickets WHERE org_id = $1 AND id = $2', [orgId, id])).rowCount === 0) throw new NotFoundException('Not found.');
@@ -100,6 +105,7 @@ export class TicketsService {
     });
     await this.files.removeFiles(paths);
     this.metrics.inc('ticket_writes_total', { action: 'delete' });
+    await this.changes.publish(orgId, { kind: 'ticket', spaceId });
   }
 
   /** A parent or an epic must be a ticket of the same space (and so of the same organisation), and never the ticket itself. */

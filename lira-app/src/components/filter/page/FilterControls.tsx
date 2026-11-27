@@ -100,7 +100,7 @@ function PresetButtons({ active, counts, onApply }: { active: string; counts: Fi
           >
             <span>{preset.icon}</span>
             <span>{preset.label}</span>
-            <span className={`text-3xs px-1.5 py-0.2 rounded-full font-bold ${isActive ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-600'}`}>{counts[preset.key]}</span>
+            <span className={`text-3xs px-1.5 py-0.2 rounded-full font-bold ${isActive ? 'bg-lira-on-blue/20 text-lira-on-blue' : 'bg-gray-200 text-gray-600'}`}>{counts[preset.key]}</span>
           </button>
         );
       })}

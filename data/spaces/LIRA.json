@@ -3,8 +3,8 @@
   "spaceId": 6,
   "spaceKey": "LIRA",
   "spaceName": "Lira",
-  "updatedAt": "2026-11-21T10:00:00.000Z",
-  "issueCount": 98,
+  "updatedAt": "2026-11-25T12:00:00.000Z",
+  "issueCount": 104,
   "space": {
     "id": 6,
     "name": "Lira",
@@ -13,8 +13,8 @@
     "color": "#0052CC",
     "description": "Lira product roadmap, feature development, DevOps and AI assistant",
     "createdAt": "2026-10-18T08:15:46.633Z",
-    "updatedAt": "2026-11-21T10:00:00.000Z",
-    "issueCount": 98,
+    "updatedAt": "2026-11-25T12:00:00.000Z",
+    "issueCount": 104,
     "file": "spaces/LIRA.json"
   },
   "issues": [
@@ -6329,6 +6329,385 @@
           "to": "done",
           "at": "2026-11-21T10:00:00.000Z"
         }
+      ]
+    },
+    {
+      "activity": [
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "created this task",
+          "id": "f07b3b2c-2192-457c-ae5e-645242dcea83",
+          "type": "created"
+        },
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "moved from todo to done",
+          "id": "109c1f0c-12d2-4539-aa0a-89484aa0f1b2",
+          "newValue": "done",
+          "oldValue": "todo",
+          "type": "status_change"
+        }
+      ],
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "attachments": [],
+      "comments": [],
+      "createdAt": "2026-11-25T12:00:00.000Z",
+      "description": "## Task\nIn the hosted edition the Assignee dropdown lists the real members of the organisation. A child ticket can be assigned in place from the epic child list.",
+      "dueDate": "2026-11-25T12:00:00.000Z",
+      "epicId": 195,
+      "epicLink": "Organisations, teams, roles and invitations",
+      "id": 216,
+      "key": "LIRA-112",
+      "labels": [
+        "hosted",
+        "assignee"
+      ],
+      "linkedIssues": [],
+      "parentId": 195,
+      "priority": "medium",
+      "rank": 1793937364499,
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "resolvedAt": "2026-11-25T12:00:00.000Z",
+      "spaceId": 6,
+      "sprint": "2026-11",
+      "startDate": "2026-11-25T12:00:00.000Z",
+      "status": "done",
+      "statusLog": [
+        {
+          "at": "2026-11-25T12:00:00.000Z",
+          "from": "todo",
+          "to": "done"
+        }
+      ],
+      "storyPoints": 3,
+      "subtasks": [],
+      "title": "Ticket assignee list uses real teammates, and tickets can be assigned from an epic",
+      "type": "task",
+      "updatedAt": "2026-11-25T12:00:00.000Z",
+      "watchers": [
+        "VY"
+      ]
+    },
+    {
+      "activity": [
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "created this task",
+          "id": "fc0ba07d-f0fd-4035-a9da-96960a924cda",
+          "type": "created"
+        },
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "moved from todo to done",
+          "id": "07d9596f-86ea-40cc-a701-a4eb3e70ee09",
+          "newValue": "done",
+          "oldValue": "todo",
+          "type": "status_change"
+        }
+      ],
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "attachments": [],
+      "comments": [],
+      "createdAt": "2026-11-25T12:00:00.000Z",
+      "description": "## Task\nThe vibe-check count of untested helpers is 0. Dashboards helpers, the issue popup hook and the store now have tests next to them.",
+      "dueDate": "2026-11-25T12:00:00.000Z",
+      "epicId": 212,
+      "epicLink": "Documentation and quality for 4.0.0",
+      "id": 217,
+      "key": "LIRA-113",
+      "labels": [
+        "testing",
+        "quality"
+      ],
+      "linkedIssues": [],
+      "parentId": 212,
+      "priority": "medium",
+      "rank": 1793937364599,
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "resolvedAt": "2026-11-25T12:00:00.000Z",
+      "spaceId": 6,
+      "sprint": "2026-11",
+      "startDate": "2026-11-25T12:00:00.000Z",
+      "status": "done",
+      "statusLog": [
+        {
+          "at": "2026-11-25T12:00:00.000Z",
+          "from": "todo",
+          "to": "done"
+        }
+      ],
+      "storyPoints": 5,
+      "subtasks": [],
+      "title": "Unit tests for every untested utils and hooks helper",
+      "type": "task",
+      "updatedAt": "2026-11-25T12:00:00.000Z",
+      "watchers": [
+        "VY"
+      ]
+    },
+    {
+      "activity": [
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "created this task",
+          "id": "3cc483d9-e654-4d03-8c59-541700789253",
+          "type": "created"
+        },
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "moved from todo to done",
+          "id": "93f9f5fd-d9a9-44e6-a10b-b0ce1de460d5",
+          "newValue": "done",
+          "oldValue": "todo",
+          "type": "status_change"
+        }
+      ],
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "attachments": [],
+      "comments": [],
+      "createdAt": "2026-11-25T12:00:00.000Z",
+      "description": "## Task\nPOST orgs/:orgId/ai/ask and GET orgs/:orgId/ai/providers. Admin allow-list (AI_PROVIDERS), keys from the environment, fixed provider addresses, tickets the caller may view sent as data only, per-user hourly limit, audit rows with counts and never text. 23 tests.",
+      "dueDate": "2026-11-25T12:00:00.000Z",
+      "epicId": 185,
+      "epicLink": "Hosted API and database",
+      "id": 218,
+      "key": "LIRA-114",
+      "labels": [
+        "viva",
+        "ai",
+        "security"
+      ],
+      "linkedIssues": [],
+      "parentId": 185,
+      "priority": "medium",
+      "rank": 1793937364699,
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "resolvedAt": "2026-11-25T12:00:00.000Z",
+      "spaceId": 6,
+      "sprint": "2026-11",
+      "startDate": "2026-11-25T12:00:00.000Z",
+      "status": "done",
+      "statusLog": [
+        {
+          "at": "2026-11-25T12:00:00.000Z",
+          "from": "todo",
+          "to": "done"
+        }
+      ],
+      "storyPoints": 8,
+      "subtasks": [],
+      "title": "Viva on the server with OpenAI, Anthropic and Gemini",
+      "type": "task",
+      "updatedAt": "2026-11-25T12:00:00.000Z",
+      "watchers": [
+        "VY"
+      ]
+    },
+    {
+      "activity": [
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "created this task",
+          "id": "84a19d4e-44b7-4175-a353-6b8360a717d0",
+          "type": "created"
+        },
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "moved from todo to done",
+          "id": "55836293-7369-4e27-afea-0618afb8ccea",
+          "newValue": "done",
+          "oldValue": "todo",
+          "type": "status_change"
+        }
+      ],
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "attachments": [],
+      "comments": [],
+      "createdAt": "2026-11-25T12:00:00.000Z",
+      "description": "## Task\nIn the hosted edition the chat default is the server provider; no key in the browser; the built-in engine answers if the server cannot. Settings show only built-in and server.",
+      "dueDate": "2026-11-25T12:00:00.000Z",
+      "epicId": 185,
+      "epicLink": "Hosted API and database",
+      "id": 219,
+      "key": "LIRA-115",
+      "labels": [
+        "viva",
+        "hosted"
+      ],
+      "linkedIssues": [],
+      "parentId": 185,
+      "priority": "medium",
+      "rank": 1793937364799,
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "resolvedAt": "2026-11-25T12:00:00.000Z",
+      "spaceId": 6,
+      "sprint": "2026-11",
+      "startDate": "2026-11-25T12:00:00.000Z",
+      "status": "done",
+      "statusLog": [
+        {
+          "at": "2026-11-25T12:00:00.000Z",
+          "from": "todo",
+          "to": "done"
+        }
+      ],
+      "storyPoints": 3,
+      "subtasks": [],
+      "title": "Hosted Viva chat answers through the Liraspaces server",
+      "type": "task",
+      "updatedAt": "2026-11-25T12:00:00.000Z",
+      "watchers": [
+        "VY"
+      ]
+    },
+    {
+      "activity": [
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "created this task",
+          "id": "c1c1c3de-75f0-482e-8099-79de6d996550",
+          "type": "created"
+        },
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "moved from todo to done",
+          "id": "1c0ce3ab-1ece-4459-8a49-cec7a8c04bcd",
+          "newValue": "done",
+          "oldValue": "todo",
+          "type": "status_change"
+        }
+      ],
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "attachments": [],
+      "comments": [],
+      "createdAt": "2026-11-25T12:00:00.000Z",
+      "description": "## Task\nREADMEs, HLD, LLD, threat model, TESTING, SOP-01, doc-freshness and the manual test checklist (A61) match the code.",
+      "dueDate": "2026-11-25T12:00:00.000Z",
+      "epicId": 212,
+      "epicLink": "Documentation and quality for 4.0.0",
+      "id": 220,
+      "key": "LIRA-116",
+      "labels": [
+        "docs",
+        "testing"
+      ],
+      "linkedIssues": [],
+      "parentId": 212,
+      "priority": "medium",
+      "rank": 1793937364899,
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "resolvedAt": "2026-11-25T12:00:00.000Z",
+      "spaceId": 6,
+      "sprint": "2026-11",
+      "startDate": "2026-11-25T12:00:00.000Z",
+      "status": "done",
+      "statusLog": [
+        {
+          "at": "2026-11-25T12:00:00.000Z",
+          "from": "todo",
+          "to": "done"
+        }
+      ],
+      "storyPoints": 2,
+      "subtasks": [],
+      "title": "Update test counts and release notes to 2741 app and 327 API tests",
+      "type": "task",
+      "updatedAt": "2026-11-25T12:00:00.000Z",
+      "watchers": [
+        "VY"
+      ]
+    },
+    {
+      "activity": [
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "created this task",
+          "id": "59b0ed93-7354-4e25-89b6-523e733aaf26",
+          "type": "created"
+        },
+        {
+          "author": "VY",
+          "authorInitials": "VY",
+          "createdAt": "2026-11-25T12:00:00.000Z",
+          "description": "moved from todo to done",
+          "id": "f64bc4c7-489e-4aef-bfce-3daacc3952bf",
+          "newValue": "done",
+          "oldValue": "todo",
+          "type": "status_change"
+        }
+      ],
+      "assignee": "VY",
+      "assigneeInitials": "VY",
+      "attachments": [],
+      "comments": [],
+      "createdAt": "2026-11-25T12:00:00.000Z",
+      "description": "## Task\nInfra and database steps ran; the Container Apps environment stuck in Waiting and the sandbox then expired. Two rows added to the sandbox-refusals table in infra/azure-playground/README.md.",
+      "dueDate": "2026-11-25T12:00:00.000Z",
+      "epicId": 208,
+      "epicLink": "Azure rehearsal and deployment",
+      "id": 221,
+      "key": "LIRA-117",
+      "labels": [
+        "docs",
+        "azure"
+      ],
+      "linkedIssues": [],
+      "parentId": 208,
+      "priority": "medium",
+      "rank": 1793937364999,
+      "reporter": "VY",
+      "reporterInitials": "VY",
+      "resolvedAt": "2026-11-25T12:00:00.000Z",
+      "spaceId": 6,
+      "sprint": "2026-11",
+      "startDate": "2026-11-25T12:00:00.000Z",
+      "status": "done",
+      "statusLog": [
+        {
+          "at": "2026-11-25T12:00:00.000Z",
+          "from": "todo",
+          "to": "done"
+        }
+      ],
+      "storyPoints": 1,
+      "subtasks": [],
+      "title": "Record the sandbox lessons from the 24 Nov Azure rehearsal",
+      "type": "task",
+      "updatedAt": "2026-11-25T12:00:00.000Z",
+      "watchers": [
+        "VY"
       ]
     }
   ]

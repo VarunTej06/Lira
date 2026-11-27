@@ -5,7 +5,7 @@ import { fieldErrors } from '../auth/schemas';
 import { SessionGuard, type AuthedRequest } from '../auth/session.guard';
 import { ObjectsService, type ObjectType } from './objects.service';
 
-const KINDS: readonly string[] = ['project', 'roadmap', 'dashboard'];
+const KINDS: readonly string[] = ['project', 'roadmap', 'dashboard', 'storybox', 'mindmap'];
 const saveSchema = z.strictObject({ doc: z.record(z.string(), z.unknown()), version: z.number().int().min(1).optional(), position: z.number().int().min(0).max(100000).optional() });
 const deleteSchema = z.strictObject({ version: z.number().int().min(1) });
 const ID = /^[A-Za-z0-9_.:-]{1,80}$/;

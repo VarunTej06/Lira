@@ -40,7 +40,7 @@ describe('readMigrations', () => {
   it('reads the real migrations of this project, numbered from 1, and the app role has no way to change the audit log', () => {
     const real = readMigrations(join(__dirname, '..', '..', 'migrations'));
     expect(real.map(m => m.version)).toEqual(real.map((_, i) => i + 1));
-    const withoutComments = (sql: string) => sql.split('\n').map(line => line.replace(/--.*$/, '')).join('\n');
+    const withoutComments = (sql: string) => sql.split(/\r?\n/).map(line => line.replace(/--.*$/, '')).join('\n');
     const statements = real.flatMap(m => withoutComments(m.sql).split(';')).map(s => s.replace(/\s+/g, ' ').trim());
     const onAudit = statements.filter(s => /^GRANT/i.test(s) && /\baudit_log\b/.test(s) && /lira_app/.test(s));
     expect(onAudit).toEqual(['GRANT SELECT, INSERT ON audit_log TO lira_app']);

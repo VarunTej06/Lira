@@ -4,8 +4,11 @@ import { TypeIcon, PriorityIcon } from '../common/Icons';
 import React from 'react';
 import type { Issue } from '../../types/issue';
 import { PRIORITY_CONFIG } from '../../utils/priorityUtils';
-import { Avatar } from '../common/Avatar';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from '../../db/db';
 import { updateIssue } from '../../hooks/useIssues';
+import { canEditSpace } from '../../utils/spaceAccess';
+import { AssigneeSelect } from './AssigneeSelect';
 
 interface ChildIssuesProps {
   childIssues: Issue[];
@@ -14,22 +17,28 @@ interface ChildIssuesProps {
 
 const STATUS_BADGE: Record<string, { label: string; color: string; bg: string }> = STATUS_META;
 
+/** Who a ticket in the list is given to, changed in place. Off for someone who may only look at its space. */
+function ChildAssignee({ child }: { child: Issue }) {
+  const space = useLiveQuery(() => db.spaces.get(child.spaceId), [child.spaceId]);
+  return <AssigneeSelect spaceId={child.spaceId} assignee={child.assignee} initials={child.assigneeInitials} label={`Assignee of ${child.key}`} disabled={!canEditSpace(space)} onChange={patch => { if (child.id) void updateIssue(child.id, patch); }} />;
+}
+
 /** The tickets one level below this one, each with its priority, assignee and a status that can be changed in place. */
 export const ChildIssues: React.FC<ChildIssuesProps> = ({ childIssues, onIssueClick }) => {
   if (childIssues.length === 0) return <p className="text-xs text-lira-muted py-1" data-testid="no-children">No tickets linked.</p>;
   return (
     <div className="border border-lira-border rounded-lg overflow-hidden" data-testid="child-issues">
-      <div className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 px-3 py-1.5 bg-gray-50 border-b border-lira-border text-2xs font-semibold text-lira-muted uppercase tracking-wide">
+      <div className="grid grid-cols-[1fr_auto_11rem_auto] items-center gap-2 px-3 py-1.5 bg-gray-50 border-b border-lira-border text-2xs font-semibold text-lira-muted uppercase tracking-wide">
         <span>Work</span>
         <span className="w-16 text-center">Priority</span>
-        <span className="w-8 text-center">User</span>
+        <span className="w-44">Assigned to</span>
         <span className="w-24 text-right">Status</span>
       </div>
       {childIssues.map(child => {
         const pCfg = PRIORITY_CONFIG[child.priority] ?? PRIORITY_CONFIG.medium;
         const sBadge = STATUS_BADGE[child.status] ?? STATUS_BADGE.todo;
         return (
-          <div key={child.id} className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 px-3 py-2 border-b border-lira-border last:border-0 hover:bg-gray-50 transition-colors group">
+          <div key={child.id} className="grid grid-cols-[1fr_auto_11rem_auto] items-center gap-2 px-3 py-2 border-b border-lira-border last:border-0 hover:bg-gray-50 transition-colors group">
             <button onClick={() => onIssueClick(child)} {...issueLink(child)} className="flex items-center gap-2 text-left min-w-0">
               <TypeIcon type={child.type} className="w-4 h-4" />
               <span className="text-xs font-mono text-lira-muted flex-shrink-0">{child.key}</span>
@@ -38,9 +47,7 @@ export const ChildIssues: React.FC<ChildIssuesProps> = ({ childIssues, onIssueCl
             <div className="w-16 text-center text-sm" title={pCfg.label}>
               <span className="inline-flex justify-center"><PriorityIcon priority={child.priority} className="w-4 h-4" /></span>
             </div>
-            <div className="w-8 flex justify-center">
-              {child.assigneeInitials ? <Avatar initials={child.assigneeInitials} size="xs" /> : <div className="w-5 h-5 rounded-full border-2 border-dashed border-lira-border" />}
-            </div>
+            <div className="w-44"><ChildAssignee child={child} /></div>
             <div className="w-24 flex justify-end">
               <select
                 value={child.status}

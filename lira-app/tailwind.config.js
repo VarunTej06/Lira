@@ -144,6 +144,10 @@ export default {
         'chat-pop': 'chatPop 0.42s cubic-bezier(.22,1,.36,1) both',
         'chat-out': 'chatOut 0.3s cubic-bezier(.5,0,.75,0) forwards',
         'msg-in': 'msgIn 0.35s cubic-bezier(.2,.8,.3,1) both',
+        // Story boxes: a sized ticket drops into its lane, a ticket put up for voting rises onto the stage
+        'card-land': 'cardLand 0.6s cubic-bezier(.2,.9,.3,1.25) both',
+        'card-rise': 'cardRise 0.45s cubic-bezier(.2,.9,.3,1) both',
+        'card-leave': 'cardLeave 0.45s cubic-bezier(.5,0,.75,0) forwards',
       },
       keyframes: {
         caret: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '0' } },
@@ -162,6 +166,9 @@ export default {
           "60%": { opacity: "0.9" },
           "100%": { opacity: "0", transform: "scale(0.04)" },
         },
+        cardLand: { '0%': { transform: 'translateY(-70px) scale(1.18)', opacity: '0' }, '60%': { opacity: '1' }, '100%': { transform: 'translateY(0) scale(1)', opacity: '1' } },
+        cardRise: { '0%': { transform: 'translateY(40px) scale(0.92)', opacity: '0' }, '100%': { transform: 'translateY(0) scale(1)', opacity: '1' } },
+        cardLeave: { '0%': { transform: 'translateY(0) scale(1)', opacity: '1' }, '100%': { transform: 'translateY(90px) scale(0.7)', opacity: '0' } },
         msgIn: {
           "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },

@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { listGrants, revokeGrant, setGrant, type Grant, type Level, type Member, type ObjectKind, type Team } from '../../services/accessApi';
 import { listObjects, listSpaces } from '../../services/workspaceApi';
 import { BUTTON, FIELD, LEVELS } from './teamsUi';
+import { SpaceSharesPanel } from './SpaceSharesPanel';
 
-const KINDS: { value: ObjectKind; label: string }[] = [{ value: 'space', label: 'Space' }, { value: 'project', label: 'Project' }, { value: 'roadmap', label: 'Roadmap' }, { value: 'dashboard', label: 'Dashboard' }];
+const KINDS: { value: ObjectKind; label: string }[] = [{ value: 'space', label: 'Space' }, { value: 'project', label: 'Project' }, { value: 'roadmap', label: 'Roadmap' }, { value: 'dashboard', label: 'Dashboard' }, { value: 'storybox', label: 'Story box' }, { value: 'mindmap', label: 'Storyboard' }];
 interface Choice { id: string; name: string }
 
 /** Who may do what with one space, project, roadmap or dashboard. Owner and Admin always have everything and are not listed. */
@@ -21,7 +22,7 @@ export function AccessTab({ org, members, teams }: { org: string; members: Membe
     let current = true;
     const load = kind === 'space'
       ? listSpaces(org).then(r => (r.ok ? r.data.map(s => ({ id: String(s.id), name: `${s.name} (${s.key})` })) : null))
-      : listObjects(org, kind).then(r => (r.ok ? r.data.map(o => ({ id: o.id, name: typeof o.doc.name === 'string' && o.doc.name ? o.doc.name : o.id })) : null));
+      : listObjects(org, kind as Exclude<ObjectKind, 'space'>).then(r => (r.ok ? r.data.map(o => ({ id: o.id, name: typeof o.doc.name === 'string' && o.doc.name ? o.doc.name : o.id })) : null));
     void load.then(list => { if (current) { setChoices(list ?? []); setObjectId(list?.[0]?.id ?? ''); } });
     return () => { current = false; };
   }, [org, kind]);
@@ -51,6 +52,7 @@ export function AccessTab({ org, members, teams }: { org: string; members: Membe
         </select></label>
       </div>
       {choices && choices.length === 0 && <p className="text-ui text-lira-muted">There is nothing of this kind yet.</p>}
+      {kind === 'space' && objectId && <SpaceSharesPanel org={org} spaceId={objectId} />}
 
       {objectId && (
         <>

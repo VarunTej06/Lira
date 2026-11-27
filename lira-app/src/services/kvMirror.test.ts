@@ -77,7 +77,7 @@ describe('buildFiles / flattenFiles', () => {
 
   it('always includes every file, even when empty', () => {
     expect(Object.keys(buildFiles(fakeStorage({}))).sort()).toEqual(
-      ['board-config', 'dashboards', 'projects', 'roadmaps', 'secrets', 'settings', 'sprints', 'standups', 'teams'],
+      ['board-config', 'dashboards', 'mindmaps', 'projects', 'roadmaps', 'secrets', 'settings', 'sprints', 'standups', 'storyboxes', 'teams'],
     )
   })
 

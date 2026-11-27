@@ -23,7 +23,7 @@ describe('ChildIssues', () => {
     const child = makeIssue({ id: 7, key: 'AAA-7', title: 'Build it', type: 'task' });
     const onIssueClick = vi.fn();
     mount(<ChildIssues childIssues={[child, makeIssue({ id: 8, key: 'AAA-8' })]} onIssueClick={onIssueClick} />);
-    expect(qa('[data-testid="child-issues"] select')).toHaveLength(2);
+    expect(qa('[data-testid="child-issues"] select[aria-label^="Status of"]')).toHaveLength(2); // a status for each (and a person for each, checked in ChildIssues.test)
     expect(document.body.textContent).toContain('AAA-7');
     await click(qa('[data-testid="child-issues"] button')[0]);
     expect(onIssueClick).toHaveBeenCalledWith(child);

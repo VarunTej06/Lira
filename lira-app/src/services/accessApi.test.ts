@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
-  acceptInvitation, createTeam, invite, inviteLink, listGrants, removeMember, revokeGrant, setGrant, setTeamMembers, updateMember,
+  acceptInvitation, createTeam, invite, inviteLink, listAllGrants, listGrants, removeMember, revokeGrant, setGrant, setTeamMembers, updateMember,
 } from './accessApi';
 
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -22,6 +22,7 @@ describe('access calls', () => {
     await setGrant('o 1', { subjectType: 'team', subjectId: 't1', kind: 'space', objectId: '4', level: 'edit' });
     await revokeGrant('o 1', 'g1');
     await listGrants('o 1', 'project', 'p 1');
+    await listAllGrants('o 1');
     await invite('o 1', { email: 'a@b.co', role: 'member', teamId: 't1' });
     expect(calls()).toEqual([
       ['PATCH', '/api/orgs/o%201/members/u1', { role: 'viewer' }],
@@ -31,6 +32,7 @@ describe('access calls', () => {
       ['POST', '/api/orgs/o%201/grants', { subjectType: 'team', subjectId: 't1', kind: 'space', objectId: '4', level: 'edit' }],
       ['DELETE', '/api/orgs/o%201/grants/g1', undefined],
       ['GET', '/api/orgs/o%201/grants?kind=project&objectId=p%201', undefined],
+      ['GET', '/api/orgs/o%201/grants', undefined],
       ['POST', '/api/orgs/o%201/invitations', { email: 'a@b.co', role: 'member', teamId: 't1' }],
     ]);
   });

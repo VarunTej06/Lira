@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { byText, cleanup, click, mount, q, qa } from '../../../test/render';
 import type { Space } from '../../../types/space';
+import { setActiveOrg } from '../../../utils/hostedOrg';
 import { Collapsible, ContextItem, FloatingMenu, RowMenuButton, SectionHeader, SpaceRow } from './parts';
 
 afterEach(cleanup);
@@ -16,6 +17,13 @@ function row(over: Partial<RowProps> = {}) {
 const item = (label: string) => byText('button', label)!;
 
 describe('SpaceRow', () => {
+  it('tags the space as Invited for someone who is in the organisation by invitation, and not for an Owner, an Admin or the local app', () => {
+    row();
+    expect(document.body.textContent).not.toContain('Invited');
+    for (const role of ['owner', 'admin']) { cleanup(); setActiveOrg('o1', role); row(); expect(document.body.textContent, role).not.toContain('Invited'); }
+    for (const role of ['member', 'viewer', 'guest']) { cleanup(); setActiveOrg('o1', role); row(); expect(document.body.textContent, role).toContain('Invited'); }
+    setActiveOrg(null);
+  });
   it('shows the icon and name and selects the space on click', async () => {
     const h = row();
     expect(document.body.textContent).toContain('Alpha');

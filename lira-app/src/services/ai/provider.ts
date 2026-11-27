@@ -4,6 +4,8 @@ import type { Space } from '../../types/space';
 import type { ChatMessage, RefinedPromptGoal } from './types';
 import { getAiProvider, getGeminiApiKey, getOpenAiConfig, getSystemInstruction } from './settings';
 import { buildPromptText, callGeminiAPI } from './gemini';
+import { askVivaOnServer } from '../workspaceApi';
+import { activeOrg } from '../../utils/hostedOrg';
 
 /** Everything a model needs to answer one chat message. */
 interface ModelRequest {
@@ -46,6 +48,16 @@ async function callOpenAiCompatible({ userPrompt, activeSpace, allSpaces, allIss
   };
 }
 
+/** Asks Liraspaces' own server, which builds the context from what this person may see and holds the provider keys. */
+async function callServer({ userPrompt, activeSpace, refinedGoal }: ModelRequest): Promise<ChatMessage | null> {
+  const org = activeOrg();
+  if (!org) return null;
+  const spaceId = refinedGoal?.targetSpace?.id ?? activeSpace?.id;
+  const res = await askVivaOnServer(org, { question: userPrompt.slice(0, 2000), ...(spaceId ? { spaceId } : {}) });
+  if (!res.ok) throw new Error(`Viva server HTTP ${res.status}`); // the caller then lets the built-in engine answer
+  return { id: uuidv4(), sender: 'assistant', text: res.data.answer, timestamp: new Date(), suggestedActions: ['What is in progress?', 'Show all spaces overview', 'Plan next sprint from my backlog'] };
+}
+
 /** Uses the chosen provider. Returns null for the built-in engine, or when the model gave no answer (the caller then falls back). */
 export async function askConfiguredModel(req: ModelRequest): Promise<ChatMessage | null> {
   const { userPrompt, activeSpace, allSpaces, allIssues, refinedGoal } = req;
@@ -55,5 +67,6 @@ export async function askConfiguredModel(req: ModelRequest): Promise<ChatMessage
     return key ? callGeminiAPI(userPrompt, key, activeSpace, allSpaces, allIssues, refinedGoal) : null;
   }
   if (provider === 'openai') return callOpenAiCompatible(req);
+  if (provider === 'server') return callServer(req);
   return null;
 }

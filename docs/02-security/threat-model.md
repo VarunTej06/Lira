@@ -55,6 +55,16 @@ Checked against the code, not a pen test. "Built" means the control exists and h
 | T12 Secrets | Partly: Key Vault in the rehearsal, a separate key encrypts Google refresh tokens. No secret scanning in a pipeline yet |
 | T14 Denial of service | Partly: body size limits, login attempt limits. No general rate limit |
 | T15 Audit | Built: `audit_log` is insert-only for the application role |
-| T6, T7, T10 | Not built or not applicable yet: AI runs in the browser, no organisation AI settings, no sign-out of leavers beyond removing the membership |
+| T6 Outbound calls | Built for Viva on the server: the three provider addresses are fixed in code, the allow-list is the administrator's `AI_PROVIDERS`, nothing from a request reaches an address, model names are restricted to plain characters |
+| T7 Prompt injection | Built for Viva on the server: ticket text is flattened, marked as data and kept apart from the question; the model has no way to write; the context holds only what the caller may view; negative tests cover a hidden space and another organisation |
+| T10 | Not built: no sign-out of leavers beyond removing the membership |
 
-New risks that came with the hosted edition and are accepted for the rehearsal: a person who signs up with a password for someone else's address (nothing proves the address) until that person signs in with Google, which takes the account over and removes the password (ADR-0009); no email verification and no password reset yet.
+Reminder emails go only to a person the system can identify without guessing: a call's invitees, or the assignee of a ticket when exactly one member of the organisation has that name and may see its space (a ticket stores a name, not an account, so an ambiguous name gets no email). Emails carry a ticket key and title, never its description or comments.
+
+Live updates (server-sent events) carry only a kind and a space number, never ticket text. A note reaches a person only when they may view that space, and the session and membership are checked again for every note, so a person who is removed or logs out stops hearing at once. Streams are capped per person and last at most 55 minutes.
+
+Two-step sign-in: a stolen password is not enough for an account that has it on; the code works once, five wrong codes end the challenge, recovery codes are stored as hashes and work once, the secret is stored encrypted, and turning it off needs a current code (so a stolen session cannot remove it). A password reset does not switch it off. Passwords known from data breaches are refused (k-anonymity: five characters of the hash leave the API, never the password).
+
+The development server's red error page shows source code, so it must never be reachable on the hosted site. The hosted site is the built bundle behind nginx: built without source maps (`vite.config.ts`), in an image whose last stage holds only `dist` (no source, no packages, no dev server), with nginx answering 404 for any `.map` file and refusing hidden files; `src/hostedHardening.test.ts` fails if any of that changes. The development server (`npm run dev`) is for the developer's own computer only.
+
+New risks that came with the hosted edition and are accepted for the rehearsal: a person who signs up with a password for someone else's address (the address stays unconfirmed until its owner opens the emailed link; joining an organisation needs a confirmed address where email works), until that person signs in with Google or resets the password, either of which takes the account over (ADR-0009). Password-reset links are single-use, expire in one hour, are stored only as hashes, are never confirmed to exist for an address, are rate limited, and end every session when used.

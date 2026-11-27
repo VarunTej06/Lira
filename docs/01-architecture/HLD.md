@@ -28,11 +28,11 @@ Why the Container Instance: the sandbox refuses every certificate resource, so C
 | Invitations, calendar and e-mail (later phase) | Done: invitations by email (Gmail), calls with Google Meet links, repeating, shown in the calendar. No Microsoft Teams link creation yet |
 | Realtime events (SSE) | Not built. Other people's changes appear when the page reloads |
 | Importer from `data/` `[ADR-0008]` | Not built. New hosted accounts start empty |
-| Viva on the server | Not built. Viva runs in the browser, as in the local edition |
+| Viva on the server | First step built (24 Nov 2026): `POST /ai/ask` answers questions from the tickets the caller may see, with OpenAI, Anthropic or Gemini, on an administrator's allow-list; it reads and explains only. In the hosted edition the app's Viva chat uses it by default (no key in the browser); changes still go through the app's own preview, confirm and undo. A server-side preview and undo, and a per-organisation settings screen, are not built |
 | Front Door, WAF, private networking | Not in the rehearsal |
 | Audit log, metrics, health | Done: append-only `audit_log` table, `/metrics` counters, structured logs, `/health` and `/ready` on both services |
 
-Tests: 2078 in the app and 195 in the API (83 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
+Tests: 2741 in the app and 327 in the API (138 of them need no database). Data model and routes as built: section 0 of [`LLD.md`](LLD.md) and [`api/README.md`](../../api/README.md).
 
 ## 1. Goals and non-goals
 
@@ -135,10 +135,10 @@ Organisation → Space → Ticket. Projects, Sprints, Roadmaps, Dashboards, Team
 | Security | OWASP ASVS L2 for the API and SPA; no critical/high findings open | Threat-model review, SAST/DAST, pen test before launch |
 | Isolation | Zero cross-tenant reads/writes | Automated negative tests on every route |
 | Availability | 99.9% monthly for the API (to be confirmed) | Health probes, alerts, status page |
-| Performance | p95 board load < 1.5 s for 2,000 tickets in a space; p95 write < 300 ms | Load test in staging |
+| Performance | p95 board load < 1.5 s for 2,000 tickets in a space; p95 write < 303 ms | Load test in staging |
 | Durability | Point-in-time restore; RPO ≤ 15 min, RTO ≤ 4 h (to be confirmed) | Quarterly restore drill (SOP 02) |
 | Auditability | Every write and permission change recorded, retained per policy | Audit tests and sampling |
-| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 2078 app tests and 195 API tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
+| Maintainability | Complexity/size limits in `CLAUDE.md`; ≥ today's 2741 app tests and 327 API tests, growing; zero lint warnings; no import cycles | Quality gates (DevOps step) |
 | Accessibility | WCAG 2.1 AA for core flows | Axe checks, manual review |
 
 ## 7. Deployment view (target, built in the DevOps step)

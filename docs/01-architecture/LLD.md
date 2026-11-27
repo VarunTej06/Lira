@@ -40,7 +40,7 @@ Every request is authenticated, scoped to an organisation and authorised per obj
 
 **Differences from the proposal below:** tickets keep comments, subtasks and links inside the ticket row instead of separate tables; there are no `columns` or `space_members` tables (grants replace the latter); the audit log is the `audit_log` table in the same database but with insert-only rights; the API paths are `/api/orgs/:orgId/...`, not `/api/v1`; the full list is in [`api/README.md`](../../api/README.md). Settings are the variables in the same file.
 
-**App, hosted mode** (`lira-app/src`): `utils/edition.ts` (which edition), `components/layout/SessionGate.tsx` (sign-in gate), `services/authApi.ts`, `hostedSync.ts`, `hostedObjects.ts`, `kvMirror.ts` (hosted mode), `utils/hostedOrg.ts` (the active organisation), the public pages and sign-up in `components/public/`, Teams and access in `components/teams/`, calls in `components/standup/` and `components/standups/`.
+**App, hosted mode** (`lira-app/src`): `utils/edition.ts` (which edition), `components/layout/SessionGate.tsx` (sign-in gate), `services/authApi.ts`, `hostedSync.ts`, `hostedObjects.ts`, `kvMirror.ts` (hosted mode), `utils/hostedOrg.ts` (the active organisation), the public pages and sign-up in `components/public/`, Settings in `components/settings/` (the rail and its pages: users, teams, access, account, security, calls, notifications, import; a person's or team's page lists what they can reach from `GET /api/orgs/:orgId/grants`), the people, team, access and import panels they reuse in `components/teams/`, calls in `components/standup/` and `components/standups/`.
 
 ## 1. Module layout (target monorepo `[ADR-0007]`)
 
@@ -163,7 +163,8 @@ authorize(user, action, resource) -> allow | deny
 - `core` intent engine receives `(message, context)` where `context` is built from rows the caller may read, size-limited and with ticket text flattened/marked as data (existing behaviour in `src/services/ai/context.ts`).
 - Write intents return a `preview`; `confirm` applies it through the same service functions and authorisation as manual edits; `undo` restores from a stored snapshot (today: last 20, in memory; target: persisted per user with expiry).
 - Model providers: base URLs come only from `ai_settings` set by an org admin and checked against an allow-list; the server refuses private/loopback addresses (SSRF). Keys in Key Vault.
-- Per-user rate limit and per-org token budget.
+- **Built so far (`api/src/ai/`):** one question in, one answer out. `providers.ts` has one function per provider with a fixed address, the key in a header, a 30 s timeout, a size limit on the reply and an error that never carries the key or the provider's words; `context.ts` flattens ticket text and builds the data block; `ai.service.ts` takes the context from `AccessService` (a space the caller cannot view is 404 and the model is never asked), counts questions per person from the audit log, and writes the audit row (provider, model, tokens, counts; no text). The allow-list is `AI_PROVIDERS` in the environment, not a per-organisation table yet, and the keys come from the environment (Key Vault in the rehearsal). Tests replace the provider with a fake through `AI_HTTP`.
+- Per-user rate limit (built) and per-org token budget (not built).
 
 ## 8. Audit and logging
 

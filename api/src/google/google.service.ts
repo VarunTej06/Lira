@@ -19,9 +19,15 @@ const REVOKE_URL = 'https://oauth2.googleapis.com/revoke';
 const USERINFO_URL = 'https://openidconnect.googleapis.com/v1/userinfo';
 const MEET_URL = 'https://meet.googleapis.com/v2/spaces';
 const GMAIL_SEND_URL = 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send';
-export const SCOPES = ['openid', 'email', 'https://www.googleapis.com/auth/meetings.space.created', 'https://www.googleapis.com/auth/gmail.send'];
+const CALENDAR_URL = 'https://www.googleapis.com/calendar/v3/calendars/primary/events';
+export const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
+export const SCOPES = ['openid', 'email', 'https://www.googleapis.com/auth/meetings.space.created', 'https://www.googleapis.com/auth/gmail.send', CALENDAR_SCOPE];
 
-export interface GoogleStatus { configured: boolean; connected: boolean; email: string | null }
+/** A call as a calendar event on the connected account's calendar. */
+export interface CalendarEvent { summary: string; description: string; location: string; startsAt: Date; durationMinutes: number; timeZone: string; attendees: string[]; recurrence: string[] }
+
+/** `calendar` is false for a connection made before the Calendar permission existed: the Owner is asked to approve once more. */
+export interface GoogleStatus { configured: boolean; connected: boolean; email: string | null; calendar: boolean }
 
 /**
  * The organisation's connected Google account: it makes the Meet link of a stand-up and sends the invitation emails. The person who
@@ -41,9 +47,9 @@ export class GoogleService implements EmailSender {
   private get key() { return parseKey(this.google!.tokenKey); }
 
   async status(orgId: string): Promise<GoogleStatus> {
-    if (!this.google) return { configured: false, connected: false, email: null };
-    const r = await this.db.query<{ google_email: string }>('SELECT google_email FROM google_connections WHERE org_id = $1', [orgId]);
-    return { configured: true, connected: r.rows.length > 0, email: r.rows[0]?.google_email ?? null };
+    if (!this.google) return { configured: false, connected: false, email: null, calendar: false };
+    const r = await this.db.query<{ google_email: string; scopes: string }>('SELECT google_email, scopes FROM google_connections WHERE org_id = $1', [orgId]);
+    return { configured: true, connected: r.rows.length > 0, email: r.rows[0]?.google_email ?? null, calendar: r.rows[0]?.scopes.split(' ').includes(CALENDAR_SCOPE) === true };
   }
 
   /** The address to send the Owner to, to sign in at Google and agree. */
@@ -74,9 +80,9 @@ export class GoogleService implements EmailSender {
     if (!email) throw new BadRequestException({ code: 'no_email', message: 'Google did not say which account this is.' });
     await this.db.transaction(async tx => {
       await tx.query(
-        `INSERT INTO google_connections (org_id, google_email, refresh_token, connected_by) VALUES ($1, $2, $3, $4)
-         ON CONFLICT (org_id) DO UPDATE SET google_email = EXCLUDED.google_email, refresh_token = EXCLUDED.refresh_token, connected_by = EXCLUDED.connected_by, connected_at = now()`,
-        [verified.orgId, email, encryptToken(refresh, this.key), sessionUserId]);
+        `INSERT INTO google_connections (org_id, google_email, refresh_token, connected_by, scopes) VALUES ($1, $2, $3, $4, $5)
+         ON CONFLICT (org_id) DO UPDATE SET google_email = EXCLUDED.google_email, refresh_token = EXCLUDED.refresh_token, connected_by = EXCLUDED.connected_by, scopes = EXCLUDED.scopes, connected_at = now()`,
+        [verified.orgId, email, encryptToken(refresh, this.key), sessionUserId, typeof tokens?.scope === 'string' ? tokens.scope : '']);
       await this.audit.record({ actor: sessionUserId, orgId: verified.orgId, action: 'google.connect', outcome: 'ok', sourceIp: ip }, tx);
     });
     this.cache.delete(verified.orgId);
@@ -102,6 +108,38 @@ export class GoogleService implements EmailSender {
       const body = (await res.json().catch(() => null)) as { meetingUri?: unknown } | null;
       return res.ok && typeof body?.meetingUri === 'string' && isMeetingLink(body.meetingUri) ? body.meetingUri : null;
     } catch { return null; }
+  }
+
+  /**
+   * Makes or changes the call's event in the connected account's calendar, which makes Google email the invitations and keep them up to date.
+   * Resolves the event's id, or null when there is no connection, no Calendar permission, or Google refused. An event the person deleted in
+   * Google is made again.
+   */
+  async saveEvent(orgId: string, existingId: string | null, event: CalendarEvent): Promise<string | null> {
+    const status = await this.status(orgId);
+    const token = status.calendar ? await this.accessToken(orgId) : null;
+    if (!token) return null;
+    const end = new Date(event.startsAt.getTime() + event.durationMinutes * 60_000);
+    const body = JSON.stringify({
+      summary: event.summary, description: event.description, location: event.location,
+      start: { dateTime: event.startsAt.toISOString(), timeZone: event.timeZone }, end: { dateTime: end.toISOString(), timeZone: event.timeZone },
+      attendees: [...new Set(event.attendees)].filter(a => a !== status.email?.toLowerCase()).map(email => ({ email })),
+      ...(event.recurrence.length ? { recurrence: event.recurrence } : {}), reminders: { useDefault: true },
+    });
+    const headers = { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' };
+    try {
+      let res = existingId ? await this.http(`${CALENDAR_URL}/${encodeURIComponent(existingId)}?sendUpdates=all`, { method: 'PATCH', headers, body }) : null;
+      if (!res || res.status === 404 || res.status === 410) res = await this.http(`${CALENDAR_URL}?sendUpdates=all`, { method: 'POST', headers, body });
+      const made = (await res.json().catch(() => null)) as { id?: unknown } | null;
+      return res.ok && typeof made?.id === 'string' ? made.id : null;
+    } catch { return null; }
+  }
+
+  /** Removes the event, telling the invited people it is cancelled. Best effort: the call is gone here either way. */
+  async deleteEvent(orgId: string, eventId: string): Promise<void> {
+    const token = await this.accessToken(orgId);
+    if (!token) return;
+    try { await this.http(`${CALENDAR_URL}/${encodeURIComponent(eventId)}?sendUpdates=all`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }); } catch { /* nothing more to do */ }
   }
 
   /** Sends an email from the connected account. False when there is no connection or Google refused. */

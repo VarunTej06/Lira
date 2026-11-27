@@ -5,7 +5,7 @@ describe('sidebar layout config', () => {
   beforeEach(() => localStorage.clear())
 
   it('defaults: Navigation has the current items plus Roadmaps and Dashboards; sections are Spaces, Projects, Sprints, Hidden spaces', () => {
-    expect(DEFAULT_NAV_ORDER).toEqual(['forYou', 'projects', 'sprints', 'allTickets', 'roadmaps', 'dashboards'])
+    expect(DEFAULT_NAV_ORDER).toEqual(['forYou', 'projects', 'sprints', 'allTickets', 'roadmaps', 'dashboards', 'mindMaps', 'storyBoxes'])
     expect(DEFAULT_SECTION_ORDER).toEqual(['sec_spaces', 'sec_projects', 'sec_sprints', 'sec_hidden'])
     expect(Object.values(DEFAULT_SIDEBAR_CONFIG.visibility).every(Boolean)).toBe(true)
   })
@@ -25,7 +25,7 @@ describe('sidebar layout config', () => {
     const saved = { version: 2, navOrder: ['forYou', 'roadmaps', 'projects'], sectionOrder: ['sec_sprints', 'sec_spaces'], visibility: { dashboards: false, sec_hidden: false } }
     localStorage.setItem('lira_sidebar_customization', JSON.stringify(saved))
     const cfg = loadSidebarConfig()
-    expect(cfg.navOrder).toEqual(['forYou', 'roadmaps', 'projects', 'sprints', 'allTickets', 'dashboards']) // missing items appended
+    expect(cfg.navOrder).toEqual(['forYou', 'roadmaps', 'projects', 'sprints', 'allTickets', 'dashboards', 'mindMaps', 'storyBoxes']) // missing items appended
     expect(cfg.sectionOrder).toEqual(['sec_sprints', 'sec_spaces', 'sec_projects', 'sec_hidden'])
     expect(cfg.visibility.dashboards).toBe(false)
     expect(cfg.visibility.sec_hidden).toBe(false)

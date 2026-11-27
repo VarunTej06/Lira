@@ -2,29 +2,47 @@ import { ConflictException, Inject, Injectable, NotFoundException } from '@nestj
 import { AuditService } from '../audit/audit.service';
 import { AttachmentsService } from '../attachments/attachments.service';
 import { DbService, type Queryable } from '../db/db.service';
+import { ChangesService } from '../realtime/changes.service';
 import { MetricsService } from '../observability/metrics.service';
+import type { Level } from '../access/access.service';
 import type { CreateSpace, UpdateSpace } from './schemas';
 
-export interface SpaceOut { id: number; key: string; name: string; icon: string; color: string; description: string | null; version: number; createdAt: string; updatedAt: string }
+export interface SpaceOut { id: number; key: string; name: string; icon: string; color: string; description: string | null; version: number; createdAt: string; updatedAt: string; myLevel: Level }
 
 interface Row { id: string; key: string; name: string; icon: string; color: string; description: string | null; version: number; created_at: Date; updated_at: Date }
 
 const COLUMNS = 'id, key, name, icon, color, description, version, created_at, updated_at';
-const out = (r: Row): SpaceOut => ({ id: Number(r.id), key: r.key, name: r.name, icon: r.icon, color: r.color, description: r.description, version: r.version, createdAt: r.created_at.toISOString(), updatedAt: r.updated_at.toISOString() });
+/** `level` is what the calling person may do here, so the app can hide what the server would refuse. */
+const out = (r: Row, level: Level): SpaceOut => ({ id: Number(r.id), key: r.key, name: r.name, icon: r.icon, color: r.color, description: r.description, version: r.version, createdAt: r.created_at.toISOString(), updatedAt: r.updated_at.toISOString(), myLevel: level });
 
 const UNIQUE_VIOLATION = '23505';
 
 /** Spaces of one organisation. Every query carries the organisation, so one organisation can never reach another's rows. */
 @Injectable()
 export class SpacesService {
-  constructor(@Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService, @Inject(MetricsService) private readonly metrics: MetricsService, @Inject(AttachmentsService) private readonly files: AttachmentsService) {}
+  constructor(@Inject(DbService) private readonly db: DbService, @Inject(AuditService) private readonly audit: AuditService, @Inject(MetricsService) private readonly metrics: MetricsService, @Inject(AttachmentsService) private readonly files: AttachmentsService, @Inject(ChangesService) private readonly changes: ChangesService) {}
 
-  /** `ids` limits the list to the spaces a person may view; null means every space of the organisation. */
-  async list(orgId: string, ids: number[] | null): Promise<SpaceOut[]> {
+  /** `levels` is what the person holds on each space they may view; 'all' means every space of the organisation, with full access. */
+  async list(orgId: string, levels: 'all' | Map<string, Level>): Promise<SpaceOut[]> {
+    const ids = levels === 'all' ? null : [...levels.keys()].map(Number).filter(Number.isInteger);
     const rows = ids === null
       ? await this.db.query<Row>(`SELECT ${COLUMNS} FROM spaces WHERE org_id = $1 ORDER BY name`, [orgId])
       : await this.db.query<Row>(`SELECT ${COLUMNS} FROM spaces WHERE org_id = $1 AND id = ANY($2::bigint[]) ORDER BY name`, [orgId, ids]);
-    return rows.rows.map(out);
+    return rows.rows.map(r => out(r, levels === 'all' ? 'manage' : levels.get(r.id) ?? 'view'));
+  }
+
+  /**
+   * The people a ticket of this space may be given to: the Owner and Admins, and everyone who was given the space (directly or through a team),
+   * except people who may only look. Names and ids only, so that every member who can see the space can use the list.
+   */
+  async assignable(orgId: string, spaceId: number): Promise<{ userId: string; name: string }[]> {
+    const r = await this.db.query<{ id: string; name: string }>(
+      `SELECT u.id, u.name FROM memberships m JOIN users u ON u.id = m.user_id
+        WHERE m.org_id = $1 AND m.role <> 'viewer' AND (m.role IN ('owner', 'admin') OR EXISTS (
+          SELECT 1 FROM grants g WHERE g.org_id = m.org_id AND g.object_kind = 'space' AND g.object_id = $2::text
+            AND ((g.subject_type = 'user' AND g.subject_id = u.id) OR (g.subject_type = 'team' AND g.subject_id IN (SELECT team_id FROM team_members WHERE user_id = u.id)))))
+        ORDER BY u.name`, [orgId, String(spaceId)]);
+    return r.rows.map(x => ({ userId: x.id, name: x.name }));
   }
 
   async create(orgId: string, actor: string, input: CreateSpace, ip: string): Promise<SpaceOut> {
@@ -37,7 +55,8 @@ export class SpacesService {
         return made.rows[0];
       });
       this.metrics.inc('space_writes_total', { action: 'create' });
-      return out(row);
+      await this.changes.publish(orgId, { kind: 'space', spaceId: Number(row.id) });
+      return out(row, 'manage');
     } catch (error) {
       if ((error as { code?: string }).code === UNIQUE_VIOLATION) throw new ConflictException({ code: 'key_taken', message: 'A space with this key already exists.' });
       throw error;
@@ -56,7 +75,8 @@ export class SpacesService {
       return changed.rows[0];
     });
     this.metrics.inc('space_writes_total', { action: 'update' });
-    return out(row);
+    await this.changes.publish(orgId, { kind: 'space', spaceId: id });
+    return out(row, 'manage');
   }
 
   async remove(orgId: string, id: number, actor: string, version: number, ip: string): Promise<void> {
@@ -69,6 +89,7 @@ export class SpacesService {
     });
     await this.files.removeFiles(paths);
     this.metrics.inc('space_writes_total', { action: 'delete' });
+    await this.changes.publish(orgId, { kind: 'space', spaceId: null }); // the space is gone, so nobody may be told which one
   }
 
   /** No row changed: either the space is not in this organisation, or someone changed it since the caller read it. */

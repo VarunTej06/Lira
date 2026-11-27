@@ -23,8 +23,14 @@ export class SpacesController {
   /** Only the spaces the person may view; for someone with no access to any, an empty list. */
   @Get()
   async list(@Param('orgId') orgId: string, @Req() req: AuthedRequest) {
-    const visible = await this.access.visible(req.me, orgId, 'space');
-    return this.spaces.list(orgId, visible === 'all' ? null : [...visible.keys()].map(Number).filter(Number.isInteger));
+    return this.spaces.list(orgId, await this.access.visible(req.me, orgId, 'space'));
+  }
+
+  /** Who a ticket of this space may be given to. Needs the right to view the space; shows names only. */
+  @Get(':id/assignable')
+  async assignable(@Param('orgId') orgId: string, @Param('id', ParseIntPipe) id: number, @Req() req: AuthedRequest) {
+    await this.access.require(req.me, orgId, 'space', id, 'view');
+    return this.spaces.assignable(orgId, id);
   }
 
   /** Making a space is for the Owner and Admins; everyone else is given access to spaces that exist. */

@@ -1,0 +1,374 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-26T11:48:30.832Z",
+  "entries": {
+    "lira_mindmaps": [
+      {
+        "comments": [],
+        "createdAt": "2026-11-24T08:50:44.748Z",
+        "id": "279575d6-33fb-430b-9626-9a9586bae8a7",
+        "links": [],
+        "name": "New mind map (copy)",
+        "nodes": [
+          {
+            "id": "b77cad5f-e86e-43b4-97db-35c2b76a7af0",
+            "parentId": null,
+            "text": "Topic"
+          },
+          {
+            "id": "08215eb8-52c6-4183-82a3-551ffbb98b65",
+            "parentId": "b77cad5f-e86e-43b4-97db-35c2b76a7af0",
+            "text": "Why"
+          },
+          {
+            "id": "ca94c470-24aa-4e70-9c6f-135474b2230d",
+            "parentId": "08215eb8-52c6-4183-82a3-551ffbb98b65",
+            "text": "The problem"
+          },
+          {
+            "id": "4ba786f6-01f0-4062-b443-3e76e7b5be45",
+            "parentId": "08215eb8-52c6-4183-82a3-551ffbb98b65",
+            "text": "Who has it"
+          },
+          {
+            "dx": -39,
+            "dy": -82,
+            "id": "94c2c212-571d-4eb3-a391-727cd7c6538f",
+            "parentId": "b77cad5f-e86e-43b4-97db-35c2b76a7af0",
+            "text": "Space",
+            "w": 64
+          },
+          {
+            "dx": -59,
+            "dy": -60,
+            "id": "7b87064b-f263-4f24-90fe-68c57589898f",
+            "parentId": "94c2c212-571d-4eb3-a391-727cd7c6538f",
+            "text": "Ideas"
+          },
+          {
+            "id": "810770a6-e2f7-4fbb-aa21-c4012ef72954",
+            "parentId": "94c2c212-571d-4eb3-a391-727cd7c6538f",
+            "text": "Options"
+          },
+          {
+            "id": "85e3c636-3cae-4d14-91e7-f80da9eb0bac",
+            "parentId": "b77cad5f-e86e-43b4-97db-35c2b76a7af0",
+            "text": "How"
+          },
+          {
+            "id": "d4a05527-399d-4dec-a510-e63e68e7e296",
+            "parentId": "85e3c636-3cae-4d14-91e7-f80da9eb0bac",
+            "text": "First steps"
+          },
+          {
+            "id": "989ccad5-121e-4117-bb92-3171ebbd173c",
+            "parentId": "85e3c636-3cae-4d14-91e7-f80da9eb0bac",
+            "text": "Risks"
+          },
+          {
+            "id": "b8fc6368-549b-4dfc-be0f-bb571ba8344a",
+            "parentId": "b77cad5f-e86e-43b4-97db-35c2b76a7af0",
+            "text": "Pseudonames"
+          },
+          {
+            "id": "4728470d-04cf-4a04-bd64-69d77e0dc6e4",
+            "parentId": "b8fc6368-549b-4dfc-be0f-bb571ba8344a",
+            "text": "Owner"
+          },
+          {
+            "id": "46ebb7e6-63dd-4483-ae01-75628c512655",
+            "parentId": "b8fc6368-549b-4dfc-be0f-bb571ba8344a",
+            "text": "Helpers"
+          }
+        ],
+        "shapes": [
+          {
+            "h": 139,
+            "id": "7e531bcb-ef3b-4c20-bbe6-27ef0fda5039",
+            "kind": "ellipse",
+            "text": "Ellipse",
+            "w": 151,
+            "x": -76,
+            "y": -72
+          }
+        ],
+        "starred": false,
+        "updatedAt": "2026-11-24T16:11:31.633Z"
+      },
+      {
+        "createdAt": "2026-11-24T13:27:06.867Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "95785d8e-f539-4371-865f-24e777dfcaec",
+        "links": [],
+        "name": "New storyboard",
+        "nodes": [
+          {
+            "id": "30a2ec60-06cc-47ce-97b1-096e28318b63",
+            "parentId": null,
+            "text": "Retrospective"
+          },
+          {
+            "id": "a214cf9c-8008-4935-828b-ed817b2de392",
+            "parentId": "30a2ec60-06cc-47ce-97b1-096e28318b63",
+            "text": "Themes"
+          },
+          {
+            "id": "21cd8cd7-58dd-4d0f-aeea-091e1731f16b",
+            "parentId": "a214cf9c-8008-4935-828b-ed817b2de392",
+            "text": "Theme one"
+          },
+          {
+            "id": "56b288de-bbd3-49ca-835b-1f1825e8b26b",
+            "parentId": "a214cf9c-8008-4935-828b-ed817b2de392",
+            "text": "Theme two"
+          },
+          {
+            "id": "a52946ec-b6b2-4953-ade6-677607b87824",
+            "parentId": "30a2ec60-06cc-47ce-97b1-096e28318b63",
+            "text": "Next time"
+          },
+          {
+            "id": "0c6ca103-7be5-4ed1-87dd-37cbbd4b1b32",
+            "parentId": "a52946ec-b6b2-4953-ade6-677607b87824",
+            "text": "Keep"
+          },
+          {
+            "id": "bd4c5ecb-a426-434e-a1b8-d10e119ee137",
+            "parentId": "a52946ec-b6b2-4953-ade6-677607b87824",
+            "text": "Change"
+          }
+        ],
+        "shapes": [
+          {
+            "bold": true,
+            "color": "#36B37E",
+            "h": 44,
+            "id": "342e26f5-5717-4dca-ab20-3a0a4692038d",
+            "kind": "box",
+            "text": "Went well",
+            "w": 190,
+            "x": -330,
+            "y": -600
+          },
+          {
+            "bold": true,
+            "color": "#FF5630",
+            "h": 44,
+            "id": "c57e65a5-ed51-45d1-9713-2349c032421c",
+            "kind": "box",
+            "text": "To improve",
+            "w": 190,
+            "x": -110,
+            "y": -600
+          },
+          {
+            "bold": true,
+            "color": "#0052CC",
+            "h": 44,
+            "id": "c6a76088-dc21-45eb-97e4-fa1abef2c7c9",
+            "kind": "box",
+            "text": "Actions",
+            "w": 190,
+            "x": 110,
+            "y": -600
+          },
+          {
+            "color": "#36B37E",
+            "h": 110,
+            "id": "479596ba-4670-4c06-8327-2309398842ac",
+            "kind": "note",
+            "text": "Went well 1",
+            "w": 190,
+            "x": -330,
+            "y": -540
+          },
+          {
+            "color": "#36B37E",
+            "h": 110,
+            "id": "c0b1e280-c686-476f-b044-e3cb84c910d9",
+            "kind": "note",
+            "text": "Went well 2",
+            "w": 190,
+            "x": -330,
+            "y": -410
+          },
+          {
+            "color": "#36B37E",
+            "h": 110,
+            "id": "11cb6d2c-d197-422b-bf62-84b4e3245d37",
+            "kind": "note",
+            "text": "Went well 3",
+            "w": 190,
+            "x": -330,
+            "y": -280
+          },
+          {
+            "color": "#FF5630",
+            "h": 110,
+            "id": "e6daba7a-f052-4d4c-9d3f-364c474aa692",
+            "kind": "note",
+            "text": "To improve 1",
+            "w": 190,
+            "x": -110,
+            "y": -540
+          },
+          {
+            "color": "#FF5630",
+            "h": 110,
+            "id": "10a024c1-354c-4d83-a65e-37ca591dd498",
+            "kind": "note",
+            "text": "To improve 2",
+            "w": 190,
+            "x": -110,
+            "y": -410
+          },
+          {
+            "color": "#FF5630",
+            "h": 110,
+            "id": "33a8ad44-e56a-4dee-ad7d-b1870c3752d9",
+            "kind": "note",
+            "text": "To improve 3",
+            "w": 190,
+            "x": -110,
+            "y": -280
+          },
+          {
+            "color": "#0052CC",
+            "h": 110,
+            "id": "09fde004-398a-4c29-9a90-4935f90e43df",
+            "kind": "note",
+            "text": "Action 1",
+            "w": 190,
+            "x": 110,
+            "y": -540
+          },
+          {
+            "color": "#0052CC",
+            "h": 110,
+            "id": "7035f4e3-a3ca-45c0-b08e-eac0d5356c72",
+            "kind": "note",
+            "text": "Action 2",
+            "w": 190,
+            "x": 110,
+            "y": -410
+          },
+          {
+            "color": "#0052CC",
+            "h": 110,
+            "id": "a5bc85d5-a9c5-4fee-bba1-5ad10010219b",
+            "kind": "note",
+            "text": "Action 3",
+            "w": 190,
+            "x": 110,
+            "y": -280
+          }
+        ],
+        "updatedAt": "2026-11-24T13:27:06.867Z"
+      },
+      {
+        "comments": [],
+        "createdAt": "2026-11-24T13:59:25.221Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "6488ccce-ad2f-476f-bb43-31adfd76c348",
+        "links": [
+          {
+            "arrow": true,
+            "from": "e8caa2ad-aa86-4665-8175-b7a83b422f34",
+            "id": "0d615323-7e4a-4eda-9ecb-fda325b26e92",
+            "to": "0175b96e-c58e-4a50-8057-70bbfcec3fbc"
+          },
+          {
+            "arrow": true,
+            "from": "0175b96e-c58e-4a50-8057-70bbfcec3fbc",
+            "id": "62fb6828-4622-4c22-b4b2-0f11a69a892b",
+            "to": "716b7881-2a8a-4072-bae0-94bb73a5349c"
+          }
+        ],
+        "name": "New storyboard",
+        "nodes": [
+          {
+            "id": "0175b96e-c58e-4a50-8057-70bbfcec3fbc",
+            "parentId": null,
+            "text": "Decision"
+          },
+          {
+            "id": "f6b6258e-a6f1-4006-a337-0b9cdc0f7703",
+            "parentId": "0175b96e-c58e-4a50-8057-70bbfcec3fbc",
+            "text": "Option A"
+          },
+          {
+            "id": "02d259be-c60a-4769-a3d6-f42fba132ea3",
+            "parentId": "f6b6258e-a6f1-4006-a337-0b9cdc0f7703",
+            "text": "Pro"
+          },
+          {
+            "id": "98b96bcc-ea34-424f-992b-66be2fdc87e6",
+            "parentId": "f6b6258e-a6f1-4006-a337-0b9cdc0f7703",
+            "text": "Con"
+          },
+          {
+            "id": "a03b4d1a-8916-4693-9ce6-2472f3ab88d0",
+            "parentId": "0175b96e-c58e-4a50-8057-70bbfcec3fbc",
+            "text": "Option B"
+          },
+          {
+            "id": "f3f7a2d8-66b5-4699-82bd-5e0fff3f5001",
+            "parentId": "a03b4d1a-8916-4693-9ce6-2472f3ab88d0",
+            "text": "Pro"
+          },
+          {
+            "id": "79ddff02-4c29-484f-8a50-d3f5e274da16",
+            "parentId": "a03b4d1a-8916-4693-9ce6-2472f3ab88d0",
+            "text": "Con"
+          }
+        ],
+        "shapes": [
+          {
+            "bold": true,
+            "color": "#0052CC",
+            "h": 90,
+            "id": "e8caa2ad-aa86-4665-8175-b7a83b422f34",
+            "kind": "ellipse",
+            "text": "What are we deciding?",
+            "w": 280,
+            "x": -140,
+            "y": -330
+          },
+          {
+            "color": "#FFAB00",
+            "h": 110,
+            "id": "0d6825a7-0065-43ba-882c-4a6e775153d2",
+            "kind": "note",
+            "text": "Criteria: what matters most?",
+            "w": 190,
+            "x": -460,
+            "y": 230
+          },
+          {
+            "bold": true,
+            "color": "#36B37E",
+            "h": 80,
+            "id": "716b7881-2a8a-4072-bae0-94bb73a5349c",
+            "kind": "box",
+            "size": "large",
+            "text": "We decided:",
+            "w": 220,
+            "x": -110,
+            "y": 230
+          },
+          {
+            "color": "#FF5630",
+            "h": 110,
+            "id": "29001182-a67c-49c7-a534-c92190a154cd",
+            "kind": "note",
+            "text": "Risks and what we do about them",
+            "w": 190,
+            "x": 270,
+            "y": 230
+          }
+        ],
+        "updatedAt": "2026-11-26T11:48:30.297Z"
+      }
+    ]
+  }
+}

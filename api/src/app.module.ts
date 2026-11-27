@@ -1,5 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { AccessService } from './access/access.service';
+import { AiController } from './ai/ai.controller';
+import { AiService } from './ai/ai.service';
+import { AI_HTTP, type AiHttp } from './ai/providers';
 import { GoogleLoginService } from './auth/google-login.service';
 import { GOOGLE_HTTP, GoogleService, type Http } from './google/google.service';
 import { GoogleController } from './google/google.controller';
@@ -9,6 +12,16 @@ import { AzureBlobStore, BLOB_STORE, type BlobStore } from './attachments/blob-s
 import { AuditService } from './audit/audit.service';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
+import { RecoveryService } from './auth/recovery.service';
+import { TwoStepService } from './auth/two-step.service';
+import { BREACH_HTTP, BreachService, type BreachHttp } from './auth/breach.service';
+import { MaintenanceService } from './maintenance/maintenance.service';
+import { AcsMailer } from './mail/acs-mailer';
+import { ChangesService } from './realtime/changes.service';
+import { EventsController } from './realtime/events.controller';
+import { RemindersController } from './reminders/reminders.controller';
+import { RemindersService } from './reminders/reminders.service';
+import { NoSystemMailer, SYSTEM_MAILER, type SystemMailer } from './mail/mailer';
 import { ClientGuard } from './auth/client.guard';
 import { CONFIG, type Config } from './config';
 import { DbService } from './db/db.service';
@@ -17,6 +30,8 @@ import { InvitationsController } from './invitations/invitations.controller';
 import { InvitationsService } from './invitations/invitations.service';
 import { KvController } from './kv/kv.controller';
 import { KvService } from './kv/kv.service';
+import { VotesController } from './objects/votes.controller';
+import { VotesService } from './objects/votes.service';
 import { ObjectsController } from './objects/objects.controller';
 import { ObjectsService } from './objects/objects.service';
 import { PeopleController } from './people/people.controller';
@@ -32,7 +47,7 @@ import { SpacesController } from './spaces/spaces.controller';
 import { SpacesService } from './spaces/spaces.service';
 
 /** Things a test replaces: file storage, email, and the way Google is reached. The real server uses none of these. */
-export interface AppOverrides { blobStore?: BlobStore; emailSender?: EmailSender; googleHttp?: Http }
+export interface AppOverrides { blobStore?: BlobStore; emailSender?: EmailSender; systemMailer?: SystemMailer; googleHttp?: Http; breachHttp?: BreachHttp; aiHttp?: AiHttp }
 
 @Module({})
 export class AppModule {
@@ -41,9 +56,12 @@ export class AppModule {
     const blobStore = overrides.blobStore ?? (config.storage ? new AzureBlobStore(config.storage.account, config.storage.key, config.storage.container) : null);
     return {
       module: AppModule,
-      controllers: [AuthController, SpacesController, TicketsController, AttachmentsController, KvController, PeopleController, ObjectsController, InvitationsController, StandupsController, GoogleController, HealthController],
-      providers: [{ provide: CONFIG, useValue: config }, DbService, AuditService, MetricsService, AuthService, ClientGuard, SessionGuard, SpacesService, TicketsService, AttachmentsService, KvService, AccessService, PeopleService, ObjectsService, InvitationsService, StandupsService,
+      controllers: [AiController, VotesController, AuthController, RemindersController, EventsController, SpacesController, TicketsController, AttachmentsController, KvController, PeopleController, ObjectsController, InvitationsController, StandupsController, GoogleController, HealthController],
+      providers: [{ provide: CONFIG, useValue: config }, DbService, AuditService, MetricsService, VotesService, AuthService, RecoveryService, TwoStepService, BreachService, MaintenanceService, RemindersService, ChangesService, ClientGuard, SessionGuard, SpacesService, TicketsService, AttachmentsService, KvService, AccessService, PeopleService, ObjectsService, InvitationsService, StandupsService, AiService,
+        { provide: AI_HTTP, useValue: overrides.aiHttp ?? fetch },
         { provide: BLOB_STORE, useValue: blobStore }, GoogleService, GoogleLoginService, { provide: GOOGLE_HTTP, useValue: overrides.googleHttp ?? fetch },
+        { provide: BREACH_HTTP, useValue: overrides.breachHttp ?? fetch },
+        { provide: SYSTEM_MAILER, useValue: overrides.systemMailer ?? (config.mail ? new AcsMailer(config.mail.connectionString, config.mail.from) : new NoSystemMailer()) },
         { provide: EMAIL_SENDER, useFactory: (google: GoogleService) => overrides.emailSender ?? (config.google ? google : new NoEmailSender()), inject: [GoogleService] }],
     };
   }

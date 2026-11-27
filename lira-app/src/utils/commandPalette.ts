@@ -45,13 +45,13 @@ export function rank(commands: readonly Command[], query: string, perGroup = 8):
   return out;
 }
 
-/** The pages. The hosted edition also has Calls and Teams and access. */
+/** The pages. The hosted edition also has Settings, with its users, teams and calls. */
 export function pageCommands(go: (path: string) => void, hosted: boolean): Command[] {
   const pages: [string, string, string][] = [
     ['For you', '/for-you', 'home start overview'], ['Projects', '/projects', ''], ['Sprints', '/sprints', 'iteration'], ['All tickets', '/tickets', 'work items issues'],
     ['Roadmaps', '/roadmaps', 'plan timeline'], ['Dashboards', '/dashboards', 'charts reports'], ['Storyboards', '/mindmaps', 'mind map storyboard brainstorm whiteboard sticky notes'], ['Story boxes', '/storyboxes', 'estimate points planning poker'],
     ['Filters', '/filters', 'search find'],
-    ...(hosted ? [['Calls', '/calls', 'stand-up meeting'], ['Teams and access', '/teams', 'people invite import permissions']] as [string, string, string][] : []),
+    ...(hosted ? [['Settings', '/settings', 'account security notifications'], ['Calls', '/settings/calls', 'stand-up meeting'], ['Users and teams', '/settings/users', 'people invite import permissions access']] as [string, string, string][] : []),
   ];
   return pages.map(([label, path, keywords]) => ({ id: `page:${path}`, group: 'Go to' as const, label, keywords, run: () => go(path) }));
 }

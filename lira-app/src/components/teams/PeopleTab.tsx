@@ -7,10 +7,10 @@ import { BUTTON, FIELD, LEVELS, ROLES } from './teamsUi';
 const SHARE_SWITCHES: readonly [keyof Shares, string][] = [['projects', 'Linked projects'], ['roadmaps', 'Linked roadmaps'], ['dashboards', 'Dashboards of this space only'], ['sprints', 'Sprints']];
 const QUIET = 'rounded px-2 py-1 text-ui border border-lira-border text-lira-text hover:bg-gray-50';
 
-interface Props { org: string; role: string; members: Member[]; teams: Team[]; invitations: Invitation[]; reload: () => void }
+interface Props { org: string; role: string; members: Member[]; teams: Team[]; invitations: Invitation[]; reload: () => void; /** When given, a person's name opens their own page. */ onOpen?: (userId: string) => void }
 
 /** Who is in the organisation, and who has been invited. The owner changes roles; the Owner and permitted Admins invite and remove. */
-export function PeopleTab({ org, role, members, teams, invitations, reload }: Props) {
+export function PeopleTab({ org, role, members, teams, invitations, reload, onOpen }: Props) {
   const isOwner = role === 'owner';
   const [email, setEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<AssignableRole>('member');
@@ -105,7 +105,7 @@ export function PeopleTab({ org, role, members, teams, invitations, reload }: Pr
         <ul className="divide-y divide-lira-border border border-lira-border rounded-lg">
           {members.map(m => (
             <li key={m.userId} className="flex flex-wrap items-center gap-3 px-3 py-2 text-ui">
-              <span className="flex-1 min-w-40"><strong>{m.name}</strong><br /><span className="text-lira-muted">{m.email}</span></span>
+              <span className="flex-1 min-w-40">{onOpen ? <button type="button" onClick={() => onOpen(m.userId)} className="underline text-left font-bold">{m.name}</button> : <strong>{m.name}</strong>}<br /><span className="text-lira-muted">{m.email}</span></span>
               {m.role === 'owner' ? <span className="font-bold">Owner</span> : isOwner ? (
                 <select aria-label={`Role of ${m.name}`} value={m.role} onChange={e => { void act(() => updateMember(org, m.userId, { role: e.target.value as AssignableRole })); }} className={FIELD}>
                   {ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}

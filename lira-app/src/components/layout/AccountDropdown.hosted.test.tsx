@@ -61,18 +61,18 @@ describe('switching workspace in the hosted edition', () => {
   });
 });
 
-describe('Teams and access in the hosted edition', () => {
-  it('is in the account menu and opens the Teams page', async () => {
+describe('Settings in the hosted edition', () => {
+  it('is in the account menu and opens the Settings page', async () => {
     open();
     await click(q('button[title="Your account"]'));
-    await click(byText('button', 'Teams and access'));
-    expect(q('#where')!.textContent).toBe('/teams');
+    await click(byText('button', 'Settings'));
+    expect(q('#where')!.textContent).toBe('/settings');
   });
 
-  it('has Calls in the account menu, which opens the Manage calls page', async () => {
+  it('no longer lists Teams and access, Security or Calls in the menu, because they are pages inside Settings', async () => {
     open();
     await click(q('button[title="Your account"]'));
-    await click(byText('button', 'Calls'));
-    expect(q('#where')!.textContent).toBe('/calls');
+    for (const gone of ['Teams and access', 'Security', 'Calls']) expect(byText('button', gone)).toBeUndefined();
+    expect(byText('button', 'Account settings')).toBeUndefined();
   });
 });

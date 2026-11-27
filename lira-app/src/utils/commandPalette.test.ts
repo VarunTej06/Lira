@@ -47,11 +47,12 @@ describe('ranking', () => {
 });
 
 describe('the commands', () => {
-  it('has a page for each place, and Calls and Teams only in the hosted edition', () => {
+  it('has a page for each place, and Settings, Calls and Users and teams only in the hosted edition', () => {
     const labels = (hosted: boolean) => pageCommands(() => undefined, hosted).map(c => c.label);
     expect(labels(false)).toEqual(expect.arrayContaining(['For you', 'Projects', 'Storyboards', 'Story boxes', 'Filters']));
     expect(labels(false)).not.toContain('Calls');
-    expect(labels(true)).toEqual(expect.arrayContaining(['Calls', 'Teams and access']));
+    expect(labels(false)).not.toContain('Settings');
+    expect(labels(true)).toEqual(expect.arrayContaining(['Settings', 'Calls', 'Users and teams']));
   });
   it('goes to the page, and to a space\'s board', () => {
     const go = vi.fn();

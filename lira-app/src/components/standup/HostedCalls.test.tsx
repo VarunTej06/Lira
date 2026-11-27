@@ -98,7 +98,7 @@ describe('the popup of a call button', () => {
     await click(byText('button', 'Delete'));
     expect(api.deleteStandup).toHaveBeenCalledWith('org-1', 'c1');
     await click(byText('button', 'Manage calls'));
-    expect(q('#where')!.textContent).toBe('/calls');
+    expect(q('#where')!.textContent).toBe('/settings/calls');
   });
 
   it('lets an Owner or Admin schedule a call for that project right there, with its scope fixed', async () => {

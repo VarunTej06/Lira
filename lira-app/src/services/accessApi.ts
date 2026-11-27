@@ -29,6 +29,8 @@ export const setTeamMembers = (orgId: string, teamId: string, userIds: string[])
 
 export const listGrants = (orgId: string, kind: ObjectKind, objectId: string) =>
   send<Grant[]>('GET', `${org(orgId)}/grants?kind=${kind}&objectId=${encodeURIComponent(objectId)}`);
+/** Every grant of the organisation, for the page that shows what one person or team can reach. Owner and permitted Admins only. */
+export const listAllGrants = (orgId: string) => send<Grant[]>('GET', `${org(orgId)}/grants`);
 export const setGrant = (orgId: string, grant: Omit<Grant, 'id'>) => send<Grant>('POST', `${org(orgId)}/grants`, grant);
 export const revokeGrant = (orgId: string, grantId: string) => send<void>('DELETE', `${org(orgId)}/grants/${grantId}`);
 

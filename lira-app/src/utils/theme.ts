@@ -1,5 +1,5 @@
 import { appStorage } from './appStorage';
-import { isHosted } from './edition';
+import { EDITION, isHosted, type Edition } from './edition';
 import type { ThemeName } from '../theme/palette';
 /**
  * The light / dark theme, and which palette each of them uses. It is changed in Settings and in System settings.
@@ -8,11 +8,14 @@ import type { ThemeName } from '../theme/palette';
  */
 export type Theme = 'light' | 'dark';
 
-/** The palettes of each theme. The first of each is the one used until the person chooses another. */
-export const PALETTES = {
-  dark: ['pace', 'blackridge'],
-  light: ['sorrel', 'fawn', 'mossgrove', 'tidewell'],
-} as const satisfies Record<Theme, readonly ThemeName[]>;
+/**
+ * The palettes of each theme. The first of each is the one used until the person chooses another. The hosted edition has exactly one
+ * per theme (Pace in dark, Mossgrove in light) and no choice; the local edition keeps all six.
+ */
+export const palettesFor = (edition: Edition): Record<Theme, readonly ThemeName[]> =>
+  edition === 'hosted' ? { dark: ['pace'], light: ['mossgrove'] } : { dark: ['pace', 'blackridge'], light: ['sorrel', 'fawn', 'mossgrove', 'tidewell'] };
+
+export const PALETTES = palettesFor(EDITION);
 
 const THEME_KEY = 'lira_theme';
 const PALETTE_KEY: Record<Theme, string> = { light: 'lira_light_palette', dark: 'lira_dark_palette' };

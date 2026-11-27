@@ -770,3 +770,11 @@ Hosted edition. Sign in as the owner, with at least one member invited, one team
 - [ ] Sign in as a Member who may not manage access and open Settings. Expect: the rail shows only Account settings, Security, Calls and Notifications; typing `/settings/users` shows "You do not have access to manage people and teams here."
 - [ ] Open the old addresses `/teams` and `/calls`. Expect: they land on Users and Calls inside Settings.
 - [ ] Open the command palette (Ctrl+K) and type "settings". Expect: Settings, Calls and Users and teams are listed in the hosted edition only.
+
+### A63. Hosted edition: Pace in dark, Mossgrove in light, one button (27 Nov 2026)  ◐
+Hosted edition. The local edition is unchanged (all six palettes, Appearance in its Settings dialog).
+- [ ] Open the app. Expect: a round sun or moon button on the top bar, just left of the notification bell, styled like the other round buttons on the bar.
+- [ ] Press it in light mode. Expect: the whole app turns dark with the Pace palette; the button now shows the sun. Press it again. Expect: light with the Mossgrove palette. Reload. Expect: the choice is remembered.
+- [ ] Press the gear on the top bar. Expect: the dialog opens on General; the list on the left has no **Appearance**, and there is no way to pick another palette anywhere.
+- [ ] If this browser once saved another palette (for example Sorrel), reload. Expect: light is Mossgrove and dark is Pace.
+- [ ] Open the local edition (`npm run dev`). Expect: no button on the bar, the gear opens on Appearance, and all six palettes can still be chosen.

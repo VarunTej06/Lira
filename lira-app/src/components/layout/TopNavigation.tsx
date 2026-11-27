@@ -20,6 +20,10 @@ import { YourWorkDropdown } from './topnav/YourWorkDropdown';
 import { FiltersDropdown } from './topnav/FiltersDropdown';
 import { OmniSearch } from './topnav/OmniSearch';
 import { NotificationsBell } from './topnav/NotificationsBell';
+import { ThemeToggle } from '../public/ThemeToggle';
+
+/** The hosted edition has one palette per mode, chosen with the button on the bar, so its Settings dialog opens past Appearance. */
+const FIRST_SECTION: SettingsSection = isHosted() ? 'general' : 'appearance';
 import { SystemSettingsModal } from './topnav/SystemSettingsModal';
 import { appStorage } from '../../utils/appStorage';
 import { isHosted } from '../../utils/edition';
@@ -46,7 +50,7 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
   onNavigateToFilters,
 }) => {
   const [showUnifiedSettingsModal, setShowUnifiedSettingsModal] = useState(false);
-  const [settingsInitialSection, setSettingsInitialSection] = useState<SettingsSection>('appearance');
+  const [settingsInitialSection, setSettingsInitialSection] = useState<SettingsSection>(FIRST_SECTION);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
@@ -171,12 +175,13 @@ export const TopNavigation: React.FC<TopNavigationProps> = ({
       </button>
       )}
 
+        {isHosted() && <ThemeToggle onBar />}
         <NotificationsBell issues={issues} onSelectIssue={onSelectIssue} />
 
         {/* Wired Settings Gear Icon Button */}
         <button
           onClick={() => {
-            setSettingsInitialSection('appearance');
+            setSettingsInitialSection(FIRST_SECTION);
             setShowUnifiedSettingsModal(true);
           }}
           className={`w-10 h-10 rounded-full flex items-center justify-center bg-lira-nav border border-white/10 hover:border-white/30 transition-colors cursor-pointer ${

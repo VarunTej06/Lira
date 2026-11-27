@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-24T16:11:32.146Z",
+  "updatedAt": "2026-11-26T11:48:30.832Z",
   "entries": {
     "lira_mindmaps": [
       {
@@ -273,194 +273,101 @@
         "links": [
           {
             "arrow": true,
-            "from": "0e8e187f-3d3b-4778-ac1f-302f13f1f03e",
-            "id": "3e649b2c-33c0-43fd-8bc4-49506f9660ff",
-            "to": "391063bc-95f9-48c1-8069-77d552c61523"
+            "from": "e8caa2ad-aa86-4665-8175-b7a83b422f34",
+            "id": "0d615323-7e4a-4eda-9ecb-fda325b26e92",
+            "to": "0175b96e-c58e-4a50-8057-70bbfcec3fbc"
+          },
+          {
+            "arrow": true,
+            "from": "0175b96e-c58e-4a50-8057-70bbfcec3fbc",
+            "id": "62fb6828-4622-4c22-b4b2-0f11a69a892b",
+            "to": "716b7881-2a8a-4072-bae0-94bb73a5349c"
           }
         ],
         "name": "New storyboard",
         "nodes": [
           {
-            "id": "391063bc-95f9-48c1-8069-77d552c61523",
+            "id": "0175b96e-c58e-4a50-8057-70bbfcec3fbc",
             "parentId": null,
-            "text": "Top picks"
+            "text": "Decision"
           },
           {
-            "id": "3ae205a6-acb2-4ac4-b10d-557c31f5c7c5",
-            "parentId": "391063bc-95f9-48c1-8069-77d552c61523",
-            "text": "Pick one"
+            "id": "f6b6258e-a6f1-4006-a337-0b9cdc0f7703",
+            "parentId": "0175b96e-c58e-4a50-8057-70bbfcec3fbc",
+            "text": "Option A"
           },
           {
-            "id": "d16be686-2ebc-42de-8288-1cc689437ab2",
-            "parentId": "3ae205a6-acb2-4ac4-b10d-557c31f5c7c5",
-            "text": "Why it wins"
+            "id": "02d259be-c60a-4769-a3d6-f42fba132ea3",
+            "parentId": "f6b6258e-a6f1-4006-a337-0b9cdc0f7703",
+            "text": "Pro"
           },
           {
-            "collapsed": true,
-            "id": "6251ad15-664d-45dc-944b-4e6f1e9efe15",
-            "parentId": "391063bc-95f9-48c1-8069-77d552c61523",
-            "text": "Pick two"
+            "id": "98b96bcc-ea34-424f-992b-66be2fdc87e6",
+            "parentId": "f6b6258e-a6f1-4006-a337-0b9cdc0f7703",
+            "text": "Con"
           },
           {
-            "id": "0e8e187f-3d3b-4778-ac1f-302f13f1f03e",
-            "parentId": "6251ad15-664d-45dc-944b-4e6f1e9efe15",
-            "text": "Why it wins"
+            "id": "a03b4d1a-8916-4693-9ce6-2472f3ab88d0",
+            "parentId": "0175b96e-c58e-4a50-8057-70bbfcec3fbc",
+            "text": "Option B"
           },
           {
-            "id": "48c7eb8c-f98d-4c6d-b012-c02974f82a17",
-            "parentId": "391063bc-95f9-48c1-8069-77d552c61523",
-            "text": "Next steps"
+            "id": "f3f7a2d8-66b5-4699-82bd-5e0fff3f5001",
+            "parentId": "a03b4d1a-8916-4693-9ce6-2472f3ab88d0",
+            "text": "Pro"
           },
           {
-            "id": "6e5b505c-baa3-4a33-b6c9-6c0cfccba8b7",
-            "parentId": "48c7eb8c-f98d-4c6d-b012-c02974f82a17",
-            "text": "Who"
-          },
-          {
-            "id": "04a9840b-751b-4105-9032-4280f9aaf92d",
-            "parentId": "48c7eb8c-f98d-4c6d-b012-c02974f82a17",
-            "text": "When"
-          },
-          {
-            "id": "de2ebba5-f407-48be-8c79-0bc294840c41",
-            "parentId": "6251ad15-664d-45dc-944b-4e6f1e9efe15",
-            "text": "New idea"
+            "id": "79ddff02-4c29-484f-8a50-d3f5e274da16",
+            "parentId": "a03b4d1a-8916-4693-9ce6-2472f3ab88d0",
+            "text": "Con"
           }
         ],
         "shapes": [
           {
             "bold": true,
-            "h": 34,
-            "id": "d8d09721-d520-48b3-b1a9-a8ec3870b008",
-            "kind": "text",
+            "color": "#0052CC",
+            "h": 90,
+            "id": "e8caa2ad-aa86-4665-8175-b7a83b422f34",
+            "kind": "ellipse",
+            "text": "What are we deciding?",
+            "w": 280,
+            "x": -140,
+            "y": -330
+          },
+          {
+            "color": "#FFAB00",
+            "h": 110,
+            "id": "0d6825a7-0065-43ba-882c-4a6e775153d2",
+            "kind": "note",
+            "text": "Criteria: what matters most?",
+            "w": 190,
+            "x": -460,
+            "y": 230
+          },
+          {
+            "bold": true,
+            "color": "#36B37E",
+            "h": 80,
+            "id": "716b7881-2a8a-4072-bae0-94bb73a5349c",
+            "kind": "box",
             "size": "large",
-            "text": "What do we want to solve? One idea on each note.",
-            "w": 660,
-            "x": -330,
-            "y": -590
+            "text": "We decided:",
+            "w": 220,
+            "x": -110,
+            "y": 230
           },
           {
-            "color": "#FFAB00",
+            "color": "#FF5630",
             "h": 110,
-            "id": "497bb574-9529-4cbc-b6ac-99b8f9c31611",
+            "id": "29001182-a67c-49c7-a534-c92190a154cd",
             "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": -360,
-            "y": -520
-          },
-          {
-            "color": "#FFAB00",
-            "h": 110,
-            "id": "ae932338-6138-4732-bf8c-3b28647f7620",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": -170,
-            "y": -520
-          },
-          {
-            "color": "#FFAB00",
-            "h": 110,
-            "id": "5a4e1c00-0e03-4eeb-b2b6-eda2d110c456",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": 20,
-            "y": -520
-          },
-          {
-            "color": "#FFAB00",
-            "h": 110,
-            "id": "a0fb1b8c-73be-425f-8629-837db35784f7",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": 210,
-            "y": -520
-          },
-          {
-            "color": "#0052CC",
-            "h": 110,
-            "id": "bd71836d-5ba5-4b62-8192-e621b23c6588",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": -360,
-            "y": -390
-          },
-          {
-            "color": "#0052CC",
-            "h": 110,
-            "id": "1405b83b-b183-4bc1-9984-1331ddfc2216",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": -170,
-            "y": -390
-          },
-          {
-            "color": "#0052CC",
-            "h": 110,
-            "id": "68ce8a10-9efe-40e2-9e71-95be2c90efef",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": 20,
-            "y": -390
-          },
-          {
-            "color": "#0052CC",
-            "h": 110,
-            "id": "b175d497-d2bb-4170-8fe5-2bb67c41abab",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": 210,
-            "y": -390
-          },
-          {
-            "color": "#36B37E",
-            "h": 110,
-            "id": "0baac7a8-e28d-4831-a5cc-bfbee0e25a93",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": -360,
-            "y": -260
-          },
-          {
-            "color": "#36B37E",
-            "h": 110,
-            "id": "d418901a-70fa-423b-b8d1-f7ac46100e07",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": -170,
-            "y": -260
-          },
-          {
-            "color": "#36B37E",
-            "h": 110,
-            "id": "79b25ed6-b1a1-49f4-8af0-9f2e8ad9d6ba",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": 20,
-            "y": -260
-          },
-          {
-            "color": "#36B37E",
-            "h": 110,
-            "id": "67ce0494-4325-4d48-816f-954e14e923ee",
-            "kind": "note",
-            "text": "Idea",
-            "w": 170,
-            "x": 210,
-            "y": -260
+            "text": "Risks and what we do about them",
+            "w": 190,
+            "x": 270,
+            "y": 230
           }
         ],
-        "updatedAt": "2026-11-24T14:00:05.652Z"
+        "updatedAt": "2026-11-26T11:48:30.297Z"
       }
     ]
   }

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-24T14:12:38.299Z",
+  "updatedAt": "2026-11-27T17:51:32.230Z",
   "entries": {
     "lira_storyboxes": [
       {
@@ -88,19 +88,19 @@
         "createdBy": "Varuntej Yadla",
         "id": "5ed49259-2f51-453b-b9b2-5fca06e20987",
         "localRounds": {
-          "172": {
-            "endsAt": "2026-11-24T14:09:54.255Z",
-            "finalPoints": 2,
-            "revealed": true
-          },
           "176": {
             "endsAt": "2026-11-24T12:37:48.047Z",
             "finalPoints": 2,
             "revealed": true
+          },
+          "178": {
+            "endsAt": "2026-11-27T17:53:20.076Z",
+            "finalPoints": 3,
+            "revealed": true
           }
         },
         "localVotes": {
-          "172": 2
+          "178": 3
         },
         "name": "lira",
         "scale": [
@@ -138,6 +138,50 @@
         "scope": {
           "spaceId": 5,
           "type": "space"
+        },
+        "status": "open",
+        "votingMinutes": 2
+      },
+      {
+        "createdAt": "2026-11-26T12:12:31.243Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "843489e1-1681-41e4-b880-05bee2fd8f28",
+        "name": "Space Courses",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "spaceId": 4,
+          "type": "space"
+        },
+        "status": "open",
+        "votingMinutes": 1
+      },
+      {
+        "createdAt": "2026-11-26T12:12:48.013Z",
+        "createdBy": "Varuntej Yadla",
+        "id": "75a42dfa-69dc-48ae-b144-83a978f8cfbd",
+        "name": "Sprint 2026-11, all spaces",
+        "scale": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          8,
+          13,
+          21
+        ],
+        "scope": {
+          "sprintKey": "2026-11",
+          "type": "sprint"
         },
         "status": "open",
         "votingMinutes": 2

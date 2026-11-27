@@ -14,7 +14,7 @@
     deploy     Container Apps environment, the API (internal) and the web app (public)
     edge       Caddy in a container (Let's Encrypt certificate) in front of the web app, and the DNS record to add
     status     checks that everything answers
-    all        runs infra, database, images, deploy and edge, stopping to ask before the DNS change
+    all        runs infra, database, google (when -GoogleClientId and GOOGLE_CLIENT_SECRET are given), images, deploy and edge, stopping to ask before the DNS change
 
   Run one step at a time (recommended the first time):   .\Setup-Playground.ps1 -Step infra
   Or everything:                                          .\Setup-Playground.ps1 -Step all
@@ -320,8 +320,13 @@ switch ($Step) {
   'status'    { Step-Status $state }
   'show'      { $state | ConvertTo-Json }
   'all' {
-    Step-Check $state; Step-Infra $state; $state = Load-State; Step-Database $state; Step-Images $state; Step-Deploy $state; $state = Load-State
+    Step-Check $state; Step-Infra $state; $state = Load-State; Step-Database $state
+    # Google goes in before the API is deployed, so the API starts with it. Without both values it is skipped, and said so at the end.
+    $googleDone = $GoogleClientId -and $env:GOOGLE_CLIENT_SECRET
+    if ($googleDone) { Step-Google (Load-State) }
+    Step-Images $state; Step-Deploy (Load-State); $state = Load-State
     Step-Edge (Load-State)
+    if (-not $googleDone) { Write-Host "`nPENDING: Google sign-in is off. Set GOOGLE_CLIENT_SECRET, then: -Step google -GoogleClientId <id>, then -Step deploy again." -ForegroundColor Yellow }
     Write-Host "`nChange the DNS record shown above, wait a few minutes, then run:  .\Setup-Playground.ps1 -Step status"
   }
 }

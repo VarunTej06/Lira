@@ -20,7 +20,7 @@ Sign in first (PowerShell): `az login` with the playground account. Then, from t
 | `-Step deploy` | Container Apps environment, the API (internal only) and the web app (public) | 5 min |
 | `-Step edge` | Caddy in a container, for the Let's Encrypt certificate; prints the DNS record to add | 2 min |
 | `-Step status` | Calls `/health`, `/ready`, `/`, `/login` and `/api/me` (must answer **401**) on both addresses | 1 min |
-| `-Step all` | `check`, `infra`, `database`, `images`, `deploy`, `edge` in order | about 30 min |
+| `-Step all` | `check`, `infra`, `database`, `google` (only when `-GoogleClientId` is given and `GOOGLE_CLIENT_SECRET` is set; otherwise it ends with a PENDING line), `images`, `deploy`, `edge` in order | about 30 min |
 
 Every step can be run again: names are kept in `.state.json`, existing resources are reused, and the Key Vault passwords are only created when missing.
 

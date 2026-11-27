@@ -3,6 +3,7 @@ import { listAllGrants, revokeGrant, setGrant, type Grant, type Level, type Obje
 import { useObjectChoices } from '../../hooks/useObjectChoices';
 import { accessFor, KIND_LABEL, objectName, type ObjectChoices, type Subject } from '../../utils/accessRows';
 import { BUTTON, FIELD, LEVELS } from '../teams/teamsUi';
+import { LevelPill } from './LevelPill';
 
 const KINDS = Object.keys(KIND_LABEL) as ObjectKind[];
 
@@ -56,28 +57,27 @@ export function AccessSection({ org, subject, teams, everything }: Props) {
     <section aria-label="Access" className="space-y-3">
       <h2 className="text-base font-bold text-lira-text">Access</h2>
       {problem && <p role="alert" className="text-ui text-red-600">{problem}</p>}
-      {rows.length === 0 ? <p className="text-ui text-lira-muted">Nothing has been shared yet.</p> : (
-        <table className="w-full text-ui text-left">
-          <thead><tr className="text-lira-muted"><th className="py-1 pr-3 font-bold">Name</th><th className="py-1 pr-3 font-bold">Type</th><th className="py-1 pr-3 font-bold">Level</th><th className="py-1 pr-3 font-bold">Through</th><th /></tr></thead>
-          <tbody className="divide-y divide-lira-border">
-            {rows.map(({ grant: g, via }) => (
-              <tr key={g.id}>
-                <td className="py-1.5 pr-3 font-semibold">{objectName(choices, g.kind, g.objectId)}</td>
-                <td className="py-1.5 pr-3">{KIND_LABEL[g.kind]}</td>
-                <td className="py-1.5 pr-3">
-                  {via ? LEVELS.find(l => l.value === g.level)?.label : (
-                    <select aria-label={`Level for ${objectName(choices, g.kind, g.objectId)}`} value={g.level} onChange={e => { void change(setGrant(org, { subjectType: g.subjectType, subjectId: g.subjectId, kind: g.kind, objectId: g.objectId, level: e.target.value as Level })); }} className={FIELD}>
+      {rows.length === 0 ? <p className="text-ui text-lira-muted">Nothing has been shared yet.</p> : KINDS.filter(k => rows.some(r => r.grant.kind === k)).map(k => (
+        <div key={k} className="space-y-1.5">
+          <h3 className="text-3xs font-bold uppercase tracking-wide text-lira-muted">{KIND_LABEL[k]}s</h3>
+          <ul className="space-y-1.5">
+            {rows.filter(r => r.grant.kind === k).map(({ grant: g, via }) => {
+              const name = objectName(choices, g.kind, g.objectId);
+              return (
+                <li key={g.id} className="flex flex-wrap items-center gap-2 border border-lira-border rounded-lg px-3 py-2 text-ui">
+                  <span className="flex-1 min-w-32"><span className="font-semibold">{name}</span> <span className="text-lira-muted text-2xs">{via ? `Team ${via}` : 'Directly'}</span></span>
+                  {via ? <LevelPill level={g.level} /> : (
+                    <select aria-label={`Level for ${name}`} value={g.level} onChange={e => { void change(setGrant(org, { subjectType: g.subjectType, subjectId: g.subjectId, kind: g.kind, objectId: g.objectId, level: e.target.value as Level })); }} className={FIELD}>
                       {LEVELS.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}
                     </select>
                   )}
-                </td>
-                <td className="py-1.5 pr-3 text-lira-muted">{via ? `Team ${via}` : 'Directly'}</td>
-                <td className="py-1.5 text-right">{!via && <button type="button" onClick={() => { void change(revokeGrant(org, g.id)); }} className="underline text-ui">Remove</button>}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+                  {!via && <button type="button" onClick={() => { void change(revokeGrant(org, g.id)); }} className="underline text-ui">Remove</button>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
       <AddAccess org={org} subject={subject} choices={choices} done={reload} />
     </section>
   );

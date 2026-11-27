@@ -89,10 +89,10 @@ describe('a person\'s page', () => {
 
   it('opens from the list and shows the role, the teams and what they can reach, with the team it comes through', async () => {
     await openAsha();
-    expect(q('main h2')!.textContent).toBe('Asha');
+    expect(q('section[aria-label="Person"] h2')!.textContent).toBe('Asha');
     expect(q('main dl')!.textContent).toContain('Member');
     expect(q('main dl')!.textContent).toContain('QA');
-    const rows = qa('section[aria-label="Access"] tbody tr').map(r => r.textContent);
+    const rows = qa('section[aria-label="Access"] li').map(r => r.textContent);
     expect(rows[0]).toContain('Lira (LIRA)'); expect(rows[0]).toContain('Directly');
     expect(rows[1]).toContain('Alpha'); expect(rows[1]).toContain('Team QA');
   });
@@ -101,7 +101,7 @@ describe('a person\'s page', () => {
     await openAsha();
     await pick(q<HTMLSelectElement>('select[aria-label="Level for Lira (LIRA)"]')!, 'manage');
     expect(api.setGrant).toHaveBeenCalledWith('org-1', { subjectType: 'user', subjectId: 'u1', kind: 'space', objectId: '4', level: 'manage' });
-    const rows = qa('section[aria-label="Access"] tbody tr');
+    const rows = qa('section[aria-label="Access"] li');
     expect(byText('button', 'Remove', rows[1])).toBeUndefined();
     expect(q('select[aria-label="Level for Alpha"]')).toBeNull();
     await click(byText('button', 'Remove', rows[0])!);
@@ -145,7 +145,7 @@ describe('a team\'s page', () => {
     await settle(40);
     expect(q('main h2')!.textContent).toBe('QA');
     expect(qa('ul[aria-label="Members"] li').map(li => li.textContent)).toEqual([expect.stringContaining('Asha')]);
-    const rows = qa('section[aria-label="Access"] tbody tr');
+    const rows = qa('section[aria-label="Access"] li');
     expect(rows).toHaveLength(1);
     expect(rows[0].textContent).toContain('Alpha');
     await click(byText('button', 'Remove', rows[0])!);
@@ -155,5 +155,69 @@ describe('a team\'s page', () => {
   it('says so when the team does not exist', async () => {
     await open('/settings/teams/gone');
     expect(q('main')!.textContent).toContain('That team does not exist.');
+  });
+});
+
+describe('the Users page', () => {
+  it('shows the head count, the teams and the invitations, a face and one line of reach for each person, and marks the open person', async () => {
+    api.listInvitations.mockResolvedValue(ok([{ id: 'i1', email: 'new@x.co', role: 'member', teamId: null, spaceId: null, level: null, shares: null, expiresAt: '2026-12-01T00:00:00Z' }]));
+    await open('/settings/users/u1');
+    expect(qa('main .text-xl').map(e => e.textContent)).toEqual(['2', '1', '1']);
+    const rows = qa('[aria-label="People"] li');
+    expect(rows[0].textContent).toContain('Everything');
+    expect(rows[1].textContent).toContain('QA · 1 space, 1 project');
+    expect(rows[1].querySelector('[title="AS"]')).not.toBeNull();
+    expect(rows[1].getAttribute('aria-current')).toBe('true');
+    expect(rows[0].getAttribute('aria-current')).toBeNull();
+  });
+
+  it('closes the panel and returns to the list', async () => {
+    await open('/settings/users/u1');
+    await click(byText('button', 'Close')!);
+    await settle(10);
+    expect(q('section[aria-label="Person"]')).toBeNull();
+  });
+});
+
+describe('the Access matrix', () => {
+  const cell = (label: string) => q<HTMLSelectElement>(`select[aria-label="${label}"]`)!;
+
+  it('puts teams and people in rows and the things of one kind in columns, with the Owner as one line', async () => {
+    await open('/settings/access');
+    const heads = qa('section[aria-label="Who can reach what"] thead th').map(th => th.textContent);
+    expect(heads).toEqual(['Person or team', 'Lira (LIRA)']);
+    const rows = qa('section[aria-label="Who can reach what"] tbody tr').map(r => r.textContent);
+    expect(rows[0]).toContain('QA');
+    expect(rows[1]).toContain('Reaches everything');
+    expect(cell('Asha on Lira (LIRA)').value).toBe('view');
+    expect(cell('QA on Lira (LIRA)').value).toBe('none');
+  });
+
+  it('shows another kind, and the level a person gets through a team beside their own cell', async () => {
+    await open('/settings/access');
+    await click(byText('button', 'Projects')!);
+    expect(qa('section[aria-label="Who can reach what"] thead th').map(th => th.textContent)).toEqual(['Person or team', 'Alpha']);
+    expect(cell('QA on Alpha').value).toBe('edit');
+    expect(cell('Asha on Alpha').value).toBe('none');
+    expect(byText('td', /Can edit via QA/)).toBeDefined();
+  });
+
+  it('changes a cell, and takes access away when it is set to None', async () => {
+    await open('/settings/access');
+    await pick(cell('QA on Lira (LIRA)'), 'manage');
+    expect(api.setGrant).toHaveBeenCalledWith('org-1', { subjectType: 'team', subjectId: 't1', kind: 'space', objectId: '4', level: 'manage' });
+    await pick(cell('Asha on Lira (LIRA)'), 'none');
+    expect(api.revokeGrant).toHaveBeenCalledWith('org-1', 'g1');
+    api.setGrant.mockClear();
+    await pick(cell('QA on Lira (LIRA)'), 'none'); // nothing was there: nothing to take away
+    expect(api.revokeGrant).toHaveBeenCalledTimes(1);
+    expect(api.setGrant).not.toHaveBeenCalled();
+  });
+
+  it('shows the server refusal when a change is not allowed', async () => {
+    api.setGrant.mockResolvedValue({ ok: false, status: 403, message: 'Only the owner can do that.' });
+    await open('/settings/access');
+    await pick(cell('QA on Lira (LIRA)'), 'edit');
+    expect(q('[role="alert"]')!.textContent).toContain('Only the owner can do that.');
   });
 });

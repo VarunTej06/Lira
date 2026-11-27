@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { invite, removeMember, revokeInvitation, updateMember, inviteLink, type AssignableRole, type CreatedInvitation, type Invitation, type Level, type Member, type Shares, type Team } from '../../services/accessApi';
 import { useSpaceChoices } from '../../hooks/useSpaceChoices';
+import { initialsOf } from '../../utils/accessRows';
+import { Avatar } from '../common/Avatar';
 import { confirmDialog } from '../common/dialogStore';
 import { BUTTON, FIELD, LEVELS, ROLES } from './teamsUi';
 
 const SHARE_SWITCHES: readonly [keyof Shares, string][] = [['projects', 'Linked projects'], ['roadmaps', 'Linked roadmaps'], ['dashboards', 'Dashboards of this space only'], ['sprints', 'Sprints']];
 const QUIET = 'rounded px-2 py-1 text-ui border border-lira-border text-lira-text hover:bg-gray-50';
 
-interface Props { org: string; role: string; members: Member[]; teams: Team[]; invitations: Invitation[]; reload: () => void; /** When given, a person's name opens their own page. */ onOpen?: (userId: string) => void }
+interface Props { org: string; role: string; members: Member[]; teams: Team[]; invitations: Invitation[]; reload: () => void; /** When given, a person's name opens their own page. */ onOpen?: (userId: string) => void; /** A line about how much each person reaches, by user id. */ reach?: Record<string, string>; selectedId?: string }
 
 /** Who is in the organisation, and who has been invited. The owner changes roles; the Owner and permitted Admins invite and remove. */
-export function PeopleTab({ org, role, members, teams, invitations, reload, onOpen }: Props) {
+export function PeopleTab({ org, role, members, teams, invitations, reload, onOpen, reach, selectedId }: Props) {
   const isOwner = role === 'owner';
   const [email, setEmail] = useState('');
   const [inviteRole, setInviteRole] = useState<AssignableRole>('member');
@@ -104,8 +106,9 @@ export function PeopleTab({ org, role, members, teams, invitations, reload, onOp
         <h3 className="text-sm font-bold mb-2">People ({members.length})</h3>
         <ul className="divide-y divide-lira-border border border-lira-border rounded-lg">
           {members.map(m => (
-            <li key={m.userId} className="flex flex-wrap items-center gap-3 px-3 py-2 text-ui">
-              <span className="flex-1 min-w-40">{onOpen ? <button type="button" onClick={() => onOpen(m.userId)} className="underline text-left font-bold">{m.name}</button> : <strong>{m.name}</strong>}<br /><span className="text-lira-muted">{m.email}</span></span>
+            <li key={m.userId} aria-current={m.userId === selectedId ? 'true' : undefined} className={`flex flex-wrap items-center gap-3 px-3 py-2.5 text-ui ${m.userId === selectedId ? 'bg-lira-blue-light' : ''}`}>
+              <Avatar initials={initialsOf(m.name, m.email)} size="lg" />
+              <span className="flex-1 min-w-40">{onOpen ? <button type="button" onClick={() => onOpen(m.userId)} className="underline text-left font-bold">{m.name}</button> : <strong>{m.name}</strong>}<br /><span className="text-lira-muted">{m.email}</span>{reach && <><br /><span className="text-2xs text-lira-muted">{[...teams.filter(t => m.teamIds.includes(t.id)).map(t => t.name), reach[m.userId]].filter(Boolean).join(' · ')}</span></>}</span>
               {m.role === 'owner' ? <span className="font-bold">Owner</span> : isOwner ? (
                 <select aria-label={`Role of ${m.name}`} value={m.role} onChange={e => { void act(() => updateMember(org, m.userId, { role: e.target.value as AssignableRole })); }} className={FIELD}>
                   {ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
